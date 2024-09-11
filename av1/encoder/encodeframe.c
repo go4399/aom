@@ -540,6 +540,7 @@ static inline void encode_nonrd_sb(AV1_COMP *cpi, ThreadData *td,
 #endif
   // Set the partition
   if (sf->part_sf.partition_search_type == FIXED_PARTITION || seg_skip ||
+      cpi->rc.is_src_frame_alt_ref ||
       (sf->rt_sf.use_fast_fixed_part && x->sb_force_fixed_part == 1 &&
        (!frame_is_intra_only(cm) &&
         (!cpi->ppi->use_svc ||
@@ -556,7 +557,8 @@ static inline void encode_nonrd_sb(AV1_COMP *cpi, ThreadData *td,
       bsize_select = cm->seq_params->sb_size;
       x->force_zeromv_skip_for_sb = 1;
     }
-    const BLOCK_SIZE bsize = seg_skip ? sb_size : bsize_select;
+    const BLOCK_SIZE bsize =
+        (seg_skip || cpi->rc.is_src_frame_alt_ref) ? sb_size : bsize_select;
     if (x->content_state_sb.source_sad_nonrd > kZeroSad)
       x->force_color_check_block_level = 1;
     av1_set_fixed_partitioning(cpi, tile_info, mi, mi_row, mi_col, bsize);
