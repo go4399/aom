@@ -3379,7 +3379,8 @@ static int remux_tiles(const CommonTileParams *const tiles, uint8_t *dst,
 uint32_t av1_write_obu_header(AV1LevelParams *const level_params,
                               int *frame_header_count, OBU_TYPE obu_type,
                               bool has_nonzero_operating_point_idc,
-                              bool is_layer_specific_obu, int obu_extension,
+                              bool is_layer_specific_obu,
+                              int obu_extension,
                               uint8_t *const dst) {
   assert(IMPLIES(!has_nonzero_operating_point_idc, obu_extension == 0));
 
@@ -4222,11 +4223,13 @@ static size_t av1_write_metadata_array(AV1_COMP *const cpi, uint8_t *dst,
   for (size_t i = 0; i < arr->sz; i++) {
     aom_metadata_t *current_metadata = arr->metadata_array[i];
     if (current_metadata && current_metadata->payload) {
+      const uint32_t metadata_insert_location =
+          (current_metadata->insert_flag) & 0x0f;
       if ((cm->current_frame.frame_type == KEY_FRAME &&
-           current_metadata->insert_flag == AOM_MIF_KEY_FRAME) ||
+           metadata_insert_location == AOM_MIF_KEY_FRAME) ||
           (cm->current_frame.frame_type != KEY_FRAME &&
-           current_metadata->insert_flag == AOM_MIF_NON_KEY_FRAME) ||
-          current_metadata->insert_flag == AOM_MIF_ANY_FRAME) {
+           metadata_insert_location == AOM_MIF_NON_KEY_FRAME) ||
+          metadata_insert_location == AOM_MIF_ANY_FRAME) {
         // OBU header is either one or two bytes.
         if (dst_size < 2) {
           aom_internal_error(cm->error, AOM_CODEC_ERROR,
@@ -4238,7 +4241,7 @@ static size_t av1_write_metadata_array(AV1_COMP *const cpi, uint8_t *dst,
         obu_header_size = av1_write_obu_header(
             &cpi->ppi->level_params, &cpi->frame_header_count, OBU_METADATA,
             cm->seq_params->has_nonzero_operating_point_idc,
-            /*is_layer_specific_obu=*/false, 0, dst);
+            /*current_metadata->insert_flag & AOM_MIF_LAYER_SPECIFIC*/false, 0, dst);
         assert(obu_header_size <= 2);
         obu_payload_size =
             av1_write_metadata_obu(current_metadata, dst + obu_header_size,

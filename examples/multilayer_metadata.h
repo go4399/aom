@@ -107,7 +107,15 @@ enum MultilayerViewType {
   VIEW_CENTER = 1,
   VIEW_LEFT = 2,
   VIEW_RIGHT = 3,
-  // 4 to 7 are reserved.
+    // 4 to 7 are reserved.
+};
+
+struct FrameLocalMetadata {
+  long frame_idx;
+  // Relevant for MULTILAYER_LAYER_TYPE_ALPHA with scope != SCOPE_GLOBAL.
+  AlphaInformation alpha;
+  // Relevant for MULTILAYER_LAYER_TYPE_DEPTH with scope != SCOPE_GLOBAL.
+  DepthInformation depth;
 };
 
 struct LayerMetadata {
@@ -121,9 +129,12 @@ struct LayerMetadata {
   std::pair<ColorProperties, bool> layer_color_description;
 
   // Relevant for MULTILAYER_LAYER_TYPE_ALPHA with scope >= SCOPE_GLOBAL.
-  AlphaInformation global_alpha_info;
+  AlphaInformation alpha;
   // Relevant for MULTILAYER_LAYER_TYPE_DEPTH with scope >= SCOPE_GLOBAL.
-  DepthInformation global_depth_info;
+  DepthInformation depth;
+
+  // Relevant when scope != SCOPE_GLOBAL.
+  std::vector<FrameLocalMetadata> local_metadata;
 };
 
 struct MultilayerMetadata {

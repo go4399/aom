@@ -402,6 +402,33 @@ TEST(MetadataTest, AddMetadataToImage) {
             -1);
 }
 
+TEST(MetadataTest, AddLayerSpecificMetadataToImage) {
+  aom_image_t image;
+  image.metadata = nullptr;
+
+  ASSERT_EQ(aom_img_add_metadata(
+                &image, OBU_METADATA_TYPE_ITUT_T35, kMetadataPayloadT35,
+                kMetadataPayloadSizeT35,
+                (aom_metadata_insert_flags_t)(AOM_MIF_ANY_FRAME |
+                                              AOM_MIF_LAYER_SPECIFIC)),
+            0);
+  aom_img_metadata_array_free(image.metadata);
+}
+
+TEST(MetadataTest, AddLayerSpecificMetadataToImageNotAllowed) {
+  aom_image_t image;
+  image.metadata = nullptr;
+
+  // OBU_METADATA_TYPE_HDR_CLL cannot be layer specific.
+  ASSERT_EQ(aom_img_add_metadata(
+                &image, OBU_METADATA_TYPE_HDR_CLL, kMetadataPayloadT35,
+                kMetadataPayloadSizeT35,
+                (aom_metadata_insert_flags_t)(AOM_MIF_ANY_FRAME |
+                                              AOM_MIF_LAYER_SPECIFIC)),
+            -1);
+  aom_img_metadata_array_free(image.metadata);
+}
+
 TEST(MetadataTest, RemoveMetadataFromImage) {
   aom_image_t image;
   image.metadata = nullptr;
