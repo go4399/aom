@@ -21,28 +21,28 @@ namespace {
 
 TEST(MultilayerMetadataTest, ParseAlpha) {
   const std::string metadata = R"(
-
-use_case: 1 # global alpha
-layers:
-  - layer_type: 5 # alpha
-    luma_plane_only_flag: 1
-    layer_metadata_scope: 2 # global
-    alpha:
-      alpha_use_idc: 1 # premultiplied
-      alpha_bit_depth: 8
-      alpha_transparent_value: 0
-      alpha_opaque_value: 4
-
-  - layer_type: 1 # texture
-    luma_plane_only_flag: 0
-    layer_metadata_scope: 2 # global
-    layer_color_description:
-      color_range: 1
-      color_primaries: 1
-      transfer_characteristics: 13
-      matrix_coefficients: 6
-
-    )";
+ 
+ use_case: 1 # global alpha
+ layers:
+   - layer_type: 5 # alpha
+     luma_plane_only_flag: 1
+     layer_metadata_scope: 2 # global
+     alpha:
+       alpha_use_idc: 1 # premultiplied
+       alpha_bit_depth: 8
+       alpha_transparent_value: 0
+       alpha_opaque_value: 4
+ 
+   - layer_type: 1 # texture
+     luma_plane_only_flag: 0
+     layer_metadata_scope: 2 # global
+     layer_color_description:
+       color_range: 1
+       color_primaries: 1
+       transfer_characteristics: 13
+       matrix_coefficients: 6
+ 
+     )";
   libaom_test::TempOutFile tmp_file(/*text_mode=*/true);
   fprintf(tmp_file.file(), "%s", metadata.c_str());
   fflush(tmp_file.file());
@@ -134,21 +134,21 @@ layers:
 
 TEST(MultilayerMetadataTest, ParseInvalid) {
   const std::string metadata = R"(
-
-use_case: 1 # global alpha
-layers:
-  - layer_type: 5 # alpha
-    luma_plane_only_flag: 1
-    layer_metadata_scope: 2 # global
-
-  - layer_type: 1 # texture
-    luma_plane_only_flag: 0
-    layer_metadata_scope: 2 # global
-
-  - layer_type: 6 # depth => bad layer type
-    luma_plane_only_flag: 1
-    layer_metadata_scope: 2 # global
-    )";
+ 
+ use_case: 1 # global alpha
+ layers:
+   - layer_type: 5 # alpha
+     luma_plane_only_flag: 1
+     layer_metadata_scope: 2 # global
+ 
+   - layer_type: 1 # texture
+     luma_plane_only_flag: 0
+     layer_metadata_scope: 2 # global
+ 
+   - layer_type: 6 # depth => bad layer type
+     luma_plane_only_flag: 1
+     layer_metadata_scope: 2 # global
+     )";
   libaom_test::TempOutFile tmp_file(/*text_mode=*/true);
   fprintf(tmp_file.file(), "%s", metadata.c_str());
   fflush(tmp_file.file());
@@ -161,17 +161,17 @@ layers:
 
 TEST(MultilayerMetadataTest, ParseBadIndent) {
   const std::string metadata = R"(
-
-use_case: 1 # global alpha
-layers:
-  - layer_type: 5 # alpha
-    luma_plane_only_flag: 1
-      layer_metadata_scope: 2 # global
-
-  - layer_type: 1 # texture
-    luma_plane_only_flag: 0
-    layer_metadata_scope: 2 # global
-    )";
+ 
+ use_case: 1 # global alpha
+ layers:
+   - layer_type: 5 # alpha
+     luma_plane_only_flag: 1
+       layer_metadata_scope: 2 # global
+ 
+   - layer_type: 1 # texture
+     luma_plane_only_flag: 0
+     layer_metadata_scope: 2 # global
+     )";
   libaom_test::TempOutFile tmp_file(/*text_mode=*/true);
   fprintf(tmp_file.file(), "%s", metadata.c_str());
   fflush(tmp_file.file());
@@ -184,18 +184,18 @@ layers:
 
 TEST(MultilayerMetadataTest, ParseUnknownField) {
   const std::string metadata = R"(
-
-use_case: 1 # global alpha
-layers:
-  - layer_type: 5 # alpha
-    luma_plane_only_flag: 1
-    layer_metadata_scope: 2 # global
-    foobar: 42
-
-  - layer_type: 1 # texture
-    luma_plane_only_flag: 0
-    layer_metadata_scope: 2 # global
-    )";
+ 
+ use_case: 1 # global alpha
+ layers:
+   - layer_type: 5 # alpha
+     luma_plane_only_flag: 1
+     layer_metadata_scope: 2 # global
+     foobar: 42
+ 
+   - layer_type: 1 # texture
+     luma_plane_only_flag: 0
+     layer_metadata_scope: 2 # global
+     )";
   libaom_test::TempOutFile tmp_file(/*text_mode=*/true);
   fprintf(tmp_file.file(), "%s", metadata.c_str());
   fflush(tmp_file.file());
