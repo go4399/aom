@@ -1539,6 +1539,39 @@ static void add_multilayer_metadata(
                            AOM_MIF_KEY_FRAME)) {
     die("Error: Failed to add metadata\n");
   }
+<<<<<<< Updated upstream
+=======
+
+  if (multilayer.layers.size() > spatial_id) {
+    const libaom_examples::LayerMetadata &layer = multilayer.layers[spatial_id];
+    for (const libaom_examples::FrameLocalMetadata &local_metadata :
+         layer.local_metadata) {
+      if (local_metadata.frame_idx == frame_idx) {
+        if (layer.layer_type == libaom_examples::MULTILAYER_LAYER_TYPE_ALPHA) {
+          buffer = { data.data(), 0 };
+          write_alpha_information(&buffer, local_metadata.alpha);
+          if (aom_img_add_metadata(
+                  frame, 34 /*METADATA_TYPE_ALPHA_INFORMATION*/,
+                  buffer.bit_buffer, buffer.bit_offset / 8,
+                  AOM_MIF_ANY_FRAME_LAYER_SPECIFIC)) {
+            die("Error: Failed to add metadata\n");
+          }
+        } else if (layer.layer_type ==
+                   libaom_examples::MULTILAYER_LAYER_TYPE_DEPTH) {
+          buffer = { data.data(), 0 };
+          write_depth_information(&buffer, local_metadata.depth);
+          if (aom_img_add_metadata(
+                  frame, 35 /*METADATA_TYPE_DEPTH_INFORMATION*/,
+                  buffer.bit_buffer, buffer.bit_offset / 8,
+                  AOM_MIF_ANY_FRAME_LAYER_SPECIFIC)) {
+            die("Error: Failed to add metadata\n");
+          }
+        }
+        break;
+      }
+    }
+  }
+>>>>>>> Stashed changes
 }
 
 #if CONFIG_AV1_DECODER

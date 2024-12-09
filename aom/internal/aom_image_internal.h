@@ -29,6 +29,10 @@ struct aom_metadata_array {
   aom_metadata_t **metadata_array; /* Array of metadata structs */
 };
 
+ /*! \brief Bit in aom_metadata_insert_flags marking metadata as layer-specific.
+  */
+#define AOM_MIF_LAYER_SPECIFIC 0x10
+
 /*!\brief Alloc memory for aom_metadata_array struct.
  *
  * Allocate memory for aom_metadata_array struct.

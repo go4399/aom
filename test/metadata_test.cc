@@ -400,6 +400,34 @@ TEST(MetadataTest, AddMetadataToImage) {
                                  kMetadataPayloadT35, kMetadataPayloadSizeT35,
                                  AOM_MIF_ANY_FRAME),
             -1);
+  // XXX test reading the metadata
+}
+
+TEST(MetadataTest, AddLayerSpecificMetadataToImage) {
+  aom_image_t image;
+  image.metadata = nullptr;
+
+  ASSERT_EQ(
+      aom_img_add_metadata(
+          &image, OBU_METADATA_TYPE_ITUT_T35, kMetadataPayloadT35,
+          kMetadataPayloadSizeT35,
+          (aom_metadata_insert_flags_t)(AOM_MIF_ANY_FRAME_LAYER_SPECIFIC)),
+      0);
+  aom_img_metadata_array_free(image.metadata);
+}
+
+TEST(MetadataTest, AddLayerSpecificMetadataToImageNotAllowed) {
+  aom_image_t image;
+  image.metadata = nullptr;
+
+  // OBU_METADATA_TYPE_HDR_CLL cannot be layer specific.
+  ASSERT_EQ(
+      aom_img_add_metadata(
+          &image, OBU_METADATA_TYPE_HDR_CLL, kMetadataPayloadT35,
+          kMetadataPayloadSizeT35,
+          (aom_metadata_insert_flags_t)(AOM_MIF_ANY_FRAME_LAYER_SPECIFIC)),
+      -1);
+  aom_img_metadata_array_free(image.metadata);
 }
 
 TEST(MetadataTest, RemoveMetadataFromImage) {
@@ -454,9 +482,13 @@ TEST(MetadataTest, GetMetadataFromImage) {
                                  kMetadataPayloadT35, kMetadataPayloadSizeT35,
                                  AOM_MIF_ANY_FRAME),
             0);
+  ASSERT_EQ(aom_img_add_metadata(&image, OBU_METADATA_TYPE_ITUT_T35,
+                                 kMetadataPayloadT35, kMetadataPayloadSizeT35,
+                                 AOM_MIF_ANY_FRAME_LAYER_SPECIFIC),
+            0);
 
   EXPECT_EQ(aom_img_get_metadata(nullptr, 0), nullptr);
-  EXPECT_EQ(aom_img_get_metadata(&image, 1u), nullptr);
+  EXPECT_EQ(aom_img_get_metadata(&image, 2u), nullptr);
   EXPECT_EQ(aom_img_get_metadata(&image, 10u), nullptr);
 
   const aom_metadata_t *metadata = aom_img_get_metadata(&image, 0);
@@ -465,6 +497,15 @@ TEST(MetadataTest, GetMetadataFromImage) {
   EXPECT_EQ(
       memcmp(kMetadataPayloadT35, metadata->payload, kMetadataPayloadSizeT35),
       0);
+  EXPECT_EQ(metadata->insert_flag, AOM_MIF_ANY_FRAME);
+
+  metadata = aom_img_get_metadata(&image, 1);
+  ASSERT_NE(metadata, nullptr);
+  ASSERT_EQ(metadata->sz, kMetadataPayloadSizeT35);
+  EXPECT_EQ(
+      memcmp(kMetadataPayloadT35, metadata->payload, kMetadataPayloadSizeT35),
+      0);
+  EXPECT_EQ(metadata->insert_flag, AOM_MIF_ANY_FRAME_LAYER_SPECIFIC);
 
   aom_img_metadata_array_free(image.metadata);
 }
