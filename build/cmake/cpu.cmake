@@ -77,6 +77,7 @@ svfloat32_t func(svfloat32_t a) {
     endif()
   endif()
 
+  set(AOM_USE_8BIT_WARPED_FILTER_TABLE 0)
   foreach(flavor ${ARM64_FLAVORS})
     if(ENABLE_${flavor})
       set(HAVE_${flavor} 1)
@@ -120,6 +121,7 @@ elseif("${AOM_TARGET_CPU}" MATCHES "^x86")
     set(RTCD_ARCH_X86_64 "yes")
   endif()
 
+  set(AOM_USE_8BIT_WARPED_FILTER_TABLE 0)
   set(X86_FLAVORS "MMX;SSE;SSE2;SSE3;SSSE3;SSE4_1;SSE4_2;AVX;AVX2")
   foreach(flavor ${X86_FLAVORS})
     if(ENABLE_${flavor} AND NOT disable_remaining_flavors)

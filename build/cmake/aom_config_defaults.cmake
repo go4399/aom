@@ -79,6 +79,8 @@ set_aom_config_var(CONFIG_LIBYUV 1 "Enables libyuv scaling/conversion support.")
 # code in third_party/SVT-AV1/.
 set_aom_config_var(CONFIG_SVT_AV1 1 "Enables SVT-AV1 AVX2 convolution support.")
 
+set_aom_config_var(AOM_USE_8BIT_WARPED_FILTER_TABLE 1
+                   "Use narrow type for warped filter table")
 set_aom_config_var(CONFIG_AV1_HIGHBITDEPTH 1
                    "Build with high bitdepth support.")
 set_aom_config_var(CONFIG_AV1_TEMPORAL_DENOISING 0
