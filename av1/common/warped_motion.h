@@ -36,6 +36,9 @@
 extern const int16_t av1_warped_filter[WARPEDPIXEL_PREC_SHIFTS * 3 + 1][8];
 
 DECLARE_ALIGNED(8, extern const int8_t,
+                av1_warped_filter_8bit[WARPEDPIXEL_PREC_SHIFTS * 3 + 1][8]);
+
+DECLARE_ALIGNED(8, extern const int8_t,
                 av1_filter_8bit[WARPEDPIXEL_PREC_SHIFTS * 3 + 1][8]);
 
 static const uint8_t warp_pad_left[14][16] = {
