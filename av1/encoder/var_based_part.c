@@ -1615,7 +1615,7 @@ int av1_choose_var_based_partitioning(AV1_COMP *cpi, const TileInfo *const tile,
   // Force skip encoding for all superblocks on slide change for
   // non_reference_frames.
   if (cpi->sf.rt_sf.skip_encoding_non_reference_slide_change &&
-      cpi->rc.high_source_sad && cpi->ppi->rtc_ref.non_reference_frame) {
+      cpi->ppi->rtc_ref.non_reference_frame) {
     MB_MODE_INFO **mi = cm->mi_params.mi_grid_base +
                         get_mi_grid_idx(&cm->mi_params, mi_row, mi_col);
     av1_set_fixed_partitioning(cpi, tile, mi, mi_row, mi_col, bsize);
