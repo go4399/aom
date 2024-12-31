@@ -545,8 +545,10 @@ static inline void encode_nonrd_sb(AV1_COMP *cpi, ThreadData *td,
     // set a fixed-size partition
     av1_set_offsets(cpi, tile_info, x, mi_row, mi_col, sb_size);
     BLOCK_SIZE bsize_select = sf->part_sf.fixed_partition_size;
-    if (sf->rt_sf.use_fast_fixed_part &&
-        x->content_state_sb.source_sad_nonrd < kLowSad) {
+    if ((sf->rt_sf.use_fast_fixed_part &&
+         x->content_state_sb.source_sad_nonrd < kLowSad) ||
+        (cpi->sf.rt_sf.skip_encoding_non_reference_slide_change &&
+         cpi->rc.high_source_sad && cpi->ppi->rtc_ref.non_reference_frame)) {
       bsize_select = cm->seq_params->sb_size;
     }
     const BLOCK_SIZE bsize = seg_skip ? sb_size : bsize_select;
