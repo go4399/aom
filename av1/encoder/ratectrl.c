@@ -3357,8 +3357,15 @@ static void rc_scene_detection_onepass_rt(AV1_COMP *cpi,
             fac = 3;
             shift = 2;
           }
-          const int pos_col = (fac * unscaled_src->y_width >> shift) - 64;
-          const int pos_row = (fac * unscaled_src->y_height >> shift) - 64;
+          int pos_col = (fac * unscaled_src->y_width >> shift) - 64;
+          int pos_row = (fac * unscaled_src->y_height >> shift) - 64;
+          if (pts == 1) {
+            pos_col = AOMMAX(512, pos_col);
+            pos_row = AOMMAX(512, pos_row);
+          } else if (pts == 2) {
+            pos_col = AOMMIN(unscaled_src->y_width - 512, pos_col);
+            pos_row = AOMMIN(unscaled_src->y_height - 512, pos_row);
+          }
           if (pos_col >= 0 && pos_col < unscaled_src->y_width - 64 &&
               pos_row >= 0 && pos_row < unscaled_src->y_height - 64) {
             src_y = unscaled_src->y_buffer + pos_row * src_ystride + pos_col;
