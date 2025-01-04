@@ -3345,7 +3345,13 @@ static void rc_scene_detection_onepass_rt(AV1_COMP *cpi,
       // to determine if motion is scroll. Only test 3 points (pts) for now.
       // TODO(marpan): Only allow for 8 bit-depth for now.
       if (cm->seq_params->bit_depth == 8) {
-        for (int pts = 0; pts < 3; pts++) {
+        int max_sw = AOMMIN(
+            512, ((AOMMIN(unscaled_src->y_width, unscaled_src->y_height) >> 1) -
+                  64));
+        int num_pts =
+            unscaled_src->y_width * unscaled_src->y_height >= 1920 * 1080 ? 3
+                                                                          : 1;
+        for (int pts = 0; pts < num_pts; pts++) {
           // fac and shift are used to move the center block for the other
           // two points (pts).
           int fac = 1;
@@ -3357,8 +3363,15 @@ static void rc_scene_detection_onepass_rt(AV1_COMP *cpi,
             fac = 3;
             shift = 2;
           }
-          const int pos_col = (fac * unscaled_src->y_width >> shift) - 64;
-          const int pos_row = (fac * unscaled_src->y_height >> shift) - 64;
+          int pos_col = (fac * unscaled_src->y_width >> shift) - 64;
+          int pos_row = (fac * unscaled_src->y_height >> shift) - 64;
+          if (pts == 1) {
+            pos_col = AOMMAX(max_sw, pos_col);
+            pos_row = AOMMAX(max_sw, pos_row);
+          } else if (pts == 2) {
+            pos_col = AOMMIN(unscaled_src->y_width - max_sw, pos_col);
+            pos_row = AOMMIN(unscaled_src->y_height - max_sw, pos_row);
+          }
           if (pos_col >= 0 && pos_col < unscaled_src->y_width - 64 &&
               pos_row >= 0 && pos_row < unscaled_src->y_height - 64) {
             src_y = unscaled_src->y_buffer + pos_row * src_ystride + pos_col;
