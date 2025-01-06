@@ -2100,7 +2100,7 @@ unsigned int av1_int_pro_motion_estimation(const AV1_COMP *cpi, MACROBLOCK *x,
   const bool screen_scroll_superblock =
       is_screen && bsize == cm->seq_params->sb_size;
   // Keep border a multiple of 16.
-  const int border = (cpi->oxcf.border_in_pixels >> 4) << 4;
+  const int border = ((cpi->oxcf.border_in_pixels >> 4) << 4) + 16;
   int search_size_width = me_search_size_col;
   int search_size_height = me_search_size_row;
   // Adjust based on boundary.
