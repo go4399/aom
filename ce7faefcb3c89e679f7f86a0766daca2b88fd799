@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c3180760_555dd3b5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-06T20:43:43Z",
+      "side": 1,
+      "message": "Gerrit works a little differently than github/gitlab. Rather than updating a change with a new local commit, you instead use `git commit --amend` and then push the update. Gerrit will track the history based on the \u0027Change-Id\u0027 field in the commit message.\n\nPlease merge this change and https://aomedia-review.googlesource.com/c/aom/+/196082 into one commit and abandon the other.",
+      "revId": "ce7faefcb3c89e679f7f86a0766daca2b88fd799",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
