@@ -16,6 +16,24 @@
       "message": "Like George mentioned, this will increase the library size with no immediate impact. Our main architectures of concern are Arm and x86 which use the existing table or modified versions in their implementations. If this isn\u0027t going to be used in any of those cases then it\u0027s probably not worth bringing in unless there\u0027s some benefit to another use case (Wasm?).\n\nGeorge, did I understand your point about the Arm optimizations correctly?",
       "revId": "25e5a9777f6cc057b672ff9ff317473f5f897362",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7631c356_8b96c567",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31817
+      },
+      "writtenOn": "2025-01-07T09:41:00Z",
+      "side": 1,
+      "message": "I ran a quick benchmark on this with a locally modified Arm implementation and didn\u0027t see any noticeable improvement, so I think for the Arm code we\u0027ll probably stick with the existing 16-bit table for now.",
+      "parentUuid": "ea1b0262_49dca2cd",
+      "revId": "25e5a9777f6cc057b672ff9ff317473f5f897362",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
