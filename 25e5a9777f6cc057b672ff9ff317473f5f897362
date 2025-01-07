@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea1b0262_49dca2cd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-07T03:09:28Z",
+      "side": 1,
+      "message": "Like George mentioned, this will increase the library size with no immediate impact. Our main architectures of concern are Arm and x86 which use the existing table or modified versions in their implementations. If this isn\u0027t going to be used in any of those cases then it\u0027s probably not worth bringing in unless there\u0027s some benefit to another use case (Wasm?).\n\nGeorge, did I understand your point about the Arm optimizations correctly?",
+      "revId": "25e5a9777f6cc057b672ff9ff317473f5f897362",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
