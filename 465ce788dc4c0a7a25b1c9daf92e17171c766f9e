@@ -34,6 +34,24 @@
       "parentUuid": "ced4eb1b_f95fefe5",
       "revId": "465ce788dc4c0a7a25b1c9daf92e17171c766f9e",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff688a00_15401bda",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3776742
+      },
+      "writtenOn": "2025-01-07T01:40:01Z",
+      "side": 1,
+      "message": "Ok thanks. Can you point me to them, and we can try to fix those up as well.\n\nBTW I signed the contributer agreement using each of my email addresses, but it looks like the system hasn\u0027t caught up with that yet.\n\nedit: I found these below. Is this the right place? We would have to adjust the pointer math.\n\ndiff --git a/av1/common/arm/highbd_warp_plane_neon.h b/av1/common/arm/highbd_warp_plane_neon.h\nindex 766abffff0..55a5dd13ba 100644\n--- a/av1/common/arm/highbd_warp_plane_neon.h\n+++ b/av1/common/arm/highbd_warp_plane_neon.h\n@@ -50,11 +50,11 @@ static AOM_FORCE_INLINE int32x4_t vertical_filter_4x1_f4(const int16x8_t *tmp,\n static AOM_FORCE_INLINE int32x4x2_t vertical_filter_8x1_f8(const int16x8_t *tmp,\n                                                            int sy, int gamma);\n \n-static AOM_FORCE_INLINE int16x8_t load_filters_1(int ofs) {\n+static AOM_FORCE_INLINE int8x8_t load_filters_1(int ofs) {\n   const int ofs0 \u003d ROUND_POWER_OF_TWO(ofs, WARPEDDIFF_PREC_BITS);\n \n-  const int16_t *base \u003d\n-      (int16_t *)av1_warped_filter + WARPEDPIXEL_PREC_SHIFTS * 8;\n+  const int8_t *base \u003d\n+      (int8_t *)av1_warped_filter + WARPEDPIXEL_PREC_SHIFTS * 8;\n   return vld1q_s16(base + ofs0 * 8);\n }\n \n@@ -65,8 +65,8 @@ static AOM_FORCE_INLINE void load_filters_4(int16x8_t out[], int ofs,\n   const int ofs2 \u003d ROUND_POWER_OF_TWO(ofs + stride * 2, WARPEDDIFF_PREC_BITS);\n   const int ofs3 \u003d ROUND_POWER_OF_TWO(ofs + stride * 3, WARPEDDIFF_PREC_BITS);\n \n-  const int16_t *base \u003d\n-      (int16_t *)av1_warped_filter + WARPEDPIXEL_PREC_SHIFTS * 8;\n+  const int8_t *base \u003d\n+      (int8_t *)av1_warped_filter + WARPEDPIXEL_PREC_SHIFTS * 8;\n   out[0] \u003d vld1q_s16(base + ofs0 * 8);\n   out[1] \u003d vld1q_s16(base + ofs1 * 8);\n   out[2] \u003d vld1q_s16(base + ofs2 * 8);\n@@ -84,8 +84,8 @@ static AOM_FORCE_INLINE void load_filters_8(int16x8_t out[], int ofs,\n   const int ofs6 \u003d ROUND_POWER_OF_TWO(ofs + stride * 6, WARPEDDIFF_PREC_BITS);\n   const int ofs7 \u003d ROUND_POWER_OF_TWO(ofs + stride * 7, WARPEDDIFF_PREC_BITS);\n \n-  const int16_t *base \u003d\n-      (int16_t *)av1_warped_filter + WARPEDPIXEL_PREC_SHIFTS * 8;\n+  const int8_t *base \u003d\n+      (int8_t *)av1_warped_filter + WARPEDPIXEL_PREC_SHIFTS * 8;\n   out[0] \u003d vld1q_s16(base + ofs0 * 8);\n   out[1] \u003d vld1q_s16(base + ofs1 * 8);\n   out[2] \u003d vld1q_s16(base + ofs2 * 8);\ndiff --git a/av1/common/x86/highbd_warp_affine_avx2.c b/av1/common/x86/highbd_warp_affine_avx2.c\nindex 3708ab827f..01225349d2 100644\n--- a/av1/common/x86/highbd_warp_affine_avx2.c\n+++ b/av1/common/x86/highbd_warp_affine_avx2.c\n@@ -124,7 +124,7 @@ void av1_highbd_warp_affine_avx2(const int32_t *mat, const uint16_t *ref,\n           for (int l \u003d -4; l \u003c 4; ++l) {\n             int ix \u003d ix4 + l - 3;\n             const int offs \u003d sx \u003e\u003e WARPEDDIFF_PREC_BITS;\n-            const int16_t *coeffs \u003d av1_warped_filter[offs];\n+            const int8_t *coeffs \u003d av1_warped_filter[offs];\n \n             int32_t sum \u003d 1 \u003c\u003c offset_bits_horiz;\n             for (int m \u003d 0; m \u003c 8; ++m) {",
+      "parentUuid": "bc137f5e_c4aed56b",
+      "revId": "465ce788dc4c0a7a25b1c9daf92e17171c766f9e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
