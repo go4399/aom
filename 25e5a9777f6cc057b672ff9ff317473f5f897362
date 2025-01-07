@@ -34,6 +34,24 @@
       "parentUuid": "ea1b0262_49dca2cd",
       "revId": "25e5a9777f6cc057b672ff9ff317473f5f897362",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "beba3bf5_edd6adb3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-07T20:01:18Z",
+      "side": 1,
+      "message": "\u003e I ran a quick benchmark on this with a locally modified Arm implementation and didn\u0027t see any noticeable improvement, so I think for the Arm code we\u0027ll probably stick with the existing 16-bit table for now.\n\nThanks for checking George. Mahesh, what\u0027s the motivation here? To improve autovectorization?",
+      "parentUuid": "7631c356_8b96c567",
+      "revId": "25e5a9777f6cc057b672ff9ff317473f5f897362",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
