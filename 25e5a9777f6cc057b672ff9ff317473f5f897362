@@ -52,6 +52,24 @@
       "parentUuid": "7631c356_8b96c567",
       "revId": "25e5a9777f6cc057b672ff9ff317473f5f897362",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "485bcfe0_c3a3d3b6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3776742
+      },
+      "writtenOn": "2025-01-09T04:47:40Z",
+      "side": 1,
+      "message": "George is right, there won\u0027t be an immediate impact on the ARM path. Some code changes may be required to take advantage of the reduced type. For example, in the ARM case we can make use of the SDOT instruction (scalar dot product) which is only possible when the types are matched. The original motivation is based on improving performance of the generic path when not using intrinsics; when the types are matched the compiler is able to insert SDOT when before it could not. The change provides a 6% uplift for the generic code. Some of that perf uplift comes via memory bandwidth reduction from the narrower type.\n\nThen the question is, why would someone not use intrinsics? The generic path would only be exercised by POWER, RISC-V, WASM... Or crazy people like me who want to test the generic path on modern systems! Right now, av1enc is proposed as a candidate benchmark for the next version of SPEC CPU, the benchmark suite that we all know and love. One of the reasons for SPEC\u0027s popularity and longevity is that the codes are all generic and not multi-dispatched to any ISAs, which means the same C code is built and run all systems past and future (the tradeoff being that they may not be the fastest versions). So, while analyzing the av1 code in the SPEC CPU harness, we saw this opportunity which the x86 intrinsic path already used and figured it would be safe and easy for the generic path as well. The changesets we have offered are a result of more eyeballs looking at your code for performance.\n\nThere is no promise nor threat that av1enc will be selected to be in the final SPEC CPU suite. But as part of the process, we do try to offer the optimizations we find back to the communities. In this case it appears that there is a healthy tension between the generic path that few people use, and the intrinsics paths that are in production use. The \"platform values\" between a SPEC CPU benchmark are different than those for production software, and that is ok.  Anyway, I hope that helps explain why I\u0027m visiting your repository. :-) Thanks!",
+      "parentUuid": "beba3bf5_edd6adb3",
+      "revId": "25e5a9777f6cc057b672ff9ff317473f5f897362",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
