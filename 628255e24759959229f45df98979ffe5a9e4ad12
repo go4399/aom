@@ -16,6 +16,24 @@
       "message": "Note there is no support for RISC-V in the presubmit pipeline currently. We may add that in the future as well as nightly builds to run the tests.",
       "revId": "628255e24759959229f45df98979ffe5a9e4ad12",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ae1f579_494dd040",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-14T19:32:11Z",
+      "side": 1,
+      "message": "\u003e Note there is no support for RISC-V in the presubmit pipeline currently. We may add that in the future as well as nightly builds to run the tests.\n\nhttps://aomedia.issues.chromium.org/389961705",
+      "parentUuid": "5d2649bc_100a1d8b",
+      "revId": "628255e24759959229f45df98979ffe5a9e4ad12",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ],
   "submitRequirementResults": [
