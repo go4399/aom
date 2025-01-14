@@ -60,7 +60,9 @@ README.md                {#LREADME}
    present, yasm will be used by default. Pass -DENABLE_NASM=ON to cmake to
    select nasm.) If you download yasm with the intention to work with Visual
    Studio, please download win32.exe or win64.exe and rename it into yasm.exe.
-   DO NOT download or use vsyasm.exe.
+   DO NOT download or use vsyasm.exe. The MSYS2 version of the binaries can also
+   be used and may avoid issues with VS2022 and GitHub actions when using the
+   yasm.torball.net 1.3.0 binaries.
 6. Building the documentation requires
    [doxygen version 1.8.10 or newer](http://doxygen.org).
 7. Emscripten builds require the portable
