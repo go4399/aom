@@ -1,0 +1,146 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2cc62b7a_288168b6",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-15T18:51:52Z",
+      "side": 1,
+      "message": "2025",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "76981b280ae6c35f8555c5ca296d57ac4bd82733",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14e08a4c_aa595fce",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-15T18:51:52Z",
+      "side": 1,
+      "message": "sort these.",
+      "revId": "76981b280ae6c35f8555c5ca296d57ac4bd82733",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed6bef70_a89ea021",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-15T18:51:52Z",
+      "side": 1,
+      "message": "merge this with the `config/` group and sort them",
+      "revId": "76981b280ae6c35f8555c5ca296d57ac4bd82733",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "75fb612d_912f4ef2",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-15T18:51:52Z",
+      "side": 1,
+      "message": "make this `static const`",
+      "revId": "76981b280ae6c35f8555c5ca296d57ac4bd82733",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc1232ce_ae6f23ba",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-15T18:51:52Z",
+      "side": 1,
+      "message": "Make this `static const`.",
+      "revId": "76981b280ae6c35f8555c5ca296d57ac4bd82733",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f19b9f82_1bd455b0",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-15T18:51:52Z",
+      "side": 1,
+      "message": "remove this extra `;`",
+      "revId": "76981b280ae6c35f8555c5ca296d57ac4bd82733",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c72dfb02_c62b851c",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 738,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-15T18:51:52Z",
+      "side": 1,
+      "message": "If possible please wrap the macros in `do {} while (0)` leaving off the final `;`. The others can do the same regarding the semicolon to help clang-format and make them look a little bit more like code.",
+      "revId": "76981b280ae6c35f8555c5ca296d57ac4bd82733",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7508e5e9_85c3d259",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1014,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-15T18:51:52Z",
+      "side": 1,
+      "message": "This can be removed.",
+      "revId": "76981b280ae6c35f8555c5ca296d57ac4bd82733",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
