@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27c34c5b_e3b0949f",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-16T19:10:43Z",
+      "side": 1,
+      "message": "Remove the trailing `;` in these macros and add it in the instantiation of the macro. This will satisfy clang-format and allow you to group the lines together.",
+      "range": {
+        "startLine": 693,
+        "startChar": 47,
+        "endLine": 693,
+        "endChar": 48
+      },
+      "revId": "c63f86ff8cf3ba76de328a8a56bde13cf0678add",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5fd685e2_55ebc028",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 772,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-16T19:10:43Z",
+      "side": 1,
+      "message": "I think this can be `do {} while`",
+      "revId": "c63f86ff8cf3ba76de328a8a56bde13cf0678add",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5a6007e6_09001727",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 779,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-16T19:10:43Z",
+      "side": 1,
+      "message": "This formatting will be fixed with the removal of the `;`s in the macros.",
+      "range": {
+        "startLine": 779,
+        "startChar": 2,
+        "endLine": 779,
+        "endChar": 27
+      },
+      "revId": "c63f86ff8cf3ba76de328a8a56bde13cf0678add",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "877a0cec_cdce0547",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 785,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-16T19:10:43Z",
+      "side": 1,
+      "message": "Please inspect these other macros to see if the variables can be scoped in a `do {} while` if they\u0027re not used afterward.",
+      "revId": "c63f86ff8cf3ba76de328a8a56bde13cf0678add",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57e2c989_ca454312",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 790,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-16T19:10:43Z",
+      "side": 1,
+      "message": "I think this can be `do {} while`",
+      "revId": "c63f86ff8cf3ba76de328a8a56bde13cf0678add",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
