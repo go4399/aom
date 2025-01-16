@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a35f4e3_6584d1d4",
+        "filename": "av1/common/warped_motion.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-01-16T17:34:26Z",
+      "side": 1,
+      "message": "I think we need to add `AOM_ARCH_ARM` here.\n\nFor example, av1/common/arm/warp_plane_neon.c is also used for 32-bit Arm, and it casts `av1_warped_filter` to `int16_t *`.",
+      "revId": "78623b4175476ed97c3c56e9be16ac4af522d9e9",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6dae6ac4_a764aa2c",
+        "filename": "av1/common/warped_motion.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-01-16T17:34:26Z",
+      "side": 1,
+      "message": "Could you confirm that `AOM_ARCH_PPC` should use this definition?\n\nI think this is correct because I don\u0027t see any PPC-specific code that uses `av1_warped_filter`.",
+      "revId": "78623b4175476ed97c3c56e9be16ac4af522d9e9",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
