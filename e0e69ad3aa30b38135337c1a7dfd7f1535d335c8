@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cb6470e2_77a59bdf",
+        "filename": "av1/common/arm/highbd_warp_plane_neon.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-01-16T20:08:23Z",
+      "side": 1,
+      "message": "The original code casts `av1_warped_filter` to `int16_t *` and then adds `WARPEDPIXEL_PREC_SHIFTS * 8`. Since `av1_warped_filter` is a two-dimensional array:\n\n```\nextern const int16_t av1_warped_filter[WARPEDPIXEL_PREC_SHIFTS * 3 + 1][8];\n```\n\nThe `* 8` part accounts for the size of the second dimension. So the index for the first dimension is `WARPEDPIXEL_PREC_SHIFTS`, not `WARPEDPIXEL_PREC_SHIFTS * 8`.",
+      "revId": "e0e69ad3aa30b38135337c1a7dfd7f1535d335c8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
