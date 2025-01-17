@@ -72,6 +72,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc87bc6c_b629ecf0",
+        "filename": "av1/common/warped_motion.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-01-17T22:28:58Z",
+      "side": 1,
+      "message": "I did an experiment and verified that patchset 9 of this CL, when rebased to tip of the main branch, has the expected compiler errors for 32-bit Arm:\nhttps://aomedia-review.googlesource.com/c/aom/+/196601",
+      "parentUuid": "fe6291f8_d7ae69f2",
+      "revId": "78623b4175476ed97c3c56e9be16ac4af522d9e9",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6dae6ac4_a764aa2c",
