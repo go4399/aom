@@ -3,6 +3,23 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "7aca7a1f_8b2ca379",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-01-17T22:30:02Z",
+      "side": 1,
+      "message": "Nit: This should be x86_64, not x86. x86 is already mentioned in line 9.",
+      "revId": "cde8c4086be96181a0ab032f6909a915ad03de77",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "97b874de_b34f9bf2",
         "filename": "av1/common/warped_motion.h",
         "patchSetId": 11
