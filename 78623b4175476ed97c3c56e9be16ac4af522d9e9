@@ -36,6 +36,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa5d0986_4252dc84",
+        "filename": "av1/common/warped_motion.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-17T20:36:02Z",
+      "side": 1,
+      "message": "\u003e I think the `int16_t *` casts for `av1_warped_filter` in the Arm Neon code may have hide the incorrect type problem. I just checked in changes to remove those `int16_t *` casts:\n\u003e https://aomedia-review.googlesource.com/c/aom/+/196581\n\u003e https://aomedia-review.googlesource.com/c/aom/+/196582\n\u003e \n\u003e Could you please rebase this CL onto the current tip of the main branch? I expect there will be compilation errors for 32-bit Arm caused by type mismatch.\n\nI\u0027m going to rebase this through the gerrit ui. Mahesh, locally you check do something like:\n\n```\ngit checkout main\ngit pull\ngit rebase main \u003cyour-branch-for-this-change\u003e\n```\n\nOr you can fetch the patch using the command listed in the gerrit overflow menu on the upper right hand side of the ui.",
+      "parentUuid": "ef624c51_fc7ff789",
+      "revId": "78623b4175476ed97c3c56e9be16ac4af522d9e9",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6dae6ac4_a764aa2c",
@@ -49,6 +67,24 @@
       "writtenOn": "2025-01-16T17:34:26Z",
       "side": 1,
       "message": "Could you confirm that `AOM_ARCH_PPC` should use this definition?\n\nI think this is correct because I don\u0027t see any PPC-specific code that uses `av1_warped_filter`.",
+      "revId": "78623b4175476ed97c3c56e9be16ac4af522d9e9",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3970b2fb_8e63a68e",
+        "filename": "av1/common/warped_motion.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-17T20:36:02Z",
+      "side": 1,
+      "message": "\u003e Could you confirm that `AOM_ARCH_PPC` should use this definition?\n\u003e \n\u003e I think this is correct because I don\u0027t see any PPC-specific code that uses `av1_warped_filter`.\n\nThat\u0027s correct, there\u0027s only VSX code for `cfl_get_subtract_average_fn` in the rtcd files.",
+      "parentUuid": "6dae6ac4_a764aa2c",
       "revId": "78623b4175476ed97c3c56e9be16ac4af522d9e9",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
