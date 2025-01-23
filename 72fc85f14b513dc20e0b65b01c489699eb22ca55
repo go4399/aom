@@ -1,0 +1,231 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "79e460d6_6a841898",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-23T21:30:20Z",
+      "side": 1,
+      "message": "I\u0027m sorry I lost track of this change. Just some cosmetics and then this should be OK to merge.",
+      "revId": "72fc85f14b513dc20e0b65b01c489699eb22ca55",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "197e9a94_478c38bb",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-23T21:30:20Z",
+      "side": 1,
+      "message": "This is unused and can be removed.",
+      "revId": "72fc85f14b513dc20e0b65b01c489699eb22ca55",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ebc9df9f_e02a991e",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-23T21:30:20Z",
+      "side": 1,
+      "message": "Please put the value being tested on the left side of comparison: `best_dir \u003d\u003d -1`. We prefer this style for readability.",
+      "range": {
+        "startLine": 592,
+        "startChar": 6,
+        "endLine": 592,
+        "endChar": 20
+      },
+      "revId": "72fc85f14b513dc20e0b65b01c489699eb22ca55",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8f357f81_cb6f80ee",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 908,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-23T21:30:20Z",
+      "side": 1,
+      "message": "You can delete some of the whitespace now if it makes sense in this and the other functions.",
+      "revId": "72fc85f14b513dc20e0b65b01c489699eb22ca55",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6dec4f37_fd87ee3d",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 931,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-23T21:30:20Z",
+      "side": 1,
+      "message": "Remove this line.",
+      "revId": "72fc85f14b513dc20e0b65b01c489699eb22ca55",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ca6800e_c65615a7",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1009,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-23T21:30:20Z",
+      "side": 1,
+      "message": "Remove this line",
+      "revId": "72fc85f14b513dc20e0b65b01c489699eb22ca55",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d2058ee_d22da8a5",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1011,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-23T21:30:20Z",
+      "side": 1,
+      "message": "Remove this line",
+      "revId": "72fc85f14b513dc20e0b65b01c489699eb22ca55",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0ad2194_52c9bba8",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1074,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-23T21:30:20Z",
+      "side": 1,
+      "message": "Remove this line",
+      "revId": "72fc85f14b513dc20e0b65b01c489699eb22ca55",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26fdf070_9424817c",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1205,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-23T21:30:20Z",
+      "side": 1,
+      "message": "Remove this line",
+      "revId": "72fc85f14b513dc20e0b65b01c489699eb22ca55",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "22bbf7e1_8fbf1b12",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1283,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-23T21:30:20Z",
+      "side": 1,
+      "message": "Remove this line",
+      "revId": "72fc85f14b513dc20e0b65b01c489699eb22ca55",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba725c4d_24c827df",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1319,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-23T21:30:20Z",
+      "side": 1,
+      "message": "This can be removed.",
+      "revId": "72fc85f14b513dc20e0b65b01c489699eb22ca55",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a819053_19ab1a1b",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1348,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-23T21:30:20Z",
+      "side": 1,
+      "message": "Remove this line",
+      "revId": "72fc85f14b513dc20e0b65b01c489699eb22ca55",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8258769d_afb0f1b7",
+        "filename": "av1/common/riscv/cdef_block_rvv.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1388,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-23T21:30:20Z",
+      "side": 1,
+      "message": "This variable is used in this function",
+      "revId": "72fc85f14b513dc20e0b65b01c489699eb22ca55",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
