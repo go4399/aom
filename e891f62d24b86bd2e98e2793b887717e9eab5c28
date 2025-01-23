@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "20ea0a42_aabc368b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-01-23T23:43:41Z",
+      "side": 1,
+      "message": "Julio: I\u0027d like you to take a look first before I formally request code review. Thanks!",
+      "revId": "e891f62d24b86bd2e98e2793b887717e9eab5c28",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
