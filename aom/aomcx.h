@@ -1668,8 +1668,8 @@ typedef enum {
  * Changes the encoder to tune for certain types of input material.
  *
  * \note
- * AOM_TUNE_SSIMULACRA2 is restricted to all intra mode (AOM_USAGE_ALL_INTRA).
- * Setting the tuning option to AOM_TUNE_SSIMULACRA2 causes the following
+ * AOM_TUNE_PERCEPTUAL is restricted to all intra mode (AOM_USAGE_ALL_INTRA).
+ * Setting the tuning option to AOM_TUNE_PERCEPTUAL causes the following
  * options to be set (expressed as command-line options):
  *   * --enable-qm=1
  *   * --qm-min=2
@@ -1690,14 +1690,14 @@ typedef enum {
   AOM_TUNE_VMAF_NEG_MAX_GAIN = 7,
   AOM_TUNE_BUTTERAUGLI = 8,
   AOM_TUNE_VMAF_SALIENCY_MAP = 9,
-/*!\brief Allows detection of the presence of AOM_TUNE_SSIMULACRA2 at compile
+/*!\brief Allows detection of the presence of AOM_TUNE_PERCEPTUAL at compile
  * time.
  */
-#define AOM_HAVE_TUNE_SSIMULACRA2 1
-  /* Increases image quality and consistency, guided by the SSIMULACRA2 metric
+#define AOM_HAVE_TUNE_PERCEPTUAL 1
+  /* Increases image quality and consistency, guided by the SSIMULACRA 2 metric
    * and subjective quality checks. Shares the rdmult code with AOM_TUNE_SSIM.
    */
-  AOM_TUNE_SSIMULACRA2 = 10,
+  AOM_TUNE_PERCEPTUAL = 10,
 } aom_tune_metric;
 
 /*!\brief Distortion metric to use for RD optimization.
