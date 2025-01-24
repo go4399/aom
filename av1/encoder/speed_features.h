@@ -1929,6 +1929,9 @@ typedef struct REAL_TIME_SPEED_FEATURES {
   // Flag to indicate more aggressive QP downward adjustment for screen static
   // content, to make convergence to min_qp faster.
   int rc_faster_convergence_static;
+
+  // Enable fast encoding on scene changes.
+  int fast_encoding_scene_change;
 } REAL_TIME_SPEED_FEATURES;
 
 /*!\endcond */
