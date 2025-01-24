@@ -2432,6 +2432,10 @@ static AOM_FORCE_INLINE bool skip_inter_mode_nonrd(
     *ref_frame2 = NONE_FRAME;
   }
 
+  if (cpi->sf.rt_sf.fast_encoding_scene_change && cpi->rc.high_source_sad &&
+      !x->sb_me_block && (*ref_frame != LAST_FRAME || *this_mode != GLOBALMV))
+    return true;
+
   if (segfeature_active(&cm->seg, segment_id, SEG_LVL_SKIP) &&
       (*this_mode != GLOBALMV || *ref_frame != LAST_FRAME))
     return true;
