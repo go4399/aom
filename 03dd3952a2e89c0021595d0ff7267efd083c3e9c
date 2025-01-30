@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "d6777284_987c97cb",
+        "filename": "av1/common/warped_motion.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-01-30T03:23:08Z",
+      "side": 1,
+      "message": "\u003e Optional: Since we are manually formatting the code, the following looks nicer:\n\u003e \n\u003e ```\n\u003e const WarpedFilterCoeff av1_warped_filter[WARPEDPIXEL_PREC_SHIFTS * 3 + 1][8]\n\u003e                                          \u003d {\n\u003e ```\n\u003e \n\u003e or perhaps this is even better:\n\u003e \n\u003e ```\n\u003e const WarpedFilterCoeff\n\u003e av1_warped_filter[WARPEDPIXEL_PREC_SHIFTS * 3 + 1][8] \u003d {\n\u003e ```\n\nI moved the `/* clang-format off */` comment and let `clang-format` handle this.\n\nI probably would have gone with:\n\n```\nconst WarpedFilterCoeff\n  av1_warped_filter[WARPEDPIXEL_PREC_SHIFTS * 3 + 1][8] \u003d {\n```\n\nIf you allowed the whole array you\u0027d get something like:\n\n```\nconst WarpedFilterCoeff av1_warped_filter[WARPEDPIXEL_PREC_SHIFTS * 3 + 1]\n                                         [8] \u003d {\n                                           // [-1, 0)\n                                           { 0, 0, 127, 1, 0, 0, 0, 0 },\n                                           { 0, -1, 127, 2, 0, 0, 0, 0 },\n...\n```",
+      "parentUuid": "c4d5a193_1100059f",
+      "revId": "03dd3952a2e89c0021595d0ff7267efd083c3e9c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "b0e2f9fe_7fd1c78a",
         "filename": "av1/common/warped_motion.c",
         "patchSetId": 1
