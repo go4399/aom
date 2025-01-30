@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "c4d5a193_1100059f",
+        "filename": "av1/common/warped_motion.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-01-30T00:27:04Z",
+      "side": 1,
+      "message": "Optional: Since we are manually formatting the code, the following looks nicer:\n\n```\nconst WarpedFilterCoeff av1_warped_filter[WARPEDPIXEL_PREC_SHIFTS * 3 + 1][8]\n                                         \u003d {\n```\n\nor perhaps this is even better:\n\n```\nconst WarpedFilterCoeff\nav1_warped_filter[WARPEDPIXEL_PREC_SHIFTS * 3 + 1][8] \u003d {\n```",
+      "revId": "03dd3952a2e89c0021595d0ff7267efd083c3e9c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "b0e2f9fe_7fd1c78a",
