@@ -16,6 +16,67 @@
       "message": "Hi everyone,\n\nI have renamed the tune VIQO (visual image quality optimization) on Frank\u0027s suggestion. Please take a look.\n\nI found that the word \"perceptual\" is already used in the `DELTAQ_MODE` enum:\n\n```\nenum {\n  NO_DELTA_Q \u003d 0,\n  DELTA_Q_OBJECTIVE \u003d 1,      // Modulation to improve objective quality\n  DELTA_Q_PERCEPTUAL \u003d 2,     // Modulation to improve video perceptual quality\n  DELTA_Q_PERCEPTUAL_AI \u003d 3,  // Perceptual quality opt for all intra mode\n  DELTA_Q_USER_RATING_BASED \u003d 4,  // User rating based delta q mode\n  DELTA_Q_HDR \u003d 5,  // QP adjustment based on HDR block pixel average\n  DELTA_Q_VARIANCE_BOOST \u003d\n      6,              // Variance Boost style modulation for all intra mode\n  DELTA_Q_MODE_COUNT  // This should always be the last member of the enum\n} UENUM1BYTE(DELTAQ_MODE);\n```\n\nSo it\u0027s not clear whether we need to avoid that word. However, note that the `DELTAQ_MODE` enum has `DELTA_Q_PERCEPTUAL` for video and `DELTA_Q_PERCEPTUAL_AI` for images (all intra), so if we go back to `--tune\u003dperceptual`, perhaps it should be `--tune\u003dperceptual-ai`. But AI means Apple intelligence these days... :-)",
       "revId": "8ddbe6e6b3b9a8de667a3b4311225a2494a4ef41",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "97d9e407_d79e66c2",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 1699,
+      "author": {
+        "id": 7060
+      },
+      "writtenOn": "2025-01-31T01:01:40Z",
+      "side": 1,
+      "message": "VIQO!",
+      "range": {
+        "startLine": 1699,
+        "startChar": 2,
+        "endLine": 1699,
+        "endChar": 15
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "7cf0089b_81a7ee4f",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "aom/aomcx.h",
+              "range": {
+                "startLine": 1671,
+                "startChar": 0,
+                "endLine": 1673,
+                "endChar": 0
+              },
+              "replacement": " * AOM_TUNE_VIQ is restricted to all intra mode (AOM_USAGE_ALL_INTRA). Setting\n * the tuning option to AOM_TUNE_VIQ causes the following options to be set\n"
+            },
+            {
+              "path": "aom/aomcx.h",
+              "range": {
+                "startLine": 1693,
+                "startChar": 0,
+                "endLine": 1695,
+                "endChar": 0
+              },
+              "replacement": "/*!\\brief Allows detection of the presence of AOM_TUNE_VIQ at compile time. */\n#define AOM_HAVE_TUNE_VIQ 1\n"
+            },
+            {
+              "path": "aom/aomcx.h",
+              "range": {
+                "startLine": 1699,
+                "startChar": 0,
+                "endLine": 1700,
+                "endChar": 0
+              },
+              "replacement": "  AOM_TUNE_VIQ \u003d 10,\n"
+            }
+          ]
+        }
+      ],
+      "revId": "8ddbe6e6b3b9a8de667a3b4311225a2494a4ef41",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
