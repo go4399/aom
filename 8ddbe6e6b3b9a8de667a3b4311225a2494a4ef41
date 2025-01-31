@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc57c4fe_e4030e14",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-01-31T00:24:03Z",
+      "side": 1,
+      "message": "Hi everyone,\n\nI have renamed the tune VIQO (visual image quality optimization) on Frank\u0027s suggestion. Please take a look.\n\nI found that the word \"perceptual\" is already used in the `DELTAQ_MODE` enum:\n\n```\nenum {\n  NO_DELTA_Q \u003d 0,\n  DELTA_Q_OBJECTIVE \u003d 1,      // Modulation to improve objective quality\n  DELTA_Q_PERCEPTUAL \u003d 2,     // Modulation to improve video perceptual quality\n  DELTA_Q_PERCEPTUAL_AI \u003d 3,  // Perceptual quality opt for all intra mode\n  DELTA_Q_USER_RATING_BASED \u003d 4,  // User rating based delta q mode\n  DELTA_Q_HDR \u003d 5,  // QP adjustment based on HDR block pixel average\n  DELTA_Q_VARIANCE_BOOST \u003d\n      6,              // Variance Boost style modulation for all intra mode\n  DELTA_Q_MODE_COUNT  // This should always be the last member of the enum\n} UENUM1BYTE(DELTAQ_MODE);\n```\n\nSo it\u0027s not clear whether we need to avoid that word. However, note that the `DELTAQ_MODE` enum has `DELTA_Q_PERCEPTUAL` for video and `DELTA_Q_PERCEPTUAL_AI` for images (all intra), so if we go back to `--tune\u003dperceptual`, perhaps it should be `--tune\u003dperceptual-ai`. But AI means Apple intelligence these days... :-)",
+      "revId": "8ddbe6e6b3b9a8de667a3b4311225a2494a4ef41",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
