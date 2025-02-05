@@ -1591,6 +1591,7 @@ static void set_rt_speed_feature_framesize_dependent(const AV1_COMP *const cpi,
       sf->rt_sf.increase_color_thresh_palette = 0;
       sf->rt_sf.prune_h_pred_using_best_mode_so_far = true;
       sf->rt_sf.enable_intra_mode_pruning_using_neighbors = true;
+      sf->rt_sf.partition_exit_spatial_variance = 1;
     }
     sf->rt_sf.skip_encoding_non_reference_slide_change =
         cpi->oxcf.rc_cfg.drop_frames_water_mark > 0 ? 1 : 0;
@@ -2328,6 +2329,7 @@ static inline void init_rt_sf(REAL_TIME_SPEED_FEATURES *rt_sf) {
   rt_sf->skip_newmv_flat_blocks_screen = 0;
   rt_sf->skip_encoding_non_reference_slide_change = 0;
   rt_sf->rc_faster_convergence_static = 0;
+  rt_sf->partition_exit_spatial_variance = 0;
 }
 
 static fractional_mv_step_fp
