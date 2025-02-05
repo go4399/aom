@@ -1581,6 +1581,39 @@ static inline bool set_force_zeromv_skip_for_sb(
   return false;
 }
 
+static inline bool check_top_left(AV1_COMP *cpi, int mi_col, int mi_row) {
+  uint8_t *src_y = cpi->source->y_buffer;
+  const int src_ystride = cpi->source->y_stride;
+  const int src_offset = src_ystride * (mi_row << 2) + (mi_col << 2);
+  src_y += src_offset;
+  const uint8_t src_value = src_y[0];
+  // Check the top row.
+  bool top_row_is_same = true;
+  bool left_column_is_same = true;
+  const int num_pixels =
+      cpi->common.seq_params->sb_size == BLOCK_128X128 ? 128 : 64;
+  src_y -= src_ystride;
+  for (int i = 0; i < num_pixels; i++) {
+    if (src_y[i] != src_value) {
+      top_row_is_same = false;
+      break;
+    }
+  }
+  if (!top_row_is_same) {
+    src_y -= 1;
+    for (int i = 0; i < num_pixels; i++) {
+      if (src_y[i * src_ystride] != src_value) {
+        left_column_is_same = false;
+        break;
+      }
+    }
+  }
+  if (top_row_is_same || left_column_is_same)
+    return true;
+  else
+    return false;
+}
+
 int av1_choose_var_based_partitioning(AV1_COMP *cpi, const TileInfo *const tile,
                                       ThreadData *td, MACROBLOCK *x, int mi_row,
                                       int mi_col) {
@@ -1708,6 +1741,20 @@ int av1_choose_var_based_partitioning(AV1_COMP *cpi, const TileInfo *const tile,
       x->content_state_sb.source_sad_nonrd > kLowSad)
     x->source_variance = av1_get_perpixel_variance_facade(
         cpi, xd, &x->plane[0].src, cm->seq_params->sb_size, AOM_PLANE_Y);
+
+  const int block_width = mi_size_wide[cm->seq_params->sb_size];
+  const int block_height = mi_size_high[cm->seq_params->sb_size];
+  if (!is_key_frame && x->source_variance == 0 && cpi->rc.high_source_sad &&
+      x->content_state_sb.source_sad_nonrd > kLowSad && mi_col > 0 &&
+      mi_row > 0 && mi_col + block_width < tile->mi_col_end &&
+      mi_row + block_height < tile->mi_row_end) {
+    // Check if the top row or right column has all same pixel data as current
+    // superblock, so intra mode would work.
+    if (check_top_left(cpi, mi_col, mi_row)) {
+      set_block_size(cpi, mi_row, mi_col, bsize);
+      return 0;
+    }
+  }
 
   if (!is_key_frame) {
     setup_planes(cpi, x, &y_sad, &y_sad_g, &y_sad_alt, &y_sad_last,
