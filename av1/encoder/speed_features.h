@@ -1929,6 +1929,10 @@ typedef struct REAL_TIME_SPEED_FEATURES {
   // Flag to indicate more aggressive QP downward adjustment for screen static
   // content, to make convergence to min_qp faster.
   int rc_faster_convergence_static;
+
+  // Flag to indicate early exit in variance partitioning based on spatial
+  // variance.
+  int partition_exit_spatial_variance;
 } REAL_TIME_SPEED_FEATURES;
 
 /*!\endcond */
