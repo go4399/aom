@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f514708_0785b3dd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-02-06T21:30:20Z",
+      "side": 1,
+      "message": "Please do a TSAN build and run the new test.\n\nTo do a TSAN build, pass `-DSANITIZE\u003dthread` to the cmake command. See https://aomedia.googlesource.com/aom#sanitizers",
+      "revId": "0bdbf921c83670dd0ef85c43ef465072616f2502",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
