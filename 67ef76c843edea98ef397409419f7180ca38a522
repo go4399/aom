@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6ec1afa_74c1af05",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-02-06T16:43:00Z",
+      "side": 1,
+      "message": "James, Julio: Please review patchset 2. Thanks!",
+      "revId": "67ef76c843edea98ef397409419f7180ca38a522",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
