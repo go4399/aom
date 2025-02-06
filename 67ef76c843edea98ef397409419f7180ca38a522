@@ -16,6 +16,24 @@
       "message": "James, Julio: Please review patchset 2. Thanks!",
       "revId": "67ef76c843edea98ef397409419f7180ca38a522",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "73093707_6446a1de",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-02-06T17:01:00Z",
+      "side": 1,
+      "message": "Patchset 2 LGTM!",
+      "parentUuid": "b6ec1afa_74c1af05",
+      "revId": "67ef76c843edea98ef397409419f7180ca38a522",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
