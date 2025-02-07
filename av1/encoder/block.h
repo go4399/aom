@@ -1349,6 +1349,10 @@ typedef struct macroblock {
   // good/reliable, and so the superblock MV will be tested in the
   // nonrd_pickmode. This is only used for LAST_FRAME.
   int sb_me_partition;
+  //! Flag to indicate superblock selected column scroll.
+  int sb_col_scroll;
+  //! Flag to indicate superblock selected row scroll.
+  int sb_row_scroll;
   //! Flag to indicate to test the superblock MV for the coding block in the
   // nonrd_pickmode.
   int sb_me_block;
