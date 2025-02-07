@@ -2635,6 +2635,8 @@ static int encode_without_recode(AV1_COMP *cpi) {
                     q_cfg->enable_chroma_deltaq, q_cfg->enable_hdr_deltaq,
                     cpi->oxcf.mode == ALLINTRA, cpi->oxcf.tune_cfg.tuning);
   av1_set_speed_features_qindex_dependent(cpi, cpi->oxcf.speed);
+  if (cpi->oxcf.enable_low_complexity_decode >= 1)
+    av1_set_speed_features_low_complexity_decode(cpi, cpi->oxcf.speed);
   av1_init_quantizer(&cpi->enc_quant_dequant_params, &cm->quant_params,
                      cm->seq_params->bit_depth);
   av1_set_variance_partition_thresholds(cpi, q, 0);
@@ -2650,6 +2652,8 @@ static int encode_without_recode(AV1_COMP *cpi) {
                         q_cfg->enable_chroma_deltaq, q_cfg->enable_hdr_deltaq,
                         cpi->oxcf.mode == ALLINTRA, cpi->oxcf.tune_cfg.tuning);
       av1_set_speed_features_qindex_dependent(cpi, cpi->oxcf.speed);
+      if (cpi->oxcf.enable_low_complexity_decode >= 1)
+        av1_set_speed_features_low_complexity_decode(cpi, cpi->oxcf.speed);
       av1_init_quantizer(&cpi->enc_quant_dequant_params, &cm->quant_params,
                          cm->seq_params->bit_depth);
       av1_set_variance_partition_thresholds(cpi, q, 0);
@@ -2955,6 +2959,8 @@ static int encode_with_recode_loop(AV1_COMP *cpi, size_t *size, uint8_t *dest,
                       q_cfg->enable_chroma_deltaq, q_cfg->enable_hdr_deltaq,
                       oxcf->mode == ALLINTRA, oxcf->tune_cfg.tuning);
     av1_set_speed_features_qindex_dependent(cpi, oxcf->speed);
+    if (cpi->oxcf.enable_low_complexity_decode >= 1)
+      av1_set_speed_features_low_complexity_decode(cpi, cpi->oxcf.speed);
     av1_init_quantizer(&cpi->enc_quant_dequant_params, &cm->quant_params,
                        cm->seq_params->bit_depth);
 
@@ -4542,10 +4548,10 @@ static void update_end_of_frame_stats(AV1_COMP *cpi) {
     if (!cpi->common.show_existing_frame) {
       AV1_COMMON *const cm = &cpi->common;
       struct loopfilter *const lf = &cm->lf;
-      cpi->ppi->filter_level[0] = lf->filter_level[0];
-      cpi->ppi->filter_level[1] = lf->filter_level[1];
-      cpi->ppi->filter_level_u = lf->filter_level_u;
-      cpi->ppi->filter_level_v = lf->filter_level_v;
+      cpi->ppi->filter_level[0] = lf->backup_filter_level[0];
+      cpi->ppi->filter_level[1] = lf->backup_filter_level[1];
+      cpi->ppi->filter_level_u = lf->backup_filter_level_u;
+      cpi->ppi->filter_level_v = lf->backup_filter_level_v;
     }
   }
   // Store frame level mv_stats from cpi to ppi.

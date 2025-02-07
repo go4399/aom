@@ -1498,6 +1498,10 @@ typedef struct LOOP_FILTER_SPEED_FEATURES {
   // level.
   int use_coarse_filter_level_search;
 
+  // Sets luma loop filter levels to zero based on current frames pyramid level
+  // and reference frames filter levels.
+  int adaptive_luma_loop_filter_skip;
+
   // Control how the CDEF strength is determined.
   CDEF_PICK_METHOD cdef_pick_method;
 
@@ -2051,6 +2055,19 @@ void av1_set_speed_features_framesize_dependent(struct AV1_COMP *cpi,
  *         (Higher speed corresponds to lower quality)
  */
 void av1_set_speed_features_qindex_dependent(struct AV1_COMP *cpi, int speed);
+
+/*!\brief Configure speed features for low complexity decoding
+ *
+ * \ingroup speed_features
+ *
+ * \param[in]    cpi     Top-level encoder instance structure
+ * \param[in]    speed   Speed setting passed in from the command line
+ *
+ * \remark No return value, but configures speed-related trade-offs
+ *         to enable optimizations for low complexity decoding.
+ */
+void av1_set_speed_features_low_complexity_decode(struct AV1_COMP *cpi,
+                                                  int speed);
 
 #ifdef __cplusplus
 }  // extern "C"

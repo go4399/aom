@@ -354,5 +354,55 @@ void av1_pick_filter_level(const YV12_BUFFER_CONFIG *sd, AV1_COMP *cpi,
           search_filter_level(sd, cpi, method == LPF_PICK_FROM_SUBIMAGE,
                               last_frame_filter_level, 2, 0);
     }
+
+    lf->backup_filter_level[0] = lf->filter_level[0];
+    lf->backup_filter_level[1] = lf->filter_level[1];
+    lf->backup_filter_level_u = lf->filter_level_u;
+    lf->backup_filter_level_v = lf->filter_level_v;
+
+    if (cpi->sf.lpf_sf.adaptive_luma_loop_filter_skip >= 1) {
+      int32_t min_ref_filter_level[2] = { MAX_LOOP_FILTER, MAX_LOOP_FILTER };
+      int32_t min_ref_filter_level_u = MAX_LOOP_FILTER;
+      int32_t min_ref_filter_level_v = MAX_LOOP_FILTER;
+      for (int ref = LAST_FRAME; ref <= ALTREF_FRAME; ++ref) {
+        const RefCntBuffer *const buf = get_ref_frame_buf(cm, ref);
+        if (buf == NULL) continue;
+        if (buf->filter_level[0] != -1)
+          min_ref_filter_level[0] =
+              AOMMIN(min_ref_filter_level[0], buf->filter_level[0]);
+        if (buf->filter_level[1] != -1)
+          min_ref_filter_level[1] =
+              AOMMIN(min_ref_filter_level[1], buf->filter_level[1]);
+      }
+
+      const FRAME_UPDATE_TYPE update_type =
+          get_frame_update_type(&cpi->ppi->gf_group, cpi->gf_frame_index);
+      int filter_threshold;
+      if (cm->current_frame.pyramid_level == 6 ||
+          cm->current_frame.pyramid_level == 5)
+        filter_threshold = 32;
+      else if (cm->current_frame.pyramid_level == 4)
+        filter_threshold = 16;
+      else
+        filter_threshold = 8;
+      bool set_luma_filter_to_zero = lf->filter_level[0] < filter_threshold &&
+                                     lf->filter_level[1] < filter_threshold &&
+                                     lf->filter_level_u < filter_threshold &&
+                                     lf->filter_level_v < filter_threshold &&
+                                     min_ref_filter_level[0] == 0 &&
+                                     min_ref_filter_level[1] == 0 &&
+                                     !(update_type == OVERLAY_UPDATE ||
+                                       update_type == INTNL_OVERLAY_UPDATE) &&
+                                     cm->current_frame.pyramid_level > 1;
+
+      if (set_luma_filter_to_zero) {
+        lf->filter_level[0] = 0;
+        lf->filter_level[1] = 0;
+      }
+      cm->cur_frame->filter_level[0] = lf->filter_level[0];
+      cm->cur_frame->filter_level[1] = lf->filter_level[1];
+      cm->cur_frame->filter_level_u = lf->filter_level_u;
+      cm->cur_frame->filter_level_v = lf->filter_level_v;
+    }
   }
 }

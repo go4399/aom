@@ -169,6 +169,10 @@ typedef struct RefCntBuffer {
   int8_t mode_deltas[MAX_MODE_LF_DELTAS];
 
   FRAME_CONTEXT frame_context;
+
+  int filter_level[2];
+  int filter_level_u;
+  int filter_level_v;
 } RefCntBuffer;
 
 typedef struct BufferPool {

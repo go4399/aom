@@ -2238,6 +2238,7 @@ static inline void init_lpf_sf(LOOP_FILTER_SPEED_FEATURES *lpf_sf) {
   lpf_sf->prune_sgr_based_on_wiener = 0;
   lpf_sf->enable_sgr_ep_pruning = 0;
   lpf_sf->reduce_wiener_window_size = 0;
+  lpf_sf->adaptive_luma_loop_filter_skip = 0;
   lpf_sf->lpf_pick = LPF_PICK_FROM_FULL_IMAGE;
   lpf_sf->use_coarse_filter_level_search = 0;
   lpf_sf->cdef_pick_method = CDEF_FULL_SEARCH;
@@ -2756,4 +2757,12 @@ void av1_set_speed_features_qindex_dependent(AV1_COMP *cpi, int speed) {
   set_subpel_search_method(&cpi->mv_search_params,
                            cpi->oxcf.unit_test_cfg.motion_vector_unit_test,
                            sf->mv_sf.subpel_search_method);
+}
+
+void av1_set_speed_features_low_complexity_decode(AV1_COMP *cpi, int speed) {
+  SPEED_FEATURES *const sf = &cpi->sf;
+  if (speed >= 1 && speed <= 3) {
+    if (cpi->oxcf.enable_low_complexity_decode >= 1)
+      sf->lpf_sf.adaptive_luma_loop_filter_skip = 1;
+  }
 }
