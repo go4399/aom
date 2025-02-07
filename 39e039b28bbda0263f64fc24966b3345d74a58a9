@@ -16,6 +16,24 @@
       "message": "Marco: The test in the original code has a typo. The `||` should be `\u0026\u0026`, because `num_col_blscroll_last_tl0` is only used when `cpi-\u003esvc.temporal_layer_id` is equal to 0.",
       "revId": "39e039b28bbda0263f64fc24966b3345d74a58a9",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0666628b_e03116c3",
+        "filename": "av1/encoder/var_based_part.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1338,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2025-02-07T01:09:46Z",
+      "side": 0,
+      "message": "The intention here was to select the bigger search window (sw) always for tl_id\u003d0 (if the condtions on line 1335-1336 are satisfied), and for temporal_enhancement frames (tl_id \u003e 0) only if the extrac condition num_col_blscroll_last_tl0 \u003e 2 is met.",
+      "parentUuid": "da6a00ac_95528596",
+      "revId": "39e039b28bbda0263f64fc24966b3345d74a58a9",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
