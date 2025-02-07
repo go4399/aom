@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b40540b3_cc03f858",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-02-07T22:41:53Z",
+      "side": 1,
+      "message": "Frank, Jingning, Roshan: FYI. This is the draft of the libaom v3.12.0 release notes.",
+      "revId": "8245e9dca6358326f0a034053833985d2fd54433",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca8a96d9_6c073f03",
+        "filename": "CHANGELOG",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-02-07T22:41:53Z",
+      "side": 1,
+      "message": "Julio: Please review my edited version of your description of the tuning mode `AOM_TUNE_IQ` and Variance Boost.\n\nNote that I also moved the list items for `--deltaq-mode` and `--enable-cdef` forward.",
+      "revId": "8245e9dca6358326f0a034053833985d2fd54433",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1aedfdd_3ea589c2",
+        "filename": "CHANGELOG",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-02-07T22:41:53Z",
+      "side": 1,
+      "message": "Marco: Please review my edited version of the description of your commits.",
+      "revId": "8245e9dca6358326f0a034053833985d2fd54433",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d5a3abb6_efd1661d",
+        "filename": "CHANGELOG",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-02-07T22:41:53Z",
+      "side": 1,
+      "message": "Jonathan and Salome: Does this summary look good?",
+      "revId": "8245e9dca6358326f0a034053833985d2fd54433",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
