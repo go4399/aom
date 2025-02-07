@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "affa5a37_21c8ae8f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-02-07T05:14:30Z",
+      "side": 1,
+      "message": "Cherry-picking the fix to the \"northstar\" branch for libaom v3.12.0.",
+      "revId": "3d000065136e16d79c139d2f467c1e7b153e769a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
