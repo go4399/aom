@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa66600d_e950d57c",
+        "filename": "CHANGELOG",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-02-07T00:26:26Z",
+      "side": 1,
+      "message": "Following up from an email convo, I\u0027d suggest advertising `--tune\u003diq` and Variance Boost:\n\n```\n  tune\u003diq, which stands for Image Quality, is a new tuning mode that\n  increases image quality by using the SSIMULACRA 2 metric as a guidance\n  and validating with subjective visual quality checks.\n\n  Variance Boost is a variance AQ implementation that modulates qindex\n  depending on the ratio of low-variance to high-variance 8x8 subblocks\n  within a 64x64 superblock, as well as the actual variance of the\n  subblocks themselves.\n```\n\nWan-Teh: let me know if this is good enough for the release notes, or you need something a bit shorter.",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 65
+      },
+      "revId": "5850fbf90d70da5825696fcfed3f0fcbb704a8d9",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "bbd4b40b_4c1c3769",
