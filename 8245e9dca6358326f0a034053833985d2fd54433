@@ -37,6 +37,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "c8fe48f4_19e57f99",
+        "filename": "CHANGELOG",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-02-08T04:56:12Z",
+      "side": 1,
+      "message": "Changes LGTM! Thanks for making the edits Wan-Teh.",
+      "parentUuid": "ca8a96d9_6c073f03",
+      "revId": "8245e9dca6358326f0a034053833985d2fd54433",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "a1aedfdd_3ea589c2",
         "filename": "CHANGELOG",
         "patchSetId": 2
