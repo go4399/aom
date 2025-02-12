@@ -25,7 +25,12 @@ int64_t av1_lowbd_pixel_proj_error_neon(
     const uint8_t *src, int width, int height, int src_stride,
     const uint8_t *dat, int dat_stride, int32_t *flt0, int flt0_stride,
     int32_t *flt1, int flt1_stride, int xq[2], const sgr_params_type *params) {
-  int64_t sse = 0;
+  if (width % 16 != 0) {
+    return av1_lowbd_pixel_proj_error_c(src, width, height, src_stride, dat,
+                                        dat_stride, flt0, flt0_stride, flt1,
+                                        flt1_stride, xq, params);
+  }
+
   int64x2_t sse_s64 = vdupq_n_s64(0);
 
   if (params->r[0] > 0 && params->r[1] > 0) {
@@ -70,16 +75,7 @@ int64_t av1_lowbd_pixel_proj_error_neon(
         sse_s32 = vmlal_s16(sse_s32, e_hi, e_hi);
 
         j += 8;
-      } while (j <= width - 8);
-
-      for (int k = j; k < width; ++k) {
-        int32_t u = (dat[k] << SGRPROJ_RST_BITS);
-        int32_t v = (1 << (SGRPROJ_RST_BITS + SGRPROJ_PRJ_BITS - 1)) +
-                    xq[0] * flt0[k] + xq[1] * flt1[k] - u * (xq[0] + xq[1]);
-        int32_t e =
-            (v >> (SGRPROJ_RST_BITS + SGRPROJ_PRJ_BITS)) + dat[k] - src[k];
-        sse += e * e;
-      }
+      } while (j != width);
 
       sse_s64 = vpadalq_s32(sse_s64, sse_s32);
 
@@ -126,15 +122,7 @@ int64_t av1_lowbd_pixel_proj_error_neon(
         sse_s32 = vmlal_s16(sse_s32, e_hi, e_hi);
 
         j += 8;
-      } while (j <= width - 8);
-
-      for (int k = j; k < width; ++k) {
-        int32_t u = dat[k] << SGRPROJ_RST_BITS;
-        int32_t v = xq_active * (flt[k] - u);
-        int32_t e = ROUND_POWER_OF_TWO(v, SGRPROJ_RST_BITS + SGRPROJ_PRJ_BITS) +
-                    dat[k] - src[k];
-        sse += e * e;
-      }
+      } while (j != width);
 
       sse_s64 = vpadalq_s32(sse_s64, sse_s32);
 
@@ -160,12 +148,7 @@ int64_t av1_lowbd_pixel_proj_error_neon(
         sse_s32 = vpadalq_u16(sse_s32, vmull_u8(diff_hi, diff_hi));
 
         j += 16;
-      } while (j <= width - 16);
-
-      for (int k = j; k < width; ++k) {
-        int32_t e = dat[k] - src[k];
-        sse += e * e;
-      }
+      } while (j != width);
 
       dat += dat_stride;
       src += src_stride;
@@ -174,8 +157,7 @@ int64_t av1_lowbd_pixel_proj_error_neon(
     sse_s64 = vreinterpretq_s64_u64(vpaddlq_u32(sse_s32));
   }
 
-  sse += horizontal_add_s64x2(sse_s64);
-  return sse;
+  return horizontal_add_s64x2(sse_s64);
 }
 
 // We can accumulate up to 32768 8-bit multiplication results in a signed
