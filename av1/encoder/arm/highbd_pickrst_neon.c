@@ -1786,13 +1786,15 @@ void av1_compute_stats_highbd_neon(int32_t wiener_win, const uint8_t *dgd8,
     div16_diagonal_copy_stats_neon(wiener_win2, H);
   }
 }
+
 int64_t av1_highbd_pixel_proj_error_neon(
     const uint8_t *src8, int width, int height, int src_stride,
     const uint8_t *dat8, int dat_stride, int32_t *flt0, int flt0_stride,
     int32_t *flt1, int flt1_stride, int xq[2], const sgr_params_type *params) {
+  assert(width % 64 == 0);
+
   const uint16_t *src = CONVERT_TO_SHORTPTR(src8);
   const uint16_t *dat = CONVERT_TO_SHORTPTR(dat8);
-  int64_t sse = 0;
   int64x2_t sse_s64 = vdupq_n_s64(0);
 
   if (params->r[0] > 0 && params->r[1] > 0) {
@@ -1840,16 +1842,7 @@ int64_t av1_highbd_pixel_proj_error_neon(
         sse_s32 = vmlal_s16(sse_s32, e_hi, e_hi);
 
         j += 8;
-      } while (j <= width - 8);
-
-      for (int k = j; k < width; ++k) {
-        int32_t v = 1 << (SGRPROJ_RST_BITS + SGRPROJ_PRJ_BITS - 1);
-        v += xq[0] * (flt0[k]) + xq[1] * (flt1[k]);
-        v -= (xq[1] + xq[0]) * (int32_t)(dat[k] << 4);
-        int32_t e =
-            (v >> (SGRPROJ_RST_BITS + SGRPROJ_PRJ_BITS)) + dat[k] - src[k];
-        sse += ((int64_t)e * e);
-      }
+      } while (j != width);
 
       sse_s64 = vpadalq_s32(sse_s64, sse_s32);
 
@@ -1898,15 +1891,7 @@ int64_t av1_highbd_pixel_proj_error_neon(
         sse_s32 = vmlal_s16(sse_s32, e_hi, e_hi);
 
         j += 8;
-      } while (j <= width - 8);
-
-      for (int k = j; k < width; ++k) {
-        int32_t v = 1 << (SGRPROJ_RST_BITS + SGRPROJ_PRJ_BITS - 1);
-        v += xq_active * (int32_t)((uint32_t)flt[j] - (uint16_t)(dat[k] << 4));
-        const int32_t e =
-            (v >> (SGRPROJ_RST_BITS + SGRPROJ_PRJ_BITS)) + dat[k] - src[k];
-        sse += ((int64_t)e * e);
-      }
+      } while (j != width);
 
       sse_s64 = vpadalq_s32(sse_s64, sse_s32);
 
@@ -1933,18 +1918,12 @@ int64_t av1_highbd_pixel_proj_error_neon(
         sse_s64 = vpadalq_s32(sse_s64, vreinterpretq_s32_u32(sqr_hi));
 
         j += 8;
-      } while (j <= width - 8);
-
-      for (int k = j; k < width; ++k) {
-        int32_t e = dat[k] - src[k];
-        sse += e * e;
-      }
+      } while (j != width);
 
       dat += dat_stride;
       src += src_stride;
     } while (--height != 0);
   }
 
-  sse += horizontal_add_s64x2(sse_s64);
-  return sse;
+  return horizontal_add_s64x2(sse_s64);
 }
