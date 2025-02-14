@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5aa7a5a_e9101571",
+        "filename": "av1/encoder/var_based_part.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1615,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-02-14T18:47:37Z",
+      "side": 1,
+      "message": "you can just do \n\n```\nreturn (top_row_is_same || left_column_is_same);\n```",
+      "range": {
+        "startLine": 1612,
+        "startChar": 0,
+        "endLine": 1615,
+        "endChar": 17
+      },
+      "revId": "d5aaf8b56609813936a0c3b4b8f1f32cbee7bf2f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
