@@ -34,6 +34,24 @@
       "parentUuid": "2cea4b90_c00d6753",
       "revId": "feba11b38dedaeae4f833cddacaf54e1aac00344",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b43ac3e3_0146e081",
+        "filename": "aom_dsp/arm/mem_neon.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-02-19T19:12:17Z",
+      "side": 1,
+      "message": "\u003e https://gcc.gnu.org/bugzilla/show_bug.cgi?id\u003d118942\n\nThanks for flagging this. I think the support functions here could benefit from a GCC version check, like in other branches. In the gcc 14.x case I think you\u0027d then only see a warning about pointer type, but not an error for redeclaring the function.",
+      "parentUuid": "8ba30ffc_6332d0ed",
+      "revId": "feba11b38dedaeae4f833cddacaf54e1aac00344",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
