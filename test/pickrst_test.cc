@@ -38,13 +38,14 @@ typedef int64_t (*lowbd_pixel_proj_error_func)(
 // 8 bit
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef std::tuple<const lowbd_pixel_proj_error_func> PixelProjErrorTestParam;
+typedef std::tuple<lowbd_pixel_proj_error_func, int> PixelProjErrorTestParam;
 
 class PixelProjErrorTest
     : public ::testing::TestWithParam<PixelProjErrorTestParam> {
  public:
   void SetUp() override {
     target_func_ = GET_PARAM(0);
+    width_ = GET_PARAM(1);
     src_ = (uint8_t *)(aom_malloc(MAX_DATA_BLOCK * MAX_DATA_BLOCK *
                                   sizeof(*src_)));
     ASSERT_NE(src_, nullptr);
@@ -74,12 +75,12 @@ class PixelProjErrorTest
   uint8_t *dgd_;
   int32_t *flt0_;
   int32_t *flt1_;
+  int32_t width_;
 };
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PixelProjErrorTest);
 
 void PixelProjErrorTest::RunPixelProjErrorTest(int32_t run_times) {
-  int h_end = run_times != 1 ? 128 : (rng_.Rand16() % MAX_DATA_BLOCK) + 1;
-  int v_end = run_times != 1 ? 128 : (rng_.Rand16() % MAX_DATA_BLOCK) + 1;
+  int height = run_times != 1 ? 128 : (rng_.Rand16() % MAX_DATA_BLOCK) + 1;
   const int dgd_stride = MAX_DATA_BLOCK;
   const int src_stride = MAX_DATA_BLOCK;
   const int flt0_stride = MAX_DATA_BLOCK;
@@ -107,33 +108,30 @@ void PixelProjErrorTest::RunPixelProjErrorTest(int32_t run_times) {
     aom_usec_timer timer;
     aom_usec_timer_start(&timer);
     for (int i = 0; i < run_times; ++i) {
-      err_ref = av1_lowbd_pixel_proj_error_c(src, h_end, v_end, src_stride, dgd,
-                                             dgd_stride, flt0_, flt0_stride,
-                                             flt1_, flt1_stride, xq, &params);
+      err_ref = av1_lowbd_pixel_proj_error_c(
+          src, width_, height, src_stride, dgd, dgd_stride, flt0_, flt0_stride,
+          flt1_, flt1_stride, xq, &params);
     }
     aom_usec_timer_mark(&timer);
     const double time1 = static_cast<double>(aom_usec_timer_elapsed(&timer));
     aom_usec_timer_start(&timer);
     for (int i = 0; i < run_times; ++i) {
       err_test =
-          target_func_(src, h_end, v_end, src_stride, dgd, dgd_stride, flt0_,
+          target_func_(src, width_, height, src_stride, dgd, dgd_stride, flt0_,
                        flt0_stride, flt1_, flt1_stride, xq, &params);
     }
     aom_usec_timer_mark(&timer);
     const double time2 = static_cast<double>(aom_usec_timer_elapsed(&timer));
     if (run_times > 10) {
       printf("r0 %d r1 %d %3dx%-3d:%7.2f/%7.2fns (%3.2f)\n", params.r[0],
-             params.r[1], h_end, v_end, time1, time2, time1 / time2);
+             params.r[1], width_, height, time1, time2, time1 / time2);
     }
     ASSERT_EQ(err_ref, err_test);
   }
 }
 
 void PixelProjErrorTest::RunPixelProjErrorTest_ExtremeValues() {
-  const int h_start = 0;
-  int h_end = 192;
-  const int v_start = 0;
-  int v_end = 192;
+  int height = 192;
   const int dgd_stride = MAX_DATA_BLOCK;
   const int src_stride = MAX_DATA_BLOCK;
   const int flt0_stride = MAX_DATA_BLOCK;
@@ -158,13 +156,13 @@ void PixelProjErrorTest::RunPixelProjErrorTest_ExtremeValues() {
     uint8_t *dgd = dgd_;
     uint8_t *src = src_;
 
-    err_ref = av1_lowbd_pixel_proj_error_c(
-        src, h_end - h_start, v_end - v_start, src_stride, dgd, dgd_stride,
-        flt0_, flt0_stride, flt1_, flt1_stride, xq, &params);
+    err_ref = av1_lowbd_pixel_proj_error_c(src, width_, height, src_stride, dgd,
+                                           dgd_stride, flt0_, flt0_stride,
+                                           flt1_, flt1_stride, xq, &params);
 
-    err_test = target_func_(src, h_end - h_start, v_end - v_start, src_stride,
-                            dgd, dgd_stride, flt0_, flt0_stride, flt1_,
-                            flt1_stride, xq, &params);
+    err_test =
+        target_func_(src, width_, height, src_stride, dgd, dgd_stride, flt0_,
+                     flt0_stride, flt1_, flt1_stride, xq, &params);
 
     ASSERT_EQ(err_ref, err_test);
   }
@@ -179,20 +177,26 @@ TEST_P(PixelProjErrorTest, ExtremeValues) {
 TEST_P(PixelProjErrorTest, DISABLED_Speed) { RunPixelProjErrorTest(200000); }
 
 #if HAVE_SSE4_1
-INSTANTIATE_TEST_SUITE_P(SSE4_1, PixelProjErrorTest,
-                         ::testing::Values(av1_lowbd_pixel_proj_error_sse4_1));
+INSTANTIATE_TEST_SUITE_P(
+    SSE4_1, PixelProjErrorTest,
+    ::testing::Combine(::testing::Values(av1_lowbd_pixel_proj_error_sse4_1),
+                       ::testing::Range(64, MAX_DATA_BLOCK, 64)));
 #endif  // HAVE_SSE4_1
 
 #if HAVE_AVX2
 
-INSTANTIATE_TEST_SUITE_P(AVX2, PixelProjErrorTest,
-                         ::testing::Values(av1_lowbd_pixel_proj_error_avx2));
+INSTANTIATE_TEST_SUITE_P(
+    AVX2, PixelProjErrorTest,
+    ::testing::Combine(::testing::Values(av1_lowbd_pixel_proj_error_avx2),
+                       ::testing::Range(64, MAX_DATA_BLOCK, 64)));
 #endif  // HAVE_AVX2
 
 #if HAVE_NEON
 
-INSTANTIATE_TEST_SUITE_P(NEON, PixelProjErrorTest,
-                         ::testing::Values(av1_lowbd_pixel_proj_error_neon));
+INSTANTIATE_TEST_SUITE_P(
+    NEON, PixelProjErrorTest,
+    ::testing::Combine(::testing::Values(av1_lowbd_pixel_proj_error_neon),
+                       ::testing::Range(64, MAX_DATA_BLOCK, 64)));
 #endif  // HAVE_NEON
 
 }  // namespace pickrst_test_lowbd
@@ -210,13 +214,14 @@ typedef int64_t (*highbd_pixel_proj_error_func)(
 // High bit-depth
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef std::tuple<const highbd_pixel_proj_error_func> PixelProjErrorTestParam;
+typedef std::tuple<highbd_pixel_proj_error_func, int> PixelProjErrorTestParam;
 
 class PixelProjHighbdErrorTest
     : public ::testing::TestWithParam<PixelProjErrorTestParam> {
  public:
   void SetUp() override {
     target_func_ = GET_PARAM(0);
+    width_ = GET_PARAM(1);
     src_ =
         (uint16_t *)aom_malloc(MAX_DATA_BLOCK * MAX_DATA_BLOCK * sizeof(*src_));
     ASSERT_NE(src_, nullptr);
@@ -246,12 +251,12 @@ class PixelProjHighbdErrorTest
   uint16_t *dgd_;
   int32_t *flt0_;
   int32_t *flt1_;
+  int32_t width_;
 };
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PixelProjHighbdErrorTest);
 
 void PixelProjHighbdErrorTest::RunPixelProjErrorTest(int32_t run_times) {
-  int h_end = run_times != 1 ? 128 : (rng_.Rand16() % MAX_DATA_BLOCK) + 1;
-  int v_end = run_times != 1 ? 128 : (rng_.Rand16() % MAX_DATA_BLOCK) + 1;
+  int height = run_times != 1 ? 128 : (rng_.Rand16() % MAX_DATA_BLOCK) + 1;
   const int dgd_stride = MAX_DATA_BLOCK;
   const int src_stride = MAX_DATA_BLOCK;
   const int flt0_stride = MAX_DATA_BLOCK;
@@ -280,32 +285,29 @@ void PixelProjHighbdErrorTest::RunPixelProjErrorTest(int32_t run_times) {
     aom_usec_timer_start(&timer);
     for (int i = 0; i < run_times; ++i) {
       err_ref = av1_highbd_pixel_proj_error_c(
-          src8, h_end, v_end, src_stride, dgd8, dgd_stride, flt0_, flt0_stride,
-          flt1_, flt1_stride, xq, &params);
+          src8, width_, height, src_stride, dgd8, dgd_stride, flt0_,
+          flt0_stride, flt1_, flt1_stride, xq, &params);
     }
     aom_usec_timer_mark(&timer);
     const double time1 = static_cast<double>(aom_usec_timer_elapsed(&timer));
     aom_usec_timer_start(&timer);
     for (int i = 0; i < run_times; ++i) {
       err_test =
-          target_func_(src8, h_end, v_end, src_stride, dgd8, dgd_stride, flt0_,
-                       flt0_stride, flt1_, flt1_stride, xq, &params);
+          target_func_(src8, width_, height, src_stride, dgd8, dgd_stride,
+                       flt0_, flt0_stride, flt1_, flt1_stride, xq, &params);
     }
     aom_usec_timer_mark(&timer);
     const double time2 = static_cast<double>(aom_usec_timer_elapsed(&timer));
     if (run_times > 10) {
       printf("r0 %d r1 %d %3dx%-3d:%7.2f/%7.2fns (%3.2f)\n", params.r[0],
-             params.r[1], h_end, v_end, time1, time2, time1 / time2);
+             params.r[1], width_, height, time1, time2, time1 / time2);
     }
     ASSERT_EQ(err_ref, err_test);
   }
 }
 
 void PixelProjHighbdErrorTest::RunPixelProjErrorTest_ExtremeValues() {
-  const int h_start = 0;
-  int h_end = 192;
-  const int v_start = 0;
-  int v_end = 192;
+  int height = 192;
   const int dgd_stride = MAX_DATA_BLOCK;
   const int src_stride = MAX_DATA_BLOCK;
   const int flt0_stride = MAX_DATA_BLOCK;
@@ -331,12 +333,12 @@ void PixelProjHighbdErrorTest::RunPixelProjErrorTest_ExtremeValues() {
     uint8_t *src8 = CONVERT_TO_BYTEPTR(src_);
 
     err_ref = av1_highbd_pixel_proj_error_c(
-        src8, h_end - h_start, v_end - v_start, src_stride, dgd8, dgd_stride,
-        flt0_, flt0_stride, flt1_, flt1_stride, xq, &params);
+        src8, width_, height, src_stride, dgd8, dgd_stride, flt0_, flt0_stride,
+        flt1_, flt1_stride, xq, &params);
 
-    err_test = target_func_(src8, h_end - h_start, v_end - v_start, src_stride,
-                            dgd8, dgd_stride, flt0_, flt0_stride, flt1_,
-                            flt1_stride, xq, &params);
+    err_test =
+        target_func_(src8, width_, height, src_stride, dgd8, dgd_stride, flt0_,
+                     flt0_stride, flt1_, flt1_stride, xq, &params);
 
     ASSERT_EQ(err_ref, err_test);
   }
@@ -353,20 +355,24 @@ TEST_P(PixelProjHighbdErrorTest, DISABLED_Speed) {
 }
 
 #if HAVE_SSE4_1
-INSTANTIATE_TEST_SUITE_P(SSE4_1, PixelProjHighbdErrorTest,
-                         ::testing::Values(av1_highbd_pixel_proj_error_sse4_1));
+INSTANTIATE_TEST_SUITE_P(
+    SSE4_1, PixelProjHighbdErrorTest,
+    ::testing::Combine(::testing::Values(av1_highbd_pixel_proj_error_sse4_1),
+                       ::testing::Range(64, MAX_DATA_BLOCK, 64)));
 #endif  // HAVE_SSE4_1
 
 #if HAVE_AVX2
-
-INSTANTIATE_TEST_SUITE_P(AVX2, PixelProjHighbdErrorTest,
-                         ::testing::Values(av1_highbd_pixel_proj_error_avx2));
+INSTANTIATE_TEST_SUITE_P(
+    AVX2, PixelProjHighbdErrorTest,
+    ::testing::Combine(::testing::Values(av1_highbd_pixel_proj_error_avx2),
+                       ::testing::Range(64, MAX_DATA_BLOCK, 64)));
 #endif  // HAVE_AVX2
 
 #if HAVE_NEON
-
-INSTANTIATE_TEST_SUITE_P(NEON, PixelProjHighbdErrorTest,
-                         ::testing::Values(av1_highbd_pixel_proj_error_neon));
+INSTANTIATE_TEST_SUITE_P(
+    NEON, PixelProjHighbdErrorTest,
+    ::testing::Combine(::testing::Values(av1_highbd_pixel_proj_error_neon),
+                       ::testing::Range(64, MAX_DATA_BLOCK, 64)));
 #endif  // HAVE_NEON
 
 }  // namespace pickrst_test_highbd
