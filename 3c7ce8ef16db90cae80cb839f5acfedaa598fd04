@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a6f61244_ad308cda",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-02-24T23:32:31Z",
+      "side": 1,
+      "message": "Thanks for the patch and for signing the CLA. Your first patch will need to be uploaded by a committer to have the tests run. I\u0027ve posted a few comments before we do that.",
+      "revId": "3c7ce8ef16db90cae80cb839f5acfedaa598fd04",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "78b4a5f3_5e69178b",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-02-24T23:32:31Z",
+      "side": 1,
+      "message": "This change doesn\u0027t look to be necessary for this commit. Please remove it.",
+      "revId": "3c7ce8ef16db90cae80cb839f5acfedaa598fd04",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "82d570c1_fab60edd",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-02-24T23:32:31Z",
+      "side": 1,
+      "message": "Would `include` (no `./`) be enough? This should expand to `\u003cinstall-prefix\u003e/include` correct?",
+      "range": {
+        "startLine": 292,
+        "startChar": 67,
+        "endLine": 292,
+        "endChar": 76
+      },
+      "revId": "3c7ce8ef16db90cae80cb839f5acfedaa598fd04",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a96c0f6b_244cb57b",
+        "filename": "build/cmake/aom_install.cmake",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-02-24T23:32:31Z",
+      "side": 1,
+      "message": "Please run cmake-format on this file:\n\n```\ndiff --git a/build/cmake/aom_install.cmake b/build/cmake/aom_install.cmake\nindex 569494eedc..3794a2b3bd 100644\n--- a/build/cmake/aom_install.cmake\n+++ b/build/cmake/aom_install.cmake\n@@ -85,7 +85,8 @@ macro(setup_aom_install_targets)\n     endif()\n \n     set(AOM_GENERATED_DIR \"${CMAKE_CURRENT_BINARY_DIR}/generated\")\n-    set(AOM_VERSION_CONFIG \"${AOM_GENERATED_DIR}/${PROJECT_NAME}ConfigVersion.cmake\")\n+    set(AOM_VERSION_CONFIG\n+        \"${AOM_GENERATED_DIR}/${PROJECT_NAME}ConfigVersion.cmake\")\n     set(AOM_PROJECT_CONFIG \"${AOM_GENERATED_DIR}/${PROJECT_NAME}Config.cmake\")\n     set(AOM_TARGETS_EXPORT_NAME \"${PROJECT_NAME}Targets\")\n     set(AOM_CONFIG_INSTALL_DIR \"lib/cmake/${PROJECT_NAME}\")\n@@ -93,20 +94,19 @@ macro(setup_aom_install_targets)\n     set(AOM_VERSION ${PROJECT_VERSION})\n \n     include(CMakePackageConfigHelpers)\n-    write_basic_package_version_file(\n-      \"${AOM_VERSION_CONFIG}\" VERSION ${AOM_VERSION} COMPATIBILITY SameMajorVersion\n-    )\n-    configure_file(\"${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.cmake.in\" \"${AOM_PROJECT_CONFIG}\" @ONLY)\n+    write_basic_package_version_file(\"${AOM_VERSION_CONFIG}\"\n+                                     VERSION ${AOM_VERSION}\n+                                     COMPATIBILITY SameMajorVersion)\n+    configure_file(\"${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.cmake.in\"\n+                   \"${AOM_PROJECT_CONFIG}\" @ONLY)\n \n     # Install cmake config files\n-    install(\n-      FILES \"${AOM_PROJECT_CONFIG}\" \"${AOM_VERSION_CONFIG}\"\n-      DESTINATION \"${AOM_CONFIG_INSTALL_DIR}\")\n+    install(FILES \"${AOM_PROJECT_CONFIG}\" \"${AOM_VERSION_CONFIG}\"\n+            DESTINATION \"${AOM_CONFIG_INSTALL_DIR}\")\n \n-    install(\n-      EXPORT \"${AOM_TARGETS_EXPORT_NAME}\"\n-      NAMESPACE \"${AOM_NAMESPACE}\"\n-      DESTINATION \"${AOM_CONFIG_INSTALL_DIR}\")\n+    install(EXPORT \"${AOM_TARGETS_EXPORT_NAME}\"\n+            NAMESPACE \"${AOM_NAMESPACE}\"\n+            DESTINATION \"${AOM_CONFIG_INSTALL_DIR}\")\n \n     # Setup the install rules. install() will automatically prepend\n     # CMAKE_INSTALL_PREFIX to relative paths\n\n```",
+      "revId": "3c7ce8ef16db90cae80cb839f5acfedaa598fd04",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
