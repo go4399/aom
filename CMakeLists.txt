@@ -25,7 +25,7 @@ if("${AOM_ROOT}" STREQUAL "${AOM_CONFIG_DIR}")
                 "And re-run CMake from the aom_build directory.")
 endif()
 
-project(AOM C CXX)
+project(AOM LANGUAGES C CXX VERSION 3.12.1)
 
 # GENERATED source property global visibility.
 if(POLICY CMP0118)
@@ -285,9 +285,11 @@ else()
   set(target_objs_aom $<TARGET_OBJECTS:aom_obj>)
 endif()
 add_library(aom ${target_objs_aom} $<TARGET_OBJECTS:aom_rtcd>)
+target_include_directories(aom PUBLIC $<INSTALL_INTERFACE:include>)
 
 if(BUILD_SHARED_LIBS)
   add_library(aom_static STATIC ${target_objs_aom} $<TARGET_OBJECTS:aom_rtcd>)
+  target_include_directories(aom_static PUBLIC $<INSTALL_INTERFACE:include>)
   set_target_properties(aom_static PROPERTIES OUTPUT_NAME aom)
   if(MSVC OR (WIN32 AND NOT MINGW))
     # Fix race condition between the import library and the static library.
