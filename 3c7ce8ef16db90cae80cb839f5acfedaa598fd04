@@ -91,6 +91,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "de614d14_d8f914b3",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 3908354
+      },
+      "writtenOn": "2025-02-25T10:34:17Z",
+      "side": 1,
+      "message": "It only interacts with the version set at the line 28, the versions set at lines 12 and 14 are the cmake version, the ${PROJECT_VERSION} is the version set at the line 28,",
+      "parentUuid": "54d02ac7_a0818be8",
+      "revId": "3c7ce8ef16db90cae80cb839f5acfedaa598fd04",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "82d570c1_fab60edd",
         "filename": "CMakeLists.txt",
         "patchSetId": 1
