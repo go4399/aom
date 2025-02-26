@@ -3,6 +3,23 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "c61e2e2b_ed6e8d6b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-02-26T23:50:13Z",
+      "side": 1,
+      "message": "In libwebp we have the following test:\n\n```\n    cat \u003e CMakeLists.txt \u003c\u003cEOF\ncmake_minimum_required(VERSION 2.8.12)\n\nproject(libwebp C)\n\nfind_package(WebP)\nif(NOT WebP_FOUND)\n  message(FATAL_ERROR \"WebP package not found\")\nendif()\nmessage(\"WebP_FOUND: \\${WebP_FOUND}\")\nmessage(\"WebP_INCLUDE_DIRS: \\${WebP_INCLUDE_DIRS}\")\nmessage(\"WebP_LIBRARIES: \\${WebP_LIBRARIES}\")\nmessage(\"WEBP_INCLUDE_DIRS: \\${WEBP_INCLUDE_DIRS}\")\nmessage(\"WEBP_LIBRARIES: \\${WEBP_LIBRARIES}\")\n\nif(NOT WEBP_LIBRARIES OR NOT WebP_LIBRARIES)\n  message(FATAL_ERROR \"(WebP|WEBP)_LIBRARIES should be non-empty\")\nendif()\n\nif(POLICY CMP0028)\n  cmake_policy(SET CMP0028 NEW)\nendif()\n\nadd_executable(main \"main.c\")\ntarget_link_libraries(main WebP::webp)\nEOF\n\ncat \u003e main.c \u003c\u003c EOF\n#include \"webp/encode.h\"\n\nint main() { return WebPGetEncoderVersion(); }\nEOF\n    cmake . $opts -DCMAKE_PREFIX_PATH\u003d\"${BUILD_DIR}/webp-install/usr/local\"\n    make\n```\n\nI can add something similar here",
+      "revId": "fac0b7040137640f9fdca8748b1bfd26845fc723",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "20fc82ce_c8c6f158",
         "filename": "build/cmake/aom_install.cmake",
         "patchSetId": 5
