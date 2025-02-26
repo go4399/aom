@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "da3eff67_83838d81",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-02-26T00:41:38Z",
+      "side": 1,
+      "message": "When working with gerrit, new patchsets are created by amending commits rather than creating a new one (the Change-Id field controls the change mapping). Let\u0027s keep the discussion in https://aomedia-review.googlesource.com/c/aom/+/197261. This change can be abandoned.",
+      "revId": "bfdb6d5fd358343b80bd1c3dc252b713b5b0bf53",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
