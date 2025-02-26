@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e64ed10_e3720c0d",
+        "filename": "cmake/config.cmake.in",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-02-26T18:02:49Z",
+      "side": 1,
+      "message": "Since we already have the `build/cmake` folder I\u0027ll move this new file there.",
+      "revId": "7ae5c25a262f4bcc6b79bd617da35e6f606b8e79",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
