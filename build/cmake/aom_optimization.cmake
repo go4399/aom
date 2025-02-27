@@ -29,6 +29,23 @@ function(get_msvc_intrinsic_flag flag translated_flag)
   endif()
 endfunction()
 
+function(configure_compiler_flags target_name base_flag)
+  set(combined_flags "${base_flag}")
+
+  foreach(opt_flag IN LISTS ARGN)  # Iterate through optional flags
+    unset(FLAG_SUPPORTED)
+    check_c_compiler_flag("${opt_flag}" FLAG_SUPPORTED)
+    if(FLAG_SUPPORTED)
+      list(APPEND combined_flags "${opt_flag}")
+    endif()
+  endforeach()
+
+  if(combined_flags)
+    separate_arguments(combined_flags) # Good practice
+    target_compile_options(${target_name} PUBLIC ${combined_flags})
+  endif()
+endfunction()
+
 # Adds an object library target. Terminates generation if $flag is not supported
 # by the current compiler. $flag is the intrinsics flag required by the current
 # compiler, and is added to the compile flags for all sources in $sources.
@@ -55,20 +72,13 @@ function(add_intrinsics_object_library flag opt_name target_to_update sources)
   endif()
 
   if("${flag}" STREQUAL "-mavx2")
-    unset(FLAG_SUPPORTED)
-    check_c_compiler_flag("-mno-avx256-split-unaligned-load" FLAG_SUPPORTED)
-    if(${FLAG_SUPPORTED})
-      set(flag "${flag} -mno-avx256-split-unaligned-load")
-    endif()
-
-    unset(FLAG_SUPPORTED)
-    check_c_compiler_flag("-mno-avx256-split-unaligned-store" FLAG_SUPPORTED)
-    if(${FLAG_SUPPORTED})
-      set(flag "${flag} -mno-avx256-split-unaligned-store")
-    endif()
-  endif()
-
-  if(flag)
+    configure_compiler_flags(${target_name} "${flag}"
+      "-mno-avx256-split-unaligned-load"
+      "-mno-avx256-split-unaligned-store"
+      "-Wno-missing-declarations"
+      "-Wno-macro-redefined"
+    )
+  elseif(flag)
     separate_arguments(flag)
     target_compile_options(${target_name} PUBLIC ${flag})
   endif()
