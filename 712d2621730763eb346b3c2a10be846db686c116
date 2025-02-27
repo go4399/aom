@@ -18,6 +18,29 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "a18487fd_d262d4f4",
+        "filename": "build/cmake/aom_install.cmake",
+        "patchSetId": 6
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-02-27T03:02:46Z",
+      "side": 1,
+      "message": "I think this namespace could be the project name, so `AOM` instead of `aom`. We use `WebP` in libwebp. I\u0027ll look for other examples and consult the documentation.",
+      "range": {
+        "startLine": 103,
+        "startChar": 23,
+        "endLine": 103,
+        "endChar": 26
+      },
+      "revId": "712d2621730763eb346b3c2a10be846db686c116",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "a4990e41_1cc97a9c",
@@ -31,6 +54,24 @@
       "writtenOn": "2025-02-27T03:00:10Z",
       "side": 1,
       "message": "In libwebp we also export variables like `WEBP_INCLUDE_DIRS`:\n\nhttps://chromium.googlesource.com/webm/libwebp/+/refs/tags/v1.5.0/cmake/WebPConfig.cmake.in\n\nThis can be done in a follow up unless it\u0027s somehow a legacy thing.",
+      "revId": "712d2621730763eb346b3c2a10be846db686c116",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea28e722_e5f37668",
+        "filename": "build/cmake/config.cmake.in",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-02-27T03:02:46Z",
+      "side": 1,
+      "message": "\u003e In libwebp we also export variables like `WEBP_INCLUDE_DIRS`:\n\u003e \n\u003e https://chromium.googlesource.com/webm/libwebp/+/refs/tags/v1.5.0/cmake/WebPConfig.cmake.in\n\u003e \n\u003e This can be done in a follow up unless it\u0027s somehow a legacy thing.\n\nWe will need to add the `Threads::Threads` part:\n\n```\nCMake Error at /tmp/libaom/lib/cmake/AOM/AOMTargets.cmake:61 (set_target_properties):\n  The link interface of target \"aom::aom\" contains:\n\n    Threads::Threads\n\n  but the target was not found.  Possible reasons include:\n\n    * There is a typo in the target name.\n    * A find_package call is missing for an IMPORTED target.\n    * An ALIAS target is missing.\n```",
+      "parentUuid": "a4990e41_1cc97a9c",
       "revId": "712d2621730763eb346b3c2a10be846db686c116",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
