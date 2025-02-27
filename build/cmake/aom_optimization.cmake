@@ -66,6 +66,12 @@ function(add_intrinsics_object_library flag opt_name target_to_update sources)
     if(${FLAG_SUPPORTED})
       set(flag "${flag} -mno-avx256-split-unaligned-store")
     endif()
+
+    unset(FLAG_SUPPORTED)
+    check_c_compiler_flag("-Wno-missing-declarations" FLAG_SUPPORTED)
+    if(${FLAG_SUPPORTED})
+      set(flag "${flag} -Wno-missing-declarations")
+    endif()
   endif()
 
   if(flag)
