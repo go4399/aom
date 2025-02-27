@@ -551,12 +551,14 @@ endif()
 add_library(hwy ${AOM_HIGHWAY_SOURCES})
 if(NOT MSVC)
   disable_compiler_flags(hwy FLAGS -Wundef -Wmissing-declarations
-                         -Wmissing-prototypes)
+                         -Wmissing-prototypes -Wmacro-redefined)
   # For Arm builds
   disable_compiler_flags(hwy FLAGS -Wshadow -Wc++17-extensions)
   target_compile_options(hwy PRIVATE -Wno-format-nonliteral)
 endif()
 target_include_directories(hwy PUBLIC ${HIGHWAY_INCLUDE_DIRS})
+
+target_link_libraries(aom ${AOM_LIB_LINK_TYPE} hwy)
 
 if(CONFIG_AV1_ENCODER)
   if(ENABLE_EXAMPLES)
