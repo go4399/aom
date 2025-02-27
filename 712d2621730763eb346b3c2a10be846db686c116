@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab12d406_5230696a",
+        "filename": "build/cmake/aom_install.cmake",
+        "patchSetId": 6
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-02-27T02:50:03Z",
+      "side": 1,
+      "message": "In the previous patchset I moved this too far. config.cmake.in requires this variable.",
+      "revId": "712d2621730763eb346b3c2a10be846db686c116",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
