@@ -250,6 +250,7 @@ if(CONFIG_AV1_ENCODER)
               "${AOM_ROOT}/aom_dsp/x86/quantize_avx2.c"
               "${AOM_ROOT}/aom_dsp/x86/sad4d_avx2.c"
               "${AOM_ROOT}/aom_dsp/x86/sad_avx2.c"
+              "${AOM_ROOT}/aom_dsp/sad_hwy.cc"
               "${AOM_ROOT}/aom_dsp/x86/sad_impl_avx2.c"
               "${AOM_ROOT}/aom_dsp/x86/variance_avx2.c"
               "${AOM_ROOT}/aom_dsp/x86/sse_avx2.c"
@@ -273,6 +274,7 @@ if(CONFIG_AV1_ENCODER)
 
   list(APPEND AOM_DSP_ENCODER_INTRIN_SSE4_1
               "${AOM_ROOT}/aom_dsp/x86/avg_intrin_sse4.c"
+              "${AOM_ROOT}/aom_dsp/sad_hwy.cc"
               "${AOM_ROOT}/aom_dsp/x86/sse_sse4.c"
               "${AOM_ROOT}/aom_dsp/x86/obmc_sad_sse4.c"
               "${AOM_ROOT}/aom_dsp/x86/obmc_variance_sse4.c")
