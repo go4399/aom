@@ -1499,6 +1499,8 @@ const SadMxNParam neon_tests[] = {
   make_tuple(64, 64, &aom_sad64x64_neon, -1),
   make_tuple(64, 32, &aom_sad64x32_neon, -1),
   make_tuple(32, 64, &aom_sad32x64_neon, -1),
+  make_tuple(64, 64, &SumOfAbsoluteDiff64x64_neon, -1),
+  make_tuple(64, 32, &SumOfAbsoluteDiff64x32_neon, -1),
   make_tuple(32, 32, &aom_sad32x32_neon, -1),
   make_tuple(32, 16, &aom_sad32x16_neon, -1),
   make_tuple(16, 32, &aom_sad16x32_neon, -1),
@@ -2154,6 +2156,8 @@ const SadMxNParam sse2_tests[] = {
   make_tuple(8, 4, &aom_sad8x4_sse2, -1),
   make_tuple(4, 8, &aom_sad4x8_sse2, -1),
   make_tuple(4, 4, &aom_sad4x4_sse2, -1),
+  make_tuple(64, 64, &SumOfAbsoluteDiff64x64_sse2, -1),
+  make_tuple(64, 32, &SumOfAbsoluteDiff64x32_sse2, -1),
 #if CONFIG_AV1_HIGHBITDEPTH
   make_tuple(64, 64, &aom_highbd_sad64x64_sse2, 8),
   make_tuple(64, 32, &aom_highbd_sad64x32_sse2, 8),
@@ -2547,6 +2551,8 @@ const SadMxNParam avx2_tests[] = {
   make_tuple(32, 64, &aom_sad32x64_avx2, -1),
   make_tuple(32, 32, &aom_sad32x32_avx2, -1),
   make_tuple(32, 16, &aom_sad32x16_avx2, -1),
+  make_tuple(64, 64, &SumOfAbsoluteDiff64x64_avx2, -1),
+  make_tuple(64, 32, &SumOfAbsoluteDiff64x32_avx2, -1),
 #if CONFIG_AV1_HIGHBITDEPTH
   make_tuple(128, 128, &aom_highbd_sad128x128_avx2, 8),
   make_tuple(128, 128, &aom_highbd_sad128x128_avx2, 10),
