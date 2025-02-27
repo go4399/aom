@@ -3908,7 +3908,14 @@ int av1_encodedframe_overshoot_cbr(AV1_COMP *cpi, int *q) {
         *q = cpi->rc.worst_quality;
       }
     } else {
-      *q = (3 * cpi->rc.worst_quality + *q) >> 2;
+      // Set a larger QP.
+      if (cm->width * cm->height >= 1280 * 720 &&
+          (p_rc->buffer_level > (p_rc->optimal_buffer_level) >> 1) &&
+          *q > (cpi->rc.best_quality << 1)) {
+        *q = (*q + cpi->rc.worst_quality) >> 1;
+      } else {
+        *q = (3 * cpi->rc.worst_quality + *q) >> 2;
+      }
       // For screen content use the max-q set by the user to allow for less
       // overshoot on slide changes.
       if (is_screen_content) *q = cpi->rc.worst_quality;
