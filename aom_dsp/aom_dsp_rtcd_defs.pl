@@ -835,6 +835,10 @@ if (aom_config("CONFIG_AV1_ENCODER") eq "yes") {
   #
   # Single block SAD / Single block Avg SAD
   #
+  add_proto qw/unsigned int SumOfAbsoluteDiff64x32/, "const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride";
+  specialize qw/SumOfAbsoluteDiff64x32 avx2 sse2 sse4 avx512/;
+  add_proto qw/unsigned int SumOfAbsoluteDiff64x64/, "const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride";
+  specialize qw/SumOfAbsoluteDiff64x64 avx2 sse2 sse4 avx512/;
   foreach (@encoder_block_sizes) {
     ($w, $h) = @$_;
     add_proto qw/unsigned int/, "aom_sad${w}x${h}", "const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride";
