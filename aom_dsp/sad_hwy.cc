@@ -1,3 +1,4 @@
+#define HWY_COMPILE_ALL_ATTAINABLE 1
 #define HWY_TARGET_INCLUDE "aom_dsp/sad_hwy.cc"
 
 #include "third_party/highway/hwy/foreach_target.h"
@@ -7,50 +8,62 @@
 
 HWY_BEFORE_NAMESPACE();
 
-#if HWY_TARGET == HWY_AVX2
-
 namespace {
 namespace HWY_NAMESPACE {
 
 namespace hn = hwy::HWY_NAMESPACE;
 
-unsigned int SumOfAbsoluteDiff64xN(const uint8_t *src_ptr, int src_stride,
-                                   const uint8_t *ref_ptr, int ref_stride,
-                                   int h) {
-  hn::CappedTag<uint8_t, 32> pixel_tag;
-  hn::CappedTag<uint64_t, 4> intermediate_sum_tag;
+HWY_MAYBE_UNUSED unsigned int SumOfAbsoluteDiff64xN(const uint8_t *src_ptr,
+                                                    int src_stride,
+                                                    const uint8_t *ref_ptr,
+                                                    int ref_stride, int h) {
+  constexpr int kBlockWidth = 64;
+  constexpr hn::CappedTag<uint8_t, kBlockWidth> pixel_tag;
+  constexpr hn::Repartition<uint64_t, decltype(pixel_tag)> intermediate_sum_tag;
+  const int vw = hn::Lanes(pixel_tag);
   auto sum_sad = hn::Zero(intermediate_sum_tag);
-  for (int i = 0; i < h; i++) {
-    auto ref_vec_1 = hn::LoadU(pixel_tag, ref_ptr);
-    auto ref_vec_2 = hn::LoadU(pixel_tag, ref_ptr + 32);
-    auto sad_1 = hn::SumsOf8AbsDiff(ref_vec_1, hn::LoadU(pixel_tag, src_ptr));
-    auto sad_2 =
-        hn::SumsOf8AbsDiff(ref_vec_2, hn::LoadU(pixel_tag, src_ptr + 32));
-    sum_sad = hn::Add(sum_sad, hn::Add(sad_1, sad_2));
+  for (int i = 0; i < h; ++i) {
+    for (int j = 0; j < kBlockWidth; j += vw) {
+      auto src_vec = hn::LoadU(pixel_tag, &src_ptr[j]);
+      auto ref_vec = hn::LoadU(pixel_tag, &ref_ptr[j]);
+      auto sad = hn::SumsOf8AbsDiff(src_vec, ref_vec);
+      sum_sad = hn::Add(sum_sad, sad);
+    }
     src_ptr += src_stride;
     ref_ptr += ref_stride;
   }
-
-  unsigned int res =
-      static_cast<unsigned int>(hn::ReduceSum(intermediate_sum_tag, sum_sad));
-  return res;
+  return static_cast<unsigned int>(
+      hn::ReduceSum(intermediate_sum_tag, sum_sad));
 }
 }  // namespace HWY_NAMESPACE
 }  // namespace
 
 HWY_AFTER_NAMESPACE();
 
-#define FSAD64_H(h)                                                           \
-  extern "C" unsigned int SumOfAbsoluteDiff64x##h##_avx2(                     \
+#define FSAD64_H(h, suffix)                                                   \
+  extern "C" unsigned int SumOfAbsoluteDiff64x##h##_##suffix(                 \
       const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr,         \
       int ref_stride) {                                                       \
     return HWY_NAMESPACE::SumOfAbsoluteDiff64xN(src_ptr, src_stride, ref_ptr, \
                                                 ref_stride, h);               \
   }
 
-FSAD64_H(32)
-FSAD64_H(64)
+#if HWY_TARGET == HWY_SSE2
+FSAD64_H(32, sse2)
+FSAD64_H(64, sse2)
+#endif  // HWY_TARGET == HWY_SSE2
 
-#undef FSAD64_H
+#if HWY_TARGET == HWY_SSE4
+FSAD64_H(32, sse4)
+FSAD64_H(64, sse4)
+#endif  // HWY_TARGET == HWY_SSE4
 
+#if HWY_TARGET == HWY_AVX2
+FSAD64_H(32, avx2)
+FSAD64_H(64, avx2)
 #endif  // HWY_TARGET == HWY_AVX2
+
+#if HWY_TARGET == HWY_AVX3
+FSAD64_H(32, avx512)
+FSAD64_H(64, avx512)
+#endif  // HWY_TARGET == HWY_AVX3
