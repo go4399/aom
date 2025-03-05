@@ -1577,7 +1577,8 @@ static aom_codec_err_t encoder_set_config(aom_codec_alg_priv_t *ctx,
     // to update the frame width and height only when the actual encoding is
     // performed. cpi->last_coded_width and cpi->last_coded_height are used to
     // track the actual coded frame size.
-    if (ctx->ppi->cpi->last_coded_width && ctx->ppi->cpi->last_coded_height &&
+    if (ctx->ppi->cpi->svc.number_spatial_layers == 1 && 
+        ctx->ppi->cpi->last_coded_width && ctx->ppi->cpi->last_coded_height &&
         (!valid_ref_frame_size(ctx->ppi->cpi->last_coded_width,
                                ctx->ppi->cpi->last_coded_height, cfg->g_w,
                                cfg->g_h) ||
