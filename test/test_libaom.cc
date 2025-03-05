@@ -11,6 +11,8 @@
 
 #include "gtest/gtest.h"
 
+#include "third_party/benchmark/include/benchmark/benchmark.h"
+
 #include "config/aom_config.h"
 
 #if !CONFIG_SHARED
@@ -54,7 +56,7 @@ static void append_negative_gtest_filter(const char *str) {
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
-
+  benchmark::RunSpecifiedBenchmarks();
 #if !CONFIG_SHARED
 #if AOM_ARCH_AARCH64
   const int caps = aom_arm_cpu_caps();
