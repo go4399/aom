@@ -16,6 +16,69 @@
       "message": "In this CL, we introduced a speed feature `adaptive_luma_filter_skip` for low-complexity decode mode. Initially, this sf is tested with resetting chroma filter levels as well. However, the speed up observed is not much as compared with the BD-Rate loss. Hence, to minimize BD-rate drop, this logic is limited to luma only.\n\nThe visual quality tests showed blocking artifacts for ‘blue_sky_480p25’ at cpu_used\u003d1, --target-bitrate\u003d75 kbps in both the reference and modified versions. For this configuration, an unexpected vertical line was observed in the reference version but the same was not seen after this change. However, the modified version has slightly more artifacts at the boundaries of the video frame.\n\nPerformance results of encoder and decoder for the streams generated\nwith low complexity decode enabled.\n\n```\n                        Instruction Count                                               \n                          Reduction(%)                BD-Rate Loss(%)                 Time Reduction(%)\ncpu-used  Resolution    Encoder   Decoder    avg.psnr    ssim       vmaf     vmaf_neg  dav1d Decoder \n   1        LOWRES2     -0.031    4.013      0.0212    0.0170    -0.0793    -0.0721      3.457\n   1        MIDRES2     -0.052    3.832      0.0541    0.0240     0.0121    -0.0002      3.137\n   1     SHORTS608P     -0.027    4.123      0.1369    0.1277     0.0064    -0.0033      3.472\n   1         HDRES2      0.068    2.935      0.0313    0.0055     0.0057    -0.0015      2.539\n   1        Average     -0.011    3.745      0.0645    0.0476    -0.0128    -0.0185      3.166\n                                                                                         \n   2        LOWRES2     -0.021    4.100      0.0201   -0.0610    -0.0874    -0.1099      2.827\n   2        MIDRES2      0.008    3.990      0.0416    0.0000    -0.0838    -0.0518      3.271\n   2     SHORTS608P     -0.001    4.201      0.2187    0.1683    -0.0176    -0.0065      3.521\n   2         HDRES2      0.004    3.053      0.0616    0.0413     0.0317     0.0350      2.393\n   2        Average     -0.002    3.853      0.0918    0.0434    -0.0382    -0.0320      3.028\n                                                                                                 \n   3        LOWRES2     -0.066    3.045     -0.0094   -0.0317    -0.2399    -0.1657      2.571\n   3        MIDRES2     -0.051    3.082      0.0034   -0.0012    -0.0362    -0.0385      2.388\n   3     SHORTS608P      0.065    3.421      0.1787    0.1654     0.0607     0.0433      3.062\n   3         HDRES2     -0.037    2.302      0.0176    0.0096    -0.0029     0.0000      1.759\n   3        Average     -0.018    2.984      0.0538    0.0417    -0.0491    -0.0362      2.474\n```\n\nThe instruction count reduction specified has been measured using command:\n`$ perf stat -e instructions:u ./aomenc …`\n`$ perf stat -e instructions:u ./dav1d …`\n\nThe decode time is measured using command\n`time taskset -c 0  ./dav1d …`\n\nWe also verified that this CL produces bit-exact output for RT, ALLINTRA and cpu_used\u003e\u003d4 of GOOD encoding modes.",
       "revId": "7f9b469b273128fffe3acbdf61a4001a0677c48f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "61b56601_5cf7f454",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-03-05T21:59:35Z",
+      "side": 1,
+      "message": "Thanks for the patch. Please see my comments below.",
+      "revId": "7f9b469b273128fffe3acbdf61a4001a0677c48f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08f2bfc1_f3ec402f",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 4548,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-03-05T21:59:35Z",
+      "side": 1,
+      "message": "What is the benefit for not storing the final filter_level here?",
+      "range": {
+        "startLine": 4545,
+        "startChar": 6,
+        "endLine": 4548,
+        "endChar": 59
+      },
+      "revId": "7f9b469b273128fffe3acbdf61a4001a0677c48f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "88ac0af8_4e2d4d36",
+        "filename": "av1/encoder/picklpf.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-03-05T21:59:35Z",
+      "side": 1,
+      "message": "This condition seems to create a chain reaction. Requiring one frame\u0027s reference filter level to be 0 requires its reference\u0027s reference filter level to be 0. Could you explain how this works? Is it likely that a leaf frame\u0027s filter level being set to 0 needs the reference at lower pyramid level to have filter_level\u003d0 as well. How does this process start? E.g. ARF frame?",
+      "range": {
+        "startLine": 395,
+        "startChar": 11,
+        "endLine": 395,
+        "endChar": 73
+      },
+      "revId": "7f9b469b273128fffe3acbdf61a4001a0677c48f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
