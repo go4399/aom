@@ -573,7 +573,8 @@ void av1_cyclic_refresh_setup(AV1_COMP *const cpi) {
        cm->height != cm->prev_frame->height) &&
       cpi->svc.prev_number_spatial_layers == cpi->svc.number_spatial_layers;
 
-  if (resolution_change) cyclic_refresh_reset_resize(cpi);
+  if (resolution_change && cpi->svc.temporal_layer_id == 0)
+    cyclic_refresh_reset_resize(cpi);
   if (!cr->apply_cyclic_refresh) {
     // Don't disable and set seg_map to 0 if active_maps is enabled, unless
     // whole frame is set as inactive (since we only apply cyclic_refresh to
