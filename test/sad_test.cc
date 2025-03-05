@@ -16,6 +16,8 @@
 
 #include "gtest/gtest.h"
 
+#include "third_party/benchmark/include/benchmark/benchmark.h"
+
 #include "config/aom_config.h"
 #include "config/aom_dsp_rtcd.h"
 
@@ -596,6 +598,37 @@ TEST_P(SADTest, DISABLED_Speed) {
   SpeedSAD();
   source_stride_ = tmp_stride;
 }
+
+static void FillRandomForBM(uint8_t *data, ACMRandom &rnd, int stride,
+                            int height) {
+  for (int j = 0; j < height; ++j) {
+    for (int i = 0; i < stride; ++i) {
+      data[j * stride + i] = rnd.Rand8();
+    }
+  }
+}
+
+static void BM_SADBasline(benchmark::State &state) {
+  // const int width = 64;
+  const int source_stride = 32;
+  const int reference_stride = 128;
+  ACMRandom rnd;
+  rnd.Reset(ACMRandom::DeterministicSeed());
+  uint8_t *source_data =
+      reinterpret_cast<uint8_t *>(aom_memalign(16, 128 * 256));
+  uint8_t *reference_data =
+      reinterpret_cast<uint8_t *>(aom_memalign(16, 4 * 128 * 256));
+  FillRandomForBM(source_data, rnd, source_stride, 64);
+  FillRandomForBM(reference_data, rnd, reference_stride, 64);
+  for (auto s : state) {
+    aom_sad64x64_avx2(source_data, source_stride, reference_data,
+                      reference_stride);
+  }
+  aom_free(source_data);
+  aom_free(reference_data);
+}
+
+BENCHMARK(BM_SADBasline);
 
 TEST_P(SADSkipTest, MaxRef) {
   FillConstant(source_data_, source_stride_, 0);
