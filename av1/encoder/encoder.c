@@ -517,10 +517,11 @@ static void init_seq_coding_tools(AV1_PRIMARY *const ppi,
 
   seq->max_frame_width = frm_dim_cfg->forced_max_frame_width
                              ? frm_dim_cfg->forced_max_frame_width
-                             : frm_dim_cfg->width;
-  seq->max_frame_height = frm_dim_cfg->forced_max_frame_height
-                              ? frm_dim_cfg->forced_max_frame_height
-                              : frm_dim_cfg->height;
+                             : AOMMAX(seq->max_frame_width, frm_dim_cfg->width);
+  seq->max_frame_height =
+      frm_dim_cfg->forced_max_frame_height
+          ? frm_dim_cfg->forced_max_frame_height
+          : AOMMAX(seq->max_frame_height, frm_dim_cfg->height);
   seq->num_bits_width =
       (seq->max_frame_width > 1) ? get_msb(seq->max_frame_width - 1) + 1 : 1;
   seq->num_bits_height =
