@@ -96,7 +96,7 @@ static inline int aom_get_qmlevel_allintra(int qindex, int first, int last) {
   return clamp(qm_level, first, last);
 }
 
-// Luma QM levels tuned for image quality (IQ)
+// Luma QM levels tuned for SSIMULACRA 2
 // This formula was empirically derived by encoding Daala's subset1 validation
 // testset for each QP/QM tuple, and building a convex hull that maximizes
 // SSIMULACRA 2 scores, and a final subjective visual quality pass as a quick
@@ -108,7 +108,8 @@ static inline int aom_get_qmlevel_allintra(int qindex, int first, int last) {
 // both set below or above this range.
 // For more information on quantization matrices, please refer to
 // https://arxiv.org/pdf/2008.06091, section F.
-static inline int aom_get_qmlevel_luma_iq(int qindex, int first, int last) {
+static inline int aom_get_qmlevel_luma_ssimulacra2(int qindex, int first,
+                                                   int last) {
   int qm_level = 0;
 
   if (qindex <= 40) {

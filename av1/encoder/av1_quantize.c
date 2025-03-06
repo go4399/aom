@@ -971,8 +971,12 @@ void av1_set_quantizer(AV1_COMMON *const cm, int min_qmlevel, int max_qmlevel,
 
   if (is_allintra) {
     if (tuning == AOM_TUNE_IQ || tuning == AOM_TUNE_SSIMULACRA2) {
-      // Use luma QM formula specifically tailored for tune IQ
-      get_luma_qmlevel = aom_get_qmlevel_luma_iq;
+      if (tuning == AOM_TUNE_SSIMULACRA2) {
+        // Use luma QM formula specifically tailored for tune SSIMULACRA2
+        get_luma_qmlevel = aom_get_qmlevel_luma_ssimulacra2;
+      } else {
+        get_luma_qmlevel = aom_get_qmlevel_allintra;
+      }
 
       if (cm->seq_params->subsampling_x == 0 &&
           cm->seq_params->subsampling_y == 0) {
