@@ -60,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4fb492b8_2ae158c0",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 4548,
+      "author": {
+        "id": 25857
+      },
+      "writtenOn": "2025-03-06T14:51:55Z",
+      "side": 1,
+      "message": "The `filter_level` search of the current frame starts around the `filter_level` of the previous frame (please check the switch case in `search_filter_level()`). Since our logic resets the `filter_level` of the current frame, the original value is backed up. The backed up values serve as the starting point for `fitler_level` search of the next frame and the search will happen around the original values.",
+      "parentUuid": "08f2bfc1_f3ec402f",
+      "range": {
+        "startLine": 4545,
+        "startChar": 6,
+        "endLine": 4548,
+        "endChar": 59
+      },
+      "revId": "7f9b469b273128fffe3acbdf61a4001a0677c48f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "88ac0af8_4e2d4d36",
         "filename": "av1/encoder/picklpf.c",
         "patchSetId": 4
@@ -71,6 +95,30 @@
       "writtenOn": "2025-03-05T21:59:35Z",
       "side": 1,
       "message": "This condition seems to create a chain reaction. Requiring one frame\u0027s reference filter level to be 0 requires its reference\u0027s reference filter level to be 0. Could you explain how this works? Is it likely that a leaf frame\u0027s filter level being set to 0 needs the reference at lower pyramid level to have filter_level\u003d0 as well. How does this process start? E.g. ARF frame?",
+      "range": {
+        "startLine": 395,
+        "startChar": 11,
+        "endLine": 395,
+        "endChar": 73
+      },
+      "revId": "7f9b469b273128fffe3acbdf61a4001a0677c48f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "470f11e6_06c63304",
+        "filename": "av1/encoder/picklpf.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 25857
+      },
+      "writtenOn": "2025-03-06T14:51:55Z",
+      "side": 1,
+      "message": "The process of setting `filter_level` to zero begins when the current frame’s `filter_level[0]` and `filter_level[1]` are selected as zero by the filter search. Any frame referring to this frame can also have its `filter_level` set to zero, subject to filter thresholds, minimum filter_level of reference frames and pyramid level.\n\nThis logic applies only to frames with `pyramid_level` \u003e 1 (i.e., internal ARF frames) and when the minimum filter level among reference frames is zero. For a given frame, `filter_level` selected is closer to 0 (from search_filter_level()) indicating that the frame is closer to the original reference with less blocking artifacts. The logic is developed based on the fact that if the deblocking filter is skipped for such a frame, coding impact may not be significant.\n\nAs you correctly pointed out, this may create a chain reaction, but the frames coded in future may get a chance to recover, as the filter level search of the current frame happens around the original `filter_level` of the previous frame. The filter level is only set to zero if all four components `(lf-\u003efilter_level[0], lf-\u003efilter_level[1], lf-\u003efilter_level_u, and lf-\u003efilter_level_v)` fall below the threshold.",
+      "parentUuid": "88ac0af8_4e2d4d36",
       "range": {
         "startLine": 395,
         "startChar": 11,
