@@ -501,7 +501,7 @@ function(setup_aom_test_targets)
     endif()
   endif()
 
-  target_link_libraries(test_libaom ${AOM_LIB_LINK_TYPE} aom aom_gtest)
+  target_link_libraries(test_libaom ${AOM_LIB_LINK_TYPE} aom aom_gtest yuv)
 
   if(CONFIG_WEBM_IO)
     target_sources(test_libaom PRIVATE $<TARGET_OBJECTS:webm>)
