@@ -24,6 +24,50 @@
 namespace datarate_test {
 namespace {
 
+class ResizingVideoSource : public ::libaom_test::DummyVideoSource {
+ public:
+  ResizingVideoSource(int width, int height, int inp_width, int inp_height,
+                      std::string file_name, int limit) {
+    width_ = width;
+    height_ = height;
+    inp_width_ = inp_width;
+    inp_height_ = inp_height;
+    file_name_ = file_name;
+    limit_ = limit;
+    SetSize(width_, height_);
+    img_inp_ =
+        aom_img_alloc(nullptr, AOM_IMG_FMT_I420, inp_width_, inp_height_, 32);
+    raw_size_ = inp_width_ * inp_height_ * 3 / 2;
+    input_file_ = ::libaom_test::OpenTestDataFile(file_name_);
+  }
+
+  ~ResizingVideoSource() override = default;
+
+ protected:
+  void FillFrame() override {
+    // Read frame from input_file and scale up.
+    ASSERT_NE(input_file_, nullptr);
+    fread(img_inp_->img_data, raw_size_, 1, input_file_);
+    libyuv::I420Scale(
+        img_inp_->planes[AOM_PLANE_Y], img_inp_->stride[AOM_PLANE_Y],
+        img_inp_->planes[AOM_PLANE_U], img_inp_->stride[AOM_PLANE_U],
+        img_inp_->planes[AOM_PLANE_V], img_inp_->stride[AOM_PLANE_V],
+        inp_width_, inp_height_, img_->planes[AOM_PLANE_Y],
+        img_->stride[AOM_PLANE_Y], img_->planes[AOM_PLANE_U],
+        img_->stride[AOM_PLANE_U], img_->planes[AOM_PLANE_V],
+        img_->stride[AOM_PLANE_V], width_, height_, libyuv::kFilterBox);
+  }
+
+  int width_;
+  int height_;
+  int inp_width_;
+  int inp_height_;
+  std::string file_name_;
+  aom_image_t *img_inp_;
+  size_t raw_size_;
+  FILE *input_file_;
+};
+
 // Params: test mode, speed, aq mode and index for bitrate array.
 class DatarateTestLarge
     : public ::libaom_test::CodecTestWith4Params<libaom_test::TestMode, int,
@@ -84,6 +128,25 @@ class DatarateTestLarge
         << " The datarate for the file is lower than target by too much!";
     ASSERT_LE(effective_datarate_, cfg_.rc_target_bitrate * 1.19)
         << " The datarate for the file is greater than target by too much!";
+  }
+
+  // Test an ancoding mode that triggers an assert (av1_is_subpelmv_in_range)
+  // in nonrd_pickmode., issue: Bug: b:396169342.
+  // The assert is triggered on a 2456x2054 resolution with settings define
+  // with the flag avif_mode_. This test upsamples a QVGA clip to the target
+  // resolution, using libyuv.
+  virtual void BasicRateTargetingCBRAssertAvifModeTest() {
+    cfg_.rc_min_quantizer = 0;
+    cfg_.rc_max_quantizer = 63;
+    cfg_.rc_end_usage = AOM_CBR;
+    cfg_.g_lag_in_frames = 0;
+    ResizingVideoSource video(2456, 2054, 320, 240,
+                              "pixel_capture_w320h240.yuv", 100);
+    const int bitrate_array[2] = { 1000, 2000 };
+    cfg_.rc_target_bitrate = bitrate_array[GET_PARAM(4)];
+    ResetModel();
+    avif_mode_ = 1;
+    ASSERT_NO_FATAL_FAILURE(RunLoop(&video));
   }
 
   virtual void BasicRateTargetingCBRSpikeTest() {
@@ -553,6 +616,11 @@ TEST_P(DatarateTestRealtime, BasicRateTargetingVBR) {
 // Check basic rate targeting for CBR.
 TEST_P(DatarateTestRealtime, BasicRateTargetingCBR) {
   BasicRateTargetingCBRTest();
+}
+
+// Check basic rate targeting for CBR, special case.
+TEST_P(DatarateTestRealtime, BasicRateTargetingCBRAssertAvifMode) {
+  BasicRateTargetingCBRAssertAvifModeTest();
 }
 
 // Check basic rate targeting for CBR. Use a longer clip,
