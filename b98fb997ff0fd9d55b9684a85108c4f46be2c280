@@ -1,0 +1,164 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a2cff8c_8802c905",
+        "filename": "test/sad_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 621,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-03-07T14:31:43Z",
+      "side": 1,
+      "message": "I\u0027d expect this to more typically be equal to the width.",
+      "range": {
+        "startLine": 621,
+        "startChar": 0,
+        "endLine": 621,
+        "endChar": 31
+      },
+      "revId": "b98fb997ff0fd9d55b9684a85108c4f46be2c280",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d2e7eec9_b6db82d6",
+        "filename": "test/sad_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-03-07T14:31:43Z",
+      "side": 1,
+      "message": "Is this the typical alignment in AOM? Arguably long term this should be equal to the maximum vector size (so 64 with AVX512).",
+      "range": {
+        "startLine": 628,
+        "startChar": 47,
+        "endLine": 628,
+        "endChar": 49
+      },
+      "revId": "b98fb997ff0fd9d55b9684a85108c4f46be2c280",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04fcd885_b56c0dee",
+        "filename": "test/sad_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-03-07T14:31:43Z",
+      "side": 1,
+      "message": "I\u0027d add a state.SetBytesProcessed(static_cast\u003cint64_t\u003e(state.iterations()) * Width * Height) here (and pass in width/height as template parameters).",
+      "range": {
+        "startLine": 636,
+        "startChar": 0,
+        "endLine": 636,
+        "endChar": 27
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "9e371a63_6d672b03",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/sad_test.cc",
+              "range": {
+                "startLine": 619,
+                "startChar": 0,
+                "endLine": 620,
+                "endChar": 0
+              },
+              "replacement": "template \u003cSADFuncPtr SADFunc, int width, int height\u003e\n"
+            },
+            {
+              "path": "test/sad_test.cc",
+              "range": {
+                "startLine": 621,
+                "startChar": 0,
+                "endLine": 623,
+                "endChar": 0
+              },
+              "replacement": "  const int source_stride \u003d width;\n  const int reference_stride \u003d width * 2;\n"
+            },
+            {
+              "path": "test/sad_test.cc",
+              "range": {
+                "startLine": 626,
+                "startChar": 0,
+                "endLine": 627,
+                "endChar": 0
+              },
+              "replacement": "      reinterpret_cast\u003cuint8_t *\u003e(aom_memalign(16, width * 256));\n"
+            },
+            {
+              "path": "test/sad_test.cc",
+              "range": {
+                "startLine": 628,
+                "startChar": 0,
+                "endLine": 629,
+                "endChar": 0
+              },
+              "replacement": "      reinterpret_cast\u003cuint8_t *\u003e(aom_memalign(16, 4 * width * 256));\n"
+            },
+            {
+              "path": "test/sad_test.cc",
+              "range": {
+                "startLine": 637,
+                "startChar": 0,
+                "endLine": 637,
+                "endChar": 0
+              },
+              "replacement": "  state.SetBytesProcessed(static_cast\u003cint64_t\u003e(state.iterations()) * width *\n                          height);\n"
+            },
+            {
+              "path": "test/sad_test.cc",
+              "range": {
+                "startLine": 639,
+                "startChar": 0,
+                "endLine": 643,
+                "endChar": 0
+              },
+              "replacement": "BENCHMARK(BM_SAD\u003caom_sad64x64_avx2, 64, 64\u003e);\nBENCHMARK(BM_SAD\u003cSumOfAbsoluteDiff64x64_avx2, 64, 64\u003e);\nBENCHMARK(BM_SAD\u003caom_sad64x32_avx2, 64, 32\u003e);\nBENCHMARK(BM_SAD\u003cSumOfAbsoluteDiff64x32_avx2, 64, 32\u003e);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "b98fb997ff0fd9d55b9684a85108c4f46be2c280",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09e576f1_ca2a8726",
+        "filename": "test/sad_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 640,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-03-07T14:31:43Z",
+      "side": 1,
+      "message": "I guess long term, I\u0027d assume this is going to be renamed to match the original functions?",
+      "range": {
+        "startLine": 640,
+        "startChar": 17,
+        "endLine": 640,
+        "endChar": 44
+      },
+      "revId": "b98fb997ff0fd9d55b9684a85108c4f46be2c280",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
