@@ -224,6 +224,44 @@ void av1_setup_src_planes(MACROBLOCK *x, const YV12_BUFFER_CONFIG *src,
   }
 }
 
+static inline void setup_delta_q_nord(AV1_COMP *const cpi, ThreadData *td,
+                                      MACROBLOCK *const x,
+                                      const TileInfo *const tile_info,
+                                      int mi_row, int mi_col, int num_planes) {
+  AV1_COMMON *const cm = &cpi->common;
+  const CommonModeInfoParams *const mi_params = &cm->mi_params;
+  const DeltaQInfo *const delta_q_info = &cm->delta_q_info;
+  assert(delta_q_info->delta_q_present_flag);
+
+  const BLOCK_SIZE sb_size = cm->seq_params->sb_size;
+  // Delta-q modulation based on variance
+  av1_setup_src_planes(x, cpi->source, mi_row, mi_col, num_planes, sb_size);
+
+  const int delta_q_res = delta_q_info->delta_q_res;
+  int current_qindex = cm->quant_params.base_qindex;
+
+  assert(cpi->oxcf.q_cfg.deltaq_mode == DELTA_Q_VARIANCE_BOOST);
+  if (cpi->oxcf.q_cfg.deltaq_mode == DELTA_Q_VARIANCE_BOOST) {
+    current_qindex = av1_get_sbq_variance_boost(cpi, x);
+  }
+
+  x->rdmult_cur_qindex = current_qindex;
+  MACROBLOCKD *const xd = &x->e_mbd;
+  const int adjusted_qindex = av1_adjust_q_from_delta_q_res(
+      delta_q_res, xd->current_base_qindex, current_qindex);
+  current_qindex = adjusted_qindex;
+
+  x->delta_qindex = current_qindex - cm->quant_params.base_qindex;
+  x->rdmult_delta_qindex = x->delta_qindex;
+
+  av1_set_offsets(cpi, tile_info, x, mi_row, mi_col, sb_size);
+  xd->mi[0]->current_qindex = current_qindex;
+  av1_init_plane_quantizers(cpi, x, xd->mi[0]->segment_id, 0);
+
+  // keep track of any non-zero delta-q used
+  td->deltaq_used |= (x->delta_qindex != 0);
+}
+
 #if !CONFIG_REALTIME_ONLY
 /*!\brief Assigns different quantization parameters to each super
  * block based on its TPL weight.
@@ -509,6 +547,21 @@ static void get_estimated_pred(AV1_COMP *cpi, const TileInfo *const tile,
 #define AVG_CDF_WEIGHT_LEFT 3
 #define AVG_CDF_WEIGHT_TOP_RIGHT 1
 
+static inline void init_encode_nord_sb(AV1_COMP *cpi, ThreadData *td,
+                                       const TileDataEnc *tile_data, int mi_row,
+                                       int mi_col) {
+  AV1_COMMON *cm = &cpi->common;
+  const TileInfo *tile_info = &tile_data->tile_info;
+  MACROBLOCK *x = &td->mb;
+
+  if (cm->delta_q_info.delta_q_present_flag) {
+    const int num_planes = av1_num_planes(cm);
+    const BLOCK_SIZE sb_size = cm->seq_params->sb_size;
+
+    setup_delta_q_nord(cpi, td, x, tile_info, mi_row, mi_col, num_planes);
+  }
+}
+
 /*!\brief Encode a superblock (minimal RD search involved)
  *
  * \ingroup partition_search
@@ -538,6 +591,8 @@ static inline void encode_nonrd_sb(AV1_COMP *cpi, ThreadData *td,
     return;
   }
 #endif
+
+  init_encode_nord_sb(cpi, td, tile_data, mi_row, mi_col);
   // Set the partition
   if (sf->part_sf.partition_search_type == FIXED_PARTITION || seg_skip ||
       (sf->rt_sf.use_fast_fixed_part && x->sb_force_fixed_part == 1 &&
