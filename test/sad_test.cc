@@ -644,8 +644,10 @@ static void BM_SAD(benchmark::State &state) {
 
 BENCHMARK(BM_SAD<aom_sad64x64_avx2, 64, 64>);
 BENCHMARK(BM_SAD<SumOfAbsoluteDiff64x64_avx2, 64, 64>);
+BENCHMARK(BM_SAD<SumOfAbsoluteDiff64x64_avx512, 64, 64>);
 BENCHMARK(BM_SAD<aom_sad64x32_avx2, 64, 32>);
 BENCHMARK(BM_SAD<SumOfAbsoluteDiff64x32_avx2, 64, 32>);
+BENCHMARK(BM_SAD<SumOfAbsoluteDiff64x32_avx512, 64, 32>);
 #endif  // HAVE_AVX2 && !(defined(_WIN32) || defined(_WIN64))
 
 TEST_P(SADSkipTest, MaxRef) {
@@ -2654,6 +2656,14 @@ const SadMxNParam avx2_tests[] = {
 #endif
 };
 INSTANTIATE_TEST_SUITE_P(AVX2, SADTest, ::testing::ValuesIn(avx2_tests));
+
+#if HAVE_AVX512 && AOM_ARCH_X86_64
+const SadMxNParam avx512_tests[] = {
+  make_tuple(64, 64, &SumOfAbsoluteDiff64x64_avx512, -1),
+  make_tuple(64, 32, &SumOfAbsoluteDiff64x32_avx512, -1),
+};
+INSTANTIATE_TEST_SUITE_P(AVX512, SADTest, ::testing::ValuesIn(avx512_tests));
+#endif
 
 const SadSkipMxNParam skip_avx2_tests[] = {
   make_tuple(128, 128, &aom_sad_skip_128x128_avx2, -1),
