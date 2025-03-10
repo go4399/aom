@@ -430,7 +430,7 @@ if ($opts{arch} eq 'x86') {
   @ALL_ARCHS = filter(qw/mmx sse sse2 sse3 ssse3 sse4_1 sse4_2 avx avx2/);
   x86;
 } elsif ($opts{arch} eq 'x86_64') {
-  @ALL_ARCHS = filter(qw/mmx sse sse2 sse3 ssse3 sse4_1 sse4_2 avx avx2/);
+  @ALL_ARCHS = filter(qw/mmx sse sse2 sse3 ssse3 sse4_1 sse4_2 avx avx2 avx512/);
   @REQUIRES = filter(qw/mmx sse sse2/);
   &require(@REQUIRES);
   x86;
