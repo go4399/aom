@@ -24,6 +24,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ef8ddab_2186ad0c",
+        "filename": "aom_dsp/aom_dsp_rtcd_defs.pl",
+        "patchSetId": 2
+      },
+      "lineNbr": 842,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-03-12T00:47:28Z",
+      "side": 1,
+      "message": "Yes they need to replace the old one. I\u0027ll do so in a follow-up. This CL focuses on adding rtcd.",
+      "parentUuid": "8e3f4a48_ee6d4c93",
+      "range": {
+        "startLine": 842,
+        "startChar": 18,
+        "endLine": 842,
+        "endChar": 40
+      },
+      "revId": "69c55d54cfd4d0c92e33b4a87189ddc434615740",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ec5ba802_c4142d56",
@@ -47,6 +71,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eec661de_d567e096",
+        "filename": "build/cmake/rtcd.pl",
+        "patchSetId": 2
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-03-12T00:47:28Z",
+      "side": 1,
+      "message": "Done.\n\nBringing it in here https://aomedia-review.googlesource.com/c/aom/+/197741",
+      "parentUuid": "ec5ba802_c4142d56",
+      "range": {
+        "startLine": 433,
+        "startChar": 72,
+        "endLine": 433,
+        "endChar": 78
+      },
+      "revId": "69c55d54cfd4d0c92e33b4a87189ddc434615740",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "787c498a_1fedf420",
@@ -60,6 +108,30 @@
       "writtenOn": "2025-03-11T12:22:05Z",
       "side": 1,
       "message": "Will running these on a non-AVX512-enabled machine crash? Should these opt themselves out somehow?",
+      "range": {
+        "startLine": 651,
+        "startChar": 0,
+        "endLine": 655,
+        "endChar": 0
+      },
+      "revId": "69c55d54cfd4d0c92e33b4a87189ddc434615740",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ecb132c3_a8f628d2",
+        "filename": "test/sad_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-03-12T00:47:28Z",
+      "side": 1,
+      "message": "`HAVE_AVX512` is set to be 0 on my machine which doesn\u0027t have avx512, so I don\u0027t know if it\u0027ll crash as this doesn\u0027t get built.\n\nWe have run time flag `HAS_AVX512` which should more accurately reflect if the machine supports avx512, but `HAVE_` is used everywhere in the tests in libaom. Do you suggest using runtime detection here instead?",
+      "parentUuid": "787c498a_1fedf420",
       "range": {
         "startLine": 651,
         "startChar": 0,
