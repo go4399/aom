@@ -356,6 +356,62 @@ void AV1FwdTxfm2dSpeedTest(TX_SIZE tx_size, lowbd_fwd_txfm_func target_func) {
   }
 }
 
+#if (HAVE_SSE4_1 || HAVE_AVX2 || HAVE_AVX512) && \
+    !(defined(_WIN32) || defined(_WIN64))
+using LowbdForwardTransform2DFunction = decltype(&av1_lowbd_fwd_txfm_c);
+
+const char *const kTxSizeStrings[] = {
+  "TX_4X4",   "TX_8X8",   "TX_16X16", "TX_32X32", "TX_64X64",
+  "TX_4X8",   "TX_8X4",   "TX_8X16",  "TX_16X8",  "TX_16X32",
+  "TX_32X16", "TX_32X64", "TX_64X32", "TX_4X16",  "TX_16X4",
+  "TX_8X32",  "TX_32X8",  "TX_16X64", "TX_64X16"
+};
+
+void RunAV1LowbdFwdTxfm2d(const LowbdForwardTransform2DFunction target_func,
+                          benchmark::State &state) {
+  DECLARE_ALIGNED(32, int16_t, input[64 * 64]) = { 0 };
+  DECLARE_ALIGNED(32, int32_t, output[64 * 64]);
+  TxfmParam param;
+  memset(&param, 0, sizeof(param));
+  param.tx_size = static_cast<TX_SIZE>(state.range(0));
+  param.tx_type = static_cast<TX_TYPE>(state.range(1));
+  param.tx_set_type = EXT_TX_SET_ALL16;
+  param.bd = bd;
+  const int input_stride = 64;
+  const int rows = tx_size_high[param.tx_size];
+  const int cols = tx_size_wide[param.tx_size];
+  const int bd = 8;
+  {
+    ACMRandom rnd(ACMRandom::DeterministicSeed());
+    for (int r = 0; r < rows; ++r) {
+      for (int c = 0; c < cols; ++c) {
+        input[r * input_stride + c] = rnd.Rand16() % (1 << bd);
+      }
+    }
+  }
+  for (auto _ : state) {
+    (void)_;
+    target_func(input, output, input_stride, &param);
+  }
+  state.SetBytesProcessed(static_cast<int64_t>(state.iterations()) * rows *
+                          cols * sizeof(*input));
+  state.SetItemsProcessed(state.iterations());
+  state.SetLabel(std::string(kTxSizeStrings[param.tx_size]) + "," +
+                 tx_type_name[param.tx_type]);
+}
+
+void ForwardTransformArguments(benchmark::internal::Benchmark *b) {
+  for (int tx_size = 0; tx_size < TX_SIZES_ALL; ++tx_size) {
+    for (int tx_type = 0; tx_type < TX_TYPES; ++tx_type) {
+      if (libaom_test::IsTxSizeTypeValid(static_cast<TX_SIZE>(tx_size),
+                                         static_cast<TX_TYPE>(tx_type))) {
+        b->Args({ tx_size, tx_type });
+      }
+    }
+  }
+}
+#endif
+
 typedef std::tuple<TX_SIZE, lowbd_fwd_txfm_func> LbdFwdTxfm2dParam;
 
 class AV1FwdTxfm2dTest : public ::testing::TestWithParam<LbdFwdTxfm2dParam> {};
@@ -481,6 +537,14 @@ static TX_SIZE fwd_txfm_for_sse41[] = { TX_4X4,   TX_8X8,   TX_16X16, TX_32X32,
 INSTANTIATE_TEST_SUITE_P(SSE4_1, AV1FwdTxfm2dTest,
                          Combine(ValuesIn(fwd_txfm_for_sse41),
                                  Values(av1_lowbd_fwd_txfm_sse4_1)));
+
+#if !(defined(_WIN32) || defined(_WIN64))
+void BM_AV1LowbdFwdTxfm2d_SSE4(benchmark::State &state) {
+  RunAV1LowbdFwdTxfm2d(&av1_lowbd_fwd_txfm_sse4_1, state);
+}
+
+BENCHMARK(BM_AV1LowbdFwdTxfm2d_SSE4)->Apply(ForwardTransformArguments);
+#endif
 #endif  // HAVE_SSE4_1
 
 #if HAVE_AVX2
@@ -493,7 +557,35 @@ static TX_SIZE fwd_txfm_for_avx2[] = {
 INSTANTIATE_TEST_SUITE_P(AVX2, AV1FwdTxfm2dTest,
                          Combine(ValuesIn(fwd_txfm_for_avx2),
                                  Values(av1_lowbd_fwd_txfm_avx2)));
+
+#if !(defined(_WIN32) || defined(_WIN64))
+void BM_AV1LowbdFwdTxfm2d_AVX2(benchmark::State &state) {
+  RunAV1LowbdFwdTxfm2d(&av1_lowbd_fwd_txfm_avx2, state);
+}
+
+BENCHMARK(BM_AV1LowbdFwdTxfm2d_AVX2)->Apply(ForwardTransformArguments);
+#endif
 #endif  // HAVE_AVX2
+
+#if HAVE_AVX512
+static TX_SIZE fwd_txfm_for_avx512[] = {
+  TX_4X4,  TX_8X8,  TX_16X16, TX_32X32, TX_64X64, TX_4X8,   TX_8X4,
+  TX_8X16, TX_16X8, TX_16X32, TX_32X16, TX_32X64, TX_64X32, TX_4X16,
+  TX_16X4, TX_8X32, TX_32X8,  TX_16X64, TX_64X16,
+};
+
+INSTANTIATE_TEST_SUITE_P(AVX512, AV1FwdTxfm2dTest,
+                         Combine(ValuesIn(fwd_txfm_for_avx512),
+                                 Values(av1_lowbd_fwd_txfm_avx512)));
+
+#if !(defined(_WIN32) || defined(_WIN64))
+void BM_AV1LowbdFwdTxfm2d_AVX512(benchmark::State &state) {
+  RunAV1LowbdFwdTxfm2d(&av1_lowbd_fwd_txfm_avx512, state);
+}
+
+BENCHMARK(BM_AV1LowbdFwdTxfm2d_AVX512)->Apply(ForwardTransformArguments);
+#endif
+#endif  // HAVE_AVX512
 
 #if HAVE_NEON
 
@@ -636,6 +728,82 @@ void AV1HighbdFwdTxfm2dSpeedTest(TX_SIZE tx_size,
   }
 }
 
+#if (HAVE_SSE4_1 || HAVE_AVX2 || HAVE_AVX512) && \
+    !(defined(_WIN32) || defined(_WIN64))
+#if CONFIG_REALTIME_ONLY
+#define FOR_EACH_TXFM2D(X, suffix) \
+  X(4, 4, suffix)                  \
+  X(8, 8, suffix)                  \
+  X(16, 16, suffix)                \
+  X(32, 32, suffix)                \
+  X(64, 64, suffix)                \
+  X(4, 8, suffix)                  \
+  X(8, 4, suffix)                  \
+  X(8, 16, suffix)                 \
+  X(16, 8, suffix)                 \
+  X(16, 32, suffix)                \
+  X(32, 16, suffix)                \
+  X(32, 64, suffix)                \
+  X(64, 32, suffix)
+#else
+#define FOR_EACH_TXFM2D(X, suffix) \
+  X(4, 4, suffix)                  \
+  X(8, 8, suffix)                  \
+  X(16, 16, suffix)                \
+  X(32, 32, suffix)                \
+  X(64, 64, suffix)                \
+  X(4, 8, suffix)                  \
+  X(8, 4, suffix)                  \
+  X(8, 16, suffix)                 \
+  X(16, 8, suffix)                 \
+  X(16, 32, suffix)                \
+  X(32, 16, suffix)                \
+  X(32, 64, suffix)                \
+  X(64, 32, suffix)                \
+  X(4, 16, suffix)                 \
+  X(16, 4, suffix)                 \
+  X(8, 32, suffix)                 \
+  X(32, 8, suffix)                 \
+  X(16, 64, suffix)                \
+  X(64, 16, suffix)
+#endif
+
+#define HIGHBD_TXFM2D_POINTER(w, h, suffix) \
+  &av1_fwd_txfm2d_##w##x##h##_##suffix,
+
+using HighbdForwardTransform2DFunction = decltype(&av1_fwd_txfm2d_4x4_c);
+
+void RunAV1HighbdFwdTxfm2d(const HighbdForwardTransform2DFunction *functions,
+                           benchmark::State &state) {
+  DECLARE_ALIGNED(32, int16_t, input[64 * 64]) = { 0 };
+  DECLARE_ALIGNED(32, int32_t, output[64 * 64]);
+  const int input_stride = 64;
+  const auto tx_size = static_cast<TX_SIZE>(state.range(0));
+  const auto tx_type = static_cast<TX_TYPE>(state.range(1));
+  const auto target_func = functions[tx_size];
+  const int rows = tx_size_high[tx_size];
+  const int cols = tx_size_wide[tx_size];
+  const int bd = 12;
+  {
+    ACMRandom rnd(ACMRandom::DeterministicSeed());
+    for (int r = 0; r < rows; ++r) {
+      for (int c = 0; c < cols; ++c) {
+        input[r * input_stride + c] = rnd.Rand16() % (1 << bd);
+      }
+    }
+  }
+  for (auto _ : state) {
+    (void)_;
+    target_func(input, output, input_stride, tx_type, bd);
+  }
+  state.SetBytesProcessed(static_cast<int64_t>(state.iterations()) * rows *
+                          cols * sizeof(*input));
+  state.SetItemsProcessed(state.iterations());
+  state.SetLabel(std::string(kTxSizeStrings[tx_size]) + "," +
+                 tx_type_name[tx_type]);
+}
+#endif
+
 typedef std::tuple<TX_SIZE, Highbd_fwd_txfm_func> HighbdFwdTxfm2dParam;
 
 class AV1HighbdFwdTxfm2dTest
@@ -666,15 +834,63 @@ static TX_SIZE Highbd_fwd_txfm_for_sse4_1[] = {
 INSTANTIATE_TEST_SUITE_P(SSE4_1, AV1HighbdFwdTxfm2dTest,
                          Combine(ValuesIn(Highbd_fwd_txfm_for_sse4_1),
                                  Values(av1_highbd_fwd_txfm)));
+
+#if !(defined(_WIN32) || defined(_WIN64))
+void BM_AV1HighbdFwdTxfm2d_SSE4(benchmark::State &state) {
+  constexpr HighbdForwardTransform2DFunction kFunctions[] = { FOR_EACH_TXFM2D(
+      HIGHBD_TXFM2D_POINTER, sse4_1) };
+  RunAV1HighbdFwdTxfm2d(kFunctions, state);
+}
+
+BENCHMARK(BM_AV1HighbdFwdTxfm2d_SSE4)->Apply(ForwardTransformArguments);
+#endif
 #endif  // HAVE_SSE4_1
 #if HAVE_AVX2
-static TX_SIZE Highbd_fwd_txfm_for_avx2[] = { TX_8X8,   TX_16X16, TX_32X32,
-                                              TX_64X64, TX_8X16,  TX_16X8 };
+static TX_SIZE Highbd_fwd_txfm_for_avx2[] = {
+  TX_4X4,  TX_8X8,  TX_16X16, TX_32X32, TX_64X64, TX_4X8,   TX_8X4,
+  TX_8X16, TX_16X8, TX_16X32, TX_32X16, TX_32X64, TX_64X32,
+#if !CONFIG_REALTIME_ONLY
+  TX_4X16, TX_16X4, TX_8X32,  TX_32X8,  TX_16X64, TX_64X16,
+#endif  // !CONFIG_REALTIME_ONLY
+};
 
 INSTANTIATE_TEST_SUITE_P(AVX2, AV1HighbdFwdTxfm2dTest,
                          Combine(ValuesIn(Highbd_fwd_txfm_for_avx2),
                                  Values(av1_highbd_fwd_txfm)));
+
+#if !(defined(_WIN32) || defined(_WIN64))
+void BM_AV1HighbdFwdTxfm2d_AVX2(benchmark::State &state) {
+  constexpr HighbdForwardTransform2DFunction kFunctions[] = { FOR_EACH_TXFM2D(
+      HIGHBD_TXFM2D_POINTER, avx2) };
+  RunAV1HighbdFwdTxfm2d(kFunctions, state);
+}
+
+BENCHMARK(BM_AV1HighbdFwdTxfm2d_AVX2)->Apply(ForwardTransformArguments);
+#endif
 #endif  // HAVE_AVX2
+#if HAVE_AVX512
+static TX_SIZE Highbd_fwd_txfm_for_avx512[] = {
+  TX_4X4,  TX_8X8,  TX_16X16, TX_32X32, TX_64X64, TX_4X8,   TX_8X4,
+  TX_8X16, TX_16X8, TX_16X32, TX_32X16, TX_32X64, TX_64X32,
+#if !CONFIG_REALTIME_ONLY
+  TX_4X16, TX_16X4, TX_8X32,  TX_32X8,  TX_16X64, TX_64X16,
+#endif  // !CONFIG_REALTIME_ONLY
+};
+
+INSTANTIATE_TEST_SUITE_P(AVX512, AV1HighbdFwdTxfm2dTest,
+                         Combine(ValuesIn(Highbd_fwd_txfm_for_avx512),
+                                 Values(av1_highbd_fwd_txfm)));
+
+#if !(defined(_WIN32) || defined(_WIN64))
+void BM_AV1HighbdFwdTxfm2d_AVX512(benchmark::State &state) {
+  constexpr HighbdForwardTransform2DFunction kFunctions[] = { FOR_EACH_TXFM2D(
+      HIGHBD_TXFM2D_POINTER, avx512) };
+  RunAV1HighbdFwdTxfm2d(kFunctions, state);
+}
+
+BENCHMARK(BM_AV1HighbdFwdTxfm2d_AVX512)->Apply(ForwardTransformArguments);
+#endif
+#endif  // HAVE_AVX512
 
 #if HAVE_NEON
 static TX_SIZE Highbd_fwd_txfm_for_neon[] = {
