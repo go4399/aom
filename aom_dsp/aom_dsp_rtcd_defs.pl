@@ -835,14 +835,6 @@ if (aom_config("CONFIG_AV1_ENCODER") eq "yes") {
   #
   # Single block SAD / Single block Avg SAD
   #
-  # This condition is needed because HAVE_AVX2 is somehow set to 1 when cross
-  # compile for ia32, while Highway wouldn't generate avx2 for ia32.
-  if (aom_config("AOM_ARCH_X86_64") eq "yes") {
-    add_proto qw/unsigned int SumOfAbsoluteDiff64x32/, "const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride";
-    specialize qw/SumOfAbsoluteDiff64x32 avx2 avx512/;
-    add_proto qw/unsigned int SumOfAbsoluteDiff64x64/, "const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride";
-    specialize qw/SumOfAbsoluteDiff64x64 avx2 avx512/;
-  }
   foreach (@encoder_block_sizes) {
     ($w, $h) = @$_;
     add_proto qw/unsigned int/, "aom_sad${w}x${h}", "const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride";
@@ -856,14 +848,28 @@ if (aom_config("CONFIG_AV1_ENCODER") eq "yes") {
 
   add_proto qw/uint64_t aom_sum_sse_2d_i16/, "const int16_t *src, int src_stride, int width, int height, int *sum";
   specialize qw/aom_sum_sse_2d_i16 avx2 neon sse2 sve/;
-  specialize qw/aom_sad128x128    avx2 sse2 neon neon_dotprod/;
-  specialize qw/aom_sad128x64     avx2 sse2 neon neon_dotprod/;
-  specialize qw/aom_sad64x128     avx2 sse2 neon neon_dotprod/;
-  specialize qw/aom_sad64x64      avx2 sse2 neon neon_dotprod/;
-  specialize qw/aom_sad64x32      avx2 sse2 neon neon_dotprod/;
-  specialize qw/aom_sad32x64      avx2 sse2 neon neon_dotprod/;
-  specialize qw/aom_sad32x32      avx2 sse2 neon neon_dotprod/;
-  specialize qw/aom_sad32x16      avx2 sse2 neon neon_dotprod/;
+  specialize qw/aom_sad128x128    sse2 neon neon_dotprod/;
+  specialize qw/aom_sad128x64     sse2 neon neon_dotprod/;
+  specialize qw/aom_sad64x128     sse2 neon neon_dotprod/;
+  specialize qw/aom_sad64x64      sse2 neon neon_dotprod/;
+  specialize qw/aom_sad64x32      sse2 neon neon_dotprod/;
+  specialize qw/aom_sad32x64      sse2 neon neon_dotprod/;
+  specialize qw/aom_sad32x32      sse2 neon neon_dotprod/;
+  specialize qw/aom_sad32x16      sse2 neon neon_dotprod/;
+
+  # This condition is needed because HAVE_AVX2 is somehow set to 1 when cross
+  # compile for ia32, while Highway wouldn't generate avx2 for ia32.
+  if (aom_config("AOM_ARCH_X86_64") eq "yes") {
+    specialize qw/aom_sad128x128    avx2 avx512/;
+    specialize qw/aom_sad128x64     avx2 avx512/;
+    specialize qw/aom_sad64x128     avx2 avx512/;
+    specialize qw/aom_sad64x64      avx2 avx512/;
+    specialize qw/aom_sad64x32      avx2 avx512/;
+    specialize qw/aom_sad32x64      avx2 avx512/;
+    specialize qw/aom_sad32x32      avx2 avx512/;
+    specialize qw/aom_sad32x16      avx2 avx512/;
+  }
+
   specialize qw/aom_sad16x32           sse2 neon neon_dotprod/;
   specialize qw/aom_sad16x16           sse2 neon neon_dotprod/;
   specialize qw/aom_sad16x8            sse2 neon neon_dotprod/;
