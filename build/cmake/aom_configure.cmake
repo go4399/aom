@@ -321,13 +321,13 @@ else()
     # Microsoft's C++ Standard Library requires C++14 as it's MSVC's default and
     # minimum supported C++ version. If Clang is using this Standard Library
     # implementation, it cannot target C++11.
-    require_cxx_flag_nomsvc("-std=c++14" YES)
+    require_cxx_flag_nomsvc("-std=c++17" YES)
   elseif(CYGWIN AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     # The GNU C++ compiler in Cygwin needs the -std=gnu++11 flag to make the
     # POSIX function declarations visible in the Standard C Library headers.
-    require_cxx_flag_nomsvc("-std=gnu++11" YES)
+    require_cxx_flag_nomsvc("-std=gnu++17" YES)
   else()
-    require_cxx_flag_nomsvc("-std=c++11" YES)
+    require_cxx_flag_nomsvc("-std=c++17" YES)
   endif()
   add_compiler_flag_if_supported("-Wall")
   add_compiler_flag_if_supported("-Wdisabled-optimization")
