@@ -28,6 +28,11 @@
 #include "av1/common/blockd.h"
 #include "av1/common/enums.h"
 
+#if (HAVE_SSE4_1 || HAVE_AVX2 || HAVE_AVX512) && \
+    !(defined(_WIN32) || defined(_WIN64))
+#include "third_party/benchmark/include/benchmark/benchmark.h"
+#endif
+
 namespace libaom_test {
 
 extern const char *tx_type_name[];
