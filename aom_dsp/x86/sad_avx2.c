@@ -73,24 +73,12 @@ static inline unsigned int sad32xh_avx2(const uint8_t *src_ptr, int src_stride,
   return res;
 }
 
-#define FSAD64_H(h)                                                           \
-  unsigned int aom_sad64x##h##_avx2(const uint8_t *src_ptr, int src_stride,   \
-                                    const uint8_t *ref_ptr, int ref_stride) { \
-    return sad64xh_avx2(src_ptr, src_stride, ref_ptr, ref_stride, h);         \
-  }
-
 #define FSADS64_H(h)                                                          \
   unsigned int aom_sad_skip_64x##h##_avx2(                                    \
       const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr,         \
       int ref_stride) {                                                       \
     return 2 * sad64xh_avx2(src_ptr, src_stride * 2, ref_ptr, ref_stride * 2, \
                             h / 2);                                           \
-  }
-
-#define FSAD32_H(h)                                                           \
-  unsigned int aom_sad32x##h##_avx2(const uint8_t *src_ptr, int src_stride,   \
-                                    const uint8_t *ref_ptr, int ref_stride) { \
-    return sad32xh_avx2(src_ptr, src_stride, ref_ptr, ref_stride, h);         \
   }
 
 #define FSADS32_H(h)                                                          \
@@ -102,15 +90,10 @@ static inline unsigned int sad32xh_avx2(const uint8_t *src_ptr, int src_stride,
   }
 
 #define FSAD64  \
-  FSAD64_H(64)  \
-  FSAD64_H(32)  \
   FSADS64_H(64) \
   FSADS64_H(32)
 
 #define FSAD32  \
-  FSAD32_H(64)  \
-  FSAD32_H(32)  \
-  FSAD32_H(16)  \
   FSADS32_H(64) \
   FSADS32_H(32) \
   FSADS32_H(16)
@@ -122,8 +105,6 @@ FSAD32
 
 #undef FSAD64
 #undef FSAD32
-#undef FSAD64_H
-#undef FSAD32_H
 
 #define FSADAVG64_H(h)                                                        \
   unsigned int aom_sad64x##h##_avg_avx2(                                      \
