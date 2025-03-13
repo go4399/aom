@@ -356,7 +356,8 @@ void AV1FwdTxfm2dSpeedTest(TX_SIZE tx_size, lowbd_fwd_txfm_func target_func) {
   }
 }
 
-#if (HAVE_SSE4_1 || HAVE_AVX2) && !(defined(_WIN32) || defined(_WIN64))
+#if (HAVE_SSE4_1 || HAVE_AVX2 || HAVE_AVX512) && \
+    !(defined(_WIN32) || defined(_WIN64))
 using LowbdForwardTransform2DFunction = decltype(&av1_lowbd_fwd_txfm_c);
 
 const char *const kTxSizeStrings[] = {
@@ -566,6 +567,26 @@ BENCHMARK(BM_AV1LowbdFwdTxfm2d_AVX2)->Apply(ForwardTransformArguments);
 #endif
 #endif  // HAVE_AVX2
 
+#if HAVE_AVX512
+static TX_SIZE fwd_txfm_for_avx512[] = {
+  TX_4X4,  TX_8X8,  TX_16X16, TX_32X32, TX_64X64, TX_4X8,   TX_8X4,
+  TX_8X16, TX_16X8, TX_16X32, TX_32X16, TX_32X64, TX_64X32, TX_4X16,
+  TX_16X4, TX_8X32, TX_32X8,  TX_16X64, TX_64X16,
+};
+
+INSTANTIATE_TEST_SUITE_P(AVX512, AV1FwdTxfm2dTest,
+                         Combine(ValuesIn(fwd_txfm_for_avx512),
+                                 Values(av1_lowbd_fwd_txfm_avx512)));
+
+#if !(defined(_WIN32) || defined(_WIN64))
+void BM_AV1LowbdFwdTxfm2d_AVX512(benchmark::State &state) {
+  RunAV1LowbdFwdTxfm2d(&av1_lowbd_fwd_txfm_avx512, state);
+}
+
+BENCHMARK(BM_AV1LowbdFwdTxfm2d_AVX512)->Apply(ForwardTransformArguments);
+#endif
+#endif  // HAVE_AVX512
+
 #if HAVE_NEON
 
 static TX_SIZE fwd_txfm_for_neon[] = { TX_4X4,   TX_8X8,   TX_16X16, TX_32X32,
@@ -707,7 +728,8 @@ void AV1HighbdFwdTxfm2dSpeedTest(TX_SIZE tx_size,
   }
 }
 
-#if (HAVE_SSE4_1 || HAVE_AVX2) && !(defined(_WIN32) || defined(_WIN64))
+#if (HAVE_SSE4_1 || HAVE_AVX2 || HAVE_AVX512) && \
+    !(defined(_WIN32) || defined(_WIN64))
 #if CONFIG_REALTIME_ONLY
 #define FOR_EACH_TXFM2D(X, suffix) \
   X(4, 4, suffix)                  \
@@ -846,6 +868,29 @@ void BM_AV1HighbdFwdTxfm2d_AVX2(benchmark::State &state) {
 BENCHMARK(BM_AV1HighbdFwdTxfm2d_AVX2)->Apply(ForwardTransformArguments);
 #endif
 #endif  // HAVE_AVX2
+#if HAVE_AVX512
+static TX_SIZE Highbd_fwd_txfm_for_avx512[] = {
+  TX_4X4,  TX_8X8,  TX_16X16, TX_32X32, TX_64X64, TX_4X8,   TX_8X4,
+  TX_8X16, TX_16X8, TX_16X32, TX_32X16, TX_32X64, TX_64X32,
+#if !CONFIG_REALTIME_ONLY
+  TX_4X16, TX_16X4, TX_8X32,  TX_32X8,  TX_16X64, TX_64X16,
+#endif  // !CONFIG_REALTIME_ONLY
+};
+
+INSTANTIATE_TEST_SUITE_P(AVX512, AV1HighbdFwdTxfm2dTest,
+                         Combine(ValuesIn(Highbd_fwd_txfm_for_avx512),
+                                 Values(av1_highbd_fwd_txfm)));
+
+#if !(defined(_WIN32) || defined(_WIN64))
+void BM_AV1HighbdFwdTxfm2d_AVX512(benchmark::State &state) {
+  constexpr HighbdForwardTransform2DFunction kFunctions[] = { FOR_EACH_TXFM2D(
+      HIGHBD_TXFM2D_POINTER, avx512) };
+  RunAV1HighbdFwdTxfm2d(kFunctions, state);
+}
+
+BENCHMARK(BM_AV1HighbdFwdTxfm2d_AVX512)->Apply(ForwardTransformArguments);
+#endif
+#endif  // HAVE_AVX512
 
 #if HAVE_NEON
 static TX_SIZE Highbd_fwd_txfm_for_neon[] = {
