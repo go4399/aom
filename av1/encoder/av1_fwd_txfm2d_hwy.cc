@@ -2413,6 +2413,16 @@ HWY_AFTER_NAMESPACE();
                                                              stride, tx_type); \
   }
 
+#define MAKE_LOWBD_TXFM2D(suffix)                                              \
+  extern "C" void av1_lowbd_fwd_txfm_##suffix(                                 \
+      const int16_t *src_diff, tran_low_t *coeff, int diff_stride,             \
+      TxfmParam *txfm_param);                                                  \
+  void av1_lowbd_fwd_txfm_##suffix(const int16_t *src_diff, tran_low_t *coeff, \
+                                   int diff_stride, TxfmParam *txfm_param) {   \
+    HWY_NAMESPACE::LowBitdepthForwardTransform2D(src_diff, coeff, diff_stride, \
+                                                 txfm_param);                  \
+  }
+
 #if HWY_TARGET == HWY_SSE4
 FOR_EACH_TXFM2D(MAKE_TXFM2D, sse4_1)
 #endif  // HWY_TARGET == HWY_SSE4
@@ -2420,3 +2430,8 @@ FOR_EACH_TXFM2D(MAKE_TXFM2D, sse4_1)
 #if HWY_TARGET == HWY_AVX2
 FOR_EACH_TXFM2D(MAKE_TXFM2D, avx2)
 #endif  // HWY_TARGET == HWY_AVX2
+
+#if HWY_TARGET == HWY_AVX3
+FOR_EACH_TXFM2D(MAKE_TXFM2D, avx512)
+MAKE_LOWBD_TXFM2D(avx512)
+#endif  // HWY_TARGET == HWY_AVX3
