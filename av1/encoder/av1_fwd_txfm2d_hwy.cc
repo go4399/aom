@@ -2428,6 +2428,14 @@ HWY_AFTER_NAMESPACE();
                                                  txfm_param);                  \
   }
 
+#if AOM_ARCH_X86 && HWY_TARGET == HWY_SSE2
+// Include top-level function only for 32-bit x86, to support Valgrind. For
+// normal use, we require SSE4.1, so av1_lowbd_fwd_txfm_sse4_1 will be used
+// instead of this function. However, 32-bit Valgrind does not support SSE4.1,
+// so we include a fallback to SSE2 to improve performance
+MAKE_LOWBD_TXFM2D_DISPATCH(sse2)
+#endif  // AOM_ARCH_X86 && HWY_TARGET == HWY_SSE2
+
 #if HAVE_SSE4_1 && HWY_TARGET == HWY_SSE4
 FOR_EACH_TXFM2D(MAKE_HIGHBD_TXFM2D, sse4_1)
 // At the moment, these functions are faster on x86 with the above
