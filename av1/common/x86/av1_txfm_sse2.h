@@ -256,14 +256,8 @@ static inline void flip_buf_sse2(__m128i *in, __m128i *out, int size) {
   }
 }
 
-void av1_lowbd_fwd_txfm2d_4x4_sse2(const int16_t *input, int32_t *output,
-                                   int stride, TX_TYPE tx_type, int bd);
-
 void av1_lowbd_fwd_txfm2d_8x4_sse2(const int16_t *input, int32_t *output,
                                    int stride, TX_TYPE tx_type, int bd);
-
-void av1_lowbd_fwd_txfm2d_16x4_sse2(const int16_t *input, int32_t *output,
-                                    int stride, TX_TYPE tx_type, int bd);
 
 void av1_lowbd_fwd_txfm2d_16x8_sse2(const int16_t *input, int32_t *output,
                                     int stride, TX_TYPE tx_type, int bd);
