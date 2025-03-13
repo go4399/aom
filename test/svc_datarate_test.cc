@@ -23,6 +23,8 @@
 #include "av1/common/enums.h"
 #include "av1/encoder/encoder.h"
 
+#include "third_party/libyuv/include/libyuv/scale.h"
+
 namespace datarate_test {
 namespace {
 
@@ -62,6 +64,8 @@ class DatarateTestSVC
   int GetNumSpatialLayers() override { return number_spatial_layers_; }
 
   void ResetModel() override {
+    libyuv::FilterMode filter = libyuv::FilterMode::kFilterBilinear;
+    (void)filter;
     DatarateTest::ResetModel();
     layer_frame_cnt_ = 0;
     superframe_cnt_ = 0;
