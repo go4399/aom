@@ -2401,7 +2401,7 @@ HWY_MAYBE_UNUSED void LowBitdepthForwardTransform2D(const int16_t *src_diff,
 
 HWY_AFTER_NAMESPACE();
 
-#define MAKE_TXFM2D(w, h, suffix)                                              \
+#define MAKE_HIGHBD_TXFM2D(w, h, suffix)                                       \
   extern "C" void av1_fwd_txfm2d_##w##x##h##_##suffix(                         \
       const int16_t *input, int32_t *output, int stride, TX_TYPE tx_type,      \
       int bd);                                                                 \
@@ -2413,7 +2413,19 @@ HWY_AFTER_NAMESPACE();
                                                              stride, tx_type); \
   }
 
-#define MAKE_LOWBD_TXFM2D(suffix)                                              \
+#define MAKE_LOWBD_TXFM2D(w, h, suffix)                                        \
+  extern "C" void av1_lowbd_fwd_txfm2d_##w##x##h##_##suffix(                   \
+      const int16_t *input, int32_t *output, int stride, TX_TYPE tx_type,      \
+      int bd);                                                                 \
+  void av1_lowbd_fwd_txfm2d_##w##x##h##_##suffix(const int16_t *input,         \
+                                                 int32_t *output, int stride,  \
+                                                 TX_TYPE tx_type, int bd) {    \
+    (void)bd;                                                                  \
+    HWY_NAMESPACE::ForwardTransform2D<TX_##w##X##h, int16_t>(input, output,    \
+                                                             stride, tx_type); \
+  }
+
+#define MAKE_LOWBD_TXFM2D_DISPATCH(suffix)                                     \
   extern "C" void av1_lowbd_fwd_txfm_##suffix(                                 \
       const int16_t *src_diff, tran_low_t *coeff, int diff_stride,             \
       TxfmParam *txfm_param);                                                  \
@@ -2424,14 +2436,40 @@ HWY_AFTER_NAMESPACE();
   }
 
 #if HWY_TARGET == HWY_SSE4
-FOR_EACH_TXFM2D(MAKE_TXFM2D, sse4_1)
+FOR_EACH_TXFM2D(MAKE_HIGHBD_TXFM2D, sse4_1)
+// At the moment, these functions are faster on x86 with the above
+// implementations.
+MAKE_LOWBD_TXFM2D(8, 8, sse4_1)
+MAKE_LOWBD_TXFM2D(16, 16, sse4_1)
+MAKE_LOWBD_TXFM2D(32, 32, sse4_1)
+MAKE_LOWBD_TXFM2D(4, 8, sse4_1)
+MAKE_LOWBD_TXFM2D(8, 16, sse4_1)
+MAKE_LOWBD_TXFM2D(32, 16, sse4_1)
+MAKE_LOWBD_TXFM2D(4, 16, sse4_1)
+MAKE_LOWBD_TXFM2D(8, 32, sse4_1)
+MAKE_LOWBD_TXFM2D(32, 8, sse4_1)
+MAKE_LOWBD_TXFM2D(64, 16, sse4_1)
 #endif  // HWY_TARGET == HWY_SSE4
 
 #if HWY_TARGET == HWY_AVX2
-FOR_EACH_TXFM2D(MAKE_TXFM2D, avx2)
+FOR_EACH_TXFM2D(MAKE_HIGHBD_TXFM2D, avx2)
+MAKE_LOWBD_TXFM2D(8, 8, avx2)
+MAKE_LOWBD_TXFM2D(16, 16, avx2)
+MAKE_LOWBD_TXFM2D(32, 32, avx2)
+MAKE_LOWBD_TXFM2D(64, 64, avx2)
+MAKE_LOWBD_TXFM2D(4, 8, avx2)
+MAKE_LOWBD_TXFM2D(8, 16, avx2)
+MAKE_LOWBD_TXFM2D(32, 64, avx2)
+MAKE_LOWBD_TXFM2D(64, 32, avx2)
+MAKE_LOWBD_TXFM2D(4, 16, avx2)
+MAKE_LOWBD_TXFM2D(16, 4, avx2)
+MAKE_LOWBD_TXFM2D(8, 32, avx2)
+MAKE_LOWBD_TXFM2D(32, 8, avx2)
+MAKE_LOWBD_TXFM2D(16, 64, avx2)
+MAKE_LOWBD_TXFM2D(64, 16, avx2)
 #endif  // HWY_TARGET == HWY_AVX2
 
 #if HWY_TARGET == HWY_AVX3
-FOR_EACH_TXFM2D(MAKE_TXFM2D, avx512)
-MAKE_LOWBD_TXFM2D(avx512)
+FOR_EACH_TXFM2D(MAKE_HIGHBD_TXFM2D, avx512)
+MAKE_LOWBD_TXFM2D_DISPATCH(avx512)
 #endif  // HWY_TARGET == HWY_AVX3
