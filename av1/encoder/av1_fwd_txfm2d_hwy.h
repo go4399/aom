@@ -315,7 +315,7 @@ HWY_ATTR HWY_INLINE void Fdct4(D int_tag, hn::TFromD<D> *HWY_RESTRICT in,
   const int32_t *HWY_RESTRICT const cospi = cospi_arr(cos_bit);
   if constexpr (sizeof(hn::TFromD<D>) == 2 && hn::MaxLanes(int_tag) == 4 &&
                 HWY_TARGET != HWY_EMU128) {
-    constexpr hn::Twice<D> demote_tag;
+    constexpr hn::FixedTag<hn::TFromD<D>, 8> demote_tag;
     constexpr hn::Repartition<int32_t, decltype(demote_tag)> int32_tag;
     const auto round = hn::Set(int32_tag, 1 << (cos_bit - 1));
     const auto cospi_p32_p32 = SetPair(int_tag, cospi[32], cospi[32]);
@@ -340,10 +340,12 @@ HWY_ATTR HWY_INLINE void Fdct4(D int_tag, hn::TFromD<D> *HWY_RESTRICT in,
     const auto v1w1 = hn::ShiftRightSame(hn::Add(x3, round), cos_bit);
     const auto o0 = hn::ReorderDemote2To(demote_tag, v0w0, v0w1);
     const auto o1 = hn::ReorderDemote2To(demote_tag, v1w0, v1w1);
-    hn::Store(hn::LowerHalf(int_tag, o0), int_tag, &in[0 * instride]);
-    hn::Store(hn::LowerHalf(int_tag, o1), int_tag, &in[1 * instride]);
-    hn::Store(hn::UpperHalf(int_tag, o0), int_tag, &in[2 * instride]);
-    hn::Store(hn::UpperHalf(int_tag, o1), int_tag, &in[3 * instride]);
+    hn::Store(o0, demote_tag, &in[0 * instride]);
+    hn::Store(o1, demote_tag, &in[1 * instride]);
+    hn::Store(hn::ShiftRightLanes<4>(demote_tag, o0), demote_tag,
+              &in[2 * instride]);
+    hn::Store(hn::ShiftRightLanes<4>(demote_tag, o1), demote_tag,
+              &in[3 * instride]);
   } else {
     constexpr hn::Repartition<int32_t, D> int32_tag;
     const auto round = hn::Set(int32_tag, 1 << (cos_bit - 1));
@@ -1205,14 +1207,10 @@ HWY_ATTR HWY_INLINE void Fadst4(D int_tag, hn::TFromD<D> *HWY_RESTRICT in,
     const auto sinpi_p03_p04 = SetPair(demote_tag, sinpi[3], sinpi[4]);
     const auto sinpi_m03_p02 = SetPair(demote_tag, -sinpi[3], sinpi[2]);
     const auto sinpi_p03_p03 = hn::Set(demote_tag, sinpi[3]);
-    const auto in0 =
-        hn::ZeroExtendVector(demote_tag, hn::Load(int_tag, &in[0 * instride]));
-    const auto in1 =
-        hn::ZeroExtendVector(demote_tag, hn::Load(int_tag, &in[1 * instride]));
-    const auto in2 =
-        hn::ZeroExtendVector(demote_tag, hn::Load(int_tag, &in[2 * instride]));
-    const auto in3 =
-        hn::ZeroExtendVector(demote_tag, hn::Load(int_tag, &in[3 * instride]));
+    const auto in0 = hn::Load(demote_tag, &in[0 * instride]);
+    const auto in1 = hn::Load(demote_tag, &in[1 * instride]);
+    const auto in2 = hn::Load(demote_tag, &in[2 * instride]);
+    const auto in3 = hn::Load(demote_tag, &in[3 * instride]);
     const auto in7 = hn::Add(in0, in1);
     auto u0 = hn::InterleaveLower(in0, in1);
     auto u1 = hn::InterleaveLower(in2, in3);
@@ -1244,10 +1242,12 @@ HWY_ATTR HWY_INLINE void Fadst4(D int_tag, hn::TFromD<D> *HWY_RESTRICT in,
     w3 = hn::ShiftRightSame(v3, cos_bit);
     auto o0 = hn::ReorderDemote2To(demote_tag, w0, w2);
     auto o1 = hn::ReorderDemote2To(demote_tag, w1, w3);
-    hn::Store(hn::LowerHalf(int_tag, o0), int_tag, &in[0 * instride]);
-    hn::Store(hn::LowerHalf(int_tag, o1), int_tag, &in[1 * instride]);
-    hn::Store(hn::UpperHalf(int_tag, o0), int_tag, &in[2 * instride]);
-    hn::Store(hn::UpperHalf(int_tag, o1), int_tag, &in[3 * instride]);
+    hn::Store(o0, demote_tag, &in[0 * instride]);
+    hn::Store(o1, demote_tag, &in[1 * instride]);
+    hn::Store(hn::ShiftRightLanes<4>(demote_tag, o0), demote_tag,
+              &in[2 * instride]);
+    hn::Store(hn::ShiftRightLanes<4>(demote_tag, o1), demote_tag,
+              &in[3 * instride]);
   } else if constexpr (sizeof(hn::TFromD<D>) == 2) {
     constexpr hn::RepartitionToWide<D> int32_tag;
     const auto round = hn::Set(int32_tag, 1 << (cos_bit - 1));

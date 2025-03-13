@@ -1347,6 +1347,7 @@ static void lowbd_fwd_txfm2d_16x8_avx2(const int16_t *input, int32_t *output,
   extern void av1_lowbd_fwd_txfm2d_##w##x##h##_avx2(                      \
       const int16_t *input, int32_t *output, int stride, TX_TYPE tx_type, \
       int bd);
+DECLARE_LOWBD_TXFM2D(4, 4)
 DECLARE_LOWBD_TXFM2D(8, 8)
 DECLARE_LOWBD_TXFM2D(16, 16)
 DECLARE_LOWBD_TXFM2D(32, 32)
@@ -1363,7 +1364,7 @@ DECLARE_LOWBD_TXFM2D(16, 64)
 DECLARE_LOWBD_TXFM2D(64, 16)
 
 static FwdTxfm2dFunc fwd_txfm2d_func_ls[TX_SIZES_ALL] = {
-  av1_lowbd_fwd_txfm2d_4x4_sse2,    // 4x4 transform
+  av1_lowbd_fwd_txfm2d_4x4_avx2,    // 4x4 transform
   av1_lowbd_fwd_txfm2d_8x8_avx2,    // 8x8 transform
   av1_lowbd_fwd_txfm2d_16x16_avx2,  // 16x16 transform
   av1_lowbd_fwd_txfm2d_32x32_avx2,  // 32x32 transform

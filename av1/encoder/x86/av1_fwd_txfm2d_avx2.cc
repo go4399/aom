@@ -12,6 +12,7 @@
 #include "av1/encoder/av1_fwd_txfm2d_hwy.h"
 
 FOR_EACH_TXFM2D(MAKE_HIGHBD_TXFM2D, avx2)
+MAKE_LOWBD_TXFM2D(4, 4, avx2)
 MAKE_LOWBD_TXFM2D(8, 8, avx2)
 MAKE_LOWBD_TXFM2D(16, 16, avx2)
 MAKE_LOWBD_TXFM2D(32, 32, avx2)
