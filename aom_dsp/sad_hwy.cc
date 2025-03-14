@@ -61,6 +61,14 @@ HWY_AFTER_NAMESPACE();
                                                ref_stride, h);               \
   }
 
+#define FSADSKIP(w, h, suffix)                                               \
+  extern "C" unsigned int aom_sad_skip_##w##x##h##_##suffix(                 \
+      const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr,        \
+      int ref_stride) {                                                      \
+    return 2 * HWY_NAMESPACE::SumOfAbsoluteDiff<w>(                          \
+                   src_ptr, src_stride * 2, ref_ptr, ref_stride * 2, h / 2); \
+  }
+
 #define FOR_EACH_BLOCK_SIZE(X, suffix) \
   X(128, 128, suffix)                  \
   X(128, 64, suffix)                   \
@@ -70,10 +78,12 @@ HWY_AFTER_NAMESPACE();
 
 #if HWY_TARGET == HWY_AVX2
 FOR_EACH_BLOCK_SIZE(FSAD, avx2)
+FOR_EACH_BLOCK_SIZE(FSADSKIP, avx2)
 #endif  // HWY_TARGET == HWY_AVX2
 
 #if HWY_TARGET == HWY_AVX3
 FOR_EACH_BLOCK_SIZE(FSAD, avx512)
+FOR_EACH_BLOCK_SIZE(FSADSKIP, avx512)
 #endif  // HWY_TARGET == HWY_AVX3
 
 #undef FSAD
