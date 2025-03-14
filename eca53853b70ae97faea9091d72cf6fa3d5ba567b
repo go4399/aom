@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c635709f_73644aa4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-03-14T21:57:17Z",
+      "side": 1,
+      "message": "I don\u0027t know if Jenkins machines have avx512, but it seems like it ran into problems when running avx512 tests:\n\n```\nNote: Google Test filter \u003d *AVX512/AV1FwdTxfm2dTest.match/16*\n[\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] Running 1 test from 1 test suite.\n[----------] Global test environment set-up.\n[----------] 1 test from AVX512/AV1FwdTxfm2dTest\n[ RUN      ] AVX512/AV1FwdTxfm2dTest.match/16\nIllegal instruction (core dumped)\n```\n\nI guess this CL set HAVE_AVX2 to 1 so it gets compiled now...",
+      "revId": "eca53853b70ae97faea9091d72cf6fa3d5ba567b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e51a64fb_d4c4ed49",
