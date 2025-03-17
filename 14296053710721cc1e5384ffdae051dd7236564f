@@ -1,0 +1,39 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8eb8fec_469de3d4",
+        "filename": "test/svc_datarate_test.cc",
+        "patchSetId": 21
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-03-17T19:21:09Z",
+      "side": 1,
+      "message": "Make this `explicit`:\n\nhttps://google.github.io/styleguide/cppguide.html#Implicit_Conversions",
+      "fixSuggestions": [
+        {
+          "fixId": "cd1ff235_d975571a",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/svc_datarate_test.cc",
+              "range": {
+                "startLine": 82,
+                "startChar": 0,
+                "endLine": 83,
+                "endChar": 0
+              },
+              "replacement": "  explicit ResizingVideoSource(int external_resize_pattern) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "14296053710721cc1e5384ffdae051dd7236564f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
