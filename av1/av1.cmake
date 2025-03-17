@@ -777,11 +777,11 @@ function(setup_av1_targets)
 
   if(HAVE_AVX512)
     require_compiler_flag_nomsvc(
-      "-mavx512f -mavx512cd -mavx512bw -mavx512dq -mavx512vl" NO)
+      "-mavx2 -mavx512f -mavx512cd -mavx512bw -mavx512dq -mavx512vl" NO)
 
     if(CONFIG_AV1_ENCODER)
       add_intrinsics_object_library(
-        "-mavx512f -mavx512cd -mavx512bw -mavx512dq -mavx512vl" "avx512"
+        "-march=skylake-avx512" "avx512"
         "aom_av1_encoder" "AOM_AV1_ENCODER_INTRIN_AVX512")
     endif()
   endif()
