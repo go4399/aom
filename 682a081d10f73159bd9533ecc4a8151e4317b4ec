@@ -1,0 +1,75 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "02fc977a_c84a2397",
+        "filename": "aom_dsp/sad_hwy.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-03-17T22:40:02Z",
+      "side": 1,
+      "message": "I think there gotta be better ways to do this? The baseline avx2 code flattens four vectors into one. I don\u0027t know how to do this with highway. @jdorfman@google.com any idea? Thanks!",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 99,
+        "endChar": 76
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "c5e6a357_1ef1afb1",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "aom_dsp/sad_hwy.cc",
+              "range": {
+                "startLine": 59,
+                "startChar": 0,
+                "endLine": 60,
+                "endChar": 0
+              },
+              "replacement": "  constexpr hn::Repartition\u003cuint32_t, decltype(pixel_tag)\u003e intermediate_sum_tag;\n"
+            },
+            {
+              "path": "aom_dsp/sad_hwy.cc",
+              "range": {
+                "startLine": 61,
+                "startChar": 0,
+                "endLine": 65,
+                "endChar": 0
+              },
+              "replacement": "  auto sum_sad \u003d hn::Zero(intermediate_sum_tag);\n"
+            },
+            {
+              "path": "aom_dsp/sad_hwy.cc",
+              "range": {
+                "startLine": 77,
+                "startChar": 0,
+                "endLine": 85,
+                "endChar": 0
+              },
+              "replacement": "      auto sad \u003d hn::ConcatOf(hn::SumsOf8AbsDiff(src_vec, ref_vec_0),\n                               hn::SumsOf8AbsDiff(src_vec, ref_vec_1),\n                               hn::SumsOf8AbsDiff(src_vec, ref_vec_2),\n                               hn::SumsOf8AbsDiff(src_vec, ref_vec_3));\n      sum_sad \u003d hn::Add(sum_sad, sad);\n"
+            },
+            {
+              "path": "aom_dsp/sad_hwy.cc",
+              "range": {
+                "startLine": 92,
+                "startChar": 0,
+                "endLine": 100,
+                "endChar": 0
+              },
+              "replacement": "  res[0] \u003d hn::ReduceSum(intermediate_sum_tag, sum_sad);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "682a081d10f73159bd9533ecc4a8151e4317b4ec",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
