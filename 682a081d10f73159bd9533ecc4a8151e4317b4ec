@@ -70,6 +70,30 @@
       ],
       "revId": "682a081d10f73159bd9533ecc4a8151e4317b4ec",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "514a65b1_018be0b1",
+        "filename": "aom_dsp/sad_hwy.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-03-18T00:39:53Z",
+      "side": 1,
+      "message": "This will create a vector such that the lanes are res[0], res[1], res[2], res[3] across blocks (you\u0027ll need to bitcast to uint32_t vectors first):\n```\n    auto r02 \u003d hn::InterleaveEven(uint32_tag, r0, r2);\n    auto r13 \u003d hn::InterleaveEven(uint32_tag, r1, r3);\n    auto r0123 \u003d hn::Add(hn::InterleaveLower(uint32_tag, r02, r13),\n                         hn::InterleaveUpper(uint32_tag, r02, r13));\n```\n\nTo sum across blocks, you have to do something a bit more bespoke:\n```\ntemplate \u003csize_t NumBlocks\u003e\nstruct BlockReduceTraits {};\n\ntemplate \u003c\u003e\nstruct BlockReduceTraits\u003c1\u003e {\n  template \u003ctypename D\u003e\n  HWY_ATTR HWY_INLINE static hn::VFromD\u003cD\u003e ReduceSum(D int_tag,\n                                                     hn::VFromD\u003cD\u003e v) {\n    (void)int_tag;\n    return v;\n  }\n};\n\ntemplate \u003c\u003e\nstruct BlockReduceTraits\u003c2\u003e {\n  template \u003ctypename D\u003e\n  HWY_ATTR HWY_INLINE static hn::VFromD\u003chn::BlockDFromD\u003cD\u003e\u003e ReduceSum(\n      D int_tag, hn::VFromD\u003cD\u003e v) {\n    (void)int_tag;\n    constexpr hn::BlockDFromD\u003cD\u003e block_tag;\n    return hn::Add(hn::LowerHalf(block_tag, v), hn::UpperHalf(block_tag, v));\n  }\n};\n\ntemplate \u003c\u003e\nstruct BlockReduceTraits\u003c4\u003e {\n  template \u003ctypename D\u003e\n  HWY_ATTR HWY_INLINE static hn::VFromD\u003chn::BlockDFromD\u003cD\u003e\u003e ReduceSum(\n      D int_tag, hn::VFromD\u003cD\u003e v) {\n    (void)int_tag;\n    constexpr hn::Half\u003cD\u003e half_tag;\n    constexpr hn::BlockDFromD\u003cD\u003e block_tag;\n    auto vh \u003d hn::Add(hn::LowerHalf(half_tag, v), hn::UpperHalf(half_tag, v));\n    return hn::Add(hn::LowerHalf(block_tag, vh), hn::UpperHalf(block_tag, vh));\n  }\n};\n\ntemplate \u003ctypename D\u003e\nHWY_ATTR HWY_INLINE hn::Vec\u003chn::BlockDFromD\u003cD\u003e\u003e BlockReduceSum(\n    D int_tag, hn::VFromD\u003cD\u003e v) {\n  return BlockReduceTraits\u003cint_tag.MaxBlocks()\u003e::ReduceSum(int_tag, v);\n}\n```",
+      "parentUuid": "02fc977a_c84a2397",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 99,
+        "endChar": 76
+      },
+      "revId": "682a081d10f73159bd9533ecc4a8151e4317b4ec",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
