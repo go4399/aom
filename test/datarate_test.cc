@@ -22,7 +22,7 @@
 #include "aom/aom_codec.h"
 
 #if CONFIG_LIBYUV
-#include "third_party/libyuv/include/libyuv/scale.h"
+#include "third_party/libyuv/include/libyuv/scale.h"  // nogncheck
 #endif
 
 namespace datarate_test {
