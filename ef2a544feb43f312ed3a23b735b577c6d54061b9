@@ -1,0 +1,128 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "990bd86c_8e15bfa9",
+        "filename": "aom_dsp/aom_dsp_rtcd_defs.pl",
+        "patchSetId": 3
+      },
+      "lineNbr": 924,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-03-18T00:41:56Z",
+      "side": 1,
+      "message": "I feel like we should pass --disable-avx512 on ia32 instead of having to special-case this through the definitions script.",
+      "range": {
+        "startLine": 924,
+        "startChar": 0,
+        "endLine": 924,
+        "endChar": 47
+      },
+      "revId": "ef2a544feb43f312ed3a23b735b577c6d54061b9",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d58521d7_9ea0733f",
+        "filename": "aom_dsp/sad_hwy.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-03-18T00:41:56Z",
+      "side": 1,
+      "message": "You can condition on this being null instead of having 2 different implementations. The compiler is smart enough to discard the branch when it\u0027s a constant.",
+      "range": {
+        "startLine": 57,
+        "startChar": 66,
+        "endLine": 57,
+        "endChar": 77
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "a72b86c6_a4c900f7",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "aom_dsp/sad_hwy.cc",
+              "range": {
+                "startLine": 17,
+                "startChar": 0,
+                "endLine": 18,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "aom_dsp/sad_hwy.cc",
+              "range": {
+                "startLine": 30,
+                "startChar": 0,
+                "endLine": 34,
+                "endChar": 0
+              },
+              "replacement": "HWY_MAYBE_UNUSED unsigned int SumOfAbsoluteDiff(\n    const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr,\n    int ref_stride, int h, const uint8_t *second_pred \u003d nullptr) {\n"
+            },
+            {
+              "path": "aom_dsp/sad_hwy.cc",
+              "range": {
+                "startLine": 42,
+                "startChar": 0,
+                "endLine": 69,
+                "endChar": 0
+              },
+              "replacement": "      auto sad \u003d hn::Zero(pixel_tag);\n      if (second_pred) {\n        auto sec_pred_vec \u003d hn::LoadU(pixel_tag, \u0026second_pred[j]);\n        auto ref2_vec \u003d hn::AverageRound(ref_vec, sec_pred_vec);\n        sad \u003d hn::SumsOf8AbsDiff(src_vec, ref2_vec);\n      } else {\n        sad \u003d hn::SumsOf8AbsDiff(src_vec, ref_vec);\n      }\n"
+            },
+            {
+              "path": "aom_dsp/sad_hwy.cc",
+              "range": {
+                "startLine": 81,
+                "startChar": 0,
+                "endLine": 95,
+                "endChar": 0
+              },
+              "replacement": "#define FSAD(w, h, suffix)                                                \\\n  extern \"C\" HWY_ATTR unsigned int aom_sad##w##x##h##_##suffix(           \\\n      const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr,     \\\n      int ref_stride, const uint8_t *second_pred \u003d nullptr) {             \\\n    return HWY_NAMESPACE::SumOfAbsoluteDiff\u003cw\u003e(                           \\\n        src_ptr, src_stride, ref_ptr, ref_stride, h, second_pred);        \\\n"
+            },
+            {
+              "path": "aom_dsp/sad_hwy.cc",
+              "range": {
+                "startLine": 97,
+                "startChar": 0,
+                "endLine": 103,
+                "endChar": 0
+              },
+              "replacement": "#define FSADSKIP(w, h, suffix)                                            \\\n  extern \"C\" HWY_ATTR unsigned int aom_sad_skip_##w##x##h##_##suffix(     \\\n      const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr,     \\\n      int ref_stride, const uint8_t *second_pred \u003d nullptr) {             \\\n    return 2 * HWY_NAMESPACE::SumOfAbsoluteDiff\u003cw\u003e(                       \\\n                   src_ptr, src_stride * 2, ref_ptr, ref_stride * 2, h / 2, \\\n                   second_pred);                                           \\\n"
+            },
+            {
+              "path": "aom_dsp/sad_hwy.cc",
+              "range": {
+                "startLine": 115,
+                "startChar": 0,
+                "endLine": 116,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "aom_dsp/sad_hwy.cc",
+              "range": {
+                "startLine": 121,
+                "startChar": 0,
+                "endLine": 122,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "ef2a544feb43f312ed3a23b735b577c6d54061b9",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
