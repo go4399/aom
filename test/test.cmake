@@ -266,7 +266,6 @@ if(NOT BUILD_SHARED_LIBS)
                 "${AOM_ROOT}/test/kf_test.cc"
                 "${AOM_ROOT}/test/lossless_test.cc"
                 "${AOM_ROOT}/test/noise_model_test.cc"
-                "${AOM_ROOT}/test/quant_test.cc"
                 "${AOM_ROOT}/test/rd_test.cc"
                 "${AOM_ROOT}/test/sb_multipass_test.cc"
                 "${AOM_ROOT}/test/sb_qp_sweep_test.cc"
@@ -280,6 +279,9 @@ if(NOT BUILD_SHARED_LIBS)
     if(CONFIG_AV1_HIGHBITDEPTH)
       list(APPEND AOM_UNIT_TEST_COMMON_SOURCES
                   "${AOM_ROOT}/test/coding_path_sync.cc")
+    endif()
+    if(CONFIG_QUANT_MATRIX)
+      list(APPEND AOM_UNIT_TEST_COMMON_SOURCES "${AOM_ROOT}/test/quant_test.cc")
     endif()
   endif()
   if(CONFIG_REALTIME_ONLY)
