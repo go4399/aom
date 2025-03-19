@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "01a42502_df05fa3d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-19T22:40:13Z",
+      "side": 1,
+      "message": "Without this change, the test fails with error messages like the following:\n\n```\n[ RUN      ] AV1/QMTest.TestNoMisMatchQM1/0\n/home/wtc/aom.3/aom/test/encode_test_driver.h:109: Failure\nExpected equality of these values:\n  AOM_CODEC_OK\n    Which is: 0\n  res\n    Which is: 8\nQM can\u0027t be enabled with CONFIG_QUANT_MATRIX\u003d0.\n/home/wtc/aom.3/aom/test/quant_test.cc:73: Failure\nExpected: RunLoop(\u0026video) doesn\u0027t generate new fatal failures in the current thread.\n  Actual: it does.\n[  FAILED  ] AV1/QMTest.TestNoMisMatchQM1/0, where GetParam() \u003d (0x56420072a538, 0, 5) (258 ms)\n```",
+      "revId": "e8a9a89197616b627e6f4df00f7bf48f5bd3d765",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "09500154_92586b51",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-19T22:40:13Z",
+      "side": 1,
+      "message": "I noticed this issue while reviewing Marco\u0027s CL https://aomedia-review.googlesource.com/c/aom/+/198101\n\nquant_test.cc also calls `encoder-\u003eControl(AV1E_SET_ENABLE_QM, 1)`.",
+      "revId": "e8a9a89197616b627e6f4df00f7bf48f5bd3d765",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
