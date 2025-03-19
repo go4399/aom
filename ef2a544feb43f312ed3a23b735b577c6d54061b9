@@ -24,6 +24,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2754fd63_c7fefe18",
+        "filename": "aom_dsp/aom_dsp_rtcd_defs.pl",
+        "patchSetId": 3
+      },
+      "lineNbr": 924,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-03-19T22:38:14Z",
+      "side": 1,
+      "message": "this is addressed in https://aomedia-review.googlesource.com/c/aom/+/197901",
+      "parentUuid": "990bd86c_8e15bfa9",
+      "range": {
+        "startLine": 924,
+        "startChar": 0,
+        "endLine": 924,
+        "endChar": 47
+      },
+      "revId": "ef2a544feb43f312ed3a23b735b577c6d54061b9",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d58521d7_9ea0733f",
@@ -121,6 +145,30 @@
           ]
         }
       ],
+      "revId": "ef2a544feb43f312ed3a23b735b577c6d54061b9",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "84c4ec9e_0f0a1f30",
+        "filename": "aom_dsp/sad_hwy.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-03-19T22:38:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d58521d7_9ea0733f",
+      "range": {
+        "startLine": 57,
+        "startChar": 66,
+        "endLine": 57,
+        "endChar": 77
+      },
       "revId": "ef2a544feb43f312ed3a23b735b577c6d54061b9",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
