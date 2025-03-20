@@ -2083,6 +2083,9 @@ static inline void encode_frame_internal(AV1_COMP *cpi) {
   mt_info->pack_bs_mt_enabled = AOMMIN(mt_info->num_mod_workers[MOD_PACK_BS],
                                        cm->tiles.cols * cm->tiles.rows) > 1;
 
+  fprintf(stderr, "\nPOC = %d, qp = %d\n", cm->cur_frame->order_hint,
+          cm->quant_params.base_qindex);
+
   if (oxcf->row_mt && (mt_info->num_workers > 1)) {
     mt_info->row_mt_enabled = 1;
     enc_row_mt->sync_read_ptr = av1_row_mt_sync_read;

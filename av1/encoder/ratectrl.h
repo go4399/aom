@@ -318,6 +318,11 @@ typedef struct {
   int gfu_boost;
 
   /*!
+   * Boost factor used to calculate the extra bits allocated to ARFs and GFs
+   */
+  int tpl_boost;
+
+  /*!
    * Stores the determined gf group lengths for a set of gf groups
    */
   int gf_intervals[MAX_NUM_GF_INTERVALS];
