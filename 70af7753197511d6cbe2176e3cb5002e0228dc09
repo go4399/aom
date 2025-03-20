@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1ab2e63_363221db",
+        "filename": "aom_dsp/sad_hwy.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-03-20T00:27:35Z",
+      "side": 1,
+      "message": "second_pred !\u003d nullptr.",
+      "range": {
+        "startLine": 37,
+        "startChar": 26,
+        "endLine": 37,
+        "endChar": 63
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "a4592246_74a896ca",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "aom_dsp/sad_hwy.cc",
+              "range": {
+                "startLine": 37,
+                "startChar": 0,
+                "endLine": 38,
+                "endChar": 0
+              },
+              "replacement": "  const bool is_sad_avg \u003d second_pred !\u003d nullptr;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "70af7753197511d6cbe2176e3cb5002e0228dc09",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20a088fe_a31d78d6",
+        "filename": "aom_dsp/sad_hwy.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-03-20T00:27:35Z",
+      "side": 1,
+      "message": "nit: I think you can just assign back to ref_vec and have a single call to SumsOf8AbsDiff.",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 0
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "59817f4e_f1fa99f2",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "aom_dsp/sad_hwy.cc",
+              "range": {
+                "startLine": 42,
+                "startChar": 0,
+                "endLine": 43,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "aom_dsp/sad_hwy.cc",
+              "range": {
+                "startLine": 45,
+                "startChar": 0,
+                "endLine": 49,
+                "endChar": 0
+              },
+              "replacement": "        ref_vec \u003d hn::AverageRound(ref_vec, sec_pred_vec);\n"
+            },
+            {
+              "path": "aom_dsp/sad_hwy.cc",
+              "range": {
+                "startLine": 50,
+                "startChar": 0,
+                "endLine": 50,
+                "endChar": 0
+              },
+              "replacement": "      auto sad \u003d hn::SumsOf8AbsDiff(src_vec, ref_vec);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "70af7753197511d6cbe2176e3cb5002e0228dc09",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
