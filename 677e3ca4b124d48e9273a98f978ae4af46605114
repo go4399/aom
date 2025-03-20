@@ -1,0 +1,127 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "076ca3aa_f9cd5b19",
+        "filename": "aom_dsp/reduce_sum_hwy.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-03-20T22:05:28Z",
+      "side": 1,
+      "message": "Why is this declaration needed?",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 0
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "230b817d_49276d6d",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "aom_dsp/reduce_sum_hwy.h",
+              "range": {
+                "startLine": 26,
+                "startChar": 0,
+                "endLine": 29,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "677e3ca4b124d48e9273a98f978ae4af46605114",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd5669d8_b0f73352",
+        "filename": "aom_dsp/reduce_sum_hwy.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-03-20T22:05:28Z",
+      "side": 1,
+      "message": "This should be HWY_INLINE too.",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 62
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "78fbd5d9_e323c538",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "aom_dsp/reduce_sum_hwy.h",
+              "range": {
+                "startLine": 64,
+                "startChar": 0,
+                "endLine": 66,
+                "endChar": 0
+              },
+              "replacement": "HWY_ATTR HWY_INLINE hn::Vec\u003chn::BlockDFromD\u003cD\u003e\u003e BlockReduceSum(D int_tag,\n                                                               hn::VFromD\u003cD\u003e v) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "677e3ca4b124d48e9273a98f978ae4af46605114",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0cfdd872_82608dac",
+        "filename": "aom_dsp/reduce_sum_hwy.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-03-20T22:05:28Z",
+      "side": 1,
+      "message": "Add a comment.",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 62
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "a5cbdd30_ecd42161",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "aom_dsp/reduce_sum_hwy.h",
+              "range": {
+                "startLine": 63,
+                "startChar": 0,
+                "endLine": 63,
+                "endChar": 0
+              },
+              "replacement": "// Reduce sum of a vector of vectors.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "677e3ca4b124d48e9273a98f978ae4af46605114",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
