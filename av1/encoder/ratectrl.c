@@ -2136,6 +2136,19 @@ static int rc_pick_q_and_bounds(const AV1_COMP *cpi, int width, int height,
 #endif
     }
 
+    if (cpi->oxcf.algo_cfg.sharpness && cpi->oxcf.algo_cfg.enable_tpl_model &&
+        av1_tpl_stats_ready(&cpi->ppi->tpl_data, cpi->gf_frame_index)) {
+      double gfu_boost = cpi->ppi->p_rc.gfu_boost + 1.0;
+      double tpl_boost = cpi->ppi->p_rc.tpl_boost + 1.0;
+      if (gfu_boost > tpl_boost) {
+        double scale_factor = pow(gfu_boost / tpl_boost, 0.5);
+        int quality_gap = active_worst_quality - active_best_quality;
+        int quality_delta = (int)(quality_gap / scale_factor) / 2;
+        active_best_quality += quality_delta;
+        active_worst_quality -= quality_delta;
+      }
+    }
+
     // For alt_ref and GF frames (including internal arf frames) adjust the
     // worst allowed quality as well. This insures that even on hard
     // sections we don't clamp the Q at the same value for arf frames and
