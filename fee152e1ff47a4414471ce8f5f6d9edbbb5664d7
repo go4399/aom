@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04ed5c7f_7c0ab7ae",
+        "filename": "aom_dsp/sad_hwy.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-03-20T00:51:37Z",
+      "side": 1,
+      "message": "nit: FixedTag, as the truncation behavior of CappedTag is incorrect here.",
+      "range": {
+        "startLine": 154,
+        "startChar": 0,
+        "endLine": 154,
+        "endChar": 53
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "5b1acc2e_2b073f52",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "aom_dsp/sad_hwy.cc",
+              "range": {
+                "startLine": 154,
+                "startChar": 0,
+                "endLine": 155,
+                "endChar": 0
+              },
+              "replacement": "  constexpr hn::FixedTag\u003cuint32_t, 4\u003e block_sum_tag;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "fee152e1ff47a4414471ce8f5f6d9edbbb5664d7",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}

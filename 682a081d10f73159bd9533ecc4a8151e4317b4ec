@@ -118,6 +118,30 @@
       },
       "revId": "682a081d10f73159bd9533ecc4a8151e4317b4ec",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b68684f8_727e86c3",
+        "filename": "aom_dsp/sad_hwy.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-03-20T00:51:37Z",
+      "side": 1,
+      "message": "Horizontal/cross-block is very high latency. It may also only have a small effect on performance, particularly at large block sizes, and potentially only on newer CPUs.\n\nWas this also the case with AVX512?\n\nAt a glance, the transpose reduction is theoretically way faster (https://godbolt.org/z/enMj3Y66a):\n```\n 2      10    1.00    *                   vpmovsxbd\tzmm4, xmmword ptr [rip + .LCPI0_1]\n 1      3     1.00                        vpermt2d\tzmm0, zmm4, zmm3\n 1      3     1.00                        vpermt2d\tzmm1, zmm4, zmm2\n 1      1     1.00                        vpunpckldq\tzmm2, zmm0, zmm1\n 1      1     1.00                        vpunpckhdq\tzmm0, zmm0, zmm1\n 1      1     0.33                        vpaddd\tzmm0, zmm2, zmm0\n 1      3     1.00                        vextracti64x4\tymm1, zmm0, 1\n 1      1     0.33                        vpaddd\tymm0, ymm1, ymm0\n 1      3     1.00                        vextracti128\txmm1, ymm0, 1\n 1      1     0.33                        vpaddd\txmm0, xmm0, xmm1\n 2      1     1.00           *            vmovdqu\txmmword ptr [r8], xmm0\n```\nvs.\n```\n 1      3     1.00                        vpermq\tzmm4, zmm1, 78\n 1      1     0.33                        vpaddq\tzmm1, zmm1, zmm4\n 1      3     1.00                        vpermq\tzmm4, zmm3, 78\n 1      1     0.33                        vpaddq\tzmm3, zmm3, zmm4\n 1      3     1.00                        vpermq\tzmm4, zmm2, 78\n 1      1     0.33                        vpaddq\tzmm2, zmm2, zmm4\n 1      3     1.00                        vextracti32x4\txmm4, zmm2, 3\n 1      1     0.33                        vpaddq\txmm2, xmm2, xmm4\n 1      1     1.00                        vpshufd\txmm4, xmm2, 238\n 1      1     0.33                        vpaddq\txmm2, xmm2, xmm4\n 1      2     1.00                        vmovd\teax, xmm2\n 1      3     1.00                        vpermq\tzmm2, zmm0, 78\n 1      1     0.33                        vpaddq\tzmm0, zmm0, zmm2\n 1      3     1.00                        vextracti32x4\txmm2, zmm0, 3\n 1      1     0.33                        vpaddq\txmm0, xmm0, xmm2\n 1      1     1.00                        vpshufd\txmm2, xmm0, 238\n 1      1     0.33                        vpaddq\txmm0, xmm0, xmm2\n 1      2     1.00                        vmovd\tecx, xmm0\n 1      3     1.00                        vextracti32x4\txmm0, zmm3, 3\n 1      1     0.33                        vpaddq\txmm0, xmm3, xmm0\n 1      1     1.00                        vpshufd\txmm2, xmm0, 238\n 1      1     0.33                        vpaddq\txmm0, xmm0, xmm2\n 1      3     1.00                        vextracti32x4\txmm2, zmm1, 3\n 1      1     0.33                        vpaddq\txmm1, xmm1, xmm2\n 1      1     1.00                        vpshufd\txmm2, xmm1, 238\n 1      1     0.33                        vpaddq\txmm1, xmm1, xmm2\n 1      1     1.00                        vpunpckldq\txmm0, xmm1, xmm0\n 2      2     2.00                        vpinsrd\txmm0, xmm0, eax, 2\n 2      2     2.00                        vpinsrd\txmm0, xmm0, ecx, 3\n 2      1     1.00           *            vmovdqu\txmmword ptr [r8], xmm0\n```",
+      "parentUuid": "4fb223a1_2d7d9cbc",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 99,
+        "endChar": 76
+      },
+      "revId": "682a081d10f73159bd9533ecc4a8151e4317b4ec",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
