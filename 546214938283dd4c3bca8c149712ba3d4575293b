@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17c21868_45f27535",
+        "filename": "aom_dsp/reduce_sum_hwy.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-03-21T14:07:10Z",
+      "side": 1,
+      "message": "optional: use the recursive version with partial template specialization. It\u0027s arguably a tiny bit cleaner.",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 0
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "dac67f58_0d59accd",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "aom_dsp/reduce_sum_hwy.h",
+              "range": {
+                "startLine": 23,
+                "startChar": 0,
+                "endLine": 60,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "aom_dsp/reduce_sum_hwy.h",
+              "range": {
+                "startLine": 66,
+                "startChar": 0,
+                "endLine": 69,
+                "endChar": 0
+              },
+              "replacement": "HWY_ATTR HWY_INLINE hn::Vec\u003chn::BlockDFromD\u003cD\u003e\u003e BlockReduceSum(D int_tag,\n                                                              hn::VFromD\u003cD\u003e v) {\n  constexpr hn::Half\u003cD\u003e half_tag;\n  constexpr hn::BlockDFromD\u003cD\u003e block_tag;\n  auto vh \u003d hn::Add(hn::LowerHalf(half_tag, v), hn::UpperHalf(half_tag, v));\n  return hn::Add(hn::LowerHalf(block_tag, vh), hn::UpperHalf(block_tag, vh));\n"
+            }
+          ]
+        }
+      ],
+      "revId": "546214938283dd4c3bca8c149712ba3d4575293b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
