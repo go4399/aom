@@ -1,0 +1,226 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f93c2da_74d86d59",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-21T23:45:35Z",
+      "side": 1,
+      "message": "Thanks for updating the CL. I didn\u0027t review test/metadata_test.cc. Please read my comment at av1/decoder/obu.c:1064 first because several other comments depend on that.",
+      "revId": "9182de0a11cf28074759cc6bf6c34971916d56ab",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a33a815_fcda2cad",
+        "filename": "aom/aom_image.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-21T23:45:35Z",
+      "side": 1,
+      "message": "Please see my comment at av1/decoder/obu.c:1064. It is better to document that `aom_metadata_t::insert_flag` is not used by the decoder, and the placeholder value set by the decoder should be ignored.",
+      "range": {
+        "startLine": 168,
+        "startChar": 0,
+        "endLine": 171,
+        "endChar": 54
+      },
+      "revId": "9182de0a11cf28074759cc6bf6c34971916d56ab",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc049e48_29a8dca5",
+        "filename": "aom/src/aom_image.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-21T23:45:35Z",
+      "side": 1,
+      "message": "Please see my comment at av1/decoder/obu.c:1064. If we add an `AOM_MIF_UNUSED` or `AOM_MIF_IGNORED` enum constant for the decoder, we should handle that here.",
+      "revId": "9182de0a11cf28074759cc6bf6c34971916d56ab",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f518c98f_69395f4e",
+        "filename": "aom/src/aom_image.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-21T23:45:35Z",
+      "side": 1,
+      "message": "Optional: We may want to allow these two metadata OBUs to be layer-specific because of our CWG-F006 proposal.",
+      "revId": "9182de0a11cf28074759cc6bf6c34971916d56ab",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5257ebf_acf75099",
+        "filename": "av1/decoder/obu.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-21T23:45:35Z",
+      "side": 1,
+      "message": "Note that we include \u003cstdbool.h\u003e here, so we can use the `bool` type in this file.",
+      "revId": "9182de0a11cf28074759cc6bf6c34971916d56ab",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "34d79c44_0bc1a5cd",
+        "filename": "av1/decoder/obu.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 631,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-21T23:45:35Z",
+      "side": 1,
+      "message": "Nit: Declare `is_layer_specific` as `bool`.",
+      "range": {
+        "startLine": 631,
+        "startChar": 46,
+        "endLine": 631,
+        "endChar": 67
+      },
+      "revId": "9182de0a11cf28074759cc6bf6c34971916d56ab",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c7ff458_7780f7dd",
+        "filename": "av1/decoder/obu.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 789,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-21T23:45:35Z",
+      "side": 1,
+      "message": "Nit: Declare `is_layer_specific` as `bool`.",
+      "range": {
+        "startLine": 789,
+        "startChar": 28,
+        "endLine": 789,
+        "endChar": 49
+      },
+      "revId": "9182de0a11cf28074759cc6bf6c34971916d56ab",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9ce57263_75bdf482",
+        "filename": "av1/decoder/obu.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1064,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-21T23:45:35Z",
+      "side": 1,
+      "message": "IMPORTANT: If obu_header.has_extension is false, the OBU may still be layer-specific. That can happen when there is only one layer.\n\nThis reminded me of a fact I discovered while analyzing this code: `metadata-\u003einsert_flag` is only used by the encoder and is ignored by the decoder. So in this file (used by the decoder only) we should simply set `metadata-\u003einsert_flag` to an arbitrary fixed value, such as `AOM_MIF_ANY_FRAME`. We can even add a new enum constant `AOM_MIF_UNUSED` or `AOM_MIF_IGNORED` for use in the decoder.",
+      "revId": "9182de0a11cf28074759cc6bf6c34971916d56ab",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9105b132_85610894",
+        "filename": "av1/decoder/obu.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1064,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-21T23:45:35Z",
+      "side": 1,
+      "message": "Nit: Declare `is_layer_specific` as `bool`.",
+      "revId": "9182de0a11cf28074759cc6bf6c34971916d56ab",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c9a5588_43b9d087",
+        "filename": "av1/encoder/bitstream.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 4225,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-21T23:45:35Z",
+      "side": 1,
+      "message": "Nit/optional: We can use the `int` type. One reason is that this variable is compared with enum constants such as `AOM_MIF_KEY_FRAME`, which have the `int` type in C99.",
+      "revId": "9182de0a11cf28074759cc6bf6c34971916d56ab",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b3a704e_6a2d0a26",
+        "filename": "av1/encoder/bitstream.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 4226,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-21T23:45:35Z",
+      "side": 1,
+      "message": "Nit: Omit the parentheses.",
+      "revId": "9182de0a11cf28074759cc6bf6c34971916d56ab",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5a58206_7a6884a4",
+        "filename": "av1/encoder/bitstream.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 4238,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-21T23:45:35Z",
+      "side": 1,
+      "message": "Use the `bool` type:\n\n```\n        const bool is_layer_specific_obu \u003d\n            (current_metadata-\u003einsert_flag \u0026 AOM_MIF_LAYER_SPECIFIC) !\u003d 0;\n```",
+      "revId": "9182de0a11cf28074759cc6bf6c34971916d56ab",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
