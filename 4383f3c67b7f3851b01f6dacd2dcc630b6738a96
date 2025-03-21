@@ -1,0 +1,103 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d82b6faa_2a7d092a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7065
+      },
+      "writtenOn": "2025-03-21T21:53:29Z",
+      "side": 1,
+      "message": "Some minor suggestions.",
+      "revId": "4383f3c67b7f3851b01f6dacd2dcc630b6738a96",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f47047f_b97a8b71",
+        "filename": "av1/encoder/txb_rdopt.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 7065
+      },
+      "writtenOn": "2025-03-21T21:53:29Z",
+      "side": 1,
+      "message": "int allow_lower_qc \u003d sharpness ? (abs_qc \u003e 1): 1;",
+      "range": {
+        "startLine": 116,
+        "startChar": 4,
+        "endLine": 117,
+        "endChar": 47
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "1e495497_bb7ddff3",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/txb_rdopt.c",
+              "range": {
+                "startLine": 116,
+                "startChar": 0,
+                "endLine": 118,
+                "endChar": 0
+              },
+              "replacement": "    int allow_lower_qc \u003d sharpness ? (abs_qc \u003e 1) : 1;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "4383f3c67b7f3851b01f6dacd2dcc630b6738a96",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cbce31f4_e5783ee2",
+        "filename": "av1/encoder/txb_rdopt.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 7065
+      },
+      "writtenOn": "2025-03-21T21:53:29Z",
+      "side": 1,
+      "message": "[Optional] \n\nint qc_threshold \u003d (si \u003c\u003d 5)? 2: 1;\nint allow_lower_qc \u003d sharpness ? abs_qc \u003e threshold : 1;",
+      "range": {
+        "startLine": 209,
+        "startChar": 1,
+        "endLine": 213,
+        "endChar": 5
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "b362e709_957b1c22",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/txb_rdopt.c",
+              "range": {
+                "startLine": 209,
+                "startChar": 0,
+                "endLine": 214,
+                "endChar": 0
+              },
+              "replacement": "    const int qc_threshold \u003d (si \u003c\u003d 5) ? 2 : 1;\n    const int allow_lower_qc \u003d sharpness ? abs_qc \u003e qc_threshold : 1;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "4383f3c67b7f3851b01f6dacd2dcc630b6738a96",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
