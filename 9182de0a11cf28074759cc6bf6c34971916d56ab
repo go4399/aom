@@ -65,6 +65,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f497a52a_ab7dd7cf",
+        "filename": "aom/aom_image.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-24T23:40:47Z",
+      "side": 1,
+      "message": "Hmm... You are right. Although the `aom_image_t` struct has the `temporal_id` and `spatial_id` fields, when they are both 0 it is ambiguous whether they are explicitly set to 0 in the OBU extension header or they are assigned the default value 0 because the OBU extension header is absent. So it is useful to report whether the OBU extension header is present. Note that this is not exactly the same as whether the OBU is layer-specific, but it is a good approximation. The two booleans differ only when there is only one layer, in which case it doesn\u0027t really matter whether an OBU is layer-specific.",
+      "parentUuid": "661a4b3f_83e2b5ba",
+      "range": {
+        "startLine": 168,
+        "startChar": 0,
+        "endLine": 171,
+        "endChar": 54
+      },
+      "revId": "9182de0a11cf28074759cc6bf6c34971916d56ab",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dc049e48_29a8dca5",
@@ -78,6 +102,24 @@
       "writtenOn": "2025-03-21T23:45:35Z",
       "side": 1,
       "message": "Please see my comment at av1/decoder/obu.c:1064. If we add an `AOM_MIF_UNUSED` or `AOM_MIF_IGNORED` enum constant for the decoder, we should handle that here.",
+      "revId": "9182de0a11cf28074759cc6bf6c34971916d56ab",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5be30238_1e15c3ef",
+        "filename": "aom/src/aom_image.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-24T23:40:47Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "dc049e48_29a8dca5",
       "revId": "9182de0a11cf28074759cc6bf6c34971916d56ab",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -113,6 +155,24 @@
       "side": 1,
       "message": "Do you think we should make this change now, or wait for the spec to be updated?",
       "parentUuid": "f518c98f_69395f4e",
+      "revId": "9182de0a11cf28074759cc6bf6c34971916d56ab",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97804cc8_a3025d1e",
+        "filename": "aom/src/aom_image.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-24T23:40:47Z",
+      "side": 1,
+      "message": "If you agree that we should allow these two metadata OBUs to be layer-specific, we can make this change now. An application can still conform to the current draft AV1 spec update by using a non-layer-specific insert flag for these two metadata OBUs. On the other hand, once the check is shipped in a libaom release, an application won\u0027t be able to use a layer-specific insert flag if that libaom release is used.",
+      "parentUuid": "82ca528a_9ad5164d",
       "revId": "9182de0a11cf28074759cc6bf6c34971916d56ab",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -294,6 +354,24 @@
       "side": 1,
       "message": "You are right that there is a subtle semantics difference, but in practice I don\u0027t think it really matters. If there is only one layer, it it\u0027s the same thing if an OBU applies to all layers or only to the current layer. In practice, this boolean determines whether we output the OBU with AOM_MIF_ANY_FRAME or AOM_MIF_ANY_FRAME_LAYER_SPECIFIC. In aom_image.h, I did write that the latter is used only \"when the video contains multiple layers\".\n\nNote that the spec doesn\u0027t actually describe what should be done for OBUs that can optionally be layer-specific, except for the Padding OBU: \"Padding OBUs may or may not be layer-specific. If the obu_extension_flag is set to 1 they are layer-specific, whereas when the obu_extension_flag is set to 0 they are not.\"",
       "parentUuid": "9ce57263_75bdf482",
+      "revId": "9182de0a11cf28074759cc6bf6c34971916d56ab",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4fc72d7_74335058",
+        "filename": "av1/decoder/obu.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1064,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-24T23:40:47Z",
+      "side": 1,
+      "message": "I agree with your analysis.",
+      "parentUuid": "86e6d57d_a57d9b0b",
       "revId": "9182de0a11cf28074759cc6bf6c34971916d56ab",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },

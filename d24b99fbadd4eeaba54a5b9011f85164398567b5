@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d37babb1_346de284",
+        "filename": "aom/aom_image.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-24T23:40:47Z",
+      "side": 1,
+      "message": "It just occurred to me that we can redefine the `aom_metadata_insert_flags_t` typedef as `int`. This is ABI-compatible if the `enum aom_metadata_insert_flags` type and `int` have the same size.\n\nThis will allow us to define AOM_MIF_LAYER_SPECIFIC as a value in the enum type.\n\nWe can look into this in a future CL.",
+      "revId": "d24b99fbadd4eeaba54a5b9011f85164398567b5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27786084_fb5411ab",
+        "filename": "av1/decoder/obu.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 631,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-24T23:40:47Z",
+      "side": 1,
+      "message": "Nit: has_extension \u003d\u003e has_obu_extension_header",
+      "revId": "d24b99fbadd4eeaba54a5b9011f85164398567b5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a954a4c_c03fc383",
+        "filename": "av1/encoder/bitstream.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 4238,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-24T23:40:47Z",
+      "side": 1,
+      "message": "IMPORTANT: When using the `bool` type, the value should be 0 or 1, so we need to compare the result of the bitwise AND with 0:\n\n```\n        const bool is_layer_specific_obu \u003d\n            (current_metadata-\u003einsert_flag \u0026 AOM_MIF_LAYER_SPECIFIC) !\u003d 0;\n```",
+      "revId": "d24b99fbadd4eeaba54a5b9011f85164398567b5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
