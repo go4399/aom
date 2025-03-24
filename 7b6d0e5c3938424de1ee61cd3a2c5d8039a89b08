@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "b01ba8b9_72d1294c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-03-24T20:56:42Z",
+      "side": 1,
+      "message": "Should this change to \"or current frame pyramid_level \u003c\u003d 1\" ?",
+      "range": {
+        "startLine": 14,
+        "startChar": 42,
+        "endLine": 15,
+        "endChar": 18
+      },
+      "revId": "7b6d0e5c3938424de1ee61cd3a2c5d8039a89b08",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "17c9367c_ac3fc49a",
@@ -14,6 +37,82 @@
       "writtenOn": "2025-03-24T14:21:27Z",
       "side": 1,
       "message": "In this CL, we introduced a speed feature `skip_loop_filter_using_filt_error` for low-complexity decode mode. This sf resets luma filter levels based on relative reduction in error when applying the filter compared to no filtering for the current frame. This sf is not enabled for pyramid_level \u003e 1 to contain the BD-rate drop.\n\nThe visual quality tests showed no artifacts for mid and high bit-rates for cpu \u003c\u003d 3.\n\nPerformance results of encoder and decoder for the streams generated\nwith low complexity decode enabled.\n\n```\n                       Instruction Count                                                                              \n                          Reduction(%)                   BD-Rate Loss(%)                Time Reduction(%)\ncpu-used  Resolution    Encoder   Decoder    avg.psnr     ssim       vmaf    vmaf_neg    dav1d Decoder   \n   1          608P      -0.098     3.136      0.1330     0.2940    -0.0128     0.0158       3.120\n   1        HDRES2      -0.168     6.650      0.4240     0.5649     0.2104     0.2103       6.987\n   1       Average      -0.130     4.733      0.2653     0.4171     0.0887     0.1042       4.878\n   \n   2          608P      -0.095     3.294      0.1534     0.3535     0.0287     0.0328       3.383\n   2        HDRES2      -0.106     6.815      0.4890     0.5839     0.2491     0.2381       6.748\n   2       Average      -0.100     4.894      0.3059     0.4582     0.1289     0.1261       4.913\n   \n   3          608P      -0.043     3.551      0.1778     0.3155    -0.0268    -0.0272       3.240\n   3        HDRES2       0.001     7.031      0.4333     0.4881     0.1044     0.1033       7.123\n   3       Average      -0.023     5.133      0.2939     0.3940     0.0328     0.0321       5.005  \n   \n```\n\nThe instruction count reduction specified has been measured using command:\n`$ perf stat -e instructions:u ./aomenc …`\n`$ perf stat -e instructions:u ./dav1d --cpumask avx2 …`\n\nThe decode time is measured using command\n`time taskset -c 0  ./dav1d  --cpumask avx2 …`\n\nWe also verified that this CL produces bit-exact output for RT, ALLINTRA and cpu_used\u003e\u003d4 of GOOD encoding modes.",
+      "revId": "7b6d0e5c3938424de1ee61cd3a2c5d8039a89b08",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fefea67c_4a538660",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-03-24T20:56:42Z",
+      "side": 1,
+      "message": "Thanks for the CL. What sets were used for visual quality tests? For 608p, did you cover 300 - 900 kbps range?",
+      "parentUuid": "17c9367c_ac3fc49a",
+      "revId": "7b6d0e5c3938424de1ee61cd3a2c5d8039a89b08",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cabb0a3c_3a0cf8bf",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-03-24T20:56:42Z",
+      "side": 1,
+      "message": "So this is disabled for key and arf frames? This might be ok, but using the definition similar to frame_is_boosted() sounds more clear?",
+      "range": {
+        "startLine": 604,
+        "startChar": 9,
+        "endLine": 604,
+        "endChar": 52
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "f55e0343_0b38adc5",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/speed_features.c",
+              "range": {
+                "startLine": 604,
+                "startChar": 0,
+                "endLine": 605,
+                "endChar": 0
+              },
+              "replacement": "         frame_is_boosted(cpi))\n"
+            }
+          ]
+        }
+      ],
+      "revId": "7b6d0e5c3938424de1ee61cd3a2c5d8039a89b08",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "301fdcdc_4fbf2f75",
+        "filename": "av1/encoder/speed_features.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1505,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-03-24T20:56:42Z",
+      "side": 1,
+      "message": "Is it true that chroma filter use luma filter level?",
       "revId": "7b6d0e5c3938424de1ee61cd3a2c5d8039a89b08",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
