@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "827bdee5_eb381157",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 25857
+      },
+      "writtenOn": "2025-03-25T12:58:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b01ba8b9_72d1294c",
+      "range": {
+        "startLine": 14,
+        "startChar": 42,
+        "endLine": 15,
+        "endChar": 18
+      },
+      "revId": "7b6d0e5c3938424de1ee61cd3a2c5d8039a89b08",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "17c9367c_ac3fc49a",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 2
@@ -55,6 +79,24 @@
       "side": 1,
       "message": "Thanks for the CL. What sets were used for visual quality tests? For 608p, did you cover 300 - 900 kbps range?",
       "parentUuid": "17c9367c_ac3fc49a",
+      "revId": "7b6d0e5c3938424de1ee61cd3a2c5d8039a89b08",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c08e127_966323c3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 25857
+      },
+      "writtenOn": "2025-03-25T12:58:12Z",
+      "side": 1,
+      "message": "We used 608P and HDRES2 test sets for visual quality. For 608p we tested the visual quality at 200, 400 and 800 kbps for worst bd-rate drop contents, and observed no artifacts.",
+      "parentUuid": "fefea67c_4a538660",
       "revId": "7b6d0e5c3938424de1ee61cd3a2c5d8039a89b08",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -102,6 +144,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2912075a_0de9614e",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 25857
+      },
+      "writtenOn": "2025-03-25T12:58:12Z",
+      "side": 1,
+      "message": "\u003e So this is disabled for key and arf frames?\n\nYes.\n\n\u003e This might be ok, but using the definition similar to frame_is_boosted() sounds more clear?\n\n   After regenerating speed-quality data using `frame_is_boosted()`, we observed \na mismatch in few contents with the current approach. We analyzed one of the test-case (\"SDR_Music_8b3y.y4m\" at 200kbps) and observed that the last two frames of video are coded at pyramid_level\u003d1 (without ARF frames).\nWith the current approach: filter_level is preserved when pyramid_level \u003e 1.\nWith frame_is_boosted(): filter_level is reset for the last two frames.\n\nSince this scenario is rare and is not thoroughly validated, we retained the current approach for now. Please let us know your opinion.",
+      "parentUuid": "cabb0a3c_3a0cf8bf",
+      "range": {
+        "startLine": 604,
+        "startChar": 9,
+        "endLine": 604,
+        "endChar": 52
+      },
+      "revId": "7b6d0e5c3938424de1ee61cd3a2c5d8039a89b08",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "301fdcdc_4fbf2f75",
         "filename": "av1/encoder/speed_features.h",
         "patchSetId": 2
@@ -113,6 +179,24 @@
       "writtenOn": "2025-03-24T20:56:42Z",
       "side": 1,
       "message": "Is it true that chroma filter use luma filter level?",
+      "revId": "7b6d0e5c3938424de1ee61cd3a2c5d8039a89b08",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "943383d4_d56241a3",
+        "filename": "av1/encoder/speed_features.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1505,
+      "author": {
+        "id": 25857
+      },
+      "writtenOn": "2025-03-25T12:58:12Z",
+      "side": 1,
+      "message": "Yes. When the luma filter level is set to zero, the chroma filter level is also forced to zero, (as per the standard loop filtering is skipped if the luma filter levels are zero). Please refer to the condition check at line 2411 in encoder.c.",
+      "parentUuid": "301fdcdc_4fbf2f75",
       "revId": "7b6d0e5c3938424de1ee61cd3a2c5d8039a89b08",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
