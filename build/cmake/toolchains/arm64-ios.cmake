@@ -17,7 +17,13 @@ if(XCODE) # TODO(tomfinegan): Handle arm builds in Xcode.
   message(FATAL_ERROR "This toolchain does not support Xcode.")
 endif()
 
+set(TRIPLE arm64-apple-ios)
+set(CMAKE_C_COMPILER_TARGET ${TRIPLE})
+set(CMAKE_CXX_COMPILER_TARGET ${TRIPLE})
+
+set(CMAKE_ASM_COMPILER clang)
+set(CMAKE_ASM_COMPILER_TARGET ${TRIPLE})
+
 set(CMAKE_SYSTEM_PROCESSOR "arm64")
-set(CMAKE_OSX_ARCHITECTURES "arm64")
 
 include("${CMAKE_CURRENT_LIST_DIR}/arm-ios-common.cmake")
