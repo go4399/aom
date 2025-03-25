@@ -35,6 +35,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e3ab83c8_43907f1f",
+        "filename": "av1/decoder/obu.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 631,
+      "author": {
+        "id": 26789
+      },
+      "writtenOn": "2025-03-25T10:00:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "27786084_fb5411ab",
+      "revId": "d24b99fbadd4eeaba54a5b9011f85164398567b5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0a954a4c_c03fc383",
@@ -48,6 +66,24 @@
       "writtenOn": "2025-03-24T23:40:47Z",
       "side": 1,
       "message": "IMPORTANT: When using the `bool` type, the value should be 0 or 1, so we need to compare the result of the bitwise AND with 0:\n\n```\n        const bool is_layer_specific_obu \u003d\n            (current_metadata-\u003einsert_flag \u0026 AOM_MIF_LAYER_SPECIFIC) !\u003d 0;\n```",
+      "revId": "d24b99fbadd4eeaba54a5b9011f85164398567b5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dfd0f7a5_4a05f4d3",
+        "filename": "av1/encoder/bitstream.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 4238,
+      "author": {
+        "id": 26789
+      },
+      "writtenOn": "2025-03-25T10:00:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a954a4c_c03fc383",
       "revId": "d24b99fbadd4eeaba54a5b9011f85164398567b5",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
