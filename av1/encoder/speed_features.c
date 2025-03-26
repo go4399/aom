@@ -604,6 +604,8 @@ static void set_good_speed_features_lc_dec_framesize_dependent(
          cpi->common.current_frame.pyramid_level > 1)
             ? 1
             : 0;
+
+    sf->hl_sf.allow_show_existing_frame_for_arf_update = 1;
   }
 }
 
@@ -2018,6 +2020,7 @@ static inline void init_hl_sf(HIGH_LEVEL_SPEED_FEATURES *hl_sf) {
   hl_sf->accurate_bit_estimate = 0;
   hl_sf->weight_calc_level_in_tf = 0;
   hl_sf->allow_sub_blk_me_in_tf = 0;
+  hl_sf->allow_show_existing_frame_for_arf_update = 0;
 }
 
 static inline void init_fp_sf(FIRST_PASS_SPEED_FEATURES *fp_sf) {

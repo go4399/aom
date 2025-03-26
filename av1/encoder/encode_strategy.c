@@ -785,8 +785,15 @@ static int denoise_and_encode(AV1_COMP *const cpi, uint8_t *const dest,
           &cpi->ppi->tf_info, cpi->gf_frame_index, &frame_diff);
       if (tf_buf != NULL) {
         frame_input->source = tf_buf;
-        show_existing_alt_ref = av1_check_show_filtered_frame(
-            tf_buf, &frame_diff, q_index, cm->seq_params->bit_depth);
+
+        if (update_type == ARF_UPDATE &&
+            cpi->sf.hl_sf.allow_show_existing_frame_for_arf_update) {
+          show_existing_alt_ref = 1;
+        } else {
+          show_existing_alt_ref = av1_check_show_filtered_frame(
+              tf_buf, &frame_diff, q_index, cm->seq_params->bit_depth);
+        }
+
         if (show_existing_alt_ref) {
           cpi->common.showable_frame |= 1;
         } else {

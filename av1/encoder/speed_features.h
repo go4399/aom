@@ -482,6 +482,14 @@ typedef struct HIGH_LEVEL_SPEED_FEATURES {
    * 1: Conditionally allow motion estimation based on 4x4 sub-blocks variance.
    */
   int allow_sub_blk_me_in_tf;
+
+  /*!
+   * Decide whether to enable `show_existing_alt_ref` for ARF frame.
+   * 0: Use the filtered frame's SSE and current Q index to decide (see
+   * av1_check_show_filtered_frame()).
+   * 1: Enable directly for ARF frame.
+   */
+  int allow_show_existing_frame_for_arf_update;
 } HIGH_LEVEL_SPEED_FEATURES;
 
 /*!
