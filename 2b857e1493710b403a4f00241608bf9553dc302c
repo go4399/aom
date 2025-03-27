@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "68924f51_da12e4aa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 25857
+      },
+      "writtenOn": "2025-03-27T15:30:41Z",
+      "side": 1,
+      "message": "The earlier submitted optimization [CL198281](https://aomedia-review.googlesource.com/c/aom/+/198281) was intended to be enabled only for 608p and above resolutions. This CL disables the optimization appropriately for resolutions smaller than 608p.",
+      "revId": "2b857e1493710b403a4f00241608bf9553dc302c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
