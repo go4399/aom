@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b77f891f_a0058a94",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 3241,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-27T18:44:14Z",
+      "side": 1,
+      "message": "Note that `encode_with_recode_loop_and_filter()` sets `*largest_tile_id` to 0 here when it sets`*sse` and `*rate` to `INT64_MAX`.",
+      "revId": "e0170e841ed21ae84be9ed0f8328f2d7e0dd208c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b088f7d_d457f3f0",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 3378,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-27T18:44:14Z",
+      "side": 1,
+      "message": "Note that we declare the three `superres_*` arrays here without initialization.",
+      "revId": "e0170e841ed21ae84be9ed0f8328f2d7e0dd208c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "63d76a14_72fa7013",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 3391,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-27T18:44:14Z",
+      "side": 1,
+      "message": "Here we call `encode_with_recode_loop_and_filter()` to set up the three `superres_*` arrays properly.",
+      "revId": "e0170e841ed21ae84be9ed0f8328f2d7e0dd208c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ddb8f954_05ff6104",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 3405,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-27T18:44:14Z",
+      "side": 1,
+      "message": "Here apparently we want to set the three `superres_*` arrays to some default, placeholder values. But we neglected the `superres_largest_tile_ids` array.\n\nSo the issue is what is the right placeholder value for `superres_largest_tile_ids[this_index]`. In some other places, we set it to 0. So I am setting it to 0 here.",
+      "revId": "e0170e841ed21ae84be9ed0f8328f2d7e0dd208c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c179a1aa_625748e3",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 3924,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-03-27T18:44:14Z",
+      "side": 1,
+      "message": "Note that the caller of `encode_with_and_without_superres()` initializes `largest_tile_id` to 0 here.",
+      "revId": "e0170e841ed21ae84be9ed0f8328f2d7e0dd208c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
