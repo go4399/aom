@@ -162,6 +162,7 @@ if(CONFIG_AV1_ENCODER)
               "${AOM_ROOT}/aom_dsp/bitwriter.c"
               "${AOM_ROOT}/aom_dsp/bitwriter.h"
               "${AOM_ROOT}/aom_dsp/blk_sse_sum.c"
+              "${AOM_ROOT}/aom_dsp/convolve_hwy.h"
               "${AOM_ROOT}/aom_dsp/entenc.c"
               "${AOM_ROOT}/aom_dsp/entenc.h"
               "${AOM_ROOT}/aom_dsp/fft.c"
@@ -265,6 +266,7 @@ if(CONFIG_AV1_ENCODER)
               "${AOM_ROOT}/aom_dsp/x86/aom_quantize_avx.c")
 
   list(APPEND AOM_DSP_ENCODER_INTRIN_AVX512
+              "${AOM_ROOT}/aom_dsp/x86/convolve_avx512.cc"
               "${AOM_ROOT}/aom_dsp/x86/sad_avx512.cc"
               "${AOM_ROOT}/aom_dsp/x86/variance_avx512.cc")
 
