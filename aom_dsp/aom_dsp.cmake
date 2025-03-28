@@ -27,6 +27,7 @@ list(APPEND AOM_DSP_COMMON_SOURCES
             "${AOM_ROOT}/aom_dsp/blend_a64_hmask.c"
             "${AOM_ROOT}/aom_dsp/blend_a64_mask.c"
             "${AOM_ROOT}/aom_dsp/blend_a64_vmask.c"
+            "${AOM_ROOT}/aom_dsp/convolve_hwy.h"
             "${AOM_ROOT}/aom_dsp/entcode.c"
             "${AOM_ROOT}/aom_dsp/entcode.h"
             "${AOM_ROOT}/aom_dsp/grain_params.h"
@@ -96,6 +97,9 @@ list(APPEND AOM_DSP_COMMON_INTRIN_AVX2
             "${AOM_ROOT}/aom_dsp/x86/loopfilter_avx2.c"
             "${AOM_ROOT}/aom_dsp/x86/blend_a64_mask_avx2.c"
             "${AOM_ROOT}/aom_dsp/x86/bitdepth_conversion_avx2.h")
+
+list(APPEND AOM_DSP_COMMON_INTRIN_AVX512
+            "${AOM_ROOT}/aom_dsp/x86/convolve_avx512.cc")
 
 if(CONFIG_SVT_AV1)
   list(APPEND AOM_DSP_COMMON_INTRIN_AVX2
@@ -488,6 +492,9 @@ function(setup_aom_dsp_targets)
   endif()
 
   if(HAVE_AVX512)
+    add_intrinsics_object_library("-march=skylake-avx512" "avx512"
+                                  "aom_dsp_common"
+                                  "AOM_DSP_COMMON_INTRIN_AVX512")
     if(CONFIG_AV1_ENCODER)
       add_intrinsics_object_library("-march=skylake-avx512" "avx512"
                                     "aom_dsp_encoder"

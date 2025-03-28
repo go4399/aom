@@ -49,6 +49,19 @@ static const uint8_t bilinear_filters_2t[BIL_SUBPEL_SHIFTS][2] = {
   { 64, 64 }, { 48, 80 },  { 32, 96 }, { 16, 112 },
 };
 
+static inline int get_filter_taps_convolve8(const int16_t *filter) {
+  if (filter[0] | filter[7]) {
+    return 8;
+  }
+  if (filter[1] | filter[6]) {
+    return 6;
+  }
+  if (filter[2] | filter[5]) {
+    return 4;
+  }
+  return 2;
+}
+
 #ifdef __cplusplus
 }  // extern "C"
 #endif
