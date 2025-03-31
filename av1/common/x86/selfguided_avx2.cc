@@ -9,6 +9,8 @@
  * PATENTS file, you can obtain it at www.aomedia.org/license/patent.
  */
 
+#define HWY_BASELINE_TARGETS HWY_AVX2
+
 #include "av1/common/selfguided_hwy.h"
 
 MAKE_SELFGUIDED_RESTORATION(avx2)

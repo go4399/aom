@@ -9,6 +9,8 @@
  * PATENTS file, you can obtain it at www.aomedia.org/license/patent.
  */
 
+#define HWY_BASELINE_TARGETS HWY_SSE2
+
 #include "av1/encoder/av1_fwd_txfm2d_hwy.h"
 
 #if AOM_ARCH_X86

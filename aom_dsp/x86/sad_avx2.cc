@@ -9,6 +9,8 @@
  * PATENTS file, you can obtain it at www.aomedia.org/license/patent.
  */
 
+#define HWY_BASELINE_TARGETS HWY_AVX2
+
 #include "aom_dsp/sad_hwy.h"
 
 FOR_EACH_SAD_BLOCK_SIZE(FSAD, avx2)
