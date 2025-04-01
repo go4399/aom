@@ -108,8 +108,24 @@ elseif("${AOM_TARGET_CPU}" MATCHES "ppc")
 elseif("${AOM_TARGET_CPU}" MATCHES "^x86")
   if("${AOM_TARGET_CPU}" STREQUAL "x86")
     set(AOM_ARCH_X86 1)
+<<<<<<< HEAD   (4e3595 lc-dec: adaptive use of global motion)
+||||||| BASE
+    set(RTCD_ARCH_X86 "yes")
+=======
+    # Disable avx512
+    set(HAVE_AVX512 0)
+    set(AOM_RTCD_FLAGS ${AOM_RTCD_FLAGS} --disable-avx512)
+>>>>>>> BRANCH (41b79b highway: add sad_skip_MxNx4d)
   elseif("${AOM_TARGET_CPU}" STREQUAL "x86_64")
     set(AOM_ARCH_X86_64 1)
+<<<<<<< HEAD   (4e3595 lc-dec: adaptive use of global motion)
+||||||| BASE
+    set(RTCD_ARCH_X86_64 "yes")
+=======
+    if(ENABLE_AVX512)
+      set(HAVE_AVX512 1)
+    endif()
+>>>>>>> BRANCH (41b79b highway: add sad_skip_MxNx4d)
   endif()
 
   set(X86_FLAVORS "MMX;SSE;SSE2;SSE3;SSSE3;SSE4_1;SSE4_2;AVX;AVX2")

@@ -20,7 +20,7 @@ include("${AOM_ROOT}/build/cmake/util.cmake")
 function(get_msvc_intrinsic_flag flag translated_flag)
   if("${flag}" STREQUAL "-mavx")
     set(${translated_flag} "/arch:AVX" PARENT_SCOPE)
-  elseif("${flag}" STREQUAL "-mavx2")
+  elseif("${flag}" STREQUAL "-march=haswell")
     set(${translated_flag} "/arch:AVX2" PARENT_SCOPE)
   else()
 
@@ -54,7 +54,7 @@ function(add_intrinsics_object_library flag opt_name target_to_update sources)
     get_msvc_intrinsic_flag("${flag}" "flag")
   endif()
 
-  if("${flag}" STREQUAL "-mavx2")
+  if("${flag}" STREQUAL "-march=haswell")
     unset(FLAG_SUPPORTED)
     check_c_compiler_flag("-mno-avx256-split-unaligned-load" FLAG_SUPPORTED)
     if(${FLAG_SUPPORTED})
@@ -67,6 +67,11 @@ function(add_intrinsics_object_library flag opt_name target_to_update sources)
       set(flag "${flag} -mno-avx256-split-unaligned-store")
     endif()
   endif()
+
+  target_compile_options(${target_name} PUBLIC "-Wno-missing-declarations")
+  target_compile_options(
+    ${target_name}
+    PUBLIC $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-Wno-missing-prototypes>)
 
   if(flag)
     separate_arguments(flag)
