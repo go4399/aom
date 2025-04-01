@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e64d238_43d06e0e",
+        "filename": "av1/encoder/mcomp.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-04-01T23:35:10Z",
+      "side": 1,
+      "message": "sorry, i think this should be `SubpelMvLimits`",
+      "range": {
+        "startLine": 202,
+        "startChar": 4,
+        "endLine": 202,
+        "endChar": 16
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "73c4cead_c4112122",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/mcomp.c",
+              "range": {
+                "startLine": 202,
+                "startChar": 0,
+                "endLine": 203,
+                "endChar": 0
+              },
+              "replacement": "    SubpelMvLimits *mv_limits \u003d \u0026ms_params-\u003emv_limits;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "295cf302b05084af3f5ac318861d001ad74e81e9",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
