@@ -1,0 +1,252 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "071239b0_85746ef6",
+        "filename": "aom_dsp/convolve_hwy.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-04-01T20:14:31Z",
+      "side": 1,
+      "message": "HWY_ALIGN int16_t, then Load instead of LoadU below.",
+      "range": {
+        "startLine": 30,
+        "startChar": 2,
+        "endLine": 30,
+        "endChar": 9
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "870fd1af_6abdc0ee",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "aom_dsp/convolve_hwy.h",
+              "range": {
+                "startLine": 30,
+                "startChar": 0,
+                "endLine": 31,
+                "endChar": 0
+              },
+              "replacement": "  HWY_ALIGN int16_t buf_to_array[16];\n"
+            },
+            {
+              "path": "aom_dsp/convolve_hwy.h",
+              "range": {
+                "startLine": 37,
+                "startChar": 0,
+                "endLine": 38,
+                "endChar": 0
+              },
+              "replacement": "  return hn::Load(tag16, buf_to_array);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "3b95764d369cf342add1d95cb63035ec46966ae1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6750bee4_16e7e6cd",
+        "filename": "aom_dsp/convolve_hwy.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-04-01T20:14:31Z",
+      "side": 1,
+      "message": "hwy::CopyBytes",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 0
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "12476685_548f05b7",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "aom_dsp/convolve_hwy.h",
+              "range": {
+                "startLine": 32,
+                "startChar": 0,
+                "endLine": 35,
+                "endChar": 0
+              },
+              "replacement": "    hn::CopyBytes(buf, buf_to_array + i * 4, 4);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "3b95764d369cf342add1d95cb63035ec46966ae1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "817a3423_0f170725",
+        "filename": "aom_dsp/convolve_hwy.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-04-01T20:14:31Z",
+      "side": 1,
+      "message": "nit: clearer to just do `buf + stride` below.",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 16
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "d8c85799_e0dcd79d",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "aom_dsp/convolve_hwy.h",
+              "range": {
+                "startLine": 67,
+                "startChar": 0,
+                "endLine": 69,
+                "endChar": 0
+              },
+              "replacement": "  auto second_half \u003d hn::LoadU(half_tag8, buf + stride);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "3b95764d369cf342add1d95cb63035ec46966ae1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89720604_21c0946d",
+        "filename": "aom_dsp/convolve_hwy.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-04-01T20:14:31Z",
+      "side": 1,
+      "message": "Don\u0027t pass by reference unnecessarily.",
+      "range": {
+        "startLine": 159,
+        "startChar": 0,
+        "endLine": 161,
+        "endChar": 0
+      },
+      "revId": "3b95764d369cf342add1d95cb63035ec46966ae1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b9de0e7_41b51d7c",
+        "filename": "aom_dsp/convolve_hwy.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-04-01T20:14:31Z",
+      "side": 1,
+      "message": "hn::BroadcastLane\u003clane\u003e(filter).\n\nAI prompt, `BroadcastLane\u003c0\u003e(filter)`, no tag.",
+      "range": {
+        "startLine": 162,
+        "startChar": 19,
+        "endLine": 162,
+        "endChar": 61
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "7be33def_54fc007d",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "aom_dsp/convolve_hwy.h",
+              "range": {
+                "startLine": 162,
+                "startChar": 0,
+                "endLine": 166,
+                "endChar": 0
+              },
+              "replacement": "  auto mul0 \u003d s0 * hn::BroadcastLane\u003c0\u003e(filter);\n  auto mul1 \u003d s1 * hn::BroadcastLane\u003c1\u003e(filter);\n  auto mul2 \u003d s2 * hn::BroadcastLane\u003c2\u003e(filter);\n  auto mul3 \u003d s3 * hn::BroadcastLane\u003c3\u003e(filter);\n"
+            },
+            {
+              "path": "aom_dsp/convolve_hwy.h",
+              "range": {
+                "startLine": 253,
+                "startChar": 0,
+                "endLine": 261,
+                "endChar": 0
+              },
+              "replacement": "  auto mul0 \u003d s0 * hn::BroadcastLane\u003c0\u003e(filter);\n  auto mul1 \u003d s1 * hn::BroadcastLane\u003c1\u003e(filter);\n  auto mul2 \u003d s2 * hn::BroadcastLane\u003c2\u003e(filter);\n  auto mul3 \u003d s3 * hn::BroadcastLane\u003c3\u003e(filter);\n  auto mul4 \u003d s4 * hn::BroadcastLane\u003c4\u003e(filter);\n  auto mul5 \u003d s5 * hn::BroadcastLane\u003c5\u003e(filter);\n  auto mul6 \u003d s6 * hn::BroadcastLane\u003c6\u003e(filter);\n  auto mul7 \u003d s7 * hn::BroadcastLane\u003c7\u003e(filter);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "3b95764d369cf342add1d95cb63035ec46966ae1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1496e434_d0c6d529",
+        "filename": "aom_dsp/convolve_hwy.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-04-01T20:14:31Z",
+      "side": 1,
+      "message": "Are the ExtractLane/BroadcastLanes getting hoisted out of the loop already?",
+      "range": {
+        "startLine": 349,
+        "startChar": 58,
+        "endLine": 349,
+        "endChar": 63
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "1b0b6380_f88cb1b7",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "aom_dsp/convolve_hwy.h",
+              "range": {
+                "startLine": 157,
+                "startChar": 0,
+                "endLine": 157,
+                "endChar": 0
+              },
+              "replacement": "// TODO(debargha): The filter values are halved in the Convolve4_8 and\n// Convolve8_8 functions, but not in ConvolveHoriz2Tap. Investigate if\n// this can be done for the 2-tap case as well.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "3b95764d369cf342add1d95cb63035ec46966ae1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
