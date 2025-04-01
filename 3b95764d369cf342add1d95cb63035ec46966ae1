@@ -210,6 +210,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9b50dd84_d38df2b7",
+        "filename": "aom_dsp/convolve_hwy.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-04-01T20:20:57Z",
+      "side": 1,
+      "message": "I think you only need 2 loads + promotes, and then can do CombineShiftRightLanes. This should be a little nicer.",
+      "range": {
+        "startLine": 340,
+        "startChar": 0,
+        "endLine": 348,
+        "endChar": 0
+      },
+      "revId": "3b95764d369cf342add1d95cb63035ec46966ae1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1496e434_d0c6d529",
         "filename": "aom_dsp/convolve_hwy.h",
         "patchSetId": 5
