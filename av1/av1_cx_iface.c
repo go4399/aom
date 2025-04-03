@@ -3509,6 +3509,8 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
       }
 
       ppi->seq_params_locked = 1;
+      cpi->svc.prev_number_temporal_layers = cpi->svc.number_temporal_layers;
+      cpi->svc.prev_number_spatial_layers = cpi->svc.number_spatial_layers;
       av1_post_encode_updates(cpi, &cpi_data);
 
 #if CONFIG_ENTROPY_STATS
@@ -3883,6 +3885,12 @@ static aom_codec_err_t ctrl_set_svc_params(aom_codec_alg_priv_t *ctx,
   ppi->number_temporal_layers = params->number_temporal_layers;
   cpi->svc.number_spatial_layers = params->number_spatial_layers;
   cpi->svc.number_temporal_layers = params->number_temporal_layers;
+  if (ppi->seq_params_locked &&
+      (cpi->svc.number_temporal_layers !=
+           cpi->svc.prev_number_temporal_layers ||
+       cpi->svc.number_spatial_layers != cpi->svc.prev_number_spatial_layers)) {
+    ppi->seq_params_locked = 0;
+  }
   if (ppi->number_spatial_layers > 1 || ppi->number_temporal_layers > 1) {
     unsigned int sl, tl;
     ctx->ppi->use_svc = 1;
