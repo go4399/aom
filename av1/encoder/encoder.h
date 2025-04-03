@@ -3905,6 +3905,8 @@ void av1_set_screen_content_options(struct AV1_COMP *cpi,
 
 void av1_update_frame_size(AV1_COMP *cpi);
 
+void av1_set_svc_seq_params(AV1_PRIMARY *const ppi);
+
 typedef struct {
   int pyr_level;
   int disp_order;
