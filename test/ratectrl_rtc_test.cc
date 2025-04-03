@@ -148,6 +148,10 @@ class RcInterfaceTest : public ::libaom_test::EncoderTest,
     if (encoder_exit_) {
       return;
     }
+    int num_operating_points;
+    encoder->Control(AV1E_GET_NUM_OPERATING_POINTS, &num_operating_points);
+    ASSERT_EQ(num_operating_points,
+              rc_cfg_.ss_number_layers * rc_cfg_.ts_number_layers);
     layer_frame_cnt_++;
     frame_cnt_++;
     if (layer_id_.spatial_layer_id == rc_cfg_.ss_number_layers - 1)
