@@ -22,6 +22,7 @@
 
 // Must come before HWY_DIAGNOSTICS and HWY_COMPILER_CLANGCL
 #include "third_party/highway/hwy/base.h"
+#include "third_party/highway/hwy/abort.h"
 
 // Avoid uninitialized warnings in GCC's avx512fintrin.h - see
 // https://github.com/google/highway/issues/710)
