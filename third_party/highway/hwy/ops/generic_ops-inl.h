@@ -22,6 +22,7 @@
 // the generic implementation here if native ops are already defined.
 
 #include "third_party/highway/hwy/base.h"
+#include "third_party/highway/hwy/abort.h"
 
 // Define detail::Shuffle1230 etc, but only when viewing the current header;
 // normally this is included via highway.h, which includes ops/*.h.

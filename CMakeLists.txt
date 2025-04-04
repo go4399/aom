@@ -238,18 +238,12 @@ list(APPEND AOM_HIGHWAY_SOURCES
             "${AOM_ROOT}/third_party/highway/hwy/ops/x86_256-inl.h"
             "${AOM_ROOT}/third_party/highway/hwy/ops/x86_512-inl.h"
             "${AOM_ROOT}/third_party/highway/hwy/ops/x86_avx3-inl.h"
-            "${AOM_ROOT}/third_party/highway/hwy/abort.cc"
-            "${AOM_ROOT}/third_party/highway/hwy/aligned_allocator.cc"
-            "${AOM_ROOT}/third_party/highway/hwy/per_target.cc"
-            "${AOM_ROOT}/third_party/highway/hwy/print.cc"
-            "${AOM_ROOT}/third_party/highway/hwy/targets.cc"
             "${AOM_ROOT}/third_party/highway/hwy/contrib/algo/copy-inl.h"
             "${AOM_ROOT}/third_party/highway/hwy/contrib/algo/find-inl.h"
             "${AOM_ROOT}/third_party/highway/hwy/contrib/algo/transform-inl.h"
             "${AOM_ROOT}/third_party/highway/hwy/contrib/dot/dot-inl.h"
             "${AOM_ROOT}/third_party/highway/hwy/contrib/image/image.h"
-            "${AOM_ROOT}/third_party/highway/hwy/contrib/math/math-inl.h"
-            "${AOM_ROOT}/third_party/highway/hwy/contrib/image/image.cc")
+            "${AOM_ROOT}/third_party/highway/hwy/contrib/math/math-inl.h")
 
 list(APPEND HIGHWAY_INCLUDE_DIRS "${AOM_ROOT}/third_party/highway/hwy"
             "${AOM_ROOT}/third_party/highway/hwy/ops"
@@ -317,6 +311,7 @@ if(ENABLE_EXAMPLES)
   set(AOM_LIB_TARGETS ${AOM_LIB_TARGETS} aom_encoder_stats)
 endif()
 
+list(APPEND AOM_SOURCES ${AOM_HIGHWAY_SOURCES})
 # Xcode generator cannot take a library composed solely of objects. See
 # https://gitlab.kitware.com/cmake/cmake/-/issues/17500
 if(XCODE)
@@ -544,18 +539,18 @@ if(CONFIG_LIBYUV OR CONFIG_TUNE_BUTTERAUGLI)
   include_directories("${AOM_ROOT}/third_party/libyuv/include")
 endif()
 
-add_library(hwy ${AOM_HIGHWAY_SOURCES})
-if(NOT MSVC)
-  disable_compiler_flags(hwy FLAGS -Wmissing-declarations)
-  # For Arm builds
-  disable_compiler_flags(hwy FLAGS -Wundef -Wshadow -Wc++17-extensions)
-  target_compile_options(hwy PRIVATE -Wno-format-nonliteral)
-endif()
-target_include_directories(hwy
-                           PUBLIC $<BUILD_INTERFACE:${HIGHWAY_INCLUDE_DIRS}>
-                                  $<INSTALL_INTERFACE:include>)
+# add_library(hwy ${AOM_HIGHWAY_SOURCES})
+# if(NOT MSVC)
+#   disable_compiler_flags(hwy FLAGS -Wmissing-declarations)
+#   # For Arm builds
+#   disable_compiler_flags(hwy FLAGS -Wundef -Wshadow -Wc++17-extensions)
+#   target_compile_options(hwy PRIVATE -Wno-format-nonliteral)
+# endif()
+# target_include_directories(hwy
+#                            PUBLIC $<BUILD_INTERFACE:${HIGHWAY_INCLUDE_DIRS}>
+#                                   $<INSTALL_INTERFACE:include>)
 
-target_link_libraries(aom ${AOM_LIB_LINK_TYPE} hwy)
+# target_link_libraries(aom ${AOM_LIB_LINK_TYPE} hwy)
 
 if(CONFIG_AV1_ENCODER)
   if(ENABLE_EXAMPLES)
