@@ -491,6 +491,9 @@ if(ENABLE_TESTS)
     target_compile_options(
       aom_benchmark
       PUBLIC $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-Wno-missing-prototypes>)
+    target_compile_options(
+      aom_benchmark
+      PUBLIC $<$<COMPILE_LANG_AND_ID:CXX,AppleClang>:-Wno-missing-prototypes>)
   endif()
 endif()
 
