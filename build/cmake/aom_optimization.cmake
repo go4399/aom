@@ -72,6 +72,9 @@ function(add_intrinsics_object_library flag opt_name target_to_update sources)
   target_compile_options(
     ${target_name}
     PUBLIC $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-Wno-missing-prototypes>)
+  target_compile_options(
+      ${target_name}
+      PUBLIC $<$<COMPILE_LANG_AND_ID:CXX,AppleClang>:-Wno-missing-prototypes>)
 
   if(flag)
     separate_arguments(flag)
