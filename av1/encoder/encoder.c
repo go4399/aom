@@ -1953,42 +1953,11 @@ void av1_set_mv_search_params(AV1_COMP *cpi) {
   }
 }
 
-void av1_set_screen_content_options(AV1_COMP *cpi, FeatureFlags *features) {
+// Estimate if the source frame is screen content, based on the portion of
+// blocks that have few luma colors.
+static void estimate_screen_content(AV1_COMP *cpi, FeatureFlags *features) {
   const AV1_COMMON *const cm = &cpi->common;
   const MACROBLOCKD *const xd = &cpi->td.mb.e_mbd;
-
-  if (cm->seq_params->force_screen_content_tools != 2) {
-    features->allow_screen_content_tools = features->allow_intrabc =
-        cm->seq_params->force_screen_content_tools;
-    return;
-  }
-
-  if (cpi->oxcf.tune_cfg.content == AOM_CONTENT_SCREEN) {
-    features->allow_screen_content_tools = 1;
-    features->allow_intrabc = cpi->oxcf.mode == REALTIME ? 0 : 1;
-    cpi->is_screen_content_type = 1;
-    cpi->use_screen_content_tools = 1;
-    return;
-  }
-
-  if (cpi->oxcf.mode == REALTIME) {
-    features->allow_screen_content_tools = features->allow_intrabc = 0;
-    return;
-  }
-
-  // Screen content tools are not evaluated in non-RD encoding mode unless
-  // content type is not set explicitly, i.e., when
-  // cpi->oxcf.tune_cfg.content != AOM_CONTENT_SCREEN, use_nonrd_pick_mode = 1
-  // and hybrid_intra_pickmode = 0. Hence, screen content detection is
-  // disabled.
-  if (cpi->sf.rt_sf.use_nonrd_pick_mode &&
-      !cpi->sf.rt_sf.hybrid_intra_pickmode) {
-    features->allow_screen_content_tools = features->allow_intrabc = 0;
-    return;
-  }
-
-  // Estimate if the source frame is screen content, based on the portion of
-  // blocks that have few luma colors.
   const uint8_t *src = cpi->unfiltered_source->y_buffer;
   assert(src != NULL);
   const int use_hbd = cpi->unfiltered_source->flags & YV12_FLAG_HIGHBITDEPTH;
@@ -2040,6 +2009,323 @@ void av1_set_screen_content_options(AV1_COMP *cpi, FeatureFlags *features) {
   cpi->is_screen_content_type =
       features->allow_intrabc || (counts_1 * blk_h * blk_w * 10 > area * 4 &&
                                   counts_2 * blk_h * blk_w * 30 > area);
+}
+
+#define DEBUG_PSY_SCM 0
+#define DEBUG_PSY_SCM_DILATION 0
+
+static uint8_t find_dominant_value(const uint8_t *src, int stride, int rows,
+                                   int cols) {
+  uint32_t value_freq[1 << 8];  // Maximum (1 << 8) value levels.
+  memset(value_freq, 0, (1 << 8) * sizeof(*value_freq));
+  uint32_t dominant_value_count = 0;
+  uint8_t dominant_value = 0;
+
+  for (int r = 0; r < rows; ++r) {
+    for (int c = 0; c < cols; ++c) {
+      const int value = src[r * stride + c];
+
+      value_freq[value]++;
+
+      if (value_freq[value] > dominant_value_count) {
+        dominant_value = value;
+        dominant_value_count = value_freq[value];
+      }
+    }
+  }
+
+  return dominant_value;
+}
+
+static void dilate_block(const uint8_t *src, uint32_t src_stride,
+                         uint8_t *dilated_block, uint32_t dilated_stride,
+                         int32_t rows, int32_t cols) {
+  uint8_t dominant_value = find_dominant_value(src, src_stride, rows, cols);
+
+#if DEBUG_PSY_SCM_DILATION
+  printf("Original values:\n");
+#endif
+  for (int r = 0; r < rows; ++r) {
+    for (int c = 0; c < cols; ++c) {
+      const int value = src[r * src_stride + c];
+
+      dilated_block[r * dilated_stride + c] = value;
+
+#if DEBUG_PSY_SCM_DILATION
+      printf("%3i,", value);
+#endif
+    }
+#if DEBUG_PSY_SCM_DILATION
+    printf("\n");
+#endif
+  }
+
+  for (int r = 0; r < rows; ++r) {
+    for (int c = 0; c < cols; ++c) {
+      const int value = src[r * src_stride + c];
+
+      if (value == dominant_value) {
+        // Dilate up
+        if (r != 0) {
+          dilated_block[(r - 1) * dilated_stride + c] = value;
+        }
+        // Dilate down
+        if (r != rows - 1) {
+          dilated_block[(r + 1) * dilated_stride + c] = value;
+        }
+        // Dilate left
+        if (c != 0) {
+          dilated_block[r * dilated_stride + (c - 1)] = value;
+        }
+        // Dilate right
+        if (c != cols - 1) {
+          dilated_block[r * dilated_stride + (c + 1)] = value;
+        }
+        // Dilate upper-left corner
+        if (r != 0 && c != 0) {
+          dilated_block[(r - 1) * dilated_stride + (c - 1)] = value;
+        }
+        // Dilate upper-right corner
+        if (r != 0 && c != cols - 1) {
+          dilated_block[(r - 1) * dilated_stride + (c + 1)] = value;
+        }
+        // Dilate lower-left corner
+        if (r != rows - 1 && c != 0) {
+          dilated_block[(r + 1) * dilated_stride + (c - 1)] = value;
+        }
+        // Dilate lower-right corner
+        if (r != rows - 1 && c != cols - 1) {
+          dilated_block[(r + 1) * dilated_stride + (c + 1)] = value;
+        }
+      }
+    }
+  }
+#if DEBUG_PSY_SCM_DILATION
+  printf("Dilated values:\n");
+
+  for (int r = 0; r < rows; ++r) {
+    for (int c = 0; c < cols; ++c) {
+      printf("%3i,", dilated_block[r * dilated_stride + c]);
+    }
+    printf("\n");
+  }
+#endif
+}
+
+// Estimate if the source frame is screen content, with more robust detection of
+// anti-aliased glyphs
+static void estimate_screen_content_enhanced(AV1_COMP *cpi,
+                                             FeatureFlags *features) {
+  const AV1_COMMON *const cm = &cpi->common;
+  const MACROBLOCKD *const xd = &cpi->td.mb.e_mbd;
+  uint8_t *src = cpi->unfiltered_source->y_buffer;
+  assert(src != NULL);
+  const int use_hbd = cpi->unfiltered_source->flags & YV12_FLAG_HIGHBITDEPTH;
+  const int blk_w = 16;
+  const int blk_h = 16;
+
+  // Holds the down-converted block to 8 bit (if source is HBD)
+  uint8_t downconv_blk[1 << 8];
+  // Hold the block after a round of dilation
+  uint8_t dilated_blk[1 << 8];
+  const int stride = cpi->unfiltered_source->y_stride;
+  const int width = cpi->unfiltered_source->y_width;
+  const int height = cpi->unfiltered_source->y_height;
+  const int64_t area = (int64_t)width * height;
+  const int bd = cm->seq_params->bit_depth;
+
+  // These threshold values are selected experimentally
+  // Detects text and glyphs without anti-aliasing, and graphics with a 4-color
+  // palette
+  const int simple_color_thresh = 4;
+  // Detects potential text and glyphs with anti-aliasing, and graphics with a
+  // more extended color palette
+  const int complex_initial_color_thresh = 40;
+  // Detects text and glyphs with anti-aliasing, and graphics with a more
+  // extended color palette
+  const int complex_final_color_thresh = 6;
+  const int var_thresh = 5;
+  // Counts of blocks with no more than final_color_thresh colors
+  int counts_1 = 0;
+  // Counts of blocks with no more than final_color_thresh colors and variance
+  // larger than var_thresh.
+  int counts_2 = 0;
+  // Counts of "photo-like" blocks
+  int counts_photo = 0;
+
+#if DEBUG_PSY_SCM
+  printf("\n");
+#endif
+
+  for (int r = 0; r + blk_h <= height; r += blk_h) {
+    for (int c = 0; c + blk_w <= width; c += blk_w) {
+      int count_buf[1 << 8];  // Maximum (1 << 8) bins for HBD path
+      uint8_t *blk = src + r * stride + c;
+      uint8_t *blk_src = blk;
+      int blk_stride = cpi->unfiltered_source->y_stride;
+      int number_of_colors;
+
+      // Down-convert pixels to 8-bit domain if source is HBD
+      if (use_hbd) {
+        const uint16_t *blk_src_hbd = CONVERT_TO_SHORTPTR(blk);
+
+        for (int blk_r = 0; blk_r < blk_h; ++blk_r) {
+          for (int blk_c = 0; blk_c < blk_w; ++blk_c) {
+            const int downconv_val =
+                ((blk_src_hbd[blk_r * stride + blk_c]) >> (bd - 8));
+
+            assert(downconv_val <
+                   (1 << 8));  // Ensure down-converted value is 8-bit
+            downconv_blk[blk_r * blk_w + blk_c] = downconv_val;
+          }
+        }
+
+        // Switch block source and stride to down-converted buffer and its width
+        blk = downconv_blk;
+        blk_stride = blk_w;
+      }
+
+      // First, find if the block could be palletized
+      av1_count_colors(blk, blk_stride, blk_w, blk_h, count_buf,
+                       &number_of_colors);
+
+      if (number_of_colors > 1 &&
+          number_of_colors <= complex_initial_color_thresh) {
+        struct buf_2d buf;
+        buf.stride = stride;
+        buf.buf = (uint8_t *)blk_src;
+
+        if (number_of_colors <= simple_color_thresh) {
+          // Simple block detected, add to block count with no further
+          // processing required
+          ++counts_1;
+          // Variance always comes from the source image with no down-conversion
+          int var = av1_get_perpixel_variance(cpi, xd, &buf, BLOCK_16X16,
+                                              AOM_PLANE_Y, use_hbd);
+
+          if (var > var_thresh) {
+            ++counts_2;
+#if DEBUG_PSY_SCM
+            printf("S");
+          } else {
+            printf("-");
+#endif
+          }
+        } else {
+          // Complex block detected, try to find if it's palettizable
+          // Dilate block with dominant color, to exclude anti-aliased pixels
+          // from final palette count
+          dilate_block(blk, blk_stride, dilated_blk, blk_w, blk_w, blk_h);
+          av1_count_colors(dilated_blk, blk_w, blk_w, blk_h, count_buf,
+                           &number_of_colors);
+
+          if (number_of_colors <= complex_final_color_thresh) {
+            ++counts_1;
+
+            // Variance always comes from the source image with no
+            // down-conversion
+            int var = av1_get_perpixel_variance(cpi, xd, &buf, BLOCK_16X16,
+                                                AOM_PLANE_Y, use_hbd);
+
+            if (var > var_thresh) {
+              ++counts_2;
+#if DEBUG_PSY_SCM
+              printf("C");
+            } else {
+              printf("=");
+#endif
+            }
+#if DEBUG_PSY_SCM
+          } else {
+            printf(".");
+#endif
+          }
+        }
+      } else {
+        if (number_of_colors > complex_initial_color_thresh) {
+          ++counts_photo;
+#if DEBUG_PSY_SCM
+          printf("x");
+        } else {
+          printf(" ");  // Solid block (1 color)
+#endif
+        }
+      }
+    }
+#if DEBUG_PSY_SCM
+    printf("\n");
+#endif
+  }
+
+  // The threshold values are selected experimentally.
+  // Penalize presence of photo-like blocks (1/16th the weight of a palettizable
+  // block)
+  features->allow_screen_content_tools =
+      ((counts_1 - counts_photo / 16) * blk_h * blk_w * 4 > area);
+
+  // IntraBC would force loop filters off, so we use more strict rules that also
+  // requires that the block has high variance.
+  // Penalize presence of photo-like blocks (1/16th the weight of a palettizable
+  // block)
+  features->allow_intrabc =
+      features->allow_screen_content_tools &&
+      ((counts_2 - counts_photo / 16) * blk_h * blk_w * 12 > area);
+  cpi->use_screen_content_tools = features->allow_screen_content_tools;
+  cpi->is_screen_content_type =
+      features->allow_intrabc || (counts_1 * blk_h * blk_w * 15 > area * 4 &&
+                                  counts_2 * blk_h * blk_w * 30 > area);
+
+#if DEBUG_PSY_SCM
+  printf("block count 1: %i, count 2: %i, count photo: %i, total: %i\n",
+         counts_1, counts_2, counts_photo,
+         (int)(ceil(width / blk_w) * ceil(height / blk_h)));
+  printf("sc scc value: %i, threshold %lli\n",
+         (counts_1 - counts_photo / 16) * blk_h * blk_w * 10, area);
+  printf("sc ibc value: %i, threshold %lli\n",
+         (counts_2 - counts_photo / 16) * blk_h * blk_w * 12, area);
+  printf("is ibc: %i\n", features->allow_intrabc);
+#endif
+}
+
+void av1_set_screen_content_options(AV1_COMP *cpi, FeatureFlags *features) {
+  const AV1_COMMON *const cm = &cpi->common;
+
+  if (cm->seq_params->force_screen_content_tools != 2) {
+    features->allow_screen_content_tools = features->allow_intrabc =
+        cm->seq_params->force_screen_content_tools;
+    return;
+  }
+
+  if (cpi->oxcf.tune_cfg.content == AOM_CONTENT_SCREEN) {
+    features->allow_screen_content_tools = 1;
+    features->allow_intrabc = cpi->oxcf.mode == REALTIME ? 0 : 1;
+    cpi->is_screen_content_type = 1;
+    cpi->use_screen_content_tools = 1;
+    return;
+  }
+
+  if (cpi->oxcf.mode == REALTIME) {
+    features->allow_screen_content_tools = features->allow_intrabc = 0;
+    return;
+  }
+
+  // Screen content tools are not evaluated in non-RD encoding mode unless
+  // content type is not set explicitly, i.e., when
+  // cpi->oxcf.tune_cfg.content != AOM_CONTENT_SCREEN, use_nonrd_pick_mode = 1
+  // and hybrid_intra_pickmode = 0. Hence, screen content detection is
+  // disabled.
+  if (cpi->sf.rt_sf.use_nonrd_pick_mode &&
+      !cpi->sf.rt_sf.hybrid_intra_pickmode) {
+    features->allow_screen_content_tools = features->allow_intrabc = 0;
+    return;
+  }
+
+  if (cpi->oxcf.tune_cfg.tuning == AOM_TUNE_IQ ||
+      cpi->oxcf.tune_cfg.tuning == AOM_TUNE_SSIMULACRA2) {
+    estimate_screen_content_enhanced(cpi, features);
+  } else {
+    estimate_screen_content(cpi, features);
+  }
 }
 
 static void init_motion_estimation(AV1_COMP *cpi) {
