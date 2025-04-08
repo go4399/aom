@@ -16,6 +16,23 @@
       "message": "In this CL, we introduced a speed feature `gm_erroradv_tr_level` for low-complexity decode mode. This speed feature allows global motion to be enabled for a given frame w.r.t the reference frame, only if the compensation using GM parameters improves by 80%. This sf is enabled for hd resolution and above as the tool is already disabled for 608p and further speed-up  is lesser.\n\n```\n                       Instruction Count                                                                 \n                          Reduction(%)                   BD-Rate Loss(%)                Time Reduction(%)\ncpu-used  Resolution    Encoder   Decoder    avg.psnr     ssim       vmaf    vmaf_neg    dav1d Decoder   \n   1          608P       0.000     0.000      0.0000     0.0000     0.0000     0.0000       0.000\n   1        HDRES2       0.502     7.557      0.3075     0.2837     0.5687     0.5481       4.787\n   1       Average       0.228     3.435      0.1398     0.1290     0.2585     0.2491       2.176\n\n   2          608P       0.000     0.000      0.0000     0.0000     0.0000     0.0000       0.000\n   2        HDRES2       1.073     7.469      0.3417     0.2856     0.4791     0.5188       4.624\n   2       Average       0.488     3.395      0.1553     0.1298     0.2178     0.2358       2.102\n\n   3          608P       0.000     0.000      0.0000     0.0000     0.0000     0.0000       0.000\n   3        HDRES2       2.437     8.108      0.4559     0.4056     0.8161     0.7410       5.424\n   3       Average       1.108     3.685      0.2072     0.1844     0.3710     0.3368       2.465  \n   \n````\nThe instruction count reduction specified has been measured using command:\n`$ perf stat -e instructions:u ./aomenc …`\n`$ perf stat -e instructions:u ./dav1d --cpumask avx2 …`\n\nThe decode time is measured using command\n`time taskset -c 0  ./dav1d  --cpumask avx2 …`\n\nWe also verified that this CL produces bit-exact output for RT, ALLINTRA and cpu_used\u003e\u003d4 of GOOD encoding mode.",
       "revId": "35583bd0c9e07315ac5235a66410cc81a2d8325b",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe1d0e64_de7417c6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2025-04-08T21:46:33Z",
+      "side": 1,
+      "message": "LGTM. Would be interesting to see the results by just plainly turning off GM too, to more clearly show the effectiveness of this speed feature.",
+      "revId": "35583bd0c9e07315ac5235a66410cc81a2d8325b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
