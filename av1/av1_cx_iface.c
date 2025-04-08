@@ -3885,7 +3885,6 @@ static aom_codec_err_t ctrl_set_svc_params(aom_codec_alg_priv_t *ctx,
   cpi->svc.number_temporal_layers = params->number_temporal_layers;
   // Sequence parameters (operating_points_cnt_minus_1, operating_point_idc[])
   // need to be updated if the number of layers have changed.
-  // Force a keyframe here and update the two relevant sequence parameters.
   if (cpi->svc.prev_number_temporal_layers &&
       cpi->svc.prev_number_spatial_layers &&
       (cpi->svc.number_temporal_layers !=
@@ -3894,7 +3893,6 @@ static aom_codec_err_t ctrl_set_svc_params(aom_codec_alg_priv_t *ctx,
     SequenceHeader *const seq_params = &ppi->seq_params;
     seq_params->operating_points_cnt_minus_1 =
         ppi->number_spatial_layers * ppi->number_temporal_layers - 1;
-    ctx->next_frame_flags |= AOM_EFLAG_FORCE_KF;
     av1_set_svc_seq_params(ppi);
   }
 
