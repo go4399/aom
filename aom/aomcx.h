@@ -499,6 +499,8 @@ enum aome_enc_control_id {
    *  - AOM_CONTENT_DEFAULT = Regular video content (default)
    *  - AOM_CONTENT_SCREEN  = Screen capture content
    *  - AOM_CONTENT_FILM = Film content
+   *  - AOM_CONTENT_ENHANCED = Regular content, with enhanced SCC content
+   * detection
    */
   AV1E_SET_TUNE_CONTENT = 43,
 
@@ -1659,6 +1661,7 @@ typedef enum {
   AOM_CONTENT_DEFAULT,
   AOM_CONTENT_SCREEN,
   AOM_CONTENT_FILM,
+  AOM_CONTENT_ENHANCED,
   AOM_CONTENT_INVALID
 } aom_tune_content;
 
