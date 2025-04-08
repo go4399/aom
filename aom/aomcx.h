@@ -1583,6 +1583,14 @@ enum aome_enc_control_id {
    */
   AV1E_SET_ENABLE_LOW_COMPLEXITY_DECODE = 170,
 
+  /*!\brief Codec control to set the screen content tools detection mode,
+   * unsigned int parameter.
+   *
+   * - 1 = default (default)
+   * - 2 = anti-aliased text and graphics aware
+   */
+  AV1E_SET_SCREEN_CONTENT_TOOLS_DETECTION_MODE = 171,
+
   // Any new encoder control IDs should be added above.
   // Maximum allowed encoder control ID is 229.
   // No encoder control ID should be added below.
@@ -2293,6 +2301,9 @@ AOM_CTRL_USE_TYPE(AV1E_SET_MAX_CONSEC_FRAME_DROP_MS_CBR, int)
 
 AOM_CTRL_USE_TYPE(AV1E_SET_ENABLE_LOW_COMPLEXITY_DECODE, unsigned int)
 #define AOM_CTRL_AV1E_SET_ENABLE_LOW_COMPLEXITY_DECODE
+
+AOM_CTRL_USE_TYPE(AV1E_SET_SCREEN_CONTENT_TOOLS_DETECTION_MODE, unsigned int)
+#define AOM_CTRL_SET_SCREEN_CONTENT_TOOLS_DETECTION_MODE
 
 /*!\endcond */
 /*! @} - end defgroup aom_encoder */
