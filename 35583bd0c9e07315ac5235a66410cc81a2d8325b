@@ -33,6 +33,24 @@
       "message": "LGTM. Would be interesting to see the results by just plainly turning off GM too, to more clearly show the effectiveness of this speed feature.",
       "revId": "35583bd0c9e07315ac5235a66410cc81a2d8325b",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d962e04d_636d4fce",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-04-08T22:06:58Z",
+      "side": 1,
+      "message": "From Ranjit\u0027s old result for HDRES2 set, It seems totally disabling GM would double the coding loss without much further decoder time reduction compared with this CL.\n\nMudassir may have more results - please add.",
+      "parentUuid": "fe1d0e64_de7417c6",
+      "revId": "35583bd0c9e07315ac5235a66410cc81a2d8325b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
