@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "a5d41315_50b66cff",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 3899,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-04-09T22:22:37Z",
+      "side": 1,
+      "message": "I agree it is better to leave this check here, otherwise it may hide invalid spatial/temporal_layer_id.",
+      "parentUuid": "1cc19507_17b7cb82",
+      "revId": "e4cf34956df42224b48c77c9b4fbfafd9e7fa9dd",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "db6615ae_d8c3a5a6",
         "filename": "av1/av1_cx_iface.c",
         "patchSetId": 4
@@ -31,6 +49,24 @@
       "writtenOn": "2025-04-09T22:05:38Z",
       "side": 1,
       "message": "may be better to force the spatial/temporal_layer_id to 0 here, but will leave it as is for now.",
+      "revId": "e4cf34956df42224b48c77c9b4fbfafd9e7fa9dd",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2dd65333_00f4f85b",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 3904,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-04-09T22:22:37Z",
+      "side": 1,
+      "message": "I also think it would be better to force the spatial/temporal_layer_id to 0 here. The reason is that the clamped value is unrelated to the current value, so we might as well change to layer id 0.",
+      "parentUuid": "db6615ae_d8c3a5a6",
       "revId": "e4cf34956df42224b48c77c9b4fbfafd9e7fa9dd",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
