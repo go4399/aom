@@ -69,6 +69,24 @@
       "parentUuid": "d962e04d_636d4fce",
       "revId": "35583bd0c9e07315ac5235a66410cc81a2d8325b",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c45a56d6_78bbe159",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 25857
+      },
+      "writtenOn": "2025-04-09T09:33:46Z",
+      "side": 1,
+      "message": "Thank You for reviewing the CL. The data below shows the impact of disabling the Global Motion tool generated on [CL198421](https://aomedia-review.googlesource.com/c/aom/+/198421). The average BD-rate loss for HD resolutions is more than twice that of this speed feature. Additionally, the maximum BD-rate loss when disabling GM reaches 18.9%, whereas with this speed feature it was limited to 2.7%.\n```\n                       Instruction Count                                                                 \n                          Reduction(%)                   BD-Rate Loss(%)                Time Reduction(%)  \ncpu-used  Resolution    Encoder   Decoder    avg.psnr     ssim       vmaf     vmaf_neg   dav1d Decoder    max-qty-drop   max-drop-content\n   1          608P       2.013     2.220      0.4013     0.4413     0.5268     0.5144        1.564           5.5107      SDR_Hobby_9y87\n   1        HDRES2       2.139     9.377      0.7612     0.7454     1.1787     1.1201        6.096          17.1206      station2_1080p25\n   1       Average       2.071     5.473      0.5649     0.5795     0.8231     0.7898        3.624          17.1206      station2_1080p25\n   \n   2          608P       2.505     2.188      0.3897     0.4470     0.4937     0.5385        1.576           3.6771      SDR_Hobby_9y87\n   2        HDRES2       3.497     9.193      0.7924     0.7735     1.0616     1.1169        5.943          18.1640      station2_1080p25\n   2       Average       2.956     5.372      0.5728     0.5954     0.7518     0.8014        3.561          18.1640      station2_1080p25\n   \n   3          608P       1.765     2.668      0.5081     0.4808     0.6064     0.5839        1.602           3.7668      SDR_Sports_6mug\n   3        HDRES2       3.793     9.981      0.9818     0.9592     1.6936     1.5341        6.587          18.8886      station2_1080p25\n   3       Average       2.687     5.992      0.7234     0.6983     1.1005     1.0158        3.868          18.8886      station2_1080p25\n```",
+      "parentUuid": "1d444943_76289303",
+      "revId": "35583bd0c9e07315ac5235a66410cc81a2d8325b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ],
   "submitRequirementResults": [
