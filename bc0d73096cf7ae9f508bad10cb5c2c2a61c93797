@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed09e0ec_cebe7c1d",
+        "filename": "test/acm_random.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-04-09T04:03:44Z",
+      "side": 1,
+      "message": "`Rand15()` is only used in line 52 and in cfl_test.cc.",
+      "revId": "bc0d73096cf7ae9f508bad10cb5c2c2a61c93797",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0eed1ed2_beb061af",
+        "filename": "test/acm_random.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-04-09T04:03:44Z",
+      "side": 1,
+      "message": "The original code doesn\u0027t need the `static_cast\u003cint16_t\u003e` here. This seems to imply `Rand15()` did not return `int16_t` originally. I didn\u0027t look into this.",
+      "revId": "bc0d73096cf7ae9f508bad10cb5c2c2a61c93797",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
