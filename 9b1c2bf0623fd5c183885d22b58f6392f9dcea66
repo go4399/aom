@@ -33,6 +33,24 @@
       "message": "Optional: We could change this line to:\n\n```\n    dst +\u003d CFL_BUF_LINE * 4;\n  } while (src \u003c end);\n```\n\nto be more similar to the _avx2, _sse2, and _neon functions.",
       "revId": "9b1c2bf0623fd5c183885d22b58f6392f9dcea66",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8ceb831_ecb42d2e",
+        "filename": "av1/common/ppc/cfl_ppc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-04-10T01:51:08Z",
+      "side": 1,
+      "message": "\u003e Optional: We could change this line to:\n\u003e \n\u003e ```\n\u003e     dst +\u003d CFL_BUF_LINE * 4;\n\u003e   } while (src \u003c end);\n\u003e ```\n\u003e \n\u003e to be more similar to the _avx2, _sse2, and _neon functions.\n\nI noticed the difference here too, but wanted to keep this change minimal. I can normalize this in another change.",
+      "parentUuid": "c1b3fa10_7a4dee8d",
+      "revId": "9b1c2bf0623fd5c183885d22b58f6392f9dcea66",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
