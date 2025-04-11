@@ -1,0 +1,186 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "499d86f4_92eec715",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-04-11T22:06:13Z",
+      "side": 1,
+      "message": "Please try to add some tests. At least add a test that enables enhanced screen content detection and encode a frame. When that test runs under dynamic analyzers such as AddressSanitizer, at least we know there aren\u0027t memory errors in the code.",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ddca13e_d5bf7588",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-04-11T22:06:13Z",
+      "side": 1,
+      "message": "Julio: This is a quick, preliminary review. I only checked the API and general coding. I haven\u0027t studied the actual enhanced screen content detection.",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7985d61d_3ed07beb",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 496,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-04-11T22:06:13Z",
+      "side": 1,
+      "message": "API Design: \"enhanced\" isn\u0027t a new content type. It is a new way to detect screen content. It would be bettter to add a new codec control ID to enable enhanced screen content detection.",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89aa2586_2382a01c",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-04-11T22:06:13Z",
+      "side": 1,
+      "message": "Nit: AOM_CONTENT_ENHANCED \u003d\u003e AOM_CONTENT_ENHANCED_SCC_DETECTION?",
+      "range": {
+        "startLine": 502,
+        "startChar": 8,
+        "endLine": 502,
+        "endChar": 28
+      },
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2adc5c9f_3b4a00d0",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-04-11T22:06:13Z",
+      "side": 1,
+      "message": "Nit: Do not abbreviate \"SCC\". The \"SCC\" abbreviation isn\u0027t used in the libaom source tree:\n\n```\n$ find . -name \"*\" -a -type f | xargs grep SCC\n./doc/AlgorithmDescription.md:\u003cfigure class\u003d\"image\"\u003e \u003ccenter\u003e\u003cimg src\u003d\"img\\SCC_IntraBC.svg\" alt\u003d\"Intra block\n$\n```\n\nThe \"SCC\" abbreviation also doesn\u0027t seem to be used in the AV1 specification. The AV1 spec uses the term \"screen content tools\".",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "368cfc8c_042c971c",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-04-11T22:06:13Z",
+      "side": 1,
+      "message": "Nit: Indent \"detection\" after the `-` as follows:\n\n```\n   *  - AOM_CONTENT_ENHANCED \u003d Regular content, with enhanced SCC content\n   *    detection\n```",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "807e96c3_b65c7fbe",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 1665,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-04-11T22:06:13Z",
+      "side": 1,
+      "message": "IMPORTANT: Since this enum type is defined in a public header, the new enumerator `AOM_CONTENT_ENHANCED` has to be added at the end, after `AOM_CONTENT_INVALID`, so as to not change the values of the existing enumerators.",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f5d04c5_52a127af",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2029,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-04-11T22:06:13Z",
+      "side": 1,
+      "message": "To support large frame size, cast `stride` to `ptrdiff_t`, which is 64 bits on 64-bit systems. `int` is always 32 bits in practice.\n\nPlease search for `*` and fix all occurrences of this issue.\n\nNote: Another way to avoid this potential overflow is to use a row pointer variable:\n\n```\n  const uint8_t *row_ptr \u003d src;\n  for (int r \u003d 0; r \u003c rows; ++r) {\n    for (int c \u003d 0; c \u003c cols; ++c) {\n      const int value \u003d row_ptr[c];\n      ...\n    }\n    row_ptr +\u003d stride;\n  }\n```\n\nSome people just increment the `src` input parameter directly.",
+      "range": {
+        "startLine": 2029,
+        "startChar": 28,
+        "endLine": 2029,
+        "endChar": 38
+      },
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "900e1aac_5efb3136",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2044,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-04-11T22:06:13Z",
+      "side": 1,
+      "message": "Nit: I haven\u0027t analyzed the code carefully, but in general it would good if the stride, rows, and cols parameters are either all signed or all unsigned.\n\nIt is often convenient to declare the stride as signed so that we can go backward,\n\nIf the stride is unsigned, then we should cast it to `size_t` instead of `ptrdiff_t` before multiplying it with `r` to avoid potential overflow. (`size_t` is unsigned, `ptrdiff_t` is signed.)",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "917c048c_b523d69c",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2049,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-04-11T22:06:13Z",
+      "side": 1,
+      "message": "Nit: It may be better to use `stderr` for this kind of message.",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
