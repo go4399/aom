@@ -5432,6 +5432,7 @@ void av1_apply_encoding_flags(AV1_COMP *cpi, aom_enc_frame_flags_t flags) {
     update_entropy(&ext_flags->refresh_frame_context,
                    &ext_flags->refresh_frame_context_pending, 0);
   }
+  return;
 }
 
 aom_fixed_buf_t *av1_get_global_headers(AV1_PRIMARY *ppi) {
