@@ -34,6 +34,24 @@
       "parentUuid": "be8c02e4_9db6f035",
       "revId": "4fdade464a474f7c1673c45e75b8a96e2513dd51",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "424d95f6_fccc553c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-04-15T19:19:36Z",
+      "side": 1,
+      "message": "I don\u0027t mean in microbenchmarks, I mean running a full encode on a Skylake Xeon, such that AVX512 and AVX2/SSE4/SSE2 are mixed.",
+      "parentUuid": "0728777f_79b6d1d9",
+      "revId": "4fdade464a474f7c1673c45e75b8a96e2513dd51",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
