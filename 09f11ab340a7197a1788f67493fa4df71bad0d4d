@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ead225c0_b25c2fd1",
+        "filename": "aom_ports/x86.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-04-17T15:53:14Z",
+      "side": 1,
+      "message": "Optional: Perhaps these macro should be named `*_BITS` because some of them may have multiple bits. But please see the next comment.",
+      "revId": "09f11ab340a7197a1788f67493fa4df71bad0d4d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bbf46214_e384ae87",
+        "filename": "aom_ports/x86.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-04-17T15:53:14Z",
+      "side": 1,
+      "message": "Nit/optional: The original code tests whether the result of the bitwise AND is nonzero. The new code compares the result with a constant. A nonzero check is cheaper on some platforms. It would be good to inspect the assembly code to see if we need to eliminate this minor difference, e.g., by using two different forms:\n\n```\n  flags |\u003d (reg_edx \u0026 MMX_BIT) ? HAS_MMX : 0;\n```\n\nand\n\n```\n  if ((reg_ecx \u0026 AVX_BIT) \u003d\u003d AVX_BIT) {\n```",
+      "revId": "09f11ab340a7197a1788f67493fa4df71bad0d4d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "baaf43ca_82799592",
+        "filename": "aom_ports/x86.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-04-17T15:53:14Z",
+      "side": 1,
+      "message": "Nit: `FEATURE` \u003d\u003e `feature`",
+      "range": {
+        "startLine": 184,
+        "startChar": 25,
+        "endLine": 184,
+        "endChar": 32
+      },
+      "revId": "09f11ab340a7197a1788f67493fa4df71bad0d4d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1127b35_ef944ebc",
+        "filename": "aom_ports/x86.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-04-17T15:53:14Z",
+      "side": 1,
+      "message": "Nit/optional: the if statements used in the original code are also quite readable, i.e.,\n\n```\n  if (FEATURE_SET(reg_edx, MMX)) flags |\u003d HAS_MMX;\n```",
+      "revId": "09f11ab340a7197a1788f67493fa4df71bad0d4d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
