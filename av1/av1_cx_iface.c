@@ -3308,9 +3308,14 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
         int lag_in_frames = cpi_lap != NULL ? cpi_lap->oxcf.gf_cfg.lag_in_frames
                                             : cpi->oxcf.gf_cfg.lag_in_frames;
         AV1EncoderConfig *oxcf = &cpi->oxcf;
-        const BLOCK_SIZE sb_size = av1_select_sb_size(
-            oxcf, oxcf->frm_dim_cfg.width, oxcf->frm_dim_cfg.height,
-            ppi->number_spatial_layers);
+        const int width = ppi->number_spatial_layers > 1
+                              ? cpi->data_alloc_width
+                              : oxcf->frm_dim_cfg.width;
+        const int height = ppi->number_spatial_layers > 1
+                               ? cpi->data_alloc_height
+                               : oxcf->frm_dim_cfg.height;
+        const BLOCK_SIZE sb_size =
+            av1_select_sb_size(oxcf, width, height, ppi->number_spatial_layers);
         oxcf->border_in_pixels =
             av1_get_enc_border_size(av1_is_resize_needed(oxcf),
                                     oxcf->kf_cfg.key_freq_max == 0, sb_size);
