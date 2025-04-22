@@ -368,11 +368,13 @@ void av1_update_frame_size(AV1_COMP *cpi) {
                        cpi->sf.part_sf.default_min_partition_size);
 
   av1_init_macroblockd(cm, xd);
-
-  if (!cpi->ppi->seq_params_locked)
+  if (!cpi->ppi->seq_params_locked) {
+    const int width = cpi->ppi->number_spatial_layers > 1 ? cpi->data_alloc_width : cm->width;
+    const int height = cpi->ppi->number_spatial_layers > 1 ?cpi->data_alloc_height : cm->height;
     set_sb_size(cm->seq_params,
-                av1_select_sb_size(&cpi->oxcf, cm->width, cm->height,
+                av1_select_sb_size(&cpi->oxcf, width, height,
                                    cpi->ppi->number_spatial_layers));
+  }
 
   set_tile_info(cm, &cpi->oxcf.tile_cfg);
 }
@@ -763,8 +765,9 @@ void av1_change_config_seq(struct AV1_PRIMARY *ppi,
   int sb_size = seq_params->sb_size;
   // Superblock size should not be updated after the first key frame.
   if (!ppi->seq_params_locked) {
-    set_sb_size(seq_params, av1_select_sb_size(oxcf, frm_dim_cfg->width,
-                                               frm_dim_cfg->height,
+    const int width = ppi->number_spatial_layers > 1 ? ppi->cpi->data_alloc_width : frm_dim_cfg->width;
+    const int height = ppi->number_spatial_layers > 1 ? ppi->cpi->data_alloc_height : frm_dim_cfg->height;
+    set_sb_size(seq_params, av1_select_sb_size(oxcf, width, height,
                                                ppi->number_spatial_layers));
     for (int i = 0; i < MAX_NUM_OPERATING_POINTS; ++i)
       seq_params->tier[i] = (oxcf->tier_mask >> i) & 1;
