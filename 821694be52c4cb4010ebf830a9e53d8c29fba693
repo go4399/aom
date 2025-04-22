@@ -79,6 +79,91 @@
       ],
       "revId": "821694be52c4cb4010ebf830a9e53d8c29fba693",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "97dae3e0_d0a85223",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2636,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-04-22T17:20:44Z",
+      "side": 1,
+      "message": "Suggestion: This checking I added before seems not specific enough. Maybe we should include the vertical video checking as well to avoid it being used by other contents? What do you think?",
+      "fixSuggestions": [
+        {
+          "fixId": "8e499a99_3d0f9233",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/speed_features.c",
+              "range": {
+                "startLine": 2635,
+                "startChar": 0,
+                "endLine": 2635,
+                "endChar": 0
+              },
+              "replacement": "  const int is_vertical_video \u003d cm-\u003ewidth \u003c cm-\u003eheight;\n"
+            },
+            {
+              "path": "av1/encoder/speed_features.c",
+              "range": {
+                "startLine": 2636,
+                "startChar": 0,
+                "endLine": 2637,
+                "endChar": 0
+              },
+              "replacement": "  if (is_vertical_video \u0026\u0026 short_dimension \u003e 480 \u0026\u0026 short_dimension \u003c 720) {\n"
+            },
+            {
+              "path": "av1/encoder/speed_features.c",
+              "range": {
+                "startLine": 2658,
+                "startChar": 0,
+                "endLine": 2658,
+                "endChar": 0
+              },
+              "replacement": "  const int is_vertical_video \u003d cm-\u003ewidth \u003c cm-\u003eheight;\n"
+            },
+            {
+              "path": "av1/encoder/speed_features.c",
+              "range": {
+                "startLine": 2822,
+                "startChar": 0,
+                "endLine": 2823,
+                "endChar": 0
+              },
+              "replacement": "    if (is_vertical_video \u0026\u0026 is_1440p_or_larger) {\n"
+            },
+            {
+              "path": "av1/encoder/speed_features.c",
+              "range": {
+                "startLine": 2824,
+                "startChar": 0,
+                "endLine": 2825,
+                "endChar": 0
+              },
+              "replacement": "    } else if (is_vertical_video \u0026\u0026 is_720p_or_larger) {\n"
+            },
+            {
+              "path": "av1/encoder/speed_features.c",
+              "range": {
+                "startLine": 2835,
+                "startChar": 0,
+                "endLine": 2836,
+                "endChar": 0
+              },
+              "replacement": "    if (cm-\u003equant_params.base_qindex \u003c\u003d qindex_thresh \u0026\u0026\n        !(is_vertical_video \u0026\u0026 is_1440p_or_larger)) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "821694be52c4cb4010ebf830a9e53d8c29fba693",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
