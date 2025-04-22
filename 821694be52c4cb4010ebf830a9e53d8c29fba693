@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "187d5fb3_1989b536",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 25857
+      },
+      "writtenOn": "2025-04-22T16:16:05Z",
+      "side": 1,
+      "message": "In this CL, both the minimum and maximum LR unit size are set to 128 in low-complexity decode mode. This setting is enabled for short resolutions (608p) when speed \u003c\u003d 3 and for HD resolutions when speed \u003c\u003d 2. For speed \u003d 3 and HD resolution, the LR unit size is already set to 128 for lower QPs (base_qindex \u003c\u003d 96). However, extending this to higher QPs did not provide a favorable speed-quality trade-off, so the setting remains disabled in that case.\n\n```\n                       Instruction Count                                                                 \n                          Reduction(%)                   BD-Rate Loss(%)                Time Reduction(%)\ncpu-used  Resolution    Encoder   Decoder    avg.psnr     ssim       vmaf    vmaf_neg    dav1d Decoder   \n   1          608P       0.886     4.640      0.2215     0.4806     0.3276     0.2281       3.773\n   1        HDRES2       0.268     1.150      0.0789     0.0968     0.3376     0.2177       0.971\n   1       Average       0.605     3.054      0.1567     0.3061     0.3321     0.2234       2.499\n\n   2          608P       1.170     4.370      0.2947     0.6502     0.4910     0.3101       3.688\n   2        HDRES2       0.448     0.967      0.0437     0.0711     0.2455     0.1127       0.944\n   2       Average       0.842     2.823      0.1806     0.3870     0.3794     0.2204       2.441\n\n   3          608P       0.522     4.190      0.2940     0.6653     0.7741     0.4813       3.496\n   3        HDRES2       0.000     0.000      0.0000     0.0000     0.0000     0.0000       0.000\n   3       Average       0.285     2.285      0.1604     0.3629     0.4222     0.2625       1.916  \n````\n\nThe instruction count reduction specified has been measured using command:\n`$ perf stat -e instructions:u ./aomenc …`\n`$ perf stat -e instructions:u ./dav1d --cpumask avx2 …`\n\nThe decode time is measured using command\n`time taskset -c 0  ./dav1d  --cpumask avx2 …`\n\nWe also verified that this CL produces bit-exact output for RT, ALLINTRA and cpu_used\u003e\u003d4 of GOOD encoding modes.",
+      "revId": "821694be52c4cb4010ebf830a9e53d8c29fba693",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
