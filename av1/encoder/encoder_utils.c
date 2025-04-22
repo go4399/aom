@@ -840,11 +840,9 @@ BLOCK_SIZE av1_select_sb_size(const AV1EncoderConfig *const oxcf, int width,
 
   if (number_spatial_layers > 1 ||
       oxcf->resize_cfg.resize_mode != RESIZE_NONE) {
-    // Use the configured size (top resolution) for spatial layers or
-    // on resize.
-    return AOMMIN(oxcf->frm_dim_cfg.width, oxcf->frm_dim_cfg.height) > 720
-               ? BLOCK_128X128
-               : BLOCK_64X64;
+    // For spatial layers or resize: the width/height passed in here should be
+    // the allocated width/height.
+    return AOMMIN(width, height) > 720 ? BLOCK_128X128 : BLOCK_64X64;
   } else if (oxcf->mode == REALTIME) {
     if (oxcf->tune_cfg.content == AOM_CONTENT_SCREEN) {
       const TileConfig *const tile_cfg = &oxcf->tile_cfg;
@@ -910,8 +908,14 @@ void av1_setup_frame(AV1_COMP *cpi) {
   if ((cm->current_frame.frame_type == KEY_FRAME && cm->show_frame) ||
       frame_is_sframe(cm)) {
     if (!cpi->ppi->seq_params_locked) {
+      const int width = cpi->ppi->number_spatial_layers > 1
+                            ? cpi->data_alloc_width
+                            : cm->width;
+      const int height = cpi->ppi->number_spatial_layers > 1
+                             ? cpi->data_alloc_height
+                             : cm->height;
       set_sb_size(cm->seq_params,
-                  av1_select_sb_size(&cpi->oxcf, cm->width, cm->height,
+                  av1_select_sb_size(&cpi->oxcf, width, height,
                                      cpi->ppi->number_spatial_layers));
     }
   } else {
