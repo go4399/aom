@@ -1,0 +1,111 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3612710f_7f745a25",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-04-23T16:00:28Z",
+      "side": 1,
+      "message": "Thanks for making the speed features more specific.",
+      "revId": "7a524a636135050cbf7026ade30f49cd1c704846",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ea1f056_030a2057",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2623,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-04-23T16:00:28Z",
+      "side": 1,
+      "message": "There are other functions for LC mode. Could you modify those as well? Thanks.",
+      "fixSuggestions": [
+        {
+          "fixId": "20d70691_e1d3c827",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/speed_features.c",
+              "range": {
+                "startLine": 1727,
+                "startChar": 0,
+                "endLine": 1727,
+                "endChar": 0
+              },
+              "replacement": "\nstatic void set_good_speed_features_lc_dec_qindex_dependent(\n    const AV1_COMP *const cpi, SPEED_FEATURES *const sf, int speed) {\n  if (speed \u003c 1 || speed \u003e 3) return;\n\n  const AV1_COMMON *const cm \u003d \u0026cpi-\u003ecommon;\n  const int short_dimension \u003d AOMMIN(cm-\u003ewidth, cm-\u003eheight);\n  const int is_720p_or_larger \u003d AOMMIN(cm-\u003ewidth, cm-\u003eheight) \u003e\u003d 720;\n  const FRAME_UPDATE_TYPE update_type \u003d\n      get_frame_update_type(\u0026cpi-\u003eppi-\u003egf_group, cpi-\u003egf_frame_index);\n  const bool leaf_and_overlay_frames \u003d\n      (update_type \u003d\u003d LF_UPDATE || update_type \u003d\u003d OVERLAY_UPDATE ||\n       update_type \u003d\u003d INTNL_OVERLAY_UPDATE);\n  const bool is_vertical_video \u003d cm-\u003ewidth \u003c cm-\u003eheight;\n\n  if (is_vertical_video \u0026\u0026 short_dimension \u003e 480 \u0026\u0026 short_dimension \u003c 720) {\n    sf-\u003elpf_sf.min_lr_unit_size \u003d RESTORATION_UNITSIZE_MAX \u003e\u003e 1;\n    sf-\u003elpf_sf.max_lr_unit_size \u003d RESTORATION_UNITSIZE_MAX \u003e\u003e 1;\n  } else if (is_720p_or_larger \u0026\u0026 speed \u003c\u003d 2 \u0026\u0026 leaf_and_overlay_frames) {\n    // For 720p and above, only enable this feature for leaf and overlay frames\n    // to avoid quality degradation on ARF frames.\n    sf-\u003elpf_sf.min_lr_unit_size \u003d RESTORATION_UNITSIZE_MAX \u003e\u003e 1;\n    sf-\u003elpf_sf.max_lr_unit_size \u003d RESTORATION_UNITSIZE_MAX \u003e\u003e 1;\n  }\n}\n"
+            },
+            {
+              "path": "av1/encoder/speed_features.c",
+              "range": {
+                "startLine": 2621,
+                "startChar": 0,
+                "endLine": 2647,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "av1/encoder/speed_features.c",
+              "range": {
+                "startLine": 2851,
+                "startChar": 0,
+                "endLine": 2853,
+                "endChar": 0
+              },
+              "replacement": "  if (cpi-\u003eoxcf.enable_low_complexity_decode \u0026\u0026 cpi-\u003eoxcf.mode \u003d\u003d GOOD)\n    set_good_speed_features_lc_dec_qindex_dependent(cpi, sf, speed);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "7a524a636135050cbf7026ade30f49cd1c704846",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "49914012_617660c8",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2640,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-04-23T16:00:28Z",
+      "side": 1,
+      "message": "Adding is_vertical_video should be good enough. To be precise, this \u003e\u003d 720p feature should be added for !is_vertical_video since it targets hdres2 videos? Maybe the LC mode features can be grouped in 2 categories (i.e. is_vertical_video and !is_vertical_video)?",
+      "fixSuggestions": [
+        {
+          "fixId": "952fd297_007079b3",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/speed_features.c",
+              "range": {
+                "startLine": 2640,
+                "startChar": 0,
+                "endLine": 2641,
+                "endChar": 0
+              },
+              "replacement": "  } else if (!is_vertical_video \u0026\u0026 is_720p_or_larger \u0026\u0026 speed \u003c\u003d 2 \u0026\u0026\n             leaf_and_overlay_frames) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "7a524a636135050cbf7026ade30f49cd1c704846",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
