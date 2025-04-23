@@ -2354,9 +2354,9 @@ static void update_gop_length(RATE_CONTROL *rc, PRIMARY_RATE_CONTROL *p_rc,
  * \remark No return but updates the rate control and group data structures
  *         to reflect the allocation of bits.
  */
-static void av1_gop_bit_allocation(const AV1_COMP *cpi, RATE_CONTROL *const rc,
-                                   GF_GROUP *gf_group, int is_key_frame,
-                                   int use_arf, int64_t gf_group_bits) {
+void av1_gop_bit_allocation(const AV1_COMP *cpi, RATE_CONTROL *const rc,
+                            GF_GROUP *gf_group, int is_key_frame,
+                            int use_arf, int64_t gf_group_bits) {
   PRIMARY_RATE_CONTROL *const p_rc = &cpi->ppi->p_rc;
   // Calculate the extra bits to be used for boosted frame(s)
 #ifdef FIXED_ARF_BITS
@@ -3528,7 +3528,7 @@ static void process_first_pass_stats(AV1_COMP *cpi,
   set_twopass_params_based_on_fp_stats(cpi, this_frame);
 }
 
-static void setup_target_rate(AV1_COMP *cpi) {
+void setup_target_rate(AV1_COMP *cpi) {
   RATE_CONTROL *const rc = &cpi->rc;
   GF_GROUP *const gf_group = &cpi->ppi->gf_group;
 
