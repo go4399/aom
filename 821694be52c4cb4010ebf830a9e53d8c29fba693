@@ -164,6 +164,24 @@
       ],
       "revId": "821694be52c4cb4010ebf830a9e53d8c29fba693",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8caab090_81f007ca",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2636,
+      "author": {
+        "id": 25857
+      },
+      "writtenOn": "2025-04-23T12:12:27Z",
+      "side": 1,
+      "message": "Adding `is_vertical_video` to the conditions in `av1_set_speed_features_qindex_dependent()` would change the --low-complexity-decode\u003d0 behaviour. So we have not taken up this change, other comments are addressed in [CL199241](https://aomedia-review.googlesource.com/c/aom/+/199241), please review the same.",
+      "parentUuid": "97dae3e0_d0a85223",
+      "revId": "821694be52c4cb4010ebf830a9e53d8c29fba693",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ],
   "submitRequirementResults": [
