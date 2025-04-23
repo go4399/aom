@@ -2629,14 +2629,17 @@ static void set_speed_features_lc_dec_qindex_dependent(
   const int is_720p_or_larger = AOMMIN(cm->width, cm->height) >= 720;
   const FRAME_UPDATE_TYPE update_type =
       get_frame_update_type(&cpi->ppi->gf_group, cpi->gf_frame_index);
-  const int leaf_and_overlay_frames =
+  const bool leaf_and_overlay_frames =
       (update_type == LF_UPDATE || update_type == OVERLAY_UPDATE ||
        update_type == INTNL_OVERLAY_UPDATE);
+  const bool is_vertical_video = cm->width < cm->height;
 
-  if (short_dimension > 480 && short_dimension < 720) {
+  if (is_vertical_video && short_dimension > 480 && short_dimension < 720) {
     sf->lpf_sf.min_lr_unit_size = RESTORATION_UNITSIZE_MAX >> 1;
     sf->lpf_sf.max_lr_unit_size = RESTORATION_UNITSIZE_MAX >> 1;
   } else if (is_720p_or_larger && speed <= 2 && leaf_and_overlay_frames) {
+    // For 720p and above, only enable this feature for leaf and overlay frames
+    // to avoid quality degradation on ARF frames.
     sf->lpf_sf.min_lr_unit_size = RESTORATION_UNITSIZE_MAX >> 1;
     sf->lpf_sf.max_lr_unit_size = RESTORATION_UNITSIZE_MAX >> 1;
   }
