@@ -840,11 +840,10 @@ BLOCK_SIZE av1_select_sb_size(const AV1EncoderConfig *const oxcf, int width,
 
   if (number_spatial_layers > 1 ||
       oxcf->resize_cfg.resize_mode != RESIZE_NONE) {
-    // Use the configured size (top resolution) for spatial layers or
-    // on resize.
-    return AOMMIN(oxcf->frm_dim_cfg.width, oxcf->frm_dim_cfg.height) > 720
-               ? BLOCK_128X128
-               : BLOCK_64X64;
+    // For spatial layers better selection may be done given the resolutions
+    // used across the layers, but for now use 64x64 for spatial layers and
+    // for resize_mode on.
+    return BLOCK_64X64;
   } else if (oxcf->mode == REALTIME) {
     if (oxcf->tune_cfg.content == AOM_CONTENT_SCREEN) {
       const TileConfig *const tile_cfg = &oxcf->tile_cfg;
