@@ -1,0 +1,49 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e57d9875_1e5a7bf3",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-04-25T20:04:36Z",
+      "side": 1,
+      "message": "\"is_short_608p\" doesn\u0027t sound a good name. Probably not use \"short\" since vertical video check isn\u0027t included. Also, we are not checking 608p specifically here, so using \"608p\" is not accurate. It is more like \"between 480p and 720p\". The reason for checking a range of resolutions is that, though we didn\u0027t test it, I was hoping this sf level also applies to something like vertical_540p. If we want to state that this sf level is for vertical_608p as of now, maybe add a comment to state that?",
+      "fixSuggestions": [
+        {
+          "fixId": "82a0b659_b352da87",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/speed_features.c",
+              "range": {
+                "startLine": 601,
+                "startChar": 0,
+                "endLine": 603,
+                "endChar": 0
+              },
+              "replacement": "  const bool is_between_480p_and_720p \u003d AOMMIN(cm-\u003ewidth, cm-\u003eheight) \u003e 480 \u0026\u0026\n                                        AOMMIN(cm-\u003ewidth, cm-\u003eheight) \u003c 720;\n"
+            },
+            {
+              "path": "av1/encoder/speed_features.c",
+              "range": {
+                "startLine": 615,
+                "startChar": 0,
+                "endLine": 616,
+                "endChar": 0
+              },
+              "replacement": "  if (is_vertical_video \u0026\u0026 is_between_480p_and_720p) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "da315b0cee3ab98076792d55e51b995122465401",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
