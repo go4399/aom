@@ -16,6 +16,114 @@
       "message": "In this CL, we introduced a conservative method to disable `allow_ref_frame_mvs` based on tpl and motion field data for low-complexity decode . The threshold is increased for speed 3 to improve decoder speed-up. This speed feature is enabled specifically for HDRES.\n\nPerformance results of encoder and decoder for the streams generated\nwith low complexity decode enabled are as follows:\n```\n                       Instruction Count                                                                 \n                          Reduction(%)                   BD-Rate Loss(%)                       Time Reduction(%)\ncpu-used  Resolution    Encoder   Decoder    avg.psnr   ovr.psnr    ssim     vmaf   vmaf_neg    dav1d Decoder   \n   1        HDRES2       4.590     10.943      0.7741     0.7971   0.7365   0.8788   0.8520      10.573\n   2        HDRES2       4.644      9.276      0.7775     0.8051   0.7687   0.8906   0.8894       9.197\n   3        HDRES2       2.894      8.336      0.7344     0.8309   0.7919   0.8053   0.7793       7.991\n```\nThe instruction count reduction specified has been measured using command:\n`$ perf stat -e instructions:u ./aomenc …`\n`$ perf stat -e instructions:u ./dav1d --cpumask avx2 …`\nThe decode time is measured using command\n`time taskset -c 0  ./dav1d  --cpumask avx2 …`\n\nWe have verified that this CL produces no noticeable artifacts for the max-drop contents.",
       "revId": "52e8fbfdb9957c62497259bf9a534c07d85bc5dd",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3cacb1e4_c43ead41",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-04-25T19:38:39Z",
+      "side": 1,
+      "message": "This approach ends up with a better tradeoff. Looks good. Thanks.",
+      "parentUuid": "8a8bee9b_8444c33c",
+      "revId": "52e8fbfdb9957c62497259bf9a534c07d85bc5dd",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d99447be_9508b8d0",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2246,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-04-25T19:38:39Z",
+      "side": 1,
+      "message": "Should check_to_disable_ref_frame_mvs() be called before av1_setup_motion_field to save unneeded motion field setup?",
+      "fixSuggestions": [
+        {
+          "fixId": "8bbf3c41_8451e970",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/encodeframe.c",
+              "range": {
+                "startLine": 2245,
+                "startChar": 0,
+                "endLine": 2247,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "av1/encoder/encodeframe.c",
+              "range": {
+                "startLine": 2250,
+                "startChar": 0,
+                "endLine": 2250,
+                "endChar": 0
+              },
+              "replacement": "  features-\u003eallow_ref_frame_mvs \u0026\u003d !(cpi-\u003esf.hl_sf.ref_frame_mvs_lvl \u003d\u003d 2);\n  if (features-\u003eallow_ref_frame_mvs) av1_setup_motion_field(cm);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "52e8fbfdb9957c62497259bf9a534c07d85bc5dd",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c979a334_d30efafb",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2247,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-04-25T19:38:39Z",
+      "side": 1,
+      "message": "Does this check really needed? Looks like if ref_frame_mvs is disabled, it will return immediately from check_to_disable_ref_frame_mvs(). Or if you want to exclude realtime case for now, I think you can check \"cpi-\u003eoxcf.mode \u003d\u003d REALTIME\".",
+      "fixSuggestions": [
+        {
+          "fixId": "d854550f_c9ba559d",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/encodeframe.c",
+              "range": {
+                "startLine": 2247,
+                "startChar": 0,
+                "endLine": 2248,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "av1/encoder/encodeframe.c",
+              "range": {
+                "startLine": 2249,
+                "startChar": 0,
+                "endLine": 2250,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "52e8fbfdb9957c62497259bf9a534c07d85bc5dd",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
