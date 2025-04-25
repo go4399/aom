@@ -621,7 +621,7 @@ static void get_variance_stats(const AV1_COMP *cpi, const MACROBLOCK *x,
   *rec_var = 0;
 
   for (int plane = 0; plane < num_planes; ++plane) {
-    if (plane && !xd->is_chroma_ref) break;
+    // if (plane && !xd->is_chroma_ref) break;
     const struct macroblock_plane *const p = &x->plane[plane];
     const struct macroblockd_plane *const pd = &xd->plane[plane];
     const BLOCK_SIZE bs =
