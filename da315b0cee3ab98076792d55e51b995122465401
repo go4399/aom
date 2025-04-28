@@ -62,6 +62,24 @@
       "parentUuid": "e57d9875_1e5a7bf3",
       "revId": "da315b0cee3ab98076792d55e51b995122465401",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2de2e54f_360306f9",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-04-28T15:53:49Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "d50e671f_73bed789",
+      "revId": "da315b0cee3ab98076792d55e51b995122465401",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
