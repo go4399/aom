@@ -83,6 +83,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c2c069c3_0eb8f752",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2246,
+      "author": {
+        "id": 33002
+      },
+      "writtenOn": "2025-04-28T11:28:51Z",
+      "side": 1,
+      "message": "The function `get_temporal_mvpred_err()` called in `check_to_disable_ref_frame_mvs()` uses motion field data populated in `av1_setup_motion_field()` to find the temporal MV predictors. Therefore, `check_to_disable_ref_frame_mvs()` is called after `av1_setup_motion_field()`.",
+      "parentUuid": "d99447be_9508b8d0",
+      "revId": "52e8fbfdb9957c62497259bf9a534c07d85bc5dd",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c979a334_d30efafb",
         "filename": "av1/encoder/encodeframe.c",
         "patchSetId": 2
@@ -122,6 +140,24 @@
           ]
         }
       ],
+      "revId": "52e8fbfdb9957c62497259bf9a534c07d85bc5dd",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e39d8cd_f3cb7a5f",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2247,
+      "author": {
+        "id": 33002
+      },
+      "writtenOn": "2025-04-28T11:28:51Z",
+      "side": 1,
+      "message": "The function `check_to_disable_ref_frame_mvs()` accesses TPL stage data. However, TPL functions are excluded from `CONFIG_REALTIME_ONLY\u003d1` build. Thus, \nadding the check`#if !CONFIG_REALTIME_ONLY` is necessary to avoid build failures with `CONFIG_REALTIME_ONLY` enabled.",
+      "parentUuid": "c979a334_d30efafb",
       "revId": "52e8fbfdb9957c62497259bf9a534c07d85bc5dd",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
