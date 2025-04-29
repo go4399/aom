@@ -27,11 +27,12 @@
 #define DEFICIENT_CLANG_32_BIT  // This includes clang-cl.
 #endif
 
-#if defined(__GNUC__) && !defined(__clang__) && defined(ARM_32_BIT)
-#define GCC_32_BIT
+#if defined(__GNUC__) && !defined(__clang__) && defined(ARM_32_BIT) && \
+    __GNUC__ < 14
+#define DEFICIENT_GCC_32_BIT
 #endif
 
-#if defined(DEFICIENT_CLANG_32_BIT) || defined(GCC_32_BIT)
+#if defined(DEFICIENT_CLANG_32_BIT) || defined(DEFICIENT_GCC_32_BIT)
 
 static inline uint8x16x3_t vld1q_u8_x3(const uint8_t *ptr) {
   uint8x16x3_t res = { { vld1q_u8(ptr + 0 * 16), vld1q_u8(ptr + 1 * 16),
