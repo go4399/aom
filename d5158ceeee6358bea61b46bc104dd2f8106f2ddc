@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a483c93b_9730f396",
+        "filename": "aom_dsp/arm/mem_neon.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-04-29T23:42:12Z",
+      "side": 1,
+      "message": "Nit: Delete this comment because it repeats the comment at line 24.",
+      "range": {
+        "startLine": 27,
+        "startChar": 32,
+        "endLine": 27,
+        "endChar": 58
+      },
+      "revId": "d5158ceeee6358bea61b46bc104dd2f8106f2ddc",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c81a00f_0ce6800e",
+        "filename": "aom_dsp/arm/mem_neon.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-04-29T23:42:12Z",
+      "side": 1,
+      "message": "Optional: It would be good to add a comment to note what is deficient about GCC 13 or older.",
+      "revId": "d5158ceeee6358bea61b46bc104dd2f8106f2ddc",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
