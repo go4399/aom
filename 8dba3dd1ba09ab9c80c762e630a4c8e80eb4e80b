@@ -1,0 +1,155 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a1f5111_ca07d19d",
+        "filename": "av1/encoder/interp_search.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-04-30T14:32:00Z",
+      "side": 1,
+      "message": "these can be put in one `if` statment",
+      "range": {
+        "startLine": 478,
+        "startChar": 10,
+        "endLine": 479,
+        "endChar": 33
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "e89ddf01_d4fb5574",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/interp_search.c",
+              "range": {
+                "startLine": 478,
+                "startChar": 0,
+                "endLine": 484,
+                "endChar": 0
+              },
+              "replacement": "      if (cpi-\u003eoxcf.algo_cfg.sharpness \u003d\u003d 3 \u0026\u0026 i \u003d\u003d EIGHTTAP_SMOOTH) {\n        DUAL_FILTER_TYPE filt_type \u003d i + SWITCHABLE_FILTERS * i;\n        reset_interp_filter_allowed_mask(\u0026interp_filter_search_mask,\n                                         filt_type);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "8dba3dd1ba09ab9c80c762e630a4c8e80eb4e80b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7691d871_bf380dfb",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1426,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-04-30T14:32:00Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 1424,
+        "startChar": 8,
+        "endLine": 1426,
+        "endChar": 45
+      },
+      "revId": "8dba3dd1ba09ab9c80c762e630a4c8e80eb4e80b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c66ccf56_b60aab0b",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 3729,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-04-30T14:32:00Z",
+      "side": 1,
+      "message": "`const`",
+      "range": {
+        "startLine": 3729,
+        "startChar": 6,
+        "endLine": 3729,
+        "endChar": 9
+      },
+      "revId": "8dba3dd1ba09ab9c80c762e630a4c8e80eb4e80b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "165273b3_0a025e7a",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 5367,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-04-30T14:32:00Z",
+      "side": 1,
+      "message": "these can be combined",
+      "range": {
+        "startLine": 5366,
+        "startChar": 8,
+        "endLine": 5367,
+        "endChar": 45
+      },
+      "revId": "8dba3dd1ba09ab9c80c762e630a4c8e80eb4e80b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff13bfd5_99803f52",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1001,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-04-30T14:32:00Z",
+      "side": 1,
+      "message": "is this TODO still revelant?",
+      "range": {
+        "startLine": 1001,
+        "startChar": 0,
+        "endLine": 1001,
+        "endChar": 58
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "648c29ed_b8fa5090",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/speed_features.c",
+              "range": {
+                "startLine": 1001,
+                "startChar": 0,
+                "endLine": 1002,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "8dba3dd1ba09ab9c80c762e630a4c8e80eb4e80b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
