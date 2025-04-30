@@ -24,6 +24,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0132863e_3f2c6592",
+        "filename": "aom_dsp/arm/mem_neon.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-04-30T17:57:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a483c93b_9730f396",
+      "range": {
+        "startLine": 27,
+        "startChar": 32,
+        "endLine": 27,
+        "endChar": 58
+      },
+      "revId": "d5158ceeee6358bea61b46bc104dd2f8106f2ddc",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7c81a00f_0ce6800e",
@@ -37,6 +61,24 @@
       "writtenOn": "2025-04-29T23:42:12Z",
       "side": 1,
       "message": "Optional: It would be good to add a comment to note what is deficient about GCC 13 or older.",
+      "revId": "d5158ceeee6358bea61b46bc104dd2f8106f2ddc",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1644d2cd_52d3e904",
+        "filename": "aom_dsp/arm/mem_neon.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-04-30T17:57:28Z",
+      "side": 1,
+      "message": "\u003e Optional: It would be good to add a comment to note what is deficient about GCC 13 or older.\n\nI relocated the general comment from line 19 to line 34 where both of the defines are checked.",
+      "parentUuid": "7c81a00f_0ce6800e",
       "revId": "d5158ceeee6358bea61b46bc104dd2f8106f2ddc",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
