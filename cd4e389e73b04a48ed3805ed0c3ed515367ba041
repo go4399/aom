@@ -35,6 +35,23 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "86c345f8_53397340",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-01T22:52:06Z",
+      "side": 1,
+      "message": "Julio: Sorry about the late review. I reviewed everything carefully except `estimate_screen_content_enhanced()`, which I just skimmed through.",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7985d61d_3ed07beb",
@@ -128,6 +145,74 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "83eb8e3e_8d2d2e44",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2018,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-01T22:52:06Z",
+      "side": 1,
+      "message": "Optional: The debug printf statements should be replaced by unit tests.\n\nNote: These printf statements should ideally be removed when this code is fully debugged. The reason is that they are not compiled by default and are likely to go out of date if the surrounding code is modified.",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "33e93ae0_c20c4302",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2020,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-01T22:52:06Z",
+      "side": 1,
+      "message": "Nit: Add a function comment.\n\nhttps://google.github.io/styleguide/cppguide.html#Function_Comments",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc27d5d6_4bd44575",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2023,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-01T22:52:06Z",
+      "side": 1,
+      "message": "Since `value_freq` is an array, `sizeof(value_freq)` is the size in bytes:\n\n```\n  memset(value_freq, 0, sizeof(value_freq));\n```",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d82d06b2_f67c89a8",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2024,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-01T22:52:06Z",
+      "side": 1,
+      "message": "Nit: \"value freq\" (line 2022) and \"value count\" (this line) mean the same thing in this function. Standardize on one.",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1f5d04c5_52a127af",
         "filename": "av1/encoder/encoder.c",
         "patchSetId": 3
@@ -145,6 +230,40 @@
         "endLine": 2029,
         "endChar": 38
       },
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "16566979_bf9b85fd",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2029,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-01T22:52:06Z",
+      "side": 1,
+      "message": "Nit: declare `value` as `uint8_t`.",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f0513b4f_3694d36d",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2043,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-01T22:52:06Z",
+      "side": 1,
+      "message": "Nit: Add a function comment.",
       "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -197,6 +316,182 @@
       "side": 1,
       "message": "I took a closer look. libaom isn\u0027t consistent where it writes such diagnostic messages to.\n\nWriting debug messages to stdout means we won\u0027t be able to pipe the encoded output to stdout. As long as that limitation doesn\u0027t bother you, this is okay.",
       "parentUuid": "917c048c_b523d69c",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d7b63660_b660d487",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2053,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-01T22:52:06Z",
+      "side": 1,
+      "message": "Nit: Declare `value` as `uint8_t`.",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4095fcc9_651ba812",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2068,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-01T22:52:06Z",
+      "side": 1,
+      "message": "Nit: Declare `value` as `uint8_t`.",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1708cf3d_0e527364",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2119,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-01T22:52:06Z",
+      "side": 1,
+      "message": "Nit: I suggest adding a function comment that describes the strategy of this function at a high level and informally explain why it works.",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "72a0c65a_ab2e1345",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2124,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-01T22:52:06Z",
+      "side": 1,
+      "message": "Nit: One problem with macros is that they are not scoped to this function. Could you try if enum works?\n\n```\n  enum {\n    BLK_W \u003d 16,\n    BLK_H \u003d 16,\n    BLK_AREA \u003d BLK_W * BLK_H\n  };\n```",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a379d38e_f8e0eb3f",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2128,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-01T22:52:06Z",
+      "side": 1,
+      "message": "Add `const`:\n\n```\n  const uint8_t *src \u003d cpi-\u003eunfiltered_source-\u003ey_buffer;\n```",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "027adfa7_f58ebdeb",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2152,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-01T22:52:06Z",
+      "side": 1,
+      "message": "Nit: Document this variable.",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e4f39f1_04d06e43",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2153,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-01T22:52:06Z",
+      "side": 1,
+      "message": "Nit: There is no variable named `final_color_thresh`.\n\nFix this line and line 2155.",
+      "range": {
+        "startLine": 2153,
+        "startChar": 40,
+        "endLine": 2153,
+        "endChar": 58
+      },
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb8f8c90_e12d39fa",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2183,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-01T22:52:06Z",
+      "side": 1,
+      "message": "Nit: The right-hand side is equal to `stride`:\n\n```\n      int blk_stride \u003d stride;\n```",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "18d144e5_c8954c6f",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2184,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-01T22:52:06Z",
+      "side": 1,
+      "message": "Nit: Move this variable declaration right before line 2206.",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7236886d_3e6a249a",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2214,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-01T22:52:06Z",
+      "side": 1,
+      "message": "Delete this cast because `blk_src` is already of the `uint8_t *` type. See lne 2182.",
       "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
