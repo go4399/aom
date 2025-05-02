@@ -421,6 +421,65 @@ static void configure_static_seg_features(AV1_COMP *cpi) {
   }
 }
 
+void av1_apply_roi_map(AV1_COMP *cpi) {
+  AV1_COMMON *cm = &cpi->common;
+  struct segmentation *const seg = &cm->seg;
+  unsigned char *const seg_map = cpi->enc_seg.map;
+  aom_roi_map_t *roi = &cpi->roi;
+  const int *delta_q = roi->delta_q;
+  const int *delta_lf = roi->delta_lf;
+  const int *skip = roi->skip;
+  int ref_frame[8];
+  int internal_delta_q[MAX_SEGMENTS];
+  int i;
+
+  if (!roi->enabled) return;
+
+  memcpy(&ref_frame, roi->ref_frame, sizeof(ref_frame));
+
+  av1_enable_segmentation(seg);
+  av1_clearall_segfeatures(seg);
+
+  memcpy(seg_map, roi->roi_map, (cm->mi_params.mi_rows * cm->mi_params.mi_cols));
+
+  for (i = 0; i < MAX_SEGMENTS; ++i) {
+    // Translate the external delta q values to internal values.
+    internal_delta_q[i] = av1_quantizer_to_qindex(abs(delta_q[i]));
+    if (delta_q[i] < 0) internal_delta_q[i] = -internal_delta_q[i];
+    av1_disable_segfeature(seg, i, SEG_LVL_ALT_Q);
+    av1_disable_segfeature(seg, i, SEG_LVL_ALT_LF_Y_H);
+    av1_disable_segfeature(seg, i, SEG_LVL_ALT_LF_Y_V);
+    av1_disable_segfeature(seg, i, SEG_LVL_ALT_LF_U);
+    av1_disable_segfeature(seg, i, SEG_LVL_ALT_LF_V);
+    if (internal_delta_q[i] != 0) {
+      av1_enable_segfeature(seg, i, SEG_LVL_ALT_Q);
+      av1_set_segdata(seg, i, SEG_LVL_ALT_Q, internal_delta_q[i]);
+    }
+    if (delta_lf[i] != 0) {
+      av1_enable_segfeature(seg, i, SEG_LVL_ALT_LF_Y_H);
+      av1_enable_segfeature(seg, i, SEG_LVL_ALT_LF_Y_V);
+      av1_set_segdata(seg, i, SEG_LVL_ALT_LF_Y_H, delta_lf[i]);
+      av1_set_segdata(seg, i, SEG_LVL_ALT_LF_Y_V, delta_lf[i]);
+    }
+    if (skip[i] != 0) {
+      av1_enable_segfeature(seg, i, SEG_LVL_SKIP);
+      av1_set_segdata(seg, i, SEG_LVL_SKIP, 0);
+    }
+    if (ref_frame[i] >= 0) {
+      int valid_ref = 1;
+      // GOLDEN was updated in previous encoded frame, so GOLDEN and LAST are
+      // same reference.
+      if (ref_frame[i] == GOLDEN_FRAME && cpi->rc.frames_since_golden == 0)
+        ref_frame[i] = LAST_FRAME;
+      if (valid_ref) {
+        av1_enable_segfeature(seg, i, SEG_LVL_REF_FRAME);
+        av1_set_segdata(seg, i, SEG_LVL_REF_FRAME, ref_frame[i]);
+      }
+    }
+  }
+  roi->enabled = 1;
+}
+
 void av1_apply_active_map(AV1_COMP *cpi) {
   struct segmentation *const seg = &cpi->common.seg;
   unsigned char *const seg_map = cpi->enc_seg.map;
