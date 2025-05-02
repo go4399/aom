@@ -24,6 +24,11 @@ extern "C" {
 #define SEG_TEMPORAL_PRED_CTXS 3
 #define SPATIAL_PREDICTION_PROBS 3
 
+// Segment ID used to skip background encoding
+#define BACKGROUND_SEG_SKIP_ID 3
+// Number of frames that don't skip after a key frame
+#define FRAMES_NO_SKIPPING_AFTER_KEY 20
+
 enum {
   SEG_LVL_ALT_Q,       // Use alternate Quantizer ....
   SEG_LVL_ALT_LF_Y_V,  // Use alternate loop filter value on y plane vertical
