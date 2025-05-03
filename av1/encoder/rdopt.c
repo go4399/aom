@@ -1631,7 +1631,7 @@ static int64_t motion_mode_rd(
         int64_t curr_sse = get_sse(cpi, x, &sse_y);
         skip_rd = RDCOST(x->rdmult, rd_stats->rate, curr_sse);
         skip_rdy = RDCOST(x->rdmult, rd_stats->rate, (sse_y << 4));
-        int eval_txfm = check_txfm_eval(x, bsize, ref_skip_rd[0], skip_rd,
+        int eval_txfm = check_txfm_eval(cpi, x, bsize, ref_skip_rd[0], skip_rd,
                                         txfm_rd_gate_level, 0);
         if (!eval_txfm) continue;
       }
@@ -5326,8 +5326,9 @@ static void tx_search_best_inter_candidates(
       // Check if the mode is good enough based on skip RD
       int64_t curr_sse = inter_modes_info->sse_arr[data_idx];
       skip_rd = RDCOST(x->rdmult, mode_rate, curr_sse);
-      int eval_txfm = check_txfm_eval(x, bsize, search_state->best_skip_rd[0],
-                                      skip_rd, txfm_rd_gate_level, 0);
+      int eval_txfm =
+          check_txfm_eval(cpi, x, bsize, search_state->best_skip_rd[0], skip_rd,
+                          txfm_rd_gate_level, 0);
       if (!eval_txfm) continue;
     }
 

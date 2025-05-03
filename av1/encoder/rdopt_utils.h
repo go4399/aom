@@ -344,10 +344,13 @@ static inline int bsize_to_num_blk(BLOCK_SIZE bsize) {
   return num_blk;
 }
 
-static inline int check_txfm_eval(MACROBLOCK *const x, BLOCK_SIZE bsize,
-                                  int64_t best_skip_rd, int64_t skip_rd,
-                                  int level, int is_luma_only) {
+static inline int check_txfm_eval(struct AV1_COMP *cpi, MACROBLOCK *const x,
+                                  BLOCK_SIZE bsize, int64_t best_skip_rd,
+                                  int64_t skip_rd, int level,
+                                  int is_luma_only) {
   int eval_txfm = 1;
+  if (cpi->oxcf.algo_cfg.sharpness) return 0;
+
   // Derive aggressiveness factor for gating the transform search
   // Lower value indicates more aggressiveness. Be more conservative (high
   // value) for (i) low quantizers (ii) regions where prediction is poor
