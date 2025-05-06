@@ -645,7 +645,7 @@ static void get_variance_stats(const AV1_COMP *cpi, const MACROBLOCK *x,
 }
 
 static void adjust_rdcost(const AV1_COMP *cpi, const MACROBLOCK *x,
-                          RD_STATS *rd_cost) {
+                          int is_inter, RD_STATS *rd_cost) {
   if (cpi->oxcf.algo_cfg.sharpness != 3) return;
 
   if (frame_is_kf_gf_arf(cpi)) return;
@@ -657,12 +657,15 @@ static void adjust_rdcost(const AV1_COMP *cpi, const MACROBLOCK *x,
 
   int64_t var_offset = src_var - rec_var;
 
-  rd_cost->dist += var_offset;
+  if (is_inter)
+    rd_cost->dist += var_offset;
+  else
+    rd_cost->dist += 2 * var_offset;
 
   rd_cost->rdcost = RDCOST(x->rdmult, rd_cost->rate, rd_cost->dist);
 }
 
-static void adjust_cost(const AV1_COMP *cpi, const MACROBLOCK *x,
+static void adjust_cost(const AV1_COMP *cpi, const MACROBLOCK *x, int is_inter,
                         int64_t *rd_cost) {
   if (cpi->oxcf.algo_cfg.sharpness != 3) return;
 
@@ -675,7 +678,10 @@ static void adjust_cost(const AV1_COMP *cpi, const MACROBLOCK *x,
 
   int64_t var_offset = src_var - rec_var;
 
-  *rd_cost += RDCOST(x->rdmult, 0, var_offset);
+  if (is_inter)
+    *rd_cost += RDCOST(x->rdmult, 0, var_offset);
+  else
+    *rd_cost += RDCOST(x->rdmult, 0, 2 * var_offset);
 }
 
 static int64_t get_sse(const AV1_COMP *cpi, const MACROBLOCK *x,
@@ -1673,9 +1679,9 @@ static int64_t motion_mode_rd(
       }
     }
 
-    adjust_cost(cpi, x, &this_yrd);
-    adjust_rdcost(cpi, x, rd_stats);
-    adjust_rdcost(cpi, x, rd_stats_y);
+    adjust_cost(cpi, x, 1, &this_yrd);
+    adjust_rdcost(cpi, x, 1, rd_stats);
+    adjust_rdcost(cpi, x, 1, rd_stats_y);
 
     const int64_t tmp_rd = RDCOST(x->rdmult, rd_stats->rate, rd_stats->dist);
     if (mode_index == 0) {
@@ -5590,7 +5596,7 @@ static inline void search_intra_modes_in_interframe(
         &best_model_rd, top_intra_model_rd);
 
     if (intra_rd_y < INT64_MAX) {
-      adjust_cost(cpi, x, &intra_rd_y);
+      adjust_cost(cpi, x, 0, &intra_rd_y);
     }
 
     if (is_luma_result_valid && intra_rd_y < yrd_threshold) {
@@ -5678,7 +5684,7 @@ static inline void search_intra_modes_in_interframe(
 
   intra_rd_stats.rdcost = this_rd;
 
-  adjust_rdcost(cpi, x, &intra_rd_stats);
+  adjust_rdcost(cpi, x, 0, &intra_rd_stats);
 
   // Collect mode stats for multiwinner mode processing
   const int txfm_search_done = 1;
@@ -6160,8 +6166,8 @@ void av1_rd_pick_inter_mode(struct AV1_COMP *cpi, struct TileDataEnc *tile_data,
       ref_frame_rd[ref_frame] = this_rd;
     }
 
-    adjust_cost(cpi, x, &this_rd);
-    adjust_rdcost(cpi, x, &rd_stats);
+    adjust_cost(cpi, x, 1, &this_rd);
+    adjust_rdcost(cpi, x, 1, &rd_stats);
 
     // Did this mode help, i.e., is it the new best mode
     if (this_rd < search_state.best_rd) {
