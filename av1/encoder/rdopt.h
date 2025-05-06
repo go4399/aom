@@ -320,6 +320,11 @@ static inline void av1_copy_mbmi_ext_to_mbmi_ext_frame(
          sizeof(mbmi_ext->global_mvs));
 }
 
+void adjust_rdcost(const AV1_COMP *cpi, const MACROBLOCK *x, RD_STATS *rd_cost);
+
+void adjust_cost(const AV1_COMP *cpi, const MACROBLOCK *x, int64_t *rd_cost,
+                 int64_t orig_dist);
+
 #ifdef __cplusplus
 }  // extern "C"
 #endif

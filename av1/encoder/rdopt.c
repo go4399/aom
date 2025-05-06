@@ -644,36 +644,98 @@ static void get_variance_stats(const AV1_COMP *cpi, const MACROBLOCK *x,
   *rec_var <<= 4;
 }
 
-static void adjust_rdcost(const AV1_COMP *cpi, const MACROBLOCK *x,
-                          RD_STATS *rd_cost) {
+static void get_mod_dist(const AV1_COMP *cpi, const MACROBLOCK *x,
+                         int num_planes, int64_t *src_var, int64_t *rec_var) {
+  const MACROBLOCKD *xd = &x->e_mbd;
+  const MB_MODE_INFO *mbmi = xd->mi[0];
+  BLOCK_SIZE bsize = mbmi->bsize;
+  int bw = block_size_wide[bsize];
+  int bh = block_size_high[bsize];
+  const struct macroblockd_plane *const pd = &xd->plane[AOM_PLANE_Y];
+  const struct macroblock_plane *const p = &x->plane[AOM_PLANE_Y];
+  int pred_stride = pd->dst.stride;
+  int src_stride = p->src.stride;
+
+  (void)num_planes;
+  (void)rec_var;
+
+  static int gau_filter[3][3] = {
+    { 1, 2, 1 },
+    { 2, 4, 2 },
+    { 1, 2, 1 },
+  };
+
+  DECLARE_ALIGNED(16, uint8_t, pred[(MAX_SB_SIZE + 2) * (MAX_SB_SIZE + 2)]);
+  uint8_t *pred_ptr = &pred[bw + 1];
+
+  for (int idy = -1; idy < bh + 1; ++idy) {
+    for (int idx = -1; idx < bw + 1; ++idx) {
+      int offset_idy = idy;
+      int offset_idx = idx;
+      if (idy == -1) offset_idy = 0;
+      if (idy == bh) offset_idy = bh - 1;
+      if (idx == -1) offset_idx = 0;
+      if (idx == bw) offset_idx = bw - 1;
+
+      int offset = offset_idy * pred_stride + offset_idx;
+      pred_ptr[idy * bw + idx] = pd->dst.buf[offset];
+    }
+  }
+
+  *src_var = 0;
+  for (int idy = 0; idy < bh; ++idy) {
+    for (int idx = 0; idx < bw; ++idx) {
+      int sum = 0;
+      for (int iy = 0; iy < 3; ++iy)
+        for (int ix = 0; ix < 3; ++ix)
+          sum += pred_ptr[(idy + iy - 1) * bw + (idx + ix - 1)] *
+                 gau_filter[iy][ix];
+
+      sum = sum >> 4;
+
+      int diff = p->src.buf[idy * src_stride + idx] - sum;
+      *src_var += diff * diff;
+    }
+  }
+
+  *src_var <<= 4;
+}
+
+void adjust_rdcost(const AV1_COMP *cpi, const MACROBLOCK *x,
+                   RD_STATS *rd_cost) {
+  (void)cpi;
   if (cpi->oxcf.algo_cfg.sharpness != 3) return;
 
   if (frame_is_kf_gf_arf(cpi)) return;
 
   int64_t src_var, rec_var;
-  get_variance_stats(cpi, x, 1, &src_var, &rec_var);
+  // get_variance_stats(cpi, x, 1, &src_var, &rec_var);
 
-  if (src_var <= rec_var) return;
+  get_mod_dist(cpi, x, 1, &src_var, &rec_var);
+  
+  // if (src_var <= rec_var) return;
 
-  int64_t var_offset = src_var - rec_var;
+  // int64_t var_offset = src_var - rec_var;
 
-  rd_cost->dist += var_offset;
+  // rd_cost->dist += var_offset;
+  rd_cost->dist = src_var;
 
   rd_cost->rdcost = RDCOST(x->rdmult, rd_cost->rate, rd_cost->dist);
 }
 
-static void adjust_cost(const AV1_COMP *cpi, const MACROBLOCK *x,
-                        int64_t *rd_cost) {
+void adjust_cost(const AV1_COMP *cpi, const MACROBLOCK *x, int64_t *rd_cost,
+                 int64_t orig_dist) {
+  (void)cpi;
   if (cpi->oxcf.algo_cfg.sharpness != 3) return;
 
   if (frame_is_kf_gf_arf(cpi)) return;
 
   int64_t src_var, rec_var;
-  get_variance_stats(cpi, x, 1, &src_var, &rec_var);
+  get_mod_dist(cpi, x, 1, &src_var, &rec_var);
 
-  if (src_var <= rec_var) return;
+  // if (src_var <= rec_var) return;
 
-  int64_t var_offset = src_var - rec_var;
+  int64_t var_offset = src_var - orig_dist;
 
   *rd_cost += RDCOST(x->rdmult, 0, var_offset);
 }
@@ -1651,6 +1713,7 @@ static int64_t motion_mode_rd(
               ? x->mode_costs.skip_txfm_cost[skip_ctx][1]
               : (rd_stats_y->rate + x->mode_costs.skip_txfm_cost[skip_ctx][0]);
       this_yrd = RDCOST(x->rdmult, y_rate + mode_rate, rd_stats_y->dist);
+      adjust_cost(cpi, x, &this_yrd, rd_stats_y->dist);
 
       const int64_t curr_rd = RDCOST(x->rdmult, rd_stats->rate, rd_stats->dist);
       if (curr_rd < ref_best_rd) {
@@ -1673,7 +1736,6 @@ static int64_t motion_mode_rd(
       }
     }
 
-    adjust_cost(cpi, x, &this_yrd);
     adjust_rdcost(cpi, x, rd_stats);
     adjust_rdcost(cpi, x, rd_stats_y);
 
@@ -3178,6 +3240,7 @@ static int64_t handle_inter_mode(
   av1_copy_array(xd->tx_type_map, best_tx_type_map, xd->height * xd->width);
 
   rd_stats->rdcost = RDCOST(x->rdmult, rd_stats->rate, rd_stats->dist);
+  adjust_rdcost(cpi, x, rd_stats);
 
   return rd_stats->rdcost;
 }
@@ -5589,10 +5652,6 @@ static inline void search_intra_modes_in_interframe(
         &intra_rd_stats_y, search_state->best_rd, &mode_cost_y, &intra_rd_y,
         &best_model_rd, top_intra_model_rd);
 
-    if (intra_rd_y < INT64_MAX) {
-      adjust_cost(cpi, x, &intra_rd_y);
-    }
-
     if (is_luma_result_valid && intra_rd_y < yrd_threshold) {
       is_best_y_mode_intra = 1;
       if (intra_rd_y < best_rd_y) {
@@ -6160,7 +6219,6 @@ void av1_rd_pick_inter_mode(struct AV1_COMP *cpi, struct TileDataEnc *tile_data,
       ref_frame_rd[ref_frame] = this_rd;
     }
 
-    adjust_cost(cpi, x, &this_rd);
     adjust_rdcost(cpi, x, &rd_stats);
 
     // Did this mode help, i.e., is it the new best mode

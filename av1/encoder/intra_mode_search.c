@@ -16,6 +16,7 @@
 #include "av1/encoder/intra_mode_search.h"
 #include "av1/encoder/intra_mode_search_utils.h"
 #include "av1/encoder/palette.h"
+#include "av1/encoder/rdopt.h"
 #include "av1/encoder/speed_features.h"
 #include "av1/encoder/tx_search.h"
 
@@ -1377,6 +1378,9 @@ int av1_handle_intra_y_mode(IntraModeSearchState *intra_search_state,
                          ? mode_costs->skip_txfm_cost[skip_ctx][1]
                          : rd_stats_y->rate;
   *rd_y = RDCOST(x->rdmult, rate_y + *mode_cost_y, rd_stats_y->dist);
+
+  adjust_cost(cpi, x, rd_y, rd_stats_y->dist);
+
   if (best_rd < (INT64_MAX / 2) && *rd_y > (best_rd + (best_rd >> 2))) {
     intra_search_state->skip_intra_modes = 1;
     return 0;
