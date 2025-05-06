@@ -36,7 +36,7 @@
 #include "aom_dsp/grain_table.h"
 #include "aom_mem/aom_mem.h"
 
-static const char kFileMagic[8] = "filmgrn1";
+static const char kFileMagic[9] = "filmgrn1";
 
 static void grain_table_entry_read(FILE *file,
                                    struct aom_internal_error_info *error_info,
@@ -287,7 +287,7 @@ aom_codec_err_t aom_film_grain_table_read(
   // Read in one extra character as there should be white space after
   // the header.
   char magic[9];
-  if (!fread(magic, 9, 1, file) || memcmp(magic, kFileMagic, 8)) {
+  if (!fread(magic, 9, 1, file) || memcmp(magic, kFileMagic, 9)) {
     aom_internal_error(error_info, AOM_CODEC_ERROR,
                        "Unable to read (or invalid) file magic");
     fclose(file);
@@ -330,7 +330,7 @@ aom_codec_err_t aom_film_grain_table_write(
     return error_info->error_code;
   }
 
-  if (!fwrite(kFileMagic, 8, 1, file)) {
+  if (!fwrite(kFileMagic, 9, 1, file)) {
     aom_internal_error(error_info, AOM_CODEC_ERROR,
                        "Unable to write file magic");
     fclose(file);
