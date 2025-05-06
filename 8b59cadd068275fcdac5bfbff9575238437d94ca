@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5837daf9_569693dc",
+        "filename": "av1/encoder/pass2_strategy.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-05-06T14:37:56Z",
+      "side": 1,
+      "message": "I missed this, this should be renamed to `av1_setup_target_rate` since it\u0027s not static any more.",
+      "range": {
+        "startLine": 118,
+        "startChar": 5,
+        "endLine": 118,
+        "endChar": 22
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "6ac32ee7_66ea11ad",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/pass2_strategy.h",
+              "range": {
+                "startLine": 118,
+                "startChar": 0,
+                "endLine": 119,
+                "endChar": 0
+              },
+              "replacement": "void av1_setup_target_rate(AV1_COMP *cpi);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "8b59cadd068275fcdac5bfbff9575238437d94ca",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
