@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d476464c_0c8dd81a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-07T16:44:15Z",
+      "side": 1,
+      "message": "\"Extra\" implies this CL should delete some include statements. Please see my comment at av1/encoder/encoder_utils.c:26.",
+      "revId": "98d09023df7eeb4bccf7279f2a7353a9a72ae60a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "64991d69_9bc15876",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-07T16:44:15Z",
+      "side": 1,
+      "message": "Lin: Please review. Our Google-internal libaom update CLs run ClangTidy checks. If you see ClangTidy warnings, you can fix them as Jerome did in this CL.",
+      "revId": "98d09023df7eeb4bccf7279f2a7353a9a72ae60a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4bcaa00_2250ec40",
+        "filename": "av1/encoder/encoder_utils.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-07T16:44:15Z",
+      "side": 1,
+      "message": "Delete this line? I see the ClangTidy warning \"included header pass2_strategy.h is not used directly\".",
+      "revId": "98d09023df7eeb4bccf7279f2a7353a9a72ae60a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
