@@ -16,6 +16,24 @@
       "message": "James: Should we return `AOM_CODEC_INVALID_PARAM` if `params-\u003eframerate_factor[tl]` is \u003c\u003d 0?\n\nThis function handles invalid values inconsistently. It returns `AOM_CODEC_INVALID_PARAM` for some, and clamps to the valid range for others.",
       "revId": "4c983381cd254becfb17435cdeecfdc56c982e37",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d85e25cc_18556ef4",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 3965,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-05-08T17:43:00Z",
+      "side": 1,
+      "message": "\u003e James: Should we return `AOM_CODEC_INVALID_PARAM` if `params-\u003eframerate_factor[tl]` is \u003c\u003d 0?\n\u003e \n\u003e This function handles invalid values inconsistently. It returns `AOM_CODEC_INVALID_PARAM` for some, and clamps to the valid range for others.\n\nI discussed this with Marco and he favored this given the earlier fix for `scaling_factor_num[]` and `scaling_factor_den[]` (line 3957 and 3958). That change doesn\u0027t have an associated bug, so it\u0027s unclear what the effect would be on downstream if we normalized in the other direction. Most users of this are well behaved, they zero the struct and initialize the layers needed. Only the unit test provided more layers without fully initializing this field.",
+      "parentUuid": "0dc334f7_c906ce95",
+      "revId": "4c983381cd254becfb17435cdeecfdc56c982e37",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
