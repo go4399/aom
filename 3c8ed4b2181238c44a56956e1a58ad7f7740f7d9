@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17c2fcbd_9ee5a6f8",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 621,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-05-08T14:37:31Z",
+      "side": 1,
+      "message": "this static is not needed, instead this could be `const`",
+      "range": {
+        "startLine": 621,
+        "startChar": 2,
+        "endLine": 621,
+        "endChar": 8
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "b3577443_0f327e98",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/rdopt.c",
+              "range": {
+                "startLine": 621,
+                "startChar": 0,
+                "endLine": 622,
+                "endChar": 0
+              },
+              "replacement": "  const int gau_filter[3][3] \u003d {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "3c8ed4b2181238c44a56956e1a58ad7f7740f7d9",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
