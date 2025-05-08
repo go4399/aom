@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a93f123_d90a6f1d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 25857
+      },
+      "writtenOn": "2025-05-08T01:28:40Z",
+      "side": 1,
+      "message": "In this CL, speed feature `dual_sgr_penalty_level` which adds penalty to the dual sgr-filter selection has been increased to level 3 and 2 for non-boosted frames for shorts and HD resolutions respectively.\n\nWe have verified that this CL produces no noticeable artifacts for the max-drop contents.\n\nPerformance results of encoder and decoder for the streams generated\nwith low complexity decode enabled.\n\n```\n                       Instruction Count                                                                 \n                          Reduction(%)                        BD-Rate Loss(%)                     Time Reduction(%)\ncpu-used  Resolution    Encoder   Decoder    avg.psnr   ovr.psnr    ssim       vmaf     vmaf_neg   dav1d Decoder   \n   1          608P       -0.100     3.082     0.2648     0.2720    0.3932     0.0231     0.0329       2.377\n   1        HDRES2        0.076     1.496     0.1123     0.1013    0.1019     0.0973     0.0763       1.224\n   1       Average       -0.020     2.361     0.1955     0.1944    0.2608     0.0568     0.0526       1.853\n\n   2          608P       -0.148     1.857     0.2192     0.2003    0.2333    -0.0402    -0.0384       1.678\n   2        HDRES2       -0.034     1.153     0.0905     0.1033    0.0646    -0.0154    -0.0087       1.029\n   2       Average       -0.096     1.537     0.1607     0.1562    0.1566    -0.0289    -0.0249       1.383\n\n   3          608P        0.031     1.308     0.1515     0.1327    0.1984    -0.1550    -0.0645       1.241\n   3        HDRES2       -0.103     1.163     0.0721     0.0295    0.0279    -0.2055    -0.1124       1.653\n   3       Average       -0.030     1.242     0.1154     0.0858    0.1209    -0.1780    -0.0863       1.428\n````\n\nThe instruction count reduction specified has been measured using command:\n`$ perf stat -e instructions:u ./aomenc …`\n`$ perf stat -e instructions:u ./dav1d --cpumask avx2 …`\n\nThe decode time is measured using command\n`time taskset -c 0  ./dav1d  --cpumask avx2 …`",
+      "revId": "8494503a748defe2c73b271951c37d63ec818e0b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
