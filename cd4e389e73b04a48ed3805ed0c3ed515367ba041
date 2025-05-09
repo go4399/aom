@@ -213,6 +213,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dab2302b_3d1e37e9",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2020,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-09T23:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "33e93ae0_c20c4302",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cc27d5d6_4bd44575",
@@ -230,6 +248,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5aac5e2c_c270e6b3",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2023,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-09T23:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cc27d5d6_4bd44575",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d82d06b2_f67c89a8",
@@ -243,6 +279,24 @@
       "writtenOn": "2025-05-01T22:52:06Z",
       "side": 1,
       "message": "Nit: \"value freq\" (line 2022) and \"value count\" (this line) mean the same thing in this function. Standardize on one.",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec5b5a41_64d36b56",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2024,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-09T23:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d82d06b2_f67c89a8",
       "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -287,6 +341,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9c15e3e7_c1d031ff",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2029,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-09T23:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16566979_bf9b85fd",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f0513b4f_3694d36d",
@@ -300,6 +372,24 @@
       "writtenOn": "2025-05-01T22:52:06Z",
       "side": 1,
       "message": "Nit: Add a function comment.",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b802507e_ecdf89ea",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2043,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-09T23:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0513b4f_3694d36d",
       "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -373,6 +463,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5f532b6_989d78e5",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2053,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-09T23:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d7b63660_b660d487",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4095fcc9_651ba812",
@@ -390,6 +498,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "25122cef_cdc3b159",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2068,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-09T23:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4095fcc9_651ba812",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1708cf3d_0e527364",
@@ -403,6 +529,24 @@
       "writtenOn": "2025-05-01T22:52:06Z",
       "side": 1,
       "message": "Nit: I suggest adding a function comment that describes the strategy of this function at a high level and informally explain why it works.",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9c83d28a_2c918071",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2119,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-09T23:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1708cf3d_0e527364",
       "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -441,6 +585,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8017026f_6f30f453",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2128,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-09T23:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a379d38e_f8e0eb3f",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "027adfa7_f58ebdeb",
@@ -454,6 +616,24 @@
       "writtenOn": "2025-05-01T22:52:06Z",
       "side": 1,
       "message": "Nit: Document this variable.",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e59b2599_b5787ee6",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2152,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-09T23:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "027adfa7_f58ebdeb",
       "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -481,6 +661,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "88627ae4_e7c1fa8b",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2153,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-09T23:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2e4f39f1_04d06e43",
+      "range": {
+        "startLine": 2153,
+        "startChar": 40,
+        "endLine": 2153,
+        "endChar": 58
+      },
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fb8f8c90_e12d39fa",
@@ -494,6 +698,24 @@
       "writtenOn": "2025-05-01T22:52:06Z",
       "side": 1,
       "message": "Nit: The right-hand side is equal to `stride`:\n\n```\n      int blk_stride \u003d stride;\n```",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9be6910_eb4abfdc",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2183,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-09T23:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fb8f8c90_e12d39fa",
       "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -515,6 +737,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "13a60750_6fd0941f",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2184,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-09T23:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "18d144e5_c8954c6f",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7236886d_3e6a249a",
@@ -528,6 +768,24 @@
       "writtenOn": "2025-05-01T22:52:06Z",
       "side": 1,
       "message": "Delete this cast because `blk_src` is already of the `uint8_t *` type. See lne 2182.",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "12c298f8_d14fdf4a",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2214,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-09T23:41:15Z",
+      "side": 1,
+      "message": "So, for this one I tightened up the code by declaring `blk_src` as `const uint8_t *blk_src`, as this is the intended usage in this section of code. The current cast is now functionally used to remove the const qualifier for buf_2d.\n\nExplanation: The source buffer can either be the image itself (if encoding 8-bit material), or a scratch space holding a downsampled 8-bit version (if encoding HBD material), but the *contents* of the buffer shouldn\u0027t be modified in this scope.",
+      "parentUuid": "7236886d_3e6a249a",
       "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
