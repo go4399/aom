@@ -16,6 +16,24 @@
       "message": "@linzhen@google.com\n\nPlease take a look at its impact on the prod side. Thanks!",
       "revId": "b8b7e4c265c2f05f0c7db783faf8efc36c227006",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2785652_79e9493b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-10T00:15:40Z",
+      "side": 1,
+      "message": "Hi @linzhen@google.com, I wanted to give some context on this CL:\n\n- This is a port of the SVT-AV1-PSY\u0027s \"enhanced screen content\" algorithm, refactored to align with libaom\u0027s code standards and to use libaom\u0027s native functions.\n- This CL is intended to be mainly used with still image coding\u0027s `tune\u003diq`, but it can also benefit videos.\n- I\u0027m currently working on addressing @wtc@google.com\u0027s comments. The algorithm side is essentially complete, and its invocation will be resurfaced as a new codec control instead of a separate `--tune-content` value.\n\nLet me know if you have any questions.",
+      "parentUuid": "ae62c454_1c1dea61",
+      "revId": "b8b7e4c265c2f05f0c7db783faf8efc36c227006",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
