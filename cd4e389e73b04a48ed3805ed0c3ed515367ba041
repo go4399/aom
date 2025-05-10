@@ -198,6 +198,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "31e5bfe0_2f1be925",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2018,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-10T00:32:36Z",
+      "side": 1,
+      "message": "After our talk, My current plan is as follows:\n\n1. The dilation logging code (enabled by OUTPUT_ENH_SCC_DILATION_STATS) is no longer needed and is now deleted. Dilation is a very straightforward and predictable process, so its behavior can be verified with a unit test.\n2. I do find the main block map classifier logger (enabled by OUTPUT_ENH_SCC_STATS) qualitatively useful. I\u0027ve found knowing how each block is classified and tallied useful at all stages of development, especially for novel images with mixed photographic/screen content.\n\nI\u0027d like to keep the logging for 2, but instead of writing to stdout I\u0027ll write it to a .stt file, as this appears to be the most common logging pattern currently available in libaom. If anybody has strong feelings, I won\u0027t object to its removal though -- I just wanted to mention the block logging map has its value.",
+      "parentUuid": "83eb8e3e_8d2d2e44",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "33e93ae0_c20c4302",
         "filename": "av1/encoder/encoder.c",
         "patchSetId": 3
