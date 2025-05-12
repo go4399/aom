@@ -69,6 +69,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "863ffe40_b20d6c6e",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 496,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-12T23:30:56Z",
+      "side": 1,
+      "message": "Done. The \"enhanced\" SCC mode is now known as screen coding tools detection mode 2.",
+      "parentUuid": "7985d61d_3ed07beb",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "89aa2586_2382a01c",
@@ -127,6 +145,48 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "62d5f1ed_26881c30",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-12T23:30:56Z",
+      "side": 1,
+      "message": "Removed after the refactor.",
+      "parentUuid": "89aa2586_2382a01c",
+      "range": {
+        "startLine": 502,
+        "startChar": 8,
+        "endLine": 502,
+        "endChar": 28
+      },
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a28396cf_6d28fe81",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-12T23:30:56Z",
+      "side": 1,
+      "message": "Done. The \"enhanced\" SCC mode is now known as screen coding tools (SCT) detection mode 2.",
+      "parentUuid": "19cbfe8f_2b325f54",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "368cfc8c_042c971c",
@@ -140,6 +200,24 @@
       "writtenOn": "2025-04-11T22:06:13Z",
       "side": 1,
       "message": "Nit: Indent \"detection\" after the `-` as follows:\n\n```\n   *  - AOM_CONTENT_ENHANCED \u003d Regular content, with enhanced SCC content\n   *    detection\n```",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "64a539c6_1bd629fc",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-12T23:30:56Z",
+      "side": 1,
+      "message": "Removed after the refactor.",
+      "parentUuid": "368cfc8c_042c971c",
       "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -175,6 +253,24 @@
       "side": 1,
       "message": "The public headers in libaom are the aom/*.h files.",
       "parentUuid": "807e96c3_b65c7fbe",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b8cf949_36fc0cd7",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 1665,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-12T23:30:56Z",
+      "side": 1,
+      "message": "Removed after the refactor.",
+      "parentUuid": "45c91e3a_eca5a815",
       "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -460,6 +556,24 @@
       "side": 1,
       "message": "I took a closer look. libaom isn\u0027t consistent where it writes such diagnostic messages to.\n\nWriting debug messages to stdout means we won\u0027t be able to pipe the encoded output to stdout. As long as that limitation doesn\u0027t bother you, this is okay.",
       "parentUuid": "917c048c_b523d69c",
+      "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bbd2b8d8_360b2b0c",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2049,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-12T23:30:56Z",
+      "side": 1,
+      "message": "Removed as this is debug code is no longer needed.",
+      "parentUuid": "eb2a6ff1_f805a3c4",
       "revId": "cd4e389e73b04a48ed3805ed0c3ed515367ba041",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
