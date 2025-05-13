@@ -193,6 +193,11 @@ enum {
   ENABLE_SCENECUT_MODE_2   // For twopass and LAP - lag_in_frames >=33
 } UENUM1BYTE(SCENECUT_MODE);
 
+enum {
+  SCT_DETECTION_STANDARD = 1,
+  SCT_DETECTION_ANTIALIAS_AWARE = 2,
+} UENUM1BYTE(SCT_DETECTION_MODE);
+
 #define MAX_VBR_CORPUS_COMPLEXITY 10000
 
 typedef enum {
@@ -885,6 +890,13 @@ typedef struct {
    * on reconstructed frame.
    */
   bool skip_postproc_filtering;
+
+  /*!
+   * Controls screen content tools detection mode
+   * - 1 = standard (default)
+   * - 2 = anti-aliased text and graphics aware
+   */
+  SCT_DETECTION_MODE sct_detection_mode;
 } AlgoCfg;
 /*!\cond */
 
