@@ -1401,9 +1401,11 @@ static void setup_planes(AV1_COMP *cpi, MACROBLOCK *x, unsigned int *y_sad,
                     (cpi->sf.rt_sf.use_comp_ref_nonrd &&
                      cpi->sf.rt_sf.ref_frame_comp_nonrd[2] == 1);
 
-  // For 1 spatial layer: GOLDEN is another temporal reference.
-  // Check if it should be used as reference for partitioning.
-  if (cpi->svc.number_spatial_layers == 1 && use_golden_ref &&
+  // Check if GOLDEN should be used as reference for partitioning.
+  // Allow for spatial layers if lower layer has same resolution.
+  if ((cpi->svc.number_spatial_layers == 1 ||
+       cpi->svc.has_lower_quality_layer) &&
+      use_golden_ref &&
       (x->content_state_sb.source_sad_nonrd != kZeroSad || !use_last_ref)) {
     yv12_g = get_ref_frame_yv12_buf(cm, GOLDEN_FRAME);
     if (yv12_g && (yv12_g->y_crop_height != cm->height ||
@@ -1423,10 +1425,11 @@ static void setup_planes(AV1_COMP *cpi, MACROBLOCK *x, unsigned int *y_sad,
     }
   }
 
-  // For 1 spatial layer: ALTREF is another temporal reference.
-  // Check if it should be used as reference for partitioning.
-  if (cpi->svc.number_spatial_layers == 1 && use_alt_ref &&
-      (cpi->ref_frame_flags & AOM_ALT_FLAG) &&
+  // Check if ALTREF should be used as reference for partitioning.
+  // Allow for spatial layers if lower layer has same resolution.
+  if ((cpi->svc.number_spatial_layers == 1 ||
+       cpi->svc.has_lower_quality_layer) &&
+      use_alt_ref && (cpi->ref_frame_flags & AOM_ALT_FLAG) &&
       (x->content_state_sb.source_sad_nonrd != kZeroSad || !use_last_ref)) {
     yv12_alt = get_ref_frame_yv12_buf(cm, ALTREF_FRAME);
     if (yv12_alt && (yv12_alt->y_crop_height != cm->height ||
