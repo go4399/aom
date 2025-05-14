@@ -16,6 +16,24 @@
       "message": "This patch introduced a speed feature `bias_warp_mode_rd_scale_pct` to increase the rd cost of warp mode to bias the encoder decisions to bias against warp mode.\n\nDuring this experiment, we studied the behavior of the sf by biasing the rd cost of warp mode at the below locations of inter mode search.\n* (1). Inter mode evaluation loop (in `av1_rd_pick_inter_mode()`)\n* (2). Motion mode evaluation (at `motion_mode_rd()`)\n* (3). Motion mode evaluation loop for winners (at `evaluate_motion_mode_for_winner_candidates()`)\n* (4). Tx search for best inter candidates (`tx_search_best_inter_candidates()`)\n\nWe observed that the BD-Rate loss was high if the rd cost of warp mode is biased at location (1). Hence, in this patch we considered adding the bias logic at locations (2), (3) and (4) only.\n\nFor this CL, we ensured that there are no noticeable artifacts for the worst case quality drop contents.\n\nPerformance results of encoder and decoder for the streams generated with low complexity decode enabled.\n```\n                   Instruction Count\n                      Reduction(%)                       BD-Rate Loss(%)              Time Reduction(%)\ncpu  Resolution    Encoder    Decoder   avg.psnr  ovr.psnr   ssim     vmaf   vmaf_neg dav1d Decoder\n 1         608P    -0.173      2.706     0.0438    0.0479   0.0283   0.0972    0.0563     1.397\n 1       HDRES2    -0.248      2.662     0.1046    0.1128   0.1298   0.0517    0.0779     1.675\n 1      Average    -0.207      2.686     0.0715    0.0774   0.0744   0.0765    0.0661     1.524\n\n 2         608P    -0.302      3.184     0.0920    0.0823   0.0957  -0.0845   -0.0154     1.634\n 2       HDRES2    -0.188      3.678     0.0910    0.1009   0.0986   0.1334    0.1359     1.896\n 2      Average    -0.250      3.409     0.0915    0.0907   0.0970   0.0145    0.0534     1.753\n\n 3         608P    -0.111      3.911     0.0712    0.0364   0.0588   0.0485    0.0114     2.086\n 3       HDRES2    -0.121      3.965     0.1762    0.1730   0.2160   0.3314    0.3089     2.125\n 3      Average    -0.115      3.936     0.1189    0.0985   0.1302   0.1771    0.1466     2.104\n```\n\nThe instruction count reduction specified has been measured using the command:\n```\n$ perf stat -e instructions:u ./aomenc …\n$ perf stat -e instructions:u ./dav1d --cpumask avx2 …\n```\n\nThe decode time is measured using command\n`time taskset -c 0  ./dav1d  --cpumask avx2 …`",
       "revId": "e67939217625e8632ecd06e85f05f473b118c372",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9547132c_4224f208",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-05-14T16:27:33Z",
+      "side": 1,
+      "message": "Thanks for the CL. Looks good to me. Were you able to test with the warp_motion clip I sent?",
+      "parentUuid": "25390b42_3af8424f",
+      "revId": "e67939217625e8632ecd06e85f05f473b118c372",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
