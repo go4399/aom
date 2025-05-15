@@ -1,0 +1,696 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20b53ba5_da77ad80",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Delete \"tools\". We are detecting screen content, not screen content tools.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f810b67c_f3c3b726",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Change \"code\" to \"content\" or \"coding\"?",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b06fd8a_51cc8ccc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: sct \u003d\u003e screen\n\nOr we can name the option \"--screen-content-detection\".",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7db825f_09053be1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Delete \"_TOOLS\"",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0144dc86_68f617c0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Delete \"tools\"",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e09b4f9e_cbe3145b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Julio: I am sorry about the large number of comments, Most of them are trivial (deleting the word \"tools\").\n\nI suggest looking at my comment at av1/encoder/encoder.h:199 first.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7aab272b_f3cb5e77",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1586,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Delete \"tools\"",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c1b6671_c69d3d9b",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1587,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: unsigned int \u003d\u003e aom_screen_detection_mode\n\nPlease see my comment at av1/encoder/encoder.h:199.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f2d3e5c8_4e38ae58",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1592,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Delete \"_TOOLS\"",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb49c8fa_154c7b08",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 2305,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Change `unsigned int` to `int`, with a comment `/* aom_screen_detection_mode */`. Please see my comment at av1/encoder/encoder.h:199.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6654899_4b507971",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 2306,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Delete \"_TOOLS\" in these two lines",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d62695bc_4340db1b",
+        "filename": "av1/arg_defs.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 713,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Change \"sct\" to \"screen\"",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "681dea83_81076514",
+        "filename": "av1/arg_defs.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 714,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Delete \"tools\".",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "307cd81e_81ff5aa7",
+        "filename": "av1/arg_defs.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 715,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Use more than \"anti-alias\", e.g., \"anti-aliased text and graphics\"",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57150361_b582da1c",
+        "filename": "av1/arg_defs.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Change \"sct\" to \"screen\"",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "42f829cf_33289552",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Change \"SCT\" to \"SCREEN\"",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0611ce0_037e9117",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Change \"sct\" to \"screen\"",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c37f90a0_041f2d5d",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 526,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: sct \u003d\u003e screen",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "185fc423_fb3e4240",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 2814,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Delete \"_tools\"",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d5453edf_08729338",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 2817,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: sct_detection_mode_arg \u003d\u003e \"screen_detection_mode\" or \"mode\"",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7156fe0_ffe52a2d",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 2018,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: tooling \u003d\u003e tools\n\nNote: It seems that the AV1 spec only considers the palette mode as a screen content tool. On page 152 of the AV1 spec, we have:\n\n\u003e allow_screen_content_tools equal to 1 indicates that intra blocks may use palette encoding; allow_screen_content_tools equal to 0 indicates that palette encoding is never used.\n\u003e\n\u003e allow_intrabc equal to 1 indicates that intra block copy may be used in this frame. allow_intrabc equal to 0 indicates that intra block copy is not allowed in this frame.\n\nI.e., intra block copy is not considered as a screen content tool.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "623427c5_7abc3b45",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 2029,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: tooling \u003d\u003e tools",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad2db40d_8e301b7b",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 2094,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Cast `stride` to `ptrdiff_t`, or use the row pointer increment method.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70a3e2c1_7bb2e87b",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Document the two enum constants.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9bd95a96_48500e63",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Optional: ANTIALIAS \u003d\u003e ANTIALIASING",
+      "range": {
+        "startLine": 198,
+        "startChar": 16,
+        "endLine": 198,
+        "endChar": 25
+      },
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c476e40_a67c6e8f",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Move this enum type to the public header aom/aomcx.h. Model it after the `aom_tune_content` enum type and the `AV1E_SET_TUNE_CONTENT` codec control. Search for \"aom_tune_content\" in aom/aomcx.h.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "75158d8e_50d69349",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Change \"SCT\" to \"SCREEN\"",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d98601d_ed81885a",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 895,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Delete \"tools\"",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04ac5880_fa337595",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 4460,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: with value \u003d\u003e the value",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5dc4557c_96572340",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 4462,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "I suggest following the common practice of defining functions in a .c file and declaring them in a .h file. I understand there are many bad examples of defining very long functions as static inline functions in a .h file.\n\nWe will need to add the \"av1_\" prefix to these two functions\u0027 names.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "65159ad1_f8b79d8c",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 4471,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Optional: Instead of casting `stride` to `ptrdiff_t`, we can add it to the `src` pointer:\n\n```\n  for (int r \u003d 0; r \u003c rows; ++r) {\n    for (int c \u003d 0; c \u003c cols; ++c) {\n      const uint8_t value \u003d src[c];\n      ...\n    }\n    src +\u003d stride;\n  }\n```\n\nIf you don\u0027t like modifying the function parameter `src`, you can declare a local variable and modify that instead:\n\n```\n  const uint8_t *src_row \u003d src;\n  for (int r \u003d 0; r \u003c rows; ++r) {\n    for (int c \u003d 0; c \u003c cols; ++c) {\n      const uint8_t value \u003d src_row[c];\n      ...\n    }\n    src_row +\u003d stride;\n  }\n```",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40c6b86c_a514589d",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 4507,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Declare `rows` and `cols` as `int`",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "397bd223_dcdfd330",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 4512,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Cast `src_stride` to `ptrdiff_t`.\n\nAlternatively, use the `src_row` and `dilated_row` pointer increment method I described at line 4471.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "83a0e110_a3f89802",
+        "filename": "test/screen_content_detection_mode_2_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Nit: Change `int32_t` to `int` in this file.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "687d2237_9478a667",
+        "filename": "test/screen_content_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Delete these two `#include` statements.\n\n\"av1/encoder/encoder.h\" is a private header. This file is apparently using only the public API. Let\u0027s keep it that way.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "883b8f4a_288de581",
+        "filename": "test/screen_content_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "A better way to test screen content detection mode 1 and 2 is to add `aom_screen_detection_mode` as a test parameter here, after `aom_rc_mode`. You will need to change `CodecTestWith2Params` to `CodecTestWith3Params`.\n\nUse `rc_end_usage_` as an example.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "67efd1b4_7a188ea5",
+        "filename": "test/screen_content_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Change `SCT_DETECTION_MODE` to `aom_screen_detection_mode`.\n\nNit: Delete \"_tools\"",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79869d47_22617318",
+        "filename": "test/screen_content_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "You should be able to undo all the changes below.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d9a2fffa_1dc8fdb6",
+        "filename": "test/screen_content_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "We can uncomment this block of code (lines 106-112) and put it inside `if (screen_content_tools_detection_mode_ \u003d\u003d AOM_SCREEN_DETECTION_ANTIALIAS_AWARE) {`.",
+      "range": {
+        "startLine": 103,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 58
+      },
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d4f55f3_95800451",
+        "filename": "test/screen_content_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-15T22:57:44Z",
+      "side": 1,
+      "message": "Add `::testing::Values(AOM_SCREEN_DETECTION_STANDARD, AOM_SCREEN_DETECTION_ANTIALIAS_AWARE)` here.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
