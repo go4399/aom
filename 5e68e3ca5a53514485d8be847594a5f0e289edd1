@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e741691_4e615cf6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-05-15T18:02:29Z",
+      "side": 1,
+      "message": "The only difference seems to be the type of `dclevel` and `pred_ptr` (and whether to use `CONVERT_TO_SHORTPTR`).\n\nI suggest these to be cast to different types based on high bd or not in the same function, to reduce the duplication.",
+      "revId": "5e68e3ca5a53514485d8be847594a5f0e289edd1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
