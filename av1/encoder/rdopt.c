@@ -622,14 +622,22 @@ static void get_variance_stats(const MACROBLOCK *x, int64_t *src_var,
   int bw = block_size_wide[bsize];
   int bh = block_size_high[bsize];
 
+  const bool is_hbd = is_cur_buf_hbd(&x->e_mbd);
+
   const int gau_filter[3][3] = {
     { 1, 2, 1 },
     { 2, 4, 2 },
     { 1, 2, 1 },
   };
 
-  DECLARE_ALIGNED(16, uint8_t, dclevel[(MAX_SB_SIZE + 2) * (MAX_SB_SIZE + 2)]);
+  DECLARE_ALIGNED(16, uint8_t,
+                  dclevel[(MAX_SB_SIZE + 2) * (MAX_SB_SIZE + 2)]);
+  DECLARE_ALIGNED(16, uint16_t,
+                  dclevel16[(MAX_SB_SIZE + 2) * (MAX_SB_SIZE + 2)]);
+
   uint8_t *pred_ptr = &dclevel[bw + 1];
+  uint16_t *pred_ptr16 = &dclevel16[bw + 1];
+
   int pred_stride = xd->plane[0].dst.stride;
 
   for (int idy = -1; idy < bh + 1; ++idy) {
@@ -642,7 +650,10 @@ static void get_variance_stats(const MACROBLOCK *x, int64_t *src_var,
       if (idx == bw) offset_idx = bw - 1;
 
       int offset = offset_idy * pred_stride + offset_idx;
-      pred_ptr[idy * bw + idx] = pd->dst.buf[offset];
+      if (is_hbd)
+        pred_ptr16[idy * bw + idx] = CONVERT_TO_SHORTPTR(pd->dst.buf)[offset];
+      else
+        pred_ptr[idy * bw + idx] = pd->dst.buf[offset];
     }
   }
 
@@ -650,14 +661,24 @@ static void get_variance_stats(const MACROBLOCK *x, int64_t *src_var,
   for (int idy = 0; idy < bh; ++idy) {
     for (int idx = 0; idx < bw; ++idx) {
       int sum = 0;
-      for (int iy = 0; iy < 3; ++iy)
-        for (int ix = 0; ix < 3; ++ix)
-          sum += pred_ptr[(idy + iy - 1) * bw + (idx + ix - 1)] *
-                 gau_filter[iy][ix];
+      for (int iy = 0; iy < 3; ++iy) {
+        for (int ix = 0; ix < 3; ++ix) {
+          if (is_hbd)
+            sum += pred_ptr16[(idy + iy - 1) * bw + (idx + ix - 1)] *
+                   gau_filter[iy][ix];
+          else
+            sum += pred_ptr[(idy + iy - 1) * bw + (idx + ix - 1)] *
+                   gau_filter[iy][ix];
+        }
+      }
 
       sum = sum >> 4;
 
-      int diff = pred_ptr[idy * bw + idx] - sum;
+      int64_t diff;
+      if (is_hbd)
+        diff = pred_ptr16[idy * bw + idx] - sum;
+      else
+        diff = pred_ptr[idy * bw + idx] - sum;
       *rec_var += diff * diff;
     }
   }
@@ -674,7 +695,10 @@ static void get_variance_stats(const MACROBLOCK *x, int64_t *src_var,
       if (idx == bw) offset_idx = bw - 1;
 
       int offset = offset_idy * src_stride + offset_idx;
-      pred_ptr[idy * bw + idx] = p->src.buf[offset];
+      if (is_hbd)
+        pred_ptr16[idy * bw + idx] = CONVERT_TO_SHORTPTR(p->src.buf)[offset];
+      else
+        pred_ptr[idy * bw + idx] = p->src.buf[offset];
     }
   }
 
@@ -682,14 +706,25 @@ static void get_variance_stats(const MACROBLOCK *x, int64_t *src_var,
   for (int idy = 0; idy < bh; ++idy) {
     for (int idx = 0; idx < bw; ++idx) {
       int sum = 0;
-      for (int iy = 0; iy < 3; ++iy)
-        for (int ix = 0; ix < 3; ++ix)
-          sum += pred_ptr[(idy + iy - 1) * bw + (idx + ix - 1)] *
-                 gau_filter[iy][ix];
+      for (int iy = 0; iy < 3; ++iy) {
+        for (int ix = 0; ix < 3; ++ix) {
+          if (is_hbd)
+            sum += pred_ptr16[(idy + iy - 1) * bw + (idx + ix - 1)] *
+                   gau_filter[iy][ix];
+          else
+            sum += pred_ptr[(idy + iy - 1) * bw + (idx + ix - 1)] *
+                   gau_filter[iy][ix];
+        }
+      }
 
       sum = sum >> 4;
 
-      int diff = pred_ptr[idy * bw + idx] - sum;
+      int64_t diff;
+
+      if (is_hbd)
+        diff = pred_ptr16[idy * bw + idx] - sum;
+      else
+        diff = pred_ptr[idy * bw + idx] - sum;
       *src_var += diff * diff;
     }
   }
@@ -703,6 +738,7 @@ static void adjust_rdcost(const AV1_COMP *cpi, const MACROBLOCK *x,
   if (frame_is_kf_gf_arf(cpi)) return;
 
   int64_t src_var, rec_var;
+
   get_variance_stats(x, &src_var, &rec_var);
 
   if (src_var <= rec_var) return;
