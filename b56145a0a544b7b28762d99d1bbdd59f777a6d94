@@ -24,6 +24,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "54278370_5556d924",
+        "filename": "av1/encoder/var_based_part.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1217,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2025-05-15T21:00:37Z",
+      "side": 1,
+      "message": "that\u0027s existing code, so not sure. lets fix that in another CL.",
+      "parentUuid": "27bbd9e8_29ce0081",
+      "range": {
+        "startLine": 1217,
+        "startChar": 25,
+        "endLine": 1217,
+        "endChar": 72
+      },
+      "revId": "b56145a0a544b7b28762d99d1bbdd59f777a6d94",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a23d68dd_dc95e918",
@@ -61,6 +85,30 @@
           ]
         }
       ],
+      "revId": "b56145a0a544b7b28762d99d1bbdd59f777a6d94",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "180a83ed_6dc09ef1",
+        "filename": "av1/encoder/var_based_part.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1221,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2025-05-15T21:00:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a23d68dd_dc95e918",
+      "range": {
+        "startLine": 1221,
+        "startChar": 2,
+        "endLine": 1221,
+        "endChar": 8
+      },
       "revId": "b56145a0a544b7b28762d99d1bbdd59f777a6d94",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
