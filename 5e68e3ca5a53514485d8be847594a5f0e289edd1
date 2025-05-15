@@ -16,6 +16,24 @@
       "message": "The only difference seems to be the type of `dclevel` and `pred_ptr` (and whether to use `CONVERT_TO_SHORTPTR`).\n\nI suggest these to be cast to different types based on high bd or not in the same function, to reduce the duplication.",
       "revId": "5e68e3ca5a53514485d8be847594a5f0e289edd1",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a953915_a701f402",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5022
+      },
+      "writtenOn": "2025-05-15T19:17:32Z",
+      "side": 1,
+      "message": "I thought about this again. The difference between lbd and hbd can\u0027t be resolved by a simple cast, due to legacy implementation of highbd.\n\nTo convert between hbd and lbd, it doesn\u0027t effectively reuse the same physical buffer, but actually needs to change the physical address..",
+      "parentUuid": "0e741691_4e615cf6",
+      "revId": "5e68e3ca5a53514485d8be847594a5f0e289edd1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
