@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "d5c86720_4b0832af",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T22:20:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "359df5f5_15dd1353",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "f2160ed5_072a3b04",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 11
@@ -52,6 +70,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a926f42e_cf25b6e6",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 1595,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T22:20:34Z",
+      "side": 1,
+      "message": "I think this is a good idea, because the enum does start from 1, instead of the more usual 0.",
+      "parentUuid": "9ae0b6a2_bcdf9bf3",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3e39a222_561d6995",
@@ -65,6 +101,24 @@
       "writtenOn": "2025-05-16T21:09:17Z",
       "side": 1,
       "message": "Nit: Please try putting the comments before the enum constant definitions:\n\n```\n  /**\u003c Standard */\n  AOM_SCREEN_DETECTION_STANDARD \u003d 1,\n  /**\u003c Anti-aliased text and graphics aware */\n  AOM_SCREEN_DETECTION_ANTIALIASING_AWARE \u003d 2,\n```",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0751daaa_09a9f6b9",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 1684,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T22:20:34Z",
+      "side": 1,
+      "message": "I could do this, however I noticed that `enum/variable declaration /**\u003c comment */` appears to be the pattern for Doxygen-style comments, of which all the other declarations in `aomcx.h` appear to follow.\n\nReference: \"Putting documentation after members\" section at https://www.doxygen.nl/manual/docblocks.html.",
+      "parentUuid": "3e39a222_561d6995",
       "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -88,6 +142,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a0839a21_76f8b069",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T22:20:34Z",
+      "side": 1,
+      "message": "Let me see if I can make this change in a clean way. `cmake-format` seems to go crazy every time I touch this region.",
+      "parentUuid": "8359f472_3bbf5a7f",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cb173ea9_a1bbdda1",
         "filename": "av1/av1_cx_iface.c",
         "patchSetId": 11
@@ -99,6 +171,24 @@
       "writtenOn": "2025-05-16T21:09:17Z",
       "side": 1,
       "message": "In general the symbolic constants AOM_SCREEN_DETECTION_STANDARD/ANTIALIASING_AWARE are more informative than 1, 2. But here it seems clearer to specify a range using the numeric values 1, 2.\n\nWhat do you think? Leave this unchanged?",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e43e998_587a825e",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 929,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T22:20:34Z",
+      "side": 1,
+      "message": "I don\u0027t have strong feelings on going with either option. I do personally slightly prefer leaving the numbers, as it becomes straightforward what\u0027s the actual range that\u0027s being checked, instead of having to do two additional lookups.",
+      "parentUuid": "cb173ea9_a1bbdda1",
       "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -120,6 +210,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "822154d0_0cf0f420",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 4610,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T22:20:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e39955b9_4320c834",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "36468069_2c252a00",
@@ -137,6 +245,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc151095_2d0c7ead",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 2090,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T22:20:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "36468069_2c252a00",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9cc06d22_41e03077",
@@ -150,6 +276,24 @@
       "writtenOn": "2025-05-16T21:09:17Z",
       "side": 1,
       "message": "Since this if-else-if statement doesn\u0027t have an \"else\" block, it makes the readers wonder what happens if the screen detection mode is not 1 or 2. Because of the range check on `screen_detection_mode`, we know that cannot happen, but that fact is not obvious here.\n\nThere are several ways to deal with this. I suggest rewriting this statement as follows so that `STANDARD` is the default.\n\n```\n  if (cpi-\u003eoxcf.algo_cfg.screen_detection_mode \u003d\u003d\n      AOM_SCREEN_DETECTION_ANTIALIASING_AWARE) {\n    estimate_screen_content_antialiasing_aware(cpi, features);\n  } else {\n    estimate_screen_content(cpi, features);\n  }\n```",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8f8ad5a_02394f98",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 2432,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T22:20:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9cc06d22_41e03077",
       "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -177,6 +321,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1b90822_5fe38986",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 892,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T22:20:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fd50eb36_55195b78",
+      "range": {
+        "startLine": 891,
+        "startChar": 0,
+        "endLine": 892,
+        "endChar": 47
+      },
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "95082d42_08cff386",
@@ -190,6 +358,24 @@
       "writtenOn": "2025-05-16T21:09:17Z",
       "side": 1,
       "message": "Nit: Lines 17-30 don\u0027t need to be indented.",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f6cfdb08_661f342c",
+        "filename": "test/screen_content_detection_mode_2_test.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T22:20:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "95082d42_08cff386",
       "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -211,6 +397,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a29457f_26866604",
+        "filename": "test/screen_content_detection_mode_2_test.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T22:20:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "81e156b5_9861fab3",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0fd39148_21bc30f8",
@@ -228,6 +432,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c831a2fd_64e997a5",
+        "filename": "test/screen_content_test.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T22:20:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0fd39148_21bc30f8",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "af84eb1d_9f1a3a3d",
@@ -241,6 +463,24 @@
       "writtenOn": "2025-05-16T21:09:17Z",
       "side": 1,
       "message": "This TODO comment was added in https://aomedia-review.googlesource.com/c/aom/+/115761. In the old convention, we should use the username of the person who wrote the TODO comment. So we can change \"anyone\" to \"mufaddal.chakera\". If that doesn\u0027t work, we can use my username \"wtc\".\n\nIn the new convention, it is preferred to file a bug report for the to-do item and use the bug number here. If you have time, it is best to do that.\n\nAlternatively, we can remove \"TODO(anyone)\" and rephrase this comment as follows:\n\n\u003e The test below is disabled for mode 1 because mode 1 has low resolution screen content detection issues. ...",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "836771d1_3207afdf",
+        "filename": "test/screen_content_test.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T22:20:34Z",
+      "side": 1,
+      "message": "Thanks Wan-Teh for looking into this.\n\nAfter digging a bit further, what the TODO describes is actually inaccurate -- mode 1 isn\u0027t failing because the clip is low resolution, but because `screendata.y4m` mostly contains anti-aliased text, and so mode 1 is unable to classify those regions as candidates to use palette mode and intraBC.\n\nIn other words, it\u0027s \"by design\" that mode 1 (as currently designed) fails to turn `screen_content` on for `screendata.y4m`.\n\nTherefore, I\u0027ll modify the comment so it reads like this instead:\n```c\n  // The test below is only enabled for mode 2 because the input consists of\n  // anti-aliased text, which mode 1 can\u0027t determine as screen content \n```",
+      "parentUuid": "af84eb1d_9f1a3a3d",
       "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
