@@ -18,6 +18,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6d0249c_45455fcc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "20b53ba5_da77ad80",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f810b67c_f3c3b726",
@@ -31,6 +49,24 @@
       "writtenOn": "2025-05-15T22:57:44Z",
       "side": 1,
       "message": "Nit: Change \"code\" to \"content\" or \"coding\"?",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b14c4cc_7075fd98",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f810b67c_f3c3b726",
       "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -52,6 +88,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "82c68765_17312941",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8b06fd8a_51cc8ccc",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b7db825f_09053be1",
@@ -69,6 +123,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a3b9290_302228f9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b7db825f_09053be1",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0144dc86_68f617c0",
@@ -82,6 +154,24 @@
       "writtenOn": "2025-05-15T22:57:44Z",
       "side": 1,
       "message": "Nit: Delete \"tools\"",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5dbead8_36823889",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0144dc86_68f617c0",
       "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -120,6 +210,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "872151d7_f1813bcf",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1586,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7aab272b_f3cb5e77",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7c1b6671_c69d3d9b",
@@ -133,6 +241,24 @@
       "writtenOn": "2025-05-15T22:57:44Z",
       "side": 1,
       "message": "Nit: unsigned int \u003d\u003e aom_screen_detection_mode\n\nPlease see my comment at av1/encoder/encoder.h:199.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "249a465d_d48b51f2",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1587,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c1b6671_c69d3d9b",
       "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -154,6 +280,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5208a37_ff0bda02",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1592,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f2d3e5c8_4e38ae58",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bb49c8fa_154c7b08",
@@ -167,6 +311,24 @@
       "writtenOn": "2025-05-15T22:57:44Z",
       "side": 1,
       "message": "Nit: Change `unsigned int` to `int`, with a comment `/* aom_screen_detection_mode */`. Please see my comment at av1/encoder/encoder.h:199.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56b378c0_f7c8b1f4",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 2305,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb49c8fa_154c7b08",
       "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -188,6 +350,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "84fcb136_70ed0eb1",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 2306,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d6654899_4b507971",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d62695bc_4340db1b",
@@ -201,6 +381,24 @@
       "writtenOn": "2025-05-15T22:57:44Z",
       "side": 1,
       "message": "Nit: Change \"sct\" to \"screen\"",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0e35017_a22cd9e6",
+        "filename": "av1/arg_defs.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 713,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d62695bc_4340db1b",
       "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -222,6 +420,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1708fcdb_309297ea",
+        "filename": "av1/arg_defs.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 714,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "681dea83_81076514",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "307cd81e_81ff5aa7",
@@ -235,6 +451,24 @@
       "writtenOn": "2025-05-15T22:57:44Z",
       "side": 1,
       "message": "Nit: Use more than \"anti-alias\", e.g., \"anti-aliased text and graphics\"",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c5921bf_16ba5670",
+        "filename": "av1/arg_defs.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 715,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done, modified to \"anti-aliased text and graphics aware\"",
+      "parentUuid": "307cd81e_81ff5aa7",
       "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -256,6 +490,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d7764f1_722a18c6",
+        "filename": "av1/arg_defs.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57150361_b582da1c",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "42f829cf_33289552",
@@ -269,6 +521,24 @@
       "writtenOn": "2025-05-15T22:57:44Z",
       "side": 1,
       "message": "Nit: Change \"SCT\" to \"SCREEN\"",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b3e0f7c_e119e6d0",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "42f829cf_33289552",
       "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -290,6 +560,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "41671b34_ba13e3be",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a0611ce0_037e9117",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c37f90a0_041f2d5d",
@@ -303,6 +591,24 @@
       "writtenOn": "2025-05-15T22:57:44Z",
       "side": 1,
       "message": "Nit: sct \u003d\u003e screen",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "729f4640_4f625adc",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 526,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c37f90a0_041f2d5d",
       "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -324,6 +630,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "48eb2089_d944c947",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 2814,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "185fc423_fb3e4240",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d5453edf_08729338",
@@ -337,6 +661,24 @@
       "writtenOn": "2025-05-15T22:57:44Z",
       "side": 1,
       "message": "Nit: sct_detection_mode_arg \u003d\u003e \"screen_detection_mode\" or \"mode\"",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c13051fe_7cf7a22e",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 2817,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d5453edf_08729338",
       "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -360,6 +702,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ba9e246d_d4448100",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 2018,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Right, the AV1 spec does technically consider only palette encoding to be a screen content tool.\n\nIn practice however, the encoder should be discouraged from using intraBC for natural or photo-like content, as turning on intraBC disables in-loop deblocking.\n\nSo in AV1, intraBC is considered as \"de-facto\" screen content tool. I do know that this won\u0027t be the case for AV2 though.",
+      "parentUuid": "b7156fe0_ffe52a2d",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "623427c5_7abc3b45",
         "filename": "av1/encoder/encoder.c",
         "patchSetId": 9
@@ -371,6 +731,24 @@
       "writtenOn": "2025-05-15T22:57:44Z",
       "side": 1,
       "message": "Nit: tooling \u003d\u003e tools",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d95fcb32_ff3c0000",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 2029,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "623427c5_7abc3b45",
       "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -392,6 +770,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "30a54f80_7af5f484",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 2094,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad2db40d_8e301b7b",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "70a3e2c1_7bb2e87b",
@@ -409,6 +805,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7118c30d_e7648802",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70a3e2c1_7bb2e87b",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9bd95a96_48500e63",
@@ -422,6 +836,30 @@
       "writtenOn": "2025-05-15T22:57:44Z",
       "side": 1,
       "message": "Optional: ANTIALIAS \u003d\u003e ANTIALIASING",
+      "range": {
+        "startLine": 198,
+        "startChar": 16,
+        "endLine": 198,
+        "endChar": 25
+      },
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9fc7848c_f7eb33ad",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9bd95a96_48500e63",
       "range": {
         "startLine": 198,
         "startChar": 16,
@@ -466,6 +904,42 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "84600edc_29f4a24f",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75158d8e_50d69349",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cfa3bf44_55e53ed9",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c476e40_a67c6e8f",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8d98601d_ed81885a",
@@ -479,6 +953,24 @@
       "writtenOn": "2025-05-15T22:57:44Z",
       "side": 1,
       "message": "Nit: Delete \"tools\"",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "33859681_fd5fb240",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 895,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d98601d_ed81885a",
       "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -500,6 +992,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9dfd941b_12f73a62",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 4460,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04ac5880_fa337595",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5dc4557c_96572340",
@@ -513,6 +1023,24 @@
       "writtenOn": "2025-05-15T22:57:44Z",
       "side": 1,
       "message": "I suggest following the common practice of defining functions in a .c file and declaring them in a .h file. I understand there are many bad examples of defining very long functions as static inline functions in a .h file.\n\nWe will need to add the \"av1_\" prefix to these two functions\u0027 names.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6827d6c_6f50bd91",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 4462,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5dc4557c_96572340",
       "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -534,6 +1062,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d085651e_ccf23cb3",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 4471,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "So, I did consider using adding the stride to the source pointer.\n\nThere are some parts of the code (i.e. in `dilate_block()`) that require reading from the previous or the next row, so I thought keeping every array addressing style (with the multiply with stride) to be more consistent and cleaner throughout the new mode.\n\nGiven this, I\u0027d like to keep this part of the code as is.",
+      "parentUuid": "65159ad1_f8b79d8c",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "40c6b86c_a514589d",
@@ -547,6 +1093,24 @@
       "writtenOn": "2025-05-15T22:57:44Z",
       "side": 1,
       "message": "Nit: Declare `rows` and `cols` as `int`",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b03aa0bc_0b3b738f",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 4507,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "40c6b86c_a514589d",
       "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -568,6 +1132,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d26c26a7_ce6ae6b8",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 4512,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "397bd223_dcdfd330",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "83a0e110_a3f89802",
@@ -581,6 +1163,24 @@
       "writtenOn": "2025-05-15T22:57:44Z",
       "side": 1,
       "message": "Nit: Change `int32_t` to `int` in this file.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a093729_3cdd5096",
+        "filename": "test/screen_content_detection_mode_2_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "83a0e110_a3f89802",
       "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -602,6 +1202,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "47f0e709_e2298f3d",
+        "filename": "test/screen_content_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "687d2237_9478a667",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "883b8f4a_288de581",
@@ -615,6 +1233,24 @@
       "writtenOn": "2025-05-15T22:57:44Z",
       "side": 1,
       "message": "A better way to test screen content detection mode 1 and 2 is to add `aom_screen_detection_mode` as a test parameter here, after `aom_rc_mode`. You will need to change `CodecTestWith2Params` to `CodecTestWith3Params`.\n\nUse `rc_end_usage_` as an example.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "450f5c40_c66938eb",
+        "filename": "test/screen_content_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "883b8f4a_288de581",
       "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -636,6 +1272,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1f580b4_3ceb9bd5",
+        "filename": "test/screen_content_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "67efd1b4_7a188ea5",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "79869d47_22617318",
@@ -649,6 +1303,24 @@
       "writtenOn": "2025-05-15T22:57:44Z",
       "side": 1,
       "message": "You should be able to undo all the changes below.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a865d493_54214157",
+        "filename": "test/screen_content_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "79869d47_22617318",
       "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -676,6 +1348,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "27b4affe_9270db2f",
+        "filename": "test/screen_content_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9a2fffa_1dc8fdb6",
+      "range": {
+        "startLine": 103,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 58
+      },
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1d4f55f3_95800451",
@@ -689,6 +1385,24 @@
       "writtenOn": "2025-05-15T22:57:44Z",
       "side": 1,
       "message": "Add `::testing::Values(AOM_SCREEN_DETECTION_STANDARD, AOM_SCREEN_DETECTION_ANTIALIAS_AWARE)` here.",
+      "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8041f226_afe4c06e",
+        "filename": "test/screen_content_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-16T19:31:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1d4f55f3_95800451",
       "revId": "8cfef08c7ed1d6a606621a11b7b2d2d3cada4a85",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
