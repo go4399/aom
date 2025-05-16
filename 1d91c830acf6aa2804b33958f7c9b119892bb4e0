@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c1ed9d2e_574a2a4f",
+        "filename": "av1/encoder/mcomp.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-16T21:41:35Z",
+      "side": 1,
+      "message": "Jingning: I am not familiar with this code, but my hunch is that after you ensured that `-top_margin \u003c\u003d bottom_margin`, this line can be simply:\n\n```\n    mv_limits-\u003erow_min \u003d AOMMAX(mv_limits-\u003erow_min, -top_margin);\n```\n\nSimilarly for the other `clamp` calls below.\n\nIn other words, I think the only change we need is to add lines 113-114 and lines 210-211, and we can revert all the other changes.",
+      "revId": "1d91c830acf6aa2804b33958f7c9b119892bb4e0",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
