@@ -885,6 +885,13 @@ typedef struct {
    * on reconstructed frame.
    */
   bool skip_postproc_filtering;
+
+  /*!
+   * Controls screen content tools detection mode
+   * - 1 = standard (default)
+   * - 2 = anti-aliased text and graphics aware
+   */
+  aom_screen_detection_mode sct_detection_mode;
 } AlgoCfg;
 /*!\cond */
 
@@ -4450,6 +4457,109 @@ static inline int get_lpf_opt_level(const SPEED_FEATURES *sf) {
 static inline bool is_switchable_motion_mode_allowed(bool allow_warped_motion,
                                                      bool enable_obmc) {
   return (allow_warped_motion || enable_obmc);
+}
+
+/*!\brief Helper function that finds the dominant value of a block.
+ *
+ * This function builds a histogram of all 256 possible (8 bit) values, and
+ * returns with value with the greatest count (i.e. the dominant value).
+ */
+static inline uint8_t find_dominant_value(const uint8_t *src, ptrdiff_t stride,
+                                          int rows, int cols) {
+  uint32_t value_count[1 << 8];  // Maximum (1 << 8) value levels.
+  memset(value_count, 0, sizeof(value_count));
+  uint32_t dominant_value_count = 0;
+  uint8_t dominant_value = 0;
+
+  for (int r = 0; r < rows; ++r) {
+    for (int c = 0; c < cols; ++c) {
+      const uint8_t value = src[r * (ptrdiff_t)stride + c];
+
+      value_count[value]++;
+
+      if (value_count[value] > dominant_value_count) {
+        dominant_value = value;
+        dominant_value_count = value_count[value];
+      }
+    }
+  }
+
+  return dominant_value;
+}
+
+/*!\brief Helper function that performs one round of image dilation on a block.
+ *
+ * This function finds the dominant value (i.e. the value that appears most
+ * often within a block), then performs a round of dilation by "extending" all
+ * occurrences of the dominant value outwards in all 8 directions (4 sides + 4
+ * corners).
+ *
+ * For a visual example, let:
+ *  - D: the dominant value
+ *  - [a-p]: different non-dominant values (usually anti-aliased pixels)
+ *  - .: the most common non-dominant value
+ *
+ * Before dilation:       After dilation:
+ * . . a b D c d . .     . . D D D D D . .
+ * . e f D D D g h .     D D D D D D D D D
+ * . D D D D D D D .     D D D D D D D D D
+ * . D D D D D D D .     D D D D D D D D D
+ * . i j D D D k l .     D D D D D D D D D
+ * . . m n D o p . .     . . D D D D D . .
+ */
+static inline void dilate_block(const uint8_t *src, int src_stride,
+                                uint8_t *dilated, int dilated_stride,
+                                int32_t rows, int32_t cols) {
+  uint8_t dominant_value = find_dominant_value(src, src_stride, rows, cols);
+
+  for (int r = 0; r < rows; ++r) {
+    for (int c = 0; c < cols; ++c) {
+      const uint8_t value = src[r * src_stride + c];
+
+      dilated[r * (ptrdiff_t)dilated_stride + c] = value;
+    }
+  }
+
+  for (int r = 0; r < rows; ++r) {
+    for (int c = 0; c < cols; ++c) {
+      const uint8_t value = src[r * src_stride + c];
+
+      if (value == dominant_value) {
+        // Dilate up
+        if (r != 0) {
+          dilated[(r - 1) * (ptrdiff_t)dilated_stride + c] = value;
+        }
+        // Dilate down
+        if (r != rows - 1) {
+          dilated[(r + 1) * (ptrdiff_t)dilated_stride + c] = value;
+        }
+        // Dilate left
+        if (c != 0) {
+          dilated[r * (ptrdiff_t)dilated_stride + (c - 1)] = value;
+        }
+        // Dilate right
+        if (c != cols - 1) {
+          dilated[r * (ptrdiff_t)dilated_stride + (c + 1)] = value;
+        }
+        // Dilate upper-left corner
+        if (r != 0 && c != 0) {
+          dilated[(r - 1) * (ptrdiff_t)dilated_stride + (c - 1)] = value;
+        }
+        // Dilate upper-right corner
+        if (r != 0 && c != cols - 1) {
+          dilated[(r - 1) * (ptrdiff_t)dilated_stride + (c + 1)] = value;
+        }
+        // Dilate lower-left corner
+        if (r != rows - 1 && c != 0) {
+          dilated[(r + 1) * (ptrdiff_t)dilated_stride + (c - 1)] = value;
+        }
+        // Dilate lower-right corner
+        if (r != rows - 1 && c != cols - 1) {
+          dilated[(r + 1) * (ptrdiff_t)dilated_stride + (c + 1)] = value;
+        }
+      }
+    }
+  }
 }
 
 #if CONFIG_AV1_TEMPORAL_DENOISING
