@@ -1,0 +1,248 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "359df5f5_15dd1353",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-16T21:09:17Z",
+      "side": 1,
+      "message": "Nit: should we add \"or\" before the second \"by\"?\n\n```\nThis can be enabled by parameter `--screen-detection-mode\u003d2`, or by\n```",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2160ed5_072a3b04",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-16T21:09:17Z",
+      "side": 1,
+      "message": "I only reviewed the public API and verified that this CL has no effects by default. I will review the new mode 2 code later.",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9ae0b6a2_bcdf9bf3",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 1595,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-16T21:09:17Z",
+      "side": 1,
+      "message": "Nit: Should we also add the numeric values 1, 2 here? For example,\n\n```\n   * - AOM_SCREEN_DETECTION_STANDARD (1) \u003d standard (default)\n   * - AOM_SCREEN_DETECTION_ANTIALIASING_AWARE (2) \u003d anti-aliased text and graphics\n   *   aware\n```\n\nOr\n\n```\n   * - 1: AOM_SCREEN_DETECTION_STANDARD \u003d standard (default)\n   * - 2: AOM_SCREEN_DETECTION_ANTIALIASING_AWARE \u003d anti-aliased text and graphics\n   *   aware\n```",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e39a222_561d6995",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 1684,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-16T21:09:17Z",
+      "side": 1,
+      "message": "Nit: Please try putting the comments before the enum constant definitions:\n\n```\n  /**\u003c Standard */\n  AOM_SCREEN_DETECTION_STANDARD \u003d 1,\n  /**\u003c Anti-aliased text and graphics aware */\n  AOM_SCREEN_DETECTION_ANTIALIASING_AWARE \u003d 2,\n```",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8359f472_3bbf5a7f",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-16T21:09:17Z",
+      "side": 1,
+      "message": "Use `AOM_SCREEN_DETECTION_STANDARD` here and at line 526.",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb173ea9_a1bbdda1",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 929,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-16T21:09:17Z",
+      "side": 1,
+      "message": "In general the symbolic constants AOM_SCREEN_DETECTION_STANDARD/ANTIALIASING_AWARE are more informative than 1, 2. But here it seems clearer to specify a range using the numeric values 1, 2.\n\nWhat do you think? Leave this unchanged?",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e39955b9_4320c834",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 4610,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-16T21:09:17Z",
+      "side": 1,
+      "message": "Use `arg_parse_int_helper` because I changed the argument type from `unsigned int` to `int`.",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36468069_2c252a00",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 2090,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-16T21:09:17Z",
+      "side": 1,
+      "message": "Nit: The `ptrdiff_t` type is redundant with the `ptrdiff_t` cast in line 2099. Since libaom usually uses the `int` type for the stride, I suggest we follow that convention and declare the `stride` parameter as `int`.",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9cc06d22_41e03077",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 2432,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-16T21:09:17Z",
+      "side": 1,
+      "message": "Since this if-else-if statement doesn\u0027t have an \"else\" block, it makes the readers wonder what happens if the screen detection mode is not 1 or 2. Because of the range check on `screen_detection_mode`, we know that cannot happen, but that fact is not obvious here.\n\nThere are several ways to deal with this. I suggest rewriting this statement as follows so that `STANDARD` is the default.\n\n```\n  if (cpi-\u003eoxcf.algo_cfg.screen_detection_mode \u003d\u003d\n      AOM_SCREEN_DETECTION_ANTIALIASING_AWARE) {\n    estimate_screen_content_antialiasing_aware(cpi, features);\n  } else {\n    estimate_screen_content(cpi, features);\n  }\n```",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd50eb36_55195b78",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 892,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-16T21:09:17Z",
+      "side": 1,
+      "message": "Delete these two lines (891-892).",
+      "range": {
+        "startLine": 891,
+        "startChar": 0,
+        "endLine": 892,
+        "endChar": 47
+      },
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95082d42_08cff386",
+        "filename": "test/screen_content_detection_mode_2_test.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-16T21:09:17Z",
+      "side": 1,
+      "message": "Nit: Lines 17-30 don\u0027t need to be indented.",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81e156b5_9861fab3",
+        "filename": "test/screen_content_detection_mode_2_test.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-16T21:09:17Z",
+      "side": 1,
+      "message": "Nit: Declare `source`, `expected`, `width`, `height` as `const`.",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0fd39148_21bc30f8",
+        "filename": "test/screen_content_test.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-16T21:09:17Z",
+      "side": 1,
+      "message": "Nit: Capitalize \"mode 2\" at the beginning of the sentence, and add a period as the end of the sentence.",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af84eb1d_9f1a3a3d",
+        "filename": "test/screen_content_test.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-16T21:09:17Z",
+      "side": 1,
+      "message": "This TODO comment was added in https://aomedia-review.googlesource.com/c/aom/+/115761. In the old convention, we should use the username of the person who wrote the TODO comment. So we can change \"anyone\" to \"mufaddal.chakera\". If that doesn\u0027t work, we can use my username \"wtc\".\n\nIn the new convention, it is preferred to file a bug report for the to-do item and use the bug number here. If you have time, it is best to do that.\n\nAlternatively, we can remove \"TODO(anyone)\" and rephrase this comment as follows:\n\n\u003e The test below is disabled for mode 1 because mode 1 has low resolution screen content detection issues. ...",
+      "revId": "e2986c456fc1ca059dd3f7e20472f327213b942e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
