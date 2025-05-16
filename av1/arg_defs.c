@@ -709,5 +709,9 @@ const av1_codec_arg_definitions_t g_av1_codec_arg_defs = {
   .enable_low_complexity_decode =
       ARG_DEF(NULL, "enable-low-complexity-decode", 1,
               "Enable low complexity decode (0: false (default), 1: true)"),
+  .sct_detection_mode =
+      ARG_DEF(NULL, "sct-detection-mode", 1,
+              "Screen content tools detection mode (1: standard (default), "
+              "2: anti-alias aware)"),
 #endif  // CONFIG_AV1_ENCODER
 };

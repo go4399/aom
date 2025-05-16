@@ -2021,42 +2021,11 @@ void av1_set_mv_search_params(AV1_COMP *cpi) {
   }
 }
 
-void av1_set_screen_content_options(AV1_COMP *cpi, FeatureFlags *features) {
+// Estimate if the source frame is screen content, based on the portion of
+// blocks that have few luma colors.
+static void estimate_screen_content(AV1_COMP *cpi, FeatureFlags *features) {
   const AV1_COMMON *const cm = &cpi->common;
   const MACROBLOCKD *const xd = &cpi->td.mb.e_mbd;
-
-  if (cm->seq_params->force_screen_content_tools != 2) {
-    features->allow_screen_content_tools = features->allow_intrabc =
-        cm->seq_params->force_screen_content_tools;
-    return;
-  }
-
-  if (cpi->oxcf.tune_cfg.content == AOM_CONTENT_SCREEN) {
-    features->allow_screen_content_tools = 1;
-    features->allow_intrabc = cpi->oxcf.mode == REALTIME ? 0 : 1;
-    cpi->is_screen_content_type = 1;
-    cpi->use_screen_content_tools = 1;
-    return;
-  }
-
-  if (cpi->oxcf.mode == REALTIME) {
-    features->allow_screen_content_tools = features->allow_intrabc = 0;
-    return;
-  }
-
-  // Screen content tools are not evaluated in non-RD encoding mode unless
-  // content type is not set explicitly, i.e., when
-  // cpi->oxcf.tune_cfg.content != AOM_CONTENT_SCREEN, use_nonrd_pick_mode = 1
-  // and hybrid_intra_pickmode = 0. Hence, screen content detection is
-  // disabled.
-  if (cpi->sf.rt_sf.use_nonrd_pick_mode &&
-      !cpi->sf.rt_sf.hybrid_intra_pickmode) {
-    features->allow_screen_content_tools = features->allow_intrabc = 0;
-    return;
-  }
-
-  // Estimate if the source frame is screen content, based on the portion of
-  // blocks that have few luma colors.
   const uint8_t *src = cpi->unfiltered_source->y_buffer;
   assert(src != NULL);
   const int use_hbd = cpi->unfiltered_source->flags & YV12_FLAG_HIGHBITDEPTH;
@@ -2108,6 +2077,257 @@ void av1_set_screen_content_options(AV1_COMP *cpi, FeatureFlags *features) {
   cpi->is_screen_content_type =
       features->allow_intrabc || (counts_1 * blk_h * blk_w * 10 > area * 4 &&
                                   counts_2 * blk_h * blk_w * 30 > area);
+}
+
+// Macro that helps debug the SCT detection mode 2 mechanism
+// #define OUTPUT_SCT_DET_MODE2_STATS
+
+/*!\brief Estimates if the source frame is a candidate to enable screen content
+ * tooling, with accurately detection of anti-aliased text and graphics.
+ *
+ * Screen content detection is done by dividing frame's luma plane (Y) into
+ * small blocks, counting the how many unique colors each block contains and
+ * their per-pixel variance, and classifying these blocks into three main
+ * categories:
+ * 1. Palettizable blocks, low variance (can use palette mode)
+ * 2. Palettizable blocks, high variance (can use palette mode and IntraBC)
+ * 3. Non palettizable, photo-like blocks (can neither use palette mode nor
+ *   IntraBC)
+ * Finally, this function decides whether the frame could benefit from
+ * enabling screen content tooling (palette mode with or without IntraBC),
+ * based on the the ratio of the three categories mentioned above.
+ */
+static void estimate_screen_content_antialias_aware(AV1_COMP *cpi,
+                                                    FeatureFlags *features) {
+  enum { BLK_W = 16, BLK_H = 16, BLK_AREA = BLK_W * BLK_H };
+
+  const AV1_COMMON *const cm = &cpi->common;
+  const MACROBLOCKD *const xd = &cpi->td.mb.e_mbd;
+  const uint8_t *src = cpi->unfiltered_source->y_buffer;
+  assert(src != NULL);
+  const int use_hbd = cpi->unfiltered_source->flags & YV12_FLAG_HIGHBITDEPTH;
+
+  // Holds the down-converted block to 8 bit (if source is HBD)
+  uint8_t downconv_blk[BLK_AREA];
+  // Hold the block after a round of dilation
+  uint8_t dilated_blk[BLK_AREA];
+  const int stride = cpi->unfiltered_source->y_stride;
+  const int width = cpi->unfiltered_source->y_width;
+  const int height = cpi->unfiltered_source->y_height;
+  const int64_t area = (int64_t)width * height;
+  const int bd = cm->seq_params->bit_depth;
+
+  // These threshold values are selected experimentally
+  // Detects text and glyphs without anti-aliasing, and graphics with a 4-color
+  // palette
+  const int simple_color_thresh = 4;
+  // Detects potential text and glyphs with anti-aliasing, and graphics with a
+  // more extended color palette
+  const int complex_initial_color_thresh = 40;
+  // Detects text and glyphs with anti-aliasing, and graphics with a more
+  // extended color palette
+  const int complex_final_color_thresh = 6;
+  // Threshold used to classify low-variance and high-variance blocks
+  const int var_thresh = 5;
+  // Count of blocks that are candidates for using palette mode
+  int count_palette = 0;
+  // Count of blocks that are candidates for using IntraBC mode
+  int count_intrabc = 0;
+  // Count of "photo-like" blocks (i.e. can't use AV1 screen content tools)
+  int count_photo = 0;
+
+#ifdef OUTPUT_SCT_DET_MODE2_STATS
+  FILE *stats_file;
+  stats_file = fopen("sct.stt", "a");
+
+  fprintf(stats_file, "\n");
+  fprintf(stats_file, "Enhanced SCT detection image map legend\n");
+  fprintf(stats_file,
+          "---------------------------------------------------------------\n");
+  fprintf(stats_file,
+          "S: simple SCT block, high var    C: complex SCT block, high var\n");
+  fprintf(stats_file,
+          "-: simple SCT block, low var     =: complex SCT block, low var \n");
+  fprintf(stats_file,
+          "*: photo-like block              .: non-palletizable block     \n");
+  fprintf(stats_file,
+          "(whitespace): solid block                                      \n");
+  fprintf(stats_file,
+          "---------------------------------------------------------------\n");
+#endif
+
+  for (int r = 0; r + BLK_H <= height; r += BLK_H) {
+    for (int c = 0; c + BLK_W <= width; c += BLK_W) {
+      int count_buf[1 << 8];  // Maximum (1 << 8) bins for HBD path
+      const uint8_t *blk = src + r * stride + c;
+      const uint8_t *blk_src = blk;
+      int blk_stride = stride;
+
+      // Down-convert pixels to 8-bit domain if source is HBD
+      if (use_hbd) {
+        const uint16_t *blk_src_hbd = CONVERT_TO_SHORTPTR(blk);
+
+        for (int blk_r = 0; blk_r < BLK_H; ++blk_r) {
+          for (int blk_c = 0; blk_c < BLK_W; ++blk_c) {
+            const int downconv_val =
+                ((blk_src_hbd[blk_r * (ptrdiff_t)stride + blk_c]) >> (bd - 8));
+
+            assert(downconv_val <
+                   (1 << 8));  // Ensure down-converted value is 8-bit
+            downconv_blk[blk_r * (ptrdiff_t)BLK_W + blk_c] = downconv_val;
+          }
+        }
+
+        // Switch block source and stride to down-converted buffer and its width
+        blk = downconv_blk;
+        blk_stride = BLK_W;
+      }
+
+      // First, find if the block could be palettized
+      int number_of_colors;
+      av1_count_colors(blk, blk_stride, BLK_W, BLK_H, count_buf,
+                       &number_of_colors);
+
+      if (number_of_colors > 1 &&
+          number_of_colors <= complex_initial_color_thresh) {
+        struct buf_2d buf;
+        buf.stride = stride;
+        buf.buf = (uint8_t *)blk_src;
+
+        if (number_of_colors <= simple_color_thresh) {
+          // Simple block detected, add to block count with no further
+          // processing required
+          ++count_palette;
+          // Variance always comes from the source image with no down-conversion
+          int var = av1_get_perpixel_variance(cpi, xd, &buf, BLOCK_16X16,
+                                              AOM_PLANE_Y, use_hbd);
+
+          if (var > var_thresh) {
+            ++count_intrabc;
+#ifdef OUTPUT_SCT_DET_MODE2_STATS
+            fprintf(stats_file, "S");
+          } else {
+            fprintf(stats_file, "-");
+#endif
+          }
+        } else {
+          // Complex block detected, try to find if it's palettizable
+          // Dilate block with dominant color, to exclude anti-aliased pixels
+          // from final palette count
+          dilate_block(blk, blk_stride, dilated_blk, BLK_W, BLK_W, BLK_H);
+          av1_count_colors(dilated_blk, BLK_W, BLK_W, BLK_H, count_buf,
+                           &number_of_colors);
+
+          if (number_of_colors <= complex_final_color_thresh) {
+            ++count_palette;
+
+            // Variance always comes from the source image with no
+            // down-conversion
+            int var = av1_get_perpixel_variance(cpi, xd, &buf, BLOCK_16X16,
+                                                AOM_PLANE_Y, use_hbd);
+
+            if (var > var_thresh) {
+              ++count_intrabc;
+#ifdef OUTPUT_SCT_DET_MODE2_STATS
+              fprintf(stats_file, "C");
+            } else {
+              fprintf(stats_file, "=");
+#endif
+            }
+#ifdef OUTPUT_SCT_DET_MODE2_STATS
+          } else {
+            fprintf(stats_file, ".");
+#endif
+          }
+        }
+      } else {
+        if (number_of_colors > complex_initial_color_thresh) {
+          ++count_photo;
+#ifdef OUTPUT_SCT_DET_MODE2_STATS
+          fprintf(stats_file, "x");
+        } else {
+          fprintf(stats_file, " ");  // Solid block (1 color)
+#endif
+        }
+      }
+    }
+#ifdef OUTPUT_SCT_DET_MODE2_STATS
+    fprintf(stats_file, "\n");
+#endif
+  }
+
+  // The threshold values are selected experimentally.
+  // Penalize presence of photo-like blocks (1/16th the weight of a palettizable
+  // block)
+  features->allow_screen_content_tools =
+      ((count_palette - count_photo / 16) * BLK_AREA * 10 > area);
+
+  // IntraBC would force loop filters off, so we use more strict rules that also
+  // requires that the block has high variance.
+  // Penalize presence of photo-like blocks (1/16th the weight of a palettizable
+  // block)
+  features->allow_intrabc =
+      features->allow_screen_content_tools &&
+      ((count_intrabc - count_photo / 16) * BLK_AREA * 12 > area);
+  cpi->use_screen_content_tools = features->allow_screen_content_tools;
+  cpi->is_screen_content_type =
+      features->allow_intrabc || (count_palette * BLK_AREA * 15 > area * 4 &&
+                                  count_intrabc * BLK_AREA * 30 > area);
+
+#ifdef OUTPUT_SCT_DET_MODE2_STATS
+  fprintf(stats_file,
+          "block count palette: %i, count intrabc: %i, count photo: %i, total: "
+          "%i\n",
+          count_palette, count_intrabc, count_photo,
+          (int)(ceil(width / BLK_W) * ceil(height / BLK_H)));
+  fprintf(stats_file, "sc palette value: %i, threshold %lli\n",
+          (count_palette - count_photo / 16) * BLK_AREA * 10, area);
+  fprintf(stats_file, "sc ibc value: %i, threshold %lli\n",
+          (count_intrabc - count_photo / 16) * BLK_AREA * 12, area);
+  fprintf(stats_file, "allow sct: %i, allow ibc: %i\n",
+          features->allow_screen_content_tools, features->allow_intrabc);
+#endif
+}
+
+void av1_set_screen_content_options(AV1_COMP *cpi, FeatureFlags *features) {
+  const AV1_COMMON *const cm = &cpi->common;
+
+  if (cm->seq_params->force_screen_content_tools != 2) {
+    features->allow_screen_content_tools = features->allow_intrabc =
+        cm->seq_params->force_screen_content_tools;
+    return;
+  }
+
+  if (cpi->oxcf.tune_cfg.content == AOM_CONTENT_SCREEN) {
+    features->allow_screen_content_tools = 1;
+    features->allow_intrabc = cpi->oxcf.mode == REALTIME ? 0 : 1;
+    cpi->is_screen_content_type = 1;
+    cpi->use_screen_content_tools = 1;
+    return;
+  }
+
+  if (cpi->oxcf.mode == REALTIME) {
+    features->allow_screen_content_tools = features->allow_intrabc = 0;
+    return;
+  }
+
+  // Screen content tools are not evaluated in non-RD encoding mode unless
+  // content type is not set explicitly, i.e., when
+  // cpi->oxcf.tune_cfg.content != AOM_CONTENT_SCREEN, use_nonrd_pick_mode = 1
+  // and hybrid_intra_pickmode = 0. Hence, screen content detection is
+  // disabled.
+  if (cpi->sf.rt_sf.use_nonrd_pick_mode &&
+      !cpi->sf.rt_sf.hybrid_intra_pickmode) {
+    features->allow_screen_content_tools = features->allow_intrabc = 0;
+    return;
+  }
+
+  if (cpi->oxcf.algo_cfg.sct_detection_mode == SCT_DETECTION_STANDARD) {
+    estimate_screen_content(cpi, features);
+  } else if (cpi->oxcf.algo_cfg.sct_detection_mode ==
+             SCT_DETECTION_ANTIALIAS_AWARE) {
+    estimate_screen_content_antialias_aware(cpi, features);
+  }
 }
 
 static void init_motion_estimation(AV1_COMP *cpi) {
