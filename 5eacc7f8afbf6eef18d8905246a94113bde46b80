@@ -16,6 +16,51 @@
       "message": "Please add some unit test coverage.",
       "revId": "5eacc7f8afbf6eef18d8905246a94113bde46b80",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9b2476a_7132492c",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 625,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-05-16T02:36:12Z",
+      "side": 1,
+      "message": "make this `static const`",
+      "fixSuggestions": [
+        {
+          "fixId": "a93aae73_2ea991bd",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/rdopt.c",
+              "range": {
+                "startLine": 625,
+                "startChar": 0,
+                "endLine": 626,
+                "endChar": 0
+              },
+              "replacement": "  static const int gau_filter[3][3] \u003d {\n"
+            },
+            {
+              "path": "av1/encoder/rdopt.c",
+              "range": {
+                "startLine": 711,
+                "startChar": 0,
+                "endLine": 712,
+                "endChar": 0
+              },
+              "replacement": "  static const int gau_filter[3][3] \u003d {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "5eacc7f8afbf6eef18d8905246a94113bde46b80",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
