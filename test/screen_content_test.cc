@@ -9,6 +9,7 @@
  * PATENTS file, you can obtain it at www.aomedia.org/license/patent.
  */
 #include "aom/aom_codec.h"
+#include "aom/aomcx.h"
 #include "gtest/gtest.h"
 #include "test/codec_factory.h"
 #include "test/encode_test_driver.h"
@@ -28,6 +29,7 @@ class ScreenContentToolsTestLarge
         rc_end_usage_(GET_PARAM(2)) {
     is_screen_content_violated_ = true;
     tune_content_ = AOM_CONTENT_DEFAULT;
+    screen_content_tools_detection_mode_ = AOM_SCREEN_DETECTION_STANDARD;
   }
   ~ScreenContentToolsTestLarge() override = default;
 
@@ -50,6 +52,8 @@ class ScreenContentToolsTestLarge
       encoder->Control(AOME_SET_CPUUSED, 5);
       encoder->Control(AOME_SET_ENABLEAUTOALTREF, 1);
       encoder->Control(AV1E_SET_TUNE_CONTENT, tune_content_);
+      encoder->Control(AV1E_SET_SCREEN_CONTENT_DETECTION_MODE,
+                       screen_content_tools_detection_mode_);
     }
   }
 
@@ -73,9 +77,10 @@ class ScreenContentToolsTestLarge
   bool is_screen_content_violated_;
   int tune_content_;
   aom_rc_mode rc_end_usage_;
+  aom_screen_detection_mode screen_content_tools_detection_mode_;
 };
 
-TEST_P(ScreenContentToolsTestLarge, ScreenContentToolsTest) {
+TEST_P(ScreenContentToolsTestLarge, ScreenContentToolsMode1Test) {
   // force screen content tools on
   ::libaom_test::Y4mVideoSource video_nonsc("park_joy_90p_8_444.y4m", 0, 1);
   cfg_.g_profile = 1;
@@ -106,6 +111,30 @@ TEST_P(ScreenContentToolsTestLarge, ScreenContentToolsTest) {
   //      << "Failed detection of screen content(lowres)";
 }
 
+TEST_P(ScreenContentToolsTestLarge, ScreenContentToolsMode2Test) {
+  // Set screen content tools detection mode 2 (anti-alias aware)
+  screen_content_tools_detection_mode_ = AOM_SCREEN_DETECTION_ANTIALIAS_AWARE;
+
+  // force screen content tools on
+  ::libaom_test::Y4mVideoSource video_nonsc("park_joy_90p_8_444.y4m", 0, 1);
+  cfg_.g_profile = 1;
+  tune_content_ = AOM_CONTENT_SCREEN;
+  ASSERT_NO_FATAL_FAILURE(RunLoop(&video_nonsc));
+  ASSERT_EQ(is_screen_content_violated_, false)
+      << "Failed for tune_content_ = AOM_CONTENT_SCREEN";
+
+  // Don't force screen content, however as the input is screen content
+  // allow_screen_content_tools should still be turned on
+  // mode 2 allows correct screen content determination of this clip
+  ::libaom_test::Y4mVideoSource video_sc("screendata.y4m", 0, 1);
+  cfg_.g_profile = 0;
+  is_screen_content_violated_ = true;
+  tune_content_ = AOM_CONTENT_DEFAULT;
+  ASSERT_NO_FATAL_FAILURE(RunLoop(&video_sc));
+  ASSERT_EQ(is_screen_content_violated_, false)
+      << "Failed detection of screen content(lowres)";
+}
+
 AV1_INSTANTIATE_TEST_SUITE(ScreenContentToolsTestLarge,
                            ::testing::Values(::libaom_test::kOnePassGood,
                                              ::libaom_test::kTwoPassGood),
@@ -114,7 +143,24 @@ AV1_INSTANTIATE_TEST_SUITE(ScreenContentToolsTestLarge,
 class ScreenContentToolsMultiThreadTestLarge
     : public ScreenContentToolsTestLarge {};
 
-TEST_P(ScreenContentToolsMultiThreadTestLarge, ScreenContentToolsTest) {
+TEST_P(ScreenContentToolsMultiThreadTestLarge, ScreenContentToolsMode1Test) {
+  // Don't force screen content, however as the input is screen content
+  // allow_screen_content_tools should still be turned on even with
+  // multi-threaded encoding.
+  ::libaom_test::Y4mVideoSource video_sc("desktop_credits.y4m", 0, 10);
+  cfg_.g_profile = 1;
+  cfg_.g_threads = 4;
+  is_screen_content_violated_ = true;
+  tune_content_ = AOM_CONTENT_DEFAULT;
+  ASSERT_NO_FATAL_FAILURE(RunLoop(&video_sc));
+  ASSERT_EQ(is_screen_content_violated_, false)
+      << "Failed detection of screen content";
+}
+
+TEST_P(ScreenContentToolsMultiThreadTestLarge, ScreenContentToolsMode2Test) {
+  // Set screen content tools detection mode 2 (anti-alias aware)
+  screen_content_tools_detection_mode_ = AOM_SCREEN_DETECTION_ANTIALIAS_AWARE;
+
   // Don't force screen content, however as the input is screen content
   // allow_screen_content_tools should still be turned on even with
   // multi-threaded encoding.
