@@ -61,6 +61,24 @@
       ],
       "revId": "5eacc7f8afbf6eef18d8905246a94113bde46b80",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8211edc_8e4e6970",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 625,
+      "author": {
+        "id": 5022
+      },
+      "writtenOn": "2025-05-16T04:49:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b9b2476a_7132492c",
+      "revId": "5eacc7f8afbf6eef18d8905246a94113bde46b80",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
