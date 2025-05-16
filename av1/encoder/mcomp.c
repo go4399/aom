@@ -110,10 +110,13 @@ void av1_make_default_fullpel_ms_params(
     int right_margin =
         cpi->common.width - mi_size_wide[bsize] * MI_SIZE - left_margin + 16;
     FullMvLimits *mv_limits = &ms_params->mv_limits;
-    mv_limits->row_min = AOMMAX(mv_limits->row_min, -top_margin);
     mv_limits->row_max = AOMMIN(mv_limits->row_max, bottom_margin);
-    mv_limits->col_min = AOMMAX(mv_limits->col_min, -left_margin);
+    mv_limits->row_min =
+        clamp(mv_limits->row_min, -top_margin, mv_limits->row_max);
+
     mv_limits->col_max = AOMMIN(mv_limits->col_max, right_margin);
+    mv_limits->col_min =
+        clamp(mv_limits->col_min, -left_margin, mv_limits->col_max);
   }
 
   // Mvcost params
@@ -200,10 +203,13 @@ void av1_make_default_subpel_ms_params(SUBPEL_MOTION_SEARCH_PARAMS *ms_params,
         GET_MV_SUBPEL(cpi->common.width - mi_size_wide[bsize] * MI_SIZE -
                       x->e_mbd.mi_col * MI_SIZE + 8);
     SubpelMvLimits *mv_limits = &ms_params->mv_limits;
-    mv_limits->row_min = AOMMAX(mv_limits->row_min, -top_margin);
     mv_limits->row_max = AOMMIN(mv_limits->row_max, bottom_margin);
-    mv_limits->col_min = AOMMAX(mv_limits->col_min, -left_margin);
+    mv_limits->row_min =
+        clamp(mv_limits->row_min, -top_margin, mv_limits->row_max);
+
     mv_limits->col_max = AOMMIN(mv_limits->col_max, right_margin);
+    mv_limits->col_min =
+        clamp(mv_limits->col_min, -left_margin, mv_limits->col_max);
   }
 
   // Mvcost params
