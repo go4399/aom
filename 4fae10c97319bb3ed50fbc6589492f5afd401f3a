@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f2fbf64d_8c383557",
+        "filename": "test/screen_content_test.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-16T22:30:29Z",
+      "side": 1,
+      "message": "Nit: Delete the space at the end of the line.",
+      "revId": "4fae10c97319bb3ed50fbc6589492f5afd401f3a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
