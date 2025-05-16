@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7ee9e32c_a9be8779",
+        "filename": "av1/encoder/mcomp.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-16T18:31:37Z",
+      "side": 1,
+      "message": "IMPORTANT: `clamp()` is defined as follows:\n\n```\nstatic inline int clamp(int value, int low, int high) {\n  return value \u003c low ? low : (value \u003e high ? high : value);\n}\n```\n\nIt assumes `low \u003c\u003d high`. If `low` is greater than `high`, then `clamp` does NOT ensure that the result is \u003c\u003d `high`.\n\nSo, at this point, do we know that `-top_margin \u003c\u003d mv_limits-\u003erow_max`?",
+      "revId": "9c902237e8b7be68e2d3d6aaa158aa701e0e2d8e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6ffe32c_66754c67",
+        "filename": "av1/encoder/mcomp.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-16T18:31:37Z",
+      "side": 1,
+      "message": "Jingning: I am just curious... How can mv_limits-\u003erow_min become larger than `mv_limits-\u003erow_max`? It seems that can only happen if `-top_margin \u003e bottom_margin`.",
+      "revId": "9c902237e8b7be68e2d3d6aaa158aa701e0e2d8e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
