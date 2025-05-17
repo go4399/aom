@@ -68,6 +68,24 @@
       "parentUuid": "bf5e9e05_996d2f72",
       "revId": "ee28c02bb2106089da36ddd60642ca9f90bde37e",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6675e1a_2fff1a85",
+        "filename": "av1/encoder/temporal_filter.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-17T16:08:31Z",
+      "side": 1,
+      "message": "Happy to help. I didn\u0027t realize this is similar to the bug I fixed last time. The following patch works:\n\n```\ndiff --git a/av1/encoder/mcomp.c b/av1/encoder/mcomp.c\nindex c9ade71d59..ba9f4d013b 100644\n--- a/av1/encoder/mcomp.c\n+++ b/av1/encoder/mcomp.c\n@@ -3380,7 +3380,6 @@ int av1_return_max_sub_pixel_mv(MACROBLOCKD *xd, const AV1_COMMON *const cm,\n   (void)cm;\n   (void)start_mv;\n   (void)start_mv_stats;\n-  (void)distortion;\n   (void)last_mv_search_list;\n \n   const int allow_hp \u003d ms_params-\u003eallow_hp;\n@@ -3394,6 +3393,7 @@ int av1_return_max_sub_pixel_mv(MACROBLOCKD *xd, const AV1_COMMON *const cm,\n   // In the sub-pel motion search, if hp is not used, then the last bit of mv\n   // has to be 0.\n   lower_mv_precision(bestmv, allow_hp, 0);\n+  *distortion \u003d besterr;\n   *sse1 \u003d besterr;\n   return besterr;\n }\n@@ -3409,7 +3409,6 @@ int av1_return_min_sub_pixel_mv(MACROBLOCKD *xd, const AV1_COMMON *const cm,\n   (void)cm;\n   (void)start_mv;\n   (void)start_mv_stats;\n-  (void)distortion;\n   (void)last_mv_search_list;\n \n   const int allow_hp \u003d ms_params-\u003eallow_hp;\n@@ -3422,6 +3421,7 @@ int av1_return_min_sub_pixel_mv(MACROBLOCKD *xd, const AV1_COMMON *const cm,\n   // In the sub-pel motion search, if hp is not used, then the last bit of mv\n   // has to be 0.\n   lower_mv_precision(bestmv, allow_hp, 0);\n+  *distortion \u003d besterr;\n   *sse1 \u003d besterr;\n   return besterr;\n }\n```",
+      "parentUuid": "aeb5d241_41cf0931",
+      "revId": "ee28c02bb2106089da36ddd60642ca9f90bde37e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
