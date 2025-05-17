@@ -199,8 +199,9 @@ static void tf_motion_search(AV1_COMP *cpi, MACROBLOCK *mb,
       av1_get_search_site_config(cpi, mb, search_method);
 
   // Unused intermediate results for motion search.
-  unsigned int sse, error;
-  int distortion;
+  unsigned int sse = 0;
+  unsigned int error = 0;
+  int distortion = 0;
   int cost_list[5];
 
   const int is_high_bitdepth = is_cur_buf_hbd(mbd);
