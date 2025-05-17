@@ -33,6 +33,23 @@
       "message": "Use double `**` after `/`:\n\n```\n  /** Anti-aliased text and graphics aware */\n```",
       "revId": "c2cea20d3be61cbc700424b718bb241cab54d6fe",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51bb393d_b8fc3c6f",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 17
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-17T01:21:14Z",
+      "side": 1,
+      "message": "Optional: I found two ways to use `AOM_SCREEN_DETECTION_STANDARD` here without excessive reformatting by clang-format, as shown in the following patch:\n\n```\ndiff --git a/av1/av1_cx_iface.c b/av1/av1_cx_iface.c\nindex 18b54f9707..bdbec6957d 100644\n--- a/av1/av1_cx_iface.c\n+++ b/av1/av1_cx_iface.c\n@@ -368,7 +368,8 @@ static const struct av1_extracfg default_extra_cfg \u003d {\n   0,               // strict_level_conformance\n   -1,              // kf_max_pyr_height\n   0,               // sb_qp_sweep\n-  1,               // screen_detection_mode\n+  // screen_detection_mode\n+  AOM_SCREEN_DETECTION_STANDARD,\n };\n #else\n // Some settings are changed for realtime only build.\n@@ -523,7 +524,7 @@ static const struct av1_extracfg default_extra_cfg \u003d {\n   0,               // strict_level_conformance\n   -1,              // kf_max_pyr_height\n   0,               // sb_qp_sweep\n-  1,               // screen_detection_mode\n+  AOM_SCREEN_DETECTION_STANDARD,\n };\n #endif\n \n```\n\nThe first way is to move the comment before the initializer. The second way is to delete the comment, which is acceptable because the initializer is a symbolic constant.",
+      "revId": "c2cea20d3be61cbc700424b718bb241cab54d6fe",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
