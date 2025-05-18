@@ -226,7 +226,59 @@ void av1_setup_src_planes(MACROBLOCK *x, const YV12_BUFFER_CONFIG *src,
 
 #if !CONFIG_REALTIME_ONLY
 /*!\brief Assigns different quantization parameters to each super
- * block based on its TPL weight.
+ * block based on relevant statistics depending on the selected
+ * delta-q mode (variance). This is the non-rd version.
+ *
+ * \param[in]     cpi         Top level encoder instance structure
+ * \param[in,out] td          Thread data structure
+ * \param[in,out] x           Macro block level data for this block.
+ * \param[in]     tile_info   Tile infromation / identification
+ * \param[in]     mi_row      Block row (in "MI_SIZE" units) index
+ * \param[in]     mi_col      Block column (in "MI_SIZE" units) index
+ * \param[out]    num_planes  Number of image planes (e.g. Y,U,V)
+ *
+ * \remark No return value but updates super block and thread data
+ * related to the q / q delta to be used.
+ */
+static inline void setup_delta_q_nonrd(AV1_COMP *const cpi, ThreadData *td,
+                                       MACROBLOCK *const x,
+                                       const TileInfo *const tile_info,
+                                       int mi_row, int mi_col, int num_planes) {
+  AV1_COMMON *const cm = &cpi->common;
+  const DeltaQInfo *const delta_q_info = &cm->delta_q_info;
+  assert(delta_q_info->delta_q_present_flag);
+
+  const BLOCK_SIZE sb_size = cm->seq_params->sb_size;
+  av1_setup_src_planes(x, cpi->source, mi_row, mi_col, num_planes, sb_size);
+
+  const int delta_q_res = delta_q_info->delta_q_res;
+  int current_qindex = cm->quant_params.base_qindex;
+
+  assert(cpi->oxcf.q_cfg.deltaq_mode == DELTA_Q_VARIANCE_BOOST);
+  if (cpi->oxcf.q_cfg.deltaq_mode == DELTA_Q_VARIANCE_BOOST) {
+    current_qindex = av1_get_sbq_variance_boost(cpi, x);
+  }
+
+  x->rdmult_cur_qindex = current_qindex;
+  MACROBLOCKD *const xd = &x->e_mbd;
+  const int adjusted_qindex = av1_adjust_q_from_delta_q_res(
+      delta_q_res, xd->current_base_qindex, current_qindex);
+  current_qindex = adjusted_qindex;
+
+  x->delta_qindex = current_qindex - cm->quant_params.base_qindex;
+  x->rdmult_delta_qindex = x->delta_qindex;
+
+  av1_set_offsets(cpi, tile_info, x, mi_row, mi_col, sb_size);
+  xd->mi[0]->current_qindex = current_qindex;
+  av1_init_plane_quantizers(cpi, x, xd->mi[0]->segment_id, 0);
+
+  // keep track of any non-zero delta-q used
+  td->deltaq_used |= (x->delta_qindex != 0);
+}
+
+/*!\brief Assigns different quantization parameters to each super
+ * block based on relevant statistics depending on the selected
+ * delta-q mode (TPL weight, variance, HDR, etc).
  *
  * \ingroup tpl_modelling
  *
@@ -238,7 +290,7 @@ void av1_setup_src_planes(MACROBLOCK *x, const YV12_BUFFER_CONFIG *src,
  * \param[in]     mi_col      Block column (in "MI_SIZE" units) index
  * \param[out]    num_planes  Number of image planes (e.g. Y,U,V)
  *
- * \remark No return value but updates macroblock and thread data
+ * \remark No return value but updates super block and thread data
  * related to the q / q delta to be used.
  */
 static inline void setup_delta_q(AV1_COMP *const cpi, ThreadData *td,
@@ -509,6 +561,24 @@ static void get_estimated_pred(AV1_COMP *cpi, const TileInfo *const tile,
 #define AVG_CDF_WEIGHT_LEFT 3
 #define AVG_CDF_WEIGHT_TOP_RIGHT 1
 
+#if !CONFIG_REALTIME_ONLY
+/*!\brief Initializes the stats for encode_nonrd_sb
+ */
+static inline void init_encode_nonrd_sb(AV1_COMP *cpi, ThreadData *td,
+                                        const TileDataEnc *tile_data,
+                                        int mi_row, int mi_col) {
+  AV1_COMMON *cm = &cpi->common;
+  const TileInfo *tile_info = &tile_data->tile_info;
+  MACROBLOCK *x = &td->mb;
+
+  if (cm->delta_q_info.delta_q_present_flag) {
+    const int num_planes = av1_num_planes(cm);
+
+    setup_delta_q_nonrd(cpi, td, x, tile_info, mi_row, mi_col, num_planes);
+  }
+}
+#endif
+
 /*!\brief Encode a superblock (minimal RD search involved)
  *
  * \ingroup partition_search
@@ -537,6 +607,10 @@ static inline void encode_nonrd_sb(AV1_COMP *cpi, ThreadData *td,
                              BLOCK_64X64, &dummy_rdc, 1, INT64_MAX, pc_root);
     return;
   }
+#endif
+
+#if !CONFIG_REALTIME_ONLY
+  init_encode_nonrd_sb(cpi, td, tile_data, mi_row, mi_col);
 #endif
   // Set the partition
   if (sf->part_sf.partition_search_type == FIXED_PARTITION || seg_skip ||
