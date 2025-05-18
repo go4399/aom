@@ -1669,10 +1669,12 @@ int av1_choose_var_based_partitioning(AV1_COMP *cpi, const TileInfo *const tile,
   const bool is_segment_id_boosted =
       cpi->oxcf.q_cfg.aq_mode == CYCLIC_REFRESH_AQ && cm->seg.enabled &&
       cyclic_refresh_segment_id_boosted(segment_id);
-  const int qindex =
-      is_segment_id_boosted
-          ? av1_get_qindex(&cm->seg, segment_id, cm->quant_params.base_qindex)
-          : cm->quant_params.base_qindex;
+  const int sb_qindex = cm->delta_q_info.delta_q_present_flag
+                            ? x->delta_qindex + cm->quant_params.base_qindex
+                            : cm->quant_params.base_qindex;
+  const int qindex = is_segment_id_boosted
+                         ? av1_get_qindex(&cm->seg, segment_id, sb_qindex)
+                         : sb_qindex;
   set_vbp_thresholds(
       cpi, thresholds, blk_sad, qindex, x->content_state_sb.low_sumdiff,
       x->content_state_sb.source_sad_nonrd, x->content_state_sb.source_sad_rd,
