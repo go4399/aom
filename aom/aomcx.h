@@ -1140,6 +1140,11 @@ enum aome_enc_control_id {
    * - 4 = use modulation for user rating based perceptual quality optimization
    * - 5 = use modulation for HDR video
    * - 6 = use modulation for all intra using Variance Boost
+   *
+   * \attention Only delta q mode 6 is supported in non-rd mode. Non-rd mode is
+   * enabled by setting cpu-used >= 8 (all intra usage) and cpu-used >= 7
+   * (realtime usage). Setting delta q mode to any other value in non-rd mode
+   * has no effect and will be treated as setting the delta q mode to 0.
    */
   AV1E_SET_DELTAQ_MODE = 107,
 
