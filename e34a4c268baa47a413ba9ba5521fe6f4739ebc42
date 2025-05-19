@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c150df3_bf05cb1b",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 19
+      },
+      "lineNbr": 2040,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-05-19T19:58:26Z",
+      "side": 1,
+      "message": "Sorry, I wasn\u0027t clear. I meant to include this one (`color_thresh`) too.  `blk_w` / `blk_h` could be `kBlockWidth` / `kBlockHeight` alternatively.",
+      "revId": "e34a4c268baa47a413ba9ba5521fe6f4739ebc42",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
