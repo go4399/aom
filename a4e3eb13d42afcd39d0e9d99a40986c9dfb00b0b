@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d686b27_e1adb3dc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 33002
+      },
+      "writtenOn": "2025-05-19T12:31:49Z",
+      "side": 1,
+      "message": "This patch introduces an adaptive RD cost penalty for split partition, applying higher penalties to smaller blocks and lower penalties to the larger ones to minimize the quality impact. Most of the decoder speed improvement observed is due to penalizing the splitting of 16×16, 32×32, and 64×64 block sizes.\n\nPerformance results of encoder and decoder for the streams generated\nwith low complexity decode enabled are as follows:\n```\n          Instruction Count                                                                 \n             Reduction(%)                   BD-Rate Loss(%)                      Time Reduction(%)\ncpu-used   Encoder   Decoder    avg.psnr   ovr.psnr   ssim     vmaf    vmaf_neg   dav1d Decoder   \n   1       -1.728     1.797      0.1219     0.1035   0.0546  -0.0185    0.0210      2.033\n   2       -0.747     1.385     -0.0148    -0.0233  -0.0399  -0.0569   -0.0373      1.453\n   3       -0.141     1.733      0.1098     0.1485   0.0864   0.0498    0.0475      1.768\n```\n\nThe instruction count reduction specified has been measured using command:\n$ `perf stat -e instructions:u ./aomenc …`\n$ `perf stat -e instructions:u ./dav1d --cpumask avx2 …`\nThe decode time is measured using command\n`time taskset -c 0  ./dav1d  --cpumask avx2 …`\n\nWe have verified that this CL produces no noticeable artifacts for the max-drop contents.",
+      "revId": "a4e3eb13d42afcd39d0e9d99a40986c9dfb00b0b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
