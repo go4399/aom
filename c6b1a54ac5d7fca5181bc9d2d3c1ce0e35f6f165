@@ -18,6 +18,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "0afd027b_103b9d5b",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 20
+      },
+      "lineNbr": 2038,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-19T22:14:11Z",
+      "side": 1,
+      "message": "I could make these can changes. However, because Mode 2 creates a couple of scratch buffer arrays, using `kBlockArea` to specify size is considered a VLA initialization (even if `kBlockArea` is of type `const int`), and so I\u0027m getting Clang build warnings.\n\n```\n/Users/juliobbv/Repos/aom_build/aom/av1/encoder/encoder.c:2223:24: warning: variable length array used [-Wvla]\n 2223 |   uint8_t downconv_blk[kBlockArea];\n      |                        ^~~~~~~~~~\n/Users/juliobbv/Repos/aom_build/aom/av1/encoder/encoder.c:2225:23: warning: variable length array used [-Wvla]\n 2225 |   uint8_t dilated_blk[kBlockArea];\n      |                       ^~~~~~~~~~\n```",
+      "parentUuid": "2e0a9e2d_a0b82937",
+      "revId": "c6b1a54ac5d7fca5181bc9d2d3c1ce0e35f6f165",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "cf49c869_38db6d24",
