@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e0a9e2d_a0b82937",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 20
+      },
+      "lineNbr": 2038,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-19T21:41:15Z",
+      "side": 1,
+      "message": "Add\n\n```\n  const int kBlockArea \u003d kBlockWidth * kBlockHeight;\n```\n\nand replace `kBlockHeight * kBlockWidth` with `kBlockArea` below.",
+      "revId": "c6b1a54ac5d7fca5181bc9d2d3c1ce0e35f6f165",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf49c869_38db6d24",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 20
+      },
+      "lineNbr": 2208,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-19T21:41:15Z",
+      "side": 1,
+      "message": "These enumerators can be renamed `kBlockWidth`, `kBlockHeight`, and `kBlockArea` now.",
+      "revId": "c6b1a54ac5d7fca5181bc9d2d3c1ce0e35f6f165",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9334a86b_8daabacc",
+        "filename": "test/screen_content_detection_mode_2_test.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-19T21:41:15Z",
+      "side": 1,
+      "message": "`9 * 6` can be changed to `kWidth * kHeight` now.",
+      "range": {
+        "startLine": 44,
+        "startChar": 18,
+        "endLine": 44,
+        "endChar": 23
+      },
+      "revId": "c6b1a54ac5d7fca5181bc9d2d3c1ce0e35f6f165",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
