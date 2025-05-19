@@ -16,6 +16,176 @@
       "message": "James: Could you review Julio\u0027s CL as a second reviewer? You just need to review the changes to the public interface: aom/aomcx.h and av1_arg_defs.{h,c}. Thanks!",
       "revId": "42b27bae6e59e4b460c95906ea90512bd84910e6",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "31007745_a80293ef",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 18
+      },
+      "lineNbr": 2201,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-05-19T18:19:28Z",
+      "side": 1,
+      "message": "The extra \u0027the\u0027 can be removed",
+      "range": {
+        "startLine": 2201,
+        "startChar": 12,
+        "endLine": 2201,
+        "endChar": 16
+      },
+      "revId": "42b27bae6e59e4b460c95906ea90512bd84910e6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96c5e250_dd9b1254",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 18
+      },
+      "lineNbr": 2234,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-05-19T18:19:28Z",
+      "side": 1,
+      "message": "Since these are true constants they could be named `kVarThresh`, etc.",
+      "revId": "42b27bae6e59e4b460c95906ea90512bd84910e6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e2278586_aa502a64",
+        "filename": "test/screen_content_detection_mode_2_test.cc",
+        "patchSetId": 18
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-05-19T18:19:28Z",
+      "side": 1,
+      "message": "add a blank line after `namespace {` to balance the one at the end of the block.",
+      "fixSuggestions": [
+        {
+          "fixId": "d795e5a9_5a362941",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/screen_content_detection_mode_2_test.cc",
+              "range": {
+                "startLine": 16,
+                "startChar": 0,
+                "endLine": 16,
+                "endChar": 0
+              },
+              "replacement": "\n"
+            }
+          ]
+        }
+      ],
+      "revId": "42b27bae6e59e4b460c95906ea90512bd84910e6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "751448c6_d4ba9d96",
+        "filename": "test/screen_content_detection_mode_2_test.cc",
+        "patchSetId": 18
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-05-19T18:19:28Z",
+      "side": 1,
+      "message": "Make this `constexpr` and name it `kSource`. The same goes for the other globals.",
+      "fixSuggestions": [
+        {
+          "fixId": "9cee2992_1310a4ed",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/screen_content_detection_mode_2_test.cc",
+              "range": {
+                "startLine": 18,
+                "startChar": 0,
+                "endLine": 19,
+                "endChar": 0
+              },
+              "replacement": "constexpr uint8_t kSource[] \u003d   {   0,   0,   1,   2, 255,   3,   4,   0,   0,\n"
+            },
+            {
+              "path": "test/screen_content_detection_mode_2_test.cc",
+              "range": {
+                "startLine": 25,
+                "startChar": 0,
+                "endLine": 26,
+                "endChar": 0
+              },
+              "replacement": "constexpr uint8_t kExpected[] \u003d {   0,   0, 255, 255, 255, 255, 255,   0,   0,\n"
+            },
+            {
+              "path": "test/screen_content_detection_mode_2_test.cc",
+              "range": {
+                "startLine": 33,
+                "startChar": 0,
+                "endLine": 35,
+                "endChar": 0
+              },
+              "replacement": "constexpr int kWidth \u003d 9;\nconstexpr int kHeight \u003d 6;\n"
+            },
+            {
+              "path": "test/screen_content_detection_mode_2_test.cc",
+              "range": {
+                "startLine": 37,
+                "startChar": 0,
+                "endLine": 38,
+                "endChar": 0
+              },
+              "replacement": "  // Find the dominant value of kSource[], which should be 255,\n"
+            },
+            {
+              "path": "test/screen_content_detection_mode_2_test.cc",
+              "range": {
+                "startLine": 39,
+                "startChar": 0,
+                "endLine": 40,
+                "endChar": 0
+              },
+              "replacement": "  EXPECT_EQ(av1_find_dominant_value(kSource, kWidth, kHeight, kWidth), 255);\n"
+            },
+            {
+              "path": "test/screen_content_detection_mode_2_test.cc",
+              "range": {
+                "startLine": 45,
+                "startChar": 0,
+                "endLine": 46,
+                "endChar": 0
+              },
+              "replacement": "  av1_dilate_block(kSource, kWidth, dilated, kWidth, kHeight, kWidth);\n"
+            },
+            {
+              "path": "test/screen_content_detection_mode_2_test.cc",
+              "range": {
+                "startLine": 48,
+                "startChar": 0,
+                "endLine": 51,
+                "endChar": 0
+              },
+              "replacement": "  for (int r \u003d 0; r \u003c kHeight; ++r) {\n    for (int c \u003d 0; c \u003c kWidth; ++c) {\n      EXPECT_EQ(kExpected[r * kHeight + c], dilated[r * kHeight + c]);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "42b27bae6e59e4b460c95906ea90512bd84910e6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
