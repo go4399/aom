@@ -1794,6 +1794,13 @@ static inline void get_ref_frame_use_mask(AV1_COMP *cpi, MACROBLOCK *x,
       get_segdata(seg, mi->segment_id, SEG_LVL_REF_FRAME) == GOLDEN_FRAME) {
     use_golden_ref_frame = 1;
     use_alt_ref_frame = 0;
+    return;
+  } else if (segfeature_active(seg, mi->segment_id, SEG_LVL_REF_FRAME) &&
+             get_segdata(seg, mi->segment_id, SEG_LVL_REF_FRAME) ==
+                 ALTREF_FRAME) {
+    use_golden_ref_frame = 0;
+    use_alt_ref_frame = 1;
+    return;
   }
 
   // Skip golden/altref reference if color is set, on flat blocks with motion.
