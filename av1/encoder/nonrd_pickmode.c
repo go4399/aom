@@ -1792,8 +1792,15 @@ static inline void get_ref_frame_use_mask(AV1_COMP *cpi, MACROBLOCK *x,
 
   if (segfeature_active(seg, mi->segment_id, SEG_LVL_REF_FRAME) &&
       get_segdata(seg, mi->segment_id, SEG_LVL_REF_FRAME) == GOLDEN_FRAME) {
-    use_golden_ref_frame = 1;
-    use_alt_ref_frame = 0;
+    use_ref_frame[GOLDEN_FRAME] = 1;
+    use_ref_frame[ALTREF_FRAME] = 0;
+    return;
+  } else if (segfeature_active(seg, mi->segment_id, SEG_LVL_REF_FRAME) &&
+             get_segdata(seg, mi->segment_id, SEG_LVL_REF_FRAME) ==
+                 ALTREF_FRAME) {
+    use_ref_frame[GOLDEN_FRAME] = 0;
+    use_ref_frame[ALTREF_FRAME] = 1;
+    return;
   }
 
   // Skip golden/altref reference if color is set, on flat blocks with motion.
@@ -2448,6 +2455,15 @@ static AOM_FORCE_INLINE bool skip_inter_mode_nonrd(
       (*this_mode != GLOBALMV || *ref_frame != LAST_FRAME))
     return true;
 
+  // If the segment reference frame feature is enabled then do nothing if the
+  // current ref frame is not allowed.
+  if (segfeature_active(seg, segment_id, SEG_LVL_REF_FRAME)) {
+    if (get_segdata(seg, segment_id, SEG_LVL_REF_FRAME) != (int)(*ref_frame))
+      return true;
+    else
+      return false;
+  }
+
   // Skip the mode if use reference frame mask flag is not set.
   if (!search_state->use_ref_frame_mask[*ref_frame]) return true;
 
@@ -2525,12 +2541,6 @@ static AOM_FORCE_INLINE bool skip_inter_mode_nonrd(
       return true;
     }
   }
-
-  // If the segment reference frame feature is enabled then do nothing if the
-  // current ref frame is not allowed.
-  if (segfeature_active(seg, segment_id, SEG_LVL_REF_FRAME) &&
-      get_segdata(seg, segment_id, SEG_LVL_REF_FRAME) != (int)(*ref_frame))
-    return true;
 
   // For screen content: skip mode testing based on source_sad.
   if (cpi->oxcf.tune_cfg.content == AOM_CONTENT_SCREEN &&
@@ -3228,6 +3238,7 @@ void av1_nonrd_pick_inter_mode_sb(AV1_COMP *cpi, TileDataEnc *tile_data,
   SVC *const svc = &cpi->svc;
   MACROBLOCKD *const xd = &x->e_mbd;
   MB_MODE_INFO *const mi = xd->mi[0];
+  const struct segmentation *const seg = &cm->seg;
   struct macroblockd_plane *const pd = &xd->plane[AOM_PLANE_Y];
   const MB_MODE_INFO_EXT *const mbmi_ext = &x->mbmi_ext;
   MV_REFERENCE_FRAME ref_frame, ref_frame2;
@@ -3325,6 +3336,10 @@ void av1_nonrd_pick_inter_mode_sb(AV1_COMP *cpi, TileDataEnc *tile_data,
   } else {
     tot_num_comp_modes = 0;
   }
+
+  // No compound if SEG_LVL_REF_FRAME is set.
+  if (segfeature_active(seg, segment_id, SEG_LVL_REF_FRAME))
+    tot_num_comp_modes = 0;
 
   if (x->pred_mv_sad[LAST_FRAME] != INT_MAX) {
     thresh_sad_pred = ((int64_t)x->pred_mv_sad[LAST_FRAME]) << 1;
