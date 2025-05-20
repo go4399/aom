@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "82cd0497_b853ed2a",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2061,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-20T17:47:11Z",
+      "side": 1,
+      "message": "Since `kBlockWidth` and `kBlockHeight` are equal, we could not detect the bug that they were swapped.",
+      "revId": "284aad4abeb63037d53caba285d17e86b84b3440",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
