@@ -222,7 +222,7 @@ void av1_update_state(const AV1_COMP *const cpi, ThreadData *td,
   // If segmentation in use
   if (seg->enabled) {
     // For in frame complexity AQ copy the segment id from the segment map.
-    if (cpi->oxcf.q_cfg.aq_mode == COMPLEXITY_AQ) {
+    if (cpi->oxcf.q_cfg.aq_mode == COMPLEXITY_AQ || cpi->roi.enabled) {
       const uint8_t *const map =
           seg->update_map ? cpi->enc_seg.map : cm->last_frame_seg_map;
       mi_addr->segment_id =
@@ -294,7 +294,7 @@ void av1_update_state(const AV1_COMP *const cpi, ThreadData *td,
     for (x_idx = 0; x_idx < cols; x_idx++) xd->mi[x_idx + y * mis] = mi_addr;
   }
 
-  if (cpi->oxcf.q_cfg.aq_mode)
+  if (cpi->oxcf.q_cfg.aq_mode || cpi->roi.enabled)
     av1_init_plane_quantizers(cpi, x, mi_addr->segment_id, 0);
 
   if (dry_run) return;
