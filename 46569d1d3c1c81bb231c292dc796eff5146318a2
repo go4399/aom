@@ -54,6 +54,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "26463d49_ae4fb4cc",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 22
+      },
+      "lineNbr": 2055,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-20T16:09:35Z",
+      "side": 1,
+      "message": "I can take care of fixing the rows/cols vs. width/height confusion.",
+      "parentUuid": "979ea44c_772df6a8",
+      "revId": "46569d1d3c1c81bb231c292dc796eff5146318a2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f890ab2e_6334ffa3",
@@ -67,6 +85,24 @@
       "writtenOn": "2025-05-20T00:53:49Z",
       "side": 1,
       "message": "This should be `/*rows\u003d*/kBlockHeight, /*cols\u003d*/kBlockWidth`.",
+      "revId": "46569d1d3c1c81bb231c292dc796eff5146318a2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aaef71cc_76843e13",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 22
+      },
+      "lineNbr": 2058,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-20T16:09:35Z",
+      "side": 1,
+      "message": "Will fix in a separate CL.",
+      "parentUuid": "f890ab2e_6334ffa3",
       "revId": "46569d1d3c1c81bb231c292dc796eff5146318a2",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -88,6 +124,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1437638d_a75448ad",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 22
+      },
+      "lineNbr": 2286,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-20T16:09:35Z",
+      "side": 1,
+      "message": "We can ignore this minor issue.",
+      "parentUuid": "69527cf4_2e1f6ecc",
+      "revId": "46569d1d3c1c81bb231c292dc796eff5146318a2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2d0a09dc_f6769b96",
@@ -101,6 +155,24 @@
       "writtenOn": "2025-05-20T00:53:49Z",
       "side": 1,
       "message": "This should be `/*rows\u003d*/kBlockHeight, /*cols\u003d*/kBlockWidth`.",
+      "revId": "46569d1d3c1c81bb231c292dc796eff5146318a2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b501790_052384b9",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 22
+      },
+      "lineNbr": 2297,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-20T16:09:35Z",
+      "side": 1,
+      "message": "Will fix in a separate CL.",
+      "parentUuid": "2d0a09dc_f6769b96",
       "revId": "46569d1d3c1c81bb231c292dc796eff5146318a2",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -122,6 +194,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8c0e141_c1c827ea",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 22
+      },
+      "lineNbr": 2327,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-20T16:09:35Z",
+      "side": 1,
+      "message": "Will fix in a separate CL.",
+      "parentUuid": "80d17cae_dacbf1f0",
+      "revId": "46569d1d3c1c81bb231c292dc796eff5146318a2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a2359b7e_1d8d4d50",
@@ -135,6 +225,24 @@
       "writtenOn": "2025-05-20T00:53:49Z",
       "side": 1,
       "message": "The last two arguments in this line should be `/*rows\u003d*/kBlockHeight, /*cols\u003d*/kBlockWidth`.",
+      "revId": "46569d1d3c1c81bb231c292dc796eff5146318a2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "139df4fb_27d4384c",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 22
+      },
+      "lineNbr": 2328,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-20T16:09:35Z",
+      "side": 1,
+      "message": "Will fix in a separate CL.",
+      "parentUuid": "a2359b7e_1d8d4d50",
       "revId": "46569d1d3c1c81bb231c292dc796eff5146318a2",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
