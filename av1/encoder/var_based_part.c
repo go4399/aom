@@ -1670,7 +1670,7 @@ int av1_choose_var_based_partitioning(AV1_COMP *cpi, const TileInfo *const tile,
       cpi->oxcf.q_cfg.aq_mode == CYCLIC_REFRESH_AQ && cm->seg.enabled &&
       cyclic_refresh_segment_id_boosted(segment_id);
   const int qindex =
-      is_segment_id_boosted
+      is_segment_id_boosted || cpi->roi.enabled
           ? av1_get_qindex(&cm->seg, segment_id, cm->quant_params.base_qindex)
           : cm->quant_params.base_qindex;
   set_vbp_thresholds(
