@@ -457,11 +457,24 @@ void av1_apply_roi_map(AV1_COMP *cpi) {
     // Translate the external delta q values to internal values.
     internal_delta_q[i] = av1_quantizer_to_qindex(abs(delta_q[i]));
     if (delta_q[i] < 0) internal_delta_q[i] = -internal_delta_q[i];
+    // Clamp to allowed best/worst quality.
+    if (cm->quant_params.base_qindex + internal_delta_q[i] <
+        cpi->rc.best_quality)
+      internal_delta_q[i] = cpi->rc.best_quality - cm->quant_params.base_qindex;
+    if (cm->quant_params.base_qindex + internal_delta_q[i] >
+        cpi->rc.worst_quality)
+      internal_delta_q[i] =
+          cpi->rc.worst_quality - cm->quant_params.base_qindex;
     if (internal_delta_q[i] != 0) {
       av1_enable_segfeature(seg, i, SEG_LVL_ALT_Q);
       av1_set_segdata(seg, i, SEG_LVL_ALT_Q, internal_delta_q[i]);
     }
     if (delta_lf[i] != 0) {
+      // For now disable loopfilter delta from ROI, as it requires
+      // additional changes and settings: DELTAQ_MODE and DELTALF_MODE
+      // are needed to be enabled, along with additional internal fix.
+      return;
+      /*
       // Force the same delta on YUV.
       av1_enable_segfeature(seg, i, SEG_LVL_ALT_LF_Y_H);
       av1_enable_segfeature(seg, i, SEG_LVL_ALT_LF_Y_V);
@@ -471,27 +484,33 @@ void av1_apply_roi_map(AV1_COMP *cpi) {
       av1_set_segdata(seg, i, SEG_LVL_ALT_LF_Y_V, delta_lf[i]);
       av1_set_segdata(seg, i, SEG_LVL_ALT_LF_U, delta_lf[i]);
       av1_set_segdata(seg, i, SEG_LVL_ALT_LF_V, delta_lf[i]);
+      */
     }
-    if (skip[i] != 0) {
+    // Skip only allowed on delta frames.
+    if (skip[i] != 0 && !frame_is_intra_only(cm)) {
       av1_enable_segfeature(seg, i, SEG_LVL_SKIP);
       // Also force skip on loopfilter.
       av1_enable_segfeature(seg, i, SEG_LVL_ALT_LF_Y_H);
       av1_enable_segfeature(seg, i, SEG_LVL_ALT_LF_Y_V);
       av1_enable_segfeature(seg, i, SEG_LVL_ALT_LF_U);
       av1_enable_segfeature(seg, i, SEG_LVL_ALT_LF_V);
-      av1_set_segdata(seg, i, SEG_LVL_SKIP, 0);
       av1_set_segdata(seg, i, SEG_LVL_ALT_LF_Y_H, -MAX_LOOP_FILTER);
       av1_set_segdata(seg, i, SEG_LVL_ALT_LF_Y_V, -MAX_LOOP_FILTER);
       av1_set_segdata(seg, i, SEG_LVL_ALT_LF_U, -MAX_LOOP_FILTER);
       av1_set_segdata(seg, i, SEG_LVL_ALT_LF_V, -MAX_LOOP_FILTER);
     }
-    if (ref_frame[i] >= 0) {
-      // GOLDEN was updated in previous encoded frame, so GOLDEN and LAST are
-      // same reference.
-      if (ref_frame[i] == GOLDEN_FRAME && cpi->rc.frames_since_golden == 0)
-        ref_frame[i] = LAST_FRAME;
-      av1_enable_segfeature(seg, i, SEG_LVL_REF_FRAME);
-      av1_set_segdata(seg, i, SEG_LVL_REF_FRAME, ref_frame[i]);
+    if (ref_frame[i] >= 0 && !frame_is_intra_only(cm)) {
+      // Only allowed for LAST, GOLDEN, and ALTREF, and check that if either
+      // is set as a reference.
+      if ((ref_frame[i] == LAST_FRAME &&
+           cpi->ref_frame_flags & AOM_LAST_FLAG) ||
+          (ref_frame[i] == GOLDEN_FRAME &&
+           cpi->ref_frame_flags & AOM_GOLD_FLAG) ||
+          (ref_frame[i] == ALTREF_FRAME &&
+           cpi->ref_frame_flags & AOM_ALT_FLAG)) {
+        av1_enable_segfeature(seg, i, SEG_LVL_REF_FRAME);
+        av1_set_segdata(seg, i, SEG_LVL_REF_FRAME, ref_frame[i]);
+      }
     }
   }
   roi->enabled = 1;
