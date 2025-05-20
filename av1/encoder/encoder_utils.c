@@ -479,7 +479,6 @@ void av1_apply_roi_map(AV1_COMP *cpi) {
       av1_enable_segfeature(seg, i, SEG_LVL_ALT_LF_Y_V);
       av1_enable_segfeature(seg, i, SEG_LVL_ALT_LF_U);
       av1_enable_segfeature(seg, i, SEG_LVL_ALT_LF_V);
-      av1_set_segdata(seg, i, SEG_LVL_SKIP, 0);
       av1_set_segdata(seg, i, SEG_LVL_ALT_LF_Y_H, -MAX_LOOP_FILTER);
       av1_set_segdata(seg, i, SEG_LVL_ALT_LF_Y_V, -MAX_LOOP_FILTER);
       av1_set_segdata(seg, i, SEG_LVL_ALT_LF_U, -MAX_LOOP_FILTER);
