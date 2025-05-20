@@ -1648,6 +1648,7 @@ typedef struct aom_roi_map {
   int delta_lf[AOM_MAX_SEGMENTS];  /**< Loop filter deltas. */
   int skip[AOM_MAX_SEGMENTS];      /**< Skip this block. */
   int ref_frame[AOM_MAX_SEGMENTS]; /**< Reference frame for this block. */
+  int reference_enabled;           /**< Reference frame feature set. */
 } aom_roi_map_t;
 
 /*!\brief  aom active region map
