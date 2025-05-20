@@ -3074,7 +3074,8 @@ void av1_nonrd_use_partition(AV1_COMP *cpi, ThreadData *td,
       }
       if (cpi->sf.rt_sf.nonrd_check_partition_merge_mode &&
           av1_is_leaf_split_partition(cm, mi_row, mi_col, bsize) &&
-          !frame_is_intra_only(cm) && bsize <= BLOCK_64X64) {
+          !frame_is_intra_only(cm) && bsize <= BLOCK_64X64 &&
+          !cpi->roi.enabled) {
         try_merge(cpi, td, tile_data, mib, tp, mi_row, mi_col, bsize, pc_tree,
                   partition, subsize, pl);
       } else {
