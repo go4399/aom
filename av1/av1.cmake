@@ -126,6 +126,7 @@ list(APPEND AOM_AV1_ENCODER_SOURCES
             "${AOM_ROOT}/av1/encoder/av1_fwd_txfm1d.h"
             "${AOM_ROOT}/av1/encoder/av1_fwd_txfm1d_cfg.h"
             "${AOM_ROOT}/av1/encoder/av1_fwd_txfm2d.c"
+            "${AOM_ROOT}/av1/encoder/av1_fwd_txfm2d_hwy.h"
             "${AOM_ROOT}/av1/encoder/av1_quantize.c"
             "${AOM_ROOT}/av1/encoder/av1_quantize.h"
             "${AOM_ROOT}/av1/encoder/bitstream.c"
@@ -364,6 +365,9 @@ if(NOT CONFIG_EXCLUDE_SIMD_MISMATCH)
               "${AOM_ROOT}/av1/encoder/x86/cnn_avx2.c"
               "${AOM_ROOT}/av1/encoder/x86/ml_avx2.c")
 endif()
+
+list(APPEND AOM_AV1_ENCODER_INTRIN_AVX512
+            "${AOM_ROOT}/av1/encoder/x86/av1_fwd_txfm2d_hwy_avx512.cc")
 
 list(APPEND AOM_AV1_ENCODER_INTRIN_NEON
             "${AOM_ROOT}/av1/encoder/arm/av1_error_neon.c"
@@ -767,6 +771,12 @@ function(setup_av1_targets)
       add_intrinsics_object_library("-mavx2" "avx2" "aom_av1_encoder"
                                     "AOM_AV1_ENCODER_INTRIN_AVX2")
     endif()
+  endif()
+
+  if(HAVE_AVX512 AND CONFIG_AV1_ENCODER AND CONFIG_HIGHWAY)
+    add_intrinsics_object_library(
+      "-march=skylake-avx512" "avx512"
+      "aom_av1_encoder" "AOM_AV1_ENCODER_INTRIN_AVX512")
   endif()
 
   if(HAVE_NEON)
