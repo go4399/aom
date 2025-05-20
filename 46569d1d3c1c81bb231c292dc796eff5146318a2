@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "09def31e_93abb88f",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 22
+      },
+      "lineNbr": 2055,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-20T16:03:45Z",
+      "side": 1,
+      "message": "Hey Wan-Teh! Is it okay if I address this round of comments in a separate CL? Iterating on it is getting more complicated. Thanks!",
+      "parentUuid": "343bcced_c878cc19",
+      "revId": "46569d1d3c1c81bb231c292dc796eff5146318a2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f890ab2e_6334ffa3",
         "filename": "av1/encoder/encoder.c",
         "patchSetId": 22
