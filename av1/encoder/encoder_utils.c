@@ -457,6 +457,7 @@ void av1_apply_roi_map(AV1_COMP *cpi) {
     // Translate the external delta q values to internal values.
     internal_delta_q[i] = av1_quantizer_to_qindex(abs(delta_q[i]));
     if (delta_q[i] < 0) internal_delta_q[i] = -internal_delta_q[i];
+
     if (internal_delta_q[i] != 0) {
       av1_enable_segfeature(seg, i, SEG_LVL_ALT_Q);
       av1_set_segdata(seg, i, SEG_LVL_ALT_Q, internal_delta_q[i]);
@@ -471,6 +472,7 @@ void av1_apply_roi_map(AV1_COMP *cpi) {
       av1_set_segdata(seg, i, SEG_LVL_ALT_LF_Y_V, delta_lf[i]);
       av1_set_segdata(seg, i, SEG_LVL_ALT_LF_U, delta_lf[i]);
       av1_set_segdata(seg, i, SEG_LVL_ALT_LF_V, delta_lf[i]);
+      cm->delta_q_info.delta_lf_present_flag = 1;
     }
     if (skip[i] != 0) {
       av1_enable_segfeature(seg, i, SEG_LVL_SKIP);
@@ -479,7 +481,6 @@ void av1_apply_roi_map(AV1_COMP *cpi) {
       av1_enable_segfeature(seg, i, SEG_LVL_ALT_LF_Y_V);
       av1_enable_segfeature(seg, i, SEG_LVL_ALT_LF_U);
       av1_enable_segfeature(seg, i, SEG_LVL_ALT_LF_V);
-      av1_set_segdata(seg, i, SEG_LVL_SKIP, 0);
       av1_set_segdata(seg, i, SEG_LVL_ALT_LF_Y_H, -MAX_LOOP_FILTER);
       av1_set_segdata(seg, i, SEG_LVL_ALT_LF_Y_V, -MAX_LOOP_FILTER);
       av1_set_segdata(seg, i, SEG_LVL_ALT_LF_U, -MAX_LOOP_FILTER);

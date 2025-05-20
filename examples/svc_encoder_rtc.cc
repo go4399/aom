@@ -67,6 +67,8 @@ typedef enum {
   ALL_OPTION_TYPES
 } LAYER_OPTION_TYPE;
 
+enum { kSkip = 0, kDeltaQ = 1, kDeltaLF = 2, kReference = 3 };
+
 static const arg_def_t outputfile =
     ARG_DEF("o", "output", 1, "Output filename");
 static const arg_def_t frames_arg =
@@ -1767,6 +1769,45 @@ static void set_active_map(const aom_codec_enc_cfg_t *cfg,
   free(map.active_map);
 }
 
+static void set_roi_map(const aom_codec_enc_cfg_t *cfg, aom_codec_ctx_t *codec,
+                        int roi_feature) {
+  aom_roi_map_t roi = aom_roi_map_t();
+  const int block_size = 4;
+  roi.rows = (cfg->g_h + block_size - 1) / block_size;
+  roi.cols = (cfg->g_w + block_size - 1) / block_size;
+  memset(&roi.skip, 0, sizeof(roi.skip));
+  memset(&roi.delta_q, 0, sizeof(roi.delta_q));
+  memset(&roi.delta_lf, 0, sizeof(roi.delta_lf));
+  memset(roi.ref_frame, -1, sizeof(roi.ref_frame));
+  // Set ROI map to be 1 (segment #1) in middle squere of image,
+  // 0 elsewhere.
+  roi.enabled = 1;
+  roi.roi_map = (uint8_t *)calloc(roi.rows * roi.cols, sizeof(*roi.roi_map));
+  for (unsigned int i = 0; i < roi.rows; ++i) {
+    for (unsigned int j = 0; j < roi.cols; ++j) {
+      const int idx = i * roi.cols + j;
+      if (i > roi.rows / 4 && i < (3 * roi.rows) / 4 && j > roi.cols / 4 &&
+          j < (3 * roi.cols) / 4)
+        roi.roi_map[idx] = 1;
+      else
+        roi.roi_map[idx] = 0;
+    }
+  }
+  // Set the ROI feature, on segment #1.
+  if (roi_feature == kSkip)
+    roi.skip[1] = 1;
+  else if (roi_feature == kDeltaQ)
+    roi.delta_q[1] = -20;
+  else if (roi_feature == kDeltaLF)
+    roi.delta_lf[1] = 63;
+  else if (roi_feature == kReference)
+    roi.ref_frame[1] = 1;  // LAST_FRAME
+
+  if (aom_codec_control(codec, AOME_SET_ROI_MAP, &roi))
+    die_codec(codec, "Failed to set active map");
+
+  free(roi.roi_map);
+}
 int main(int argc, const char **argv) {
   AppInput app_input;
   AvxVideoWriter *outfile[AOM_MAX_LAYERS] = { NULL };
@@ -1821,6 +1862,9 @@ int main(int argc, const char **argv) {
 
   // Flag for testing active maps.
   const int test_active_maps = 0;
+
+  // Flag for testing roi map.
+  const int test_roi_map = 0;
 
   /* Setup default input stream settings */
   for (i = 0; i < MAX_NUM_SPATIAL_LAYERS; ++i) {
@@ -2234,6 +2278,8 @@ int main(int argc, const char **argv) {
       }
 
       if (test_active_maps) set_active_map(&cfg, &codec, frame_cnt);
+
+      if (test_roi_map) set_roi_map(&cfg, &codec, kDeltaQ);
 
       // Do the layer encode.
       aom_usec_timer_start(&timer);
