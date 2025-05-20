@@ -445,6 +445,8 @@ void av1_apply_roi_map(AV1_COMP *cpi) {
   memcpy(seg_map, roi->roi_map,
          (cm->mi_params.mi_rows * cm->mi_params.mi_cols));
 
+  roi->delta_q_enabled = 0;
+
   for (int i = 0; i < MAX_SEGMENTS; ++i) {
     // Default: disable all feautures.
     av1_disable_segfeature(seg, i, SEG_LVL_ALT_Q);
@@ -460,6 +462,7 @@ void av1_apply_roi_map(AV1_COMP *cpi) {
     if (internal_delta_q[i] != 0) {
       av1_enable_segfeature(seg, i, SEG_LVL_ALT_Q);
       av1_set_segdata(seg, i, SEG_LVL_ALT_Q, internal_delta_q[i]);
+      roi->delta_q_enabled = 1;
     }
     if (delta_lf[i] != 0) {
       // Force the same delta on YUV.
@@ -479,7 +482,6 @@ void av1_apply_roi_map(AV1_COMP *cpi) {
       av1_enable_segfeature(seg, i, SEG_LVL_ALT_LF_Y_V);
       av1_enable_segfeature(seg, i, SEG_LVL_ALT_LF_U);
       av1_enable_segfeature(seg, i, SEG_LVL_ALT_LF_V);
-      av1_set_segdata(seg, i, SEG_LVL_SKIP, 0);
       av1_set_segdata(seg, i, SEG_LVL_ALT_LF_Y_H, -MAX_LOOP_FILTER);
       av1_set_segdata(seg, i, SEG_LVL_ALT_LF_Y_V, -MAX_LOOP_FILTER);
       av1_set_segdata(seg, i, SEG_LVL_ALT_LF_U, -MAX_LOOP_FILTER);

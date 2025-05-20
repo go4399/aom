@@ -294,7 +294,7 @@ void av1_update_state(const AV1_COMP *const cpi, ThreadData *td,
     for (x_idx = 0; x_idx < cols; x_idx++) xd->mi[x_idx + y * mis] = mi_addr;
   }
 
-  if (cpi->oxcf.q_cfg.aq_mode)
+  if (cpi->oxcf.q_cfg.aq_mode || cpi->roi.delta_q_enabled)
     av1_init_plane_quantizers(cpi, x, mi_addr->segment_id, 0);
 
   if (dry_run) return;

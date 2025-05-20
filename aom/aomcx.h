@@ -1627,6 +1627,8 @@ typedef enum aom_scaling_mode_1d {
 typedef struct aom_roi_map {
   /*! If ROI is enabled. */
   uint8_t enabled;
+  /*! delta_q feature enabled. */
+  int delta_q_enabled;
   /*! An id between 0 and 7 for each 8x8 region within a frame. */
   unsigned char *roi_map;
   unsigned int rows;               /**< Number of rows. */
