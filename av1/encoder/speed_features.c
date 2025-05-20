@@ -1761,6 +1761,11 @@ static void set_rt_speed_feature_framesize_dependent(const AV1_COMP *const cpi,
   if (is_psnr_calc_enabled(cpi) && (cpi->oxcf.frm_dim_cfg.width != cm->width ||
                                     cpi->oxcf.frm_dim_cfg.height != cm->height))
     sf->rt_sf.use_rtc_tf = 0;
+
+  // Keep this speed feature off as it's causing a test failure with
+  // roi when reference selection is used.
+  if (cpi->roi.reference_enabled)
+    sf->rt_sf.nonrd_check_partition_merge_mode = 0;
 }
 
 static void set_rt_speed_features_framesize_independent(AV1_COMP *cpi,
