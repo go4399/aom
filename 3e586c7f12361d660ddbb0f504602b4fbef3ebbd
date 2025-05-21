@@ -39,6 +39,30 @@
       },
       "revId": "3e586c7f12361d660ddbb0f504602b4fbef3ebbd",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b7cc1c9f_73139e9b",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2392,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-21T22:00:40Z",
+      "side": 1,
+      "message": "This is because Julio used `%i` originally and I have been self-censoring my review comments.",
+      "parentUuid": "8fbd8394_2decc3d1",
+      "range": {
+        "startLine": 2392,
+        "startChar": 35,
+        "endLine": 2392,
+        "endChar": 41
+      },
+      "revId": "3e586c7f12361d660ddbb0f504602b4fbef3ebbd",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
