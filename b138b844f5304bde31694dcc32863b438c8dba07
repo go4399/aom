@@ -18,6 +18,23 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d6fe5dd_1f882f75",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-21T22:42:09Z",
+      "side": 1,
+      "message": "Julio: I finished the review. Here are the rest of my review comments.",
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "73e891e9_3945284a",
@@ -123,6 +140,74 @@
       "writtenOn": "2025-05-21T00:12:28Z",
       "side": 1,
       "message": "Same comment as line 234 above.",
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3150a384_9f0d23ee",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-21T22:42:09Z",
+      "side": 1,
+      "message": "Just curious: You deleted this comment in the non-rd version of this function. Why?\n\nShould we also delete this comment in this function?",
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19a48760_47f32230",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 564,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-21T22:42:09Z",
+      "side": 1,
+      "message": "Nit: Add a period at the end of the sentence.",
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a889a6c_cbea655c",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-21T22:42:09Z",
+      "side": 1,
+      "message": "Add `const`:\n\n```\n  const AV1_COMMON *cm \u003d \u0026cpi-\u003ecommon;\n```",
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e468e7d_eddec83a",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 600,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-21T22:42:09Z",
+      "side": 1,
+      "message": "Should we call `init_encode_nonrd_sb()` here, before the `#if CONFIG_RT_ML_PARTITIONING` code below?",
       "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
