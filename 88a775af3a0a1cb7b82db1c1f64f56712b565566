@@ -53,6 +53,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ebdb832c_951dab2a",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 23
+      },
+      "lineNbr": 2309,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-21T17:28:35Z",
+      "side": 1,
+      "message": "Thanks for double checking my analysis.",
+      "parentUuid": "5a8dff21_abd66327",
+      "revId": "88a775af3a0a1cb7b82db1c1f64f56712b565566",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "536bbfa8_0e1a970d",
@@ -84,6 +102,24 @@
       "side": 1,
       "message": "Coverity is right. `count_intrabc * kBlockArea * 30` can overflow an `int` if the image is big enough, and most blocks are deemed `intra BC` candidates.\n\nThis overflow also applies to all the statements where `count * kBlockArea` is present in the function. So I agree, and please add the casts.",
       "parentUuid": "536bbfa8_0e1a970d",
+      "revId": "88a775af3a0a1cb7b82db1c1f64f56712b565566",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d169db7_4a0e6699",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 23
+      },
+      "lineNbr": 2385,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-21T17:28:35Z",
+      "side": 1,
+      "message": "Thanks. I found that I addressed this issue in the original screen content detection code (now known as mode 1) by declaring the `counts_` variables as `int64_t`:\n\nhttps://aomedia-review.googlesource.com/c/aom/+/183282\n\nI will use the same approach rather than adding `int64_t` casts.",
+      "parentUuid": "fe9fbee2_f32dbf3b",
       "revId": "88a775af3a0a1cb7b82db1c1f64f56712b565566",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
