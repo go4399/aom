@@ -1,0 +1,187 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd93052f_74c370e3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-21T00:12:28Z",
+      "side": 1,
+      "message": "Julio: Here are the review comments from a partial review.\n\nWhen I am done reviewing, I will ask Marco to review this CL.",
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "73e891e9_3945284a",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-21T00:12:28Z",
+      "side": 1,
+      "message": "Nit: \"depending on\" sounds a little awkward here. Please rephrase.\n\nPerhaps \"based on statistics relevant to the selected delta-q mode\"?",
+      "range": {
+        "startLine": 229,
+        "startChar": 32,
+        "endLine": 229,
+        "endChar": 44
+      },
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f825b004_89eabd94",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-21T00:12:28Z",
+      "side": 1,
+      "message": "I am not familiar with this code, so I am asking a stupid question. `x` is a pointer to `MACROBLOCK`. Why is `x` not the \"Macro block level data for this block\"?",
+      "range": {
+        "startLine": 234,
+        "startChar": 18,
+        "endLine": 234,
+        "endChar": 19
+      },
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "212592c6_1a1c4b4e",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-21T00:12:28Z",
+      "side": 1,
+      "message": "Nit/optional: We can delete the `adjusted_qindex` variable and just assign the return value to `current_qindex` directly.\n\n```\n  current_qindex \u003d av1_adjust_q_from_delta_q_res(\n      delta_q_res, xd-\u003ecurrent_base_qindex, current_qindex);\n```",
+      "range": {
+        "startLine": 263,
+        "startChar": 0,
+        "endLine": 265,
+        "endChar": 35
+      },
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c39e6892_2af26ae4",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-21T00:12:28Z",
+      "side": 1,
+      "message": "Same comment as line 229 above.",
+      "range": {
+        "startLine": 279,
+        "startChar": 32,
+        "endLine": 279,
+        "endChar": 44
+      },
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab3c767b_e7ad6b02",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-21T00:12:28Z",
+      "side": 1,
+      "message": "Same comment as line 234 above.",
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a291d89e_bc7cdc5d",
+        "filename": "av1/encoder/var_based_part.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1672,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-21T00:12:28Z",
+      "side": 1,
+      "message": "Nit/optional: This variable is usually named `current_qindex` in libaom. But perhaps \"current\" mean \"the current superblock\"?",
+      "range": {
+        "startLine": 1672,
+        "startChar": 12,
+        "endLine": 1672,
+        "endChar": 21
+      },
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "661a8f5e_736f6cef",
+        "filename": "av1/encoder/var_based_part.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1673,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-21T00:12:28Z",
+      "side": 1,
+      "message": "Nit: reverse the operands for the addition:\n\n```\n                            ? cm-\u003equant_params.base_qindex + x-\u003edelta_qindex\n```",
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05d020c0_00e7bf3e",
+        "filename": "av1/encoder/var_based_part.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1674,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-21T00:12:28Z",
+      "side": 1,
+      "message": "Do we need to clamp to the range? Please see the following code in av1/encoder/av1_quantize.c\n\n```\n  const int current_qindex \u003d AOMMAX(\n      0,\n      AOMMIN(QINDEX_RANGE - 1, cm-\u003edelta_q_info.delta_q_present_flag\n                                   ? quant_params-\u003ebase_qindex + x-\u003edelta_qindex\n                                   : quant_params-\u003ebase_qindex));\n```\n\nIf we need to clamp, please use the `clamp()` inline function defined in aom_dsp/aom_dsp_common.h instead of the `AOMMAX` and `AOMMIN` macros.",
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
