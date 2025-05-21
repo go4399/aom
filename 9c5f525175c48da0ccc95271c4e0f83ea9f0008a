@@ -16,6 +16,101 @@
       "message": "The recently introduced  speed features `split_partition_penalty_level` and  `bias_warp_mode_rd_scale_pct` are tuned for only shorts 608p and hd-res test sets. Hence, we disabled the same for low-res and mid-res (horizontal resolution) by moving the sfs to frame size dependent lc-decode mode function. We ensured that the CL is producing bit-exact output for shorts 608p and hd-res test sets.",
       "revId": "9c5f525175c48da0ccc95271c4e0f83ea9f0008a",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e8f7f19_dfadb72b",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-05-21T16:13:43Z",
+      "side": 1,
+      "message": "To make it simple and clean, maybe we can structure this function as below:\n\n// SFs for vertical videos\nif (is_vertical_video) {\n  // List SFs for each resolution below.\n  ......\n}\n\n// SFs for regular videos\nif (!is_vertical_video) {\n  // List SFs for each resolution below.\n  ......\n}",
+      "fixSuggestions": [
+        {
+          "fixId": "9486065f_4d0bc07d",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/speed_features.c",
+              "range": {
+                "startLine": 602,
+                "startChar": 0,
+                "endLine": 602,
+                "endChar": 0
+              },
+              "replacement": "  const bool is_vertical_video \u003d cm-\u003ewidth \u003c cm-\u003eheight;\n"
+            },
+            {
+              "path": "av1/encoder/speed_features.c",
+              "range": {
+                "startLine": 604,
+                "startChar": 0,
+                "endLine": 607,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "av1/encoder/speed_features.c",
+              "range": {
+                "startLine": 610,
+                "startChar": 0,
+                "endLine": 611,
+                "endChar": 0
+              },
+              "replacement": "  // SFs for vertical videos\n  if (is_vertical_video) {\n    const bool is_vert_midres \u003d is_between_480p_and_720p;\n    if (is_vert_midres) {\n      const int leaf_and_overlay_frames \u003d\n          (update_type \u003d\u003d LF_UPDATE || update_type \u003d\u003d OVERLAY_UPDATE ||\n           update_type \u003d\u003d INTNL_OVERLAY_UPDATE);\n      if (leaf_and_overlay_frames)\n        sf-\u003egm_sf.gm_search_type \u003d GM_DISABLE_SEARCH;\n\n      sf-\u003ehl_sf.ref_frame_mvs_lvl \u003d 2;\n      sf-\u003elpf_sf.dual_sgr_penalty_level \u003d boosted ? 1 : 3;\n    }\n"
+            },
+            {
+              "path": "av1/encoder/speed_features.c",
+              "range": {
+                "startLine": 616,
+                "startChar": 0,
+                "endLine": 617,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "av1/encoder/speed_features.c",
+              "range": {
+                "startLine": 619,
+                "startChar": 0,
+                "endLine": 630,
+                "endChar": 0
+              },
+              "replacement": "  } else if (is_720p_or_larger) {\n"
+            },
+            {
+              "path": "av1/encoder/speed_features.c",
+              "range": {
+                "startLine": 633,
+                "startChar": 0,
+                "endLine": 633,
+                "endChar": 0
+              },
+              "replacement": "    sf-\u003elpf_sf.skip_loop_filter_using_filt_error \u003d\n        (update_type !\u003d OVERLAY_UPDATE \u0026\u0026 update_type !\u003d INTNL_OVERLAY_UPDATE \u0026\u0026\n         cpi-\u003ecommon.current_frame.pyramid_level \u003e 1)\n            ? 1\n            : 0;\n    sf-\u003einter_sf.bias_warp_mode_rd_scale_pct \u003d 4;\n    sf-\u003epart_sf.split_partition_penalty_level \u003d is_key_frame ? 0 : 2;\n"
+            },
+            {
+              "path": "av1/encoder/speed_features.c",
+              "range": {
+                "startLine": 636,
+                "startChar": 0,
+                "endLine": 637,
+                "endChar": 0
+              },
+              "replacement": "    if (is_vertical_video || is_720p_or_larger) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9c5f525175c48da0ccc95271c4e0f83ea9f0008a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
