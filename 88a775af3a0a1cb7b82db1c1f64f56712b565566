@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5a8dff21_abd66327",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 23
+      },
+      "lineNbr": 2309,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-21T16:55:04Z",
+      "side": 1,
+      "message": "This is correct. None of these `count_` variables can overflow an `int`, as the analyzed blocks `2 ^ 8` pixels in area are big enough.\n\nThe maximum AV1 area will be `2^(16 - 4) * 2^(16 - 4) \u003d 2^24 blocks`, which can be expressed by an `int`.",
+      "parentUuid": "334cfb9d_d67b687d",
+      "revId": "88a775af3a0a1cb7b82db1c1f64f56712b565566",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "536bbfa8_0e1a970d",
         "filename": "av1/encoder/encoder.c",
         "patchSetId": 23
@@ -48,6 +66,24 @@
       "writtenOn": "2025-05-21T16:25:53Z",
       "side": 1,
       "message": "Coverity (a static analyzer) warns about potential signed integer overflow in lines 2373, 2381, 2384, 2385. I will use line 2385 as an example.\n\nIt says:\n\n\u003e CID 523775: (#1 of 1): Unintentional integer overflow (OVERFLOW_BEFORE_WIDEN)\noverflow_before_widen: Potentially overflowing expression count_intrabc * kBlockArea * 30 with type int (32 bits, signed) is evaluated using 32-bit arithmetic, and then used in a context that expects an expression of type int64_t const (64 bits, signed).\n\nand suggests\n\n\u003e To avoid overflow, cast either count_intrabc * kBlockArea or 30 to type int64_t const.\n\nI think `count_intrabc * kBlockArea * 30` can potentially overflow an `int` (I am not certain because of the complicated if statements around the `++count_intrabc` statements), so it is safer to cast `count_intrabc` to `int64_t` as Coverity suggested.\n\nIf you agree, I can take care of adding the `int64_t` casts.",
+      "revId": "88a775af3a0a1cb7b82db1c1f64f56712b565566",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe9fbee2_f32dbf3b",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 23
+      },
+      "lineNbr": 2385,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-21T16:55:04Z",
+      "side": 1,
+      "message": "Coverity is right. `count_intrabc * kBlockArea * 30` can overflow an `int` if the image is big enough, and most blocks are deemed `intra BC` candidates.\n\nThis overflow also applies to all the statements where `count * kBlockArea` is present in the function. So I agree, and please add the casts.",
+      "parentUuid": "536bbfa8_0e1a970d",
       "revId": "88a775af3a0a1cb7b82db1c1f64f56712b565566",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
