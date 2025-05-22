@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b39c060a_e7595b0a",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 1146,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-22T16:24:50Z",
+      "side": 1,
+      "message": "Also, the comment for delta q mode 6 at line 1142 says it can only be used with all intra usage. Does this mean we should remove \"and cpu-used \u003e\u003d 7 (realtime usage)\" to avoid confusion?\n\nI.e., maybe we should say something like the following:\n\n```\n   * \\attention Only delta q mode 6 is supported in all intra non-rd mode.\n   * In all intra usage, non-rd mode is enabled by setting cpu-used \u003e\u003d 8.\n   * Setting delta q mode to any other value in all intra non-rd mode\n   * ...\n```",
+      "parentUuid": "b28e5d5a_bc29d542",
+      "range": {
+        "startLine": 1145,
+        "startChar": 24,
+        "endLine": 1146,
+        "endChar": 21
+      },
+      "revId": "4a64d8eddc043a254c6c6d59a2ce95787383cc15",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "29458785_d9cc1898",
         "filename": "aom/aomcx.h",
         "patchSetId": 6
