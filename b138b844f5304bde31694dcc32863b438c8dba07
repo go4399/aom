@@ -58,6 +58,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "31d58de4_0fba64b8",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-22T00:03:36Z",
+      "side": 1,
+      "message": "Suggestion sounds good to me, thanks.",
+      "parentUuid": "73e891e9_3945284a",
+      "range": {
+        "startLine": 229,
+        "startChar": 32,
+        "endLine": 229,
+        "endChar": 44
+      },
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f825b004_89eabd94",
@@ -71,6 +95,30 @@
       "writtenOn": "2025-05-21T00:12:28Z",
       "side": 1,
       "message": "I am not familiar with this code, so I am asking a stupid question. `x` is a pointer to `MACROBLOCK`. Why is `x` not the \"Macro block level data for this block\"?",
+      "range": {
+        "startLine": 234,
+        "startChar": 18,
+        "endLine": 234,
+        "endChar": 19
+      },
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d0c7c41_c102954b",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-22T00:03:36Z",
+      "side": 1,
+      "message": "This is a good question actually! `MACROBLOCK` appears to be a legacy name, probably carried over from the VPx code base.\n\nThe AV1 specification refers to this coding unit as a \"superblock\", so I\u0027m bringing this terminology to be in line with the spec. Most of the code comments within the `MACROBLOCK` struct have been moved to mentioning \"superblock\" already.",
+      "parentUuid": "f825b004_89eabd94",
       "range": {
         "startLine": 234,
         "startChar": 18,
@@ -104,6 +152,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ced939d_db0869c0",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-22T00:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "212592c6_1a1c4b4e",
+      "range": {
+        "startLine": 263,
+        "startChar": 0,
+        "endLine": 265,
+        "endChar": 35
+      },
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c39e6892_2af26ae4",
@@ -117,6 +189,30 @@
       "writtenOn": "2025-05-21T00:12:28Z",
       "side": 1,
       "message": "Same comment as line 229 above.",
+      "range": {
+        "startLine": 279,
+        "startChar": 32,
+        "endLine": 279,
+        "endChar": 44
+      },
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "61722925_291179ba",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-22T00:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c39e6892_2af26ae4",
       "range": {
         "startLine": 279,
         "startChar": 32,
@@ -144,6 +240,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "950d3a31_9dbd2fd1",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-22T00:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ab3c767b_e7ad6b02",
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3150a384_9f0d23ee",
@@ -157,6 +271,24 @@
       "writtenOn": "2025-05-21T22:42:09Z",
       "side": 1,
       "message": "Just curious: You deleted this comment in the non-rd version of this function. Why?\n\nShould we also delete this comment in this function?",
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1639f13f_229df8ca",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-22T00:03:36Z",
+      "side": 1,
+      "message": "I found the comment superfluous (it doesn\u0027t really add anything that the function comment isn\u0027t already mentioning).\n\nI think we should delete the rd comment as well, especially because it\u0027s actually misleading. Not all delta-q modulations are based on variance.",
+      "parentUuid": "3150a384_9f0d23ee",
       "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -178,6 +310,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d41653b_af2228ee",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 564,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-22T00:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "19a48760_47f32230",
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7a889a6c_cbea655c",
@@ -195,6 +345,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b7bbcd3_90cda3f5",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-22T00:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a889a6c_cbea655c",
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6e468e7d_eddec83a",
@@ -208,6 +376,24 @@
       "writtenOn": "2025-05-21T22:42:09Z",
       "side": 1,
       "message": "Should we call `init_encode_nonrd_sb()` here, before the `#if CONFIG_RT_ML_PARTITIONING` code below?",
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "59c3e742_b515a78b",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 600,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-22T00:03:36Z",
+      "side": 1,
+      "message": "Sure thing, makes sense to move up before the `#if CONFIG_RT_ML_PARTITIONING` code.",
+      "parentUuid": "6e468e7d_eddec83a",
       "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -237,6 +423,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "468aad2d_a14ed172",
+        "filename": "av1/encoder/var_based_part.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1672,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-22T00:03:36Z",
+      "side": 1,
+      "message": "Correct, I\u0027d say that `sb_qindex` would be the more descriptive name here. `sb_qindex` is essentially the current superblock\u0027s qindex without the `segment_id` contribution added yet -- an intermediate calculation.",
+      "parentUuid": "a291d89e_bc7cdc5d",
+      "range": {
+        "startLine": 1672,
+        "startChar": 12,
+        "endLine": 1672,
+        "endChar": 21
+      },
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "661a8f5e_736f6cef",
         "filename": "av1/encoder/var_based_part.c",
         "patchSetId": 4
@@ -248,6 +458,24 @@
       "writtenOn": "2025-05-21T00:12:28Z",
       "side": 1,
       "message": "Nit: reverse the operands for the addition:\n\n```\n                            ? cm-\u003equant_params.base_qindex + x-\u003edelta_qindex\n```",
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "045f5d73_1204fbf5",
+        "filename": "av1/encoder/var_based_part.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1673,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-22T00:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "661a8f5e_736f6cef",
       "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -265,6 +493,24 @@
       "writtenOn": "2025-05-21T00:12:28Z",
       "side": 1,
       "message": "Do we need to clamp to the range? Please see the following code in av1/encoder/av1_quantize.c\n\n```\n  const int current_qindex \u003d AOMMAX(\n      0,\n      AOMMIN(QINDEX_RANGE - 1, cm-\u003edelta_q_info.delta_q_present_flag\n                                   ? quant_params-\u003ebase_qindex + x-\u003edelta_qindex\n                                   : quant_params-\u003ebase_qindex));\n```\n\nIf we need to clamp, please use the `clamp()` inline function defined in aom_dsp/aom_dsp_common.h instead of the `AOMMAX` and `AOMMIN` macros.",
+      "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7b62d02_c53c1b55",
+        "filename": "av1/encoder/var_based_part.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1674,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-22T00:03:36Z",
+      "side": 1,
+      "message": "Yes, we should clamp here. Good catch.",
+      "parentUuid": "05d020c0_00e7bf3e",
       "revId": "b138b844f5304bde31694dcc32863b438c8dba07",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
