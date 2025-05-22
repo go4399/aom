@@ -139,6 +139,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f6e5058a_e3ebc053",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 1146,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-22T17:02:25Z",
+      "side": 1,
+      "message": "It is simpler to describe what is not supported and is silently ignored, e.g.,\n\u003e Delta q modes 1-5 are unsupported and treated as delta q mode 0 in non-RD mode. Non-RD mode is enabled by setting cpu-used \u003e\u003d 8 (all intra usage) and cpu-used \u003e\u003d 7 (realtime usage).\n\nWe can replace \"treated as delta q mode 0\" with \"have no effect\" or \"silently ignored\".",
+      "parentUuid": "c3c03d80_c28dd393",
+      "range": {
+        "startLine": 1145,
+        "startChar": 24,
+        "endLine": 1146,
+        "endChar": 21
+      },
+      "revId": "4a64d8eddc043a254c6c6d59a2ce95787383cc15",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "29458785_d9cc1898",
         "filename": "aom/aomcx.h",
         "patchSetId": 6
