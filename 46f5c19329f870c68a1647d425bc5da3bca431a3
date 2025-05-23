@@ -22,6 +22,30 @@
       },
       "revId": "46f5c19329f870c68a1647d425bc5da3bca431a3",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "732e2e25_82f684e5",
+        "filename": "av1/encoder/var_based_part.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2025-05-23T18:14:48Z",
+      "side": 1,
+      "message": "Yes agree to leave it untouched for rt mode. Sounds good.",
+      "parentUuid": "a85d4fd3_bd9a61b8",
+      "range": {
+        "startLine": 552,
+        "startChar": 6,
+        "endLine": 552,
+        "endChar": 55
+      },
+      "revId": "46f5c19329f870c68a1647d425bc5da3bca431a3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
