@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a85d4fd3_bd9a61b8",
+        "filename": "av1/encoder/var_based_part.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-23T18:02:17Z",
+      "side": 1,
+      "message": "Marco: this change comes with an overall speed penalty. At `--cpu-used 8`, encoding Daala\u0027s subset1 is around 2.5% slower on average. On individual images, there\u0027s a 0% to 10% slowdown.\n\nThe tradeoff seems to be worth it for `allintra` mode, but I\u0027m not sure for `rt` mode given the high variability of the slowdown, so I left `shift_val` untouched there. Does this sound good?",
+      "range": {
+        "startLine": 552,
+        "startChar": 6,
+        "endLine": 552,
+        "endChar": 55
+      },
+      "revId": "46f5c19329f870c68a1647d425bc5da3bca431a3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
