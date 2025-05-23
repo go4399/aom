@@ -145,6 +145,24 @@
       "message": "Nit/optional: The value of a comparison expression is 1 or 0, so the `? 1 : 0` part is redundant.\n\nHowever, you can use `? 1 : 0` to stress the fact that you want the integer value 1 or 0, rather than the boolean value 1 (true) or 0 (false). Is that what you intended?",
       "revId": "a1f4448451fa099189d986b75c6cdf90bf0c8547",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9504266_19c011e3",
+        "filename": "av1/encoder/var_based_part.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-05-23T22:03:52Z",
+      "side": 1,
+      "message": "Correct on the latter interpretation. I want `shift_val` to be integer value `1` for all intra, and `0` for realtime.",
+      "parentUuid": "9ad5a443_66f38840",
+      "revId": "a1f4448451fa099189d986b75c6cdf90bf0c8547",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
