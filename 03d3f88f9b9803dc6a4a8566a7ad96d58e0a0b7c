@@ -16,6 +16,24 @@
       "message": "28515 and 29292 exceed the maximum of 12-bit samples, so this input is invalid.\n\nThis issue came up before in libavif fuzzing tests. We have to pass valid (in-range) sample values to libaom, even in fuzzing tests.",
       "revId": "03d3f88f9b9803dc6a4a8566a7ad96d58e0a0b7c",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c9503ecc_f0db08cc",
+        "filename": "test/encode_small_width_height_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 7025
+      },
+      "writtenOn": "2025-05-27T23:13:49Z",
+      "side": 1,
+      "message": "ah okay, my bad. i will drop this CL.",
+      "parentUuid": "2533b621_02237923",
+      "revId": "03d3f88f9b9803dc6a4a8566a7ad96d58e0a0b7c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
