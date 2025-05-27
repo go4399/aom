@@ -65,8 +65,7 @@ static inline int tx_size_cost(const MACROBLOCK *const x, BLOCK_SIZE bsize,
  */
 int64_t av1_pixel_diff_dist(const MACROBLOCK *x, int plane, int blk_row,
                             int blk_col, const BLOCK_SIZE plane_bsize,
-                            const BLOCK_SIZE tx_bsize,
-                            unsigned int *block_mse_q8);
+                            const BLOCK_SIZE tx_bsize, uint64_t *block_mse_q8);
 
 int64_t av1_estimate_txfm_yrd(const AV1_COMP *const cpi, MACROBLOCK *x,
                               RD_STATS *rd_stats, int64_t ref_best_rd,
