@@ -346,9 +346,10 @@ static void update_buffer_level(AV1_COMP *cpi, int encoded_frame_size) {
 
   // Non-viewable frames are a special case and are treated as pure overhead.
   if (!cm->show_frame)
-    p_rc->bits_off_target -= encoded_frame_size;
+    p_rc->bits_off_target -= (int64_t)encoded_frame_size;
   else
-    p_rc->bits_off_target += rc->avg_frame_bandwidth - encoded_frame_size;
+    p_rc->bits_off_target +=
+        (int64_t)rc->avg_frame_bandwidth - (int64_t)encoded_frame_size;
 
   // Clip the buffer level to the maximum specified buffer size.
   p_rc->bits_off_target =
