@@ -120,8 +120,7 @@ static inline void fetch_mb_rd_info(int n4, const MB_RD_INFO *const mb_rd_info,
 
 int64_t av1_pixel_diff_dist(const MACROBLOCK *x, int plane, int blk_row,
                             int blk_col, const BLOCK_SIZE plane_bsize,
-                            const BLOCK_SIZE tx_bsize,
-                            unsigned int *block_mse_q8) {
+                            const BLOCK_SIZE tx_bsize, uint64_t *block_mse_q8) {
   int visible_rows, visible_cols;
   const MACROBLOCKD *xd = &x->e_mbd;
   get_txb_dimensions(xd, plane, plane_bsize, blk_row, blk_col, tx_bsize, NULL,
@@ -134,10 +133,9 @@ int64_t av1_pixel_diff_dist(const MACROBLOCK *x, int plane, int blk_row,
       aom_sum_squares_2d_i16(diff, diff_stride, visible_cols, visible_rows);
   if (block_mse_q8 != NULL) {
     if (visible_cols > 0 && visible_rows > 0)
-      *block_mse_q8 =
-          (unsigned int)((256 * sse) / (visible_cols * visible_rows));
+      *block_mse_q8 = (uint64_t)((256 * sse) / (visible_cols * visible_rows));
     else
-      *block_mse_q8 = UINT_MAX;
+      *block_mse_q8 = UINT64_MAX;
   }
   return sse;
 }
@@ -147,7 +145,7 @@ int64_t av1_pixel_diff_dist(const MACROBLOCK *x, int plane, int blk_row,
 static inline int64_t pixel_diff_stats(
     MACROBLOCK *x, int plane, int blk_row, int blk_col,
     const BLOCK_SIZE plane_bsize, const BLOCK_SIZE tx_bsize,
-    unsigned int *block_mse_q8, int64_t *per_px_mean, uint64_t *block_var) {
+    uint64_t *block_mse_q8, int64_t *per_px_mean, uint64_t *block_var) {
   int visible_rows, visible_cols;
   const MACROBLOCKD *xd = &x->e_mbd;
   get_txb_dimensions(xd, plane, plane_bsize, blk_row, blk_col, tx_bsize, NULL,
@@ -165,10 +163,10 @@ static inline int64_t pixel_diff_stats(
     // Conversion to transform domain
     *per_px_mean = (int64_t)(norm_factor * abs(sum)) << 7;
     *per_px_mean = sign_sum * (*per_px_mean);
-    *block_mse_q8 = (unsigned int)(norm_factor * (256 * sse));
+    *block_mse_q8 = (uint64_t)(norm_factor * (256 * sse));
     *block_var = (uint64_t)(sse - (uint64_t)(norm_factor * sum * sum));
   } else {
-    *block_mse_q8 = UINT_MAX;
+    *block_mse_q8 = UINT64_MAX;
   }
   return sse;
 }
@@ -1955,7 +1953,7 @@ static int skip_trellis_opt_based_on_satd(MACROBLOCK *x,
 static inline void predict_dc_only_block(
     MACROBLOCK *x, int plane, BLOCK_SIZE plane_bsize, TX_SIZE tx_size,
     int block, int blk_row, int blk_col, RD_STATS *best_rd_stats,
-    int64_t *block_sse, unsigned int *block_mse_q8, int64_t *per_px_mean,
+    int64_t *block_sse, uint64_t *block_mse_q8, int64_t *per_px_mean,
     int *dc_only_blk) {
   MACROBLOCKD *xd = &x->e_mbd;
   MB_MODE_INFO *mbmi = xd->mi[0];
@@ -1966,7 +1964,7 @@ static inline void predict_dc_only_block(
   *block_sse = pixel_diff_stats(x, plane, blk_row, blk_col, plane_bsize,
                                 txsize_to_bsize[tx_size], block_mse_q8,
                                 per_px_mean, &block_var);
-  assert((*block_mse_q8) != UINT_MAX);
+  assert((*block_mse_q8) != UINT64_MAX);
   uint64_t var_threshold = (uint64_t)(1.8 * qstep * qstep);
   if (is_cur_buf_hbd(xd))
     block_var = ROUND_POWER_OF_TWO(block_var, (xd->bd - 8) * 2);
@@ -2054,7 +2052,7 @@ static void search_tx_type(const AV1_COMP *cpi, MACROBLOCK *x, int plane,
   const uint8_t txw = tx_size_wide[tx_size];
   const uint8_t txh = tx_size_high[tx_size];
   int64_t block_sse;
-  unsigned int block_mse_q8;
+  uint64_t block_mse_q8;
   int dc_only_blk = 0;
   const bool predict_dc_block =
       txfm_params->predict_dc_level >= 1 && txw != 64 && txh != 64;
@@ -2071,7 +2069,7 @@ static void search_tx_type(const AV1_COMP *cpi, MACROBLOCK *x, int plane,
   } else {
     block_sse = av1_pixel_diff_dist(x, plane, blk_row, blk_col, plane_bsize,
                                     txsize_to_bsize[tx_size], &block_mse_q8);
-    assert(block_mse_q8 != UINT_MAX);
+    assert(block_mse_q8 != UINT64_MAX);
   }
 
   // Bit mask to indicate which transform types are allowed in the RD search.
@@ -2097,7 +2095,7 @@ static void search_tx_type(const AV1_COMP *cpi, MACROBLOCK *x, int plane,
   // effective.
   // TODO(any): Experiment with variance and mean based thresholds
   const int perform_block_coeff_opt =
-      ((uint64_t)block_mse_q8 <=
+      (block_mse_q8 <=
        (uint64_t)txfm_params->coeff_opt_thresholds[0] * qstep * qstep);
   skip_trellis |= !perform_block_coeff_opt;
 

@@ -243,4 +243,38 @@ TEST(HighbdEncodeSmallWidthHeight, 1x1) {
 }
 #endif  // CONFIG_AV1_HIGHBITDEPTH
 
+#if CONFIG_AV1_HIGHBITDEPTH
+TEST(EncodeSmallWidthHeight, OverflowInTxSearch) {
+  constexpr int kWidth = 1;
+  constexpr int kHeight = 1;
+
+  aom_image_t img;
+  EXPECT_NE(aom_img_alloc(&img, AOM_IMG_FMT_I44416, kWidth, kHeight, 1),
+            nullptr);
+  *reinterpret_cast<uint16_t*>(img.planes[AOM_PLANE_Y]) = 0;
+  *reinterpret_cast<uint16_t*>(img.planes[AOM_PLANE_U]) = 28515;
+  *reinterpret_cast<uint16_t*>(img.planes[AOM_PLANE_V]) = 29292;
+
+  aom_codec_iface_t *iface = aom_codec_av1_cx();
+  aom_codec_enc_cfg_t cfg;
+  EXPECT_EQ(AOM_CODEC_OK, aom_codec_enc_config_default(iface, &cfg, 0));
+  cfg.g_w = kWidth;
+  cfg.g_h = kHeight;
+  cfg.g_profile = 2;
+  cfg.g_bit_depth = AOM_BITS_12;
+  cfg.g_limit = 1;
+  cfg.g_lag_in_frames = 0;
+  cfg.kf_mode = AOM_KF_DISABLED;
+  cfg.kf_max_dist = 0;
+
+  aom_codec_ctx_t enc;
+  EXPECT_EQ(AOM_CODEC_OK,
+            aom_codec_enc_init(&enc, iface, &cfg, AOM_CODEC_USE_HIGHBITDEPTH));
+  EXPECT_EQ(AOM_CODEC_OK, aom_codec_control(&enc, AOME_SET_CPUUSED, 6));
+  EXPECT_EQ(AOM_CODEC_OK, aom_codec_encode(&enc, &img, 0, 1, 0));
+  EXPECT_EQ(AOM_CODEC_OK, aom_codec_destroy(&enc));
+  aom_img_free(&img);
+}
+#endif  // CONFIG_AV1_HIGHBITDEPTH
+
 }  // namespace
