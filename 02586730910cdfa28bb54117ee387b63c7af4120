@@ -69,6 +69,24 @@
       "parentUuid": "10174381_89db12f2",
       "revId": "02586730910cdfa28bb54117ee387b63c7af4120",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a69d7b8e_0a55425d",
+        "filename": "av1/encoder/ratectrl.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-05-28T00:20:18Z",
+      "side": 1,
+      "message": "Things go wrong in av1/encoder/svc_layercontext.c:\n\n```\nvoid av1_update_temporal_layer_framerate(AV1_COMP *const cpi) {\n  ...\n  lc-\u003eframerate \u003d cpi-\u003eframerate / lc-\u003eframerate_factor;\n  lrc-\u003eavg_frame_bandwidth \u003d (int)round(lc-\u003etarget_bandwidth / lc-\u003eframerate);\n```\n\n   cpi-\u003eframerate\u003d0.462339, lc-\u003eframerate_factor\u003d4\n   lc-\u003etarget_bandwidth\u003d276824000, lc-\u003eframerate\u003d0.115585\n   \nI added a `saturate_cast_double_to_int()` function to handle this case. Plase replace the `(int)` cast before the `round()` call with `saturate_cast_double_to_int()`.\n\nWe may want to fix other instances of this pattern. I ran the command:\n\n```\nfind . -name \"*\" -a -type f | xargs grep target_bandwidth | grep framerate\n```\n\nand found the following:\n\n```\n./av1/encoder/ratectrl.c:        (int)round(lc-\u003etarget_bandwidth / lc-\u003eframerate) - encoded_frame_size;\n./av1/encoder/ratectrl.c:      1, (int)(oxcf-\u003erc_cfg.target_bandwidth / oxcf-\u003einput_cfg.init_framerate));\n./av1/encoder/ratectrl.c:      1, (int)(oxcf-\u003erc_cfg.target_bandwidth / oxcf-\u003einput_cfg.init_framerate));\n./av1/encoder/ratectrl.c:      round(oxcf-\u003erc_cfg.target_bandwidth / cpi-\u003eframerate));\n./av1/encoder/svc_layercontext.c:          (int)round(lc-\u003etarget_bandwidth / lc-\u003eframerate);\n./av1/encoder/svc_layercontext.c:  lrc-\u003eavg_frame_bandwidth \u003d (int)round(lc-\u003etarget_bandwidth / lc-\u003eframerate);\n./av1/encoder/svc_layercontext.c:      lc-\u003eavg_frame_size \u003d (int)round(lc-\u003etarget_bandwidth / lc-\u003eframerate);\n```",
+      "parentUuid": "9bb9d19a_0cc68049",
+      "revId": "02586730910cdfa28bb54117ee387b63c7af4120",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
