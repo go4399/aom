@@ -42,6 +42,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "929003ae_c214fa43",
+        "filename": "av1/encoder/nonrd_pickmode.c",
+        "patchSetId": 14
+      },
+      "lineNbr": 2464,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2025-05-28T19:07:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e26dda6f_53955c39",
+      "range": {
+        "startLine": 2464,
+        "startChar": 0,
+        "endLine": 2464,
+        "endChar": 19
+      },
+      "revId": "542d2f1e87da0c285aa8967f9edb6e4288929c3c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "63033ab7_7652cfbb",
@@ -83,6 +107,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "97570d9d_4d016074",
+        "filename": "av1/encoder/nonrd_pickmode.c",
+        "patchSetId": 14
+      },
+      "lineNbr": 3554,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2025-05-28T19:07:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63033ab7_7652cfbb",
+      "range": {
+        "startLine": 3554,
+        "startChar": 2,
+        "endLine": 3554,
+        "endChar": 5
+      },
+      "revId": "542d2f1e87da0c285aa8967f9edb6e4288929c3c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cdd97040_61d66d25",
@@ -96,6 +144,30 @@
       "writtenOn": "2025-05-28T14:25:31Z",
       "side": 1,
       "message": "should this be a TODO?",
+      "range": {
+        "startLine": 1765,
+        "startChar": 5,
+        "endLine": 1765,
+        "endChar": 9
+      },
+      "revId": "542d2f1e87da0c285aa8967f9edb6e4288929c3c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "802a7987_5309c764",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 14
+      },
+      "lineNbr": 1765,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2025-05-28T19:07:48Z",
+      "side": 1,
+      "message": "removed it here",
+      "parentUuid": "cdd97040_61d66d25",
       "range": {
         "startLine": 1765,
         "startChar": 5,
@@ -129,6 +201,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f6bc1c67_7efe159e",
+        "filename": "test/roi_map_test.cc",
+        "patchSetId": 14
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2025-05-28T19:07:48Z",
+      "side": 1,
+      "message": "fixed in latest patch.",
+      "parentUuid": "d5a664c2_9ad56e2e",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 76
+      },
+      "revId": "542d2f1e87da0c285aa8967f9edb6e4288929c3c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0a375726_3e6fc672",
@@ -142,6 +238,30 @@
       "writtenOn": "2025-05-28T14:25:31Z",
       "side": 1,
       "message": "Add TODO here as well",
+      "range": {
+        "startLine": 166,
+        "startChar": 0,
+        "endLine": 166,
+        "endChar": 71
+      },
+      "revId": "542d2f1e87da0c285aa8967f9edb6e4288929c3c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "86832f65_c368a094",
+        "filename": "test/roi_map_test.cc",
+        "patchSetId": 14
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2025-05-28T19:07:48Z",
+      "side": 1,
+      "message": "don\u0027t plan to allow this, as it needs addditional settings not used for rtc, and my patch is only for rtc encoding. So will just remove the test.",
+      "parentUuid": "0a375726_3e6fc672",
       "range": {
         "startLine": 166,
         "startChar": 0,
