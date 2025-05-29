@@ -52,6 +52,24 @@
       "parentUuid": "7a904611_dce7a100",
       "revId": "0c545f5bd028a6892cee56c6538637b491505d25",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4d54454_9f95af6d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-05-29T19:08:06Z",
+      "side": 1,
+      "message": "Is this what you refer to?\n\nhttps://aomedia-review.googlesource.com/c/aom/+/198741\n\nIt was fixed, and included in this CL.\n\nThere\u0027s CONFIG_HIGHWAY setup for presubmit build, but our jenkins instances run on n2-standard-8 which doesn\u0027t have AVX512_DL. Using newer instances is WIP.",
+      "parentUuid": "4a6d636c_14e6d451",
+      "revId": "0c545f5bd028a6892cee56c6538637b491505d25",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
