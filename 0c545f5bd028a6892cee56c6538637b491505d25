@@ -16,6 +16,24 @@
       "message": "Did we ever figure out why this was broken with SSE2?",
       "revId": "0c545f5bd028a6892cee56c6538637b491505d25",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a904611_dce7a100",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-05-29T19:03:26Z",
+      "side": 1,
+      "message": "was it ever broken for sse2? I don\u0027t remember that...",
+      "parentUuid": "4734ae23_6914185b",
+      "revId": "0c545f5bd028a6892cee56c6538637b491505d25",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
