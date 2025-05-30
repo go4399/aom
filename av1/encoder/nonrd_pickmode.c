@@ -3600,7 +3600,12 @@ void av1_nonrd_pick_inter_mode_sb(AV1_COMP *cpi, TileDataEnc *tile_data,
   mi->ref_frame[0] = best_pickmode->best_ref_frame;
   mi->ref_frame[1] = best_pickmode->best_second_ref_frame;
   // For lossless: always force the skip flags off.
-  if (is_lossless_requested(&cpi->oxcf.rc_cfg)) {
+  int qindex_is_zero = 0;
+  if (cpi->roi.enabled && cpi->roi.delta_qp_enabled && segment_id) {
+    qindex_is_zero =
+        av1_get_qindex(&cm->seg, segment_id, cm->quant_params.base_qindex) == 0;
+  }
+  if (is_lossless_requested(&cpi->oxcf.rc_cfg) || qindex_is_zero) {
     txfm_info->skip_txfm = 0;
     memset(ctx->blk_skip, 0, sizeof(ctx->blk_skip[0]) * ctx->num_4x4_blk);
   } else {
