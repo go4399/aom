@@ -429,6 +429,8 @@ static TX_SIZE calculate_tx_size(const AV1_COMP *const cpi, BLOCK_SIZE bsize,
                                  MACROBLOCK *const x, unsigned int var,
                                  unsigned int sse, int *force_skip) {
   MACROBLOCKD *const xd = &x->e_mbd;
+  MB_MODE_INFO *const mi = xd->mi[0];
+  if (xd->lossless[mi->segment_id]) return TX_4X4;
   TX_SIZE tx_size;
   const TxfmSearchParams *txfm_params = &x->txfm_search_params;
   if (txfm_params->tx_mode_search_type == TX_MODE_SELECT) {
@@ -1572,6 +1574,7 @@ void av1_nonrd_pick_intra_mode(AV1_COMP *cpi, MACROBLOCK *x, RD_STATS *rd_cost,
   mi->tx_size =
       AOMMIN(max_txsize_lookup[bsize],
              tx_mode_to_biggest_tx_size[txfm_params->tx_mode_search_type]);
+  if (xd->lossless[mi->segment_id]) mi->tx_size = TX_4X4;
   assert(IMPLIES(xd->lossless[mi->segment_id], mi->tx_size == TX_4X4));
   const BLOCK_SIZE tx_bsize = txsize_to_bsize[mi->tx_size];
 
@@ -1715,10 +1718,12 @@ void av1_nonrd_pick_intra_mode(AV1_COMP *cpi, MACROBLOCK *x, RD_STATS *rd_cost,
   // For lossless: always force the skip flags off.
   // Even though the blk_skip is set to 0 above in the rdcost comparison,
   // do it here again in case the above logic changes.
-  if (is_lossless_requested(&cpi->oxcf.rc_cfg)) {
+  if (is_lossless_requested(&cpi->oxcf.rc_cfg) ||
+      xd->lossless[mi->segment_id]) {
     x->txfm_search_info.skip_txfm = 0;
     memset(ctx->blk_skip, 0,
            sizeof(x->txfm_search_info.blk_skip[0]) * ctx->num_4x4_blk);
+    mi->tx_size = TX_4X4;
   }
 
 #if CONFIG_INTERNAL_STATS
@@ -3600,9 +3605,11 @@ void av1_nonrd_pick_inter_mode_sb(AV1_COMP *cpi, TileDataEnc *tile_data,
   mi->ref_frame[0] = best_pickmode->best_ref_frame;
   mi->ref_frame[1] = best_pickmode->best_second_ref_frame;
   // For lossless: always force the skip flags off.
-  if (is_lossless_requested(&cpi->oxcf.rc_cfg)) {
+  if (is_lossless_requested(&cpi->oxcf.rc_cfg) ||
+      xd->lossless[mi->segment_id]) {
     txfm_info->skip_txfm = 0;
     memset(ctx->blk_skip, 0, sizeof(ctx->blk_skip[0]) * ctx->num_4x4_blk);
+    mi->tx_size = TX_4X4;
   } else {
     txfm_info->skip_txfm = best_pickmode->best_mode_skip_txfm;
   }
