@@ -2252,6 +2252,15 @@ static inline void encode_frame_internal(AV1_COMP *cpi) {
   }
   cpi->rc.cnt_zeromv = 0;
 
+  if (cpi->roi.enabled && cpi->roi.delta_lf_enabled) {
+    cm->delta_q_info.delta_lf_present_flag =
+        cm->delta_q_info.delta_q_present_flag &&
+        oxcf->tool_cfg.enable_deltalf_mode;
+    cm->delta_q_info.delta_lf_present_flag &= quant_params->base_qindex > 0;
+    cm->delta_q_info.delta_lf_multi = DEFAULT_DELTA_LF_MULTI;
+    cm->delta_q_info.delta_q_present_flag = 0;
+  }
+
   av1_frame_init_quantizer(cpi);
   init_encode_frame_mb_context(cpi);
   set_default_interp_skip_flags(cm, &cpi->interp_search_flags);
