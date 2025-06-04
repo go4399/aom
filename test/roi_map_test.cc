@@ -83,6 +83,8 @@ class ROIMapTest
         roi.delta_q[1] = -40;
       else if (roi_feature_ == kReference)
         roi.ref_frame[1] = 4;  // GOLDEN_FRAME;
+      else if (roi_feature_ == kDeltaLF)
+        roi.delta_lf[1] = 60;
       encoder->Control(AOME_SET_ROI_MAP, &roi);
       free(roi.roi_map);
     }
@@ -136,6 +138,20 @@ class ROIMapTest
     ASSERT_NO_FATAL_FAILURE(RunLoop(&video));
   }
 
+  void ROIDeltaLFTest() {
+    cfg_.g_lag_in_frames = 0;
+    cfg_.rc_target_bitrate = 400;
+    cfg_.rc_resize_mode = 0;
+    cfg_.g_pass = AOM_RC_ONE_PASS;
+    cfg_.rc_end_usage = AOM_CBR;
+    cfg_.kf_max_dist = 90000;
+    roi_feature_ = kDeltaLF;
+    ::libaom_test::I420VideoSource video("niklas_640_480_30.yuv", 640, 480, 30,
+                                         1, 0, 400);
+
+    ASSERT_NO_FATAL_FAILURE(RunLoop(&video));
+  }
+
   int cpu_used_;
   int aq_mode_;
   int screen_mode_;
@@ -149,6 +165,8 @@ TEST_P(ROIMapTest, ROISkip) { ROISkipTest(); }
 TEST_P(ROIMapTest, ROIDeltaQ) { ROIDeltaQTest(); }
 
 TEST_P(ROIMapTest, ROIReference) { ROIReferenceTest(); }
+
+TEST_P(ROIMapTest, ROIDeltaLF) { ROIDeltaLFTest(); }
 
 AV1_INSTANTIATE_TEST_SUITE(ROIMapTest,
                            ::testing::Values(::libaom_test::kRealTime),

@@ -1650,7 +1650,8 @@ typedef struct aom_roi_map {
   int ref_frame[AOM_MAX_SEGMENTS]; /**< Reference frame for this block. */
   int delta_qp_enabled;            /**< Delta qp feature enabled. */
   int reference_enabled;           /**< Reference frame feature enabled. */
-  int rdmult_delta_qp;             /**< RD mult for delta qp feature. */
+  int delta_lf_enabled;            /**< Delta lf feature enabled. */
+  int rdmult_delta_qp;             /**< RD mult for delta qp feature. */\
 } aom_roi_map_t;
 
 /*!\brief  aom active region map

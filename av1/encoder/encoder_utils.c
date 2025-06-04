@@ -443,12 +443,14 @@ void av1_apply_roi_map(AV1_COMP *cpi) {
     roi->enabled = 0;
     roi->delta_qp_enabled = 0;
     roi->reference_enabled = 0;
+    roi->delta_lf_enabled = 0;
     return;
   }
 
   memcpy(&ref_frame, roi->ref_frame, sizeof(ref_frame));
   roi->reference_enabled = 0;
   roi->delta_qp_enabled = 0;
+  roi->delta_lf_enabled = 0;
 
   av1_enable_segmentation(seg);
   av1_clearall_segfeatures(seg);
@@ -483,10 +485,16 @@ void av1_apply_roi_map(AV1_COMP *cpi) {
       qindex = cm->quant_params.base_qindex + internal_delta_q[i];
     }
     if (delta_lf[i] != 0) {
-      // Disable loopfilter delta from ROI, as it requires
-      // additional changes and settings: DELTAQ_MODE and DELTALF_MODE
-      // are needed to be enabled, along with additional internal fix.
-      return;
+      // Force the same delta on YUV.
+      av1_enable_segfeature(seg, i, SEG_LVL_ALT_LF_Y_H);
+      av1_enable_segfeature(seg, i, SEG_LVL_ALT_LF_Y_V);
+      av1_enable_segfeature(seg, i, SEG_LVL_ALT_LF_U);
+      av1_enable_segfeature(seg, i, SEG_LVL_ALT_LF_V);
+      av1_set_segdata(seg, i, SEG_LVL_ALT_LF_Y_H, delta_lf[i]);
+      av1_set_segdata(seg, i, SEG_LVL_ALT_LF_Y_V, delta_lf[i]);
+      av1_set_segdata(seg, i, SEG_LVL_ALT_LF_U, delta_lf[i]);
+      av1_set_segdata(seg, i, SEG_LVL_ALT_LF_V, delta_lf[i]);
+      roi->delta_lf_enabled = 1;
     }
     // Skip only allowed on delta frames.
     if (skip[i] != 0 && !frame_is_intra_only(cm)) {
@@ -517,7 +525,8 @@ void av1_apply_roi_map(AV1_COMP *cpi) {
       }
     }
   }
-  if (roi->delta_qp_enabled || skip_enabled || roi->reference_enabled) {
+  if (roi->delta_qp_enabled || skip_enabled || roi->reference_enabled ||
+      roi->delta_lf_enabled) {
     roi->enabled = 1;
     if (roi->delta_qp_enabled) {
       roi->rdmult_delta_qp = av1_compute_rd_mult(

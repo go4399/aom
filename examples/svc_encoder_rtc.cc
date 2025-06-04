@@ -1810,6 +1810,12 @@ static void set_roi_map(const aom_codec_enc_cfg_t *cfg, aom_codec_ctx_t *codec,
 
   if (aom_codec_control(codec, AOME_SET_ROI_MAP, &roi))
     die_codec(codec, "Failed to set roi map");
+  if (roi_feature == kDeltaLF) {
+    if (aom_codec_control(codec, AV1E_SET_DELTAQ_MODE, 1))
+      die_codec(codec, "Failed to set deltaq mode");
+    if (aom_codec_control(codec, AV1E_SET_DELTALF_MODE, 1))
+      die_codec(codec, "Failed to set deltalf mode");
+  }
 
   free(roi.roi_map);
 }
@@ -2300,7 +2306,7 @@ int main(int argc, const char **argv) {
 
       if (test_active_maps) set_active_map(&cfg, &codec, frame_cnt);
 
-      if (test_roi_map) set_roi_map(&cfg, &codec, kDeltaQ);
+      if (test_roi_map) set_roi_map(&cfg, &codec, kDeltaLF);
 
       // Do the layer encode.
       aom_usec_timer_start(&timer);
