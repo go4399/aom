@@ -693,7 +693,7 @@ static void set_layer_pattern(
     aom_svc_ref_frame_config_t *ref_frame_config,
     aom_svc_ref_frame_comp_pred_t *ref_frame_comp_pred, int *use_svc_control,
     int spatial_layer_id, int is_key_frame, int ksvc_mode, int speed,
-    int *reference_updated, int test_roi_map) {
+    int *reference_updated, int test_roi_map, int newest_available_ref_poc) {
   // Setting this flag to 1 enables simplex example of
   // RPS (Reference Picture Selection) for 1 layer.
   int use_rps_example = 0;
@@ -723,6 +723,33 @@ static void set_layer_pattern(
   switch (layering_mode) {
     case 0:
       if (use_rps_example == 0) {
+        // HACK
+
+        const int slot_number = 8;  // slots 0 - 7.
+        int last_idx = 0;
+        int last_idx_refresh = superframe_cnt % slot_number;
+        // Moving index slot for last: 0 - (sh - 1)
+        if (superframe_cnt > 1) last_idx = (superframe_cnt - 1) % slot_number;
+
+        ref_frame_config->refresh[last_idx_refresh] = 1;
+        // FIX: to refresh a buffer slot: assign a reference frame to that slot.
+        ref_frame_config->ref_idx[SVC_LAST_FRAME] = last_idx_refresh;
+
+        if (!is_key_frame) {
+          ref_frame_config->ref_idx[SVC_GOLDEN_FRAME] =
+              newest_available_ref_poc % slot_number;
+          ref_frame_config->reference[SVC_GOLDEN_FRAME] = 1;
+          // printf("newest_available_ref_poc %d \n", newest_available_ref_poc %
+          // slot_number);
+        } else {
+          printf(
+              "the newest received decoded frame was too old to "
+              "reference,force generating a key frame %d %d \n",
+              superframe_cnt, newest_available_ref_poc);
+        }
+
+        //
+        /*
         // 1-layer: update LAST on every frame, reference LAST.
         layer_id->temporal_layer_id = 0;
         layer_id->spatial_layer_id = 0;
@@ -731,6 +758,7 @@ static void set_layer_pattern(
         // Add additional reference (GOLDEN) if test_roi_map is set,
         // to test reference frame feature on segment.
         if (test_roi_map) ref_frame_config->reference[SVC_GOLDEN_FRAME] = 1;
+        */
       } else {
         // Pattern of 2 references (ALTREF and GOLDEN) trailing
         // LAST by 4 and 8 frames, with some switching logic to
@@ -1910,7 +1938,7 @@ int main(int argc, const char **argv) {
   cfg.rc_buf_sz = 1000;
   cfg.rc_resize_mode = 0;  // Set to RESIZE_DYNAMIC for dynamic resize.
   cfg.g_lag_in_frames = 0;
-  cfg.kf_mode = AOM_KF_AUTO;
+  cfg.kf_mode = AOM_KF_DISABLED;
   cfg.g_w = 0;  // Force user to specify width and height for raw input.
   cfg.g_h = 0;
 
@@ -2133,6 +2161,7 @@ int main(int argc, const char **argv) {
   }
 
   frame_avail = 1;
+  int last_keyframe_poc = 0;
   struct psnr_stats psnr_stream;
   memset(&psnr_stream, 0, sizeof(psnr_stream));
   while (frame_avail || got_data) {
@@ -2158,11 +2187,27 @@ int main(int argc, const char **argv) {
       if (app_input.layering_mode >= 0) {
         // Set the reference/update flags, layer_id, and reference_map
         // buffer index.
-        set_layer_pattern(app_input.layering_mode, frame_cnt, &layer_id,
-                          &ref_frame_config, &ref_frame_comp_pred,
-                          &use_svc_control, slx, is_key_frame,
-                          (app_input.layering_mode == 10), app_input.speed,
-                          &reference_updated, test_roi_map);
+
+        // HACK
+        int newest_available_ref_poc = 0;
+        if (frame_cnt > 4)
+          newest_available_ref_poc =
+              frame_cnt -
+              4;  // This comes from decoder side, for now fixed number.
+
+        is_key_frame = (frame_cnt - newest_available_ref_poc >= REF_FRAMES) &&
+                       (frame_cnt - last_keyframe_poc >= REF_FRAMES);
+        if (is_key_frame) {
+          printf("FORCE KEY FRAME %d \n", frame_cnt);
+          last_keyframe_poc = frame_cnt;
+        }
+        //
+
+        set_layer_pattern(
+            app_input.layering_mode, frame_cnt, &layer_id, &ref_frame_config,
+            &ref_frame_comp_pred, &use_svc_control, slx, is_key_frame,
+            (app_input.layering_mode == 10), app_input.speed,
+            &reference_updated, test_roi_map, newest_available_ref_poc);
         aom_codec_control(&codec, AV1E_SET_SVC_LAYER_ID, &layer_id);
         if (use_svc_control) {
           aom_codec_control(&codec, AV1E_SET_SVC_REF_FRAME_CONFIG,
