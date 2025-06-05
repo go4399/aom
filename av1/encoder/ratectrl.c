@@ -3702,12 +3702,11 @@ static inline int set_key_frame(AV1_COMP *cpi, unsigned int frame_flags) {
 static bool set_flag_rps_bias_recovery_frame(const AV1_COMP *const cpi) {
   if (cpi->ppi->rtc_ref.set_ref_frame_config &&
       cpi->svc.number_temporal_layers == 1 &&
-      cpi->svc.number_spatial_layers == 1 &&
-      cpi->ppi->rtc_ref.reference_was_previous_frame) {
+      cpi->svc.number_spatial_layers == 1) {
     int min_dist = av1_svc_get_min_ref_dist(cpi);
     // Only consider boost for this frame if its closest reference is further
     // than x frames away, using x = 4 for now.
-    if (min_dist != INT_MAX && min_dist > 4) return true;
+    if (min_dist != INT_MAX && min_dist >= 4) return true;
   }
   return false;
 }
