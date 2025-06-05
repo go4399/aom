@@ -16,6 +16,24 @@
       "message": "This fixes the error of using uninitialized values reported by valgrind, but it also removes the mitigation for high latency gather...",
       "revId": "5d9ac164998e2dad9d6969c6a4bb68a4d3fb0b3c",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3860169_160f1253",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-06-05T16:04:49Z",
+      "side": 1,
+      "message": "Thank you for finding it though! There\u0027s probably a path to adding back the mitigation (which likely just entails having more correct tail handling).",
+      "parentUuid": "198dbecc_439af090",
+      "revId": "5d9ac164998e2dad9d6969c6a4bb68a4d3fb0b3c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
