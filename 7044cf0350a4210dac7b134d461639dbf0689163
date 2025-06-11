@@ -3,6 +3,67 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "76bdc7dc_86251847",
+        "filename": "av1/common/selfguided_hwy.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-06-11T19:05:58Z",
+      "side": 1,
+      "message": "Something that I\u0027ve thought a bit about -- should this be MaxLanes(int32_tag) (and thus, should the mask vector go up to MaxLanes(int32_tag))?",
+      "range": {
+        "startLine": 327,
+        "startChar": 44,
+        "endLine": 327,
+        "endChar": 45
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "99144daa_024109bb",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/common/selfguided_hwy.h",
+              "range": {
+                "startLine": 313,
+                "startChar": 0,
+                "endLine": 315,
+                "endChar": 0
+              },
+              "replacement": "  const size_t max_lanes \u003d hn::MaxLanes(int32_tag);\n  HWY_ALIGN hn::Mask\u003cdecltype(int32_tag)\u003e mask[max_lanes];\n  for (size_t idx \u003d 0; idx \u003c max_lanes; idx++) {\n"
+            },
+            {
+              "path": "av1/common/selfguided_hwy.h",
+              "range": {
+                "startLine": 327,
+                "startChar": 0,
+                "endLine": 331,
+                "endChar": 0
+              },
+              "replacement": "      // When width + 2 isn\u0027t a multiple of max_lanes, sum1 and sum2 will\n      // contain some uninitialised data in their upper words. We use a mask\n      // to ensure that these bits are set to 0.\n      int idx \u003d AOMMIN(max_lanes, width + 1 - j);\n"
+            },
+            {
+              "path": "av1/common/selfguided_hwy.h",
+              "range": {
+                "startLine": 333,
+                "startChar": 0,
+                "endLine": 334,
+                "endChar": 0
+              },
+              "replacement": "      if (idx \u003c max_lanes) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "7044cf0350a4210dac7b134d461639dbf0689163",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d0fc145f_81522d83",
         "filename": "av1/common/x86/selfguided_hwy_avx512.cc",
         "patchSetId": 5
