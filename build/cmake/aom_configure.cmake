@@ -239,9 +239,10 @@ if(AOM_TARGET_SYSTEM MATCHES "Darwin\|Linux\|Windows\|Android")
   set(CONFIG_OS_SUPPORT 1)
 endif()
 
+# Define macros that affect Windows headers.
 if(AOM_TARGET_SYSTEM STREQUAL "Windows")
-  # The default _WIN32_WINNT value in MinGW is 0x0502 (Windows XP with SP2). Set
-  # it to 0x0601 (Windows 7).
+  # The default _WIN32_WINNT value in MinGW is 0x0502 (Windows XP with SP2).
+  # Set it to 0x0601 (Windows 7).
   add_compiler_flag_if_supported("-D_WIN32_WINNT=0x0601")
   # Quiet warnings related to fopen, printf, etc.
   add_compiler_flag_if_supported("-D_CRT_SECURE_NO_WARNINGS")
