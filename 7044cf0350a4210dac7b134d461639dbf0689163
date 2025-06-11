@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0fc145f_81522d83",
+        "filename": "av1/common/x86/selfguided_hwy_avx512.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-06-11T17:57:04Z",
+      "side": 1,
+      "message": "AVX3_DL.",
+      "range": {
+        "startLine": 12,
+        "startChar": 29,
+        "endLine": 12,
+        "endChar": 37
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "a573a874_954df30a",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/common/x86/selfguided_hwy_avx512.cc",
+              "range": {
+                "startLine": 12,
+                "startChar": 0,
+                "endLine": 13,
+                "endChar": 0
+              },
+              "replacement": "#define HWY_BASELINE_TARGETS HWY_AVX3_DL\n"
+            }
+          ]
+        }
+      ],
+      "revId": "7044cf0350a4210dac7b134d461639dbf0689163",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
