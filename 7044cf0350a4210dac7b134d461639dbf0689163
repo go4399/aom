@@ -62,6 +62,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "595ce5c8_0771b8da",
+        "filename": "av1/common/selfguided_hwy.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-06-12T14:32:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76bdc7dc_86251847",
+      "range": {
+        "startLine": 327,
+        "startChar": 44,
+        "endLine": 327,
+        "endChar": 45
+      },
+      "revId": "7044cf0350a4210dac7b134d461639dbf0689163",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d0fc145f_81522d83",
