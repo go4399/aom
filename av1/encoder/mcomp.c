@@ -2133,10 +2133,11 @@ unsigned int av1_int_pro_motion_estimation(const AV1_COMP *cpi, MACROBLOCK *x,
   int idx;
   const int bw = block_size_wide[bsize];
   const int bh = block_size_high[bsize];
-  const int is_screen = cpi->oxcf.tune_cfg.content == AOM_CONTENT_SCREEN;
-  const int full_search = is_screen;
+  const int est_scroll = cpi->oxcf.tune_cfg.content == AOM_CONTENT_SCREEN ||
+                         cm->width * cm->height >= 1280 * 720;
+  const int full_search = est_scroll;
   const bool screen_scroll_superblock =
-      is_screen && bsize == cm->seq_params->sb_size;
+      est_scroll && bsize == cm->seq_params->sb_size;
   // Keep border a multiple of 16.
   const int border = (cpi->oxcf.border_in_pixels >> 4) << 4;
   int search_size_width = me_search_size_col;
@@ -2225,7 +2226,7 @@ unsigned int av1_int_pro_motion_estimation(const AV1_COMP *cpi, MACROBLOCK *x,
                        search_size_height, full_search, &best_sad_row);
 
   // For screen: select between horiz or vert motion.
-  if (is_screen) {
+  if (est_scroll) {
     if (best_sad_col < best_sad_row)
       best_int_mv->as_fullmv.row = 0;
     else
