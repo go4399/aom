@@ -1335,17 +1335,19 @@ static void do_int_pro_motion_estimation(AV1_COMP *cpi, MACROBLOCK *x,
   AV1_COMMON *const cm = &cpi->common;
   MACROBLOCKD *xd = &x->e_mbd;
   MB_MODE_INFO *mi = xd->mi[0];
-  const int is_screen = cpi->oxcf.tune_cfg.content == AOM_CONTENT_SCREEN;
+  const int estimate_scroll =
+      cpi->oxcf.tune_cfg.content == AOM_CONTENT_SCREEN ||
+      cm->width * cm->height >= 1280 * 720;
   const int increase_col_sw = source_sad_nonrd > kMedSad &&
                               !cpi->rc.high_motion_content_screen_rtc &&
                               (cpi->svc.temporal_layer_id == 0 ||
                                cpi->rc.num_col_blscroll_last_tl0 > 2);
-  int me_search_size_col = is_screen
+  int me_search_size_col = estimate_scroll
                                ? increase_col_sw ? 512 : 96
                                : block_size_wide[cm->seq_params->sb_size] >> 1;
-  // For screen use larger search size row motion to capture
+  // For scroll detection use larger search size row motion to capture
   // vertical scroll, which can be larger motion.
-  int me_search_size_row = is_screen
+  int me_search_size_row = estimate_scroll
                                ? source_sad_nonrd > kMedSad ? 512 : 192
                                : block_size_high[cm->seq_params->sb_size] >> 1;
   unsigned int y_sad_zero;
@@ -1354,8 +1356,8 @@ static void do_int_pro_motion_estimation(AV1_COMP *cpi, MACROBLOCK *x,
       me_search_size_col, me_search_size_row);
   // The logic below selects whether the motion estimated in the
   // int_pro_motion() will be used in nonrd_pickmode. Only do this
-  // for screen for now.
-  if (is_screen) {
+  // for estimate_scroll = 1.
+  if (estimate_scroll) {
     unsigned int thresh_sad =
         (cm->seq_params->sb_size == BLOCK_128X128) ? 50000 : 20000;
     if (*y_sad < (y_sad_zero >> 1) && *y_sad < thresh_sad) {
