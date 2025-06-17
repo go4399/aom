@@ -14,4 +14,7 @@
 
 #include "aom_dsp/sad_hwy.h"
 
+// FSAD_4D, FSAD_3D and FSAD_4D_SKIP have no obvious improvement
 FOR_EACH_SAD_BLOCK_SIZE(FSAD, avx2)
+FOR_EACH_SAD_BLOCK_SIZE(FSAD_SKIP, avx2)
+FOR_EACH_SAD_BLOCK_SIZE(FSAD_AVG, avx2)

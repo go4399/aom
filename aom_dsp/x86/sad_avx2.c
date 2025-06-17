@@ -73,6 +73,7 @@ static inline unsigned int sad32xh_avx2(const uint8_t *src_ptr, int src_stride,
   return res;
 }
 
+#if !CONFIG_HIGHWAY
 #define FSAD64_H(h)                                                           \
   unsigned int aom_sad64x##h##_avx2(const uint8_t *src_ptr, int src_stride,   \
                                     const uint8_t *ref_ptr, int ref_stride) { \
@@ -86,6 +87,7 @@ static inline unsigned int sad32xh_avx2(const uint8_t *src_ptr, int src_stride,
     return 2 * sad64xh_avx2(src_ptr, src_stride * 2, ref_ptr, ref_stride * 2, \
                             h / 2);                                           \
   }
+#endif  // !CONFIG_HIGHWAY
 
 #define FSAD32_H(h)                                                           \
   unsigned int aom_sad32x##h##_avx2(const uint8_t *src_ptr, int src_stride,   \
@@ -101,11 +103,7 @@ static inline unsigned int sad32xh_avx2(const uint8_t *src_ptr, int src_stride,
                             h / 2);                                           \
   }
 
-#if CONFIG_HIGHWAY
-#define FSAD64  \
-  FSADS64_H(64) \
-  FSADS64_H(32)
-#else
+#if !CONFIG_HIGHWAY
 #define FSAD64  \
   FSAD64_H(64)  \
   FSAD64_H(32)  \
@@ -122,15 +120,20 @@ static inline unsigned int sad32xh_avx2(const uint8_t *src_ptr, int src_stride,
   FSADS32_H(16)
 
 /* clang-format off */
+#if !CONFIG_HIGHWAY
 FSAD64
+#endif
 FSAD32
 /* clang-format on */
 
+#if !CONFIG_HIGHWAY
 #undef FSAD64
+#endif
 #undef FSAD32
 #undef FSAD64_H
 #undef FSAD32_H
 
+#if !CONFIG_HIGHWAY
 #define FSADAVG64_H(h)                                                        \
   unsigned int aom_sad64x##h##_avg_avx2(                                      \
       const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr,         \
@@ -165,6 +168,7 @@ FSAD32
     _mm256_zeroupper();                                                       \
     return res;                                                               \
   }
+#endif  // !CONFIG_HIGHWAY
 
 #define FSADAVG32_H(h)                                                        \
   unsigned int aom_sad32x##h##_avg_avx2(                                      \
@@ -205,9 +209,11 @@ FSAD32
     return res;                                                               \
   }
 
+#if !CONFIG_HIGHWAY
 #define FSADAVG64 \
   FSADAVG64_H(64) \
   FSADAVG64_H(32)
+#endif
 
 #define FSADAVG32 \
   FSADAVG32_H(64) \
@@ -215,11 +221,16 @@ FSAD32
   FSADAVG32_H(16)
 
 /* clang-format off */
+#if !CONFIG_HIGHWAY
 FSADAVG64
+#endif
+
 FSADAVG32
 /* clang-format on */
 
+#if !CONFIG_HIGHWAY
 #undef FSADAVG64
-#undef FSADAVG32
 #undef FSADAVG64_H
+#endif
+#undef FSADAVG32
 #undef FSADAVG32_H
