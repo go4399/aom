@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6baf09a_dbc85f29",
+        "filename": "aom_dsp/x86/sad_hwy_avx2.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2025-06-18T14:14:23Z",
+      "side": 1,
+      "message": "Were they equivalent? One could argue we should eventually migrate everything neutral-or-better to Highway as a simplification.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 64
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "4cdc157d_8772d0c5",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "aom_dsp/x86/sad_hwy_avx2.cc",
+              "range": {
+                "startLine": 17,
+                "startChar": 0,
+                "endLine": 18,
+                "endChar": 0
+              },
+              "replacement": "// FSAD_4D, FSAD_3D and FSAD_4D_SKIP have no obvious improvement.\n// TODO(b/268483087): Migrate neutral-or-better functions to Highway.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "4d6487dc8667e93977da325a07d3dfd4ef68bfaf",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
