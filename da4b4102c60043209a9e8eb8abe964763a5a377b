@@ -33,6 +33,24 @@
       "message": "Will these functions be used elsewhere? It seems like they could go in the .c file for now.",
       "revId": "da4b4102c60043209a9e8eb8abe964763a5a377b",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "86166e79_ac8b3a51",
+        "filename": "av1/common/riscv/highbd_convolve_rvv.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3703552
+      },
+      "writtenOn": "2025-06-24T02:47:10Z",
+      "side": 1,
+      "message": "These functions won\u0027t be used elsewhere, so I\u0027ll put them in the .c file.",
+      "parentUuid": "0116983e_7729d9e8",
+      "revId": "da4b4102c60043209a9e8eb8abe964763a5a377b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
