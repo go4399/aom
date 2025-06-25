@@ -18,6 +18,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "d2772487_91f202a7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-06-25T21:03:45Z",
+      "side": 1,
+      "message": "Correct, the paragraph is referring to those two speed feature changes.\n\n- `sf-\u003ert_sf.hybrid_intra_pickmode \u003d 2` biases the encoder towards using the non-RD path more often by taking block variance into account. A value of 2 means that only blocks smaller than 16x16 with a variance of 101 or greater will go through the RD path.\n- `sf-\u003ert_sf.prune_palette_search_nonrd \u003d 1` reduces the palette search space in the non-RD path. A value of 1 is the mildest prune setting. During testing, I found the tradeoff worth it for images that have palette mode turned on by the screen detector (now that palette mode RDO is functional).\n\nDo you want me to add me this explanation somewhere else, or is leaving it as a CL comment good enough?",
+      "parentUuid": "f528e75b_a8b7c912",
+      "revId": "d8fba664d666e8b950d72cba0bde5f6d1a7d7028",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "5a1f63f5_0a486699",
@@ -31,6 +49,24 @@
       "writtenOn": "2025-06-25T20:22:35Z",
       "side": 1,
       "message": "Good job, Julio!\n\nNow there seems to be a new issue with speed 7: speed 8 (after) produces a smaller output than speed 7. Can you try a few more images and see if this is just an exception or a general pattern? Thanks.",
+      "revId": "d8fba664d666e8b950d72cba0bde5f6d1a7d7028",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8bd08f7_2ed5eb7b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-06-25T21:03:45Z",
+      "side": 1,
+      "message": "Thanks Wan-Teh!\n\nFrom looking at the `subset1` efficiency curve chart (average file size vs QP level), speed 8 (after) images do tend to be overall a bit smaller than speed 7 images for the same QP level. The efficiency curve for speed 8 now solidly sits in between the speed 7 and speed 9 curves though (this used to not be the case before).\n\nFor my education: does libaom in general strive to produce larger files as speed increases? SVT-AV1 doesn\u0027t have this constraint.",
+      "parentUuid": "5a1f63f5_0a486699",
       "revId": "d8fba664d666e8b950d72cba0bde5f6d1a7d7028",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
