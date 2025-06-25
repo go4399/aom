@@ -36,6 +36,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "620279a7_b08ab553",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-06-25T21:23:36Z",
+      "side": 1,
+      "message": "Optional: I find your explanation very helpful.\n\nYour first bullet point can become a comment in av1/encoder/speed_features.h, where the `hybrid_intra_pickmode` field is defined. (This can be done in a separate CL.)\n\nYour second bullet point can either go to the commit message of this CL, or become a comment in av1/encoder/speed_features.c where we set `sf-\u003ert_sf.prune_palette_search_nonrd` to 1 for speed \u003e\u003d 8.\n\nPlease exercise your judgment on the right amount of information. Thanks!",
+      "parentUuid": "d2772487_91f202a7",
+      "revId": "d8fba664d666e8b950d72cba0bde5f6d1a7d7028",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "5a1f63f5_0a486699",
@@ -67,6 +85,24 @@
       "side": 1,
       "message": "Thanks Wan-Teh!\n\nFrom looking at the `subset1` efficiency curve chart (average file size vs QP level), speed 8 (after) images do tend to be overall a bit smaller than speed 7 images for the same QP level. The efficiency curve for speed 8 now solidly sits in between the speed 7 and speed 9 curves though (this used to not be the case before).\n\nFor my education: does libaom in general strive to produce larger files as speed increases? SVT-AV1 doesn\u0027t have this constraint.",
       "parentUuid": "5a1f63f5_0a486699",
+      "revId": "d8fba664d666e8b950d72cba0bde5f6d1a7d7028",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a38e5dd_41f20ad5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-06-25T21:23:36Z",
+      "side": 1,
+      "message": "For the same target quality, if the encoder spends more time encoding an image, it is natural to expect the encoded output should be smaller.\n\nPerhaps speed 7\u0027s output has a slightly better quality?",
+      "parentUuid": "f8bd08f7_2ed5eb7b",
       "revId": "d8fba664d666e8b950d72cba0bde5f6d1a7d7028",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
