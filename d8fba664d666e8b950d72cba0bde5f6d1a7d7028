@@ -86,6 +86,24 @@
       "message": "Julio: I forgot to review this file. Sorry!\n\nShould we still check `use_nonrd_pick_mode` here? Or do you think `discount_color_cost` should be an independent speed feature?\n\nTo check both speed features, we can say:\n\n```\n  const int discount_color_cost \u003d\n      cpi-\u003esf.rt_sf.use_nonrd_pick_mode \u0026\u0026cpi-\u003esf.rt_sf.discount_color_cost;\n```\n\nAlternatively, we should document in av1/encoder/speed_features.h that `discount_color_cost` can only be set to 1 when `use_nonrd_pick_mode` is 1.",
       "revId": "d8fba664d666e8b950d72cba0bde5f6d1a7d7028",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f8244c4_ed4f51a2",
+        "filename": "av1/encoder/palette.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 564,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-06-25T21:23:03Z",
+      "side": 1,
+      "message": "No worries, this is a good question.\n\nI think it makes more sense for `discount_color_cost` to be an independent speed feature. I\u0027m actually unsure as for why the functionality was coupled with `use_nonrd_pick_mode` in the first place. Probably because the original author tried to save specifying another speed feature in the code?\n\nUltimately, `discount_color_cost` is still functional in the palette search RD code path, so it\u0027s best to make the flag fully independent.",
+      "parentUuid": "f3f7825a_6beea3ca",
+      "revId": "d8fba664d666e8b950d72cba0bde5f6d1a7d7028",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
