@@ -107,6 +107,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "40ff7e67_5e70319e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 7060
+      },
+      "writtenOn": "2025-06-25T21:56:59Z",
+      "side": 1,
+      "message": "So the size issue goes back a few years that I struggled with for text to add to avifenc/libaom (which we did not add to the help). But in general this is what I settled on. quality 1-100: Higher quality at the cost of file size. effort 1-10: More encoding time, better compression ratio. We never added effort parameter. So I would think of it like this. speed 0-10: Faster speed, less encoding time, worse compression ratio. The nice thing about libaom is that for the quality/quantizer, the size vs quality is pretty monotonic. The speed is true as well for speeds 0-7, but speed 8-9 are usually much smaller than speed 7, which is we can\u0027t size speed at the code of size, we need to say somehting a little more ambiguous in speed at the cost of compression ratio.",
+      "parentUuid": "9a38e5dd_41f20ad5",
+      "revId": "d8fba664d666e8b950d72cba0bde5f6d1a7d7028",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f3f7825a_6beea3ca",
