@@ -69,6 +69,23 @@
       "parentUuid": "5a1f63f5_0a486699",
       "revId": "d8fba664d666e8b950d72cba0bde5f6d1a7d7028",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3f7825a_6beea3ca",
+        "filename": "av1/encoder/palette.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 564,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-06-25T21:07:03Z",
+      "side": 1,
+      "message": "Julio: I forgot to review this file. Sorry!\n\nShould we still check `use_nonrd_pick_mode` here? Or do you think `discount_color_cost` should be an independent speed feature?\n\nTo check both speed features, we can say:\n\n```\n  const int discount_color_cost \u003d\n      cpi-\u003esf.rt_sf.use_nonrd_pick_mode \u0026\u0026cpi-\u003esf.rt_sf.discount_color_cost;\n```\n\nAlternatively, we should document in av1/encoder/speed_features.h that `discount_color_cost` can only be set to 1 when `use_nonrd_pick_mode` is 1.",
+      "revId": "d8fba664d666e8b950d72cba0bde5f6d1a7d7028",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
