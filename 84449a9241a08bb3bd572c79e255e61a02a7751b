@@ -16,6 +16,24 @@
       "message": "I think this should be safe. If the tree is copied and .git/ removed, then the version is pulled from this file. The check isn\u0027t perfect, but shouldn\u0027t catch this line:\n\nhttps://aomedia.googlesource.com/aom/+/refs/tags/v3.12.1/build/cmake/version.pl#42",
       "revId": "84449a9241a08bb3bd572c79e255e61a02a7751b",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1aac1dac_dc18bc31",
+        "filename": "CHANGELOG",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-06-26T17:52:58Z",
+      "side": 1,
+      "message": "Thanks for checking. I tested build/cmake/version.pl on this change and verified that this is safe provided that the second word does not start with \"v\".",
+      "parentUuid": "15ee1f75_afc87179",
+      "revId": "84449a9241a08bb3bd572c79e255e61a02a7751b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
