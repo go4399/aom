@@ -16,6 +16,24 @@
       "message": "Hmm we usually create release branch first and then add CHANGELOG...\n\nShould we also do that for this?",
       "revId": "b1384d7674488b073c7c75f6dd00b95c800d9623",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "06bbf4f9_9166b2a8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-06-26T16:27:13Z",
+      "side": 1,
+      "message": "It is fine to have a partial changelog for the next libaom release on the main branch, When we create a release branch, the partial changelog will also be in the release branch. We will finish the changelog for the new release on the release branch, and merge it back to the main branch. So this should work.\n\nHowever, Jerome pointed out in Chat that this line could be parsed as the current version. So I changed \"v3.13.0\" to \"next version\" to prevent that.",
+      "parentUuid": "04ad636a_dbb25a47",
+      "revId": "b1384d7674488b073c7c75f6dd00b95c800d9623",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
