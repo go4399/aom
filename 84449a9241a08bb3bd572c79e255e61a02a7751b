@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "15ee1f75_afc87179",
+        "filename": "CHANGELOG",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-06-26T17:40:47Z",
+      "side": 1,
+      "message": "I think this should be safe. If the tree is copied and .git/ removed, then the version is pulled from this file. The check isn\u0027t perfect, but shouldn\u0027t catch this line:\n\nhttps://aomedia.googlesource.com/aom/+/refs/tags/v3.12.1/build/cmake/version.pl#42",
+      "revId": "84449a9241a08bb3bd572c79e255e61a02a7751b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
