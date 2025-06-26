@@ -56,6 +56,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "2f147f75_c561844a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-06-26T20:22:45Z",
+      "side": 1,
+      "message": "Thanks Wan-Teh,\n\nBoth `hybrid_intra_pickmode` and `prune_palette_search_nonrd` mode descriptions are already present in `speed_features.h`, so I\u0027ll just leave them like that.\n\nI\u0027ve expanded the commit message to specifically list the speed feature value changes, and the context behind those changes.",
+      "parentUuid": "620279a7_b08ab553",
+      "revId": "d8fba664d666e8b950d72cba0bde5f6d1a7d7028",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "5a1f63f5_0a486699",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
