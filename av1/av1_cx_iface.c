@@ -1576,21 +1576,22 @@ static aom_codec_err_t encoder_set_config(aom_codec_alg_priv_t *ctx,
     if (cfg->g_lag_in_frames > 1 || cfg->g_pass != AOM_RC_ONE_PASS)
       ERROR("Cannot change width or height after initialization");
     // Note: function encoder_set_config() is allowed to be called multiple
-    // times. However, when the original frame width or height is less than two
+    // times. However, when the previous frame width or height is less than two
     // times of the new frame width or height, a forced key frame should be
     // used (for the case of single spatial layer, since otherwise a previous
     // encoded frame at a lower layer may be the desired reference). To make
     // sure the correct detection of a forced key frame, we need
     // to update the frame width and height only when the actual encoding is
     // performed. cpi->last_coded_width and cpi->last_coded_height are used to
-    // track the actual coded frame size.
+    // track the actual coded frame size. We also force a key frame when the
+    // new width/height is greater than the allocated width/height.
     if (ctx->ppi->cpi->svc.number_spatial_layers == 1 &&
         ctx->ppi->cpi->last_coded_width && ctx->ppi->cpi->last_coded_height &&
         (!valid_ref_frame_size(ctx->ppi->cpi->last_coded_width,
                                ctx->ppi->cpi->last_coded_height, cfg->g_w,
                                cfg->g_h) ||
-         ((int)cfg->g_w > ctx->ppi->cpi->last_coded_width) ||
-         ((int)cfg->g_h > ctx->ppi->cpi->last_coded_height))) {
+         ((int)cfg->g_w > ctx->ppi->cpi->data_alloc_width) ||
+         ((int)cfg->g_h > ctx->ppi->cpi->data_alloc_height))) {
       force_key = 1;
     }
   }
