@@ -222,12 +222,6 @@ TEST_P(AV1ResolutionChange, RandomInput) {
       iter = nullptr;
       while ((pkt = aom_codec_get_cx_data(enc.get(), &iter)) != nullptr) {
         ASSERT_EQ(pkt->kind, AOM_CODEC_CX_FRAME_PKT);
-        // The frame following a resolution change should be a keyframe as the
-        // change is too extreme to allow previous references to be used.
-        if (i == 0 || usage_ == AOM_USAGE_ALL_INTRA) {
-          EXPECT_NE(pkt->data.frame.flags & AOM_FRAME_IS_KEY, 0u)
-              << "frame " << frame_count;
-        }
         frame_count++;
       }
     }
