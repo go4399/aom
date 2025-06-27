@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "189d73cd_0fadefe1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-06-27T17:40:14Z",
+      "side": 1,
+      "message": "LGTM. Thanks!",
+      "revId": "db168b7eeabfa9223c82b14a53df0480b54dacf8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e490bc01_29e6f2d7",
+        "filename": "CHANGELOG",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-06-27T17:40:14Z",
+      "side": 1,
+      "message": "Nit: Omit \"Libaom\" because it is implied.",
+      "range": {
+        "startLine": 19,
+        "startChar": 19,
+        "endLine": 19,
+        "endChar": 25
+      },
+      "revId": "db168b7eeabfa9223c82b14a53df0480b54dacf8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
