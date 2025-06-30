@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9aa41c08_936e1f8b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-06-30T21:58:07Z",
+      "side": 1,
+      "message": "Urvang: You don\u0027t really need to review these two CLs. I will port these two CLs to AVM.",
+      "revId": "680977ea94268e95b19dbadecbcea44ae1a1c2be",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
