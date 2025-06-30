@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "68cebd37_8391ed50",
+        "filename": "test/bitwriter_buffer_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-06-30T22:24:44Z",
+      "side": 1,
+      "message": "In the AVM build environment I got `-Wsign-compare` warnings unless I changed the string literals to 63u. I don\u0027t know why it isn\u0027t necessary in the libaom build environment. (I verified we are compiling with `-Wsign-compare`.)",
+      "revId": "b27d3663ac5829f37444005d34a5df50b9cf5eb6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
