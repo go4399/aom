@@ -2088,7 +2088,7 @@ static void estimate_screen_content(AV1_COMP *cpi, FeatureFlags *features) {
 }
 
 // Macro that helps debug the screen content mode 2 mechanism
-// #define OUTPUT_SCR_DET_MODE2_STATS
+#define OUTPUT_SCR_DET_MODE2_STATS
 
 /*!\brief Helper function that finds the dominant value of a block.
  *
