@@ -8,9 +8,12 @@
  * Media Patent License 1.0 was not distributed with this source code in the
  * PATENTS file, you can obtain it at www.aomedia.org/license/patent.
  */
-
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
 #include <assert.h>
 #include <stdbool.h>
+#include <limits.h>
 
 #include "aom_util/aom_pthread.h"
 
@@ -36,6 +39,213 @@
 #include "aom_dsp/aom_dsp_common.h"
 #include "av1/encoder/temporal_filter.h"
 #include "av1/encoder/tpl_model.h"
+
+#define MAX_SIZE_CORE 32
+typedef struct {
+  int data[MAX_SIZE_CORE];  // coreid
+  int maxFreq[MAX_SIZE_CORE];
+  int size;  // number of worker
+  int pnum;
+  bool smt;
+} Topology;
+static const Topology *g_cpu_topology = NULL;
+#if defined(__x86_64__) && defined(_WIN32)
+#include <windows.h>
+
+int get_affinity_mask_for_worker(int worker_id, Topology rst) {
+  int num;
+  if (rst.smt) {
+    num = rst.pnum * 2;
+  } else {
+    num = rst.pnum;
+  }
+  int *cpu_map = (int *)malloc(num * sizeof(int));
+  int size = 0;
+  for (int i = 0; i < rst.size; i++) {
+    if (rst.data[i] == 1) {
+      // P-core
+      if (rst.smt) {
+        for (int j = 0; j < rst.pnum; j++) {
+          cpu_map[size++] = (i + j) << 1;
+        }
+        for (int jj = 0; jj < rst.pnum; jj++) {
+          cpu_map[size++] = ((i + jj) << 1) + 1;
+        }
+      } else {
+        for (int j = 0; j < num; j++) {
+          cpu_map[size++] = i + j;
+        }
+      }
+      break;
+    }
+  }
+  if (worker_id < 0 || worker_id >= num) {
+    free(cpu_map);
+    return 0;
+  }
+  int aff_rst = (1 << cpu_map[worker_id]);
+  free(cpu_map);
+  return aff_rst;
+}
+const Topology *GetCpuTopology() {
+  static Topology rst = { 0 };
+  DWORD len = 0;
+  GetLogicalProcessorInformationEx(RelationProcessorCore, NULL, &len);
+  SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX *buffer = malloc(len);
+  if (!GetLogicalProcessorInformationEx(RelationProcessorCore, buffer, &len)) {
+    printf("---failed to get processor information.\n");
+    free(buffer);
+    return &rst;
+  }
+  int offset = 0;
+  int min = 0;
+  int max = 0;
+  int smtEnabledCount = 0;
+  int totalCores = 0;
+
+  while (offset < len) {
+    SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX *info =
+        (SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX *)((BYTE *)buffer + offset);
+    if (info->Size == 0 || offset + info->Size > len) {
+      printf("----Invalide structure size at offset %d\n", offset);
+      break;
+    }
+    if (info->Relationship == RelationProcessorCore) {
+      DWORD logicalProcCount = 0;
+      KAFFINITY mask = info->Processor.GroupMask[0].Mask;
+      while (mask) {
+        logicalProcCount += (mask & 1);
+        mask >>= 1;
+      }
+      if (logicalProcCount > 1) {
+        smtEnabledCount++;
+      }
+      totalCores++;
+      PPROCESSOR_RELATIONSHIP core = &info->Processor;
+      BYTE efficiency = core->EfficiencyClass;
+      max = (efficiency >= max) ? efficiency : max;
+      min = (efficiency <= min) ? efficiency : min;
+      if ((max != min) && (efficiency == max)) {
+        // P-core
+        rst.data[rst.size++] = efficiency;
+        ++rst.pnum;
+      } else {
+        // E-core
+        rst.data[rst.size++] = efficiency;
+      }
+    }
+    offset += info->Size;
+  }
+  free(buffer);
+  if (smtEnabledCount > 0) {
+    rst.smt = 1;
+    rst.size = rst.size << 1;
+  }
+  return &rst;
+}
+void thread_fn(int worker_id, Topology rst) {
+  DWORD_PTR affinity = get_affinity_mask_for_worker(worker_id, rst);
+  SetThreadAffinityMask(GetCurrentThread(), affinity);
+}
+#elif defined(__x86_64__) && defined(__linux__)
+#include <pthread.h>
+#include <sched.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <unistd.h>
+#include <string.h>
+#include <dirent.h>
+#include <regex.h>
+#include <ctype.h>
+// Read a value from a file, optionally interpret as hex
+static uint64_t read_value(const char *path, int is_hex) {
+  FILE *f = fopen(path, "r");
+  if (!f) return 0;
+  uint64_t value = 0;
+  if (is_hex)
+    fscanf(f, "%lx", &value);
+  else
+    fscanf(f, "%lu", &value);
+  fclose(f);
+  return value;
+}
+int extract_cpu_index(const char *name) {
+  while (*name && !isdigit(*name)) {
+    name++;
+  }
+  if (*name) {
+    return atoi(name);
+  } else {
+    return -1;
+  }
+}
+const Topology *GetCpuTopology() {
+  static Topology rst = { 0 };
+  char rootPath[] = "/sys/devices/system/cpu";
+  DIR *dir = opendir(rootPath);
+  if (!dir) return &rst;
+  struct dirent *entry;
+  int min = INT_MAX;
+  int max = 0;
+  while ((entry = readdir(dir)) != NULL) {
+    if (strncmp(entry->d_name, "cpu", 3) == 0 && isdigit(entry->d_name[3])) {
+      int cpuid = extract_cpu_index(entry->d_name);
+      if (cpuid < 0 || cpuid >= MAX_SIZE_CORE) {
+        fprintf(stderr, "[WARN] Skipping invalid cpuid: %d\n", cpuid);
+        continue;
+      }
+      char freqPath[256];
+      snprintf(freqPath, sizeof(freqPath), "%s/%s/cpufreq", rootPath,
+               entry->d_name);
+      char freq_path[256];
+      snprintf(freq_path, sizeof(freq_path), "%s/cpuinfo_max_freq", freqPath);
+      uint64_t max_freq = read_value(freq_path, 1);
+
+      max = (max_freq >= max) ? max_freq : max;
+      min = (max_freq <= min) ? max_freq : min;
+      rst.maxFreq[cpuid] = max_freq;
+      rst.size++;
+    }
+  }
+  closedir(dir);
+
+  int ssize = 0;
+  for (int i = 0; i < rst.size; i++) {
+    if (rst.maxFreq[i] > 0 && max != min && rst.maxFreq[i] > min) {
+      // P-core
+      rst.data[ssize++] = i;
+      ++rst.pnum;
+    }
+  }
+  return &rst;
+}
+
+void thread_fn(int worker_id, Topology rst) {
+  cpu_set_t cpuset;
+  CPU_ZERO(&cpuset);
+
+  int logical_id = rst.data[worker_id];
+  CPU_SET(logical_id, &cpuset);
+
+  pthread_t thread = pthread_self();
+
+  int result = pthread_setaffinity_np(thread, sizeof(cpu_set_t), &cpuset);
+  if (result != 0) {
+    perror("pthread_setaffinity_np_failed");
+  }
+}
+#endif
+
+#if defined(__x86_64__) || defined(_M_X86)
+static void InitCpuTopologyIfNeeded() {
+  if (!g_cpu_topology) {
+    g_cpu_topology = GetCpuTopology();
+  }
+}
+#endif
 
 static inline void accumulate_rd_opt(ThreadData *td, ThreadData *td_t) {
   td->rd_counts.compound_ref_used_flag |=
@@ -589,6 +799,12 @@ static int enc_row_mt_worker_hook(void *arg1, void *unused) {
   EncWorkerData *const thread_data = (EncWorkerData *)arg1;
   AV1_COMP *const cpi = thread_data->cpi;
   int thread_id = thread_data->thread_id;
+#if defined(__x86_64__) || defined(_M_X86)
+  InitCpuTopologyIfNeeded();
+  if (g_cpu_topology->pnum != 0 && thread_id < g_cpu_topology->size) {
+    thread_fn(thread_id, *g_cpu_topology);
+  }
+#endif
   AV1EncRowMultiThreadInfo *const enc_row_mt = &cpi->mt_info.enc_row_mt;
 #if CONFIG_MULTITHREAD
   pthread_mutex_t *enc_row_mt_mutex_ = enc_row_mt->mutex_;
@@ -1725,6 +1941,12 @@ int av1_get_max_num_workers(const AV1_COMP *cpi) {
 // Computes the number of workers for encoding stage (row/tile multi-threading)
 static int compute_num_enc_workers(const AV1_COMP *cpi, int max_workers) {
   if (max_workers <= 1) return 1;
+#if defined(__x86_64__) || defined(_M_X86)
+  InitCpuTopologyIfNeeded();
+  if (g_cpu_topology->pnum != 0 && g_cpu_topology->size >= max_workers) {
+    max_workers = AOMMIN(max_workers, g_cpu_topology->pnum);
+  }
+#endif
   if (cpi->oxcf.row_mt)
     return compute_num_enc_row_mt_workers(&cpi->common, max_workers);
   else
