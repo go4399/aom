@@ -612,8 +612,8 @@ HWY_ATTR HWY_INLINE int ApplySelfGuidedRestoration(
   const int ret = av1_selfguided_restoration_avx2(
       dat8, width, height, stride, flt0, flt1, width, eps, bit_depth, highbd);
 #elif HWY_TARGET <= HWY_AVX3
-  const int ret = av1_selfguided_restoration_avx512(
-      dat8, width, height, stride, flt0, flt1, width, eps, bit_depth, highbd);
+  const int ret = SelfGuidedRestoration(dat8, width, height, stride, flt0, flt1,
+                                        width, eps, bit_depth, highbd);
 #else
 #error "HWY_TARGET is not supported."
   const int ret = -1;
