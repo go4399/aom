@@ -1,0 +1,180 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cac1b3d6_76d80461",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-08T21:01:30Z",
+      "side": 1,
+      "message": "I am curious how you decided the speeds in which to enable the speed features. Did you try to maintain evenly-spaced gaps between the speeds?\n\n(You don\u0027t need to add your reply to the commit message.)",
+      "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de627c22_9c8557b2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-08T21:01:30Z",
+      "side": 1,
+      "message": "[This comment is a discussion, not a request for change.] These numbers look great. Thanks!\n\nBut the PSNR increase doesn\u0027t seem to make sense. The three new speed features all prune searches. If we are pruning searhces, the best result should not be better than the best result of full searches. Can you explain this? Is it because we are NOT optimizing for PSNR?",
+      "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f40f3d97_247f1fe6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-08T21:01:30Z",
+      "side": 1,
+      "message": "Could you please summarize the improvements in the CHANGELOG? The intended audience is the end users, so no need to mention the new speed features, which are implementation details.",
+      "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b4bfa10_f35c9c92",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-08T21:01:30Z",
+      "side": 1,
+      "message": "LGTM. Nice work! Just some small suggestions.",
+      "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3fde8cd_11c54bbb",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 2090,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-08T21:01:30Z",
+      "side": 1,
+      "message": "Nit: Add the blank line back to minimize the diffs. OK if you think the code is clearer without the blank line.",
+      "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6dd6c74d_3c67f4f7",
+        "filename": "av1/encoder/mcomp.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 2017,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-08T21:01:30Z",
+      "side": 1,
+      "message": "Optional: If it is okay with you, would it be clearer to move this if statement between lines 2008 and 2009, so we perform all the assignments to `count` in one place?\n\n```\n  int count \u003d av1_hash_table_count(ref_frame_hash, hash_value1);\n  if (cpi-\u003esf.mv_sf.prune_intrabc_candidate_block_hash) {\n    count \u003d AOMMIN(64, count);\n  }\n  if (count \u003c\u003d 1) {\n    return INT_MAX;\n  }\n```",
+      "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c825c810_4f1fb500",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 3455,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-08T21:01:30Z",
+      "side": 1,
+      "message": "Nit: add `const`.",
+      "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9cf58e33_4718c52a",
+        "filename": "av1/encoder/speed_features.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 906,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-08T21:01:30Z",
+      "side": 1,
+      "message": "Nit: Should we change \"intra\" to \"intrabc\" or \"intra BC\"?",
+      "range": {
+        "startLine": 906,
+        "startChar": 11,
+        "endLine": 906,
+        "endChar": 16
+      },
+      "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e7ce135_339dc652",
+        "filename": "av1/encoder/speed_features.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 909,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-08T21:01:30Z",
+      "side": 1,
+      "message": "Nit: Should we add `_search` to the end of the field\u0027s name?",
+      "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d9823bc3_3b96f334",
+        "filename": "av1/encoder/speed_features.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 916,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-08T21:01:30Z",
+      "side": 1,
+      "message": "Nit: Improve this comment. For example, \"Whether the maximum intrabc block size to hash is 8x8\".",
+      "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
