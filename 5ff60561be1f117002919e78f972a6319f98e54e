@@ -18,6 +18,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab1b23f4_bca1f6be",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-08T23:09:15Z",
+      "side": 1,
+      "message": "I basically tried to keep an acceptable level of intraBC overhead and efficiency tradeoffs for each speed level.\n\nEach speed feature reduces the search space further and further, and proportionally impacts efficiency more and more.\n\nprune_intrabc_candidate_block_hash gives us the best \"bang for our buck\", while intrabc_search_level gives us the least.",
+      "parentUuid": "cac1b3d6_76d80461",
+      "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "de627c22_9c8557b2",
@@ -48,6 +66,42 @@
       "writtenOn": "2025-07-08T21:01:30Z",
       "side": 1,
       "message": "Could you please summarize the improvements in the CHANGELOG? The intended audience is the end users, so no need to mention the new speed features, which are implementation details.",
+      "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "217307ce_bc844580",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-08T23:09:15Z",
+      "side": 1,
+      "message": "I believe what\u0027s happening is that intraBC blocks tend to be very cheap to encode, but are overall slightly less quality compared to a regular intra encoded block. This means the RDO process will prefer picking the intraBC block, as the rdcost will be overall lower (i.e. the much smaller rate will make up for the slightly larger distortion).\n\nIf you prune out intraBC candidates, the RDO process will pick regular intra block candidates more often, so you\u0027ll end up with slightly less distorted but larger files. If you notice, the after encoded image is 4 kB bigger than the before.\n\nI also discovered the \"No intraBC\" images also had palette mode disabled by mistake. I\u0027ve amended the tables with files encoded with palette mode. This confirms the observation mentioned above.",
+      "parentUuid": "de627c22_9c8557b2",
+      "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "33452e70_11b029e5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-08T23:09:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f40f3d97_247f1fe6",
       "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -86,6 +140,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "38d8de57_ce7d57cb",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 2090,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-08T23:09:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f3fde8cd_11c54bbb",
+      "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6dd6c74d_3c67f4f7",
@@ -103,6 +175,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "40b07fd8_6c745dba",
+        "filename": "av1/encoder/mcomp.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 2017,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-08T23:09:15Z",
+      "side": 1,
+      "message": "SGTM! I reversed the order from your suggestion, to avoid doing an AOMMIN() when there\u0027s only 1 block in the hash table.",
+      "parentUuid": "6dd6c74d_3c67f4f7",
+      "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c825c810_4f1fb500",
@@ -116,6 +206,24 @@
       "writtenOn": "2025-07-08T21:01:30Z",
       "side": 1,
       "message": "Nit: add `const`.",
+      "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04f3a662_ddb43b7a",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 3455,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-08T23:09:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c825c810_4f1fb500",
       "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -143,6 +251,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a457a689_22db4df8",
+        "filename": "av1/encoder/speed_features.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 906,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-08T23:09:15Z",
+      "side": 1,
+      "message": "Good catch!",
+      "parentUuid": "9cf58e33_4718c52a",
+      "range": {
+        "startLine": 906,
+        "startChar": 11,
+        "endLine": 906,
+        "endChar": 16
+      },
+      "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8e7ce135_339dc652",
@@ -160,6 +292,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb5beb68_ed580888",
+        "filename": "av1/encoder/speed_features.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 909,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-08T23:09:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e7ce135_339dc652",
+      "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d9823bc3_3b96f334",
@@ -173,6 +323,24 @@
       "writtenOn": "2025-07-08T21:01:30Z",
       "side": 1,
       "message": "Nit: Improve this comment. For example, \"Whether the maximum intrabc block size to hash is 8x8\".",
+      "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb90872d_0d5073d6",
+        "filename": "av1/encoder/speed_features.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 916,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-08T23:09:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9823bc3_3b96f334",
       "revId": "5ff60561be1f117002919e78f972a6319f98e54e",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
