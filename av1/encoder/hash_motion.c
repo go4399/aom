@@ -95,8 +95,7 @@ static int hash_block_size_to_index(int block_size) {
 
 void av1_hash_table_init(IntraBCHashInfo *intrabc_hash_info) {
   if (!intrabc_hash_info->g_crc_initialized) {
-    av1_crc_calculator_init(&intrabc_hash_info->crc_calculator1, 24, 0x5D6DCB);
-    av1_crc_calculator_init(&intrabc_hash_info->crc_calculator2, 24, 0x864CFB);
+    av1_crc32c_calculator_init(&intrabc_hash_info->crc_calculator);
     intrabc_hash_info->g_crc_initialized = 1;
   }
   intrabc_hash_info->intrabc_hash_table.p_lookup_table = NULL;
@@ -178,8 +177,7 @@ void av1_generate_block_2x2_hash_value(IntraBCHashInfo *intrabc_hash_info,
   const int height = 2;
   const int x_end = picture->y_crop_width - width + 1;
   const int y_end = picture->y_crop_height - height + 1;
-  CRC_CALCULATOR *calc_1 = &intrabc_hash_info->crc_calculator1;
-  CRC_CALCULATOR *calc_2 = &intrabc_hash_info->crc_calculator2;
+  CRC32C *calc = &intrabc_hash_info->crc_calculator;
 
   const int length = width * 2;
   if (picture->flags & YV12_FLAG_HIGHBITDEPTH) {
@@ -193,11 +191,18 @@ void av1_generate_block_2x2_hash_value(IntraBCHashInfo *intrabc_hash_info,
             picture->y_stride, p);
         pic_block_same_info[0][pos] = is_block16_2x2_row_same_value(p);
         pic_block_same_info[1][pos] = is_block16_2x2_col_same_value(p);
-
         pic_block_hash[0][pos] =
-            av1_get_crc_value(calc_1, (uint8_t *)p, length * sizeof(p[0]));
-        pic_block_hash[1][pos] =
-            av1_get_crc_value(calc_2, (uint8_t *)p, length * sizeof(p[0]));
+            av1_get_crc32c_value(calc, (uint8_t *)p, length * sizeof(p[0]));
+        // Copy the lower 8 bits of each input pixel to the buffer, then xor
+        // with the upper 8 bits of each input pixel.
+        pic_block_hash[1][pos] = ((uint32_t)(p[0] & 0x00ff) << 24) +
+                                 ((uint32_t)(p[1] & 0x00ff) << 16) +
+                                 ((uint32_t)(p[2] & 0x00ff) << 8) +
+                                 ((uint32_t)(p[3] & 0x00ff));
+        pic_block_hash[1][pos] ^= ((uint32_t)(p[0] & 0xff00) << 16) +
+                                  ((uint32_t)(p[1] & 0xff00) << 8) +
+                                  ((uint32_t)(p[2] & 0xff00)) +
+                                  ((uint32_t)(p[3] & 0xff00) >> 8);
         pos++;
       }
       pos += width - 1;
@@ -212,11 +217,13 @@ void av1_generate_block_2x2_hash_value(IntraBCHashInfo *intrabc_hash_info,
             picture->y_stride, p);
         pic_block_same_info[0][pos] = is_block_2x2_row_same_value(p);
         pic_block_same_info[1][pos] = is_block_2x2_col_same_value(p);
-
         pic_block_hash[0][pos] =
-            av1_get_crc_value(calc_1, p, length * sizeof(p[0]));
-        pic_block_hash[1][pos] =
-            av1_get_crc_value(calc_2, p, length * sizeof(p[0]));
+            av1_get_crc32c_value(calc, p, length * sizeof(p[0]));
+        // Both the buffer and input pixels are 4 bytes. Just copy those values
+        // as is.
+        pic_block_hash[1][pos] = ((uint32_t)p[0] << 24) +
+                                 ((uint32_t)p[1] << 16) +
+                                 ((uint32_t)p[2] << 8) + ((uint32_t)p[3]);
         pos++;
       }
       pos += width - 1;
@@ -231,8 +238,7 @@ void av1_generate_block_hash_value(IntraBCHashInfo *intrabc_hash_info,
                                    uint32_t *dst_pic_block_hash[2],
                                    int8_t *src_pic_block_same_info[3],
                                    int8_t *dst_pic_block_same_info[3]) {
-  CRC_CALCULATOR *calc_1 = &intrabc_hash_info->crc_calculator1;
-  CRC_CALCULATOR *calc_2 = &intrabc_hash_info->crc_calculator2;
+  CRC32C *calc = &intrabc_hash_info->crc_calculator;
 
   const int pic_width = picture->y_crop_width;
   const int x_end = picture->y_crop_width - block_size + 1;
@@ -252,14 +258,14 @@ void av1_generate_block_hash_value(IntraBCHashInfo *intrabc_hash_info,
       p[2] = src_pic_block_hash[0][pos + src_size * pic_width];
       p[3] = src_pic_block_hash[0][pos + src_size * pic_width + src_size];
       dst_pic_block_hash[0][pos] =
-          av1_get_crc_value(calc_1, (uint8_t *)p, length);
+          av1_get_crc32c_value(calc, (uint8_t *)p, length);
 
       p[0] = src_pic_block_hash[1][pos];
       p[1] = src_pic_block_hash[1][pos + src_size];
       p[2] = src_pic_block_hash[1][pos + src_size * pic_width];
       p[3] = src_pic_block_hash[1][pos + src_size * pic_width + src_size];
       dst_pic_block_hash[1][pos] =
-          av1_get_crc_value(calc_2, (uint8_t *)p, length);
+          av1_get_crc32c_value(calc, (uint8_t *)p, length);
 
       dst_pic_block_same_info[0][pos] =
           src_pic_block_same_info[0][pos] &&
@@ -399,8 +405,7 @@ void av1_get_block_hash_value(IntraBCHashInfo *intrabc_hash_info,
   add_value <<= kSrcBits;
   const int crc_mask = (1 << kSrcBits) - 1;
 
-  CRC_CALCULATOR *calc_1 = &intrabc_hash_info->crc_calculator1;
-  CRC_CALCULATOR *calc_2 = &intrabc_hash_info->crc_calculator2;
+  CRC32C *calc = &intrabc_hash_info->crc_calculator;
   uint32_t **buf_1 = intrabc_hash_info->hash_value_buffer[0];
   uint32_t **buf_2 = intrabc_hash_info->hash_value_buffer[1];
 
@@ -415,10 +420,18 @@ void av1_get_block_hash_value(IntraBCHashInfo *intrabc_hash_info,
         get_pixels_in_1D_short_array_by_block_2x2(
             y16_src + y_pos * stride + x_pos, stride, pixel_to_hash);
         assert(pos < AOM_BUFFER_SIZE_FOR_BLOCK_HASH);
-        buf_1[0][pos] = av1_get_crc_value(calc_1, (uint8_t *)pixel_to_hash,
-                                          sizeof(pixel_to_hash));
-        buf_2[0][pos] = av1_get_crc_value(calc_2, (uint8_t *)pixel_to_hash,
-                                          sizeof(pixel_to_hash));
+        buf_1[0][pos] = av1_get_crc32c_value(calc, (uint8_t *)pixel_to_hash,
+                                             sizeof(pixel_to_hash));
+        // Copy the lower 8 bits of each input pixel to the buffer, then xor
+        // with the upper 8 bits of each input pixel.
+        buf_2[0][pos] = ((uint32_t)(pixel_to_hash[0] & 0x00ff) << 24) +
+                        ((uint32_t)(pixel_to_hash[1] & 0x00ff) << 16) +
+                        ((uint32_t)(pixel_to_hash[2] & 0x00ff) << 8) +
+                        ((uint32_t)(pixel_to_hash[3] & 0x00ff));
+        buf_2[0][pos] ^= ((uint32_t)(pixel_to_hash[0] & 0xff00) << 16) +
+                         ((uint32_t)(pixel_to_hash[1] & 0xff00) << 8) +
+                         ((uint32_t)(pixel_to_hash[2] & 0xff00)) +
+                         ((uint32_t)(pixel_to_hash[3] & 0xff00) >> 8);
       }
     }
   } else {
@@ -430,9 +443,13 @@ void av1_get_block_hash_value(IntraBCHashInfo *intrabc_hash_info,
                                                  stride, pixel_to_hash);
         assert(pos < AOM_BUFFER_SIZE_FOR_BLOCK_HASH);
         buf_1[0][pos] =
-            av1_get_crc_value(calc_1, pixel_to_hash, sizeof(pixel_to_hash));
-        buf_2[0][pos] =
-            av1_get_crc_value(calc_2, pixel_to_hash, sizeof(pixel_to_hash));
+            av1_get_crc32c_value(calc, pixel_to_hash, sizeof(pixel_to_hash));
+        // Both the buffer and input pixels are 4 bytes. Just copy those values
+        // as is.
+        buf_2[0][pos] = ((uint32_t)pixel_to_hash[0] << 24) +
+                        ((uint32_t)pixel_to_hash[1] << 16) +
+                        ((uint32_t)pixel_to_hash[2] << 8) +
+                        ((uint32_t)pixel_to_hash[3]);
       }
     }
   }
@@ -464,14 +481,14 @@ void av1_get_block_hash_value(IntraBCHashInfo *intrabc_hash_info,
         to_hash[3] = buf_1[src_idx][srcPos + src_sub_block_in_width + 1];
 
         buf_1[dst_idx][dst_pos] =
-            av1_get_crc_value(calc_1, (uint8_t *)to_hash, sizeof(to_hash));
+            av1_get_crc32c_value(calc, (uint8_t *)to_hash, sizeof(to_hash));
 
         to_hash[0] = buf_2[src_idx][srcPos];
         to_hash[1] = buf_2[src_idx][srcPos + 1];
         to_hash[2] = buf_2[src_idx][srcPos + src_sub_block_in_width];
         to_hash[3] = buf_2[src_idx][srcPos + src_sub_block_in_width + 1];
         buf_2[dst_idx][dst_pos] =
-            av1_get_crc_value(calc_2, (uint8_t *)to_hash, sizeof(to_hash));
+            av1_get_crc32c_value(calc, (uint8_t *)to_hash, sizeof(to_hash));
         dst_pos++;
       }
     }
