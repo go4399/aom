@@ -18,6 +18,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "43ff6866_9e76a7bc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 4206323
+      },
+      "writtenOn": "2025-07-09T08:33:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "13c788d8_64e1ffb8",
+      "revId": "c56d38449674f62c87c216b113a07c00c338d00e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5716f12e_891da997",
@@ -41,6 +59,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "355ae7fe_2700d4ae",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 4206323
+      },
+      "writtenOn": "2025-07-09T08:33:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5716f12e_891da997",
+      "range": {
+        "startLine": 11,
+        "startChar": 179,
+        "endLine": 11,
+        "endChar": 267
+      },
+      "revId": "c56d38449674f62c87c216b113a07c00c338d00e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cdd5e29c_65e0dd52",
@@ -54,6 +96,24 @@
       "writtenOn": "2025-07-08T18:37:16Z",
       "side": 1,
       "message": "Please add the following before this line:\n\n```\nBug: 42302007\n```",
+      "revId": "c56d38449674f62c87c216b113a07c00c338d00e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ae18ff1_51e7356c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 4206323
+      },
+      "writtenOn": "2025-07-09T08:33:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cdd5e29c_65e0dd52",
       "revId": "c56d38449674f62c87c216b113a07c00c338d00e",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -109,6 +169,23 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed01fc5e_5db9e9b5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4206323
+      },
+      "writtenOn": "2025-07-09T08:33:54Z",
+      "side": 1,
+      "message": "Thanks all for the thorough review! I think I resolved all comments.",
+      "revId": "c56d38449674f62c87c216b113a07c00c338d00e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6b55e2da_7e8e9428",
@@ -122,6 +199,30 @@
       "writtenOn": "2025-07-08T18:35:30Z",
       "side": 1,
       "message": "Nit: The output variable should be named `aom_root_match_index` or `aom_root_index` if we follow the pattern used elsewhere.\n\nAlternatively, we can use the same variable name `aom_find_substring_index` everywhere.",
+      "range": {
+        "startLine": 1065,
+        "startChar": 51,
+        "endLine": 1065,
+        "endChar": 71
+      },
+      "revId": "c56d38449674f62c87c216b113a07c00c338d00e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b73df892_7a44068a",
+        "filename": "CMakeLists.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 1065,
+      "author": {
+        "id": 4206323
+      },
+      "writtenOn": "2025-07-09T08:33:54Z",
+      "side": 1,
+      "message": "Thanks! I like the consistency of `aom_find_substring_index` so I changed to that everywhere.",
+      "parentUuid": "6b55e2da_7e8e9428",
       "range": {
         "startLine": 1065,
         "startChar": 51,
