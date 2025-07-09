@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0be27344_7344864a",
+        "filename": "CHANGELOG",
+        "patchSetId": 11
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-09T15:40:21Z",
+      "side": 1,
+      "message": "Related to my other comment, would this be clearer if we change \"intraBC\" to \"intraBC search\"? If you agree, I can take care of that.",
+      "revId": "4be3ff9d08450bf45ddc946dc0089959b697c5ee",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
