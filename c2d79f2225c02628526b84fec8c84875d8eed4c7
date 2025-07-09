@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "efaceb0b_b8e2d5f3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-07-09T19:26:48Z",
+      "side": 1,
+      "message": "\u003e 1. Platform Support\n\u003e The code targets the x86 architecture on both Windows and Linux. I\u0027ve tested it on AMD Strix and Intel Lunar Lake systems (Windows 11 and Ubuntu 24.04.2 LTS), as well as on a Qualcomm ARM-based processor running Windows 11.\n\nWhat did those results look like? Can you give the command lines you were testing?\n\nThis kind of change feels like it will bias towards benchmarks rather than production systems with many processes active. Having the library decide to pin threads seems to be at too low of a level. Rather, an application should make this decision. An alternative in that case would be to use the semi-private [aom_set_worker_interface()](https://aomedia.googlesource.com/aom/+/refs/tags/v3.12.1/aom_util/aom_thread.h#83). This is something used by [Chrome](https://source.chromium.org/chromium/chromium/src/+/main:media/base/libaom_thread_wrapper.cc;l\u003d12;drc\u003db2353d2e6d33a0f70dd153a1cf299b8c85862ef1)",
+      "parentUuid": "c4ae1671_d699dbfe",
+      "revId": "c2d79f2225c02628526b84fec8c84875d8eed4c7",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5f82ca28_ac7831f9",
         "filename": "av1/encoder/ethread.c",
         "patchSetId": 4
