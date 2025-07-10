@@ -18,6 +18,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "24936e4d_e887114d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-10T18:12:55Z",
+      "side": 1,
+      "message": "This is a good question. I believe the change will only be a bit-exact output change iff `prune_intrabc_candidate_block_hash_search \u003d 0`. I\u0027ll test it with the speed feature disabled to confirm.\n\nMy understanding is: due to the way the hash table was designed, the \u0027key\u0027 actually only stores 16 bits of the hash (+3 bits for block size). This size isn\u0027t big enough to avoid key hash collisions for many images.\n\nDifferent hashes will cause different kinds of collisions, and if we don\u0027t visit all of the block candidates matching the 19-bit hash key (i.e. with `prune_intrabc_candidate_block_hash_search \u003d 1`), output will be slightly different (e.g. the occasional block that would be encoded with intraBC with one hash would be intra-encoded with another hash).\n\nNote that each block candidate also stores a second-level hash \"tag\" (which stores the full 32 bits of the hash), and even in the case of a second-level hash collision, these candidate blocks are still checked for distortion (as part of the RDO process).",
+      "parentUuid": "d2b49aaa_c7624f58",
+      "revId": "d35d69a9d3073ea4fad44bd643bebec253f14470",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "60e74c05_8695bafd",
