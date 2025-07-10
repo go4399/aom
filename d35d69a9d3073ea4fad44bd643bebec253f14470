@@ -99,6 +99,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "29410646_91a4f31e",
+        "filename": "av1/encoder/hash.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-10T22:21:57Z",
+      "side": 1,
+      "message": "The hash.h and hash.c edit history is a bit convoluted, but it went out like this:\n\n1. Initial files were added with CL 20160 (for `hash_me`), with the custom CRC24 implementation.\n2. Hashing for intrabc was implemented with CL 23580, which leveraged the existing CRC24 implementation.\n3. A SSE4 CRC32C routine was added to accelerate `hash_me` (but not intrabc)\n4. A C-only CRC32C routine was added to avoid SIMD/C output mismatch, and `hash_me` was modified to use CRC32C (but not intrabc)\n5. CL 201221 (this change) swaps CRC24 intrabc with CRC32C to align with `hash_me`, and deletes the original CRC24 implementation\n\nThis has two consequences:\n1. With this CL, the code in hash.h and hash.c is only used by CRC32C, so there\u0027s no need to move it to a separate file (maybe rename to crc32c.h and crc32c.c)\n2. `AOM_BUFFER_SIZE_FOR_BLOCK_HASH` is used for intrabc hashing, so we want to keep the `#define` around, maybe move it to some other header file (like `intra_mode_search_utils.h`)?",
+      "parentUuid": "60e74c05_8695bafd",
+      "revId": "d35d69a9d3073ea4fad44bd643bebec253f14470",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "65ab3eef_d2c79dc3",
