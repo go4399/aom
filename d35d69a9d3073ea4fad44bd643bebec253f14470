@@ -3,6 +3,68 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d2b49aaa_c7624f58",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-10T17:42:04Z",
+      "side": 1,
+      "message": "Julio: If this CL only changes the hash function for the hash table, this should be a bit-exact change and the output size and PSNR should stay the same. But they are different from the previous row. Did I misunderstand the changes in this CL? (I haven\u0027t reviewed it.)",
+      "revId": "d35d69a9d3073ea4fad44bd643bebec253f14470",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "60e74c05_8695bafd",
+        "filename": "av1/encoder/hash.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-10T17:42:04Z",
+      "side": 1,
+      "message": "The code deleted from hash.h and hash.c was added in https://aomedia-review.googlesource.com/c/aom/+/20160.",
+      "fixSuggestions": [
+        {
+          "fixId": "9e20b34f_4f644618",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/hash.h",
+              "range": {
+                "startLine": 23,
+                "startChar": 0,
+                "endLine": 23,
+                "endChar": 0
+              },
+              "replacement": "// TODO(angiebird): Move CRC32C related code to a separate file.\n"
+            },
+            {
+              "path": "av1/encoder/hash.h",
+              "range": {
+                "startLine": 32,
+                "startChar": 0,
+                "endLine": 32,
+                "endChar": 0
+              },
+              "replacement": "// TODO(angiebird): Remove AOM_BUFFER_SIZE_FOR_BLOCK_HASH.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "d35d69a9d3073ea4fad44bd643bebec253f14470",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "65ab3eef_d2c79dc3",
         "filename": "av1/encoder/hash_motion.c",
         "patchSetId": 2
