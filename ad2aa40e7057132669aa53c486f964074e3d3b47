@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "76defcd9_14359df4",
+        "filename": "av1/encoder/hash.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-11T22:08:39Z",
+      "side": 1,
+      "message": "Nit/optional: This should take `const uint8_t buf[4]` as input. We can do that later.",
+      "revId": "ad2aa40e7057132669aa53c486f964074e3d3b47",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "45e72dcd_bcb05107",
+        "filename": "av1/encoder/hash.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-11T22:08:39Z",
+      "side": 1,
+      "message": "Please move these two functions to hash_motion.c as static functions. Remove the `av1_` prefix; we usually omit the namespace prefix for static functions.\n\nI am sorry I wasn\u0027t clear when I said \"helper functions\".",
+      "revId": "ad2aa40e7057132669aa53c486f964074e3d3b47",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1975ba1_563747b2",
+        "filename": "av1/encoder/hash.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-11T22:08:39Z",
+      "side": 1,
+      "message": "Nit/optional: This should take `const uint16_t buf[4]` as input. We can do that later.",
+      "revId": "ad2aa40e7057132669aa53c486f964074e3d3b47",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95f6b297_f1ce410b",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-11T22:08:39Z",
+      "side": 1,
+      "message": "Nit: Add \"bits\" after \"32\".",
+      "range": {
+        "startLine": 197,
+        "startChar": 21,
+        "endLine": 197,
+        "endChar": 23
+      },
+      "revId": "ad2aa40e7057132669aa53c486f964074e3d3b47",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
