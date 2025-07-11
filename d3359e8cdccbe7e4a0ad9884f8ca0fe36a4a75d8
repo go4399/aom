@@ -33,6 +33,24 @@
       "message": "It might be better to make it impossible for `enable_chroma_deltaq` to be true when `q` is 0 and add an assert in this block. The same probably goes for `enable_hdr_deltaq`. The risk with doing it at this level is there may be other code that uses these values now or in the future.",
       "revId": "d3359e8cdccbe7e4a0ad9884f8ca0fe36a4a75d8",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9e2861d_e247185c",
+        "filename": "av1/encoder/av1_quantize.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 886,
+      "author": {
+        "id": 5022
+      },
+      "writtenOn": "2025-07-11T22:08:56Z",
+      "side": 1,
+      "message": "When the AQ is turned on, there are cases where some blocks can in theory be lossless whereas others are not. In this case, the enable_chroma_deltaq can be 1, but based on whether the block is coded in lossless mode, it shall be enabled / disabled accordingly.\n\nSince all the block operations will go through this function initially to set the quantizer, this is probably the right place to conduct such checks.",
+      "parentUuid": "d38a8ceb_37279805",
+      "revId": "d3359e8cdccbe7e4a0ad9884f8ca0fe36a4a75d8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
