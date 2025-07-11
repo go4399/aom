@@ -56,6 +56,57 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "89bb8959_feed998e",
+        "filename": "av1/encoder/hash.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-11T17:38:31Z",
+      "side": 1,
+      "message": "Note to self: Declare `c` as `CRC32C *`. Declare `buf` as `const uint8_t *`.",
+      "revId": "d35d69a9d3073ea4fad44bd643bebec253f14470",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6483167c_1bb92a4c",
+        "filename": "av1/encoder/hash.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-11T17:38:31Z",
+      "side": 1,
+      "message": "Note to self: Omit the cast.",
+      "revId": "d35d69a9d3073ea4fad44bd643bebec253f14470",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0fcabf10_db59cc10",
+        "filename": "av1/encoder/hash.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-11T17:38:31Z",
+      "side": 1,
+      "message": "Note to self: Delete this.",
+      "revId": "d35d69a9d3073ea4fad44bd643bebec253f14470",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "60e74c05_8695bafd",
         "filename": "av1/encoder/hash.h",
         "patchSetId": 2
@@ -142,6 +193,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ff26ed24_725b7a05",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-11T17:38:31Z",
+      "side": 1,
+      "message": "This could be added to the source code comment.",
+      "parentUuid": "65ab3eef_d2c79dc3",
+      "range": {
+        "startLine": 425,
+        "startChar": 0,
+        "endLine": 434,
+        "endChar": 70
+      },
+      "revId": "d35d69a9d3073ea4fad44bd643bebec253f14470",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "10e82362_45fb14f7",
         "filename": "av1/encoder/hash_motion.c",
         "patchSetId": 2
@@ -159,6 +234,47 @@
         "endLine": 452,
         "endChar": 53
       },
+      "revId": "d35d69a9d3073ea4fad44bd643bebec253f14470",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "56a48dc1_f945c8e5",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-11T17:38:31Z",
+      "side": 1,
+      "message": "Add the justification to the source code comment.",
+      "parentUuid": "10e82362_45fb14f7",
+      "range": {
+        "startLine": 449,
+        "startChar": 0,
+        "endLine": 452,
+        "endChar": 53
+      },
+      "revId": "d35d69a9d3073ea4fad44bd643bebec253f14470",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6b2c101c_fe6b169c",
+        "filename": "av1/encoder/hash_motion.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-11T17:38:31Z",
+      "side": 1,
+      "message": "Note to self: remove `g_` prefix. (It is the prefix for a global variable.)",
       "revId": "d35d69a9d3073ea4fad44bd643bebec253f14470",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
