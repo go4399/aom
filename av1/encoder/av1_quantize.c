@@ -883,7 +883,8 @@ void av1_set_quantizer(AV1_COMMON *const cm, int min_qmlevel, int max_qmlevel,
   quant_params->base_qindex = AOMMAX(cm->delta_q_info.delta_q_present_flag, q);
   quant_params->y_dc_delta_q = 0;
 
-  if (enable_chroma_deltaq) {
+  // Disable deltaq in lossless mode.
+  if (enable_chroma_deltaq && q) {
     if (is_allintra &&
         (tuning == AOM_TUNE_IQ || tuning == AOM_TUNE_SSIMULACRA2)) {
       int chroma_dc_delta_q = 0;
