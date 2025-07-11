@@ -73,6 +73,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "5a47c944_88e2e397",
+        "filename": "av1/encoder/hash.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-11T21:12:22Z",
+      "side": 1,
+      "message": "Did the `buf` change. The CRC32C * requires moving the struct to `common` so the perl code autogenerator can do its thing I think.",
+      "parentUuid": "89bb8959_feed998e",
+      "revId": "d35d69a9d3073ea4fad44bd643bebec253f14470",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "6483167c_1bb92a4c",
         "filename": "av1/encoder/hash.c",
         "patchSetId": 2
@@ -90,6 +108,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "641a6fec_3a76d0ca",
+        "filename": "av1/encoder/hash.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-11T21:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6483167c_1bb92a4c",
+      "revId": "d35d69a9d3073ea4fad44bd643bebec253f14470",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "0fcabf10_db59cc10",
         "filename": "av1/encoder/hash.h",
         "patchSetId": 2
@@ -101,6 +137,24 @@
       "writtenOn": "2025-07-11T17:38:31Z",
       "side": 1,
       "message": "Note to self: Delete this.",
+      "revId": "d35d69a9d3073ea4fad44bd643bebec253f14470",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f218d8df_8169a3bd",
+        "filename": "av1/encoder/hash.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-11T21:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0fcabf10_db59cc10",
       "revId": "d35d69a9d3073ea4fad44bd643bebec253f14470",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -215,6 +269,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd7fcde4_9fcde474",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-11T21:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff26ed24_725b7a05",
+      "range": {
+        "startLine": 425,
+        "startChar": 0,
+        "endLine": 434,
+        "endChar": 70
+      },
+      "revId": "d35d69a9d3073ea4fad44bd643bebec253f14470",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "10e82362_45fb14f7",
@@ -264,6 +342,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "954a93d5_7e4284ae",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-11T21:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56a48dc1_f945c8e5",
+      "range": {
+        "startLine": 449,
+        "startChar": 0,
+        "endLine": 452,
+        "endChar": 53
+      },
+      "revId": "d35d69a9d3073ea4fad44bd643bebec253f14470",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "6b2c101c_fe6b169c",
         "filename": "av1/encoder/hash_motion.h",
         "patchSetId": 2
@@ -275,6 +377,24 @@
       "writtenOn": "2025-07-11T17:38:31Z",
       "side": 1,
       "message": "Note to self: remove `g_` prefix. (It is the prefix for a global variable.)",
+      "revId": "d35d69a9d3073ea4fad44bd643bebec253f14470",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1fe32b9_e203e1cb",
+        "filename": "av1/encoder/hash_motion.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-11T21:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b2c101c_fe6b169c",
       "revId": "d35d69a9d3073ea4fad44bd643bebec253f14470",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
