@@ -2009,8 +2009,12 @@ int av1_intrabc_hash_search(const AV1_COMP *cpi, const MACROBLOCKD *xd,
   if (count <= 1) {
     return INT_MAX;
   }
-  if (cpi->sf.mv_sf.prune_intrabc_candidate_block_hash_search) {
+  /*if (cpi->sf.mv_sf.prune_intrabc_candidate_block_hash_search) {
     count = AOMMIN(64, count);
+  }*/
+
+  if (count > 10000) {
+    printf("%i\n", count);
   }
 
   Iterator iterator = av1_hash_get_first_iterator(ref_frame_hash, hash_value1);
