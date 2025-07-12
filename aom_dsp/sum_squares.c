@@ -16,6 +16,7 @@
 
 uint64_t aom_sum_squares_2d_i16_c(const int16_t *src, int src_stride, int width,
                                   int height) {
+  assert(width > 0 && height > 0);
   int r, c;
   uint64_t ss = 0;
 
@@ -77,9 +78,10 @@ uint64_t aom_var_2d_u16_c(uint8_t *src, int src_stride, int width, int height) {
 
 uint64_t aom_sum_sse_2d_i16_c(const int16_t *src, int src_stride, int width,
                               int height, int *sum) {
+  assert(width > 0 && height > 0);
   int r, c;
-  int16_t *srcp = (int16_t *)src;
-  int64_t ss = 0;
+  const int16_t *srcp = src;
+  uint64_t ss = 0;
 
   for (r = 0; r < height; r++) {
     for (c = 0; c < width; c++) {

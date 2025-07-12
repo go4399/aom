@@ -10,6 +10,7 @@
  */
 
 #include <arm_neon.h>
+#include <assert.h>
 
 #include "aom_dsp/arm/aom_neon_sve_bridge.h"
 #include "aom_dsp/arm/mem_neon.h"
@@ -81,7 +82,7 @@ static inline uint64_t aom_sum_squares_2d_i16_wxh_sve(const int16_t *src,
                                                       int stride, int width,
                                                       int height) {
   svint64_t sum_squares = svdup_n_s64(0);
-  uint64_t step = svcnth();
+  const uint64_t step = svcnth();
 
   do {
     const int16_t *src_ptr = src;
@@ -104,15 +105,17 @@ static inline uint64_t aom_sum_squares_2d_i16_wxh_sve(const int16_t *src,
 
 uint64_t aom_sum_squares_2d_i16_sve(const int16_t *src, int stride, int width,
                                     int height) {
-  if (width == 4) {
+  assert(width > 0 && height > 0);
+  if (width == 4 && height % 2 == 0) {
     return aom_sum_squares_2d_i16_4xh_sve(src, stride, height);
   }
-  if (width == 8) {
+  if (width == 8 && height % 2 == 0) {
     return aom_sum_squares_2d_i16_8xh_sve(src, stride, height);
   }
   if (width % 16 == 0) {
     return aom_sum_squares_2d_i16_large_sve(src, stride, width, height);
   }
+  // This assumes width is a multiple of svcnth()!
   return aom_sum_squares_2d_i16_wxh_sve(src, stride, width, height);
 }
 
@@ -223,11 +226,12 @@ static inline uint64_t aom_sum_sse_2d_i16_16xh_sve(const int16_t *src,
 
 uint64_t aom_sum_sse_2d_i16_sve(const int16_t *src, int stride, int width,
                                 int height, int *sum) {
+  assert(width > 0 && height > 0);
   uint64_t sse;
 
-  if (width == 4) {
+  if (width == 4 && height % 2 == 0) {
     sse = aom_sum_sse_2d_i16_4xh_sve(src, stride, height, sum);
-  } else if (width == 8) {
+  } else if (width == 8 && height % 2 == 0) {
     sse = aom_sum_sse_2d_i16_8xh_sve(src, stride, height, sum);
   } else if (width % 16 == 0) {
     sse = aom_sum_sse_2d_i16_16xh_sve(src, stride, width, height, sum);

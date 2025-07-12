@@ -164,7 +164,7 @@ static inline int64_t highbd_sse_wxh_sve(const uint16_t *src, int src_stride,
                                          const uint16_t *ref, int ref_stride,
                                          int width, int height) {
   svuint64_t sse = svdup_n_u64(0);
-  uint64_t step = svcnth();
+  const uint64_t step = svcnth();
 
   do {
     int w = 0;
@@ -210,6 +210,7 @@ int64_t aom_highbd_sse_sve(const uint8_t *src8, int src_stride,
     case 128:
       return highbd_sse_128xh_sve(src, src_stride, ref, ref_stride, height);
     default:
+      // This assumes width is a multiple of svcnth()!
       return highbd_sse_wxh_sve(src, src_stride, ref, ref_stride, width,
                                 height);
   }
