@@ -45,9 +45,8 @@ struct intrabc_hash_info;
 typedef struct intrabc_hash_info {
   // buffer for hash value calculation of a block
   // used only in av1_get_block_hash_value()
-  // [first hash/second hash]
   // [two buffers used ping-pong]
-  uint32_t *hash_value_buffer[2][2];
+  uint32_t *hash_value_buffer[2];
   hash_table intrabc_hash_table;
 
   CRC32C crc_calculator;
@@ -61,20 +60,14 @@ int32_t av1_hash_table_count(const hash_table *p_hash_table,
                              uint32_t hash_value);
 Iterator av1_hash_get_first_iterator(hash_table *p_hash_table,
                                      uint32_t hash_value);
-void av1_generate_block_2x2_hash_value(IntraBCHashInfo *intra_bc_hash_info,
-                                       const YV12_BUFFER_CONFIG *picture,
-                                       uint32_t *pic_block_hash[2],
-                                       int8_t *pic_block_same_info[3]);
+void av1_generate_block_2x2_hash_value(const YV12_BUFFER_CONFIG *picture,
+                                       uint32_t *pic_block_hash);
 void av1_generate_block_hash_value(IntraBCHashInfo *intra_bc_hash_info,
                                    const YV12_BUFFER_CONFIG *picture,
-                                   int block_size,
-                                   uint32_t *src_pic_block_hash[2],
-                                   uint32_t *dst_pic_block_hash[2],
-                                   int8_t *src_pic_block_same_info[3],
-                                   int8_t *dst_pic_block_same_info[3]);
+                                   int block_size, uint32_t *src_pic_block_hash,
+                                   uint32_t *dst_pic_block_hash);
 bool av1_add_to_hash_map_by_row_with_precal_data(hash_table *p_hash_table,
-                                                 uint32_t *pic_hash[2],
-                                                 int8_t *pic_is_same,
+                                                 uint32_t *pic_hash,
                                                  int pic_width, int pic_height,
                                                  int block_size);
 
