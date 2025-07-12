@@ -21,6 +21,7 @@
 #define kSrcBits 16
 #define kBlockSizeBits 3
 #define kMaxAddr (1 << (kSrcBits + kBlockSizeBits))
+#define kMaxCandidatesPerHashBucket 256
 
 // TODO(youzhou@microsoft.com): is higher than 8 bits screen content supported?
 // If yes, fix this function
@@ -48,34 +49,6 @@ static void get_pixels_in_1D_short_array_by_block_2x2(const uint16_t *y_src,
     }
     p_pel += stride;
   }
-}
-
-static int is_block_2x2_row_same_value(const uint8_t *p) {
-  if (p[0] != p[1] || p[2] != p[3]) {
-    return 0;
-  }
-  return 1;
-}
-
-static int is_block16_2x2_row_same_value(const uint16_t *p) {
-  if (p[0] != p[1] || p[2] != p[3]) {
-    return 0;
-  }
-  return 1;
-}
-
-static int is_block_2x2_col_same_value(const uint8_t *p) {
-  if ((p[0] != p[2]) || (p[1] != p[3])) {
-    return 0;
-  }
-  return 1;
-}
-
-static int is_block16_2x2_col_same_value(const uint16_t *p) {
-  if ((p[0] != p[2]) || (p[1] != p[3])) {
-    return 0;
-  }
-  return 1;
 }
 
 // the hash value (hash_value1 consists two parts, the first 3 bits relate to
@@ -161,15 +134,21 @@ static bool hash_table_add_to_table(hash_table *p_hash_table,
       return false;
     }
     if (aom_vector_setup(p_hash_table->p_lookup_table[hash_value], 10,
-                         sizeof(curr_block_hash[0])) == VECTOR_ERROR)
+                         sizeof(*curr_block_hash)) == VECTOR_ERROR)
       return false;
     if (aom_vector_push_back(p_hash_table->p_lookup_table[hash_value],
                              curr_block_hash) == VECTOR_ERROR)
       return false;
   } else {
-    if (aom_vector_push_back(p_hash_table->p_lookup_table[hash_value],
-                             curr_block_hash) == VECTOR_ERROR)
-      return false;
+    // Place an upper bound each hash table bucket to up to 256 intrabc
+    // block candidates, and ignore subsequent ones. Considering more can
+    // unnecessarily slow down encoding for virtually no efficiency gain.
+    if (aom_vector_byte_size(p_hash_table->p_lookup_table[hash_value]) <
+        kMaxCandidatesPerHashBucket * sizeof(*curr_block_hash)) {
+      if (aom_vector_push_back(p_hash_table->p_lookup_table[hash_value],
+                               curr_block_hash) == VECTOR_ERROR)
+        return false;
+    }
   }
   return true;
 }
@@ -189,17 +168,13 @@ Iterator av1_hash_get_first_iterator(hash_table *p_hash_table,
   return aom_vector_begin(p_hash_table->p_lookup_table[hash_value]);
 }
 
-void av1_generate_block_2x2_hash_value(IntraBCHashInfo *intrabc_hash_info,
-                                       const YV12_BUFFER_CONFIG *picture,
-                                       uint32_t *pic_block_hash[2],
-                                       int8_t *pic_block_same_info[3]) {
+void av1_generate_block_2x2_hash_value(const YV12_BUFFER_CONFIG *picture,
+                                       uint32_t *pic_block_hash) {
   const int width = 2;
   const int height = 2;
   const int x_end = picture->y_crop_width - width + 1;
   const int y_end = picture->y_crop_height - height + 1;
-  CRC32C *calc = &intrabc_hash_info->crc_calculator;
 
-  const int length = width * 2;
   if (picture->flags & YV12_FLAG_HIGHBITDEPTH) {
     uint16_t p[4];
     int pos = 0;
@@ -209,14 +184,10 @@ void av1_generate_block_2x2_hash_value(IntraBCHashInfo *intrabc_hash_info,
             CONVERT_TO_SHORTPTR(picture->y_buffer) + y_pos * picture->y_stride +
                 x_pos,
             picture->y_stride, p);
-        pic_block_same_info[0][pos] = is_block16_2x2_row_same_value(p);
-        pic_block_same_info[1][pos] = is_block16_2x2_col_same_value(p);
-        pic_block_hash[0][pos] =
-            av1_get_crc32c_value(calc, (uint8_t *)p, length * sizeof(p[0]));
         // For HBD, we either have 40 or 48 bits of input data that the xor hash
         // reduce to 32 bits. We intentionally don't want to "discard" bits to
         // avoid any kind of biasing.
-        pic_block_hash[1][pos] = get_xor_hash_value_hbd(p[0], p[1], p[2], p[3]);
+        pic_block_hash[pos] = get_xor_hash_value_hbd(p[0], p[1], p[2], p[3]);
         pos++;
       }
       pos += width - 1;
@@ -229,16 +200,11 @@ void av1_generate_block_2x2_hash_value(IntraBCHashInfo *intrabc_hash_info,
         get_pixels_in_1D_char_array_by_block_2x2(
             picture->y_buffer + y_pos * picture->y_stride + x_pos,
             picture->y_stride, p);
-        pic_block_same_info[0][pos] = is_block_2x2_row_same_value(p);
-        pic_block_same_info[1][pos] = is_block_2x2_col_same_value(p);
-        pic_block_hash[0][pos] =
-            av1_get_crc32c_value(calc, p, length * sizeof(p[0]));
         // This 2x2 hash isn't used directly as a "key" for the hash table, so
         // we can afford to just copy the 4 8-bit pixel values as a single
         // 32-bit value directly. (i.e. there are no concerns of a lack of
         // uniform distribution)
-        pic_block_hash[1][pos] =
-            get_identity_hash_value(p[0], p[1], p[2], p[3]);
+        pic_block_hash[pos] = get_identity_hash_value(p[0], p[1], p[2], p[3]);
         pos++;
       }
       pos += width - 1;
@@ -249,18 +215,14 @@ void av1_generate_block_2x2_hash_value(IntraBCHashInfo *intrabc_hash_info,
 void av1_generate_block_hash_value(IntraBCHashInfo *intrabc_hash_info,
                                    const YV12_BUFFER_CONFIG *picture,
                                    int block_size,
-                                   uint32_t *src_pic_block_hash[2],
-                                   uint32_t *dst_pic_block_hash[2],
-                                   int8_t *src_pic_block_same_info[3],
-                                   int8_t *dst_pic_block_same_info[3]) {
+                                   const uint32_t *src_pic_block_hash,
+                                   uint32_t *dst_pic_block_hash) {
   CRC32C *calc = &intrabc_hash_info->crc_calculator;
 
   const int pic_width = picture->y_crop_width;
   const int x_end = picture->y_crop_width - block_size + 1;
   const int y_end = picture->y_crop_height - block_size + 1;
-
   const int src_size = block_size >> 1;
-  const int quad_size = block_size >> 2;
 
   uint32_t p[4];
   const int length = sizeof(p);
@@ -268,83 +230,56 @@ void av1_generate_block_hash_value(IntraBCHashInfo *intrabc_hash_info,
   int pos = 0;
   for (int y_pos = 0; y_pos < y_end; y_pos++) {
     for (int x_pos = 0; x_pos < x_end; x_pos++) {
-      p[0] = src_pic_block_hash[0][pos];
-      p[1] = src_pic_block_hash[0][pos + src_size];
-      p[2] = src_pic_block_hash[0][pos + src_size * pic_width];
-      p[3] = src_pic_block_hash[0][pos + src_size * pic_width + src_size];
-      dst_pic_block_hash[0][pos] =
+      p[0] = src_pic_block_hash[pos];
+      p[1] = src_pic_block_hash[pos + src_size];
+      p[2] = src_pic_block_hash[pos + src_size * pic_width];
+      p[3] = src_pic_block_hash[pos + src_size * pic_width + src_size];
+      dst_pic_block_hash[pos] =
           av1_get_crc32c_value(calc, (uint8_t *)p, length);
-
-      p[0] = src_pic_block_hash[1][pos];
-      p[1] = src_pic_block_hash[1][pos + src_size];
-      p[2] = src_pic_block_hash[1][pos + src_size * pic_width];
-      p[3] = src_pic_block_hash[1][pos + src_size * pic_width + src_size];
-      dst_pic_block_hash[1][pos] =
-          av1_get_crc32c_value(calc, (uint8_t *)p, length);
-
-      dst_pic_block_same_info[0][pos] =
-          src_pic_block_same_info[0][pos] &&
-          src_pic_block_same_info[0][pos + quad_size] &&
-          src_pic_block_same_info[0][pos + src_size] &&
-          src_pic_block_same_info[0][pos + src_size * pic_width] &&
-          src_pic_block_same_info[0][pos + src_size * pic_width + quad_size] &&
-          src_pic_block_same_info[0][pos + src_size * pic_width + src_size];
-
-      dst_pic_block_same_info[1][pos] =
-          src_pic_block_same_info[1][pos] &&
-          src_pic_block_same_info[1][pos + src_size] &&
-          src_pic_block_same_info[1][pos + quad_size * pic_width] &&
-          src_pic_block_same_info[1][pos + quad_size * pic_width + src_size] &&
-          src_pic_block_same_info[1][pos + src_size * pic_width] &&
-          src_pic_block_same_info[1][pos + src_size * pic_width + src_size];
       pos++;
     }
     pos += block_size - 1;
   }
-
-  if (block_size >= 4) {
-    const int size_minus_1 = block_size - 1;
-    pos = 0;
-    for (int y_pos = 0; y_pos < y_end; y_pos++) {
-      for (int x_pos = 0; x_pos < x_end; x_pos++) {
-        dst_pic_block_same_info[2][pos] =
-            (!dst_pic_block_same_info[0][pos] &&
-             !dst_pic_block_same_info[1][pos]) ||
-            (((x_pos & size_minus_1) == 0) && ((y_pos & size_minus_1) == 0));
-        pos++;
-      }
-      pos += block_size - 1;
-    }
-  }
 }
 
 bool av1_add_to_hash_map_by_row_with_precal_data(hash_table *p_hash_table,
-                                                 uint32_t *pic_hash[2],
-                                                 int8_t *pic_is_same,
+                                                 const uint32_t *pic_hash,
                                                  int pic_width, int pic_height,
                                                  int block_size) {
   const int x_end = pic_width - block_size + 1;
   const int y_end = pic_height - block_size + 1;
 
-  const int8_t *src_is_added = pic_is_same;
-  const uint32_t *src_hash[2] = { pic_hash[0], pic_hash[1] };
-
   int add_value = hash_block_size_to_index(block_size);
   assert(add_value >= 0);
   add_value <<= kSrcBits;
   const int crc_mask = (1 << kSrcBits) - 1;
+  int step = block_size;
+  int x_offset = 0;
+  int y_offset = 0;
 
-  for (int x_pos = 0; x_pos < x_end; x_pos++) {
-    for (int y_pos = 0; y_pos < y_end; y_pos++) {
-      const int pos = y_pos * pic_width + x_pos;
-      // valid data
-      if (src_is_added[pos]) {
+  // Explore the entire frame hierarchically to hash intrabc candidate blocks,
+  // by starting with coarser steps (the block size), towards finer-grained
+  // steps until every candidate block has been considered.
+
+  // This is the coordinate exploration order example for a 5x5 image, with
+  // block_size = 4
+  //    x  0  1  2  3  4
+  //  y +---------------
+  //  0 |  1 10  5 11  2
+  //  1 | 16 22 17 23 18
+  //  2 |  7 12  9 13  8
+  //  3 | 19 24 20 25 21
+  //  4 |  3 14  6 15  4
+  while (step > 1) {
+    for (int x_pos = x_offset; x_pos < x_end; x_pos += step) {
+      for (int y_pos = y_offset; y_pos < y_end; y_pos += step) {
+        const int pos = y_pos * pic_width + x_pos;
         block_hash curr_block_hash;
         curr_block_hash.x = x_pos;
         curr_block_hash.y = y_pos;
 
-        const uint32_t hash_value1 = (src_hash[0][pos] & crc_mask) + add_value;
-        curr_block_hash.hash_value2 = src_hash[1][pos];
+        const uint32_t hash_value1 = (pic_hash[pos] & crc_mask) + add_value;
+        curr_block_hash.hash_value2 = pic_hash[pos];
 
         if (!hash_table_add_to_table(p_hash_table, hash_value1,
                                      &curr_block_hash)) {
@@ -352,7 +287,28 @@ bool av1_add_to_hash_map_by_row_with_precal_data(hash_table *p_hash_table,
         }
       }
     }
+
+    // Adjust offsets and step sizes with this state machine
+    if (x_offset == 0 && y_offset == 0) {
+      // State 0 -> State 1: special case
+      // This state will only execute when step == block_size
+      x_offset = step / 2;
+    } else if (x_offset == step / 2 && y_offset == 0) {
+      // State 1 -> State 2
+      x_offset = 0;
+      y_offset = step / 2;
+    } else if (x_offset == 0 && y_offset == step / 2) {
+      // State 2 -> State 3
+      x_offset = step / 2;
+    } else if (x_offset == step / 2 && y_offset == step / 2) {
+      // State 3 -> State 1: We've fully explored all the coordinates for the
+      // current step size, continue by halving the step size
+      step /= 2;
+      x_offset = step / 2;
+      y_offset = 0;
+    }
   }
+
   return true;
 }
 
@@ -421,8 +377,7 @@ void av1_get_block_hash_value(IntraBCHashInfo *intrabc_hash_info,
   const int crc_mask = (1 << kSrcBits) - 1;
 
   CRC32C *calc = &intrabc_hash_info->crc_calculator;
-  uint32_t **buf_1 = intrabc_hash_info->hash_value_buffer[0];
-  uint32_t **buf_2 = intrabc_hash_info->hash_value_buffer[1];
+  uint32_t **buf = intrabc_hash_info->hash_value_buffer;
 
   // 2x2 subblock hash values in current CU
   int sub_block_in_width = (block_size >> 1);
@@ -435,12 +390,10 @@ void av1_get_block_hash_value(IntraBCHashInfo *intrabc_hash_info,
         get_pixels_in_1D_short_array_by_block_2x2(
             y16_src + y_pos * stride + x_pos, stride, pixel_to_hash);
         assert(pos < AOM_BUFFER_SIZE_FOR_BLOCK_HASH);
-        buf_1[0][pos] = av1_get_crc32c_value(calc, (uint8_t *)pixel_to_hash,
-                                             sizeof(pixel_to_hash));
         // For HBD, we either have 40 or 48 bits of input data that the xor hash
         // reduce to 32 bits. We intentionally don't want to "discard" bits to
         // avoid any kind of biasing.
-        buf_2[0][pos] =
+        buf[0][pos] =
             get_xor_hash_value_hbd(pixel_to_hash[0], pixel_to_hash[1],
                                    pixel_to_hash[2], pixel_to_hash[3]);
       }
@@ -453,13 +406,11 @@ void av1_get_block_hash_value(IntraBCHashInfo *intrabc_hash_info,
         get_pixels_in_1D_char_array_by_block_2x2(y_src + y_pos * stride + x_pos,
                                                  stride, pixel_to_hash);
         assert(pos < AOM_BUFFER_SIZE_FOR_BLOCK_HASH);
-        buf_1[0][pos] =
-            av1_get_crc32c_value(calc, pixel_to_hash, sizeof(pixel_to_hash));
         // This 2x2 hash isn't used directly as a "key" for the hash table, so
         // we can afford to just copy the 4 8-bit pixel values as a single
         // 32-bit value directly. (i.e. there are no concerns of a lack of
         // uniform distribution)
-        buf_2[0][pos] =
+        buf[0][pos] =
             get_identity_hash_value(pixel_to_hash[0], pixel_to_hash[1],
                                     pixel_to_hash[2], pixel_to_hash[3]);
       }
@@ -469,14 +420,14 @@ void av1_get_block_hash_value(IntraBCHashInfo *intrabc_hash_info,
   int src_sub_block_in_width = sub_block_in_width;
   sub_block_in_width >>= 1;
 
-  int src_idx = 1;
-  int dst_idx = 0;
+  int src_idx = 0;
+  int dst_idx = !src_idx;
 
   // 4x4 subblock hash values to current block hash values
   uint32_t to_hash[4];
-  for (int sub_width = 4; sub_width <= block_size; sub_width *= 2) {
-    src_idx = 1 - src_idx;
-    dst_idx = 1 - dst_idx;
+  for (int sub_width = 4; sub_width <= block_size;
+       sub_width *= 2, src_idx = !src_idx) {
+    dst_idx = !src_idx;
 
     int dst_pos = 0;
     for (int y_pos = 0; y_pos < sub_block_in_width; y_pos++) {
@@ -487,19 +438,12 @@ void av1_get_block_hash_value(IntraBCHashInfo *intrabc_hash_info,
         assert(srcPos + src_sub_block_in_width + 1 <
                AOM_BUFFER_SIZE_FOR_BLOCK_HASH);
         assert(dst_pos < AOM_BUFFER_SIZE_FOR_BLOCK_HASH);
-        to_hash[0] = buf_1[src_idx][srcPos];
-        to_hash[1] = buf_1[src_idx][srcPos + 1];
-        to_hash[2] = buf_1[src_idx][srcPos + src_sub_block_in_width];
-        to_hash[3] = buf_1[src_idx][srcPos + src_sub_block_in_width + 1];
+        to_hash[0] = buf[src_idx][srcPos];
+        to_hash[1] = buf[src_idx][srcPos + 1];
+        to_hash[2] = buf[src_idx][srcPos + src_sub_block_in_width];
+        to_hash[3] = buf[src_idx][srcPos + src_sub_block_in_width + 1];
 
-        buf_1[dst_idx][dst_pos] =
-            av1_get_crc32c_value(calc, (uint8_t *)to_hash, sizeof(to_hash));
-
-        to_hash[0] = buf_2[src_idx][srcPos];
-        to_hash[1] = buf_2[src_idx][srcPos + 1];
-        to_hash[2] = buf_2[src_idx][srcPos + src_sub_block_in_width];
-        to_hash[3] = buf_2[src_idx][srcPos + src_sub_block_in_width + 1];
-        buf_2[dst_idx][dst_pos] =
+        buf[dst_idx][dst_pos] =
             av1_get_crc32c_value(calc, (uint8_t *)to_hash, sizeof(to_hash));
         dst_pos++;
       }
@@ -509,6 +453,6 @@ void av1_get_block_hash_value(IntraBCHashInfo *intrabc_hash_info,
     sub_block_in_width >>= 1;
   }
 
-  *hash_value1 = (buf_1[dst_idx][0] & crc_mask) + add_value;
-  *hash_value2 = buf_2[dst_idx][0];
+  *hash_value1 = (buf[dst_idx][0] & crc_mask) + add_value;
+  *hash_value2 = buf[dst_idx][0];
 }
