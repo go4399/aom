@@ -16,6 +16,24 @@
       "message": "Please add:\n\n```\nBUG\u003db/430090587\n```",
       "revId": "6afad044b2839acb5846396ed248beae9b2d22f3",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5aed506_a2fe662d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 5022
+      },
+      "writtenOn": "2025-07-14T22:42:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "717fd961_3a5b8849",
+      "revId": "6afad044b2839acb5846396ed248beae9b2d22f3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
