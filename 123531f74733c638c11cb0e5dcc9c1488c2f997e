@@ -16,6 +16,24 @@
       "message": "In this CL, speed feature `skip_loop_filter_using_filt_error` is disabled for vertical 608p resolution to improve the visual quality. The tests are performed on commit 96bfde38 (dated 2nd July). We validated that the patch does not conflict with the latest version.\n\nThe performance results of vertical 720p clips with low complexity decode mode enabled are given below:\n```\n                         Instruction Count                                                                 \n                           Reduction(%)                        BD-Rate Loss(%)                  Time Reduction(%)\ncpu-used  Resolution    Encoder   Decoder    avg.psnr   ovr.psnr    ssim      vmaf    vmaf_neg    dav1d Decoder   \n   1         608p        0.012    -5.351     -0.1575   -0.1524    -0.3248   -0.0101    0.0005       -4.453\n   2         608p        0.079    -5.370     -0.2202   -0.2436    -0.4301   -0.1014   -0.1009       -4.390\n   3         608p       -0.061    -5.735     -0.2106   -0.2117    -0.3625   -0.0067    0.0245       -5.100\n```\n\nThis speed feature is still enabled for non-vertical HD resolution. Please let us know if we should conduct the visual tests for non-vertical HD resolution as well after this CL is merged.",
       "revId": "123531f74733c638c11cb0e5dcc9c1488c2f997e",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f1827719_9ac88cd8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-07-15T21:44:11Z",
+      "side": 1,
+      "message": "Good that the visual quality got much improved with this feature disabled. Thanks.",
+      "parentUuid": "06bb421f_84389cc8",
+      "revId": "123531f74733c638c11cb0e5dcc9c1488c2f997e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
