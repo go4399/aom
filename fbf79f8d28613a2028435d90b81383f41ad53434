@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "a85f8620_4298b579",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-16T16:41:48Z",
+      "side": 1,
+      "message": "Only for speed 0, as the speed feature that limits search to 64 candidates per hash table bucket (prune_intrabc_candidate_block_hash_search) is turned off.\n\nFor the remaining speeds (\u003e\u003d 1), different block candidates will be considered because the new code inserts candidates in a different order. From quick tests, the new code has a slightly better \"hit rate\" (i.e. RDO considers using an intrabc block over a regular intra block a bit more often than before).",
+      "parentUuid": "7cee5611_cc1f7d50",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "2e82fca7_5d241796",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 8
@@ -31,6 +49,24 @@
       "writtenOn": "2025-07-16T02:46:52Z",
       "side": 1,
       "message": "Julio: Here is the first round of comments. I haven\u0027t finished reading hash_motion.{h,c}. Most of these are nit-picking comments as I tried to understand the code.",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "823c25a7_c9c118f2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-16T16:41:48Z",
+      "side": 1,
+      "message": "Thanks Wan-Teh! I\u0027ll take a look at them.",
+      "parentUuid": "2e82fca7_5d241796",
       "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -52,6 +88,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ff38b03_b6e24635",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1815,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-16T16:41:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ef46ff7f_3b9908d3",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "735cccc6_5dc0271d",
@@ -65,6 +119,24 @@
       "writtenOn": "2025-07-16T02:46:52Z",
       "side": 1,
       "message": "Nit: Move the declaration of `j` to the for loop (line 2112).",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83b47e0c_0bccfc80",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 2109,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-16T16:41:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "735cccc6_5dc0271d",
       "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -92,6 +164,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e639c50_247f3a81",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 2112,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-16T16:41:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d080861_b6879f34",
+      "range": {
+        "startLine": 2112,
+        "startChar": 22,
+        "endLine": 2112,
+        "endChar": 31
+      },
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "109d6fab_20f8efa7",
@@ -105,6 +201,24 @@
       "writtenOn": "2025-07-16T02:46:52Z",
       "side": 1,
       "message": "Nit: Change `[0]` to `[j]` to match line 2113 exactly:\n\n```\n          sizeof(*block_hash_values[j]) * pic_width * pic_height);\n```\n\nNote: I think it would be clearer to use `sizeof(uint32_t)` to match the `(uint32_t *)` cast, but most people recommend using the current form.",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "251bd95b_1f218581",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 2114,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-16T16:41:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "109d6fab_20f8efa7",
       "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -126,6 +240,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb9e6635_3bf6f374",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 2135,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-16T16:41:48Z",
+      "side": 1,
+      "message": "I made the way to update `src_idx` and `dst_idx` in `av1_get_block_hash_value()`  look more like in here. The flow is structured differently, so it\u0027s not an exact match.",
+      "parentUuid": "5f032de1_dc9254f0",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7fe2ffd0_4cd950ea",
@@ -139,6 +271,24 @@
       "writtenOn": "2025-07-16T02:46:52Z",
       "side": 1,
       "message": "Nit: Merge the nested if statements:\n\n```\n      if (size \u003e\u003d min_alloc_size \u0026\u0026\n          !av1_add_to_hash_map_by_row_with_precal_data(\n              \u0026intrabc_hash_info-\u003eintrabc_hash_table,\n              block_hash_values[dst_idx], pic_width, pic_height, size)) {\n        error \u003d true;\n        break;\n      }\n```",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "60939a58_73152592",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 2148,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-16T16:41:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7fe2ffd0_4cd950ea",
       "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -160,6 +310,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c3ecdb9e_6a059107",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1585,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-16T16:41:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f3748f1f_b579aea0",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "04f1e7f6_f6e7647c",
@@ -177,6 +345,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3af3609_a1a2cba4",
+        "filename": "av1/encoder/ethread.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1003,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-16T16:41:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04f1e7f6_f6e7647c",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a578d010_aa537ab0",
@@ -190,6 +376,24 @@
       "writtenOn": "2025-07-16T02:46:52Z",
       "side": 1,
       "message": "Nit: Change `[0]` to `[x]`.",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d1b7834f_9e362900",
+        "filename": "av1/encoder/ethread.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1595,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-16T16:41:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a578d010_aa537ab0",
       "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -217,6 +421,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa6259d1_ec20588c",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-16T16:41:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53a6c80b_f3c217be",
+      "range": {
+        "startLine": 137,
+        "startChar": 32,
+        "endLine": 137,
+        "endChar": 50
+      },
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0136acb0_bd1dca0d",
@@ -234,6 +462,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "57ad32e5_b4c6997d",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-16T16:41:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0136acb0_bd1dca0d",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3840c50b_f886f9a7",
@@ -247,6 +493,24 @@
       "writtenOn": "2025-07-16T02:46:52Z",
       "side": 1,
       "message": "Nit: We don\u0027t need the `src_hash` variable. Just use `pic_hash` directly.",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe10aa09_41d5e33f",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-16T16:41:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3840c50b_f886f9a7",
       "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -291,6 +555,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5de8cc5e_b21bb484",
+        "filename": "av1/encoder/hash_motion.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-16T16:41:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f447a576_5d339199",
+      "range": {
+        "startLine": 67,
+        "startChar": 51,
+        "endLine": 67,
+        "endChar": 79
+      },
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bdb1febd_92f65711",
@@ -304,6 +592,30 @@
       "writtenOn": "2025-07-16T02:46:52Z",
       "side": 1,
       "message": "Declare `pic_hash` as const.",
+      "range": {
+        "startLine": 70,
+        "startChar": 59,
+        "endLine": 70,
+        "endChar": 67
+      },
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dfa25524_0809d1ac",
+        "filename": "av1/encoder/hash_motion.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-16T16:41:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bdb1febd_92f65711",
       "range": {
         "startLine": 70,
         "startChar": 59,
