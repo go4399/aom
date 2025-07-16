@@ -1,0 +1,317 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7cee5611_cc1f7d50",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-16T02:46:52Z",
+      "side": 1,
+      "message": "Does this make us consider fewer candidates? Intuitivey, if we consider fewer candidates, compression efficiency should suffer, but the table below shows the output file size is smaller. Can you explain that?",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e82fca7_5d241796",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-16T02:46:52Z",
+      "side": 1,
+      "message": "Julio: Here is the first round of comments. I haven\u0027t finished reading hash_motion.{h,c}. Most of these are nit-picking comments as I tried to understand the code.",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef46ff7f_3b9908d3",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1815,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-16T02:46:52Z",
+      "side": 1,
+      "message": "Nit/optional: Switch to index variable `j` to match the for loop at line 2112 (or change that for loop to use index variable `k`).",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "735cccc6_5dc0271d",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 2109,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-16T02:46:52Z",
+      "side": 1,
+      "message": "Nit: Move the declaration of `j` to the for loop (line 2112).",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4d080861_b6879f34",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 2112,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-16T02:46:52Z",
+      "side": 1,
+      "message": "Nit: Delete the `\u0026\u0026 !error` check here, and change line 2115 to:\n\n```\n      if (!block_hash_values[j]) {\n        error \u003d true;\n        break;\n      }\n```\n\nThis matches the error break pattern used in the next for loop at line 2136.",
+      "range": {
+        "startLine": 2112,
+        "startChar": 22,
+        "endLine": 2112,
+        "endChar": 31
+      },
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "109d6fab_20f8efa7",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 2114,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-16T02:46:52Z",
+      "side": 1,
+      "message": "Nit: Change `[0]` to `[j]` to match line 2113 exactly:\n\n```\n          sizeof(*block_hash_values[j]) * pic_width * pic_height);\n```\n\nNote: I think it would be clearer to use `sizeof(uint32_t)` to match the `(uint32_t *)` cast, but most people recommend using the current form.",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f032de1_dc9254f0",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 2135,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-16T02:46:52Z",
+      "side": 1,
+      "message": "Optional: It would be good if we could standardize on the same way to update `src_idx` and `dst_idx`. A different way is used in `av1_get_block_hash_value()`.",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7fe2ffd0_4cd950ea",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 2148,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-16T02:46:52Z",
+      "side": 1,
+      "message": "Nit: Merge the nested if statements:\n\n```\n      if (size \u003e\u003d min_alloc_size \u0026\u0026\n          !av1_add_to_hash_map_by_row_with_precal_data(\n              \u0026intrabc_hash_info-\u003eintrabc_hash_table,\n              block_hash_values[dst_idx], pic_width, pic_height, size)) {\n        error \u003d true;\n        break;\n      }\n```",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3748f1f_b579aea0",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1585,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-16T02:46:52Z",
+      "side": 1,
+      "message": "IMPORTANT: add `[0]`.\n\n```\n            sizeof(*cpi-\u003etd.mb.intrabc_hash_info.hash_value_buffer[0])));\n```\n\nActually it would be better to add `[x]` to match line 1582 exactly:\n\n```\n            sizeof(*cpi-\u003etd.mb.intrabc_hash_info.hash_value_buffer[x])));\n```",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04f1e7f6_f6e7647c",
+        "filename": "av1/encoder/ethread.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1003,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-16T02:46:52Z",
+      "side": 1,
+      "message": "Nit: Change to `sizeof(*td-\u003ehash_value_buffer[x])`.",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a578d010_aa537ab0",
+        "filename": "av1/encoder/ethread.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1595,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-16T02:46:52Z",
+      "side": 1,
+      "message": "Nit: Change `[0]` to `[x]`.",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "53a6c80b_f3c217be",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-16T02:46:52Z",
+      "side": 1,
+      "message": "Nit: Change `curr_block_hash[0]` to `*curr_block_hash`. `curr_block_hash` is not an array.",
+      "range": {
+        "startLine": 137,
+        "startChar": 32,
+        "endLine": 137,
+        "endChar": 50
+      },
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0136acb0_bd1dca0d",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-16T02:46:52Z",
+      "side": 1,
+      "message": "IMPORTANT: `aom_vector_byte_size()` returns the size of the vector in bytes. It is not the number of elements in the vector. I don\u0027t know why there is no `aom_vector_size()` function.\n\nSince `block_hash` is 8 bytes, the upper bound is actually 1024 / 8 \u003d 256 intrabc block candidates.\n\nWe should change \"1024\" to \"256\" in line 24 and line 143, and change this check to:\n\n```\n    if (aom_vector_byte_size(p_hash_table-\u003ep_lookup_table[hash_value]) \u003c\n        kMaxCandidatesPerHashBucket * sizeof(*curr_block_hash)) {\n```\n\nNote that this check should use `\u003c`, not `\u003c\u003d`.",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3840c50b_f886f9a7",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-16T02:46:52Z",
+      "side": 1,
+      "message": "Nit: We don\u0027t need the `src_hash` variable. Just use `pic_hash` directly.",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d1a63f1_8343d31d",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-16T02:46:52Z",
+      "side": 1,
+      "message": "Optional: This CRC calculation seems to depend on the byte order of `uint32_t`. It would be good to serialize the four `uint32_t` values in the `to_hash` array in a standard byte order (either big endian or little endian) and then pass that to `av1_get_crc32c_value()`.",
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f447a576_5d339199",
+        "filename": "av1/encoder/hash_motion.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-16T02:46:52Z",
+      "side": 1,
+      "message": "Nit: Declare `src_pic_block_hash` as const.",
+      "range": {
+        "startLine": 67,
+        "startChar": 51,
+        "endLine": 67,
+        "endChar": 79
+      },
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdb1febd_92f65711",
+        "filename": "av1/encoder/hash_motion.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-16T02:46:52Z",
+      "side": 1,
+      "message": "Declare `pic_hash` as const.",
+      "range": {
+        "startLine": 70,
+        "startChar": 59,
+        "endLine": 70,
+        "endChar": 67
+      },
+      "revId": "fbf79f8d28613a2028435d90b81383f41ad53434",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
