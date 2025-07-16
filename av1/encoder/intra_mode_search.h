@@ -15,6 +15,8 @@
 #ifndef AOM_AV1_ENCODER_INTRA_MODE_SEARCH_H_
 #define AOM_AV1_ENCODER_INTRA_MODE_SEARCH_H_
 
+#include <stdbool.h>
+
 #include "av1/encoder/encoder.h"
 
 #ifdef __cplusplus
@@ -276,6 +278,14 @@ int64_t av1_rd_pick_intra_sbuv_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
  */
 void av1_count_colors(const uint8_t *src, int stride, int rows, int cols,
                       int *val_count, int *num_colors);
+
+/*! \brief Return the number of colors in src. Exits early if the number of
+   colors exceeds a specified threshold.
+   Used by screen content detection mode 2.
+ */
+bool av1_count_colors_with_threshold(const uint8_t *src, int stride, int rows,
+                                     int cols, int num_colors_threshold,
+                                     int *num_colors);
 
 /*! \brief See \ref av1_count_colors(), but for highbd.
  */

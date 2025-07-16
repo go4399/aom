@@ -490,6 +490,13 @@ typedef struct HIGH_LEVEL_SPEED_FEATURES {
    * 2: Always disable
    */
   int ref_frame_mvs_lvl;
+
+  /*!
+   *  Decide whether to enable screen detection mode 2 fast detection mode.
+   *  0: Regular mode
+   *  1: Fast detection mode
+   */
+  int screen_detection_mode2_fast_detection_mode;
 } HIGH_LEVEL_SPEED_FEATURES;
 
 /*!
