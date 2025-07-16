@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c702955_0edad388",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-16T23:38:33Z",
+      "side": 1,
+      "message": "Please add a test to test/encode_api_test.cc.",
+      "revId": "b71bcc9be1682396ed10474e7df56d4a6cf4f5f1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "4baafe04_aff07749",
@@ -14,6 +31,40 @@
       "writtenOn": "2025-07-16T17:53:27Z",
       "side": 1,
       "message": "Can you add a unittest for the new flag/feature, maybe in datarate_test.cc?\n\nAnother option is add a new control, instead of adding to frame_flags.",
+      "revId": "b71bcc9be1682396ed10474e7df56d4a6cf4f5f1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70323f69_371bf62a",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 3225,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-16T23:38:33Z",
+      "side": 1,
+      "message": "I don\u0027t know why we copy the input parameter `enc_flags` to a (volatile) local variable `flags`, but this function doesn\u0027t use `enc_flags` after this point. It is best to preserve that property and use `flags` instead of `enc_flags` in line 3273.",
+      "revId": "b71bcc9be1682396ed10474e7df56d4a6cf4f5f1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7635cec2_f864308c",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 3273,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-16T23:38:33Z",
+      "side": 1,
+      "message": "IMPORTANT: This may not work when `g_lag_in_frames` is nonzero, because `ppi-\u003eb_calculate_psnr` does not seem to be associated with the input frame. In the realtime mode, `g_lag_in_frames` is initialized to 0 by default, so you may not have tested this code with nonzero `g_lag_in_frames`.\n\nThe tests I asked you to add should test with both zero and nonzero `g_lag_in_frames`.",
       "revId": "b71bcc9be1682396ed10474e7df56d4a6cf4f5f1",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
