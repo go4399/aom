@@ -781,13 +781,12 @@ class DatarateTestPsnr
     libaom_test::CxDataIterator iter = encoder->GetCxData();
 
     bool had_psnr = false;
-    size_t flags = 0;
+    size_t packets = 0;
     while (const aom_codec_cx_pkt_t *pkt = iter.Next()) {
-      flags++;
-      if (pkt->kind != AOM_CODEC_PSNR_PKT) continue;
-      had_psnr = true;
+      packets++;
+      if (pkt->kind == AOM_CODEC_PSNR_PKT) had_psnr = true;
     }
-    if (flags > 0) {
+    if (packets > 0) {
       EXPECT_EQ(had_psnr, (frame_flags_ & AOM_EFLAG_CALCULATE_PSNR) ==
                               AOM_EFLAG_CALCULATE_PSNR);
     }

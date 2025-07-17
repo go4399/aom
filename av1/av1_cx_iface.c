@@ -3268,9 +3268,15 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
   if (res == AOM_CODEC_OK) {
     AV1_COMP *cpi = ppi->cpi;
 
+    // Per-frame PSNR is not supported when g_lag_in_frames is greater than 0.
+    if ((flags & AOM_EFLAG_CALCULATE_PSNR) && ctx->cfg.g_lag_in_frames != 0) {
+      aom_internal_error(
+          &ppi->error, AOM_CODEC_INCAPABLE,
+          "Can not calculate per-frame PSNR when g_lag_in_frames is non-zero");
+    }
+
     // Set up internal flags
-    ppi->b_calculate_psnr = ((flags & AOM_EFLAG_CALCULATE_PSNR) &&
-                             ctx->cfg.g_usage == AOM_USAGE_REALTIME) ||
+    ppi->b_calculate_psnr = (flags & AOM_EFLAG_CALCULATE_PSNR) ||
                             (ctx->base.init_flags & AOM_CODEC_USE_PSNR);
 
     if (img != NULL) {
