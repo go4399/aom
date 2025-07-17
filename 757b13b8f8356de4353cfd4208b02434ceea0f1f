@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "0e272dab_92549c96",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-07-17T22:07:11Z",
+      "side": 1,
+      "message": "\u003e James: Do you know why we are not getting this link error?\n\nYes, that was hidden in my comment. To reproduce you need both `-DCONFIG_INSPECTION\u003d1` and `-DBUILD_SHARED_LIBS\u003d1`. We\u0027re not setting the latter in the presubmit. I will enable it in the presubmit after this lands (and maybe some other pending changes to avoid disruption).",
+      "parentUuid": "b474aa05_606bd127",
+      "revId": "757b13b8f8356de4353cfd4208b02434ceea0f1f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "4b7d8c98_9800ecaf",
         "filename": "examples/inspect.c",
         "patchSetId": 1
