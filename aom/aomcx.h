@@ -1600,6 +1600,13 @@ enum aome_enc_control_id {
    */
   AV1E_SET_SCREEN_CONTENT_DETECTION_MODE = 171,
 
+  /*!\brief Codec control to enable adaptive sharpness, unsigned int parameter.
+   *
+   * - 0 = disable (default)
+   * - 1 = enable
+   */
+  AV1E_SET_ENABLE_ADAPTIVE_SHARPNESS = 172,
+
   // Any new encoder control IDs should be added above.
   // Maximum allowed encoder control ID is 229.
   // No encoder control ID should be added below.
@@ -1709,6 +1716,7 @@ typedef enum {
  *   * --qm-min=2
  *   * --qm-max=10
  *   * --sharpness=7
+ *   * --enable-adaptive-sharpness=1 (AOM_TUNE_IQ only)
  *   * --dist-metric=qm-psnr
  *   * --enable-cdef=3
  *   * --enable-chroma-deltaq=1
@@ -2336,6 +2344,9 @@ AOM_CTRL_USE_TYPE(AV1E_SET_ENABLE_LOW_COMPLEXITY_DECODE, unsigned int)
 AOM_CTRL_USE_TYPE(AV1E_SET_SCREEN_CONTENT_DETECTION_MODE,
                   int) /* aom_screen_detection_mode */
 #define AOM_CTRL_SET_SCREEN_CONTENT_DETECTION_MODE
+
+AOM_CTRL_USE_TYPE(AV1E_SET_ENABLE_ADAPTIVE_SHARPNESS, unsigned int)
+#define AOM_CTRL_AV1E_SET_ENABLE_ADAPTIVE_SHARPNESS
 
 /*!\endcond */
 /*! @} - end defgroup aom_encoder */

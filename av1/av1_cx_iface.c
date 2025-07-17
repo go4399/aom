@@ -214,6 +214,7 @@ struct av1_extracfg {
   int kf_max_pyr_height;
   int sb_qp_sweep;
   aom_screen_detection_mode screen_detection_mode;
+  unsigned int enable_adaptive_sharpness;
 };
 
 #if !CONFIG_REALTIME_ONLY
@@ -369,6 +370,7 @@ static const struct av1_extracfg default_extra_cfg = {
   -1,              // kf_max_pyr_height
   0,               // sb_qp_sweep
   AOM_SCREEN_DETECTION_STANDARD,
+  0,  // enable_adaptive_sharpness
 };
 #else
 // Some settings are changed for realtime only build.
@@ -524,6 +526,7 @@ static const struct av1_extracfg default_extra_cfg = {
   -1,              // kf_max_pyr_height
   0,               // sb_qp_sweep
   AOM_SCREEN_DETECTION_STANDARD,
+  0,  // enable_adaptive_sharpness
 };
 #endif
 
@@ -927,6 +930,7 @@ static aom_codec_err_t validate_config(aom_codec_alg_priv_t *ctx,
   }
 
   RANGE_CHECK(extra_cfg, screen_detection_mode, 1, 2);
+  RANGE_CHECK_HI(extra_cfg, enable_adaptive_sharpness, 1);
   return AOM_CODEC_OK;
 }
 
@@ -1297,6 +1301,7 @@ static void set_encoder_config(AV1EncoderConfig *oxcf,
   algo_cfg->loopfilter_control = extra_cfg->loopfilter_control;
   algo_cfg->skip_postproc_filtering = extra_cfg->skip_postproc_filtering;
   algo_cfg->screen_detection_mode = extra_cfg->screen_detection_mode;
+  algo_cfg->enable_adaptive_sharpness = extra_cfg->enable_adaptive_sharpness;
 
   // Set two-pass stats configuration.
   oxcf->twopass_stats_in = cfg->rc_twopass_stats_in;
@@ -1838,8 +1843,8 @@ static aom_codec_err_t handle_tuning(aom_codec_alg_priv_t *ctx,
     extra_cfg->enable_qm = 1;
     extra_cfg->qm_min = QM_FIRST_IQ_SSIMULACRA2;
     extra_cfg->qm_max = QM_LAST_IQ_SSIMULACRA2;
-    // We can turn on loop filter sharpness, as frames do not have to serve as
-    // references to others.
+    // We can turn on sharpness, as frames do not have to serve as references to
+    // others.
     extra_cfg->sharpness = 7;
     // Using the QM-PSNR metric was found to be beneficial for images (over the
     // default PSNR metric), as it correlates better with subjective image
@@ -1857,6 +1862,11 @@ static aom_codec_err_t handle_tuning(aom_codec_alg_priv_t *ctx,
     extra_cfg->enable_chroma_deltaq = 1;
     // Enable "Variance Boost" deltaq mode, optimized for images.
     extra_cfg->deltaq_mode = DELTA_Q_VARIANCE_BOOST;
+  }
+  if (extra_cfg->tuning == AOM_TUNE_IQ) {
+    // Enable adaptive sharpness to adjust loop filter levels according to QP.
+    // Takes a small SSIMULACRA2 hit on the lower end, so enable for tune iq.
+    extra_cfg->enable_adaptive_sharpness = 1;
   }
   return AOM_CODEC_OK;
 }
@@ -2818,6 +2828,14 @@ static aom_codec_err_t ctrl_set_screen_content_detection_mode(
       CAST(AV1E_SET_SCREEN_CONTENT_DETECTION_MODE, args);
 
   extra_cfg.screen_detection_mode = screen_detection_mode;
+  return update_extra_cfg(ctx, &extra_cfg);
+}
+
+static aom_codec_err_t ctrl_set_enable_adaptive_sharpness(
+    aom_codec_alg_priv_t *ctx, va_list args) {
+  struct av1_extracfg extra_cfg = ctx->extra_cfg;
+  extra_cfg.enable_adaptive_sharpness =
+      CAST(AV1E_SET_ENABLE_ADAPTIVE_SHARPNESS, args);
   return update_extra_cfg(ctx, &extra_cfg);
 }
 
@@ -4604,6 +4622,11 @@ static aom_codec_err_t encoder_set_option(aom_codec_alg_priv_t *ctx,
   } else if (arg_match_helper(&arg, &g_av1_codec_arg_defs.screen_detection_mode,
                               argv, err_string)) {
     extra_cfg.screen_detection_mode = arg_parse_int_helper(&arg, err_string);
+  } else if (arg_match_helper(&arg,
+                              &g_av1_codec_arg_defs.enable_adaptive_sharpness,
+                              argv, err_string)) {
+    extra_cfg.enable_adaptive_sharpness =
+        arg_parse_int_helper(&arg, err_string);
   } else {
     match = 0;
     snprintf(err_string, ARG_ERR_MSG_MAX_LEN, "Cannot find aom option %s",
@@ -4826,6 +4849,7 @@ static aom_codec_ctrl_fn_map_t encoder_ctrl_maps[] = {
     ctrl_set_enable_low_complexity_decode },
   { AV1E_SET_SCREEN_CONTENT_DETECTION_MODE,
     ctrl_set_screen_content_detection_mode },
+  { AV1E_SET_ENABLE_ADAPTIVE_SHARPNESS, ctrl_set_enable_adaptive_sharpness },
 
   // Getters
   { AOME_GET_LAST_QUANTIZER, ctrl_get_quantizer },
