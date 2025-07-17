@@ -52,6 +52,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "afaa041f_f932b421",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 3615345
+      },
+      "writtenOn": "2025-07-17T20:16:37Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "c6b53ef2_5bd79a03",
+      "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bd6f890e_47eeda11",
@@ -65,6 +83,24 @@
       "writtenOn": "2025-07-17T12:45:49Z",
       "side": 1,
       "message": "Nit: `flags` should be renamed because it is counting the number of output packets, not flags. Maybe `packets`?",
+      "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51af2a06_046234ba",
+        "filename": "test/datarate_test.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 784,
+      "author": {
+        "id": 3615345
+      },
+      "writtenOn": "2025-07-17T20:16:37Z",
+      "side": 1,
+      "message": "Renamed. The last encoded frame emits no packets which is the reason I needed to count this for the condition below which seemed odd.",
+      "parentUuid": "bd6f890e_47eeda11",
       "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -92,6 +128,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "06d7fa93_b70571e5",
+        "filename": "test/datarate_test.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 788,
+      "author": {
+        "id": 3615345
+      },
+      "writtenOn": "2025-07-17T20:16:37Z",
+      "side": 1,
+      "message": "True!",
+      "parentUuid": "ea972c66_daf6e0fd",
+      "range": {
+        "startLine": 787,
+        "startChar": 0,
+        "endLine": 788,
+        "endChar": 22
+      },
+      "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e4d0083b_92963416",
@@ -109,6 +169,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f83cc9c_289a19ae",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1053,
+      "author": {
+        "id": 3615345
+      },
+      "writtenOn": "2025-07-17T20:16:37Z",
+      "side": 1,
+      "message": "Moved to the end and added another CONFIG_REALTIME_ONLY block so one can read the \"working\" test before the failing one.",
+      "parentUuid": "e4d0083b_92963416",
+      "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0e5b67ef_4afeabf7",
@@ -122,6 +200,24 @@
       "writtenOn": "2025-07-17T12:45:49Z",
       "side": 1,
       "message": "Add:\n\n```\n  ASSERT_EQ(cfg.g_lag_in_frames, 0);\n```\n\nto check that g_lag_in_frames is initialized to 0 by default in realtime usage mode.",
+      "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "98053533_4f801bca",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1082,
+      "author": {
+        "id": 3615345
+      },
+      "writtenOn": "2025-07-17T20:16:37Z",
+      "side": 1,
+      "message": "Done (but see below due to move)",
+      "parentUuid": "0e5b67ef_4afeabf7",
       "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -162,6 +258,48 @@
       "writtenOn": "2025-07-17T12:45:49Z",
       "side": 1,
       "message": "Nit: Move this test forward to line 1054, right after \n`#if !CONFIG_REALTIME_ONLY`, so that this test is not in the middle of all intra tests.",
+      "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "94488215_666dfafd",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1118,
+      "author": {
+        "id": 3615345
+      },
+      "writtenOn": "2025-07-17T20:16:37Z",
+      "side": 1,
+      "message": "ALL_INTRA did not like me setting g_lag_in_frames, moving to GOOD_QUALITY did set it to 35 by default (asserted)",
+      "parentUuid": "a9eb74a1_7c73df25",
+      "range": {
+        "startLine": 1118,
+        "startChar": 45,
+        "endLine": 1118,
+        "endChar": 53
+      },
+      "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "476973b3_d7fde76b",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1118,
+      "author": {
+        "id": 3615345
+      },
+      "writtenOn": "2025-07-17T20:16:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3c104b06_e46cc044",
       "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
