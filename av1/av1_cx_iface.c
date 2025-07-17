@@ -3210,7 +3210,8 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
     AV1_COMP *cpi = ppi->cpi;
 
     // Set up internal flags
-    ppi->b_calculate_psnr = (enc_flags & AOM_EFLAG_CALCULATE_PSNR) ||
+    ppi->b_calculate_psnr = ((flags & AOM_EFLAG_CALCULATE_PSNR) &&
+                             ctx->cfg.g_usage == AOM_USAGE_REALTIME) ||
                             (ctx->base.init_flags & AOM_CODEC_USE_PSNR);
 
     if (img != NULL) {
