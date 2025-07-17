@@ -3606,14 +3606,11 @@ static void dynamic_resize_one_pass_cbr(AV1_COMP *cpi) {
   if ((cm->width * cm->height) < min_width * min_height) down_size_on = 0;
 
   // Resize based on average buffer underflow and QP over some window.
-  // Ignore samples close to key frame or scene change, since QP is usually high
+  // Ignore samples close to key frame and scene change since QP is usually high
   // after key and scene change.
   // Need to incorpoate content/motion from scene detection analysis.
-  if (cpi->rc.frames_since_key > cpi->framerate &&
-      (cpi->oxcf.tune_cfg.content != AOM_CONTENT_SCREEN ||
-       cpi->oxcf.q_cfg.aq_mode != CYCLIC_REFRESH_AQ ||
-       cpi->cyclic_refresh->counter_encode_maxq_scene_change > 4)) {
-    const int window = AOMMIN(30, (int)(2 * cpi->framerate));
+  if (rc->frames_since_key > cpi->framerate && !rc->high_source_sad) {
+    const int window = AOMMAX(60, (int)(3 * cpi->framerate));
     rc->resize_avg_qp += p_rc->last_q[INTER_FRAME];
     if (cpi->ppi->p_rc.buffer_level <
         (int)(30 * p_rc->optimal_buffer_level / 100))
@@ -3633,13 +3630,14 @@ static void dynamic_resize_one_pass_cbr(AV1_COMP *cpi) {
           resize_action = DOWN_ONEHALF;
           rc->resize_state = ONE_HALF;
         } else if (rc->resize_state == ORIG) {
-          resize_action = DOWN_THREEFOUR;
-          rc->resize_state = THREE_QUARTER;
+          resize_action = ONEHALFONLY_RESIZE ? DOWN_ONEHALF : DOWN_THREEFOUR;
+          rc->resize_state = ONEHALFONLY_RESIZE ? ONE_HALF : THREE_QUARTER;
         }
       } else if (rc->resize_state != ORIG &&
                  avg_qp < avg_qp_thr1 * cpi->rc.worst_quality / 100) {
         if (rc->resize_state == THREE_QUARTER ||
-            avg_qp < avg_qp_thr2 * cpi->rc.worst_quality / 100) {
+            avg_qp < avg_qp_thr2 * cpi->rc.worst_quality / 100 ||
+            ONEHALFONLY_RESIZE) {
           resize_action = UP_ORIG;
           rc->resize_state = ORIG;
         } else if (rc->resize_state == ONE_HALF) {
