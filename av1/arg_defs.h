@@ -238,6 +238,7 @@ typedef struct av1_codec_arg_definitions {
   arg_def_t sb_qp_sweep;
   arg_def_t enable_low_complexity_decode;
   arg_def_t screen_detection_mode;
+  arg_def_t enable_adaptive_sharpness;
 #endif  // CONFIG_AV1_ENCODER
 } av1_codec_arg_definitions_t;
 
