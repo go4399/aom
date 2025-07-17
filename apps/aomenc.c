@@ -470,6 +470,7 @@ static const arg_def_t *const av1_key_val_args[] = {
   &g_av1_codec_arg_defs.kf_max_pyr_height,
   &g_av1_codec_arg_defs.auto_tiles,
   &g_av1_codec_arg_defs.screen_detection_mode,
+  &g_av1_codec_arg_defs.enable_adaptive_sharpness,
   NULL,
 };
 
