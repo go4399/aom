@@ -1,0 +1,118 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e8eda8a_72b1be87",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2284,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-17T19:03:33Z",
+      "side": 1,
+      "message": "Nit/optional: There is a slightly simpler way to manage `initial_col`. However, it requires updating `initial_col` at the end of the outer for loop. Since the loop body is very long, this may make the code harder to understand:\n\n```\n  int initial_col \u003d 0;\n  for (int r \u003d 0; r + kBlockHeight \u003c\u003d height; r +\u003d kBlockHeight) {\n    for (int c \u003d initial_col; c + kBlockWidth \u003c\u003d width;\n         c +\u003d kBlockWidth * multiplier) {\n       ...\n    }\n#ifdef OUTPUT_SCR_DET_MODE2_STATS\n    fprintf(stats_file, \"\\n\");\n#endif\n    // Alternate skipping in a \"checkerboard\" pattern in fast detection mode\n    if (fast_detection_mode) {\n      initial_col \u003d kBlockWidth - initial_col;\n    }\n  }\n```",
+      "revId": "8e9c967acecfcf971375f3d0c0293b7bc1a92c6f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff6e545c_96173bcf",
+        "filename": "av1/encoder/intra_mode_search.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-17T19:03:33Z",
+      "side": 1,
+      "message": "Optional: In this kind of code, it is often faster to work on a local variable and then save the local variable in the output parameter before returning.\n\nIf you make this change, note that this function has two return statements.",
+      "revId": "8e9c967acecfcf971375f3d0c0293b7bc1a92c6f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95d82503_0f4f6fb8",
+        "filename": "av1/encoder/intra_mode_search.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-17T19:03:33Z",
+      "side": 1,
+      "message": "Nit: Use `has_color` like a boolean:\n\n```\n      if (!has_color[this_val]) {\n        has_color[this_val] \u003d true;\n```",
+      "range": {
+        "startLine": 349,
+        "startChar": 0,
+        "endLine": 350,
+        "endChar": 32
+      },
+      "revId": "8e9c967acecfcf971375f3d0c0293b7bc1a92c6f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "204b071b_84ef7e1e",
+        "filename": "av1/encoder/intra_mode_search.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-17T19:03:33Z",
+      "side": 1,
+      "message": "Nit: \"Return\" is ambiguous now that the function has a return value. We can say \"Set *num_colors to the number of colors in src.\"\n\nDocument what the boolean return value means. The following is what I gathered by reading the implementation:\n\n\u003e If the function returns true, `*num_colors` is accurate (and is `\u003c\u003d num_colors_threshold`). If the function returns false, `*num_colors` may be smaller than the actual value (and is `\u003e num_colors_threshold`).\n\nSo the return value is equal to `*num_colors \u003c\u003d num_colors_threshold`. The function doesn\u0027t really need to return it; the caller can calculate that easily.",
+      "range": {
+        "startLine": 282,
+        "startChar": 11,
+        "endLine": 282,
+        "endChar": 17
+      },
+      "revId": "8e9c967acecfcf971375f3d0c0293b7bc1a92c6f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "127206cc_81ceb81a",
+        "filename": "av1/encoder/intra_mode_search.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-17T19:03:33Z",
+      "side": 1,
+      "message": "Nit/optional: It seems better to declare this function after `av1_count_colors_highbd()` so that `av1_count_colors()` and `av1_count_colors_highbd()` are declared together.",
+      "revId": "8e9c967acecfcf971375f3d0c0293b7bc1a92c6f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "833d2046_58758620",
+        "filename": "av1/encoder/speed_features.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-17T19:03:33Z",
+      "side": 1,
+      "message": "Nit: The word \"mode\" used twice sounds a little strange. Perhaps we should change \"mode 2\" to \"method 2\"?",
+      "revId": "8e9c967acecfcf971375f3d0c0293b7bc1a92c6f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
