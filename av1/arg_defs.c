@@ -713,5 +713,8 @@ const av1_codec_arg_definitions_t g_av1_codec_arg_defs = {
       ARG_DEF(NULL, "screen-detection-mode", 1,
               "Screen content detection mode (1: standard (default), "
               "2: anti-aliased text and graphics aware)"),
+  .enable_adaptive_sharpness =
+      ARG_DEF(NULL, "enable-adaptive-sharpness", 1,
+              "Enable adaptive sharpness (0: disabled (default), 1: enabled)"),
 #endif  // CONFIG_AV1_ENCODER
 };

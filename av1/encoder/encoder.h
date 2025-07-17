@@ -890,6 +890,13 @@ typedef struct {
    * Controls screen content detection mode
    */
   aom_screen_detection_mode screen_detection_mode;
+
+  /*!
+   * Indicates if sharpness is adapted based on frame QP
+   * 0: disabled
+   * 1: enabled
+   */
+  unsigned int enable_adaptive_sharpness;
 } AlgoCfg;
 /*!\cond */
 
