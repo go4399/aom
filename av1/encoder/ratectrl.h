@@ -57,6 +57,8 @@ extern "C" {
 #define DEFAULT_KF_BOOST_RT 2300
 #define DEFAULT_GF_BOOST_RT 2000
 
+#define ONEHALFONLY_RESIZE 1
+
 // A passive rate control strategy for screen content type in real-time mode.
 // When it is turned on, the compression performance is improved by
 // 7.8% (overall_psnr), 5.0% (VMAF) on average. Some clips see gains
