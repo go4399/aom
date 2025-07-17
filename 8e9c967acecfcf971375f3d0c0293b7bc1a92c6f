@@ -18,6 +18,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bfe5c8d1_7251d9de",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2284,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-17T20:27:35Z",
+      "side": 1,
+      "message": "Yeah, I also think keeping the adjusting code close to the beginning is easier to read in general. I\u0027ll keep it as is.",
+      "parentUuid": "0e8eda8a_72b1be87",
+      "revId": "8e9c967acecfcf971375f3d0c0293b7bc1a92c6f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ff6e545c_96173bcf",
@@ -35,6 +53,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "128e1546_26284e7f",
+        "filename": "av1/encoder/intra_mode_search.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-17T20:27:35Z",
+      "side": 1,
+      "message": "Thanks for the suggestion. I did try your suggestion of working on a local variable first, but it didn\u0027t seem to improve performance, or made the code easier to read.\n\nI\u0027ll keep it as it currently is for now.",
+      "parentUuid": "ff6e545c_96173bcf",
+      "revId": "8e9c967acecfcf971375f3d0c0293b7bc1a92c6f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "95d82503_0f4f6fb8",
@@ -48,6 +84,30 @@
       "writtenOn": "2025-07-17T19:03:33Z",
       "side": 1,
       "message": "Nit: Use `has_color` like a boolean:\n\n```\n      if (!has_color[this_val]) {\n        has_color[this_val] \u003d true;\n```",
+      "range": {
+        "startLine": 349,
+        "startChar": 0,
+        "endLine": 350,
+        "endChar": 32
+      },
+      "revId": "8e9c967acecfcf971375f3d0c0293b7bc1a92c6f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "47688390_4e09f5c3",
+        "filename": "av1/encoder/intra_mode_search.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-17T20:27:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "95d82503_0f4f6fb8",
       "range": {
         "startLine": 349,
         "startChar": 0,
@@ -81,6 +141,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd657f38_edb724a6",
+        "filename": "av1/encoder/intra_mode_search.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-17T20:27:35Z",
+      "side": 1,
+      "message": "Sounds good, I modified the comment according to your suggestions.\n\nAs for the return value: I think it\u0027d be a good idea to keep it, as it makes the intent of the caller logic read a bit cleaner IMO.",
+      "parentUuid": "204b071b_84ef7e1e",
+      "range": {
+        "startLine": 282,
+        "startChar": 11,
+        "endLine": 282,
+        "endChar": 17
+      },
+      "revId": "8e9c967acecfcf971375f3d0c0293b7bc1a92c6f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "127206cc_81ceb81a",
@@ -98,6 +182,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd088845_32cb0016",
+        "filename": "av1/encoder/intra_mode_search.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-17T20:27:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "127206cc_81ceb81a",
+      "revId": "8e9c967acecfcf971375f3d0c0293b7bc1a92c6f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "833d2046_58758620",
@@ -111,6 +213,24 @@
       "writtenOn": "2025-07-17T19:03:33Z",
       "side": 1,
       "message": "Nit: The word \"mode\" used twice sounds a little strange. Perhaps we should change \"mode 2\" to \"method 2\"?",
+      "revId": "8e9c967acecfcf971375f3d0c0293b7bc1a92c6f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "52232b1a_31493ee8",
+        "filename": "av1/encoder/speed_features.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-17T20:27:35Z",
+      "side": 1,
+      "message": "Agreed. I went ahead with just dropping \"mode\" from \"fast detection\".",
+      "parentUuid": "833d2046_58758620",
       "revId": "8e9c967acecfcf971375f3d0c0293b7bc1a92c6f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
