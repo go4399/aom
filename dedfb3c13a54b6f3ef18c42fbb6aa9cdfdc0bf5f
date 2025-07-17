@@ -16,6 +16,154 @@
       "message": "(ignore the git fumbling please)",
       "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "45bd7734_4a1fa981",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-17T12:45:49Z",
+      "side": 1,
+      "message": "Thanks for adding the tests. I am not familiar with datarate_test.cc, so I didn\u0027t review it carefully.",
+      "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6b53ef2_5bd79a03",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-17T12:45:49Z",
+      "side": 1,
+      "message": "Document that this requires g_lag_in_frames is 0.",
+      "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd6f890e_47eeda11",
+        "filename": "test/datarate_test.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 784,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-17T12:45:49Z",
+      "side": 1,
+      "message": "Nit: `flags` should be renamed because it is counting the number of output packets, not flags. Maybe `packets`?",
+      "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea972c66_daf6e0fd",
+        "filename": "test/datarate_test.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 788,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-17T12:45:49Z",
+      "side": 1,
+      "message": "Nit: Lines 787-788 are equivalent to:\n\n```\n      if (pkt-\u003ekind \u003d\u003d AOM_CODEC_PSNR_PKT) had_psnr \u003d true;\n```",
+      "range": {
+        "startLine": 787,
+        "startChar": 0,
+        "endLine": 788,
+        "endChar": 22
+      },
+      "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e4d0083b_92963416",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1053,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-17T12:45:49Z",
+      "side": 1,
+      "message": "Note that we start a `!CONFIG_REALTIME_ONLY` block here. So the test `PerFramePsnr`, which uses the realtime usage, should be moved outside this block so that it is also used in `CONFIG_REALTIME_ONLY` builds.",
+      "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e5b67ef_4afeabf7",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1082,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-17T12:45:49Z",
+      "side": 1,
+      "message": "Add:\n\n```\n  ASSERT_EQ(cfg.g_lag_in_frames, 0);\n```\n\nto check that g_lag_in_frames is initialized to 0 by default in realtime usage mode.",
+      "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9eb74a1_7c73df25",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1118,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-17T12:45:49Z",
+      "side": 1,
+      "message": "Change \"Realtime\" to \"ZeroLagInFrames\".\n\nIn all-intra usage mode, g_lag_in_frames is also initialized to 0 by default, so this test should expect `had_psnr` is true after we have made the corresponding change to av1_cx_iface.c.\n\nSince this test uses the all-intra usage mode, it should be left inside the `#if !CONFIG_REALTIME_ONLY` block.\n\nBut I suggest we change `AOM_USAGE_ALL_INTRA` to `AOM_USAGE_GOOD_QUALITY` and add the following after the `aom_codec_enc_config_default()` call at line 1122:\n\n```\n  cfg.g_lag_in_frames \u003d 0;\n```",
+      "range": {
+        "startLine": 1118,
+        "startChar": 45,
+        "endLine": 1118,
+        "endChar": 53
+      },
+      "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c104b06_e46cc044",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1118,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-17T12:45:49Z",
+      "side": 1,
+      "message": "Nit: Move this test forward to line 1054, right after \n`#if !CONFIG_REALTIME_ONLY`, so that this test is not in the middle of all intra tests.",
+      "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
