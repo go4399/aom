@@ -16,6 +16,80 @@
       "message": "James: Please review. Thanks!",
       "revId": "d2765018b40907003d2ea2d52ffd1c7c308a7a38",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1210099a_9e91356d",
+        "filename": "av1/encoder/intra_mode_search.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-07-18T18:00:24Z",
+      "side": 1,
+      "message": "It\u0027s just cosmetic, so maybe something for future changes, no need to change anything here: for these you can use `\\a` to indicate it as an argument.\n\nhttps://doxygen.nl/manual/commands.html#cmda",
+      "range": {
+        "startLine": 289,
+        "startChar": 15,
+        "endLine": 289,
+        "endChar": 26
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "baa0c111_29d21887",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/intra_mode_search.h",
+              "range": {
+                "startLine": 289,
+                "startChar": 0,
+                "endLine": 290,
+                "endChar": 0
+              },
+              "replacement": "/*! \\brief Set \\a num_colors to the number of colors in src.\n"
+            },
+            {
+              "path": "av1/encoder/intra_mode_search.h",
+              "range": {
+                "startLine": 292,
+                "startChar": 0,
+                "endLine": 296,
+                "endChar": 0
+              },
+              "replacement": "   \\note If the function returns true, \\a num_colors is accurate (and is \u003c\u003d\n   \\a num_colors_threshold). If the function returns false, the function exited\n   early, and \\a num_colors may be smaller than the actual value (and is \u003e\n   \\a num_colors_threshold).\n"
+            }
+          ]
+        }
+      ],
+      "revId": "d2765018b40907003d2ea2d52ffd1c7c308a7a38",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f03dbcfe_4609a878",
+        "filename": "av1/encoder/intra_mode_search.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-07-18T18:00:24Z",
+      "side": 1,
+      "message": "No change needed. There\u0027s also `\\return` / `\\returns` instead of the prose + \u0027\\note` combo.",
+      "range": {
+        "startLine": 290,
+        "startChar": 3,
+        "endLine": 290,
+        "endChar": 10
+      },
+      "revId": "d2765018b40907003d2ea2d52ffd1c7c308a7a38",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
