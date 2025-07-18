@@ -105,6 +105,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f00968c3_a4af5694",
+        "filename": "test/datarate_test.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 784,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T23:25:20Z",
+      "side": 1,
+      "message": "When using the libaom encoder, after encoding all the frames, we need to call aom_codec_encode() one more time with a null-pointer input. Perhaps what you thought was the last encoded frame was this final aom_codec_encode(..., NULL, ...) call?\n\nThat aom_codec_encode(..., NULL, ...) call doesn\u0027t emit any packets when g_lag_in_frames is zero.",
+      "parentUuid": "51af2a06_046234ba",
+      "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ea972c66_daf6e0fd",
@@ -300,6 +318,30 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "3c104b06_e46cc044",
+      "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "58b592a4_8c60ae80",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1118,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T23:25:20Z",
+      "side": 1,
+      "message": "Hmm... You are right. I found that this is because of the following check:\n\n```\n  if (cfg-\u003eg_usage \u003d\u003d AOM_USAGE_ALL_INTRA) {\n    RANGE_CHECK_HI(cfg, g_lag_in_frames, 0);\n    RANGE_CHECK_HI(cfg, kf_max_dist, 0);\n  }\n```",
+      "parentUuid": "94488215_666dfafd",
+      "range": {
+        "startLine": 1118,
+        "startChar": 45,
+        "endLine": 1118,
+        "endChar": 53
+      },
       "revId": "dedfb3c13a54b6f3ef18c42fbb6aa9cdfdc0bf5f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
