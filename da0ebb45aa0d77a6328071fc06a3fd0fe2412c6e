@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b9a4f24_8609451b",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2091,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T00:08:33Z",
+      "side": 1,
+      "message": "Comment this out.",
+      "revId": "da0ebb45aa0d77a6328071fc06a3fd0fe2412c6e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47ee332a_a20ea94c",
+        "filename": "av1/encoder/intra_mode_search.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T00:08:33Z",
+      "side": 1,
+      "message": "Change \"1\" to \"true\".",
+      "range": {
+        "startLine": 393,
+        "startChar": 30,
+        "endLine": 393,
+        "endChar": 31
+      },
+      "revId": "da0ebb45aa0d77a6328071fc06a3fd0fe2412c6e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3de9696_5ee2e1a6",
+        "filename": "av1/encoder/intra_mode_search.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T00:08:33Z",
+      "side": 1,
+      "message": "Add: Returns whether *num_colors \u003c\u003d num_colors_threshold is true.\n\nOr we can state that in words: \"Returns whether the number of colors is less than or equal to the threshold.\" or \"Returns true if the number of colors does not exceed the threshold.\"",
+      "revId": "da0ebb45aa0d77a6328071fc06a3fd0fe2412c6e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
