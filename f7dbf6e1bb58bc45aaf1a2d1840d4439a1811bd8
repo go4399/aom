@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a20564b_710f0123",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T22:47:06Z",
+      "side": 1,
+      "message": "LGTM. Thanks!\n\nJames, please review.",
+      "revId": "f7dbf6e1bb58bc45aaf1a2d1840d4439a1811bd8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9e2814f_dd7fd9b7",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 1721,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T22:47:06Z",
+      "side": 1,
+      "message": "Nit/optional: Do you think we should also move this to the end of the list, so that the AOM_TUNE_IQ-only settings can be grouped together?",
+      "revId": "f7dbf6e1bb58bc45aaf1a2d1840d4439a1811bd8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf6edd2d_6b94799e",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 4713,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T22:47:06Z",
+      "side": 1,
+      "message": "Nit/optional: For this one, the old location (at line 4852/4853) seems better so that the keys (codec control IDs) are in order.",
+      "revId": "f7dbf6e1bb58bc45aaf1a2d1840d4439a1811bd8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
