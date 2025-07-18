@@ -1,0 +1,379 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5ae4564_21e4e2c7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T17:51:05Z",
+      "side": 1,
+      "message": "Please add an entry on this new feature to CHANGELOG in the \"New Features\" section.",
+      "revId": "86616242640f3da81507d7120a26dafbc205d035",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "947d3187_22731a5e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T17:51:05Z",
+      "side": 1,
+      "message": "Nit: Maybe change \"impact\" to \"degradation\" or something like that to make it clear the impact is negative?",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 6
+      },
+      "revId": "86616242640f3da81507d7120a26dafbc205d035",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa8eb3b9_ca942336",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 1604,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T17:51:05Z",
+      "side": 1,
+      "message": "Add a detailed description. You can use your description in the commit message, such as \"modulates sharpness based on frame QP\".",
+      "revId": "86616242640f3da81507d7120a26dafbc205d035",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d25e2fef_35f6c4d5",
+        "filename": "apps/aomenc.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T17:51:05Z",
+      "side": 1,
+      "message": "Nit: Consider adding `AOME_SET_ENABLE_ADAPTIVE_SHARPNESS` here. Please see also my comment at line 473.",
+      "revId": "86616242640f3da81507d7120a26dafbc205d035",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9ed1be77_52cc8b56",
+        "filename": "apps/aomenc.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T17:51:05Z",
+      "side": 1,
+      "message": "Nit: Consider adding `\u0026g_av1_codec_arg_defs.enable_adaptive_sharpness` here.",
+      "revId": "86616242640f3da81507d7120a26dafbc205d035",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb99a231_154ae232",
+        "filename": "apps/aomenc.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T17:51:05Z",
+      "side": 1,
+      "message": "Nit: Consider removing this. But it may be better to move `\u0026g_av1_codec_arg_defs.sharpness,` here and delete its two entries above.",
+      "revId": "86616242640f3da81507d7120a26dafbc205d035",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b577d2f3_909c373a",
+        "filename": "av1/arg_defs.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T17:51:05Z",
+      "side": 1,
+      "message": "Nit: Move `enable_adaptive_sharpness` here.",
+      "revId": "86616242640f3da81507d7120a26dafbc205d035",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "25b24e6e_abdfdbfe",
+        "filename": "av1/arg_defs.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T17:51:05Z",
+      "side": 1,
+      "message": "Nit: Move `enable_adaptive_sharpness` here.",
+      "revId": "86616242640f3da81507d7120a26dafbc205d035",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a32a021_03e87cdb",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T17:51:05Z",
+      "side": 1,
+      "message": "Nit: Should we move `unsigned int enable_adaptive_sharpness;` here?",
+      "revId": "86616242640f3da81507d7120a26dafbc205d035",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30892588_70f61cef",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T17:51:05Z",
+      "side": 1,
+      "message": "Nit: Move `0,  // enable_adaptive_sharpness` here?",
+      "revId": "86616242640f3da81507d7120a26dafbc205d035",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e9567a8_afc3a37e",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T17:51:05Z",
+      "side": 1,
+      "message": "Nit: Move `0,  // enable_adaptive_sharpness` here?",
+      "revId": "86616242640f3da81507d7120a26dafbc205d035",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "62114c03_ccbeae46",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 770,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T17:51:05Z",
+      "side": 1,
+      "message": "Nit: Move `RANGE_CHECK_HI(extra_cfg, enable_adaptive_sharpness, 1);` here?",
+      "revId": "86616242640f3da81507d7120a26dafbc205d035",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdf5cbc4_84c40d16",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1294,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T17:51:05Z",
+      "side": 1,
+      "message": "Nit: Move `algo_cfg-\u003eenable_adaptive_sharpness \u003d extra_cfg-\u003eenable_adaptive_sharpness;` here?",
+      "revId": "86616242640f3da81507d7120a26dafbc205d035",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1299cc0_482bb047",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1848,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T17:51:05Z",
+      "side": 1,
+      "message": "Nit: Move the enable adaptive sharpness code here?",
+      "revId": "86616242640f3da81507d7120a26dafbc205d035",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6074285_f9ad98e7",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1868,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T17:51:05Z",
+      "side": 1,
+      "message": "Nit: lower end \u003d\u003e lower quality end\n\nOtherwise it could be misinterpreted as \"lower QP end\".",
+      "range": {
+        "startLine": 1868,
+        "startChar": 44,
+        "endLine": 1868,
+        "endChar": 53
+      },
+      "revId": "86616242640f3da81507d7120a26dafbc205d035",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0722895a_3196428b",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1868,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T17:51:05Z",
+      "side": 1,
+      "message": "Nit: iq \u003d\u003e IQ ?",
+      "range": {
+        "startLine": 1868,
+        "startChar": 74,
+        "endLine": 1868,
+        "endChar": 76
+      },
+      "revId": "86616242640f3da81507d7120a26dafbc205d035",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a41567e_ab8b0b09",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 4207,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T17:51:05Z",
+      "side": 1,
+      "message": "Move the enable adaptive sharness code here?",
+      "revId": "86616242640f3da81507d7120a26dafbc205d035",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bccd0db3_c784fbea",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 834,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T17:51:05Z",
+      "side": 1,
+      "message": "Nit: Move the `enable_adaptive_sharpness` field here?",
+      "revId": "86616242640f3da81507d7120a26dafbc205d035",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "366f5c3f_18f7969f",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 899,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T17:51:05Z",
+      "side": 1,
+      "message": "Nit: Can declare this as `bool`. Then no need for `0: disabled` and `1: enabled` comments.",
+      "revId": "86616242640f3da81507d7120a26dafbc205d035",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2b39ded_8100949f",
+        "filename": "av1/encoder/picklpf.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T17:51:05Z",
+      "side": 1,
+      "message": "If we declare `cpi-\u003eoxcf.algo_cfg.enable_adaptive_sharpness` as `bool`, then delete `\u003e\u003d 1`.",
+      "revId": "86616242640f3da81507d7120a26dafbc205d035",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d7dc1850_d55df736",
+        "filename": "av1/encoder/picklpf.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-18T17:51:05Z",
+      "side": 1,
+      "message": "Nit: Omit the initializer. Alternatively, omit the `else` branch at lines 235-236.",
+      "revId": "86616242640f3da81507d7120a26dafbc205d035",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
