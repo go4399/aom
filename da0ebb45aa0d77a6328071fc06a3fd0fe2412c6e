@@ -134,6 +134,24 @@
       "parentUuid": "76e13292_81c0c190",
       "revId": "da0ebb45aa0d77a6328071fc06a3fd0fe2412c6e",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d32dd679_ea5d5a4b",
+        "filename": "av1/encoder/intra_mode_search.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-18T00:40:37Z",
+      "side": 1,
+      "message": "Yeah, I thought you were asking me to replace it, because of the implication of stating that the \"number of colors exceeding the threshold\" part.\n\nI\u0027ll re-add it.",
+      "parentUuid": "64d99754_9ca64676",
+      "revId": "da0ebb45aa0d77a6328071fc06a3fd0fe2412c6e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
