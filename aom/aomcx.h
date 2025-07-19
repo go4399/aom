@@ -1601,8 +1601,9 @@ enum aome_enc_control_id {
   AV1E_SET_SCREEN_CONTENT_DETECTION_MODE = 171,
 
   /*!\brief Codec control to enable adaptive sharpness, which modulates
-   * sharpness based on frame QP. This helps mitigate blocking artifacts in the
-   * low to medium quality range. unsigned int parameter.
+   * sharpness based on frame QP.
+   * This helps mitigate blocking artifacts in the low to medium quality range.
+   * unsigned int parameter.
    *
    * - 0 = disable (default)
    * - 1 = enable
@@ -1718,11 +1719,12 @@ typedef enum {
  *   * --qm-min=2
  *   * --qm-max=10
  *   * --sharpness=7
- *   * --enable-adaptive-sharpness=1 (AOM_TUNE_IQ only)
  *   * --dist-metric=qm-psnr
  *   * --enable-cdef=3
  *   * --enable-chroma-deltaq=1
  *   * --deltaq-mode=6
+ * AOM_TUNE_IQ additionally sets the following options:
+ *   * --enable-adaptive-sharpness=1
  */
 typedef enum {
   AOM_TUNE_PSNR = 0,
