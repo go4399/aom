@@ -16,6 +16,74 @@
       "message": "@jzern@google.com @wtc@google.com as promised, here\u0027s the follow-up CL addressing your feedback, plus updating the CHANGELOG with a couple of new features.",
       "revId": "8cae1fbdbbe9a75982e2f79d59b48221506bca7c",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b288b79_61bcbcbd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-19T14:05:04Z",
+      "side": 1,
+      "message": "Thank you for updatintg CHANGELOG.",
+      "revId": "8cae1fbdbbe9a75982e2f79d59b48221506bca7c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c1b6426_5dec78a8",
+        "filename": "CHANGELOG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-19T14:05:04Z",
+      "side": 1,
+      "message": "Is the AOM_TUNE_SSIMULACRA2 tuning mode ready for use? If it is still work in progress, we should not mention it in the release notes, or we need to clarify it is still experimental.",
+      "revId": "8cae1fbdbbe9a75982e2f79d59b48221506bca7c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0b05cd21_e1a060b9",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1604,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-19T14:05:04Z",
+      "side": 1,
+      "message": "The parameter comnent \"unsigned int parameter\" should be part of the `\\brief` comment.\n\nWe also need to add a blank line to separate the second sentence from the `\\brief` comment, i.e., we need to do more than just move the second sentence to the next line.",
+      "revId": "8cae1fbdbbe9a75982e2f79d59b48221506bca7c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dbad6e76_d5707b41",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1605,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-19T14:05:04Z",
+      "side": 1,
+      "message": "If `--enable-adaptive-sharpness\u003d1` only has effects when `--sharpness` is nonzero, we should document that.",
+      "revId": "8cae1fbdbbe9a75982e2f79d59b48221506bca7c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
