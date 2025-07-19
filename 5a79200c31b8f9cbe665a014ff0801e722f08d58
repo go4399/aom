@@ -75,6 +75,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8838a50_029c0b0c",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 3280,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-19T14:52:46Z",
+      "side": 1,
+      "message": "I just realized my previous suggestion was incorrect because it would leave `ppi-\u003eb_calculate_psnr` stuck at 1. I suggest we put your code inside `#if !CONFIG_INTERNAL_STATS` (I reordered the two checks):\n\n```\n#if CONFIG_INTERNAL_STATS\n    assert(ppi-\u003eb_calculate_psnr \u003d\u003d 1);\n#else\n    ppi-\u003eb_calculate_psnr \u003d (ctx-\u003ebase.init_flags \u0026 AOM_CODEC_USE_PSNR) ||\n                            (flags \u0026 AOM_EFLAG_CALCULATE_PSNR);\n#endif  // CONFIG_INTERNAL_STATS\n```",
+      "parentUuid": "e62f5e1c_fb481346",
+      "revId": "5a79200c31b8f9cbe665a014ff0801e722f08d58",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "d74847d7_b7feffdb",
