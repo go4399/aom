@@ -1106,8 +1106,7 @@ static inline uint64_t get_sb_source_sad(const AV1_COMP *cpi, int mi_row,
 static inline bool is_calc_src_content_needed(AV1_COMP *cpi,
                                               MACROBLOCK *const x, int mi_row,
                                               int mi_col) {
-  if (cpi->svc.spatial_layer_id < cpi->svc.number_spatial_layers - 1)
-    return true;
+  if (cpi->svc.number_spatial_layers > 1) return true;
   const uint64_t curr_sb_sad = get_sb_source_sad(cpi, mi_row, mi_col);
   if (curr_sb_sad == UINT64_MAX) return true;
   if (curr_sb_sad == 0) {
