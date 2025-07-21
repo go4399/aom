@@ -1660,16 +1660,19 @@ int av1_choose_var_based_partitioning(AV1_COMP *cpi, const TileInfo *const tile,
 
   const int segment_id = xd->mi[0]->segment_id;
   uint64_t blk_sad = 0;
-  if (cpi->src_sad_blk_64x64 != NULL &&
-      cpi->svc.spatial_layer_id == cpi->svc.number_spatial_layers - 1) {
+  if (cpi->src_sad_blk_64x64 != NULL && cpi->svc.number_spatial_layers == 1 &&
+      cpi->sf.rt_sf.check_scene_detection) {
     const int sb_size_by_mb = (cm->seq_params->sb_size == BLOCK_128X128)
                                   ? (cm->seq_params->mib_size >> 1)
                                   : cm->seq_params->mib_size;
     const int sb_cols =
         (cm->mi_params.mi_cols + sb_size_by_mb - 1) / sb_size_by_mb;
+    const int sb_rows =
+        (cm->mi_params.mi_rows + sb_size_by_mb - 1) / sb_size_by_mb;
     const int sbi_col = mi_col / sb_size_by_mb;
     const int sbi_row = mi_row / sb_size_by_mb;
-    blk_sad = cpi->src_sad_blk_64x64[sbi_col + sbi_row * sb_cols];
+    if (sbi_col + sbi_row * sb_cols < sb_cols * sb_rows)
+      blk_sad = cpi->src_sad_blk_64x64[sbi_col + sbi_row * sb_cols];
   }
 
   const bool is_segment_id_boosted =
