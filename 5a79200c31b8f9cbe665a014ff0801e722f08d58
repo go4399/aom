@@ -58,6 +58,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc091826_a9240724",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 3275,
+      "author": {
+        "id": 3615345
+      },
+      "writtenOn": "2025-07-21T04:28:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a2d15cdf_819a2971",
+      "range": {
+        "startLine": 3275,
+        "startChar": 11,
+        "endLine": 3275,
+        "endChar": 18
+      },
+      "revId": "5a79200c31b8f9cbe665a014ff0801e722f08d58",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e62f5e1c_fb481346",
@@ -93,6 +117,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "33c9acbc_9f9eac60",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 3280,
+      "author": {
+        "id": 3615345
+      },
+      "writtenOn": "2025-07-21T04:28:12Z",
+      "side": 1,
+      "message": "(messages crossed)\n\nhrm... this turned out to be a bit tricky since it means that in the \"usual\" test configuration which defines CONFIG_INTERNAL_STATS PSNR is always calculated it is not possible to not have PSNR calculated which is what the newly added DatarateTestPsnr does.\n\nI locally set that flag to 0 and ran the full test suite (as do the bots?) which suggests that all tests that need PSNR set AOM_CODEC_USE_PSNR? So changing that should be safe and maybe even reduces test time.\n\nBut wrapping it in an `if` does not work as I need it to work since one can no longer use the flag to say \"I do not want PSNR on this frame\" after asking for it once. Which then meant that fiddling with CONFIG_INTERNAL_STATS was no longer required.",
+      "parentUuid": "e62f5e1c_fb481346",
+      "revId": "5a79200c31b8f9cbe665a014ff0801e722f08d58",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "d74847d7_b7feffdb",
@@ -106,6 +148,24 @@
       "writtenOn": "2025-07-18T23:25:20Z",
       "side": 1,
       "message": "You added a negative test for good qualiy usage, which is good. My suggestion was actually to add a positive test like the following:\n\n```\nTEST(EncodeAPI, PerFramePsnrGoodQualityZeroLagInFrames) {\n  aom_codec_iface_t *iface \u003d aom_codec_av1_cx();\n  aom_codec_enc_cfg_t cfg;\n  ASSERT_EQ(aom_codec_enc_config_default(iface, \u0026cfg, AOM_USAGE_GOOD_QUALITY),\n            AOM_CODEC_OK);\n  ASSERT_NE(cfg.g_lag_in_frames, 0);\n  cfg.g_lag_in_frames \u003d 0;\n\n  aom_codec_ctx_t enc;\n  ASSERT_EQ(aom_codec_enc_init(\u0026enc, iface, \u0026cfg, 0), AOM_CODEC_OK);\n  \n  aom_image_t *image \u003d CreateGrayImage(AOM_IMG_FMT_I420, cfg.g_w, cfg.g_h);\n  ASSERT_NE(image, nullptr);\n  \n  aom_enc_frame_flags_t psnr_flags \u003d AOM_EFLAG_CALCULATE_PSNR;\n  ASSERT_EQ(aom_codec_encode(\u0026enc, image, 0, 1, psnr_flags), AOM_CODEC_OK);\n  const aom_codec_cx_pkt_t *pkt;\n  aom_codec_iter_t iter \u003d nullptr;\n  bool had_psnr \u003d false;\n  while ((pkt \u003d aom_codec_get_cx_data(\u0026enc, \u0026iter)) !\u003d nullptr) {\n    if (pkt-\u003ekind !\u003d AOM_CODEC_CX_FRAME_PKT) {\n      ASSERT_EQ(pkt-\u003ekind, AOM_CODEC_PSNR_PKT);\n      had_psnr \u003d true;\n    }\n  }\n  EXPECT_TRUE(had_psnr);\n            \n  aom_enc_frame_flags_t no_psnr_flags \u003d 0;\n  ASSERT_EQ(aom_codec_encode(\u0026enc, image, 0, 1, no_psnr_flags), AOM_CODEC_OK);\n  had_psnr \u003d false;\n  while ((pkt \u003d aom_codec_get_cx_data(\u0026enc, \u0026iter)) !\u003d nullptr) {\n    if (pkt-\u003ekind !\u003d AOM_CODEC_CX_FRAME_PKT) {\n      ASSERT_EQ(pkt-\u003ekind, AOM_CODEC_PSNR_PKT);\n      had_psnr \u003d true;\n    }\n  }\n  EXPECT_FALSE(had_psnr);\n\n  aom_img_free(image);\n  ASSERT_EQ(aom_codec_destroy(\u0026enc), AOM_CODEC_OK);\n}\n```",
+      "revId": "5a79200c31b8f9cbe665a014ff0801e722f08d58",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "712f9c93_d898c327",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 1220,
+      "author": {
+        "id": 3615345
+      },
+      "writtenOn": "2025-07-21T04:28:12Z",
+      "side": 1,
+      "message": "Added, the more tests the merrier.",
+      "parentUuid": "d74847d7_b7feffdb",
       "revId": "5a79200c31b8f9cbe665a014ff0801e722f08d58",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
