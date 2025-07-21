@@ -1667,9 +1667,12 @@ int av1_choose_var_based_partitioning(AV1_COMP *cpi, const TileInfo *const tile,
                                   : cm->seq_params->mib_size;
     const int sb_cols =
         (cm->mi_params.mi_cols + sb_size_by_mb - 1) / sb_size_by_mb;
+    const int sb_rows =
+        (cm->mi_params.mi_rows + sb_size_by_mb - 1) / sb_size_by_mb;
     const int sbi_col = mi_col / sb_size_by_mb;
     const int sbi_row = mi_row / sb_size_by_mb;
-    blk_sad = cpi->src_sad_blk_64x64[sbi_col + sbi_row * sb_cols];
+    if (sbi_col + sbi_row * sb_cols < sb_cols * sb_rows)
+      blk_sad = cpi->src_sad_blk_64x64[sbi_col + sbi_row * sb_cols];
   }
 
   const bool is_segment_id_boosted =
