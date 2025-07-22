@@ -9,8 +9,6 @@
  * PATENTS file, you can obtain it at www.aomedia.org/license/patent.
  */
 
-#include <stdbool.h>
-
 #include "av1/common/av1_common_int.h"
 #include "av1/common/cfl.h"
 #include "av1/common/reconintra.h"
