@@ -1,0 +1,75 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "228ca934_8f7ba92c",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1173,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-07-22T00:00:14Z",
+      "side": 1,
+      "message": "make these `/*pts\u003d*/0`, /*duration\u003d*/1` see line 1028.",
+      "range": {
+        "startLine": 1173,
+        "startChar": 41,
+        "endLine": 1173,
+        "endChar": 46
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "83b6311e_afa0f7ec",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 1173,
+                "startChar": 0,
+                "endLine": 1174,
+                "endChar": 0
+              },
+              "replacement": "  ASSERT_EQ(\n      aom_codec_encode(\u0026enc, image, /*pts\u003d*/0, /*duration\u003d*/1, psnr_flags),\n      AOM_CODEC_OK);\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 1204,
+                "startChar": 0,
+                "endLine": 1205,
+                "endChar": 0
+              },
+              "replacement": "  ASSERT_EQ(aom_codec_encode(\u0026enc, image, /*pts\u003d*/3000, /*duration\u003d*/3000,\n                             no_psnr_flags),\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 1243,
+                "startChar": 0,
+                "endLine": 1244,
+                "endChar": 0
+              },
+              "replacement": "  ASSERT_EQ(\n      aom_codec_encode(\u0026enc, image, /*pts\u003d*/0, /*duration\u003d*/1, psnr_flags),\n      AOM_CODEC_OK);\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 1273,
+                "startChar": 0,
+                "endLine": 1274,
+                "endChar": 0
+              },
+              "replacement": "  ASSERT_EQ(aom_codec_encode(\u0026enc, image, /*pts\u003d*/0, /*duration\u003d*/1, psnr_flags),\n"
+            }
+          ]
+        }
+      ],
+      "revId": "4ea22e9d288e787f2edb5a2056bd4709fe3cd24f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
