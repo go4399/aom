@@ -199,10 +199,10 @@ OBMCSADMxN(64, 16)
 /* clang-format on */
 
 #if CONFIG_AV1_HIGHBITDEPTH
-                            static inline unsigned int highbd_obmc_sad(
-                                const uint8_t *pre8, int pre_stride,
-                                const int32_t *wsrc, const int32_t *mask,
-                                int width, int height) {
+                        static inline unsigned int highbd_obmc_sad(
+                            const uint8_t *pre8, int pre_stride,
+                            const int32_t *wsrc, const int32_t *mask, int width,
+                            int height) {
   int y, x;
   unsigned int sad = 0;
   const uint16_t *pre = CONVERT_TO_SHORTPTR(pre8);

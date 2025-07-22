@@ -98,7 +98,9 @@ int func_assign_refer_status_8(VP9_COMP *cpi, VP9_COMP *cpi2) {
 int func_assign_refer_status_9(VP9_COMP *cpi) {
   {
     RD *rd = cpi->rd;
-    { rd->u = 0; }
+    {
+      rd->u = 0;
+    }
   }
 }
 
