@@ -166,7 +166,7 @@ static inline unsigned int obmc_sad(const uint8_t *pre, int pre_stride,
   return sad;
 }
 
-#define OBMCSADMxN(m, n)                                                     \
+#define OBMCSADMXN(m, n)                                                     \
   unsigned int aom_obmc_sad##m##x##n##_c(const uint8_t *ref, int ref_stride, \
                                          const int32_t *wsrc,                \
                                          const int32_t *mask) {              \
@@ -174,35 +174,35 @@ static inline unsigned int obmc_sad(const uint8_t *pre, int pre_stride,
   }
 
 /* clang-format off */
-OBMCSADMxN(128, 128)
-OBMCSADMxN(128, 64)
-OBMCSADMxN(64, 128)
-OBMCSADMxN(64, 64)
-OBMCSADMxN(64, 32)
-OBMCSADMxN(32, 64)
-OBMCSADMxN(32, 32)
-OBMCSADMxN(32, 16)
-OBMCSADMxN(16, 32)
-OBMCSADMxN(16, 16)
-OBMCSADMxN(16, 8)
-OBMCSADMxN(8, 16)
-OBMCSADMxN(8, 8)
-OBMCSADMxN(8, 4)
-OBMCSADMxN(4, 8)
-OBMCSADMxN(4, 4)
-OBMCSADMxN(4, 16)
-OBMCSADMxN(16, 4)
-OBMCSADMxN(8, 32)
-OBMCSADMxN(32, 8)
-OBMCSADMxN(16, 64)
-OBMCSADMxN(64, 16)
+OBMCSADMXN(128, 128)
+OBMCSADMXN(128, 64)
+OBMCSADMXN(64, 128)
+OBMCSADMXN(64, 64)
+OBMCSADMXN(64, 32)
+OBMCSADMXN(32, 64)
+OBMCSADMXN(32, 32)
+OBMCSADMXN(32, 16)
+OBMCSADMXN(16, 32)
+OBMCSADMXN(16, 16)
+OBMCSADMXN(16, 8)
+OBMCSADMXN(8, 16)
+OBMCSADMXN(8, 8)
+OBMCSADMXN(8, 4)
+OBMCSADMXN(4, 8)
+OBMCSADMXN(4, 4)
+OBMCSADMXN(4, 16)
+OBMCSADMXN(16, 4)
+OBMCSADMXN(8, 32)
+OBMCSADMXN(32, 8)
+OBMCSADMXN(16, 64)
+OBMCSADMXN(64, 16)
 /* clang-format on */
 
 #if CONFIG_AV1_HIGHBITDEPTH
-                            static inline unsigned int highbd_obmc_sad(
-                                const uint8_t *pre8, int pre_stride,
-                                const int32_t *wsrc, const int32_t *mask,
-                                int width, int height) {
+static inline unsigned int highbd_obmc_sad(const uint8_t *pre8, int pre_stride,
+                                           const int32_t *wsrc,
+                                           const int32_t *mask, int width,
+                                           int height) {
   int y, x;
   unsigned int sad = 0;
   const uint16_t *pre = CONVERT_TO_SHORTPTR(pre8);
