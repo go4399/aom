@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bdb2b73c_b56aa3b9",
+        "filename": "aom_dsp/sad_av1.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-07-22T02:09:54Z",
+      "side": 1,
+      "message": "Using all caps was needed to get this to indent correctly.",
+      "revId": "6ed917f704efe3005e7527bb8e7ba1b2761350b5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b3f08c7_6daee002",
+        "filename": "tools/auto_refactor/c_files/func_in_out.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-07-22T02:09:54Z",
+      "side": 1,
+      "message": "I had mentioned deleting this whole directory to Jerome since it\u0027s unused / unmaintained.",
+      "revId": "6ed917f704efe3005e7527bb8e7ba1b2761350b5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
