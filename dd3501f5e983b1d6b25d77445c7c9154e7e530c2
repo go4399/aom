@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36f1c226_e3c407fe",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-22T21:23:05Z",
+      "side": 1,
+      "message": "Please mention that there are some manual adjustments in this CL.",
+      "revId": "dd3501f5e983b1d6b25d77445c7c9154e7e530c2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d19dcad7_af5d53a2",
+        "filename": "aom_dsp/aom_dsp_common.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-22T21:23:05Z",
+      "side": 1,
+      "message": "clang-format-19 does a better job here. Good.",
+      "revId": "dd3501f5e983b1d6b25d77445c7c9154e7e530c2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4badf9c9_179ecdb2",
+        "filename": "aom_dsp/sad_av1.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-22T21:23:05Z",
+      "side": 1,
+      "message": "Nit: This change of `x` to `X` was not made by clang-format-19, right?",
+      "revId": "dd3501f5e983b1d6b25d77445c7c9154e7e530c2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e6dff60_b9da55c6",
+        "filename": "av1/encoder/encodeframe_utils.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1382,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-22T21:23:05Z",
+      "side": 1,
+      "message": "Nit: The parentheses around the `clamp()` call are not necessary. Could you try removing them and see if clang-format-19 will add back the spaces around `*`?",
+      "revId": "dd3501f5e983b1d6b25d77445c7c9154e7e530c2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ef1c422_24413d18",
+        "filename": "test/encodemb_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-22T21:23:05Z",
+      "side": 1,
+      "message": "Do you know what these \"should be kept\" and \"should be removed\" comments mean?",
+      "revId": "dd3501f5e983b1d6b25d77445c7c9154e7e530c2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
