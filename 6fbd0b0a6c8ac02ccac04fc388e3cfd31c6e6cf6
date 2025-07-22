@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "19b1a64b_7c62a98b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-22T21:06:32Z",
+      "side": 1,
+      "message": "Jerome: Thank you for the fixes. I suggest some changes.",
+      "revId": "6fbd0b0a6c8ac02ccac04fc388e3cfd31c6e6cf6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8daa4bc6_ced573cc",
+        "filename": "av1/encoder/hash.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-22T21:06:32Z",
+      "side": 1,
+      "message": "Nit: Pleae see if you can add blank lines to separate the headers into three or two groups. Either\n\n```\n#include \"av1/encoder/hash.h\"\n\n#include \u003cstddef.h\u003e\n\n#include \"config/av1_rtcd.h\"\n```\n\nor\n\n```\n#include \u003cstddef.h\u003e\n\n#include \"av1/encoder/hash.h\"\n#include \"config/av1_rtcd.h\"\n```\n\nSee https://google.github.io/styleguide/cppguide.html#Names_and_Order_of_Includes",
+      "revId": "6fbd0b0a6c8ac02ccac04fc388e3cfd31c6e6cf6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e2e33c70_c79bbe6f",
+        "filename": "av1/encoder/intra_mode_search.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-22T21:06:32Z",
+      "side": 1,
+      "message": "clang-tidy is wrong. `bool` is used in line 381 and this line. So this file should include \u003cstdbool.h\u003e.\n\nI will file a bug report for clang-tidy.",
+      "revId": "6fbd0b0a6c8ac02ccac04fc388e3cfd31c6e6cf6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e157568f_d986af88",
+        "filename": "av1/encoder/lookahead.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-22T21:06:32Z",
+      "side": 1,
+      "message": "Please make the same change to the definition of this function in av1/encoder/lookahead.c, otherwise MSVC will report a compilation error.\n\nMSVC allows `const` added to a function parameter in function definitiona only in C++ code, not in C code. For MSVC compatibility, in C code whether `const` is used or not must match between the declaration and the definition.",
+      "revId": "6fbd0b0a6c8ac02ccac04fc388e3cfd31c6e6cf6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
