@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ce40095_c6d61279",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T21:04:09Z",
+      "side": 1,
+      "message": "Wan-Teh: My CL build is currently failing because we\u0027re now passing in the `pic_hash_size` to the hash calculation functions, but the value is actually only read for asserts. When compiling a release build, GCC issues an unused variable warning and that\u0027s what\u0027s causing the error, I believe.\n\nIs there a known-good way to signal the compiler that we expect `pic_hash_size` to only used when asserts are on?",
+      "revId": "22391fed536d74a47ee0effcd2636efcd2764f6b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
