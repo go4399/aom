@@ -22,6 +22,30 @@
       },
       "revId": "1907fa141124285948ffad2f4c7f891e6c9b77b1",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ace7e3eb_76da514b",
+        "filename": "test/encodemb_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-07-22T22:01:25Z",
+      "side": 0,
+      "message": "\u003e This comment was manually removed, right?\n\nYes, I posted that earlier, but it might have gotten lost in an older patchset.",
+      "parentUuid": "c587ccda_1dae61cd",
+      "range": {
+        "startLine": 142,
+        "startChar": 33,
+        "endLine": 142,
+        "endChar": 53
+      },
+      "revId": "1907fa141124285948ffad2f4c7f891e6c9b77b1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }

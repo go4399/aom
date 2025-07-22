@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "41c1abe9_d2c89be3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-07-22T22:01:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "36f1c226_e3c407fe",
+      "revId": "dd3501f5e983b1d6b25d77445c7c9154e7e530c2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "d19dcad7_af5d53a2",
         "filename": "aom_dsp/aom_dsp_common.h",
         "patchSetId": 3
@@ -52,6 +70,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6b79e886_78d6251d",
+        "filename": "aom_dsp/sad_av1.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-07-22T22:01:25Z",
+      "side": 1,
+      "message": "\u003e Nit: This change of `x` to `X` was not made by clang-format-19, right?\n\nRight, I made the change to fix the indent at line 282. I missed another instance in this file. I\u0027ll update that and add a note to the commit message.",
+      "parentUuid": "4badf9c9_179ecdb2",
+      "revId": "dd3501f5e983b1d6b25d77445c7c9154e7e530c2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3e6dff60_b9da55c6",
@@ -69,6 +105,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ece86b1_41504d36",
+        "filename": "av1/encoder/encodeframe_utils.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1382,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-07-22T22:01:25Z",
+      "side": 1,
+      "message": "\u003e Nit: The parentheses around the `clamp()` call are not necessary. Could you try removing them and see if clang-format-19 will add back the spaces around `*`?\n\nGood catch, I missed this incorrect formatting. Removing the parentheses fixed the issue.",
+      "parentUuid": "3e6dff60_b9da55c6",
+      "revId": "dd3501f5e983b1d6b25d77445c7c9154e7e530c2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5ef1c422_24413d18",
@@ -82,6 +136,24 @@
       "writtenOn": "2025-07-22T21:23:05Z",
       "side": 1,
       "message": "Do you know what these \"should be kept\" and \"should be removed\" comments mean?",
+      "revId": "dd3501f5e983b1d6b25d77445c7c9154e7e530c2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0eb069cc_8b2af100",
+        "filename": "test/encodemb_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-07-22T22:01:25Z",
+      "side": 1,
+      "message": "\u003e Do you know what these \"should be kept\" and \"should be removed\" comments mean?\n\nIt\u0027s related to the check at line 144. \u0027should be removed\u0027 means the values should go to 0.",
+      "parentUuid": "5ef1c422_24413d18",
       "revId": "dd3501f5e983b1d6b25d77445c7c9154e7e530c2",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
