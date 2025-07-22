@@ -35,6 +35,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "655a7777_80aafa68",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 1585,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T18:53:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dd9a5152_9a87b3b4",
+      "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c3df5764_66bff27f",
@@ -52,6 +70,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf8c9dfa_0f5af272",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T18:53:27Z",
+      "side": 1,
+      "message": "Yep, the hash table is large. I did try smaller hash table sizes during my optimization efforts, but they ended up affecting compute performance, probably from having too many hash collisions and exploring unnecessary candidates.\n\nI eventually settled by capping how many entries each bucket can have. Without the cap, I\u0027ve seen some grow up to 50k entries!",
+      "parentUuid": "c3df5764_66bff27f",
+      "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8b9a49ba_d1ca2bc9",
@@ -65,6 +101,30 @@
       "writtenOn": "2025-07-21T23:52:54Z",
       "side": 1,
       "message": "Delete this TODO comment. I believe it\u0027s already done because of the `get_pixels_in_1D_short_array_by_block_2x2` function at line 41.",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 28
+      },
+      "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c31c8f1_332194a4",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T18:53:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8b9a49ba_d1ca2bc9",
       "range": {
         "startLine": 26,
         "startChar": 0,
@@ -121,6 +181,54 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "84ceddad_9a932d31",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T18:53:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c51f8e81_b57850d3",
+      "range": {
+        "startLine": 54,
+        "startChar": 18,
+        "endLine": 54,
+        "endChar": 30
+      },
+      "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a5f96472_45a3093d",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T18:53:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "482b4b81_ae7ce7a1",
+      "range": {
+        "startLine": 54,
+        "startChar": 31,
+        "endLine": 54,
+        "endChar": 39
+      },
+      "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7b17a86e_875b6cd0",
@@ -138,6 +246,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "38c3d29b_9e44ae56",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T18:53:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7b17a86e_875b6cd0",
+      "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "376dc17a_d973ec43",
@@ -151,6 +277,30 @@
       "writtenOn": "2025-07-21T23:52:54Z",
       "side": 1,
       "message": "Nit: p_hash_table-\u003ep_lookup_table[0][0] \u003d\u003e *p_hash_table-\u003ep_lookup_table[hash_value]\n\nNote: I prefer the following form:\n\n```\n    p_hash_table-\u003ep_lookup_table[hash_value] \u003d\n        (Vector *)aom_malloc(sizeof(Vector));\n```\n\nbecause it is shorter and clearer, and I think the `(Vector *)` typecast forces the compiler to check the type.\n\nBut most people recommend the current form.",
+      "range": {
+        "startLine": 132,
+        "startChar": 26,
+        "endLine": 132,
+        "endChar": 60
+      },
+      "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a0708091_6b101f5a",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T18:53:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "376dc17a_d973ec43",
       "range": {
         "startLine": 132,
         "startChar": 26,
@@ -184,6 +334,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ab27ffd_4b9c1bbc",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T18:53:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "109bed6f_7229b114",
+      "range": {
+        "startLine": 139,
+        "startChar": 0,
+        "endLine": 142,
+        "endChar": 10
+      },
+      "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3d661609_5d4671a8",
@@ -201,6 +375,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4aff5385_f737f818",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T18:53:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3d661609_5d4671a8",
+      "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "48473e47_28229c17",
@@ -214,6 +406,24 @@
       "writtenOn": "2025-07-21T23:52:54Z",
       "side": 1,
       "message": "```\nstatic bool hash_table_add_to_table(hash_table *p_hash_table,\n                                    uint32_t hash_value,\n                                    const block_hash *curr_block_hash) {\n  if (p_hash_table-\u003ep_lookup_table[hash_value] \u003d\u003d NULL) {\n    p_hash_table-\u003ep_lookup_table[hash_value] \u003d\n        aom_malloc(sizeof(*p_hash_table-\u003ep_lookup_table[hash_value]));\n    if (p_hash_table-\u003ep_lookup_table[hash_value] \u003d\u003d NULL) {\n      return false;\n    }\n    if (aom_vector_setup(p_hash_table-\u003ep_lookup_table[hash_value], 10,\n                         sizeof(*curr_block_hash)) \u003d\u003d VECTOR_ERROR)\n      return false;\n  }\n  // Place an upper bound each hash table bucket to up to 256 intrabc\n  // block candidates, and ignore subsequent ones. Considering more can\n  // unnecessarily slow down encoding for virtually no efficiency gain.\n  if (aom_vector_byte_size(p_hash_table-\u003ep_lookup_table[hash_value]) \u003c\n      kMaxCandidatesPerHashBucket * sizeof(*curr_block_hash)) {\n    if (aom_vector_push_back(p_hash_table-\u003ep_lookup_table[hash_value],\n                             (void *)curr_block_hash) \u003d\u003d VECTOR_ERROR)\n      return false;\n  }\n  return true;\n}\n```",
+      "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "27864552_dc66c27b",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T18:53:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48473e47_28229c17",
       "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -248,6 +458,42 @@
       "writtenOn": "2025-07-21T23:52:54Z",
       "side": 1,
       "message": "IMPORTANT: This is a preexisting issue. I found that some hashes near the right and bottom borders are calculated but not used.\n\nFor a concrete example, suppose The picture is 16x16, and the current `block_size` is 4. So `src_size` is 2.\n\nConsider the first iteration of the outer for loop. In the last iteration of the inner for loop, `x_pos` is equal to `x_end - 1 \u003d picture-\u003ey_crop_width - block_size \u003d 16 - 4 \u003d 12`. So we read the following entries in `src_pic_block_hash`:\n\n`src_pic_block_hash[pos] \u003d src_pic_block_hash[12]`\n`src_pic_block_hash[pos + src_size] \u003d src_pic_block_hash[14]`\n\nNote that `src_pic_block_hash[13]` and `src_pic_block_hash[15]` are not used. Although `src_pic_block_hash[15]` was not calculated, `src_pic_block_hash[13]` was calculated.\n\nIf we consider the last iteration of the outer for loop, I believe we can show, with a similar argument, that two entire rows of hash values, row index 13 and 15, are not used. Although row index 15 was not calculaed, row index 13 was calculated.\n\nPlease double check my analysis. If you think it is correct, we should think if this is intended and if this is a bug.",
+      "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d6493f1_91b95b19",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T18:53:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e0d02784_24818382",
+      "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "321c8fa5_9de11e35",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T18:53:27Z",
+      "side": 1,
+      "message": "I think this is intended behavior. Following your example, the 2x2 hashes for `src_pic_block_hash[13]` and `src_pic_block_hash[15]` are not part of the 4x4 block we\u0027re currently hashing, but to potential neighboring 4x4 blocks (with coordinates shifted 1 pixel to the left or right).\n\nAdditionally, due to the way the code is written, intraBC block references cannot come from partially outside the image. `src_pic_block_hash[13]` is part of the second-to-last 4x4 block (i.e. [pos - 1 + src_size]), while `src_pic_block_hash[15]` cannot be part of any larger block.\n\nHope this explains what\u0027s happening. I added a comment so the behavior is clearer.",
+      "parentUuid": "9cd08def_7671f64c",
       "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -322,6 +568,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e79119c9_4ccaf766",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T18:53:27Z",
+      "side": 1,
+      "message": "Good catch! It\u0027s an 8x8 image, 5*5 \u003d 25 total blocks.",
+      "parentUuid": "67f35c0e_20486986",
+      "range": {
+        "startLine": 264,
+        "startChar": 60,
+        "endLine": 264,
+        "endChar": 63
+      },
+      "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6b5bd83a_f25565f1",
@@ -335,6 +605,24 @@
       "writtenOn": "2025-07-21T23:52:54Z",
       "side": 1,
       "message": "IMPORTANT: I only executed the state machine mentally. I got a different exploration order. Could you please double check?\n\nAlso, in my mental execution, some entries are explored more than once. Is this expected?",
+      "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "033de423_522dfe9b",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T18:53:27Z",
+      "side": 1,
+      "message": "Just double checked. The exploration order is indeed different than shown in the example -- the x and y axes were flipped accidentally. Fixed.\n\nI also double-checked exploration count, and on my manual execution, entries are explored just once. What are the entries that you think are explored many times?",
+      "parentUuid": "6b5bd83a_f25565f1",
       "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -356,6 +644,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c1d7a71_90795399",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T18:53:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c73ea9b2_8b7c02da",
+      "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2aac24b5_34c8b884",
@@ -369,6 +675,24 @@
       "writtenOn": "2025-07-21T23:52:54Z",
       "side": 1,
       "message": "Nit: Delete this. Not needed.",
+      "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3bcf37c_ff3dd00f",
+        "filename": "av1/encoder/hash_motion.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T18:53:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2aac24b5_34c8b884",
       "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -390,6 +714,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "054f5d64_cf3a5813",
+        "filename": "av1/encoder/hash_motion.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T18:53:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1b4c6165_c31d0cb6",
+      "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0bf16849_6e9b1a3d",
@@ -403,6 +745,24 @@
       "writtenOn": "2025-07-21T23:52:54Z",
       "side": 1,
       "message": "It would be good to pass the size of `pic_block_hash` to the function.",
+      "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2544b3a7_06c43e0d",
+        "filename": "av1/encoder/hash_motion.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T18:53:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0bf16849_6e9b1a3d",
       "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -424,6 +784,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "866af1fc_f7722170",
+        "filename": "av1/encoder/hash_motion.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T18:53:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "80529199_2383a6a6",
+      "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9b9eab99_5c2952f2",
@@ -441,6 +819,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c1c167e8_65e8f4b1",
+        "filename": "av1/encoder/hash_motion.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T18:53:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b9eab99_5c2952f2",
+      "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bedb351c_d3f4bc26",
@@ -454,6 +850,30 @@
       "writtenOn": "2025-07-21T23:52:54Z",
       "side": 1,
       "message": "Nit: intrabc_hash_info \u003d\u003e intra_bc_hash_info",
+      "range": {
+        "startLine": 84,
+        "startChar": 47,
+        "endLine": 84,
+        "endChar": 64
+      },
+      "revId": "30725b63277a4a0cd2b35217b714aaf285da8dc1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9c94bd71_b8a263bc",
+        "filename": "av1/encoder/hash_motion.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-22T18:53:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bedb351c_d3f4bc26",
       "range": {
         "startLine": 84,
         "startChar": 47,
