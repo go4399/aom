@@ -33,6 +33,24 @@
       "message": "IMPORTANT: config/aom_config.h always defines the `CONFIG_INTERNAL_STATS` macro (as 0 or 1), so `defined(CONFIG_INTERNAL_STATS)` is always true. We need to test `#if !CONFIG_INTERNAL_STATS` instead. I also suggest adding a comment to explain why we are checking `CONFIG_INTERNAL_STATS` here. Here is a patch (feel free to edit the comment):\n\n```\ndiff --git a/test/datarate_test.cc b/test/datarate_test.cc\nindex 6a94cd50e0..2596e00032 100644\n--- a/test/datarate_test.cc\n+++ b/test/datarate_test.cc\n@@ -776,7 +776,11 @@ class DatarateTestPsnr\n   void PreEncodeFrameHook(::libaom_test::VideoSource *video,\n                           ::libaom_test::Encoder *encoder) override {\n     DatarateTest::PreEncodeFrameHook(video, encoder);\n-#if !defined(CONFIG_INTERNAL_STATS)\n+#if CONFIG_INTERNAL_STATS\n+    // CONFIG_INTERNAL_STATS unconditionally generates PSNR. Leave the\n+    // AOM_EFLAG_CALCULATE_PSNR flag set in frame_flags_ so that\n+    // PostEncodeFrameHook() has the correct expected value for had_psnr.\n+#else\n     frame_flags_ ^\u003d AOM_EFLAG_CALCULATE_PSNR;\n #endif  // CONFIG_INTERNAL_STATS\n     if (video-\u003eimg() \u003d\u003d nullptr) {\n```\n\nAn alternative is to add a boolean data member, say `expect_psnr_`, that indicates whether we expect a PSNR packet. You may prefer the following patch instead:\n\n```\ndiff --git a/test/datarate_test.cc b/test/datarate_test.cc\nindex 6a94cd50e0..bd5ea8098c 100644\n--- a/test/datarate_test.cc\n+++ b/test/datarate_test.cc\n@@ -772,15 +772,20 @@ class DatarateTestPsnr\n     InitializeConfig(libaom_test::kRealTime);\n     ResetModel();\n     frame_flags_ \u003d AOM_EFLAG_CALCULATE_PSNR;\n+    expect_psnr_ \u003d true;\n   }\n   void PreEncodeFrameHook(::libaom_test::VideoSource *video,\n                           ::libaom_test::Encoder *encoder) override {\n     DatarateTest::PreEncodeFrameHook(video, encoder);\n-#if !defined(CONFIG_INTERNAL_STATS)\n     frame_flags_ ^\u003d AOM_EFLAG_CALCULATE_PSNR;\n+#if CONFIG_INTERNAL_STATS\n+    // CONFIG_INTERNAL_STATS unconditionally generates PSNR.\n+    expect_psnr_ \u003d true;\n+#else\n+    expect_psnr_ \u003d (frame_flags_ \u0026 AOM_EFLAG_CALCULATE_PSNR) !\u003d 0;\n #endif  // CONFIG_INTERNAL_STATS\n     if (video-\u003eimg() \u003d\u003d nullptr) {\n-      frame_flags_ \u003d 0;\n+      expect_psnr_ \u003d false;\n     }\n   }\n   void PostEncodeFrameHook(::libaom_test::Encoder *encoder) override {\n@@ -791,9 +796,10 @@ class DatarateTestPsnr\n       if (pkt-\u003ekind \u003d\u003d AOM_CODEC_PSNR_PKT) had_psnr \u003d true;\n     }\n \n-    EXPECT_EQ(had_psnr, (frame_flags_ \u0026 AOM_EFLAG_CALCULATE_PSNR) \u003d\u003d\n-                            AOM_EFLAG_CALCULATE_PSNR);\n+    EXPECT_EQ(had_psnr, expect_psnr_);\n   }\n+\n+  bool expect_psnr_;\n };\n \n TEST_P(DatarateTestPsnr, PerFramePsnr) {\n```",
       "revId": "8f1fc4dac75fb33a31e17d2861f825f480abd5b1",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "697bfa15_83da91c6",
+        "filename": "test/datarate_test.cc",
+        "patchSetId": 10
+      },
+      "lineNbr": 779,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-23T00:35:23Z",
+      "side": 1,
+      "message": "Philipp: Although this test isn\u0027t doing what is intended, it is passing. In the interest of time, I am going to submit this CL and take care of fixing this test.",
+      "parentUuid": "39d78a7b_430e4764",
+      "revId": "8f1fc4dac75fb33a31e17d2861f825f480abd5b1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
