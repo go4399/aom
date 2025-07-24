@@ -54,6 +54,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9b352a0c_d7c79c72",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-24T02:01:47Z",
+      "side": 1,
+      "message": "Good question! In this case, it means that the same block can be found more than 256 times within the image. It\u0027s almost always either a solid color block, or a block with highly-regular pattern that has self-overlapping properties (like a checkerboard pattern), so it\u0027s easy to match in many ways.\n\nIt\u0027s desirable to keep many of these duplicates in memory, because some of these blocks will result in more favorable \"motion vectors\" that are smaller to code symbols for. However, keeping too many duplicates (\u003e256) will just end up slow down search for virtually no gain during my testing.",
+      "parentUuid": "09fd5ffa_57209bff",
+      "revId": "22391fed536d74a47ee0effcd2636efcd2764f6b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "791c79cc_1154c502",
         "filename": "av1/encoder/hash_motion.c",
         "patchSetId": 11
@@ -89,6 +107,30 @@
       "side": 1,
       "message": "Yes. We deal with this situation using a `void` cast:\n\n```\n  (void)pic_block_hash_size;\n```\n\nBut after seeing the code, I\u0027m going to suggest that we undo these pic_block_hash_size changes so we don\u0027t expand the scope of this CL. Sorry to have wasted your time.",
       "parentUuid": "791c79cc_1154c502",
+      "range": {
+        "startLine": 167,
+        "startChar": 38,
+        "endLine": 167,
+        "endChar": 65
+      },
+      "revId": "22391fed536d74a47ee0effcd2636efcd2764f6b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "616b03fe_8cde9e6e",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-24T02:01:47Z",
+      "side": 1,
+      "message": "Oh, I was under the impression that the `(void)` cast trick was only for variables that were never used within the function (either to not break ABI or for SIMD versions).\n\nI\u0027m good with undoing the `pic_block_hash_size` changes. No worries on the initial suggestion.",
+      "parentUuid": "11eb5980_15d8fff5",
       "range": {
         "startLine": 167,
         "startChar": 38,
