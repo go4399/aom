@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3262d48a_33cf7f75",
+        "filename": "av1/arg_defs.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-25T00:21:41Z",
+      "side": 1,
+      "message": "The corresponding code in aom/aomcx.h is the following:\n\n```\n  /*!\\brief Set --deltaq-mode strength.\n   *\n   * Valid range: [0, 1000]\n   */\n  AV1E_SET_DELTAQ_STRENGTH \u003d 148,\n```\n\nShould we update that comment? We should at least add \", unsigned int parameter\". This can be added in a separate CL.",
+      "revId": "861f49e795cc7af93da253f969b3521c0f416b05",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "59e99293_08469616",
         "filename": "av1/encoder/allintra_vis.c",
         "patchSetId": 1
@@ -20,6 +37,47 @@
         "endLine": 1084,
         "endChar": 40
       },
+      "revId": "861f49e795cc7af93da253f969b3521c0f416b05",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50b434b1_915820b1",
+        "filename": "av1/encoder/allintra_vis.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1084,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-25T00:21:41Z",
+      "side": 1,
+      "message": "Please consider converting your message to a comment in the source code.",
+      "parentUuid": "59e99293_08469616",
+      "range": {
+        "startLine": 1084,
+        "startChar": 19,
+        "endLine": 1084,
+        "endChar": 40
+      },
+      "revId": "861f49e795cc7af93da253f969b3521c0f416b05",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "646ff579_e7573a1c",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 808,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-25T00:21:41Z",
+      "side": 1,
+      "message": "This is a bug fix, right? If so, please move this change to a separate CL.",
       "revId": "861f49e795cc7af93da253f969b3521c0f416b05",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
