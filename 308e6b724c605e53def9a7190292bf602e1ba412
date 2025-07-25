@@ -3,6 +3,57 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3be4a311_eda715d0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 13
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-25T21:59:09Z",
+      "side": 1,
+      "message": "Optional: I believe the word \"hashing\" here also means \"adding something to the hash table\". It may be misunderstood as \"applying the hash function to something\". It would be good to rephrase, for example, \"a hierarchical process for adding block candidates to the hash table\".",
+      "revId": "308e6b724c605e53def9a7190292bf602e1ba412",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "49ef46a2_cbf0e062",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-25T21:59:09Z",
+      "side": 1,
+      "message": "LGTM. I finally fully understand the new code in this CL. Thank you for your patience. I suggest a few new comments to point out the sutlety in the code. You can add those comments in a follow-up CL.\n\nJames: I have checked the logic in this CL carefully. You just need to review the code for general coding style issues.\n\nHui: Just FYI. You don\u0027t need to review this CL.",
+      "revId": "308e6b724c605e53def9a7190292bf602e1ba412",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51cbd8a3_ead44c81",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 2108,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-25T21:59:09Z",
+      "side": 1,
+      "message": "Nit: Delete the square brackets `[]` around the comments.",
+      "revId": "308e6b724c605e53def9a7190292bf602e1ba412",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8c1c7d77_d6cf5d7d",
         "filename": "av1/encoder/hash_motion.c",
         "patchSetId": 13
@@ -32,6 +83,58 @@
       "side": 1,
       "message": "I didn\u0027t see this commented anywhere, but I\u0027ve noticed some aspects of intraBC are designed so candidate search begins in the column-major order first, then row-major. I think the nested loop is reflecting this. It\u0027s probably a good idea to keep it column-major.",
       "parentUuid": "8c1c7d77_d6cf5d7d",
+      "revId": "308e6b724c605e53def9a7190292bf602e1ba412",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fcb6cbef_ce9c9ac4",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-25T21:59:09Z",
+      "side": 1,
+      "message": "Please add a comment to point out that the nested for loop goes through the `pic_hash` array column by column. No need to speculate the rationale if you are not sure.",
+      "parentUuid": "0ea5fee9_693084ed",
+      "revId": "308e6b724c605e53def9a7190292bf602e1ba412",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10adb406_e5df5483",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-25T21:59:09Z",
+      "side": 1,
+      "message": "If the relative order among the blocks in State 1, State 2, and State 3 is important, add a comment to explain that. Otherwise, add a comment to point out that the current relative order is arbitrary.",
+      "revId": "308e6b724c605e53def9a7190292bf602e1ba412",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19b31d28_a4868972",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-25T21:59:09Z",
+      "side": 1,
+      "message": "1. Nit: Change \"This state\" to \"State 0\", or perhaps \"This state transition\"\n\n2. Explain this is because initially nothing in `pic_hash` has been explored, so the first pass (State 0) doesn\u0027t need to avoid any explored blocks.",
       "revId": "308e6b724c605e53def9a7190292bf602e1ba412",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
