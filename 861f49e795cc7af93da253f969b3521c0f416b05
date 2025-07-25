@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "608aa96f_9fb78b44",
+        "filename": "av1/arg_defs.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-25T22:47:07Z",
+      "side": 1,
+      "message": "Please also add a comment to say the value is a percentage.",
+      "parentUuid": "e9335fd3_3a6510b7",
+      "revId": "861f49e795cc7af93da253f969b3521c0f416b05",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "59e99293_08469616",
         "filename": "av1/encoder/allintra_vis.c",
         "patchSetId": 1
