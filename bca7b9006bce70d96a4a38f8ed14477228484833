@@ -16,6 +16,24 @@
       "message": "We do have a `AOM_VALGRIND_BUILD` define, you could make this conditional on it. What\u0027s the runtime in a release build? I\u0027m wondering if this would have much effect on the presubmit time.",
       "revId": "bca7b9006bce70d96a4a38f8ed14477228484833",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7a84d7d2_8279d4a6",
+        "filename": "test/datarate_test.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2025-07-25T21:55:57Z",
+      "side": 1,
+      "message": "Done.\n\nFor release build the whole test (which runs over speed 7-11, and for aq_mode\u003d0 and 1) took about 80seconds.",
+      "parentUuid": "8165068e_fd858d67",
+      "revId": "bca7b9006bce70d96a4a38f8ed14477228484833",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
