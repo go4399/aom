@@ -16,6 +16,24 @@
       "message": "Excluding `av1_hash_is_vertical_perfect`, which must use the column-major order, among all the nested for loops in this file, this is the only one that does not use the row-major order. Do you think the column-major order is important to this nested for loop? If it doesn\u0027t matter, we should switch this to row-major order.",
       "revId": "308e6b724c605e53def9a7190292bf602e1ba412",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0ea5fee9_693084ed",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-25T15:11:47Z",
+      "side": 1,
+      "message": "I didn\u0027t see this commented anywhere, but I\u0027ve noticed some aspects of intraBC are designed so candidate search begins in the column-major order first, then row-major. I think the nested loop is reflecting this. It\u0027s probably a good idea to keep it column-major.",
+      "parentUuid": "8c1c7d77_d6cf5d7d",
+      "revId": "308e6b724c605e53def9a7190292bf602e1ba412",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
