@@ -18,6 +18,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5fab03b9_daeb1dc1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-25T01:07:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d2fe371c_7f40bf0e",
+      "revId": "2bfb5a146134b657c9f0045f82508be497622582",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "320df882_9b11c51c",
@@ -31,6 +49,24 @@
       "writtenOn": "2025-07-24T21:55:00Z",
       "side": 1,
       "message": "Nit: Copy the comment \"two buffers used ping-pong\" here.",
+      "revId": "2bfb5a146134b657c9f0045f82508be497622582",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8012049e_f5b40a43",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 12
+      },
+      "lineNbr": 2108,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-25T01:07:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "320df882_9b11c51c",
       "revId": "2bfb5a146134b657c9f0045f82508be497622582",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -71,6 +107,42 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "660ca6a8_cebdf68e",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 1483,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-25T01:07:25Z",
+      "side": 1,
+      "message": "Will do. Keeping this open so I don\u0027t forget.",
+      "parentUuid": "0041f11d_bd33dc5f",
+      "revId": "2bfb5a146134b657c9f0045f82508be497622582",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "28538002_fbcd3209",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 1483,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-25T01:07:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fe648517_8c1d7770",
+      "revId": "2bfb5a146134b657c9f0045f82508be497622582",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5243b3d2_244cc142",
         "filename": "av1/encoder/ethread.c",
         "patchSetId": 12
@@ -82,6 +154,24 @@
       "writtenOn": "2025-07-24T21:55:00Z",
       "side": 1,
       "message": "I think this `memcpy()` is incorrect (but harmless) and should be deleted. I believe the source buffer `cpi-\u003etd.mb.intrabc_hash_info.hash_value_buffer` is still uninitialized at this point, so we are just copying uninitialized bytes to the destination buffer.\n\nIf you agree with my analysis, I can remove this `memcpy()` call in a separate CL.",
+      "revId": "2bfb5a146134b657c9f0045f82508be497622582",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66a81e8f_bcb61d84",
+        "filename": "av1/encoder/ethread.c",
+        "patchSetId": 12
+      },
+      "lineNbr": 1595,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-25T01:07:25Z",
+      "side": 1,
+      "message": "I think you\u0027re right. Looking at the context of the other variables surrounding this initialization, and how `prepare_enc_workers()` is called, I think the author meant to do a `memset()` instead. Maybe that\u0027s what we should do instead?",
+      "parentUuid": "5243b3d2_244cc142",
       "revId": "2bfb5a146134b657c9f0045f82508be497622582",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -109,6 +199,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc462dfd_54b8dfa2",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 12
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-25T01:07:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e7c478d_339665cf",
+      "range": {
+        "startLine": 260,
+        "startChar": 48,
+        "endLine": 260,
+        "endChar": 52
+      },
+      "revId": "2bfb5a146134b657c9f0045f82508be497622582",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "508c387d_8a1b12a2",
@@ -122,6 +236,24 @@
       "writtenOn": "2025-07-24T21:24:33Z",
       "side": 1,
       "message": "IMPORTANT: Please add a comment to explain why the new order of adding the candidate blocks to the hash table is better, and mention the relation to the pruning (max 256 per bucket).\n\nIf possible, try to explain why each entry is explored just once.",
+      "revId": "2bfb5a146134b657c9f0045f82508be497622582",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "819122f4_d6c284c4",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 12
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-25T01:07:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "508c387d_8a1b12a2",
       "revId": "2bfb5a146134b657c9f0045f82508be497622582",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -161,6 +293,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd1f41f6_5030aef3",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 12
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-25T01:07:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ccb9886_df61427f",
+      "revId": "2bfb5a146134b657c9f0045f82508be497622582",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a630dac1_a2d7b39f",
@@ -178,6 +328,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f28e4de0_4a81ae70",
+        "filename": "av1/encoder/hash_motion.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-25T01:07:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a630dac1_a2d7b39f",
+      "revId": "2bfb5a146134b657c9f0045f82508be497622582",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dae81e83_c01a00b0",
@@ -191,6 +359,24 @@
       "writtenOn": "2025-07-24T21:24:33Z",
       "side": 1,
       "message": "Nit: Add \"elements\" before \"long\".",
+      "revId": "2bfb5a146134b657c9f0045f82508be497622582",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "17e666aa_298a0de3",
+        "filename": "av1/encoder/hash_motion.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-25T01:07:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dae81e83_c01a00b0",
       "revId": "2bfb5a146134b657c9f0045f82508be497622582",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
