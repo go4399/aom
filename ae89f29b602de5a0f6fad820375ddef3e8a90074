@@ -16,6 +16,24 @@
       "message": "consistency aside, does it matter in some way?",
       "revId": "ae89f29b602de5a0f6fad820375ddef3e8a90074",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a62dffb_b19d0b09",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 14
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-26T03:10:54Z",
+      "side": 1,
+      "message": "No. Consistency between big-endian (only s390x these days) and little-endian CPUs is the only reason.",
+      "parentUuid": "9207d458_52b57f61",
+      "revId": "ae89f29b602de5a0f6fad820375ddef3e8a90074",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
