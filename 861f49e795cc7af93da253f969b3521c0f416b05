@@ -176,6 +176,24 @@
       "parentUuid": "646ff579_e7573a1c",
       "revId": "861f49e795cc7af93da253f969b3521c0f416b05",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c44aa138_04c2f960",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 808,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-07-28T21:54:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b4f07a8_76661474",
+      "revId": "861f49e795cc7af93da253f969b3521c0f416b05",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
