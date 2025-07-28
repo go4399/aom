@@ -19,8 +19,11 @@
 #include "av1/encoder/hash_motion.h"
 
 #define kSrcBits 16
-#define kBlockSizeBits 3
-#define kMaxAddr (1 << (kSrcBits + kBlockSizeBits))
+// kMaxAddr is the number of hash table buckets in p_hash_table->p_lookup_table.
+// 6 is the number of block sizes supported. p_hash_table->p_lookup_table
+// consists of 6 hash tables of 1 << kSrcBits buckets each. The 6 hash tables
+// are indexed by the return value of hash_block_size_to_index().
+#define kMaxAddr (6 << kSrcBits)
 #define kMaxCandidatesPerHashBucket 256
 
 static void get_pixels_in_1D_char_array_by_block_2x2(const uint8_t *y_src,
