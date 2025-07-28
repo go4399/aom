@@ -100,7 +100,7 @@ struct av1_extracfg {
   unsigned int enable_chroma_deltaq;
   AQ_MODE aq_mode;
   DELTAQ_MODE deltaq_mode;
-  int deltaq_strength;
+  unsigned int deltaq_strength;
   int deltalf_mode;
   unsigned int frame_periodic_boost;
   aom_tune_content content;
