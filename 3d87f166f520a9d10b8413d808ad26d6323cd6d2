@@ -34,6 +34,24 @@
       "parentUuid": "ce013016_37f1171b",
       "revId": "3d87f166f520a9d10b8413d808ad26d6323cd6d2",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "648c463d_356363d8",
+        "filename": "av1/encoder/hash.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-07-29T16:46:19Z",
+      "side": 1,
+      "message": "Another thing to clarify is that these buffers are also used for subblocks larger than 2x2. So It would be good to say the smallest subblock size is 2x2, otherwise it implies these buffers are only used with 2x2 subblocks.\n\nYou definitely understand this code at a deeper level, which is why you know max block size 128 is linked to the superblock size. I merely analyzed the code and saw that the max block size is the maximum value in this array:\n\n```\n// Width/height lookup tables in units of samples.\n// The Block_Width table in the spec (Section 9.3. Conversion tables).\nstatic const uint8_t block_size_wide[BLOCK_SIZES_ALL] \u003d {\n  4,  4,  8,  8,   8,   16, 16, 16, 32, 32, 32,\n  64, 64, 64, 128, 128, 4,  16, 8,  32, 16, 64\n};\n```",
+      "parentUuid": "5677a09a_217053d6",
+      "revId": "3d87f166f520a9d10b8413d808ad26d6323cd6d2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ],
   "submitRequirementResults": [
