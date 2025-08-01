@@ -16,6 +16,24 @@
       "message": "Marco: Does this bug affect libaom v3.12.1?\n\nI am wondering if I should cherry-pick this bug fix to the libaom v3.12.* release branch and create the libaom v3.12.2 release.",
       "revId": "820b4991a9c76831a8631ea93077f71fa240c15f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "64bfcf52_ce9111ec",
+        "filename": "av1/encoder/ratectrl.c",
+        "patchSetId": 20
+      },
+      "lineNbr": 3246,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2025-08-01T19:18:33Z",
+      "side": 1,
+      "message": "yes I think it would affect v3.12.1.",
+      "parentUuid": "8e3922e7_d323e895",
+      "revId": "820b4991a9c76831a8631ea93077f71fa240c15f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
