@@ -1572,6 +1572,11 @@ void av1_nonrd_pick_intra_mode(AV1_COMP *cpi, MACROBLOCK *x, RD_STATS *rd_cost,
   mi->tx_size =
       AOMMIN(max_txsize_lookup[bsize],
              tx_mode_to_biggest_tx_size[txfm_params->tx_mode_search_type]);
+  // Force smaller transform size to avoid chessboard-artifacts on flat areas
+  // observed at speed >= 11.
+  if (!xd->lossless[mi->segment_id] && cpi->oxcf.speed >= 11 &&
+      x->source_variance == 0 && bsize >= BLOCK_32X32)
+    mi->tx_size = TX_16X16;
   assert(IMPLIES(xd->lossless[mi->segment_id], mi->tx_size == TX_4X4));
   const BLOCK_SIZE tx_bsize = txsize_to_bsize[mi->tx_size];
 
