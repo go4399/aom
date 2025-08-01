@@ -1749,6 +1749,8 @@ static void set_rt_speed_feature_framesize_dependent(const AV1_COMP *const cpi,
       sf->rt_sf.increase_color_thresh_palette = 0;
       sf->rt_sf.prune_h_pred_using_best_mode_so_far = true;
       sf->rt_sf.enable_intra_mode_pruning_using_neighbors = true;
+      if (frame_is_intra_only(cm))
+        sf->rt_sf.prune_intra_mode_using_best_sad_so_far = 0;
     }
     if (speed >= 12) {
       if (cpi->rc.high_source_sad && cpi->rc.frame_source_sad > 40000 &&
