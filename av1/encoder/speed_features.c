@@ -1749,6 +1749,8 @@ static void set_rt_speed_feature_framesize_dependent(const AV1_COMP *const cpi,
       sf->rt_sf.increase_color_thresh_palette = 0;
       sf->rt_sf.prune_h_pred_using_best_mode_so_far = true;
       sf->rt_sf.enable_intra_mode_pruning_using_neighbors = true;
+      if (frame_is_intra_only(cm))
+        sf->rt_sf.prune_intra_mode_using_best_sad_so_far = false;
     }
     if (speed >= 12) {
       if (cpi->rc.high_source_sad && cpi->rc.frame_source_sad > 40000 &&
@@ -2512,8 +2514,8 @@ static inline void init_rt_sf(REAL_TIME_SPEED_FEATURES *rt_sf) {
   rt_sf->skip_newmv_mode_sad_screen = 0;
 }
 
-static fractional_mv_step_fp
-    *const fractional_mv_search[SUBPEL_SEARCH_METHODS] = {
+static fractional_mv_step_fp *const
+    fractional_mv_search[SUBPEL_SEARCH_METHODS] = {
       av1_find_best_sub_pixel_tree,             // SUBPEL_TREE = 0
       av1_find_best_sub_pixel_tree_pruned,      // SUBPEL_TREE_PRUNED = 1
       av1_find_best_sub_pixel_tree_pruned_more  // SUBPEL_TREE_PRUNED_MORE = 2
