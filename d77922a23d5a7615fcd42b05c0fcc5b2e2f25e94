@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "99374195_4e2847e1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-08-03T12:57:16Z",
+      "side": 1,
+      "message": "This is mentioned in https://devblogs.microsoft.com/cppblog/c11-threads-in-visual-studio-2022-version-17-8-preview-2/#mutexes and https://github.com/microsoft/STL/discussions/4126.",
+      "revId": "d77922a23d5a7615fcd42b05c0fcc5b2e2f25e94",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
