@@ -24,6 +24,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f637992d_e0309c45",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 4262161
+      },
+      "writtenOn": "2025-08-04T19:08:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "15dcac55_8433b28c",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 94
+      },
+      "revId": "cb1ba017074c582915fb8b3b43d31816e4470289",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a7f4663e_0c57b946",
@@ -37,6 +61,24 @@
       "writtenOn": "2025-08-04T17:54:44Z",
       "side": 1,
       "message": "Thank you for the patch. Your first patch will need to be uploaded by a committer to have the presubmit run. Before that,  please sign the contributor agreement: https://aomedia.googlesource.com/aom/+/refs/tags/v3.12.1#contributor-agreement",
+      "revId": "cb1ba017074c582915fb8b3b43d31816e4470289",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "40d22901_5ea08ad0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4262161
+      },
+      "writtenOn": "2025-08-04T19:08:47Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "a7f4663e_0c57b946",
       "revId": "cb1ba017074c582915fb8b3b43d31816e4470289",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -58,6 +100,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8ea4e9c_84b11019",
+        "filename": "aom_ports/ppc_cpudetect.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 4262161
+      },
+      "writtenOn": "2025-08-04T19:08:47Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "58c32d16_e55bb542",
+      "revId": "cb1ba017074c582915fb8b3b43d31816e4470289",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "69dd38c2_5f1fed9e",
@@ -71,6 +131,24 @@
       "writtenOn": "2025-08-04T18:23:38Z",
       "side": 1,
       "message": "Nit: Add `#include \u003cstdlib.h\u003e`. This header declares `getenv()` and `strtol()`.\n\nThis can be done in a separate CL if you want this CL to focus on fixing the compilation errors.",
+      "revId": "cb1ba017074c582915fb8b3b43d31816e4470289",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed390e05_93f7435c",
+        "filename": "aom_ports/ppc_cpudetect.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 4262161
+      },
+      "writtenOn": "2025-08-04T19:08:47Z",
+      "side": 1,
+      "message": "yes please",
+      "parentUuid": "69dd38c2_5f1fed9e",
       "revId": "cb1ba017074c582915fb8b3b43d31816e4470289",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
