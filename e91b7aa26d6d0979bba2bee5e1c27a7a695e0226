@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "828075a5_288d9de7",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 15
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-08-04T18:46:06Z",
+      "side": 1,
+      "message": "Julio: I found this question on a piece of paper I wrote. I\u0027m sorry I didn\u0027t ask you this question until now.\n\nThe `buf[dst_idx][0] \u0026 crc_mask` part of this statement takes the lower 16 bits of a CRC32 checksum as the hash table bucket index. Do you think we should consider the upper 16 bits when generating the hash table bucket index?\n\nIntuitively this is not necessary if CRC32 has thoroughly mixed the input data into all 32 bits of its output.",
+      "revId": "e91b7aa26d6d0979bba2bee5e1c27a7a695e0226",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "200b6867_12792665",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 15
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-08-04T18:46:06Z",
+      "side": 1,
+      "message": "Julio: This is another old comment of mine that I wrote on a piece of paper. I wonder if we could come up with more informative names than `hash_value1` and `hash_value2`.\n\nI think we can probably describe `hash_value1` as the hash table bucket/slot index. Perhaps a shorter name would be  `lookup_table_index` because it is the index for the `p_hash_table-\u003ep_lookup_table[]` array.\n\nThen we need to find a more informative name for `hash_value2`. Perhaps `block_hash` or just `hash_value` if it is understood to be the hash value for a block?",
+      "revId": "e91b7aa26d6d0979bba2bee5e1c27a7a695e0226",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
