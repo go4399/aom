@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "49487bd1_0ddb2090",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 15
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-08-05T01:09:55Z",
+      "side": 1,
+      "message": "I don\u0027t think it\u0027s necessary to consider the upper 16 bits for the hash table bucket index. The bits are reasonably mixed so taking a subset is fine for encoding purposes w.r.t. speed and compression performance (on non-adversarial inputs).\n\nHowever, there\u0027s something to keep in mind: because CRC32 isn\u0027t a cryptographic hash, a user can construct a specific input such as its pixels cause an increase in the number of block collisions during the hashing process. Not considering all CRC32 bits for the hash table index would technically make the task of finding collisions a bit easier (not by much in the grand scheme of things).\n\nThat said, because of our new hash table bucket size limitation/pruning mitigations in place, the encoder would just slow down by a bit on adversarial inputs in practice (vs. by a lot in previous libaom versions, where there wasn\u0027t an actual upper bound on how many elements a hash table bucket can have).",
+      "parentUuid": "828075a5_288d9de7",
+      "revId": "e91b7aa26d6d0979bba2bee5e1c27a7a695e0226",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "200b6867_12792665",
         "filename": "av1/encoder/hash_motion.c",
         "patchSetId": 15
@@ -31,6 +49,24 @@
       "writtenOn": "2025-08-04T18:46:06Z",
       "side": 1,
       "message": "Julio: This is another old comment of mine that I wrote on a piece of paper. I wonder if we could come up with more informative names than `hash_value1` and `hash_value2`.\n\nI think we can probably describe `hash_value1` as the hash table bucket/slot index. Perhaps a shorter name would be  `lookup_table_index` because it is the index for the `p_hash_table-\u003ep_lookup_table[]` array.\n\nThen we need to find a more informative name for `hash_value2`. Perhaps `block_hash` or just `hash_value` if it is understood to be the hash value for a block?",
+      "revId": "e91b7aa26d6d0979bba2bee5e1c27a7a695e0226",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d04bbfa3_572258e1",
+        "filename": "av1/encoder/hash_motion.c",
+        "patchSetId": 15
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-08-05T01:09:55Z",
+      "side": 1,
+      "message": "`lookup_table_index` for `hash_value1`, and `block_hash` for `hash_value2` both sound good to me. I don\u0027t think I\u0027d be confused if `block_hash` is named that way, because the surrounding code/struct make it very clear about its purpose.",
+      "parentUuid": "200b6867_12792665",
       "revId": "e91b7aa26d6d0979bba2bee5e1c27a7a695e0226",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
