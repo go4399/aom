@@ -22,6 +22,29 @@
       },
       "revId": "e21b6c569c4341353baaf543364830248da0367e",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e93b3f55_de563f50",
+        "filename": "av1/encoder/ratectrl.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 3183,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-08-06T17:27:49Z",
+      "side": 1,
+      "message": "Marco: This is an unrelated issue I noticed while reviewing this CL. Why are we comparing with `render_width` and `render_height` here? Chrome actually ignores frame render width and height.",
+      "range": {
+        "startLine": 3183,
+        "startChar": 6,
+        "endLine": 3183,
+        "endChar": 63
+      },
+      "revId": "e21b6c569c4341353baaf543364830248da0367e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
