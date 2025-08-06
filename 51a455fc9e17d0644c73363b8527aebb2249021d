@@ -256,6 +256,24 @@
       "parentUuid": "f6b5a97b_5d718bc8",
       "revId": "51a455fc9e17d0644c73363b8527aebb2249021d",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ccc0145_bffa7147",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 3531,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-08-06T22:55:26Z",
+      "side": 1,
+      "message": "Thank you for the analysis. I also found `MARK_MV_INVALID()`, which we can use to initialize `best_mv` to an invalid value.\n\nSince most programmers can see the code is correct with a simple analysis, let\u0027s be reactive and wait until a compiler or Coverity warns about this.",
+      "parentUuid": "e52bd1de_9ee30019",
+      "revId": "51a455fc9e17d0644c73363b8527aebb2249021d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
