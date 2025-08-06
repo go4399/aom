@@ -1,6 +1,80 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e55af470_fc6c18f3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-08-06T18:01:46Z",
+      "side": 1,
+      "message": "Julio: Thank you very much for the CL. I suggest some simple changes.",
+      "revId": "51a455fc9e17d0644c73363b8527aebb2249021d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f7312f9_9eeb8076",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 3383,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-08-06T18:01:46Z",
+      "side": 1,
+      "message": "Nit: Apply De Morgan\u0027s law and simplify this expression.\n\n```\n  if (cpi-\u003esf.mv_sf.intrabc_search_level \u003e\u003d 1 \u0026\u0026\n      bsize !\u003d BLOCK_4X4 \u0026\u0026 bsize !\u003d BLOCK_8X8 \u0026\u0026 bsize !\u003d BLOCK_16X16) {\n```",
+      "revId": "51a455fc9e17d0644c73363b8527aebb2249021d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e0cd760b_f2f6f5f3",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 3506,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-08-06T18:01:46Z",
+      "side": 1,
+      "message": "Declare `best_pixel_mv` in the smallest scope where it is used.",
+      "range": {
+        "startLine": 3506,
+        "startChar": 20,
+        "endLine": 3506,
+        "endChar": 33
+      },
+      "revId": "51a455fc9e17d0644c73363b8527aebb2249021d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bce852a0_29442774",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 3511,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-08-06T18:01:46Z",
+      "side": 1,
+      "message": "Nit: Same here. I suggest applying De Morgan\u0027s law.",
+      "revId": "51a455fc9e17d0644c73363b8527aebb2249021d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b892c67e_23460f2a",
@@ -85,6 +159,23 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "7a4d514a_66279f36",
+      "revId": "51a455fc9e17d0644c73363b8527aebb2249021d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f6b5a97b_5d718bc8",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 3531,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-08-06T18:01:46Z",
+      "side": 1,
+      "message": "IMPORTANT: In the new code, the compiler may think that `best_mv` may be used uninitialized.\n\nMy analysis shows that we are protected by the check at line 3530, and the fact that `bestme` and `best_mv` are always modified at the same time. Please double check my analysis.\n\nIt may be good to initialize `best_mv` to invalid values so that if we accidentally used `best_mv` without real initialization, we will detect something is wrong.",
       "revId": "51a455fc9e17d0644c73363b8527aebb2249021d",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
