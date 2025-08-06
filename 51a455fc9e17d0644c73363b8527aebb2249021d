@@ -35,6 +35,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "13c18ce7_629e2285",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 3383,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-08-06T21:24:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1f7312f9_9eeb8076",
+      "revId": "51a455fc9e17d0644c73363b8527aebb2249021d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e0cd760b_f2f6f5f3",
@@ -58,6 +76,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6063b97_f2c2652c",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 3506,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-08-06T21:24:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e0cd760b_f2f6f5f3",
+      "range": {
+        "startLine": 3506,
+        "startChar": 20,
+        "endLine": 3506,
+        "endChar": 33
+      },
+      "revId": "51a455fc9e17d0644c73363b8527aebb2249021d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bce852a0_29442774",
@@ -71,6 +113,24 @@
       "writtenOn": "2025-08-06T18:01:46Z",
       "side": 1,
       "message": "Nit: Same here. I suggest applying De Morgan\u0027s law.",
+      "revId": "51a455fc9e17d0644c73363b8527aebb2249021d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e416813f_371c7a12",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 3511,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-08-06T21:24:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bce852a0_29442774",
       "revId": "51a455fc9e17d0644c73363b8527aebb2249021d",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -176,6 +236,24 @@
       "writtenOn": "2025-08-06T18:01:46Z",
       "side": 1,
       "message": "IMPORTANT: In the new code, the compiler may think that `best_mv` may be used uninitialized.\n\nMy analysis shows that we are protected by the check at line 3530, and the fact that `bestme` and `best_mv` are always modified at the same time. Please double check my analysis.\n\nIt may be good to initialize `best_mv` to invalid values so that if we accidentally used `best_mv` without real initialization, we will detect something is wrong.",
+      "revId": "51a455fc9e17d0644c73363b8527aebb2249021d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e52bd1de_9ee30019",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 3531,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-08-06T21:24:50Z",
+      "side": 1,
+      "message": "Hi Wan-Teh, you\u0027re correct in your analysis. `bestsme` acts as a \"guard\" for checking if `best_mv` is usable or not (a stronger guarantee that includes MV values being \"valid\"). If `bestsme` is `INT_MAX`, then we know we don\u0027t care about what `best_mv` contains, because either:\n- The candidate is not valid (because neither hash search nor pixel search found any)\n- (Hypothetically) a candidate was found, but it\u0027s so incredibly expensive that it can\u0027t be used anyway\n\nIf we\u0027re worried about the compiler may think that `best_mv` may be used uninitialized, then I could initialize it to `kZeroMv`. But in practice it shouldn\u0027t be needed.",
+      "parentUuid": "f6b5a97b_5d718bc8",
       "revId": "51a455fc9e17d0644c73363b8527aebb2249021d",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
