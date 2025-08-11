@@ -13,6 +13,7 @@
 #define AOM_AV1_COMMON_SEG_COMMON_H_
 
 #include "aom_dsp/prob.h"
+#include <string.h>
 
 #ifdef __cplusplus
 extern "C" {
