@@ -34,6 +34,23 @@
       "parentUuid": "b6e58870_0267f97c",
       "revId": "00decb17e98d8f6fca5a74c944966a302665cac6",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b364197d_4a6f47d9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-08-12T20:11:54Z",
+      "side": 1,
+      "message": "Lin: Could you approve this CL? Thanks.",
+      "revId": "00decb17e98d8f6fca5a74c944966a302665cac6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
