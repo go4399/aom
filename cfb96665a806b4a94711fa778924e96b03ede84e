@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "28cfdad7_c751285c",
+        "filename": "av1/encoder/external_partition.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-08-12T23:13:45Z",
+      "side": 1,
+      "message": "[`av1_zero_array`](https://aomedia.googlesource.com/aom/+/refs/tags/v3.12.1/av1/common/common.h#44) is another option, but I don\u0027t think it\u0027s really appropriate here. (I don\u0027t like either of those macros.)",
+      "revId": "cfb96665a806b4a94711fa778924e96b03ede84e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
