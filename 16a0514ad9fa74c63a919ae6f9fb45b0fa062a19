@@ -46,6 +46,30 @@
       },
       "revId": "16a0514ad9fa74c63a919ae6f9fb45b0fa062a19",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce087c23_b766d337",
+        "filename": "test/warp_filter_test_util.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-08-14T15:00:48Z",
+      "side": 1,
+      "message": "Can you please add a comment explaining the intent?",
+      "parentUuid": "21a2a25b_cf3a6475",
+      "range": {
+        "startLine": 262,
+        "startChar": 30,
+        "endLine": 262,
+        "endChar": 62
+      },
+      "revId": "16a0514ad9fa74c63a919ae6f9fb45b0fa062a19",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
