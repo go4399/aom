@@ -24,6 +24,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d032fe5b_09a95d6e",
+        "filename": "aom_dsp/arm/aom_convolve8_neon_dotprod.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 31042
+      },
+      "writtenOn": "2025-08-20T13:15:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6fa75da9_8612d5c5",
+      "range": {
+        "startLine": 117,
+        "startChar": 37,
+        "endLine": 117,
+        "endChar": 39
+      },
+      "revId": "bfec4b036909da63f655e8e362452cb6de811e1d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d1d8c8c3_a39b8c82",
@@ -47,6 +71,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f52ed86c_f2e20a14",
+        "filename": "aom_dsp/arm/aom_convolve8_neon_dotprod.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 31042
+      },
+      "writtenOn": "2025-08-20T13:15:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1d8c8c3_a39b8c82",
+      "range": {
+        "startLine": 377,
+        "startChar": 33,
+        "endLine": 377,
+        "endChar": 35
+      },
+      "revId": "bfec4b036909da63f655e8e362452cb6de811e1d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f925438c_f374a5eb",
@@ -60,6 +108,30 @@
       "writtenOn": "2025-08-19T19:08:03Z",
       "side": 1,
       "message": "so?",
+      "range": {
+        "startLine": 434,
+        "startChar": 37,
+        "endLine": 434,
+        "endChar": 39
+      },
+      "revId": "bfec4b036909da63f655e8e362452cb6de811e1d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9631256d_5b14685d",
+        "filename": "aom_dsp/arm/aom_convolve8_neon_dotprod.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 31042
+      },
+      "writtenOn": "2025-08-20T13:15:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f925438c_f374a5eb",
       "range": {
         "startLine": 434,
         "startChar": 37,
