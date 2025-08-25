@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c34057ae_ccdc43ff",
+        "filename": "av1/decoder/obu.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 598,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-08-25T23:22:32Z",
+      "side": 1,
+      "message": "Inspection of this function shows that it does not check the temporal_id and spatial_id of the metadata OBU. Therefore the decoder cannot possibly attach a layer-specific metadata OBU to a decoded frame with the same temporal_id and spatial_id. If the next frame after a layer-specific metadata OBU has a different temporal_id or spatial_id, the metadata OBU will be attached to the wrong frame.",
+      "revId": "7e6159d32b2090dd9d1c0b86a3cef6d5bbed3eca",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
