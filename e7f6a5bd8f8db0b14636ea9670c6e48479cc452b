@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "58cdb936_160bba87",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-08-25T23:13:38Z",
+      "side": 1,
+      "message": "Maryla: I am reverting these three commits from the \"opaline\" branch for the libaom v3.13.0 release, to exclude the layer-specific metadata API from libaom v3.13.0.\n\nWhile reviewing the layer-specific metadata API with James Zern last Thursday, we are not sure if a layer-specific metadata OBU is attached to a decoded frame (aom_image_t) of the same layer. We would like to investigate this after the libaom v3.13.0 release.",
+      "revId": "e7f6a5bd8f8db0b14636ea9670c6e48479cc452b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
