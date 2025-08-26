@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6996f9e0_7ddc73e9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-08-26T00:19:23Z",
+      "side": 1,
+      "message": "Though it also builds the change before a6fe432e4f fine as well. This may have been specific to Xcode\u0027s clang, but we can go by the [support matrix](https://github.com/google/oss-policies-info/blob/48076331a/foundational-cxx-support-matrix.md) which only supports AppleClang \u003e\u003d 12 now.",
+      "range": {
+        "startLine": 13,
+        "startChar": 46,
+        "endLine": 14,
+        "endChar": 26
+      },
+      "revId": "e27d7b714bd62ccec8ab450f5990357b7b7ee812",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
