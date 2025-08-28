@@ -38,6 +38,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "39ac2054_dfbe343e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31132
+      },
+      "writtenOn": "2025-08-28T17:50:40Z",
+      "side": 1,
+      "message": "LGTM. Thanks.",
+      "parentUuid": "63f874ea_66aadfb8",
+      "revId": "382c992465037b2a17dee680b7033704692e93da",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "9648c3e2_e551e767",
         "filename": "CHANGELOG",
         "patchSetId": 1
