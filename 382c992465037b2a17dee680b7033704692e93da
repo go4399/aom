@@ -56,6 +56,23 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "1e9b60ec_2a05256b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-08-28T18:05:24Z",
+      "side": 1,
+      "message": "Changes LGTM.",
+      "revId": "382c992465037b2a17dee680b7033704692e93da",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "9648c3e2_e551e767",
         "filename": "CHANGELOG",
         "patchSetId": 1
@@ -67,6 +84,24 @@
       "writtenOn": "2025-08-28T17:48:45Z",
       "side": 1,
       "message": "Julio: I didn\u0027t have time to remove the ability to select screen content detection mode from the public API, so this will stay unchanged.",
+      "revId": "382c992465037b2a17dee680b7033704692e93da",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a075d43d_10572faa",
+        "filename": "CHANGELOG",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-08-28T18:05:24Z",
+      "side": 1,
+      "message": "Thanks for the heads-up Wan-Teh! Leaving it as is SGTM.",
+      "parentUuid": "9648c3e2_e551e767",
       "revId": "382c992465037b2a17dee680b7033704692e93da",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
