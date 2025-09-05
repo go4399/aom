@@ -18,6 +18,23 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "b59fbb3a_a203ccd6",
+        "filename": "build/cmake/config.cmake.in",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-09-05T18:46:17Z",
+      "side": 1,
+      "message": "We can also check the state of `BUILD_SHARED_LIBS` and define this variable to `AOM::aom` if it\u0027s false.",
+      "revId": "9388e37e44bc625dda4dda3d1bb0b34e2e260114",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "dd0d126e_d361d7c4",
