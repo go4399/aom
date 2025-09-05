@@ -9,6 +9,10 @@ endif()
 include("${CMAKE_CURRENT_LIST_DIR}/@AOM_TARGETS_EXPORT_NAME@.cmake")
 
 set_and_check(@PROJECT_NAME@_INCLUDE_DIRS "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
-set(@PROJECT_NAME@_LIBRARIES "@AOM_INSTALL_LIBS@")
+
+if(TARGET AOM::aom_static)
+  set(@PROJECT_NAME@_STATIC_LIBRARIES "AOM::aom_static")
+endif()
+set(@PROJECT_NAME@_LIBRARIES "AOM::aom")
 
 check_required_components(@PROJECT_NAME@)
