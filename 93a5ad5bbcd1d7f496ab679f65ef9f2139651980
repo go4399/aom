@@ -16,6 +16,23 @@
       "message": "An alternative would be to make a `v3.13.0-2` tag, but that might cause more confusion. For `v3.13.1` I don\u0027t think we technically need to change the library version, though it does currently reflect the release version.",
       "revId": "93a5ad5bbcd1d7f496ab679f65ef9f2139651980",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bb5deec9_41ca25ac",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-09-05T16:36:23Z",
+      "side": 1,
+      "message": "I can also land a patch to fix the 3.13.0 release first for downstream to pick up, but if we make 3.13.1 quickly it shouldn\u0027t matter.",
+      "revId": "93a5ad5bbcd1d7f496ab679f65ef9f2139651980",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
