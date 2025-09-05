@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dcb477a1_3144e593",
+        "filename": "CHANGELOG",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-09-05T21:45:25Z",
+      "side": 1,
+      "message": "I am not planning on changing the shared object version.",
+      "revId": "d2225caec563fc5e8ca93d437a2209e59ccadb21",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
