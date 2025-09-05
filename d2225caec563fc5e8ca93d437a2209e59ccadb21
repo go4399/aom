@@ -16,6 +16,41 @@
       "message": "I am not planning on changing the shared object version.",
       "revId": "d2225caec563fc5e8ca93d437a2209e59ccadb21",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b8ede5d_f1c07cec",
+        "filename": "CHANGELOG",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-09-05T22:05:54Z",
+      "side": 1,
+      "message": "We need to change `LT_REVISION` to 1 in CMakeLists.txt, otherwise `aom.pc` and the `aom_codec_version_str()` function will continue to report 3.13.0. That\u0027s very confusing.",
+      "parentUuid": "dcb477a1_3144e593",
+      "revId": "d2225caec563fc5e8ca93d437a2209e59ccadb21",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8f151d24_8b19c418",
+        "filename": "CHANGELOG",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-09-05T22:05:54Z",
+      "side": 1,
+      "message": "Add \"except the version number\".",
+      "revId": "d2225caec563fc5e8ca93d437a2209e59ccadb21",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
