@@ -2854,6 +2854,9 @@ static int test_candidate_kf(const FIRSTPASS_INFO *firstpass_info,
     double old_boost_score = 0.0;
     double decay_accumulator = 1.0;
 
+    fprintf(stderr, "frames_to_test_after_candidate_key = %d\n",
+            frames_to_test_after_candidate_key);
+
     // Examine how well the key frame predicts subsequent frames.
     for (i = 1; i <= frames_to_test_after_candidate_key; ++i) {
       // Get the next frame details
@@ -2972,6 +2975,9 @@ static int define_kf_interval(AV1_COMP *cpi,
       return rc->frames_to_key;
   }
 
+  fprintf(stderr, "num_frames_to_detect_scenecut = %d\n",
+          num_frames_to_detect_scenecut);
+
   if (num_frames_to_next_key != -1)
     num_frames_to_detect_scenecut =
         AOMMIN(num_frames_to_detect_scenecut, num_frames_to_next_key);
@@ -2985,6 +2991,9 @@ static int define_kf_interval(AV1_COMP *cpi,
                           : cpi->common.mi_params.MBs;
   const int future_stats_count =
       av1_firstpass_info_future_count(firstpass_info, 0);
+
+  fprintf(stderr, "future_stats_count = %d\n", future_stats_count);
+
   while (frames_to_key < future_stats_count &&
          frames_to_key < num_frames_to_detect_scenecut) {
     // Provided that we are not at the end of the file...
@@ -2999,7 +3008,27 @@ static int define_kf_interval(AV1_COMP *cpi,
             oxcf->rc_cfg.mode, cpi->ppi->p_rc.enable_scenecut_detection,
             num_mbs);
         if (scenecut_detected) {
-          break;
+          int test_next_gop = 0;
+
+          for (int idx = 0; idx < 32; ++idx) {
+            const FIRSTPASS_STATS *next_stats =
+                av1_firstpass_info_peek(firstpass_info, frames_to_key + idx);
+
+            if (next_stats == NULL) continue;
+
+            fprintf(stderr,
+                    "frame idx = %d, lt coded error = %lf, coded = %lf\n",
+                    frames_to_key + idx, next_stats->lt_coded_error,
+                    next_stats->coded_error);
+            if (next_stats->lt_coded_error * 2.5 < next_stats->coded_error)
+              test_next_gop = 1;
+          }
+
+          if (!test_next_gop) {
+            fprintf(stderr, "here scene cut detected at frame %d\n",
+                    frames_to_key);
+            break;
+          }
         }
       }
 
@@ -3027,6 +3056,8 @@ static int define_kf_interval(AV1_COMP *cpi,
           // could be a good predictor for the following frames, therefore we
           // do not use an arf.
           p_rc->use_arf_in_this_kf_group = 0;
+
+          fprintf(stderr, "transition to still \n\n");
           break;
         }
       }
@@ -4070,6 +4101,7 @@ void av1_init_second_pass(AV1_COMP *cpi) {
 
   // This variable monitors how far behind the second ref update is lagging.
   twopass->sr_update_lag = 1;
+  twopass->lt_update_lag = 1;
 
   // Scan the first pass file and calculate a modified total error based upon
   // the bias/power function used to allocate bits.
@@ -4115,6 +4147,7 @@ void av1_init_single_pass_lap(AV1_COMP *cpi) {
 
   // This variable monitors how far behind the second ref update is lagging.
   twopass->sr_update_lag = 1;
+  twopass->lt_update_lag = 1;
 
   twopass->bits_left = 0;
   twopass->modified_error_min = 0.0;
