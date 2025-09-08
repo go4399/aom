@@ -3560,8 +3560,13 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
         av1_init_sc_decisions(ppi);
       }
 
+      if (ppi->b_calculate_psnr) {
+        generate_psnr_packet(cpi);
+      }
       ppi->seq_params_locked = 1;
-      av1_post_encode_updates(cpi, &cpi_data);
+      if (!(flags & AOM_EFLAG_FREEZE_INTERNAL_STATE)) {
+        av1_post_encode_updates(cpi, &cpi_data);
+      }
 
 #if CONFIG_ENTROPY_STATS
       if (ppi->cpi->oxcf.pass != 1 && !cpi->common.show_existing_frame)
