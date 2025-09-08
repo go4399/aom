@@ -1396,13 +1396,14 @@ TEST(EncodeAPI, FreezeInternalStateSVC) {
   aom_svc_layer_id_t layer_id = {};
   aom_svc_ref_frame_config_t ref_frame_config = {};
 
-    // Encode SL0 - Keyframe
-    layer_id.spatial_layer_id = 0;
-    ASSERT_EQ(aom_codec_control(&enc, AV1E_SET_SVC_LAYER_ID, &layer_id),
-              AOM_CODEC_OK);
-    ASSERT_EQ(aom_codec_encode(&enc, image, /*pts=*/0, /*duration=*/1,
+  // Encode SL0 - Keyframe
+  layer_id.spatial_layer_id = 0;
+  ASSERT_EQ(aom_codec_control(&enc, AV1E_SET_SVC_LAYER_ID, &layer_id),
+            AOM_CODEC_OK);
+  ASSERT_EQ(aom_codec_encode(&enc, image, /*pts=*/0, /*duration=*/1,
                              /*flags=*/AOM_EFLAG_FORCE_KF),
-              AOM_CODEC_OK);  aom_codec_iter_t iter = nullptr;
+            AOM_CODEC_OK);
+  aom_codec_iter_t iter = nullptr;
   const aom_codec_cx_pkt_t *pkt;
   while ((pkt = aom_codec_get_cx_data(&enc, &iter)) != nullptr) {
   }  // Drain
