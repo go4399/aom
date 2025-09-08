@@ -1867,7 +1867,7 @@ void av1_remove_compressor(AV1_COMP *cpi) {
 #endif
 }
 
-static void generate_psnr_packet(AV1_COMP *cpi) {
+void generate_psnr_packet(AV1_COMP *cpi) {
   struct aom_codec_cx_pkt pkt;
   int i;
   PSNR_STATS psnr;
