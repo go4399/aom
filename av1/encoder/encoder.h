@@ -2379,12 +2379,21 @@ typedef struct WeberStats {
   double max_scale;
 } WeberStats;
 
+/*!
+ * \brief This structure stores different types of frame indices.
+ */
+typedef struct {
+  int show_frame_count;
+} FRAME_INDEX_SET;
+
 typedef struct {
   struct loopfilter lf;
   CdefInfo cdef_info;
   YV12_BUFFER_CONFIG copy_buffer;
   RATE_CONTROL rc;
   MV_STATS mv_stats;
+  unsigned int frame_number;
+  FRAME_INDEX_SET frame_index_set;
 } CODING_CONTEXT;
 
 typedef struct {
@@ -2399,13 +2408,6 @@ typedef struct {
   int subsampling_x;
   int subsampling_y;
 } FRAME_INFO;
-
-/*!
- * \brief This structure stores different types of frame indices.
- */
-typedef struct {
-  int show_frame_count;
-} FRAME_INDEX_SET;
 
 /*!\endcond */
 
