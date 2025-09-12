@@ -261,7 +261,6 @@ aom_codec_err_t av1_copy_reference_dec(AV1Decoder *pbi, int idx,
   const YV12_BUFFER_CONFIG *const cfg = get_ref_frame(cm, idx);
   if (cfg == NULL) {
     aom_internal_error(&pbi->error, AOM_CODEC_ERROR, "No reference frame");
-    return AOM_CODEC_ERROR;
   }
   if (!equal_dimensions(cfg, sd))
     aom_internal_error(&pbi->error, AOM_CODEC_ERROR,
@@ -293,7 +292,6 @@ aom_codec_err_t av1_set_reference_dec(AV1_COMMON *cm, int idx,
 
   if (ref_buf == NULL) {
     aom_internal_error(cm->error, AOM_CODEC_ERROR, "No reference frame");
-    return AOM_CODEC_ERROR;
   }
 
   if (!use_external_ref) {
