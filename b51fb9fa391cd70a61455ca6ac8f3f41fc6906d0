@@ -106,6 +106,24 @@
       "parentUuid": "094ce2f9_d17da602",
       "revId": "b51fb9fa391cd70a61455ca6ac8f3f41fc6906d0",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7cdb95d9_704fdad1",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 3563,
+      "author": {
+        "id": 3583131
+      },
+      "writtenOn": "2025-09-12T10:29:28Z",
+      "side": 1,
+      "message": "At least for the use cases I have in mind this will be done very rarely, and even then only for a single frame. So turning this on with a codec control and then immediate off again with the codec control seems like extra overhead. But you know the style of this code base so I\u0027ll defer to you 😊",
+      "parentUuid": "2697ca5a_2274c860",
+      "revId": "b51fb9fa391cd70a61455ca6ac8f3f41fc6906d0",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
