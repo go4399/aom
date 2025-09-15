@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae5a9e3c_c75d886f",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-09-15T14:05:37Z",
+      "side": 1,
+      "message": "Update the comment for these two in `av1/encoder/block.h`. Comments there say they are flags, but now they\u0027re counters.",
+      "range": {
+        "startLine": 178,
+        "startChar": 5,
+        "endLine": 178,
+        "endChar": 18
+      },
+      "revId": "0b88660383f4dfd1e0ddcccc4f0c20b4a7951f0b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
