@@ -1843,8 +1843,8 @@ static void adjust_active_best_and_worst_quality(const AV1_COMP *cpi,
     }
 #else
     (void)is_intrl_arf_boost;
-    active_best_quality -= cpi->ppi->twopass.extend_minq / 4;
-    active_worst_quality += cpi->ppi->twopass.extend_maxq;
+    active_best_quality -= cpi->ppi->twopass.extend_minq / 8;
+    active_worst_quality += cpi->ppi->twopass.extend_maxq / 4;
 #endif
   }
 
@@ -3307,11 +3307,14 @@ static void rc_scene_detection_onepass_rt(AV1_COMP *cpi,
   // between current and previous frame value(s). Use minimum threshold
   // for cases where there is small change from content that is completely
   // static.
+  // TODO(marpan): Look into enable the light_change detection.
+  int thresh_zero_sad_samples =
+      avg_sad > 4 * min_thresh ? 3 * (num_samples >> 2) : num_samples >> 1;
   if (!light_change &&
       avg_sad >
           AOMMAX(min_thresh, (unsigned int)(rc->avg_source_sad * thresh)) &&
       rc->frames_since_key > 1 + cpi->svc.number_spatial_layers &&
-      num_zero_temp_sad < 3 * (num_samples >> 2))
+      num_zero_temp_sad < thresh_zero_sad_samples)
     rc->high_source_sad = 1;
   else
     rc->high_source_sad = 0;
