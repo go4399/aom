@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e242a7e_00bc18c9",
+        "filename": "third_party/libwebm/README.libaom",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-09-16T20:19:27Z",
+      "side": 1,
+      "message": "https://source.chromium.org/chromium/chromium/src/+/main:third_party/README.chromium.template\n\nhttps://source.chromium.org/chromium/chromium/tools/depot_tools/+/main:metadata/fields/custom/license_allowlist.py\n\nhttps://chromium.googlesource.com/chromium/src/+/HEAD/docs/adding_to_third_party.md#security-critical",
+      "revId": "54aa98b875b2f92935022adf14aee59d5172262c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
