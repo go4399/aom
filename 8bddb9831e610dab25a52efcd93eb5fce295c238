@@ -36,6 +36,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9d8f4b0a_c924152d",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 1870,
+      "author": {
+        "id": 3583131
+      },
+      "writtenOn": "2025-09-17T10:48:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3b3089fd_555394ac",
+      "revId": "8bddb9831e610dab25a52efcd93eb5fce295c238",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "757df552_14bfefc3",
@@ -49,6 +67,24 @@
       "writtenOn": "2025-09-16T05:55:45Z",
       "side": 1,
       "message": "is this needed in latest patch?",
+      "revId": "8bddb9831e610dab25a52efcd93eb5fce295c238",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3214197d_a01747a8",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 3784,
+      "author": {
+        "id": 3583131
+      },
+      "writtenOn": "2025-09-17T10:48:15Z",
+      "side": 1,
+      "message": "No, removed.",
+      "parentUuid": "757df552_14bfefc3",
       "revId": "8bddb9831e610dab25a52efcd93eb5fce295c238",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -84,6 +120,24 @@
           ]
         }
       ],
+      "revId": "8bddb9831e610dab25a52efcd93eb5fce295c238",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "067a592a_2bbe89d2",
+        "filename": "av1/encoder/encoder_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 892,
+      "author": {
+        "id": 3583131
+      },
+      "writtenOn": "2025-09-17T10:48:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "73dc738c_36403ac1",
       "revId": "8bddb9831e610dab25a52efcd93eb5fce295c238",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
