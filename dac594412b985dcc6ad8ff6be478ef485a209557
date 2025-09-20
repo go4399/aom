@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "edf0235e_1cf8d495",
+        "filename": "aom_dsp/avg.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-09-20T04:01:44Z",
+      "side": 1,
+      "message": "Nit/optional: This collect 10b and 12b into the HBD category, but the dynamic range for HBD is too big for 10b. Another option is to have separate values for 10b and 12b.",
+      "range": {
+        "startLine": 124,
+        "startChar": 52,
+        "endLine": 124,
+        "endChar": 55
+      },
+      "revId": "dac594412b985dcc6ad8ff6be478ef485a209557",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "78329970_336d946c",
+        "filename": "aom_dsp/avg.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-09-20T04:01:44Z",
+      "side": 1,
+      "message": "Thanks for the patch. Please move the comment blocks before the `hadamard_col4()` calls for better formatting.",
+      "revId": "dac594412b985dcc6ad8ff6be478ef485a209557",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
