@@ -24,6 +24,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cea143a6_ec7f8ad3",
+        "filename": "aom_dsp/avg.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-09-22T22:58:03Z",
+      "side": 1,
+      "message": "Correct, Hadamard functions group 10b and 12b together into a (single) HBD code path, so dynamic ranges in comments are given for 12b, which is the one with the largest initial range [0-4095].\n\nThe 4x4 function is the only exception in that 8bit can also be grouped together with HBD, so I found it useful to list these two categories separately in the comments.",
+      "parentUuid": "edf0235e_1cf8d495",
+      "range": {
+        "startLine": 124,
+        "startChar": 52,
+        "endLine": 124,
+        "endChar": 55
+      },
+      "revId": "dac594412b985dcc6ad8ff6be478ef485a209557",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "78329970_336d946c",
@@ -37,6 +61,24 @@
       "writtenOn": "2025-09-20T04:01:44Z",
       "side": 1,
       "message": "Thanks for the patch. Please move the comment blocks before the `hadamard_col4()` calls for better formatting.",
+      "revId": "dac594412b985dcc6ad8ff6be478ef485a209557",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ec16046_6ee845ac",
+        "filename": "aom_dsp/avg.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-09-22T22:58:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "78329970_336d946c",
       "revId": "dac594412b985dcc6ad8ff6be478ef485a209557",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
