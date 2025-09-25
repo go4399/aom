@@ -40,6 +40,30 @@
       ],
       "revId": "1ca42caa3ff8f5230cb81a59c1554a1fd5e682d6",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a99c824_eebc0fde",
+        "filename": "av1/encoder/speed_features.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 1731,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2025-09-25T19:08:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b158b588_b6f36d36",
+      "range": {
+        "startLine": 1731,
+        "startChar": 6,
+        "endLine": 1731,
+        "endChar": 31
+      },
+      "revId": "1ca42caa3ff8f5230cb81a59c1554a1fd5e682d6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
