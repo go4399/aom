@@ -9,7 +9,11 @@
  * PATENTS file, you can obtain it at www.aomedia.org/license/patent.
  */
 
-#define HWY_BASELINE_TARGETS HWY_AVX3_DL
+// TODO(any): temporarily disable AVX512 for warp due to known test failure.
+// https://b.corp.google.com/issues/447385711
+// Renable it after the test failure is resolved.
+#define HWY_BASELINE_TARGETS HWY_AVX2
+//#define HWY_BASELINE_TARGETS HWY_AVX3_DL
 #define HWY_BROKEN_32BIT 0
 
 #include "av1/common/warp_plane_hwy.h"
