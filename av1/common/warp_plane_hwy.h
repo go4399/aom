@@ -46,6 +46,8 @@ constexpr hn::FixedTag<int16_t, 8> int16x8_tag;
 constexpr hn::FixedTag<int32_t, 4> int32x4_tag;
 constexpr hn::FixedTag<int64_t, 2> int64x2_tag;
 
+constexpr hn::ScalableTag<int8_t> coeff_tag;
+
 using IVec8 = hn::Vec<decltype(int8_tag)>;
 using IVec16 = hn::Vec<decltype(int16_tag)>;
 using IVec32 = hn::Vec<decltype(int32_tag)>;
@@ -57,15 +59,15 @@ HWY_ATTR inline void FilterPixelsHorizontal(D tag, const hn::VFromD<D> src,
                                             int8_t *HWY_RESTRICT coeff,
                                             const IVec16 round_const,
                                             const int shift, int row) {
-  constexpr hn::Repartition<int8_t, D> coeff_tag;
+  constexpr hn::Repartition<int8_t, D> int8_tag;
   constexpr hn::Repartition<int16_t, D> result_tag;
   constexpr hn::Repartition<uint16_t, D> unsigned_result_tag;
   // N.B. coeffs are stored to support the maximum vector width, which may not
   // be the vector width being filtered on now.
-  const auto coeff0 = hn::Load(coeff_tag, coeff + hn::MaxLanes(int8_tag) * 0);
-  const auto coeff1 = hn::Load(coeff_tag, coeff + hn::MaxLanes(int8_tag) * 1);
-  const auto coeff2 = hn::Load(coeff_tag, coeff + hn::MaxLanes(int8_tag) * 2);
-  const auto coeff3 = hn::Load(coeff_tag, coeff + hn::MaxLanes(int8_tag) * 3);
+  const auto coeff0 = hn::Load(int8_tag, coeff + hn::MaxLanes(coeff_tag) * 0);
+  const auto coeff1 = hn::Load(int8_tag, coeff + hn::MaxLanes(coeff_tag) * 1);
+  const auto coeff2 = hn::Load(int8_tag, coeff + hn::MaxLanes(coeff_tag) * 2);
+  const auto coeff3 = hn::Load(int8_tag, coeff + hn::MaxLanes(coeff_tag) * 3);
 
   const auto shuffle0 = hn::Dup128VecFromValues(
       uint8_tag, 0, 2, 2, 4, 4, 6, 6, 8, 1, 3, 3, 5, 5, 7, 7, 9  //
@@ -111,59 +113,83 @@ HWY_ATTR HWY_INLINE IVec8x16 LoadAV1Filter8Bit(unsigned int offset) {
                    8);
 }
 
-HWY_ATTR HWY_INLINE IVec8 LoadAV1Filter8BitLower(unsigned int offset) {
+template <typename D>
+HWY_ATTR HWY_INLINE hn::VFromD<D> LoadAV1Filter8BitLower(D int8_tag,
+                                                         unsigned int offset) {
   return hn::LoadN(int8_tag, av1_filter_8bit[offset >> WARPEDDIFF_PREC_BITS],
                    8);
 }
 
-template <int Block>
-HWY_ATTR HWY_INLINE IVec8 LoadAV1Filter8BitUpper(unsigned int offset,
-                                                 IVec8 src) {
+template <int Block, typename D>
+HWY_ATTR HWY_INLINE hn::VFromD<D> LoadAV1Filter8BitUpper(D int8_tag,
+                                                         unsigned int offset,
+                                                         hn::VFromD<D> src) {
   return hn::InsertBlock<Block>(
       src, hn::LoadN(int8x16_tag,
                      av1_filter_8bit[offset >> WARPEDDIFF_PREC_BITS], 8));
 }
 
+template <typename D>
 HWY_ATTR inline void PrepareHorizontalFilterCoefficients(
-    int alpha, int beta, int sx, int8_t *HWY_RESTRICT coeff) {
-  auto tmp_0 = LoadAV1Filter8BitLower(sx + 0 * alpha);
-  auto tmp_1 = LoadAV1Filter8BitLower(sx + 1 * alpha);
-  auto tmp_2 = LoadAV1Filter8BitLower(sx + 2 * alpha);
-  auto tmp_3 = LoadAV1Filter8BitLower(sx + 3 * alpha);
-  auto tmp_4 = LoadAV1Filter8BitLower(sx + 4 * alpha);
-  auto tmp_5 = LoadAV1Filter8BitLower(sx + 5 * alpha);
-  auto tmp_6 = LoadAV1Filter8BitLower(sx + 6 * alpha);
-  auto tmp_7 = LoadAV1Filter8BitLower(sx + 7 * alpha);
+    D int16_tag, int alpha, int beta, int sx, int8_t *HWY_RESTRICT coeff) {
+  constexpr auto int8_tag = hn::Repartition<int8_t, D>();
+  constexpr auto int32_tag = hn::Repartition<int32_t, D>();
+  constexpr auto int64_tag = hn::Repartition<int64_t, D>();
+
+  auto tmp_0 = LoadAV1Filter8BitLower(int8_tag, sx + 0 * alpha);
+  auto tmp_1 = LoadAV1Filter8BitLower(int8_tag, sx + 1 * alpha);
+  auto tmp_2 = LoadAV1Filter8BitLower(int8_tag, sx + 2 * alpha);
+  auto tmp_3 = LoadAV1Filter8BitLower(int8_tag, sx + 3 * alpha);
+  auto tmp_4 = LoadAV1Filter8BitLower(int8_tag, sx + 4 * alpha);
+  auto tmp_5 = LoadAV1Filter8BitLower(int8_tag, sx + 5 * alpha);
+  auto tmp_6 = LoadAV1Filter8BitLower(int8_tag, sx + 6 * alpha);
+  auto tmp_7 = LoadAV1Filter8BitLower(int8_tag, sx + 7 * alpha);
 
   if constexpr (int16_tag.MaxBlocks() >= 2) {
-    tmp_0 = LoadAV1Filter8BitUpper<1>(sx + beta + 0 * alpha, tmp_0);
-    tmp_1 = LoadAV1Filter8BitUpper<1>(sx + beta + 1 * alpha, tmp_1);
-    tmp_2 = LoadAV1Filter8BitUpper<1>(sx + beta + 2 * alpha, tmp_2);
-    tmp_3 = LoadAV1Filter8BitUpper<1>(sx + beta + 3 * alpha, tmp_3);
-    tmp_4 = LoadAV1Filter8BitUpper<1>(sx + beta + 4 * alpha, tmp_4);
-    tmp_5 = LoadAV1Filter8BitUpper<1>(sx + beta + 5 * alpha, tmp_5);
-    tmp_6 = LoadAV1Filter8BitUpper<1>(sx + beta + 6 * alpha, tmp_6);
-    tmp_7 = LoadAV1Filter8BitUpper<1>(sx + beta + 7 * alpha, tmp_7);
+    tmp_0 = LoadAV1Filter8BitUpper<1>(int8_tag, sx + beta + 0 * alpha, tmp_0);
+    tmp_1 = LoadAV1Filter8BitUpper<1>(int8_tag, sx + beta + 1 * alpha, tmp_1);
+    tmp_2 = LoadAV1Filter8BitUpper<1>(int8_tag, sx + beta + 2 * alpha, tmp_2);
+    tmp_3 = LoadAV1Filter8BitUpper<1>(int8_tag, sx + beta + 3 * alpha, tmp_3);
+    tmp_4 = LoadAV1Filter8BitUpper<1>(int8_tag, sx + beta + 4 * alpha, tmp_4);
+    tmp_5 = LoadAV1Filter8BitUpper<1>(int8_tag, sx + beta + 5 * alpha, tmp_5);
+    tmp_6 = LoadAV1Filter8BitUpper<1>(int8_tag, sx + beta + 6 * alpha, tmp_6);
+    tmp_7 = LoadAV1Filter8BitUpper<1>(int8_tag, sx + beta + 7 * alpha, tmp_7);
   }
 
   if constexpr (int16_tag.MaxBlocks() >= 3) {
-    tmp_0 = LoadAV1Filter8BitUpper<2>(sx + beta * 2 + 0 * alpha, tmp_0);
-    tmp_1 = LoadAV1Filter8BitUpper<2>(sx + beta * 2 + 1 * alpha, tmp_1);
-    tmp_2 = LoadAV1Filter8BitUpper<2>(sx + beta * 2 + 2 * alpha, tmp_2);
-    tmp_3 = LoadAV1Filter8BitUpper<2>(sx + beta * 2 + 3 * alpha, tmp_3);
-    tmp_4 = LoadAV1Filter8BitUpper<2>(sx + beta * 2 + 4 * alpha, tmp_4);
-    tmp_5 = LoadAV1Filter8BitUpper<2>(sx + beta * 2 + 5 * alpha, tmp_5);
-    tmp_6 = LoadAV1Filter8BitUpper<2>(sx + beta * 2 + 6 * alpha, tmp_6);
-    tmp_7 = LoadAV1Filter8BitUpper<2>(sx + beta * 2 + 7 * alpha, tmp_7);
+    tmp_0 =
+        LoadAV1Filter8BitUpper<2>(int8_tag, sx + beta * 2 + 0 * alpha, tmp_0);
+    tmp_1 =
+        LoadAV1Filter8BitUpper<2>(int8_tag, sx + beta * 2 + 1 * alpha, tmp_1);
+    tmp_2 =
+        LoadAV1Filter8BitUpper<2>(int8_tag, sx + beta * 2 + 2 * alpha, tmp_2);
+    tmp_3 =
+        LoadAV1Filter8BitUpper<2>(int8_tag, sx + beta * 2 + 3 * alpha, tmp_3);
+    tmp_4 =
+        LoadAV1Filter8BitUpper<2>(int8_tag, sx + beta * 2 + 4 * alpha, tmp_4);
+    tmp_5 =
+        LoadAV1Filter8BitUpper<2>(int8_tag, sx + beta * 2 + 5 * alpha, tmp_5);
+    tmp_6 =
+        LoadAV1Filter8BitUpper<2>(int8_tag, sx + beta * 2 + 6 * alpha, tmp_6);
+    tmp_7 =
+        LoadAV1Filter8BitUpper<2>(int8_tag, sx + beta * 2 + 7 * alpha, tmp_7);
 
-    tmp_0 = LoadAV1Filter8BitUpper<3>(sx + beta * 3 + 0 * alpha, tmp_0);
-    tmp_1 = LoadAV1Filter8BitUpper<3>(sx + beta * 3 + 1 * alpha, tmp_1);
-    tmp_2 = LoadAV1Filter8BitUpper<3>(sx + beta * 3 + 2 * alpha, tmp_2);
-    tmp_3 = LoadAV1Filter8BitUpper<3>(sx + beta * 3 + 3 * alpha, tmp_3);
-    tmp_4 = LoadAV1Filter8BitUpper<3>(sx + beta * 3 + 4 * alpha, tmp_4);
-    tmp_5 = LoadAV1Filter8BitUpper<3>(sx + beta * 3 + 5 * alpha, tmp_5);
-    tmp_6 = LoadAV1Filter8BitUpper<3>(sx + beta * 3 + 6 * alpha, tmp_6);
-    tmp_7 = LoadAV1Filter8BitUpper<3>(sx + beta * 3 + 7 * alpha, tmp_7);
+    tmp_0 =
+        LoadAV1Filter8BitUpper<3>(int8_tag, sx + beta * 3 + 0 * alpha, tmp_0);
+    tmp_1 =
+        LoadAV1Filter8BitUpper<3>(int8_tag, sx + beta * 3 + 1 * alpha, tmp_1);
+    tmp_2 =
+        LoadAV1Filter8BitUpper<3>(int8_tag, sx + beta * 3 + 2 * alpha, tmp_2);
+    tmp_3 =
+        LoadAV1Filter8BitUpper<3>(int8_tag, sx + beta * 3 + 3 * alpha, tmp_3);
+    tmp_4 =
+        LoadAV1Filter8BitUpper<3>(int8_tag, sx + beta * 3 + 4 * alpha, tmp_4);
+    tmp_5 =
+        LoadAV1Filter8BitUpper<3>(int8_tag, sx + beta * 3 + 5 * alpha, tmp_5);
+    tmp_6 =
+        LoadAV1Filter8BitUpper<3>(int8_tag, sx + beta * 3 + 6 * alpha, tmp_6);
+    tmp_7 =
+        LoadAV1Filter8BitUpper<3>(int8_tag, sx + beta * 3 + 7 * alpha, tmp_7);
   }
 
   const auto tmp_0_16 = hn::BitCast(int16_tag, tmp_0);
@@ -186,17 +212,18 @@ HWY_ATTR inline void PrepareHorizontalFilterCoefficients(
   const auto res_3 = hn::ZipUpper(int64_tag, tmp_13, tmp_15);
 
   hn::Store(hn::BitCast(int8_tag, hn::InterleaveLower(int64_tag, res_0, res_2)),
-            int8_tag, coeff + hn::MaxLanes(int8_tag) * 0);
+            int8_tag, coeff + hn::MaxLanes(coeff_tag) * 0);
   hn::Store(hn::BitCast(int8_tag, hn::InterleaveUpper(int64_tag, res_0, res_2)),
-            int8_tag, coeff + hn::MaxLanes(int8_tag) * 1);
+            int8_tag, coeff + hn::MaxLanes(coeff_tag) * 1);
   hn::Store(hn::BitCast(int8_tag, hn::InterleaveLower(int64_tag, res_1, res_3)),
-            int8_tag, coeff + hn::MaxLanes(int8_tag) * 2);
+            int8_tag, coeff + hn::MaxLanes(coeff_tag) * 2);
   hn::Store(hn::BitCast(int8_tag, hn::InterleaveUpper(int64_tag, res_1, res_3)),
-            int8_tag, coeff + hn::MaxLanes(int8_tag) * 3);
+            int8_tag, coeff + hn::MaxLanes(coeff_tag) * 3);
 }
 
+template <typename D>
 HWY_ATTR inline void PrepareHorizontalFilterCoefficientsBeta0(
-    int alpha, int beta, int sx, int8_t *HWY_RESTRICT coeff) {
+    D int16_tag, int alpha, int beta, int sx, int8_t *HWY_RESTRICT coeff) {
   (void)beta;
   const auto tmp_0 =
       hn::BitCast(int16x8_tag, LoadAV1Filter8Bit(sx + 0 * alpha));
@@ -220,6 +247,10 @@ HWY_ATTR inline void PrepareHorizontalFilterCoefficientsBeta0(
   const auto tmp_46 = hn::ZipLower(int32x4_tag, tmp_4, tmp_6);
   const auto tmp_57 = hn::ZipLower(int32x4_tag, tmp_5, tmp_7);
 
+  constexpr auto int8_tag = hn::Repartition<int8_t, D>();
+  constexpr auto int32_tag = hn::Repartition<int32_t, D>();
+  constexpr auto int64_tag = hn::Repartition<int64_t, D>();
+
   const auto broadcast_12 =
       hn::BroadcastBlock<0>(hn::ResizeBitCast(int32_tag, tmp_02));
   const auto broadcast_13 =
@@ -235,36 +266,38 @@ HWY_ATTR inline void PrepareHorizontalFilterCoefficientsBeta0(
   const auto res_3 = hn::ZipUpper(int64_tag, broadcast_13, broadcast_15);
 
   hn::Store(hn::BitCast(int8_tag, hn::InterleaveLower(int64_tag, res_0, res_2)),
-            int8_tag, coeff + hn::MaxLanes(int8_tag) * 0);
+            int8_tag, coeff + hn::MaxLanes(coeff_tag) * 0);
   hn::Store(hn::BitCast(int8_tag, hn::InterleaveUpper(int64_tag, res_0, res_2)),
-            int8_tag, coeff + hn::MaxLanes(int8_tag) * 1);
+            int8_tag, coeff + hn::MaxLanes(coeff_tag) * 1);
   hn::Store(hn::BitCast(int8_tag, hn::InterleaveLower(int64_tag, res_1, res_3)),
-            int8_tag, coeff + hn::MaxLanes(int8_tag) * 2);
+            int8_tag, coeff + hn::MaxLanes(coeff_tag) * 2);
   hn::Store(hn::BitCast(int8_tag, hn::InterleaveUpper(int64_tag, res_1, res_3)),
-            int8_tag, coeff + hn::MaxLanes(int8_tag) * 3);
+            int8_tag, coeff + hn::MaxLanes(coeff_tag) * 3);
 }
 
+template <typename D>
 HWY_ATTR inline void PrepareHorizontalFilterCoefficientsAlpha0(
-    int alpha, int beta, int sx, int8_t *HWY_RESTRICT coeff) {
+    D int16_tag, int alpha, int beta, int sx, int8_t *HWY_RESTRICT coeff) {
   (void)alpha;
-  auto tmp_0 = LoadAV1Filter8BitLower(sx);
+  constexpr auto int8_tag = hn::Repartition<int8_t, D>();
+  auto tmp_0 = LoadAV1Filter8BitLower(int8_tag, sx);
   if constexpr (int16_tag.MaxBlocks() >= 2) {
-    tmp_0 = LoadAV1Filter8BitUpper<1>(sx + beta, tmp_0);
+    tmp_0 = LoadAV1Filter8BitUpper<1>(int8_tag, sx + beta, tmp_0);
   }
   if constexpr (int16_tag.MaxBlocks() >= 3) {
-    tmp_0 = LoadAV1Filter8BitUpper<2>(sx + beta * 2, tmp_0);
-    tmp_0 = LoadAV1Filter8BitUpper<3>(sx + beta * 3, tmp_0);
+    tmp_0 = LoadAV1Filter8BitUpper<2>(int8_tag, sx + beta * 2, tmp_0);
+    tmp_0 = LoadAV1Filter8BitUpper<3>(int8_tag, sx + beta * 3, tmp_0);
   }
   const auto res_0 = hn::BitCast(int16_tag, tmp_0);
 
   hn::Store(hn::BitCast(int8_tag, hn::Broadcast<0>(res_0)), int8_tag,
-            coeff + hn::MaxLanes(int8_tag) * 0);
+            coeff + hn::MaxLanes(coeff_tag) * 0);
   hn::Store(hn::BitCast(int8_tag, hn::Broadcast<1>(res_0)), int8_tag,
-            coeff + hn::MaxLanes(int8_tag) * 1);
+            coeff + hn::MaxLanes(coeff_tag) * 1);
   hn::Store(hn::BitCast(int8_tag, hn::Broadcast<2>(res_0)), int8_tag,
-            coeff + hn::MaxLanes(int8_tag) * 2);
+            coeff + hn::MaxLanes(coeff_tag) * 2);
   hn::Store(hn::BitCast(int8_tag, hn::Broadcast<3>(res_0)), int8_tag,
-            coeff + hn::MaxLanes(int8_tag) * 3);
+            coeff + hn::MaxLanes(coeff_tag) * 3);
 }
 
 template <typename D>
@@ -273,14 +306,16 @@ HWY_ATTR inline void HorizontalFilter(D tag, const hn::VFromD<D> src,
                                       int alpha, int beta, int row,
                                       const IVec16 round_const,
                                       const int reduce_bits_horiz) {
-  HWY_ALIGN int8_t coeff[4 * hn::MaxLanes(int8_tag)];
-  PrepareHorizontalFilterCoefficients(alpha, beta, sx, coeff);
+  HWY_ALIGN int8_t coeff[4 * hn::MaxLanes(coeff_tag)];
+  PrepareHorizontalFilterCoefficients(hn::Repartition<int16_t, D>(), alpha,
+                                      beta, sx, coeff);
   FilterPixelsHorizontal(tag, src, horz_out, coeff, round_const,
                          reduce_bits_horiz, row);
 }
 
+template <typename D>
 HWY_ATTR inline void PrepareLastHorizontalFilterCoefficients(
-    int alpha, int beta, int sx, int8_t *HWY_RESTRICT coeff) {
+    D int16_tag, int alpha, int beta, int sx, int8_t *HWY_RESTRICT coeff) {
   (void)beta;
   const auto tmp_0 =
       hn::BitCast(int16x8_tag, LoadAV1Filter8Bit(sx + 0 * alpha));
@@ -314,19 +349,21 @@ HWY_ATTR inline void PrepareLastHorizontalFilterCoefficients(
   const auto tmp_18 = hn::InterleaveLower(int64x2_tag, tmp_13, tmp_15);
   const auto tmp_19 = hn::InterleaveUpper(int64x2_tag, tmp_13, tmp_15);
 
+  constexpr auto int8_tag = hn::Repartition<int8_t, D>();
+
   const auto tmp_20 = hn::ResizeBitCast(int8_tag, tmp_16);
   const auto tmp_21 = hn::ResizeBitCast(int8_tag, tmp_17);
   const auto tmp_22 = hn::ResizeBitCast(int8_tag, tmp_18);
   const auto tmp_23 = hn::ResizeBitCast(int8_tag, tmp_19);
 
   hn::Store(hn::BroadcastBlock<0>(tmp_20), int8_tag,
-            coeff + hn::MaxLanes(int8_tag) * 0);
+            coeff + hn::MaxLanes(coeff_tag) * 0);
   hn::Store(hn::BroadcastBlock<0>(tmp_21), int8_tag,
-            coeff + hn::MaxLanes(int8_tag) * 1);
+            coeff + hn::MaxLanes(coeff_tag) * 1);
   hn::Store(hn::BroadcastBlock<0>(tmp_22), int8_tag,
-            coeff + hn::MaxLanes(int8_tag) * 2);
+            coeff + hn::MaxLanes(coeff_tag) * 2);
   hn::Store(hn::BroadcastBlock<0>(tmp_23), int8_tag,
-            coeff + hn::MaxLanes(int8_tag) * 3);
+            coeff + hn::MaxLanes(coeff_tag) * 3);
 }
 
 template <typename D>
@@ -374,43 +411,79 @@ HWY_ATTR int WarpHorizontalFilterLoop(
   return k;
 }
 
-template <
-    bool InnerCoeffUpdate,
-    void (*PrepareCoeffs)(int alpha, int beta, int sx,
-                          int8_t *HWY_RESTRICT coeffs),
-    void (*LastPrepareCoeffs)(int alpha, int beta, int sx,
-                              int8_t *HWY_RESTRICT coeffs) = PrepareCoeffs>
+enum class HorizontalFilterCoeffs {
+  kAlpha0,
+  kBeta0,
+  kDefault,
+};
+
+template <bool IsLast, HorizontalFilterCoeffs Filter, typename D>
+HWY_ATTR void WarpHorizontalPrepareCoeffs(int alpha, int beta, int sx,
+                                          int8_t *HWY_RESTRICT coeffs) {
+  D int16_tag;
+  switch (Filter) {
+    case HorizontalFilterCoeffs::kAlpha0:
+      PrepareHorizontalFilterCoefficientsAlpha0(int16_tag, alpha, beta, sx,
+                                                coeffs);
+      return;
+    case HorizontalFilterCoeffs::kBeta0:
+      PrepareHorizontalFilterCoefficientsBeta0(int16_tag, alpha, beta, sx,
+                                               coeffs);
+      return;
+    case HorizontalFilterCoeffs::kDefault:
+    default:
+      if (IsLast) {
+        PrepareLastHorizontalFilterCoefficients(int16_tag, alpha, beta, sx,
+                                                coeffs);
+      } else {
+        PrepareHorizontalFilterCoefficients(int16_tag, alpha, beta, sx, coeffs);
+      }
+      return;
+  }
+}
+
+template <bool InnerCoeffUpdate, HorizontalFilterCoeffs Filter>
 HWY_ATTR inline void WarpHorizontalFilterTemplate(
     const uint8_t *HWY_RESTRICT ref, int16_t *HWY_RESTRICT horz_out, int stride,
     int32_t ix4, int32_t iy4, int32_t sx4, int alpha, int beta, int p_height,
     int height, int i, const IVec16 round_const, const int reduce_bits_horiz) {
   int k = -7, iy;
-  HWY_ALIGN int8_t coeff[4 * hn::MaxLanes(int8_tag)];
+  HWY_ALIGN int8_t coeff[4 * hn::MaxLanes(coeff_tag)];
   if constexpr (!InnerCoeffUpdate) {
-    PrepareCoeffs(alpha, beta, sx4, coeff);
+    WarpHorizontalPrepareCoeffs<false, Filter, decltype(int16_tag)>(alpha, beta,
+                                                                    sx4, coeff);
   }
   if constexpr (uint8_tag.MaxBlocks() >= 3) {
-    k = WarpHorizontalFilterLoop<(InnerCoeffUpdate ? PrepareCoeffs : nullptr)>(
-        uint8_tag, ref, horz_out, stride, ix4, iy4, sx4, alpha, beta, p_height,
-        height, i, round_const, reduce_bits_horiz, k, coeff);
+    k = WarpHorizontalFilterLoop<(
+        InnerCoeffUpdate
+            ? WarpHorizontalPrepareCoeffs<false, Filter, decltype(int16_tag)>
+            : nullptr)>(uint8_tag, ref, horz_out, stride, ix4, iy4, sx4, alpha,
+                        beta, p_height, height, i, round_const,
+                        reduce_bits_horiz, k, coeff);
   }
   if constexpr (uint8_tag.MaxBlocks() >= 2) {
-    k = WarpHorizontalFilterLoop<(InnerCoeffUpdate ? PrepareCoeffs : nullptr)>(
-        uint8x32_tag, ref, horz_out, stride, ix4, iy4, sx4, alpha, beta,
-        p_height, height, i, round_const, reduce_bits_horiz, k, coeff);
+    k = WarpHorizontalFilterLoop<(
+        InnerCoeffUpdate
+            ? WarpHorizontalPrepareCoeffs<false, Filter, decltype(int16x16_tag)>
+            : nullptr)>(uint8x32_tag, ref, horz_out, stride, ix4, iy4, sx4,
+                        alpha, beta, p_height, height, i, round_const,
+                        reduce_bits_horiz, k, coeff);
   }
   if constexpr (uint8_tag.MaxBlocks() == 1) {
-    k = WarpHorizontalFilterLoop<(InnerCoeffUpdate ? LastPrepareCoeffs
-                                                   : nullptr)>(
-        uint8x16_tag, ref, horz_out, stride, ix4, iy4, sx4, alpha, beta,
-        p_height, height, i, round_const, reduce_bits_horiz, k, coeff);
+    k = WarpHorizontalFilterLoop<(
+        InnerCoeffUpdate
+            ? WarpHorizontalPrepareCoeffs<true, Filter, decltype(int16x8_tag)>
+            : nullptr)>(uint8x16_tag, ref, horz_out, stride, ix4, iy4, sx4,
+                        alpha, beta, p_height, height, i, round_const,
+                        reduce_bits_horiz, k, coeff);
   }
   iy = iy4 + k;
   iy = clamp(iy, 0, height - 1);
   const auto src = hn::LoadU(uint8x16_tag, ref + iy * stride + ix4 - 7);
   if constexpr (InnerCoeffUpdate) {
     int sx = sx4 + beta * (k + 4);
-    LastPrepareCoeffs(alpha, beta, sx, coeff);
+    WarpHorizontalPrepareCoeffs<true, Filter, decltype(int16x8_tag)>(
+        alpha, beta, sx, coeff);
   }
   FilterPixelsHorizontal(uint8x16_tag, src, horz_out, coeff, round_const,
                          reduce_bits_horiz, k + 7);
@@ -1123,23 +1196,19 @@ HWY_ATTR inline void PrepareWarpHorizontalFilter(
     int32_t ix4, int32_t iy4, int32_t sx4, int alpha, int beta, int p_height,
     int height, int i, const IVec16 round_const, const int reduce_bits_horiz) {
   if (alpha == 0 && beta == 0)
-    WarpHorizontalFilterTemplate<false,
-                                 PrepareHorizontalFilterCoefficientsAlpha0>(
+    WarpHorizontalFilterTemplate<false, HorizontalFilterCoeffs::kAlpha0>(
         ref, horz_out, stride, ix4, iy4, sx4, alpha, beta, p_height, height, i,
         round_const, reduce_bits_horiz);
   else if (alpha == 0 && beta != 0)
-    WarpHorizontalFilterTemplate<true,
-                                 PrepareHorizontalFilterCoefficientsAlpha0>(
+    WarpHorizontalFilterTemplate<true, HorizontalFilterCoeffs::kAlpha0>(
         ref, horz_out, stride, ix4, iy4, sx4, alpha, beta, p_height, height, i,
         round_const, reduce_bits_horiz);
   else if (alpha != 0 && beta == 0)
-    WarpHorizontalFilterTemplate<false,
-                                 PrepareHorizontalFilterCoefficientsBeta0>(
+    WarpHorizontalFilterTemplate<false, HorizontalFilterCoeffs::kBeta0>(
         ref, horz_out, stride, ix4, iy4, sx4, alpha, beta, p_height, height, i,
         round_const, reduce_bits_horiz);
   else
-    WarpHorizontalFilterTemplate<true, PrepareHorizontalFilterCoefficients,
-                                 PrepareLastHorizontalFilterCoefficients>(
+    WarpHorizontalFilterTemplate<true, HorizontalFilterCoeffs::kDefault>(
         ref, horz_out, stride, ix4, iy4, sx4, alpha, beta, p_height, height, i,
         round_const, reduce_bits_horiz);
 }
@@ -1268,8 +1337,8 @@ HWY_ATTR void WarpHorizontalFilterOutOfBoundsPad(
     src = hn::TableLookupBytes(src, shuffle_reg_right);
   }
   sx = sx4 + beta * (k + 4);
-  HWY_ALIGN int8_t coeff[4 * hn::MaxLanes(int8_tag)];
-  PrepareLastHorizontalFilterCoefficients(alpha, beta, sx, coeff);
+  HWY_ALIGN int8_t coeff[4 * hn::MaxLanes(coeff_tag)];
+  PrepareLastHorizontalFilterCoefficients(int16_tag, alpha, beta, sx, coeff);
   FilterPixelsHorizontal(uint8x16_tag, src, horz_out, coeff, round_const,
                          reduce_bits_horiz, k + 7);
 }
