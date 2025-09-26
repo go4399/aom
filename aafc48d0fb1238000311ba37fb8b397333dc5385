@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0eac4e20_1e62b120",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6585
+      },
+      "writtenOn": "2025-09-26T18:22:09Z",
+      "side": 1,
+      "message": "Do we still need this change after: https://aomedia-review.googlesource.com/c/aom/+/203241 ?",
+      "revId": "aafc48d0fb1238000311ba37fb8b397333dc5385",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1557176e_e9c0cfdd",
@@ -38,6 +55,30 @@
           ]
         }
       ],
+      "revId": "aafc48d0fb1238000311ba37fb8b397333dc5385",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0b70c97_c505fa5f",
+        "filename": "av1/common/x86/warp_plane_hwy_avx512.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 6585
+      },
+      "writtenOn": "2025-09-26T18:22:09Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "1557176e_e9c0cfdd",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 51
+      },
       "revId": "aafc48d0fb1238000311ba37fb8b397333dc5385",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
