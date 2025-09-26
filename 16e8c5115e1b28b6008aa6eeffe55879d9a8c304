@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cadde49c_ff697a64",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-09-26T17:55:50Z",
+      "side": 1,
+      "message": "Add `Bug: 447385711`.",
+      "revId": "16e8c5115e1b28b6008aa6eeffe55879d9a8c304",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
