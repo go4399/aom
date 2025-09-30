@@ -1737,7 +1737,7 @@ static void set_rt_speed_feature_framesize_dependent(const AV1_COMP *const cpi,
       sf->rt_sf.part_early_exit_zeromv = 1;
       sf->rt_sf.nonrd_aggressive_skip = 1;
       sf->rt_sf.thresh_active_maps_skip_lf_cdef = 90;
-      sf->rt_sf.hybrid_intra_pickmode = 0;
+      sf->rt_sf.hybrid_intra_pickmode = 3;
       sf->rt_sf.dct_only_palette_nonrd = 1;
       sf->rt_sf.prune_palette_search_nonrd = 1;
       sf->rt_sf.prune_intra_mode_using_best_sad_so_far = true;
