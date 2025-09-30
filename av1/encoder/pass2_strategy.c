@@ -4277,7 +4277,8 @@ void av1_twopass_postencode_update(AV1_COMP *cpi) {
   twopass->kf_group_bits = AOMMAX(twopass->kf_group_bits, 0);
 
   // If the rate control is drifting consider adjustment to min or maxq.
-  if ((rc_cfg->mode != AOM_Q) && !cpi->rc.is_src_frame_alt_ref &&
+  if ((rc_cfg->mode != AOM_Q) &&
+      (cpi->gf_frame_index == (cpi->ppi->gf_group.size - 1)) &&
       (p_rc->rolling_target_bits > 0)) {
     int minq_adj_limit;
     int maxq_adj_limit;

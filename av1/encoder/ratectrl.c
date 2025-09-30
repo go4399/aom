@@ -2426,9 +2426,9 @@ void av1_rc_postencode_update(AV1_COMP *cpi, uint64_t bytes_used) {
         resize_rate_factor(&cpi->oxcf.frm_dim_cfg, cm->width, cm->height));
   if (current_frame->frame_type != KEY_FRAME) {
     p_rc->rolling_target_bits = (int)ROUND_POWER_OF_TWO_64(
-        (int64_t)p_rc->rolling_target_bits * 3 + rc->this_frame_target, 2);
+        (int64_t)p_rc->rolling_target_bits * 15 + rc->this_frame_target, 4);
     p_rc->rolling_actual_bits = (int)ROUND_POWER_OF_TWO_64(
-        (int64_t)p_rc->rolling_actual_bits * 3 + rc->projected_frame_size, 2);
+        (int64_t)p_rc->rolling_actual_bits * 15 + rc->projected_frame_size, 4);
   }
 
   // Actual bits spent
@@ -2731,9 +2731,6 @@ void av1_set_target_rate(AV1_COMP *cpi, int width, int height) {
   RATE_CONTROL *const rc = &cpi->rc;
   int target_rate = rc->base_frame_target;
 
-  // Correction to rate target based on prior over or under shoot.
-  if (cpi->oxcf.rc_cfg.mode == AOM_VBR || cpi->oxcf.rc_cfg.mode == AOM_CQ)
-    vbr_rate_correction(cpi, &target_rate);
   av1_rc_set_frame_target(cpi, target_rate, width, height);
 }
 
