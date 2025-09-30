@@ -827,9 +827,11 @@ static void encode_block_intra(int plane, int block, int blk_row, int blk_col,
     update_txk_array(xd, blk_row, blk_col, tx_size, DCT_DCT);
   }
 
-  // For intra mode, skipped blocks are so rare that transmitting
-  // skip_txfm = 1 is very expensive.
-  mbmi->skip_txfm = 0;
+  if (*eob) {
+    mbmi->skip_txfm = 0;
+  } else {
+    mbmi->skip_txfm &= 1;
+  }
 
 #if !CONFIG_REALTIME_ONLY
   if (plane == AOM_PLANE_Y && xd->cfl.store_y) {
