@@ -3075,17 +3075,11 @@ static inline void block_rd_txfm(int plane, int block, int blk_row, int blk_col,
     set_blk_skip(txfm_info->blk_skip, plane, blk_idx, 0);
 
   int64_t rd;
-  if (is_inter) {
-    const int64_t no_skip_txfm_rd =
-        RDCOST(x->rdmult, this_rd_stats.rate, this_rd_stats.dist);
-    const int64_t skip_txfm_rd = RDCOST(x->rdmult, 0, this_rd_stats.sse);
-    rd = AOMMIN(no_skip_txfm_rd, skip_txfm_rd);
-    this_rd_stats.skip_txfm &= !x->plane[plane].eobs[block];
-  } else {
-    // Signal non-skip_txfm for Intra blocks
-    rd = RDCOST(x->rdmult, this_rd_stats.rate, this_rd_stats.dist);
-    this_rd_stats.skip_txfm = 0;
-  }
+  const int64_t no_skip_txfm_rd =
+      RDCOST(x->rdmult, this_rd_stats.rate, this_rd_stats.dist);
+  const int64_t skip_txfm_rd = RDCOST(x->rdmult, 0, this_rd_stats.sse);
+  rd = AOMMIN(no_skip_txfm_rd, skip_txfm_rd);
+  this_rd_stats.skip_txfm &= !x->plane[plane].eobs[block];
 
   av1_merge_rd_stats(&args->rd_stats, &this_rd_stats);
 

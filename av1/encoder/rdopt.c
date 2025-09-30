@@ -3596,7 +3596,7 @@ void av1_rd_pick_intra_mode_sb(const struct AV1_COMP *cpi, struct macroblock *x,
   TxfmSearchInfo *txfm_info = &x->txfm_search_info;
   int rate_y = 0, rate_uv = 0, rate_y_tokenonly = 0, rate_uv_tokenonly = 0;
   uint8_t y_skip_txfm = 0, uv_skip_txfm = 0;
-  int64_t dist_y = 0, dist_uv = 0;
+  int64_t dist_y = 0, dist_uv = 0, sse_y = 0, sse_uv = 0;
 
   ctx->rd_stats.skip_txfm = 0;
   mbmi->ref_frame[0] = INTRA_FRAME;
@@ -3607,7 +3607,7 @@ void av1_rd_pick_intra_mode_sb(const struct AV1_COMP *cpi, struct macroblock *x,
 
   const int64_t intra_yrd =
       av1_rd_pick_intra_sby_mode(cpi, x, &rate_y, &rate_y_tokenonly, &dist_y,
-                                 &y_skip_txfm, bsize, best_rd, ctx);
+                                 &y_skip_txfm, bsize, best_rd, ctx, &sse_y);
 
   // Initialize default mode evaluation params
   set_mode_eval_params(cpi, x, DEFAULT_EVAL);
@@ -3625,16 +3625,22 @@ void av1_rd_pick_intra_mode_sb(const struct AV1_COMP *cpi, struct macroblock *x,
       const TX_SIZE max_uv_tx_size = av1_get_tx_size(AOM_PLANE_U, xd);
       av1_rd_pick_intra_sbuv_mode(cpi, x, &rate_uv, &rate_uv_tokenonly,
                                   &dist_uv, &uv_skip_txfm, bsize,
-                                  max_uv_tx_size);
+                                  max_uv_tx_size, &sse_uv);
     }
-
-    // Intra block is always coded as non-skip
-    rd_cost->rate =
-        rate_y + rate_uv +
-        x->mode_costs.skip_txfm_cost[av1_get_skip_txfm_context(xd)][0];
-    rd_cost->dist = dist_y + dist_uv;
-    rd_cost->rdcost = RDCOST(x->rdmult, rd_cost->rate, rd_cost->dist);
-    rd_cost->skip_txfm = 0;
+    if (y_skip_txfm && uv_skip_txfm) {
+      rd_cost->rate =
+          x->mode_costs.skip_txfm_cost[av1_get_skip_txfm_context(xd)][1];
+      rd_cost->dist = sse_y + sse_uv;
+      rd_cost->rdcost = RDCOST(x->rdmult, rd_cost->rate, rd_cost->dist);
+      rd_cost->skip_txfm = 1;
+    } else {
+      rd_cost->rate =
+          rate_y + rate_uv +
+          x->mode_costs.skip_txfm_cost[av1_get_skip_txfm_context(xd)][0];
+      rd_cost->dist = dist_y + dist_uv;
+      rd_cost->rdcost = RDCOST(x->rdmult, rd_cost->rate, rd_cost->dist);
+      rd_cost->skip_txfm = 0;
+    }
   } else {
     rd_cost->rate = INT_MAX;
   }
@@ -5865,15 +5871,23 @@ static inline void search_intra_modes_in_interframe(
         intra_mode_info_cost_uv(cpi, x, mbmi, bsize, uv_mode_cost);
   }
 
-  // Intra block is always coded as non-skip
-  intra_rd_stats.skip_txfm = 0;
-  intra_rd_stats.dist = best_intra_rd_stats_y.dist + intra_rd_stats_uv.dist;
-  // Add in the cost of the no skip flag.
-  const int skip_ctx = av1_get_skip_txfm_context(xd);
-  intra_rd_stats.rate += mode_costs->skip_txfm_cost[skip_ctx][0];
-  // Calculate the final RD estimate for this mode.
-  const int64_t this_rd =
-      RDCOST(x->rdmult, intra_rd_stats.rate, intra_rd_stats.dist);
+  int64_t this_rd = 0;
+  if (intra_rd_stats.skip_txfm) {
+    intra_rd_stats.sse = best_intra_rd_stats_y.sse;
+    // Add in the cost of the no skip flag.
+    const int skip_ctx = av1_get_skip_txfm_context(xd);
+    intra_rd_stats.rate += mode_costs->skip_txfm_cost[skip_ctx][1];
+    // Calculate the final RD estimate for this mode.
+    this_rd = RDCOST(x->rdmult, intra_rd_stats.rate, intra_rd_stats.sse);
+  } else {
+    intra_rd_stats.dist = best_intra_rd_stats_y.dist + intra_rd_stats_uv.dist;
+    // Add in the cost of the no skip flag.
+    const int skip_ctx = av1_get_skip_txfm_context(xd);
+    intra_rd_stats.rate += mode_costs->skip_txfm_cost[skip_ctx][0];
+    // Calculate the final RD estimate for this mode.
+    this_rd = RDCOST(x->rdmult, intra_rd_stats.rate, intra_rd_stats.dist);
+  }
+
   // Keep record of best intra rd
   if (this_rd < search_state->best_intra_rd) {
     search_state->best_intra_rd = this_rd;

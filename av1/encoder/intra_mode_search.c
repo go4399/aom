@@ -234,7 +234,7 @@ static int rd_pick_filter_intra_sby(const AV1_COMP *const cpi, MACROBLOCK *x,
                                     BLOCK_SIZE bsize, int mode_cost,
                                     PREDICTION_MODE best_mode_so_far,
                                     int64_t *best_rd, int64_t *best_model_rd,
-                                    PICK_MODE_CONTEXT *ctx) {
+                                    PICK_MODE_CONTEXT *ctx, int64_t *sse) {
   // Skip the evaluation of filter intra modes.
   if (cpi->sf.intra_sf.prune_filter_intra_level == 2) return 0;
 
@@ -304,6 +304,7 @@ static int rd_pick_filter_intra_sby(const AV1_COMP *const cpi, MACROBLOCK *x,
       *rate_tokenonly = tokenonly_rd_stats.rate;
       *distortion = tokenonly_rd_stats.dist;
       *skippable = tokenonly_rd_stats.skip_txfm;
+      *sse = tokenonly_rd_stats.sse;
       filter_intra_selected_flag = 1;
     }
   }
@@ -517,6 +518,7 @@ static int64_t pick_intra_angle_routine_sbuv(
     rd_stats->rate = tokenonly_rd_stats.rate;
     rd_stats->dist = tokenonly_rd_stats.dist;
     rd_stats->skip_txfm = tokenonly_rd_stats.skip_txfm;
+    rd_stats->sse = tokenonly_rd_stats.sse;
   }
   return this_rd;
 }
@@ -866,7 +868,8 @@ static bool should_prune_chroma_smooth_pred_based_on_source_variance(
 int64_t av1_rd_pick_intra_sbuv_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
                                     int *rate, int *rate_tokenonly,
                                     int64_t *distortion, uint8_t *skippable,
-                                    BLOCK_SIZE bsize, TX_SIZE max_tx_size) {
+                                    BLOCK_SIZE bsize, TX_SIZE max_tx_size,
+                                    int64_t *sse) {
   const AV1_COMMON *const cm = &cpi->common;
   MACROBLOCKD *xd = &x->e_mbd;
   MB_MODE_INFO *mbmi = xd->mi[0];
@@ -890,6 +893,7 @@ int64_t av1_rd_pick_intra_sbuv_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
   // Only store reconstructed luma when there's chroma RDO. When there's no
   // chroma RDO, the reconstructed luma will be stored in encode_superblock().
   xd->cfl.store_y = store_cfl_required_rdo(cm, x);
+  mbmi->skip_txfm = 1;
   if (xd->cfl.store_y) {
     // Restore reconstructed luma values.
     // TODO(chiyotsai@google.com): right now we are re-computing the txfm in
@@ -994,6 +998,7 @@ int64_t av1_rd_pick_intra_sbuv_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
         continue;
       }
     }
+
     const int mode_cost =
         mode_costs->intra_uv_mode_cost[cfl_allowed][mbmi->mode][uv_mode];
     this_rate = tokenonly_rd_stats.rate +
@@ -1006,6 +1011,7 @@ int64_t av1_rd_pick_intra_sbuv_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
       *rate = this_rate;
       *rate_tokenonly = tokenonly_rd_stats.rate;
       *distortion = tokenonly_rd_stats.dist;
+      *sse = tokenonly_rd_stats.sse;
       *skippable = tokenonly_rd_stats.skip_txfm;
     }
   }
@@ -1090,7 +1096,8 @@ int av1_search_palette_mode(IntraModeSearchState *intra_search_state,
       av1_rd_pick_intra_sbuv_mode(cpi, x, &intra_search_state->rate_uv_intra,
                                   &intra_search_state->rate_uv_tokenonly,
                                   &intra_search_state->dist_uvs,
-                                  &intra_search_state->skip_uvs, bsize, uv_tx);
+                                  &intra_search_state->skip_uvs, bsize, uv_tx,
+                                  &intra_search_state->sse_uvs);
       intra_search_state->mode_uv = mbmi->uv_mode;
       intra_search_state->pmi_uv = *pmi;
       intra_search_state->uv_angle_delta = mbmi->angle_delta[PLANE_TYPE_UV];
@@ -1432,7 +1439,8 @@ int av1_search_intra_uv_modes_in_interframe(
     av1_rd_pick_intra_sbuv_mode(cpi, x, &intra_search_state->rate_uv_intra,
                                 &intra_search_state->rate_uv_tokenonly,
                                 &intra_search_state->dist_uvs,
-                                &intra_search_state->skip_uvs, bsize, uv_tx);
+                                &intra_search_state->skip_uvs, bsize, uv_tx,
+                                &intra_search_state->sse_uvs);
     intra_search_state->mode_uv = mbmi->uv_mode;
     if (try_palette) intra_search_state->pmi_uv = *pmi;
     intra_search_state->uv_angle_delta = mbmi->angle_delta[PLANE_TYPE_UV];
@@ -1456,6 +1464,7 @@ int av1_search_intra_uv_modes_in_interframe(
   rd_stats_uv->dist = intra_search_state->dist_uvs;
   rd_stats_uv->skip_txfm = intra_search_state->skip_uvs;
   rd_stats->skip_txfm = rd_stats_y->skip_txfm && rd_stats_uv->skip_txfm;
+  rd_stats->sse = rd_stats_y->sse + rd_stats_uv->sse;
   mbmi->uv_mode = intra_search_state->mode_uv;
   if (try_palette) {
     pmi->palette_size[1] = intra_search_state->pmi_uv.palette_size[1];
@@ -1499,7 +1508,7 @@ int64_t av1_rd_pick_intra_sby_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
                                    int *rate, int *rate_tokenonly,
                                    int64_t *distortion, uint8_t *skippable,
                                    BLOCK_SIZE bsize, int64_t best_rd,
-                                   PICK_MODE_CONTEXT *ctx) {
+                                   PICK_MODE_CONTEXT *ctx, int64_t *sse) {
   MACROBLOCKD *const xd = &x->e_mbd;
   MB_MODE_INFO *const mbmi = xd->mi[0];
   assert(!is_inter_block(mbmi));
@@ -1686,6 +1695,7 @@ int64_t av1_rd_pick_intra_sby_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
       *rate_tokenonly = this_rate_tokenonly;
       *distortion = this_distortion;
       *skippable = s;
+      *sse = this_rd_stats.sse;
       memcpy(ctx->blk_skip, x->txfm_search_info.blk_skip,
              sizeof(x->txfm_search_info.blk_skip[0]) * ctx->num_4x4_blk);
       av1_copy_array(ctx->tx_type_map, xd->tx_type_map, ctx->num_4x4_blk);
@@ -1700,13 +1710,15 @@ int64_t av1_rd_pick_intra_sby_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
         ctx, ctx->blk_skip, ctx->tx_type_map);
   }
 
+  int64_t sse_filter_intra = 0;
   // Searches filter_intra
   if (beat_best_rd && av1_filter_intra_allowed_bsize(&cpi->common, bsize)) {
     if (rd_pick_filter_intra_sby(cpi, x, rate, rate_tokenonly, distortion,
                                  skippable, bsize, bmode_costs[DC_PRED],
-                                 best_mbmi.mode, &best_rd, &best_model_rd,
-                                 ctx)) {
+                                 best_mbmi.mode, &best_rd, &best_model_rd, ctx,
+                                 &sse_filter_intra)) {
       best_mbmi = *mbmi;
+      *sse = sse_filter_intra;
     }
   }
 

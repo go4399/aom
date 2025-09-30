@@ -61,9 +61,10 @@ typedef struct IntraModeSearchState {
    * av1_search_intra_uv_modes_in_interframe()
    */
   /**@{*/
-  int rate_uv_intra;          /*!< \brief Total rate to transmit uv_mode */
-  int rate_uv_tokenonly;      /*!< \brief Rate transmit txfm tokens */
-  int64_t dist_uvs;           /*!< \brief Distortion of the uv_mode's recon */
+  int rate_uv_intra;     /*!< \brief Total rate to transmit uv_mode */
+  int rate_uv_tokenonly; /*!< \brief Rate transmit txfm tokens */
+  int64_t dist_uvs;      /*!< \brief Distortion of the uv_mode's recon */
+  int64_t sse_uvs;
   uint8_t skip_uvs;           /*!< \brief Whether the uv txfm is skippable */
   UV_PREDICTION_MODE mode_uv; /*!< \brief The best uv mode */
   PALETTE_MODE_INFO pmi_uv;   /*!< \brief Color map if mode_uv is palette */
@@ -238,7 +239,7 @@ int64_t av1_rd_pick_intra_sby_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
                                    int *rate, int *rate_tokenonly,
                                    int64_t *distortion, uint8_t *skippable,
                                    BLOCK_SIZE bsize, int64_t best_rd,
-                                   PICK_MODE_CONTEXT *ctx);
+                                   PICK_MODE_CONTEXT *ctx, int64_t *sse);
 
 /*!\brief Perform intra-mode search on chroma channels.
  *
@@ -272,7 +273,8 @@ int64_t av1_rd_pick_intra_sby_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
 int64_t av1_rd_pick_intra_sbuv_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
                                     int *rate, int *rate_tokenonly,
                                     int64_t *distortion, uint8_t *skippable,
-                                    BLOCK_SIZE bsize, TX_SIZE max_tx_size);
+                                    BLOCK_SIZE bsize, TX_SIZE max_tx_size,
+                                    int64_t *sse);
 
 /*! \brief Return the number of colors in src. Used by palette mode.
  */
