@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f0260f8e_c6e0d37b",
+        "filename": "av1/encoder/encodemb.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 834,
+      "author": {
+        "id": 31132
+      },
+      "writtenOn": "2025-09-30T20:33:50Z",
+      "side": 1,
+      "message": "This follows the skip_txfm decision logic for inter blocks. Basically, skip_txfm can only be true if skip_txfm is true for both luma and chroma?",
+      "parentUuid": "da19ff36_53b52232",
+      "range": {
+        "startLine": 830,
+        "startChar": 2,
+        "endLine": 834,
+        "endChar": 3
+      },
+      "revId": "38679244d0c6a3e8d460656175023f1b2eb89017",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7fa44d1a_714642ff",
         "filename": "av1/encoder/intra_mode_search.c",
         "patchSetId": 1
@@ -37,6 +61,30 @@
       "writtenOn": "2025-09-30T20:29:57Z",
       "side": 1,
       "message": "Why this?",
+      "range": {
+        "startLine": 896,
+        "startChar": 0,
+        "endLine": 896,
+        "endChar": 22
+      },
+      "revId": "38679244d0c6a3e8d460656175023f1b2eb89017",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6287db02_0edf1157",
+        "filename": "av1/encoder/intra_mode_search.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 896,
+      "author": {
+        "id": 31132
+      },
+      "writtenOn": "2025-09-30T20:33:50Z",
+      "side": 1,
+      "message": "This is just an initialization, and later will be replaced by the actual decision from this block of code:\n\n  if (*eob) {\n    mbmi-\u003eskip_txfm \u003d 0;\n  } else {\n    mbmi-\u003eskip_txfm \u0026\u003d 1;\n  }",
+      "parentUuid": "7fa44d1a_714642ff",
       "range": {
         "startLine": 896,
         "startChar": 0,
