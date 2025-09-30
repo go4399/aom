@@ -72,6 +72,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "da875d95_5c6578f2",
+        "filename": "av1/encoder/encodemb.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 834,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2025-09-30T20:41:19Z",
+      "side": 1,
+      "message": "Ah nvm I misread. It uses `\u0026\u003d` here.",
+      "parentUuid": "51271e3e_81c26d4d",
+      "range": {
+        "startLine": 830,
+        "startChar": 2,
+        "endLine": 834,
+        "endChar": 3
+      },
+      "revId": "38679244d0c6a3e8d460656175023f1b2eb89017",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7fa44d1a_714642ff",
