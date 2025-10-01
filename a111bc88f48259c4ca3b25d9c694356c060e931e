@@ -16,6 +16,24 @@
       "message": "Wondering if we should force AOM_EFLAG_FREEZE_INTERNAL_STATE to only work with lag_in_frames \u003d 0, as was done for the flag AOM_EFLAG_CALCULATE_PSNR.",
       "revId": "a111bc88f48259c4ca3b25d9c694356c060e931e",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0d2468f_6df18723",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3583131
+      },
+      "writtenOn": "2025-10-01T08:22:32Z",
+      "side": 1,
+      "message": "Done. Even with lag\u003d0 the bug seen here is still a problem, so I\u0027m assuming we\u0027re doing this mostly to avoid other state leaking such as when using b-frames and multi-pass..?",
+      "parentUuid": "3d83a534_1e5d7aff",
+      "revId": "a111bc88f48259c4ca3b25d9c694356c060e931e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
