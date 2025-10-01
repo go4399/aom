@@ -34,6 +34,24 @@
       "parentUuid": "3d83a534_1e5d7aff",
       "revId": "a111bc88f48259c4ca3b25d9c694356c060e931e",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "681b1d2e_d84a7c1e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2025-10-01T17:09:30Z",
+      "side": 1,
+      "message": "Yeah the fix is needed even for lag\u003d0. I just prefer to constrain the new flag to lag\u003d0 since it will be tested/used only for that case for now.",
+      "parentUuid": "b0d2468f_6df18723",
+      "revId": "a111bc88f48259c4ca3b25d9c694356c060e931e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
