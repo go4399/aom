@@ -310,7 +310,6 @@ static int32_t read_tile_group_header(AV1Decoder *pbi,
       aom_internal_error(
           &pbi->error, AOM_CODEC_UNSUP_BITSTREAM,
           "For OBU_FRAME type obu tile_start_and_end_present_flag must be 0");
-      return -1;
     }
   }
   if (tiles->large_scale || num_tiles == 1 ||
@@ -326,20 +325,17 @@ static int32_t read_tile_group_header(AV1Decoder *pbi,
     aom_internal_error(&pbi->error, AOM_CODEC_CORRUPT_FRAME,
                        "tg_start (%d) must be equal to %d", *start_tile,
                        pbi->next_start_tile);
-    return -1;
   }
   if (*start_tile > *end_tile) {
     aom_internal_error(
         &pbi->error, AOM_CODEC_CORRUPT_FRAME,
         "tg_end (%d) must be greater than or equal to tg_start (%d)", *end_tile,
         *start_tile);
-    return -1;
   }
   if (*end_tile >= num_tiles) {
     aom_internal_error(&pbi->error, AOM_CODEC_CORRUPT_FRAME,
                        "tg_end (%d) must be less than NumTiles (%d)", *end_tile,
                        num_tiles);
-    return -1;
   }
   pbi->next_start_tile = (*end_tile == num_tiles - 1) ? 0 : *end_tile + 1;
 
