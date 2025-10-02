@@ -16,6 +16,24 @@
       "message": "Did this profile better? In other cases rounding shifts were avoided due to latency.",
       "revId": "1f591b912d9c83f9a1c704953a366c05896b4d24",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5bb9c38e_4d248e9b",
+        "filename": "aom_dsp/arm/intrapred_neon.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1640,
+      "author": {
+        "id": 4389017
+      },
+      "writtenOn": "2025-10-02T08:04:48Z",
+      "side": 1,
+      "message": "Yes, it is overall better because we then avoid extra initialization (and addition) of rounding constant, and have a lower latency shll that works on the other 2 SIMD pipelines in parallel with mla.",
+      "parentUuid": "b09d2bdd_96095ced",
+      "revId": "1f591b912d9c83f9a1c704953a366c05896b4d24",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
