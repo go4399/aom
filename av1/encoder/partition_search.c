@@ -962,6 +962,7 @@ static void pick_sb_modes(AV1_COMP *const cpi, TileDataEnc *tile_data,
   ctx->rd_stats.rate = rd_cost->rate;
   ctx->rd_stats.dist = rd_cost->dist;
   ctx->rd_stats.rdcost = rd_cost->rdcost;
+  ctx->rd_stats.skip_txfm = rd_cost->skip_txfm;
 
 #if CONFIG_COLLECT_COMPONENT_TIMING
   end_timing(cpi, rd_pick_sb_modes_time);
