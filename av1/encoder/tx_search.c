@@ -2865,8 +2865,11 @@ static int64_t uniform_txfm_yrd(const AV1_COMP *const cpi, MACROBLOCK *x,
                             : tx_size_cost(x, bs, tx_size);
   }
   const int skip_ctx = av1_get_skip_txfm_context(xd);
-  const int no_skip_txfm_rate = mode_costs->skip_txfm_cost[skip_ctx][0];
-  const int skip_txfm_rate = mode_costs->skip_txfm_cost[skip_ctx][1];
+  int no_skip_txfm_rate = mode_costs->skip_txfm_cost[skip_ctx][0];
+  int skip_txfm_rate = mode_costs->skip_txfm_cost[skip_ctx][1];
+
+  if (!is_inter) skip_txfm_rate += tx_size_rate;
+
   const int64_t skip_txfm_rd =
       is_inter ? RDCOST(x->rdmult, skip_txfm_rate, 0) : INT64_MAX;
   const int64_t no_this_rd =
@@ -2883,7 +2886,7 @@ static int64_t uniform_txfm_yrd(const AV1_COMP *const cpi, MACROBLOCK *x,
   // same is accounted in the caller functions after rd evaluation of all
   // planes. However the decisions should be done after considering the
   // skip/non-skip header cost
-  if (rd_stats->skip_txfm && is_inter) {
+  if (rd_stats->skip_txfm && (is_inter || 1)) {
     rd = RDCOST(x->rdmult, skip_txfm_rate, rd_stats->sse);
   } else {
     // Intra blocks are always signalled as non-skip
@@ -2892,7 +2895,8 @@ static int64_t uniform_txfm_yrd(const AV1_COMP *const cpi, MACROBLOCK *x,
     rd_stats->rate += tx_size_rate;
   }
   // Check if forcing the block to skip transform leads to smaller RD cost.
-  if (is_inter && !rd_stats->skip_txfm && !xd->lossless[mbmi->segment_id]) {
+  if ((1 || is_inter) && !rd_stats->skip_txfm &&
+      !xd->lossless[mbmi->segment_id]) {
     int64_t temp_skip_txfm_rd =
         RDCOST(x->rdmult, skip_txfm_rate, rd_stats->sse);
     if (temp_skip_txfm_rd <= rd) {
@@ -2983,7 +2987,11 @@ static inline void choose_tx_size_type_from_rd(const AV1_COMP *const cpi,
       av1_copy_array(best_txk_type_map, xd->tx_type_map, num_blks);
       best_tx_size = tx_size;
       best_rd = rd[depth];
+      int64_t tmp_sse = rd_stats->sse;
       *rd_stats = this_rd_stats;
+
+      if (is_inter_block(mbmi))
+        if (tx_size != start_tx) rd_stats->sse = tmp_sse;
     }
     if (tx_size == TX_4X4) break;
     // If we are searching three depths, prune the smallest size depending
@@ -3075,7 +3083,7 @@ static inline void block_rd_txfm(int plane, int block, int blk_row, int blk_col,
     set_blk_skip(txfm_info->blk_skip, plane, blk_idx, 0);
 
   int64_t rd;
-  if (is_inter) {
+  if (is_inter || 1) {
     const int64_t no_skip_txfm_rd =
         RDCOST(x->rdmult, this_rd_stats.rate, this_rd_stats.dist);
     const int64_t skip_txfm_rd = RDCOST(x->rdmult, 0, this_rd_stats.sse);
