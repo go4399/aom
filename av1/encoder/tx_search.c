@@ -2983,7 +2983,11 @@ static inline void choose_tx_size_type_from_rd(const AV1_COMP *const cpi,
       av1_copy_array(best_txk_type_map, xd->tx_type_map, num_blks);
       best_tx_size = tx_size;
       best_rd = rd[depth];
+      int64_t tmp_sse = rd_stats->sse;
       *rd_stats = this_rd_stats;
+
+      if (is_inter_block(mbmi))
+        if (tx_size != start_tx) rd_stats->sse = tmp_sse;
     }
     if (tx_size == TX_4X4) break;
     // If we are searching three depths, prune the smallest size depending
@@ -3075,7 +3079,7 @@ static inline void block_rd_txfm(int plane, int block, int blk_row, int blk_col,
     set_blk_skip(txfm_info->blk_skip, plane, blk_idx, 0);
 
   int64_t rd;
-  if (is_inter) {
+  if (is_inter || 1) {
     const int64_t no_skip_txfm_rd =
         RDCOST(x->rdmult, this_rd_stats.rate, this_rd_stats.dist);
     const int64_t skip_txfm_rd = RDCOST(x->rdmult, 0, this_rd_stats.sse);
