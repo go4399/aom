@@ -236,9 +236,9 @@ void av1_search_palette_mode_luma(const AV1_COMP *cpi, MACROBLOCK *x,
  */
 int64_t av1_rd_pick_intra_sby_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
                                    int *rate, int *rate_tokenonly,
-                                   int64_t *distortion, uint8_t *skippable,
-                                   BLOCK_SIZE bsize, int64_t best_rd,
-                                   PICK_MODE_CONTEXT *ctx);
+                                   int64_t *distortion, int64_t *sse,
+                                   uint8_t *skippable, BLOCK_SIZE bsize,
+                                   int64_t best_rd, PICK_MODE_CONTEXT *ctx);
 
 /*!\brief Perform intra-mode search on chroma channels.
  *
@@ -271,8 +271,9 @@ int64_t av1_rd_pick_intra_sby_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
  */
 int64_t av1_rd_pick_intra_sbuv_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
                                     int *rate, int *rate_tokenonly,
-                                    int64_t *distortion, uint8_t *skippable,
-                                    BLOCK_SIZE bsize, TX_SIZE max_tx_size);
+                                    int64_t *distortion, int64_t *sse,
+                                    uint8_t *skippable, BLOCK_SIZE bsize,
+                                    TX_SIZE max_tx_size);
 
 /*! \brief Return the number of colors in src. Used by palette mode.
  */

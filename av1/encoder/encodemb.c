@@ -829,7 +829,11 @@ static void encode_block_intra(int plane, int block, int blk_row, int blk_col,
 
   // For intra mode, skipped blocks are so rare that transmitting
   // skip_txfm = 1 is very expensive.
-  mbmi->skip_txfm = 0;
+  if (*eob) {
+    mbmi->skip_txfm = 0;
+  } else {
+    mbmi->skip_txfm &= 1;
+  }
 
 #if !CONFIG_REALTIME_ONLY
   if (plane == AOM_PLANE_Y && xd->cfl.store_y) {
@@ -870,6 +874,8 @@ void av1_encode_intra_block_plane(const struct AV1_COMP *cpi, MACROBLOCK *x,
   if (enable_optimize_b) {
     av1_get_entropy_contexts(plane_bsize, pd, ta, tl);
   }
+  xd->mi[0]->skip_txfm = 1;
+
   av1_foreach_transformed_block_in_plane(
       xd, plane_bsize, plane, encode_block_intra_and_set_context, &arg);
 }

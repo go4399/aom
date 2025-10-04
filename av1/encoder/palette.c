@@ -775,7 +775,7 @@ void av1_rd_pick_palette_intra_sbuv(const AV1_COMP *cpi, MACROBLOCK *x,
                                     MB_MODE_INFO *const best_mbmi,
                                     int64_t *best_rd, int *rate,
                                     int *rate_tokenonly, int64_t *distortion,
-                                    uint8_t *skippable) {
+                                    int64_t *sse, uint8_t *skippable) {
   MACROBLOCKD *const xd = &x->e_mbd;
   MB_MODE_INFO *const mbmi = xd->mi[0];
   assert(!is_inter_block(mbmi));
@@ -924,6 +924,14 @@ void av1_rd_pick_palette_intra_sbuv(const AV1_COMP *cpi, MACROBLOCK *x,
       }
 
       this_rd = RDCOST(x->rdmult, this_rate, tokenonly_rd_stats.dist);
+
+      const int skip_ctx = av1_get_skip_txfm_context(xd);
+      int skip_rate =
+          x->mode_costs.skip_txfm_cost[skip_ctx][1] +
+          +intra_mode_info_cost_uv(cpi, x, mbmi, bsize, dc_mode_cost);
+      this_rd =
+          AOMMIN(this_rd, RDCOST(x->rdmult, skip_rate, tokenonly_rd_stats.sse));
+
       if (this_rd < *best_rd) {
         *best_rd = this_rd;
         *best_mbmi = *mbmi;
@@ -932,6 +940,7 @@ void av1_rd_pick_palette_intra_sbuv(const AV1_COMP *cpi, MACROBLOCK *x,
                    sizeof(best_palette_color_map[0]));
         *rate = this_rate;
         *distortion = tokenonly_rd_stats.dist;
+        *sse = tokenonly_rd_stats.sse;
         *rate_tokenonly = tokenonly_rd_stats.rate;
         *skippable = tokenonly_rd_stats.skip_txfm;
       }
