@@ -3596,7 +3596,7 @@ void av1_rd_pick_intra_mode_sb(const struct AV1_COMP *cpi, struct macroblock *x,
   TxfmSearchInfo *txfm_info = &x->txfm_search_info;
   int rate_y = 0, rate_uv = 0, rate_y_tokenonly = 0, rate_uv_tokenonly = 0;
   uint8_t y_skip_txfm = 0, uv_skip_txfm = 0;
-  int64_t dist_y = 0, dist_uv = 0;
+  int64_t dist_y = 0, sse_y = 0, dist_uv = 0, sse_uv = 0;
 
   ctx->rd_stats.skip_txfm = 0;
   mbmi->ref_frame[0] = INTRA_FRAME;
@@ -3607,7 +3607,7 @@ void av1_rd_pick_intra_mode_sb(const struct AV1_COMP *cpi, struct macroblock *x,
 
   const int64_t intra_yrd =
       av1_rd_pick_intra_sby_mode(cpi, x, &rate_y, &rate_y_tokenonly, &dist_y,
-                                 &y_skip_txfm, bsize, best_rd, ctx);
+                                 &sse_y, &y_skip_txfm, bsize, best_rd, ctx);
 
   // Initialize default mode evaluation params
   set_mode_eval_params(cpi, x, DEFAULT_EVAL);
@@ -3624,7 +3624,7 @@ void av1_rd_pick_intra_mode_sb(const struct AV1_COMP *cpi, struct macroblock *x,
       }
       const TX_SIZE max_uv_tx_size = av1_get_tx_size(AOM_PLANE_U, xd);
       av1_rd_pick_intra_sbuv_mode(cpi, x, &rate_uv, &rate_uv_tokenonly,
-                                  &dist_uv, &uv_skip_txfm, bsize,
+                                  &dist_uv, &sse_uv, &uv_skip_txfm, bsize,
                                   max_uv_tx_size);
     }
 
@@ -3633,8 +3633,18 @@ void av1_rd_pick_intra_mode_sb(const struct AV1_COMP *cpi, struct macroblock *x,
         rate_y + rate_uv +
         x->mode_costs.skip_txfm_cost[av1_get_skip_txfm_context(xd)][0];
     rd_cost->dist = dist_y + dist_uv;
+    rd_cost->sse = sse_y + sse_uv;
     rd_cost->rdcost = RDCOST(x->rdmult, rd_cost->rate, rd_cost->dist);
     rd_cost->skip_txfm = 0;
+
+    int skip_rate =
+        x->mode_costs.skip_txfm_cost[av1_get_skip_txfm_context(xd)][1];
+    int64_t skip_rdcost = RDCOST(x->rdmult, skip_rate, rd_cost->sse);
+
+    if (rd_cost->rdcost < skip_rdcost) {
+      rd_cost->skip_txfm = 1;
+      rd_cost->rdcost = skip_rdcost;
+    }
   } else {
     rd_cost->rate = INT_MAX;
   }

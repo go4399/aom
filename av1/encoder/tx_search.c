@@ -3075,7 +3075,7 @@ static inline void block_rd_txfm(int plane, int block, int blk_row, int blk_col,
     set_blk_skip(txfm_info->blk_skip, plane, blk_idx, 0);
 
   int64_t rd;
-  if (is_inter) {
+  if (is_inter || 1) {
     const int64_t no_skip_txfm_rd =
         RDCOST(x->rdmult, this_rd_stats.rate, this_rd_stats.dist);
     const int64_t skip_txfm_rd = RDCOST(x->rdmult, 0, this_rd_stats.sse);
