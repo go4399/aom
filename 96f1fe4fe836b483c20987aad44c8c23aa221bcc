@@ -16,6 +16,24 @@
       "message": "i started off lin\u0027s cl and made a few more changes with focus on key frame only.\n\nstill seeing loss ~ 0.5 - 0.9% in all metrics for the moment.",
       "revId": "96f1fe4fe836b483c20987aad44c8c23aa221bcc",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e704bb5_b7828c0b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31132
+      },
+      "writtenOn": "2025-10-06T21:10:47Z",
+      "side": 1,
+      "message": "I checked a clip with one key frame encoding locally, and the % of intra skipped mode looks more reasonable than the previous version. Now the skipped intra mode are 190 out of 4190 blocks, but the file size is still larger by enabling the skip_txfm for intra.",
+      "parentUuid": "df884122_8136dca9",
+      "revId": "96f1fe4fe836b483c20987aad44c8c23aa221bcc",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
