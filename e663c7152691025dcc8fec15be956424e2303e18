@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "673cf468_848e8259",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-10-06T22:57:38Z",
+      "side": 1,
+      "message": "Now they\u0027re technically after the longjmp is done.",
+      "revId": "e663c7152691025dcc8fec15be956424e2303e18",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
