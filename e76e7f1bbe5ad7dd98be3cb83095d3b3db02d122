@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d437fa56_c08199e5",
+        "filename": "aom/aom_tpl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2025-10-07T21:45:28Z",
+      "side": 1,
+      "message": "We may not need this for all reference frames, but I think it is OK to leave it as is for now.",
+      "range": {
+        "startLine": 64,
+        "startChar": 10,
+        "endLine": 64,
+        "endChar": 50
+      },
+      "revId": "e76e7f1bbe5ad7dd98be3cb83095d3b3db02d122",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
