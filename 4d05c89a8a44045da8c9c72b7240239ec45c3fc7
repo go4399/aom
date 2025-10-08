@@ -1,0 +1,39 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ecd38d97_c7b4ba1c",
+        "filename": "av1/decoder/decodetxb.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-10-08T21:03:42Z",
+      "side": 1,
+      "message": "An assert at this level about longjmp being set would be good to back up the use of `aom_internal_error` inside `read_golomb`. It could be placed closer to that call, but then we\u0027d only hit that in a failure case.",
+      "fixSuggestions": [
+        {
+          "fixId": "61e14d70_5fc7be03",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/decoder/decodetxb.c",
+              "range": {
+                "startLine": 327,
+                "startChar": 0,
+                "endLine": 327,
+                "endChar": 0
+              },
+              "replacement": "  // aom_internal_error uses longjmp, so we must have a jmp_buf set.\n  assert(dcb-\u003exd.error_info-\u003esetjmp_val !\u003d 0);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "4d05c89a8a44045da8c9c72b7240239ec45c3fc7",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
