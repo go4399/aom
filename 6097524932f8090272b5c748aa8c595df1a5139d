@@ -48,6 +48,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "69a8f76e_79cc94ed",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 4224,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2025-10-09T17:49:58Z",
+      "side": 1,
+      "message": "Ah missed this. Thanks!",
+      "parentUuid": "b6cdec4e_761af90b",
+      "range": {
+        "startLine": 4224,
+        "startChar": 20,
+        "endLine": 4224,
+        "endChar": 27
+      },
+      "revId": "6097524932f8090272b5c748aa8c595df1a5139d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e78f5be0_344a8289",
@@ -79,6 +103,24 @@
       "side": 1,
       "message": "Yeah, so this is called when the codec control is set, typically in the encoder wrapper. It is probably better to set this codec control in the end (after all the other encoder configs are set).\n\nThen this functions calls `av1_extrc_create` (line 4234) which calls the callback function `ext_ratectrl-\u003efuncs.create_model` (line 34 in `av1_ext_ratectrl.c`). That will pass the `ratectrl_config` to the rate control library.\n\nSo the flow of rate control configs is: encoder wrapper (application, say, ffmpeg) -\u003e codec control -\u003e `av1_extrc_create` -\u003e callback function (defined as the middle man between libaom and rate control library) -\u003e Rate control library.\n\nSo this function will be called whenever the encoder is initiated. All three passes need this. Hope this answers your question!\n\nBtw the design chart can be found in go/vp9-qmode-integration",
       "parentUuid": "e78f5be0_344a8289",
+      "revId": "6097524932f8090272b5c748aa8c595df1a5139d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "59f6e5db_25b803b2",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 4225,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2025-10-09T17:49:58Z",
+      "side": 1,
+      "message": "Got it. Thank you for the explanation!",
+      "parentUuid": "68ad0744_9e2f0cd9",
       "revId": "6097524932f8090272b5c748aa8c595df1a5139d",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
