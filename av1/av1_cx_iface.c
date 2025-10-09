@@ -4006,7 +4006,9 @@ static aom_codec_err_t ctrl_set_svc_params(aom_codec_alg_priv_t *ctx,
     cpi->common.temporal_layer_id = clamp(cpi->common.temporal_layer_id, 0,
                                           cpi->svc.number_temporal_layers - 1);
   }
-
+  // Disable svc for spatial layers with lag_in_frames > 0.
+  if (ppi->number_spatial_layers > 1 && cpi->oxcf.gf_cfg.lag_in_frames > 0)
+    return AOM_CODEC_INVALID_PARAM;
   if (ppi->number_spatial_layers > 1 || ppi->number_temporal_layers > 1) {
     unsigned int sl, tl;
     ctx->ppi->use_svc = 1;
