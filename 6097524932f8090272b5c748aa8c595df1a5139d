@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d06e5aa_e1638372",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 4224,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2025-10-09T17:16:58Z",
+      "side": 1,
+      "message": "Possibly related to the other question: do we need to also set target rate here too?",
+      "range": {
+        "startLine": 4224,
+        "startChar": 20,
+        "endLine": 4224,
+        "endChar": 27
+      },
+      "revId": "6097524932f8090272b5c748aa8c595df1a5139d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e78f5be0_344a8289",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 4225,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2025-10-09T17:16:58Z",
+      "side": 1,
+      "message": "Question here: I\u0027m a bit unclear about the overall workflow and when the callbacks are called. Say we are doing a three-pass Q mode encoding with firstpass, tpl pass and final pass. Then could you help explain at which stage is this function used to set the parameters for rate control?",
+      "revId": "6097524932f8090272b5c748aa8c595df1a5139d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
