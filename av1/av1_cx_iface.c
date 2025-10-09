@@ -4009,6 +4009,9 @@ static aom_codec_err_t ctrl_set_svc_params(aom_codec_alg_priv_t *ctx,
 
   if (ppi->number_spatial_layers > 1 || ppi->number_temporal_layers > 1) {
     unsigned int sl, tl;
+    // Disable svc for lag_in_frames > 0 with good_quality usage.
+    if (cpi->oxcf.gf_cfg.lag_in_frames > 0 && cpi->oxcf.mode == GOOD)
+      return AOM_CODEC_INVALID_PARAM;
     ctx->ppi->use_svc = 1;
     const int num_layers =
         ppi->number_spatial_layers * ppi->number_temporal_layers;
