@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "26c5f678_34110a87",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-10-10T16:07:10Z",
+      "side": 1,
+      "message": "By using `AOM_EXT_RATECTRL_ABI_VERSION` in aom/aom_encoder.h, I mean adding `AOM_EXT_RATECTRL_ABI_VERSION` to `AOM_ENCODER_ABI_VERSION`.",
+      "parentUuid": "7c9f10d4_dbaee70c",
+      "revId": "6097524932f8090272b5c748aa8c595df1a5139d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "184bbcec_4591188a",
         "filename": "aom/aomcx.h",
         "patchSetId": 6
