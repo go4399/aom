@@ -877,6 +877,7 @@ int64_t av1_rd_pick_intra_sbuv_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
   const IntraModeCfg *const intra_mode_cfg = &cpi->oxcf.intra_mode_cfg;
 
   init_sbuv_mode(mbmi);
+  mbmi->skip_txfm = 0;
 
   // Return if the current block does not correspond to a chroma block.
   if (!xd->is_chroma_ref) {
