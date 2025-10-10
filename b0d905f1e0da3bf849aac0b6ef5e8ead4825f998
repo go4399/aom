@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4eab2ae8_90fe934e",
+        "filename": "aom/aom_ext_ratectrl.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-10-10T15:53:37Z",
+      "side": 1,
+      "message": "Please remove the `./` part from the `#include` statements in the two new headers.",
+      "revId": "b0d905f1e0da3bf849aac0b6ef5e8ead4825f998",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
