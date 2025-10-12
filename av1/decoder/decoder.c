@@ -283,6 +283,16 @@ static int equal_dimensions_and_border(const YV12_BUFFER_CONFIG *a,
              (b->flags & YV12_FLAG_HIGHBITDEPTH);
 }
 
+#define aom_internal_error_or_set(error_message)                       \
+  do {                                                                 \
+    if (cm->error->setjmp) {                                           \
+      aom_internal_error(cm->error, AOM_CODEC_ERROR, (error_message)); \
+    } else {                                                           \
+      aom_set_error(cm->error, AOM_CODEC_ERROR, (error_message));      \
+      return cm->error->error_code;                                    \
+    }                                                                  \
+  } while (0)
+
 aom_codec_err_t av1_set_reference_dec(AV1_COMMON *cm, int idx,
                                       int use_external_ref,
                                       YV12_BUFFER_CONFIG *sd) {
@@ -293,20 +303,19 @@ aom_codec_err_t av1_set_reference_dec(AV1_COMMON *cm, int idx,
   ref_buf = get_ref_frame(cm, idx);
 
   if (ref_buf == NULL) {
-    aom_set_error(cm->error, AOM_CODEC_ERROR, "No reference frame");
-    return cm->error->error_code;
+    aom_internal_error_or_set("No reference frame");
   }
 
   if (!use_external_ref) {
     if (!equal_dimensions(ref_buf, sd)) {
-      aom_set_error(cm->error, AOM_CODEC_ERROR, "Incorrect buffer dimensions");
+      aom_internal_error_or_set("Incorrect buffer dimensions");
       return cm->error->error_code;
     }
     // Overwrite the reference frame buffer.
     aom_yv12_copy_frame(sd, ref_buf, num_planes);
   } else {
     if (!equal_dimensions_and_border(ref_buf, sd)) {
-      aom_set_error(cm->error, AOM_CODEC_ERROR, "Incorrect buffer dimensions");
+      aom_internal_error_or_set("Incorrect buffer dimensions");
       return cm->error->error_code;
     }
     // Overwrite the reference frame buffer pointers.
