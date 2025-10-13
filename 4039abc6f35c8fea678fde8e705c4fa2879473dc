@@ -24,6 +24,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6350bc78_a385362a",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1649,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2025-10-13T21:23:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc400383_95cea42d",
+      "range": {
+        "startLine": 1649,
+        "startChar": 63,
+        "endLine": 1649,
+        "endChar": 65
+      },
+      "revId": "4039abc6f35c8fea678fde8e705c4fa2879473dc",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "639d9e80_1121f070",
@@ -37,6 +61,24 @@
       "writtenOn": "2025-10-13T20:58:00Z",
       "side": 1,
       "message": "Nit: Use `EXPECT_NE` to check that this call fails (return value is not `AOM_CODEC_OK`).",
+      "revId": "4039abc6f35c8fea678fde8e705c4fa2879473dc",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d0963e6_2b24c9d5",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1683,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2025-10-13T21:23:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "639d9e80_1121f070",
       "revId": "4039abc6f35c8fea678fde8e705c4fa2879473dc",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
