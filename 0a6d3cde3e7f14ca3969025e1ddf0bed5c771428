@@ -18,6 +18,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ebd8f03_6800151d",
+        "filename": "av1/decoder/decoder.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-10-14T15:09:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb1263d3_1f71bb3c",
+      "revId": "0a6d3cde3e7f14ca3969025e1ddf0bed5c771428",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7f63a285_a6e3498a",
@@ -31,6 +49,24 @@
       "writtenOn": "2025-10-13T17:16:55Z",
       "side": 1,
       "message": "https://aomedia-review.googlesource.com/c/aom/+/203501 modifies three functions. Please check if the other two functions need the same treatment.",
+      "revId": "0a6d3cde3e7f14ca3969025e1ddf0bed5c771428",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "94c69214_f3672c80",
+        "filename": "av1/decoder/decoder.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-10-14T15:09:05Z",
+      "side": 1,
+      "message": "The other two have only one caller each.",
+      "parentUuid": "7f63a285_a6e3498a",
       "revId": "0a6d3cde3e7f14ca3969025e1ddf0bed5c771428",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -76,6 +112,24 @@
           ]
         }
       ],
+      "revId": "0a6d3cde3e7f14ca3969025e1ddf0bed5c771428",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "22d15905_1f85058d",
+        "filename": "av1/decoder/decoder.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-10-14T15:09:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b7b6112_24378799",
       "revId": "0a6d3cde3e7f14ca3969025e1ddf0bed5c771428",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
