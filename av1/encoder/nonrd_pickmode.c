@@ -479,6 +479,15 @@ static TX_SIZE calculate_tx_size(const AV1_COMP *const cpi, BLOCK_SIZE bsize,
                tx_mode_to_biggest_tx_size[txfm_params->tx_mode_search_type]);
   }
 
+  if (cpi->oxcf.tune_cfg.content == AOM_CONTENT_SCREEN) {
+    MB_MODE_INFO *const mi = xd->mi[0];
+    const bool is_mv_subpel_scroll =
+        mi->mv[0].as_int != 0 && bsize <= BLOCK_16X16 &&
+        ((mi->mv[0].as_mv.row & 0x07) || (mi->mv[0].as_mv.col & 0x07)) &&
+        (mi->mv[0].as_mv.row == 0 || mi->mv[0].as_mv.col == 0);
+    if (is_mv_subpel_scroll) tx_size = TX_4X4;
+  }
+
   if (CAP_TX_SIZE_FOR_BSIZE_GT32(txfm_params->tx_mode_search_type, bsize))
     tx_size = TX_SIZE_FOR_BSIZE_GT32;
 
