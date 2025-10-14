@@ -35,6 +35,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1e57ae3_58442a17",
+        "filename": "av1/av1_dx_iface.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 966,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-10-14T16:20:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "861d7822_259ec99d",
+      "revId": "247d73e8c376a2db99d098630562f606341823d1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "862749ec_278dbbfd",
@@ -48,6 +66,24 @@
       "writtenOn": "2025-10-14T16:03:52Z",
       "side": 1,
       "message": "I suggest adding an assertion at the beginning of this function (before the `aom_internal_error()` calls):\n\n```\n  // Ensure that aom_internal_error() calls longjmp().\n  assert(cm-\u003eerror-\u003esetjmp);\n```",
+      "revId": "247d73e8c376a2db99d098630562f606341823d1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a084788_6214e033",
+        "filename": "av1/decoder/decoder.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-10-14T16:20:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "862749ec_278dbbfd",
       "revId": "247d73e8c376a2db99d098630562f606341823d1",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
