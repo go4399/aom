@@ -216,6 +216,14 @@ void av1_cyclic_refresh_update_segment(const AV1_COMP *cpi, MACROBLOCK *const x,
     // Reset segment_id if will be skipped.
     if (skip) mbmi->segment_id = CR_SEGMENT_ID_BASE;
   }
+  if (cpi->oxcf.tune_cfg.content == AOM_CONTENT_SCREEN) {
+    MV mv = mbmi->mv[0].as_mv;
+    const bool is_mv_subpel_scroll =
+        x->source_variance > 500 && mbmi->mv[0].as_int != 0 &&
+        bsize <= BLOCK_16X16 && ((mv.row & 0x07) || (mv.col & 0x07)) &&
+        (mv.row == 0 || mv.col == 0) && (abs(mv.row) > 16 || abs(mv.col) > 16);
+    if (is_mv_subpel_scroll) mbmi->segment_id = CR_SEGMENT_ID_BOOST1;
+  }
   const uint8_t segment_id = mbmi->segment_id;
 
   // Update the cyclic refresh map, to be used for setting segmentation map
