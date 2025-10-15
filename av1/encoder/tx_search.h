@@ -115,6 +115,27 @@ void av1_pick_uniform_tx_size_type_yrd(const AV1_COMP *const cpi, MACROBLOCK *x,
                                        RD_STATS *rd_stats, BLOCK_SIZE bs,
                                        int64_t ref_best_rd);
 
+/*!\brief skip transform size search.
+*
+* \ingroup transform_search
+* Search for the best transform size and type for current macroblock block,
+* with the assumption that all the transform blocks have a uniform size
+* (VP9 style). The selected transform size and type will be saved in the
+* MB_MODE_INFO structure; the corresponding RD stats will be saved in rd_stats.
+* This function may be used for both intra and inter predicted blocks.
+*
+* \param[in]    cpi            Top-level encoder structure
+* \param[in]    x              Pointer to structure holding the data for the
+current encoding macroblock
+* \param[in]    rd_stats       Pointer to struct to keep track of the RD stats
+* \param[in]    bs             Current macroblock size
+* \param[in]    ref_best_rd    Best RD cost seen for this block so far
+* \remark       Nothing is returned. The selected transform size and type will
+be saved in the MB_MODE_INFO structure
+*/
+void av1_txfm_skip_rd(const AV1_COMP *const cpi, MACROBLOCK *x,
+                      RD_STATS *rd_stats, BLOCK_SIZE bs, int64_t ref_best_rd);
+
 /*!\brief Chroma block transform search.
  *
  * \ingroup transform_search

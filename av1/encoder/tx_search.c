@@ -14,6 +14,7 @@
 #include "av1/encoder/block.h"
 #include "av1/encoder/hybrid_fwd_txfm.h"
 #include "av1/common/idct.h"
+#include "av1/encoder/intra_mode_search_utils.h"
 #include "av1/encoder/model_rd.h"
 #include "av1/encoder/random.h"
 #include "av1/encoder/rdopt_utils.h"
@@ -3008,6 +3009,65 @@ static inline void choose_tx_size_type_from_rd(const AV1_COMP *const cpi,
 #endif
 }
 
+static inline void block_rd_txfm_skip(int plane, int block, int blk_row,
+                                      int blk_col, BLOCK_SIZE plane_bsize,
+                                      TX_SIZE tx_size, void *arg) {
+  struct rdcost_block_args *args = arg;
+  MACROBLOCK *const x = args->x;
+  MACROBLOCKD *const xd = &x->e_mbd;
+  const int is_inter = is_inter_block(xd->mi[0]);
+  const AV1_COMP *cpi = args->cpi;
+  ENTROPY_CONTEXT *a = args->t_above + blk_col;
+  ENTROPY_CONTEXT *l = args->t_left + blk_row;
+  const AV1_COMMON *cm = &cpi->common;
+  RD_STATS this_rd_stats;
+  av1_init_rd_stats(&this_rd_stats);
+
+  if (!is_inter) {
+    av1_predict_intra_block_facade(cm, xd, plane, blk_col, blk_row, tx_size);
+    av1_subtract_txb(x, plane, plane_bsize, blk_col, blk_row, tx_size);
+  }
+
+  int64_t block_sse = av1_pixel_diff_dist(
+      x, plane, blk_row, blk_col, plane_bsize, txsize_to_bsize[tx_size], NULL);
+
+  block_sse *= 16;
+
+  this_rd_stats.dist = block_sse;
+  this_rd_stats.sse = block_sse;
+
+  x->plane[plane].txb_entropy_ctx[block] = 0;
+  x->plane[plane].eobs[block] = 0;
+
+#if !CONFIG_REALTIME_ONLY
+  if (plane == AOM_PLANE_Y && store_cfl_required_rdo(cm, x)) {
+    assert(!is_inter || plane_bsize < BLOCK_8X8);
+    cfl_store_tx(xd, blk_row, blk_col, tx_size, plane_bsize);
+  }
+#endif
+
+#if CONFIG_RD_DEBUG
+  update_txb_coeff_cost(&this_rd_stats, plane, this_rd_stats.rate);
+#endif  // CONFIG_RD_DEBUG
+  av1_set_txb_context(x, plane, block, tx_size, a, l);
+
+  const int blk_idx =
+      blk_row * (block_size_wide[plane_bsize] >> MI_SIZE_LOG2) + blk_col;
+
+  TxfmSearchInfo *txfm_info = &x->txfm_search_info;
+  if (plane == 0)
+    set_blk_skip(txfm_info->blk_skip, plane, blk_idx,
+                 x->plane[plane].eobs[block] == 0);
+  else
+    set_blk_skip(txfm_info->blk_skip, plane, blk_idx, 0);
+
+  int64_t rd = RDCOST(x->rdmult, this_rd_stats.rate, this_rd_stats.dist);
+
+  av1_merge_rd_stats(&args->rd_stats, &this_rd_stats);
+
+  args->current_rd += rd;
+}
+
 // Search for the best transform type for the given transform block in the
 // given plane/channel, and calculate the corresponding RD cost.
 static inline void block_rd_txfm(int plane, int block, int blk_row, int blk_col,
@@ -3650,6 +3710,119 @@ void av1_pick_uniform_tx_size_type_yrd(const AV1_COMP *const cpi, MACROBLOCK *x,
   // Save the RD search results into mb_rd_record for possible reuse in future.
   if (mb_rd_record) {
     save_mb_rd_info(num_blks, hash, x, rd_stats, mb_rd_record);
+  }
+}
+
+void av1_txfm_skip_rd(const AV1_COMP *const cpi, MACROBLOCK *x,
+                      RD_STATS *rd_stats, BLOCK_SIZE bs, int64_t ref_best_rd) {
+  MACROBLOCKD *const xd = &x->e_mbd;
+  MB_MODE_INFO *const mbmi = xd->mi[0];
+  assert(bs == mbmi->bsize);
+  const int is_inter = is_inter_block(mbmi);
+  const int mi_row = xd->mi_row;
+  const int mi_col = xd->mi_col;
+  const int num_planes = av1_num_planes(&cpi->common);
+
+  (void)is_inter;
+  (void)mi_row;
+  (void)mi_col;
+
+  if (xd->lossless[mbmi->segment_id]) return;
+
+  MB_MODE_INFO best_mbmi = *mbmi;
+
+  mbmi->skip_txfm = 1;
+
+  RD_STATS best_rd_stats;
+  av1_invalid_rd_stats(&best_rd_stats);
+
+  TxfmSearchParams *const txfm_params = &x->txfm_search_params;
+  const TX_SIZE max_rect_tx_size = max_txsize_rect_lookup[bs];
+  const int tx_select = txfm_params->tx_mode_search_type == TX_MODE_SELECT;
+  int start_tx;
+  // The split depth can be at most MAX_TX_DEPTH, so the init_depth controls
+  // how many times of splitting is allowed during the RD search.
+  int init_depth;
+
+  if (tx_select) {
+    start_tx = max_rect_tx_size;
+    init_depth = get_search_init_depth(mi_size_wide[bs], mi_size_high[bs],
+                                       is_inter_block(mbmi), &cpi->sf,
+                                       txfm_params->tx_size_search_method);
+    if (init_depth == MAX_TX_DEPTH && !cpi->oxcf.txfm_cfg.enable_tx64 &&
+        txsize_sqr_up_map[start_tx] == TX_64X64) {
+      start_tx = sub_tx_size_map[start_tx];
+    }
+  } else {
+    const TX_SIZE chosen_tx_size =
+        tx_size_from_tx_mode(bs, txfm_params->tx_mode_search_type);
+    start_tx = chosen_tx_size;
+    init_depth = MAX_TX_DEPTH;
+  }
+
+  int skip_rate =
+      x->mode_costs.skip_txfm_cost[av1_get_skip_txfm_context(xd)][1];
+  const PREDICTION_MODE A = av1_above_block_mode(xd->above_mbmi);
+  const PREDICTION_MODE L = av1_left_block_mode(xd->left_mbmi);
+  const int above_ctx = intra_mode_context[A];
+  const int left_ctx = intra_mode_context[L];
+  const int *bmode_costs = x->mode_costs.y_mode_costs[above_ctx][left_ctx];
+  int luma_mode_rate =
+      intra_mode_info_cost_y(cpi, x, mbmi, bs, bmode_costs[mbmi->mode], 0);
+  const int *uvmode_costs =
+      x->mode_costs.intra_uv_mode_cost[is_cfl_allowed(xd)][mbmi->mode];
+  int uv_mode_cost =
+      intra_mode_info_cost_uv(cpi, x, mbmi, bs, uvmode_costs[mbmi->uv_mode]);
+
+  TX_SIZE best_tx_size = max_rect_tx_size;
+  int64_t best_rd = ref_best_rd;
+  x->rd_model = FULL_TXFM_RD;
+
+  for (int tx_size = start_tx, depth = init_depth; depth <= MAX_TX_DEPTH;
+       depth++, tx_size = sub_tx_size_map[tx_size]) {
+    if ((!cpi->oxcf.txfm_cfg.enable_tx64 &&
+         txsize_sqr_up_map[tx_size] == TX_64X64) ||
+        (!cpi->oxcf.txfm_cfg.enable_rect_tx &&
+         tx_size_wide[tx_size] != tx_size_high[tx_size])) {
+      continue;
+    }
+
+    RD_STATS this_rd_stats;
+    av1_init_rd_stats(&this_rd_stats);
+    this_rd_stats.rate = skip_rate + luma_mode_rate + uv_mode_cost +
+                         tx_size_cost(x, bs, tx_size);
+
+    mbmi->tx_size = tx_size;
+
+    for (int plane = 0; plane < num_planes; ++plane) {
+      const BLOCK_SIZE plane_bsize = get_plane_block_size(
+          bs, xd->plane[plane].subsampling_x, xd->plane[plane].subsampling_y);
+
+      struct rdcost_block_args args;
+      av1_zero(args);
+      args.x = x;
+      args.cpi = cpi;
+      av1_init_rd_stats(&args.rd_stats);
+      av1_foreach_transformed_block_in_plane(xd, plane_bsize, plane,
+                                             block_rd_txfm_skip, &args);
+      av1_merge_rd_stats(&this_rd_stats, &args.rd_stats);
+    }
+
+    this_rd_stats.rdcost =
+        RDCOST(x->rdmult, this_rd_stats.rate, this_rd_stats.dist);
+
+    if (this_rd_stats.rdcost < best_rd) {
+      best_tx_size = tx_size;
+      best_rd = this_rd_stats.rdcost;
+      *rd_stats = this_rd_stats;
+    }
+    if (tx_size == TX_4X4) break;
+  }
+
+  if (best_rd < ref_best_rd) {
+    mbmi->tx_size = best_tx_size;
+  } else {
+    *mbmi = best_mbmi;
   }
 }
 

@@ -3604,6 +3604,7 @@ void av1_rd_pick_intra_mode_sb(const struct AV1_COMP *cpi, struct macroblock *x,
   mbmi->use_intrabc = 0;
   mbmi->mv[0].as_int = 0;
   mbmi->skip_mode = 0;
+  mbmi->skip_txfm = 0;
 
   const int64_t intra_yrd =
       av1_rd_pick_intra_sby_mode(cpi, x, &rate_y, &rate_y_tokenonly, &dist_y,
@@ -3641,12 +3642,20 @@ void av1_rd_pick_intra_mode_sb(const struct AV1_COMP *cpi, struct macroblock *x,
 
   if (rd_cost->rate != INT_MAX && rd_cost->rdcost < best_rd)
     best_rd = rd_cost->rdcost;
+
   if (rd_pick_intrabc_mode_sb(cpi, x, ctx, rd_cost, bsize, best_rd) < best_rd) {
     ctx->rd_stats.skip_txfm = mbmi->skip_txfm;
     memcpy(ctx->blk_skip, txfm_info->blk_skip,
            sizeof(txfm_info->blk_skip[0]) * ctx->num_4x4_blk);
+    best_rd = rd_cost->rdcost;
     assert(rd_cost->rate != INT_MAX);
   }
+
+  if (rd_cost->rate != INT_MAX) {
+    av1_txfm_skip_rd(cpi, x, rd_cost, bsize, best_rd);
+    ctx->rd_stats.skip_txfm = mbmi->skip_txfm;
+  }
+
   if (rd_cost->rate == INT_MAX) return;
 
   ctx->mic = *xd->mi[0];

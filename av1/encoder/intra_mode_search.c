@@ -1539,6 +1539,7 @@ int64_t av1_rd_pick_intra_sby_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
   }
   mbmi->filter_intra_mode_info.use_filter_intra = 0;
   pmi->palette_size[0] = 0;
+  mbmi->skip_txfm = 0;
 
   // Set params for mode evaluation
   set_mode_eval_params(cpi, x, MODE_EVAL);
