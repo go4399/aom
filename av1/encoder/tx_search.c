@@ -14,6 +14,7 @@
 #include "av1/encoder/block.h"
 #include "av1/encoder/hybrid_fwd_txfm.h"
 #include "av1/common/idct.h"
+#include "av1/encoder/intra_mode_search.h"
 #include "av1/encoder/intra_mode_search_utils.h"
 #include "av1/encoder/model_rd.h"
 #include "av1/encoder/random.h"
@@ -3732,6 +3733,9 @@ void av1_txfm_skip_rd(const AV1_COMP *const cpi, MACROBLOCK *x,
   MB_MODE_INFO best_mbmi = *mbmi;
 
   mbmi->skip_txfm = 1;
+  mbmi->filter_intra_mode_info.use_filter_intra = 0;
+  mbmi->palette_mode_info.palette_size[0] = 0;
+  mbmi->palette_mode_info.palette_size[1] = 0;
 
   RD_STATS best_rd_stats;
   av1_invalid_rd_stats(&best_rd_stats);
@@ -3767,60 +3771,81 @@ void av1_txfm_skip_rd(const AV1_COMP *const cpi, MACROBLOCK *x,
   const int above_ctx = intra_mode_context[A];
   const int left_ctx = intra_mode_context[L];
   const int *bmode_costs = x->mode_costs.y_mode_costs[above_ctx][left_ctx];
-  int luma_mode_rate =
-      intra_mode_info_cost_y(cpi, x, mbmi, bs, bmode_costs[mbmi->mode], 0);
-  const int *uvmode_costs =
-      x->mode_costs.intra_uv_mode_cost[is_cfl_allowed(xd)][mbmi->mode];
-  int uv_mode_cost =
-      intra_mode_info_cost_uv(cpi, x, mbmi, bs, uvmode_costs[mbmi->uv_mode]);
 
   TX_SIZE best_tx_size = max_rect_tx_size;
   int64_t best_rd = ref_best_rd;
+  int best_mode_idx = 0;
+  UV_PREDICTION_MODE best_uv_mode = 0;
   x->rd_model = FULL_TXFM_RD;
 
-  for (int tx_size = start_tx, depth = init_depth; depth <= MAX_TX_DEPTH;
-       depth++, tx_size = sub_tx_size_map[tx_size]) {
-    if ((!cpi->oxcf.txfm_cfg.enable_tx64 &&
-         txsize_sqr_up_map[tx_size] == TX_64X64) ||
-        (!cpi->oxcf.txfm_cfg.enable_rect_tx &&
-         tx_size_wide[tx_size] != tx_size_high[tx_size])) {
-      continue;
+  for (int mode_idx = INTRA_MODE_START; mode_idx < LUMA_MODE_COUNT;
+       ++mode_idx) {
+    set_y_mode_and_delta_angle(mode_idx, mbmi, 0);
+
+    for (UV_PREDICTION_MODE uv_mode = UV_DC_PRED; uv_mode < UV_INTRA_MODES;
+         ++uv_mode) {
+      mbmi->uv_mode = uv_mode;
+
+      if (mbmi->uv_mode == UV_CFL_PRED)
+        if (!is_cfl_allowed(xd)) continue;
+
+      int luma_mode_rate =
+          intra_mode_info_cost_y(cpi, x, mbmi, bs, bmode_costs[mbmi->mode], 0);
+      const int *uvmode_costs =
+          x->mode_costs.intra_uv_mode_cost[is_cfl_allowed(xd)][mbmi->mode];
+      int uv_mode_cost = intra_mode_info_cost_uv(cpi, x, mbmi, bs,
+                                                 uvmode_costs[mbmi->uv_mode]);
+
+      for (int tx_size = start_tx, depth = init_depth; depth <= MAX_TX_DEPTH;
+           depth++, tx_size = sub_tx_size_map[tx_size]) {
+        if ((!cpi->oxcf.txfm_cfg.enable_tx64 &&
+             txsize_sqr_up_map[tx_size] == TX_64X64) ||
+            (!cpi->oxcf.txfm_cfg.enable_rect_tx &&
+             tx_size_wide[tx_size] != tx_size_high[tx_size])) {
+          continue;
+        }
+
+        RD_STATS this_rd_stats;
+        av1_init_rd_stats(&this_rd_stats);
+        this_rd_stats.rate = skip_rate + luma_mode_rate + uv_mode_cost +
+                             tx_size_cost(x, bs, tx_size);
+
+        mbmi->tx_size = tx_size;
+
+        for (int plane = 0; plane < num_planes; ++plane) {
+          const BLOCK_SIZE plane_bsize =
+              get_plane_block_size(bs, xd->plane[plane].subsampling_x,
+                                   xd->plane[plane].subsampling_y);
+
+          struct rdcost_block_args args;
+          av1_zero(args);
+          args.x = x;
+          args.cpi = cpi;
+          av1_init_rd_stats(&args.rd_stats);
+          av1_foreach_transformed_block_in_plane(xd, plane_bsize, plane,
+                                                 block_rd_txfm_skip, &args);
+          av1_merge_rd_stats(&this_rd_stats, &args.rd_stats);
+        }
+
+        this_rd_stats.rdcost =
+            RDCOST(x->rdmult, this_rd_stats.rate, this_rd_stats.dist);
+
+        if (this_rd_stats.rdcost < best_rd) {
+          best_tx_size = tx_size;
+          best_mode_idx = mode_idx;
+          best_uv_mode = uv_mode;
+          best_rd = this_rd_stats.rdcost;
+          *rd_stats = this_rd_stats;
+        }
+        if (tx_size == TX_4X4) break;
+      }
     }
-
-    RD_STATS this_rd_stats;
-    av1_init_rd_stats(&this_rd_stats);
-    this_rd_stats.rate = skip_rate + luma_mode_rate + uv_mode_cost +
-                         tx_size_cost(x, bs, tx_size);
-
-    mbmi->tx_size = tx_size;
-
-    for (int plane = 0; plane < num_planes; ++plane) {
-      const BLOCK_SIZE plane_bsize = get_plane_block_size(
-          bs, xd->plane[plane].subsampling_x, xd->plane[plane].subsampling_y);
-
-      struct rdcost_block_args args;
-      av1_zero(args);
-      args.x = x;
-      args.cpi = cpi;
-      av1_init_rd_stats(&args.rd_stats);
-      av1_foreach_transformed_block_in_plane(xd, plane_bsize, plane,
-                                             block_rd_txfm_skip, &args);
-      av1_merge_rd_stats(&this_rd_stats, &args.rd_stats);
-    }
-
-    this_rd_stats.rdcost =
-        RDCOST(x->rdmult, this_rd_stats.rate, this_rd_stats.dist);
-
-    if (this_rd_stats.rdcost < best_rd) {
-      best_tx_size = tx_size;
-      best_rd = this_rd_stats.rdcost;
-      *rd_stats = this_rd_stats;
-    }
-    if (tx_size == TX_4X4) break;
   }
 
   if (best_rd < ref_best_rd) {
     mbmi->tx_size = best_tx_size;
+    set_y_mode_and_delta_angle(best_mode_idx, mbmi, 0);
+    mbmi->uv_mode = best_uv_mode;
   } else {
     *mbmi = best_mbmi;
   }
