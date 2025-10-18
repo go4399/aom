@@ -1501,6 +1501,7 @@ int64_t av1_rd_pick_intra_sby_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
                                    PICK_MODE_CONTEXT *ctx) {
   MACROBLOCKD *const xd = &x->e_mbd;
   MB_MODE_INFO *const mbmi = xd->mi[0];
+  const SPEED_FEATURES *sf = &cpi->sf;
   assert(!is_inter_block(mbmi));
   int64_t best_model_rd = INT64_MAX;
   int is_directional_mode;
@@ -1570,6 +1571,8 @@ int64_t av1_rd_pick_intra_sby_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
       intra_modes_rd_cost[i][j] = INT64_MAX;
     }
   }
+
+  int64_t best_uv_rd = INT64_MAX;
 
   for (int mode_idx = INTRA_MODE_START; mode_idx < LUMA_MODE_COUNT;
        ++mode_idx) {
@@ -1675,9 +1678,38 @@ int64_t av1_rd_pick_intra_sby_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
     store_winner_mode_stats(
         &cpi->common, x, mbmi, NULL, NULL, NULL, 0, NULL, bsize, this_rd,
         cpi->sf.winner_mode_sf.multi_winner_mode_type, txfm_search_done);
-    if (this_rd < best_rd) {
+
+    // Add cfl cost as an additional check point
+    int64_t uv_mode_rdcost = 0;
+
+    xd->cfl.store_y = store_cfl_required_rdo(&cpi->common, x);
+    if (xd->cfl.store_y) {
+      av1_encode_intra_block_plane(cpi, x, mbmi->bsize, AOM_PLANE_Y,
+                                   DRY_RUN_NORMAL,
+                                   cpi->optimize_seg_arr[mbmi->segment_id]);
+      xd->cfl.store_y = 0;
+    }
+
+    if (is_cfl_allowed(xd)) {
+      RD_STATS uv_rd_stats;
+      mbmi->uv_mode = UV_CFL_PRED;
+      const TX_SIZE uv_tx_size = av1_get_tx_size(AOM_PLANE_U, xd);
+      if (!cfl_rd_pick_alpha(x, cpi, uv_tx_size, INT64_MAX,
+                             sf->intra_sf.cfl_search_range, &uv_rd_stats,
+                             &mbmi->cfl_alpha_idx, &mbmi->cfl_alpha_signs)) {
+        continue;
+      }
+      uv_mode_rdcost = RDCOST(x->rdmult, uv_rd_stats.rate, uv_rd_stats.dist);
+    }
+    if (best_uv_rd == INT64_MAX) best_uv_rd = uv_mode_rdcost;
+
+    int64_t ref_best_rd = best_rd;
+    if (ref_best_rd < INT64_MAX) ref_best_rd += best_uv_rd;
+
+    if (this_rd + uv_mode_rdcost < ref_best_rd) {
       best_mbmi = *mbmi;
       best_rd = this_rd;
+      best_uv_rd = uv_mode_rdcost;
       // Setting beat_best_rd flag because current mode rd is better than
       // best_rd passed to this function
       beat_best_rd = 1;
