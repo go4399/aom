@@ -3175,6 +3175,11 @@ static int encode_without_recode(AV1_COMP *cpi) {
   // frame.
   if (!frame_is_intra_only(cm)) av1_pick_and_set_high_precision_mv(cpi, q);
 
+  if (svc->temporal_layer_id == 0) {
+    cpi->rc.num_col_blscroll_last_tl0 = 0;
+    cpi->rc.num_row_blscroll_last_tl0 = 0;
+  }
+
   // transform / motion compensation build reconstruction frame
   av1_encode_frame(cpi);
 
@@ -3981,7 +3986,6 @@ static void subtract_stats(FIRSTPASS_STATS *section,
   section->frame_avg_wavelet_energy -= frame->frame_avg_wavelet_energy;
   section->coded_error -= frame->coded_error;
   section->sr_coded_error -= frame->sr_coded_error;
-  section->lt_coded_error -= frame->lt_coded_error;
   section->pcnt_inter -= frame->pcnt_inter;
   section->pcnt_motion -= frame->pcnt_motion;
   section->pcnt_second_ref -= frame->pcnt_second_ref;
