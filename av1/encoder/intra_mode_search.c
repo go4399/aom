@@ -250,6 +250,8 @@ static int rd_pick_filter_intra_sby(const AV1_COMP *const cpi, MACROBLOCK *x,
   mbmi->mode = DC_PRED;
   mbmi->palette_mode_info.palette_size[0] = 0;
 
+  int64_t best_uv_rd = INT64_MAX;
+
   // Skip the evaluation of filter-intra if cached MB_MODE_INFO does not have
   // filter-intra as winner.
   if (x->use_mb_mode_cache &&
@@ -293,8 +295,24 @@ static int rd_pick_filter_intra_sby(const AV1_COMP *const cpi, MACROBLOCK *x,
     store_winner_mode_stats(
         &cpi->common, x, mbmi, NULL, NULL, NULL, 0, NULL, bsize, this_rd,
         cpi->sf.winner_mode_sf.multi_winner_mode_type, txfm_search_done);
-    if (this_rd < *best_rd) {
+
+    const TX_SIZE max_uv_tx_size = av1_get_tx_size(AOM_PLANE_U, xd);
+    int rate_uv = 0;
+    int rate_uv_tokenonly = 0;
+    int64_t dist_uv = 0;
+    uint8_t uv_skip_txfm = 0;
+    av1_rd_pick_intra_sbuv_mode(cpi, x, &rate_uv, &rate_uv_tokenonly, &dist_uv,
+                                &uv_skip_txfm, bsize, max_uv_tx_size);
+
+    int64_t this_uv_rd = RDCOST(x->rdmult, rate_uv, dist_uv);
+    if (best_uv_rd == INT64_MAX) best_uv_rd = this_uv_rd;
+
+    int64_t ref_best_rd = *best_rd;
+    if (ref_best_rd < INT64_MAX) ref_best_rd += best_uv_rd;
+
+    if (this_rd + this_uv_rd < ref_best_rd) {
       *best_rd = this_rd;
+      best_uv_rd = this_uv_rd;
       best_tx_size = mbmi->tx_size;
       filter_intra_mode_info = mbmi->filter_intra_mode_info;
       av1_copy_array(best_tx_type_map, xd->tx_type_map, ctx->num_4x4_blk);
@@ -1503,6 +1521,7 @@ int64_t av1_rd_pick_intra_sby_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
   MB_MODE_INFO *const mbmi = xd->mi[0];
   assert(!is_inter_block(mbmi));
   int64_t best_model_rd = INT64_MAX;
+  int64_t best_uv_rd = INT64_MAX;
   int is_directional_mode;
   uint8_t directional_mode_skip_mask[INTRA_MODES] = { 0 };
   // Flag to check rd of any intra mode is better than best_rd passed to this
@@ -1675,9 +1694,25 @@ int64_t av1_rd_pick_intra_sby_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
     store_winner_mode_stats(
         &cpi->common, x, mbmi, NULL, NULL, NULL, 0, NULL, bsize, this_rd,
         cpi->sf.winner_mode_sf.multi_winner_mode_type, txfm_search_done);
-    if (this_rd < best_rd) {
+
+    const TX_SIZE max_uv_tx_size = av1_get_tx_size(AOM_PLANE_U, xd);
+    int rate_uv = 0;
+    int rate_uv_tokenonly = 0;
+    int64_t dist_uv = 0;
+    uint8_t uv_skip_txfm = 0;
+    av1_rd_pick_intra_sbuv_mode(cpi, x, &rate_uv, &rate_uv_tokenonly, &dist_uv,
+                                &uv_skip_txfm, bsize, max_uv_tx_size);
+
+    int64_t this_uv_rd = RDCOST(x->rdmult, rate_uv, dist_uv);
+    if (best_uv_rd == INT64_MAX) best_uv_rd = this_uv_rd;
+
+    int64_t ref_best_rd = best_rd;
+    if (ref_best_rd < INT64_MAX) ref_best_rd += best_uv_rd;
+
+    if (this_rd + this_uv_rd < ref_best_rd) {
       best_mbmi = *mbmi;
       best_rd = this_rd;
+      best_uv_rd = this_uv_rd;
       // Setting beat_best_rd flag because current mode rd is better than
       // best_rd passed to this function
       beat_best_rd = 1;
