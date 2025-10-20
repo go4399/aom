@@ -70,6 +70,30 @@
       },
       "revId": "ca5eaef0c23f178e2d7e1511c1ec92cc9d3daa53",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "62e8add3_d2108cd5",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 3760,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-10-20T20:13:14Z",
+      "side": 1,
+      "message": "From what RC library implements, FP stats is sent for the whole sequence only once. And since this function is only called once per encoding invocation (in second pass), and it seems to be before key frame is set. So this will be called only once.",
+      "parentUuid": "b11bf4ae_951dc1bb",
+      "range": {
+        "startLine": 3760,
+        "startChar": 32,
+        "endLine": 3760,
+        "endChar": 49
+      },
+      "revId": "ca5eaef0c23f178e2d7e1511c1ec92cc9d3daa53",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
