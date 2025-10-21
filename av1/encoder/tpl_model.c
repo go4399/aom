@@ -1427,6 +1427,40 @@ static inline void init_mc_flow_dispenser(AV1_COMP *cpi, int frame_idx,
       gf_group->layer_depth[frame_idx] >= layer_depth_th;
 }
 
+static void tpl_store_before_propagation(AomTplBlockStats *tpl_block_stats,
+                                         TplDepStats *src_stats, int mi_row,
+                                         int mi_col) {
+  tpl_block_stats->row = mi_row * MI_SIZE;
+  tpl_block_stats->col = mi_col * MI_SIZE;
+  tpl_block_stats->srcrf_sse = src_stats->srcrf_sse;
+  tpl_block_stats->srcrf_dist = src_stats->srcrf_dist;
+  tpl_block_stats->recrf_sse = src_stats->recrf_sse;
+  tpl_block_stats->recrf_dist = src_stats->recrf_dist;
+  tpl_block_stats->intra_sse = src_stats->intra_sse;
+  tpl_block_stats->intra_dist = src_stats->intra_dist;
+  tpl_block_stats->cmp_recrf_dist[0] = src_stats->cmp_recrf_dist[0];
+  tpl_block_stats->cmp_recrf_dist[1] = src_stats->cmp_recrf_dist[1];
+  tpl_block_stats->mc_dep_rate = src_stats->mc_dep_rate;
+  tpl_block_stats->mc_dep_dist = src_stats->mc_dep_dist;
+  tpl_block_stats->inter_cost = src_stats->inter_cost;
+  tpl_block_stats->intra_cost = src_stats->intra_cost;
+  tpl_block_stats->srcrf_rate = src_stats->srcrf_rate;
+  tpl_block_stats->recrf_rate = src_stats->recrf_rate;
+  tpl_block_stats->intra_rate = src_stats->intra_rate;
+  tpl_block_stats->cmp_recrf_rate[0] = src_stats->cmp_recrf_rate[0];
+  tpl_block_stats->cmp_recrf_rate[1] = src_stats->cmp_recrf_rate[1];
+  tpl_block_stats->ref_frame_index[0] = src_stats->ref_frame_index[0];
+  tpl_block_stats->ref_frame_index[1] = src_stats->ref_frame_index[1];
+  for (int ref = 0; ref < AOM_RC_INTER_REFS_PER_FRAME; ++ref) {
+    tpl_block_stats->mv[ref].as_mv.col = src_stats->mv[ref].as_mv.col;
+    tpl_block_stats->mv[ref].as_mv.row = src_stats->mv[ref].as_mv.row;
+    tpl_block_stats->mv[ref].as_fullmv.col = src_stats->mv[ref].as_fullmv.col;
+    tpl_block_stats->mv[ref].as_fullmv.row = src_stats->mv[ref].as_fullmv.row;
+    tpl_block_stats->mv[ref].as_int = src_stats->mv[ref].as_int;
+    tpl_block_stats->pred_error[ref] = src_stats->pred_error[ref];
+  }
+}
+
 // This function stores the motion estimation dependencies of all the blocks in
 // a row
 void av1_mc_flow_dispenser_row(AV1_COMP *cpi, TplTxfmStats *tpl_txfm_stats,
@@ -1440,6 +1474,9 @@ void av1_mc_flow_dispenser_row(AV1_COMP *cpi, TplTxfmStats *tpl_txfm_stats,
   TplParams *const tpl_data = &cpi->ppi->tpl_data;
   TplDepFrame *tpl_frame = &tpl_data->tpl_frame[tpl_data->frame_idx];
   MACROBLOCKD *xd = &x->e_mbd;
+
+  AomTplFrameStats *tpl_frame_stats_before_propagation =
+      &cpi->tpl_gop_stats.frame_stats_list[tpl_data->frame_idx];
 
   const int tplb_cols_in_tile =
       ROUND_POWER_OF_TWO(mi_params->mi_cols, mi_size_wide_log2[bsize]);
@@ -1476,6 +1513,11 @@ void av1_mc_flow_dispenser_row(AV1_COMP *cpi, TplTxfmStats *tpl_txfm_stats,
     // Motion flow dependency dispenser.
     tpl_model_store(tpl_frame->tpl_stats_ptr, mi_row, mi_col, tpl_frame->stride,
                     &tpl_stats, tpl_data->tpl_stats_block_mis_log2);
+
+    AomTplBlockStats *block_stats =
+        &tpl_frame_stats_before_propagation
+             ->block_stats_list[mi_row * tpl_frame->mi_cols + mi_col];
+    tpl_store_before_propagation(block_stats, &tpl_stats, mi_row, mi_col);
     (*tpl_row_mt->sync_write_ptr)(&tpl_data->tpl_mt_sync, tplb_row,
                                   tplb_col_in_tile, tplb_cols_in_tile);
   }
@@ -1856,6 +1898,43 @@ static double get_frame_importance(const TplParams *tpl_data,
   return exp((mc_dep_cost_base - intra_cost_base) / cbcmp_base);
 }
 
+void av1_free_tpl_gop_stats(AomTplGopStats *tpl_gop_stats) {
+  if (tpl_gop_stats == NULL || tpl_gop_stats->frame_stats_list == NULL) {
+    return;
+  }
+  for (int frame_index = 0; frame_index < tpl_gop_stats->size; ++frame_index) {
+    aom_free(tpl_gop_stats->frame_stats_list[frame_index].block_stats_list);
+    tpl_gop_stats->frame_stats_list[frame_index].block_stats_list = NULL;
+  }
+  aom_free(tpl_gop_stats->frame_stats_list);
+  tpl_gop_stats->frame_stats_list = NULL;
+  tpl_gop_stats->size = 0;
+}
+
+static void init_tpl_stats_before_propagation(
+    struct aom_internal_error_info *error_info, AomTplGopStats *tpl_gop_stats,
+    TplParams *tpl_stats, int tpl_gop_frames, int frame_width,
+    int frame_height) {
+  av1_free_tpl_gop_stats(tpl_gop_stats);
+  AOM_CHECK_MEM_ERROR(
+      error_info, tpl_gop_stats->frame_stats_list,
+      aom_calloc(tpl_gop_frames, sizeof(*tpl_gop_stats->frame_stats_list)));
+  tpl_gop_stats->size = tpl_gop_frames;
+  for (int frame_index = 0; frame_index < tpl_gop_frames; ++frame_index) {
+    const int mi_rows = tpl_stats->tpl_frame[frame_index].mi_rows;
+    const int mi_cols = tpl_stats->tpl_frame[frame_index].mi_cols;
+    AOM_CHECK_MEM_ERROR(
+        error_info,
+        tpl_gop_stats->frame_stats_list[frame_index].block_stats_list,
+        aom_calloc(mi_rows * mi_cols,
+                   sizeof(*tpl_gop_stats->frame_stats_list[frame_index]
+                               .block_stats_list)));
+    tpl_gop_stats->frame_stats_list[frame_index].num_blocks = mi_rows * mi_cols;
+    tpl_gop_stats->frame_stats_list[frame_index].frame_width = frame_width;
+    tpl_gop_stats->frame_stats_list[frame_index].frame_height = frame_height;
+  }
+}
+
 int av1_tpl_setup_stats(AV1_COMP *cpi, int gop_eval,
                         const EncodeFrameParams *const frame_params) {
 #if CONFIG_COLLECT_COMPONENT_TIMING
@@ -1896,6 +1975,10 @@ int av1_tpl_setup_stats(AV1_COMP *cpi, int gop_eval,
   cpi->ppi->p_rc.base_layer_qp = pframe_qindex;
 
   av1_init_tpl_stats(tpl_data);
+
+  init_tpl_stats_before_propagation(cpi->common.error, &cpi->tpl_gop_stats,
+                                    tpl_data, tpl_gf_group_frames,
+                                    cpi->common.width, cpi->common.height);
 
   TplBuffers *tpl_tmp_buffers = &cpi->td.tpl_tmp_buffers;
   if (!tpl_alloc_temp_buffers(tpl_tmp_buffers, tpl_data->tpl_bsize_1d)) {
@@ -1960,6 +2043,22 @@ int av1_tpl_setup_stats(AV1_COMP *cpi, int gop_eval,
 
     aom_extend_frame_borders(tpl_data->tpl_frame[frame_idx].rec_picture,
                              num_planes);
+  }
+
+  if (cpi->ext_ratectrl.ready &&
+      cpi->ext_ratectrl.funcs.send_tpl_gop_stats != NULL) {
+    if (gf_group->update_type[0] != OVERLAY_UPDATE) {
+      // Back propagation only to frame 1 thus the related fields only populated
+      // to frame 1. This populates stats for frame 0.
+      init_mc_flow_dispenser(cpi, 0, gf_group->q_val[0]);
+      mc_flow_dispenser(cpi);
+    }
+    const aom_codec_err_t codec_status =
+        av1_extrc_send_tpl_stats(&cpi->ext_ratectrl, &cpi->tpl_gop_stats);
+    if (codec_status != AOM_CODEC_OK) {
+      aom_internal_error(cpi->common.error, codec_status,
+                         "av1_extrc_send_tpl_stats() failed");
+    }
   }
 
   for (int frame_idx = tpl_gf_group_frames - 1;
