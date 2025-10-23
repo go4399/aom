@@ -24,6 +24,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad18e7e2_42673259",
+        "filename": "av1/encoder/tpl_model.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 1525,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-10-23T19:14:22Z",
+      "side": 1,
+      "message": "Thanks for pointing this out. I was wondering the same thing because it is trimmed in libvpx.\n\nOne question: does it also have the overlay from previous GOP?",
+      "parentUuid": "d0043809_0b87ab97",
+      "range": {
+        "startLine": 1525,
+        "startChar": 4,
+        "endLine": 1525,
+        "endChar": 32
+      },
+      "revId": "fd72caba86f85559b8e3a2964b6395c71ffc8ba2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "6fa5a281_d2d396c3",
@@ -77,6 +101,30 @@
       "writtenOn": "2025-10-23T18:26:22Z",
       "side": 1,
       "message": "This is probably not needed in libaom. I think in libvpx it was needed, but in libaom we will call dispenser for the first frame.",
+      "range": {
+        "startLine": 2053,
+        "startChar": 1,
+        "endLine": 2067,
+        "endChar": 3
+      },
+      "revId": "fd72caba86f85559b8e3a2964b6395c71ffc8ba2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef494bf5_31789649",
+        "filename": "av1/encoder/tpl_model.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 2067,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-10-23T19:14:22Z",
+      "side": 1,
+      "message": "Did you mean line 2055 to line 2060?",
+      "parentUuid": "e38db451_a5cde0bb",
       "range": {
         "startLine": 2053,
         "startChar": 1,
