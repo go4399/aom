@@ -3427,6 +3427,38 @@ static int encode_with_recode_loop(AV1_COMP *cpi, size_t *size, uint8_t *dest,
       }
     }
 
+    if (cpi->ext_ratectrl.ready &&
+        (cpi->ext_ratectrl.funcs.rc_type & AOM_RC_QP) != 0 &&
+        cpi->ext_ratectrl.funcs.get_encodeframe_decision != NULL) {
+      aom_codec_err_t codec_status;
+      aom_rc_encodeframe_decision_t encode_frame_decision;
+      int sb_size = num_8x8_blocks_wide_lookup[BLOCK_64X64] * MI_SIZE;
+      int frame_height_sb = (cm->height + sb_size - 1) / sb_size;
+      int frame_width_sb = (cm->width + sb_size - 1) / sb_size;
+      AOM_CHECK_MEM_ERROR(&cm->error, encode_frame_decision.sb_params_list,
+                          (aom_sb_params *)aom_calloc(
+                              frame_height_sb * frame_width_sb,
+                              sizeof(*encode_frame_decision.sb_params_list)));
+      codec_status = vp9_extrc_get_encodeframe_decision(
+          &cpi->ext_ratectrl, gf_group->index, &encode_frame_decision);
+      if (codec_status != AOM_CODEC_OK) {
+        aom_internal_error(&cm->error, codec_status,
+                           "vp9_extrc_get_encodeframe_decision() failed");
+      }
+      for (int idx = 0; idx < frame_height_sb * frame_width_sb; ++idx) {
+        cpi->sb_mul_scale[idx] =
+            (((int64_t)encode_frame_decision.sb_params_list[idx].rdmult * 256) /
+             (encode_frame_decision.rdmult + 1));
+      }
+      aom_free(encode_frame_decision.sb_params_list);
+      // If the external model recommends a reserved value, we use
+      // libvpx's default q.
+      if (encode_frame_decision.q_index != AOM_DEFAULT_Q) {
+        q = encode_frame_decision.q_index;
+      }
+      ext_rc_delta_q_uv = encode_frame_decision.delta_q_uv;
+    }
+
     av1_set_quantizer(cm, q_cfg->qm_minlevel, q_cfg->qm_maxlevel, q,
                       q_cfg->enable_chroma_deltaq, q_cfg->enable_hdr_deltaq,
                       oxcf->mode == ALLINTRA, oxcf->tune_cfg.tuning);

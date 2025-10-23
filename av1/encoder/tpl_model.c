@@ -2083,12 +2083,6 @@ int av1_tpl_setup_stats(AV1_COMP *cpi, int gop_eval,
 
   if (cpi->ext_ratectrl.ready &&
       cpi->ext_ratectrl.funcs.send_tpl_gop_stats != NULL) {
-    if (gf_group->update_type[0] != OVERLAY_UPDATE) {
-      // Back propagation only to frame 1 thus the related fields only populated
-      // to frame 1. This populates stats for frame 0.
-      init_mc_flow_dispenser(cpi, 0, gf_group->q_val[0]);
-      mc_flow_dispenser(cpi);
-    }
     // TPL stats has extra frames from next GOP. Trim those extra frames for
     // external RC.
     trim_tpl_stats(cpi->common.error, &cpi->tpl_gop_stats,
