@@ -48,6 +48,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc5467ad_3ad8af93",
+        "filename": "av1/encoder/tpl_model.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 1525,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2025-10-23T19:57:13Z",
+      "side": 1,
+      "message": "The overlay is included in the same GOP as the arf in libaom, so the first frame will always be the KF / ARF / GF.",
+      "parentUuid": "ad18e7e2_42673259",
+      "range": {
+        "startLine": 1525,
+        "startChar": 4,
+        "endLine": 1525,
+        "endChar": 32
+      },
+      "revId": "fd72caba86f85559b8e3a2964b6395c71ffc8ba2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "6fa5a281_d2d396c3",
@@ -125,6 +149,30 @@
       "side": 1,
       "message": "Did you mean line 2055 to line 2060?",
       "parentUuid": "e38db451_a5cde0bb",
+      "range": {
+        "startLine": 2053,
+        "startChar": 1,
+        "endLine": 2067,
+        "endChar": 3
+      },
+      "revId": "fd72caba86f85559b8e3a2964b6395c71ffc8ba2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b702b328_04400cd0",
+        "filename": "av1/encoder/tpl_model.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 2067,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2025-10-23T19:57:13Z",
+      "side": 1,
+      "message": "Yes. Sorry I thought I commented on a selection of that region.",
+      "parentUuid": "ef494bf5_31789649",
       "range": {
         "startLine": 2053,
         "startChar": 1,
