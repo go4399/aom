@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0043809_0b87ab97",
+        "filename": "av1/encoder/tpl_model.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 1525,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2025-10-23T18:26:22Z",
+      "side": 1,
+      "message": "In libaom tpl we process all frame inside the GOP, plus some more future frames for better arf boost calculation. For ext RC we probably only want the tats in this GOP. Just making sure we are not sending additional stats here.",
+      "range": {
+        "startLine": 1525,
+        "startChar": 4,
+        "endLine": 1525,
+        "endChar": 32
+      },
+      "revId": "fd72caba86f85559b8e3a2964b6395c71ffc8ba2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6fa5a281_d2d396c3",
+        "filename": "av1/encoder/tpl_model.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 1927,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2025-10-23T18:26:22Z",
+      "side": 1,
+      "message": "Optional: Maybe instead of freeing and re-allocating each time, we can just reuse the buffers and do a memset. The length of the array can be fixed too (maybe `MAX_TPL_FRAME_IDX` would work). \n\nI\u0027m not strongly opposed to this as I guess currently speed is not the biggest concern. But it is good to note it down if we can optimize this.",
+      "revId": "fd72caba86f85559b8e3a2964b6395c71ffc8ba2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b18a8f8a_431d5415",
+        "filename": "av1/encoder/tpl_model.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 1943,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2025-10-23T18:26:22Z",
+      "side": 1,
+      "message": "This function might get called by 2 times for each gop:\n\nThe first run is with gop_eval \u003e 0, to see if we want to use max gop size \u003e16 or \u003c\u003d16. \n\nIf it is decided we should use gop_size \u003e 16, then the stats from the first run is used. \n\nIf it is decided we should use gop_size \u003c\u003d 16, then we will need to run this function with gop_eval \u003d 0 again. \n\nI think this is correctly handled in the current CL since we will erase the last run\u0027s data with `init_tpl_stats_before_propagation`. But still pointing this out in case.",
+      "range": {
+        "startLine": 1943,
+        "startChar": 43,
+        "endLine": 1943,
+        "endChar": 51
+      },
+      "revId": "fd72caba86f85559b8e3a2964b6395c71ffc8ba2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e38db451_a5cde0bb",
+        "filename": "av1/encoder/tpl_model.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 2067,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2025-10-23T18:26:22Z",
+      "side": 1,
+      "message": "This is probably not needed in libaom. I think in libvpx it was needed, but in libaom we will call dispenser for the first frame.",
+      "range": {
+        "startLine": 2053,
+        "startChar": 1,
+        "endLine": 2067,
+        "endChar": 3
+      },
+      "revId": "fd72caba86f85559b8e3a2964b6395c71ffc8ba2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
