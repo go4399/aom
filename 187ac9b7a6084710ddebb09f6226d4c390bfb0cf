@@ -40,6 +40,30 @@
       ],
       "revId": "187ac9b7a6084710ddebb09f6226d4c390bfb0cf",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "531f1264_16e2e378",
+        "filename": "av1/encoder/av1_ext_ratectrl.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-10-28T14:34:11Z",
+      "side": 1,
+      "message": "Thanks for catching that!",
+      "parentUuid": "3b6238e3_4291f63e",
+      "range": {
+        "startLine": 110,
+        "startChar": 6,
+        "endLine": 110,
+        "endChar": 18
+      },
+      "revId": "187ac9b7a6084710ddebb09f6226d4c390bfb0cf",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
