@@ -22,6 +22,30 @@
       },
       "revId": "008ef63e8f9a54eff0e632aea47e6b46d848a5dc",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ff7af59_0719af4a",
+        "filename": "av1/encoder/tpl_model.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 2088,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-10-28T17:30:40Z",
+      "side": 1,
+      "message": "Hmm, do you mean this could affect libaom encoding that is not using external RC?\n\nThe structure `cpi-\u003etpl_gop_stats` is only used for external RC. Libaom encoding itself doesn\u0027t use this.",
+      "parentUuid": "7ce5a9d1_5b78b557",
+      "range": {
+        "startLine": 2088,
+        "startChar": 4,
+        "endLine": 2088,
+        "endChar": 18
+      },
+      "revId": "008ef63e8f9a54eff0e632aea47e6b46d848a5dc",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
