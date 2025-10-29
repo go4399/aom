@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f57d46f2_c42a93d7",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 4555,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-10-29T18:22:34Z",
+      "side": 1,
+      "message": "should this be set to -1 if the resize did happen?",
+      "range": {
+        "startLine": 4555,
+        "startChar": 27,
+        "endLine": 4555,
+        "endChar": 50
+      },
+      "revId": "cb81ee48a3234673761625afcdbab516e0643c3b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6307db5e_45a560fb",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 3841,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-10-29T18:22:34Z",
+      "side": 1,
+      "message": "should this be initialized to -1 in addition to this assignment? Or this should be enough as this path is always executed?",
+      "range": {
+        "startLine": 3841,
+        "startChar": 23,
+        "endLine": 3841,
+        "endChar": 46
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "ddd2f2cb_c859cf91",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/pass2_strategy.c",
+              "range": {
+                "startLine": 4134,
+                "startChar": 0,
+                "endLine": 4134,
+                "endChar": 0
+              },
+              "replacement": "\n  cpi-\u003eppi-\u003etpl_data.prev_gop_arf_disp_order \u003d -1;\n"
+            },
+            {
+              "path": "av1/encoder/pass2_strategy.c",
+              "range": {
+                "startLine": 4165,
+                "startChar": 0,
+                "endLine": 4165,
+                "endChar": 0
+              },
+              "replacement": "\n  cpi-\u003eppi-\u003etpl_data.prev_gop_arf_disp_order \u003d -1;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "cb81ee48a3234673761625afcdbab516e0643c3b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
