@@ -39,6 +39,28 @@ bool is_send_firstpass_stats_called = false;
 // A flag to indicate if send_tpl_gop_stats() is called.
 bool is_send_extrc_tpl_gop_stats_called = false;
 
+// A flag to indicate if get_gop_decision() is called.
+bool is_get_gop_decision_called = false;
+
+const int kGopFrameCount = 3;
+aom_rc_gop_frame_t gop_frame_list[kGopFrameCount];
+
+aom_rc_status_t mock_get_gop_decision(aom_rc_model_t ratectrl_model,
+                                      aom_rc_gop_decision_t *gop_decision) {
+  (void)ratectrl_model;
+  gop_decision->gop_frame_count = kGopFrameCount;
+  gop_decision->gop_frame_list = gop_frame_list;
+  for (int i = 0; i < kGopFrameCount; ++i) {
+    gop_decision->gop_frame_list[i].display_idx = i;
+    gop_decision->gop_frame_list[i].layer_depth = 0;
+    gop_decision->gop_frame_list[i].is_key_frame = (i == 0);
+    gop_decision->gop_frame_list[i].update_ref_idx = 0;
+  }
+  gop_decision->global_order_idx_offset = 0;
+  is_get_gop_decision_called = true;
+  return AOM_RC_OK;
+}
+
 aom_rc_status_t mock_create_model(void *priv,
                                   const aom_rc_config_t *ratectrl_config,
                                   aom_rc_model_t *ratectrl_model) {
@@ -89,6 +111,7 @@ class ExtRateCtrlTest : public ::libaom_test::EncoderTest,
     rc_funcs->delete_model = mock_delete_model;
     rc_funcs->send_firstpass_stats = mock_send_firstpass_stats;
     rc_funcs->send_tpl_gop_stats = mock_send_extrc_tpl_gop_stats;
+    rc_funcs->get_gop_decision = nullptr;
     rc_funcs->get_encodeframe_decision = nullptr;
     rc_funcs->update_encodeframe_result = nullptr;
   }
@@ -102,6 +125,7 @@ class ExtRateCtrlTest : public ::libaom_test::EncoderTest,
     is_delete_model_called = false;
     is_send_firstpass_stats_called = false;
     is_send_extrc_tpl_gop_stats_called = false;
+    is_get_gop_decision_called = false;
   }
 
   void PreEncodeFrameHook(::libaom_test::VideoSource *video,
@@ -177,6 +201,27 @@ TEST_P(ExtRateCtrlQpTest, TestExternalRateCtrlConstQp) {
 }
 
 AV1_INSTANTIATE_TEST_SUITE(ExtRateCtrlQpTest,
+                           ::testing::Values(::libaom_test::kTwoPassGood),
+                           ::testing::Values(0));
+
+class ExtRateCtrlGopTest : public ExtRateCtrlTest {
+ protected:
+  ExtRateCtrlGopTest() {
+    rc_funcs_.rc_type = AOM_RC_GOP;
+    rc_funcs_.get_gop_decision = mock_get_gop_decision;
+  }
+  ~ExtRateCtrlGopTest() override = default;
+};
+
+TEST_P(ExtRateCtrlGopTest, TestExternalRateCtrlGop) {
+  ::libaom_test::Y4mVideoSource video("screendata.y4m", 0, kFrameNum);
+  ASSERT_NO_FATAL_FAILURE(RunLoop(&video));
+  EXPECT_TRUE(is_create_model_called);
+  EXPECT_TRUE(is_get_gop_decision_called);
+  EXPECT_TRUE(is_delete_model_called);
+}
+
+AV1_INSTANTIATE_TEST_SUITE(ExtRateCtrlGopTest,
                            ::testing::Values(::libaom_test::kTwoPassGood),
                            ::testing::Values(0));
 }  // namespace
