@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d8f38fb_6c55c523",
+        "filename": "aom/aom_ext_ratectrl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-10-30T22:01:37Z",
+      "side": 1,
+      "message": "This is not relevant to this project. There\u0027s no `GopFrame` to reference.",
+      "range": {
+        "startLine": 417,
+        "startChar": 9,
+        "endLine": 417,
+        "endChar": 23
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "b023c751_e34b2959",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "aom/aom_ext_ratectrl.h",
+              "range": {
+                "startLine": 417,
+                "startChar": 0,
+                "endLine": 418,
+                "endChar": 0
+              },
+              "replacement": "/*!\\brief A single frame within a Group of Pictures (GOP).\n"
+            }
+          ]
+        }
+      ],
+      "revId": "7fb457f96eec6f9f2878815815d8fc03395e84ee",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
