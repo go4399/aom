@@ -1647,7 +1647,17 @@ static inline int init_gop_frames_for_tpl(
     const YV12_BUFFER_CONFIG *tf_buf =
         av1_tf_info_get_filtered_buf(&cpi->ppi->tf_info, gf_index, &frame_diff);
     if (tf_buf != NULL) {
-      tpl_frame->gf_picture = tf_buf;
+      int use_tf = 1;
+      if (frame_update_type == INTNL_ARF_UPDATE) {
+        const int show_existing = av1_check_show_filtered_frame(
+            tf_buf, &frame_diff, gf_group->q_val[gf_index],
+            cm->seq_params->bit_depth);
+        // intarf only do show-existing, do not add overlay
+        use_tf = show_existing;
+      }
+      if (use_tf) {
+        tpl_frame->gf_picture = tf_buf;
+      }
     }
 
     // 'cm->current_frame.frame_number' is the display number
@@ -1846,15 +1856,26 @@ void av1_tpl_preload_rc_estimate(AV1_COMP *cpi,
   int bottom_index, top_index;
   if (cpi->use_ducky_encode) return;
 
+  const int tmp_src_frame_alt_ref = cpi->rc.is_src_frame_alt_ref;
+  const int tmp_frame_type = cm->current_frame.frame_type;
+  const int tmp_show_frame = cm->show_frame;
+
   cm->current_frame.frame_type = frame_params->frame_type;
   for (int gf_index = cpi->gf_frame_index; gf_index < gf_group->size;
        ++gf_index) {
+    cpi->rc.is_src_frame_alt_ref =
+        gf_group->update_type[gf_index] == OVERLAY_UPDATE ||
+        gf_group->update_type[gf_index] == INTNL_OVERLAY_UPDATE;
     cm->current_frame.frame_type = gf_group->frame_type[gf_index];
     cm->show_frame = gf_group->update_type[gf_index] != ARF_UPDATE &&
                      gf_group->update_type[gf_index] != INTNL_ARF_UPDATE;
     gf_group->q_val[gf_index] = av1_rc_pick_q_and_bounds(
         cpi, cm->width, cm->height, gf_index, &bottom_index, &top_index);
   }
+
+  cpi->rc.is_src_frame_alt_ref = tmp_src_frame_alt_ref;
+  cm->current_frame.frame_type = tmp_frame_type;
+  cm->show_frame = tmp_show_frame;
 }
 
 static inline int skip_tpl_for_frame(const GF_GROUP *gf_group, int frame_idx,

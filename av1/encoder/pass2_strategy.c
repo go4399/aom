@@ -4009,6 +4009,7 @@ void av1_get_second_pass_params(AV1_COMP *cpi,
       process_first_pass_stats(cpi, &this_frame);
 
     define_gf_group(cpi, frame_params, 1);
+    av1_tpl_preload_rc_estimate(cpi, frame_params);
 
 #if CONFIG_THREE_PASS
     // write gop info if needed for third pass. Per-frame info is written after
