@@ -1624,6 +1624,12 @@ enum aome_enc_control_id {
    */
   AV1E_SET_EXTERNAL_RATE_CONTROL = 173,
 
+  /*!\brief Codec control function to get GOP structure from the encoder.
+   *
+   * args: a pointer to aom_gop_info_t
+   */
+  AV1E_GET_GOP_INFO,
+
   // Any new encoder control IDs should be added above.
   // Maximum allowed encoder control ID is 229.
   // No encoder control ID should be added below.
@@ -1859,6 +1865,25 @@ typedef enum {
   AOM_LAYER_DROP,           /**< Any spatial layer can drop. */
   AOM_FULL_SUPERFRAME_DROP, /**< Only full superframe can drop. */
 } AOM_SVC_FRAME_DROP_MODE;
+
+/*!\brief The GOP structure information determined by the encoder.
+ */
+typedef struct aom_gop_info {
+  int gop_size; /**< The number of frames of this GOP */
+  /*!
+   * Frame type for each frame in this GOP.
+   * This is populated from |update_type| in GF_GROUP defined in firstpass.h
+   */
+  aom_rc_frame_update_type_t update_type[AOM_RC_MAX_STATIC_GF_GROUP_LENGTH + 2];
+  /*! Ref frame list used for each frame in this GOP. */
+  aom_rc_ref_frame_t ref_frame_list[AOM_RC_MAX_STATIC_GF_GROUP_LENGTH + 2];
+  /*! The coding index for each entry in the gop */
+  int coding_index[AOM_RC_MAX_STATIC_GF_GROUP_LENGTH + 2];
+  /*! The display index for each entry in the gop */
+  int display_index[AOM_RC_MAX_STATIC_GF_GROUP_LENGTH + 2];
+  /*! The layer depth for each entry in the gop */
+  int layer_depth[AOM_RC_MAX_STATIC_GF_GROUP_LENGTH + 2];
+} aom_gop_info_t;
 
 /*!\cond */
 /*!\brief Encoder control function parameter type
@@ -2369,6 +2394,9 @@ AOM_CTRL_USE_TYPE(AV1E_SET_ENABLE_ADAPTIVE_SHARPNESS, unsigned int)
 
 AOM_CTRL_USE_TYPE(AV1E_SET_EXTERNAL_RATE_CONTROL, aom_rc_funcs_t *)
 #define AOM_CTRL_AV1E_SET_EXTERNAL_RATE_CONTROL
+
+AOM_CTRL_USE_TYPE(AV1E_GET_GOP_INFO, aom_gop_info_t *)
+#define AOM_CTRL_AV1E_GET_GOP_INFO
 
 /*!\endcond */
 /*! @} - end defgroup aom_encoder */
