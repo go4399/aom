@@ -1530,9 +1530,16 @@ void av1_tf_info_filtering(TEMPORAL_FILTER_INFO *tf_info, AV1_COMP *cpi,
                            const GF_GROUP *gf_group) {
   if (tf_info->is_temporal_filter_on == 0) return;
   const AV1_COMMON *const cm = &cpi->common;
+
+  int first_int_arf = 1;
+
   for (int gf_index = 0; gf_index < gf_group->size; ++gf_index) {
     int update_type = gf_group->update_type[gf_index];
     if (update_type == KF_UPDATE || update_type == ARF_UPDATE) {
+      if (update_type == KF_UPDATE &&
+          cpi->oxcf.kf_cfg.enable_keyframe_filtering == 0) {
+        continue;
+      }
       int buf_idx = gf_group->frame_type[gf_index] == INTER_FRAME;
       int lookahead_idx = gf_group->arf_src_offset[gf_index] +
                           gf_group->cur_frame_idx[gf_index];
@@ -1549,6 +1556,26 @@ void av1_tf_info_filtering(TEMPORAL_FILTER_INFO *tf_info, AV1_COMP *cpi,
         tf_info->tf_buf_display_index_offset[buf_idx] = lookahead_idx;
         tf_info->tf_buf_valid[buf_idx] = 1;
       }
+    } else if (update_type == INTNL_ARF_UPDATE && first_int_arf) {
+      int buf_idx = 2;
+      int lookahead_idx = gf_group->arf_src_offset[gf_index] +
+                          gf_group->cur_frame_idx[gf_index];
+      // This function is designed to be called multiple times after
+      // av1_tf_info_reset(). It will only generate the filtered frame that does
+      // not exist yet.
+      if (tf_info->tf_buf_valid[buf_idx] == 0 ||
+          tf_info->tf_buf_display_index_offset[buf_idx] != lookahead_idx) {
+        YV12_BUFFER_CONFIG *out_buf = &tf_info->tf_buf[buf_idx];
+        av1_temporal_filter(cpi, lookahead_idx, gf_index,
+                            &tf_info->frame_diff[buf_idx], out_buf);
+
+        aom_extend_frame_borders(out_buf, av1_num_planes(cm));
+        tf_info->tf_buf_gf_index[buf_idx] = gf_index;
+        tf_info->tf_buf_display_index_offset[buf_idx] = lookahead_idx;
+        tf_info->tf_buf_valid[buf_idx] = 1;
+      }
+
+      first_int_arf = 0;
     }
   }
 }

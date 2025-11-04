@@ -800,33 +800,46 @@ static int denoise_and_encode(AV1_COMP *const cpi, uint8_t *const dest,
     }
 
     if (is_second_arf) {
-      // Allocate the memory for tf_buf_second_arf buffer, only when it is
-      // required.
-      int ret = aom_realloc_frame_buffer(
-          &cpi->ppi->tf_info.tf_buf_second_arf, oxcf->frm_dim_cfg.width,
-          oxcf->frm_dim_cfg.height, cm->seq_params->subsampling_x,
-          cm->seq_params->subsampling_y, cm->seq_params->use_highbitdepth,
-          cpi->oxcf.border_in_pixels, cm->features.byte_alignment, NULL, NULL,
-          NULL, cpi->alloc_pyramid, 0);
-      if (ret)
-        aom_internal_error(cm->error, AOM_CODEC_MEM_ERROR,
-                           "Failed to allocate tf_buf_second_arf");
+      YV12_BUFFER_CONFIG *tf_buf = av1_tf_info_get_filtered_buf(
+          &cpi->ppi->tf_info, cpi->gf_frame_index, &frame_diff);
+      if (tf_buf != NULL) {
+        // Use the same q_index we used in tpl to determine the usage of tf.
+        const int tf_q_index = gf_group->q_val[cpi->gf_frame_index];
+        show_existing_alt_ref = av1_check_show_filtered_frame(
+            tf_buf, &frame_diff, tf_q_index, cm->seq_params->bit_depth);
+        if (show_existing_alt_ref) {
+          aom_extend_frame_borders(tf_buf, av1_num_planes(cm));
+          frame_input->source = tf_buf;
+        }
+      } else {
+        // Allocate the memory for tf_buf_second_arf buffer, only when it is
+        // required.
+        int ret = aom_realloc_frame_buffer(
+            &cpi->ppi->tf_info.tf_buf_second_arf, oxcf->frm_dim_cfg.width,
+            oxcf->frm_dim_cfg.height, cm->seq_params->subsampling_x,
+            cm->seq_params->subsampling_y, cm->seq_params->use_highbitdepth,
+            cpi->oxcf.border_in_pixels, cm->features.byte_alignment, NULL, NULL,
+            NULL, cpi->alloc_pyramid, 0);
+        if (ret)
+          aom_internal_error(cm->error, AOM_CODEC_MEM_ERROR,
+                             "Failed to allocate tf_buf_second_arf");
 
-      YV12_BUFFER_CONFIG *tf_buf_second_arf =
-          &cpi->ppi->tf_info.tf_buf_second_arf;
-      // We didn't apply temporal filtering for second arf ahead in
-      // av1_tf_info_filtering().
-      const int arf_src_index = gf_group->arf_src_offset[cpi->gf_frame_index];
-      // Right now, we are still using tf_buf_second_arf due to
-      // implementation complexity.
-      // TODO(angiebird): Reuse tf_info->tf_buf here.
-      av1_temporal_filter(cpi, arf_src_index, cpi->gf_frame_index, &frame_diff,
-                          tf_buf_second_arf);
-      show_existing_alt_ref = av1_check_show_filtered_frame(
-          tf_buf_second_arf, &frame_diff, q_index, cm->seq_params->bit_depth);
-      if (show_existing_alt_ref) {
-        aom_extend_frame_borders(tf_buf_second_arf, av1_num_planes(cm));
-        frame_input->source = tf_buf_second_arf;
+        YV12_BUFFER_CONFIG *tf_buf_second_arf =
+            &cpi->ppi->tf_info.tf_buf_second_arf;
+        // We didn't apply temporal filtering for second arf ahead in
+        // av1_tf_info_filtering().
+        const int arf_src_index = gf_group->arf_src_offset[cpi->gf_frame_index];
+        // Right now, we are still using tf_buf_second_arf due to
+        // implementation complexity.
+        // TODO(angiebird): Reuse tf_info->tf_buf here.
+        av1_temporal_filter(cpi, arf_src_index, cpi->gf_frame_index,
+                            &frame_diff, tf_buf_second_arf);
+        show_existing_alt_ref = av1_check_show_filtered_frame(
+            tf_buf_second_arf, &frame_diff, q_index, cm->seq_params->bit_depth);
+        if (show_existing_alt_ref) {
+          aom_extend_frame_borders(tf_buf_second_arf, av1_num_planes(cm));
+          frame_input->source = tf_buf_second_arf;
+        }
       }
       // Currently INTNL_ARF_UPDATE only do show_existing.
       cpi->common.showable_frame |= 1;
@@ -970,11 +983,48 @@ static void set_unmapped_ref(RefBufMapData *buffer_map, int n_bufs,
                              int cur_frame_disp) {
   int max_dist = 0;
   int unmapped_idx = -1;
+  int max_level = 0;
+  int prev_max_level = 0;
+  int future_max_level = 0;
   if (n_bufs <= ALTREF_FRAME) return;
+
+  int prev_count = 0;
+  int future_count = 0;
   for (int i = 0; i < n_bufs; i++) {
     if (buffer_map[i].used) continue;
     if (buffer_map[i].pyr_level != min_level ||
         n_min_level_refs >= LOW_LEVEL_FRAMES_TR) {
+      if (buffer_map[i].disp_order < cur_frame_disp) {
+        if (buffer_map[i].pyr_level > prev_max_level) {
+          prev_max_level = buffer_map[i].pyr_level;
+        }
+        ++prev_count;
+      } else if (buffer_map[i].disp_order > cur_frame_disp) {
+        if (buffer_map[i].pyr_level > future_max_level) {
+          future_max_level = buffer_map[i].pyr_level;
+        }
+        ++future_count;
+      }
+      if (buffer_map[i].pyr_level > max_level) {
+        max_level = buffer_map[i].pyr_level;
+      }
+    }
+  }
+
+  for (int i = 0; i < n_bufs; i++) {
+    if (buffer_map[i].used) continue;
+    if (buffer_map[i].pyr_level != min_level ||
+        n_min_level_refs >= LOW_LEVEL_FRAMES_TR) {
+      if (future_count < prev_count &&
+          (buffer_map[i].disp_order > cur_frame_disp ||
+           buffer_map[i].pyr_level != prev_max_level))
+        continue;
+      if (future_count > prev_count &&
+          (buffer_map[i].disp_order < cur_frame_disp ||
+           buffer_map[i].pyr_level != future_max_level))
+        continue;
+      if (future_count == prev_count && buffer_map[i].pyr_level != max_level)
+        continue;
       int dist = abs(cur_frame_disp - buffer_map[i].disp_order);
       if (dist > max_dist) {
         max_dist = dist;
