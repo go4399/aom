@@ -3744,6 +3744,7 @@ void av1_get_second_pass_params(AV1_COMP *cpi,
   GF_GROUP *const gf_group = &cpi->ppi->gf_group;
   const AV1EncoderConfig *const oxcf = &cpi->oxcf;
 
+  printf("frame %d\n", cpi->common.current_frame.frame_number);
   if (cpi->use_ducky_encode &&
       cpi->ducky_encode_info.frame_info.gop_mode == DUCKY_ENCODE_GOP_MODE_RCL) {
     frame_params->frame_type = gf_group->frame_type[cpi->gf_frame_index];
