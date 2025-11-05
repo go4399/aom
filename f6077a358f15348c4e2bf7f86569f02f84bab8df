@@ -1,0 +1,66 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a96dd2f2_64134d28",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-11-05T18:37:48Z",
+      "side": 1,
+      "message": "It might be nice to also test the failure paths. For example, having a callback that fails at some point to ensure proper encoder cleanup.",
+      "revId": "f6077a358f15348c4e2bf7f86569f02f84bab8df",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9ea5b822_a345eb53",
+        "filename": "test/ext_ratectrl_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-11-05T18:37:48Z",
+      "side": 1,
+      "message": "Comment this out in the declaration instead.",
+      "fixSuggestions": [
+        {
+          "fixId": "3ec1a2d9_d8cecb12",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/ext_ratectrl_test.cc",
+              "range": {
+                "startLine": 49,
+                "startChar": 0,
+                "endLine": 50,
+                "endChar": 0
+              },
+              "replacement": "aom_rc_status_t mock_get_gop_decision(aom_rc_model_t /*ratectrl_model*/,\n"
+            },
+            {
+              "path": "test/ext_ratectrl_test.cc",
+              "range": {
+                "startLine": 51,
+                "startChar": 0,
+                "endLine": 52,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "f6077a358f15348c4e2bf7f86569f02f84bab8df",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
