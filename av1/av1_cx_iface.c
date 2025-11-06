@@ -3693,6 +3693,7 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
       has_no_show_keyframe |=
           (!is_frame_visible &&
            cpi->common.current_frame.frame_type == KEY_FRAME);
+      printf("encoder_encode while loop\n");
     }
     if (is_frame_visible) {
       // Add the frame packet to the list of returned packets.
