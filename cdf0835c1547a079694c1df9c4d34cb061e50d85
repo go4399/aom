@@ -1,0 +1,97 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a801b89f_96303d10",
+        "filename": "test/ext_ratectrl_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-11-07T00:20:48Z",
+      "side": 1,
+      "message": "Use of `g_` is a little inconsistent here. The prefix isn\u0027t typically used (though globals in general are discouraged).",
+      "revId": "cdf0835c1547a079694c1df9c4d34cb061e50d85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5a566772_77e413c2",
+        "filename": "test/ext_ratectrl_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-11-07T00:20:48Z",
+      "side": 1,
+      "message": "You can drop the whitespace on these: https://google.github.io/styleguide/cppguide.html#Function_Declarations_and_Definitions",
+      "range": {
+        "startLine": 203,
+        "startChar": 21,
+        "endLine": 203,
+        "endChar": 22
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "831b1e8b_1943dbfd",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/ext_ratectrl_test.cc",
+              "range": {
+                "startLine": 203,
+                "startChar": 0,
+                "endLine": 204,
+                "endChar": 0
+              },
+              "replacement": "    aom_rc_model_t /*ratectrl_model*/, int /*frame_gop_index*/,\n"
+            }
+          ]
+        }
+      ],
+      "revId": "cdf0835c1547a079694c1df9c4d34cb061e50d85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c73146df_98f66c29",
+        "filename": "test/ext_ratectrl_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-11-07T00:20:48Z",
+      "side": 1,
+      "message": "This could be private, no?",
+      "fixSuggestions": [
+        {
+          "fixId": "61a50720_ab98e6b4",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/ext_ratectrl_test.cc",
+              "range": {
+                "startLine": 278,
+                "startChar": 0,
+                "endLine": 278,
+                "endChar": 0
+              },
+              "replacement": " private:\n"
+            }
+          ]
+        }
+      ],
+      "revId": "cdf0835c1547a079694c1df9c4d34cb061e50d85",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
