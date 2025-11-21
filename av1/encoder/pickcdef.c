@@ -898,7 +898,24 @@ void av1_cdef_search(AV1_COMP *cpi) {
   const int max_signaling_bits =
       joint_strengths == 1 ? 0 : get_msb(joint_strengths - 1) + 1;
   int rdmult = cpi->td.mb.rdmult;
-  for (int i = 0; i <= 3; i++) {
+
+  // For adaptive CDEF, reduce primary and secondary CDEF strengths for
+  // qindexes 33 through 220.
+  bool should_reduce_cdef_strengths =
+      cdef_control == CDEF_ADAPTIVE && cpi->oxcf.mode == ALLINTRA &&
+      (cpi->oxcf.rc_cfg.mode == AOM_Q || cpi->oxcf.rc_cfg.mode == AOM_CQ) &&
+      cpi->oxcf.rc_cfg.cq_level <= 220;
+  // For adaptive CDEF with strength reduction, zero out entries with low luma
+  // and chroma strengths. This is done to reduce decode time, as CDEF is a
+  // relatively-expensive filter to compute.
+  bool should_zero_cdef_strengths =
+      should_reduce_cdef_strengths && cpi->oxcf.rc_cfg.cq_level <= 140;
+  // If running adaptive CDEF with strength zeroing, let search derive at
+  // least two (luma, chroma) strength pairs. Doing so will find low strengths
+  // that can be zeroed out to reduce overall decode time.
+  int min_cdef_strength_bits = should_zero_cdef_strengths ? 1 : 0;
+
+  for (int i = min_cdef_strength_bits; i <= 3; i++) {
     if (i > max_signaling_bits) break;
     int best_lev0[CDEF_MAX_STRENGTHS] = { 0 };
     int best_lev1[CDEF_MAX_STRENGTHS] = { 0 };
@@ -958,8 +975,7 @@ void av1_cdef_search(AV1_COMP *cpi) {
     }
   }
 
-  // For CDEF_ADAPTIVE, set primary and secondary CDEF at reduced strength for
-  // qindexes 33 through 220.
+  // Perform CDEF strength reduction.
   // Note 1: for odd strengths, the 0.5 discarded by ">> 1" is a significant
   // part of the strength when the strength is small, and because there are
   // few strength levels, odd strengths are reduced significantly more than a
@@ -972,13 +988,10 @@ void av1_cdef_search(AV1_COMP *cpi) {
   // resulting SSIMULACRA 2 scores were either exactly the same (at cpu-used 6),
   // or within noise level (at cpu-used 3). Given that there were no discernible
   // improvements, this special mapping was left out for reduced strength.
-  if (cdef_control == CDEF_ADAPTIVE && cpi->oxcf.mode == ALLINTRA &&
-      (cpi->oxcf.rc_cfg.mode == AOM_Q || cpi->oxcf.rc_cfg.mode == AOM_CQ) &&
-      cpi->oxcf.rc_cfg.cq_level <= 220) {
+  if (should_reduce_cdef_strengths) {
     for (int j = 0; j < cdef_info->nb_cdef_strengths; j++) {
       const int luma_strength = cdef_info->cdef_strengths[j];
       const int chroma_strength = cdef_info->cdef_uv_strengths[j];
-
       const int new_pri_luma_strength =
           (luma_strength / CDEF_SEC_STRENGTHS) >> 1;
       const int new_sec_luma_strength =
@@ -993,6 +1006,32 @@ void av1_cdef_search(AV1_COMP *cpi) {
       cdef_info->cdef_uv_strengths[j] =
           new_pri_chroma_strength * CDEF_SEC_STRENGTHS +
           new_sec_chroma_strength;
+
+      // Zero out entries with low luma and chroma strengths.
+      // The low-strength thresholds were empirically derived from subjective
+      // testing and SSIMULACRA 2 scores. These strike a balance between
+      // perceptual quality gains and a reasonable single-threaded decode time
+      // increase (~10%) over --enable-cdef 0. There's an overall 0.18 point
+      // loss in SSIMULACRA 2 scores over no CDEF strength zeroing at speed 6,
+      // QP 30 on the CLIC 2020 dataset.
+      if (should_zero_cdef_strengths) {
+        bool is_low_luma_strength =
+            new_pri_luma_strength <= 4 && new_sec_luma_strength <= 1;
+        bool is_low_chroma_strength =
+            new_pri_chroma_strength <= 4 && new_sec_chroma_strength <= 1;
+
+        if (is_low_luma_strength) {
+          cdef_info->cdef_strengths[j] = 0;
+
+          // Disable CDEF on chroma if we've disabled it on luma
+          if (!is_low_chroma_strength) {
+            cdef_info->cdef_uv_strengths[j] = 0;
+          }
+        }
+        if (is_low_chroma_strength) {
+          cdef_info->cdef_uv_strengths[j] = 0;
+        }
+      }
     }
   }
 
