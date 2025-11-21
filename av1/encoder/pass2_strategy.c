@@ -3900,7 +3900,7 @@ void av1_get_second_pass_params(AV1_COMP *cpi,
       p_rc->frames_till_regions_update = rest_frames;
 
       int ret;
-      if (cpi->ppi->lap_enabled) {
+      if (cpi->ppi->lap_enabled && !is_one_pass_rt_lag_params(cpi)) {
         mark_flashes(twopass->stats_buf_ctx->stats_in_start,
                      twopass->stats_buf_ctx->stats_in_end);
         estimate_noise(twopass->stats_buf_ctx->stats_in_start,
@@ -4020,6 +4020,13 @@ void av1_get_second_pass_params(AV1_COMP *cpi,
     }
 
     define_gf_group(cpi, frame_params, 0);
+
+    if (is_one_pass_rt_lag_params(cpi)) {
+      rc->frames_till_gf_update_due = p_rc->baseline_gf_interval;
+      frame_params->frame_type = gf_group->frame_type[cpi->gf_frame_index];
+      av1_setup_target_rate(cpi);
+      return;
+    }
 
     if (gf_group->update_type[cpi->gf_frame_index] != ARF_UPDATE &&
         rc->frames_since_key > 0)
