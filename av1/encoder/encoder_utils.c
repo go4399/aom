@@ -973,7 +973,7 @@ BLOCK_SIZE av1_select_sb_size(const AV1EncoderConfig *const oxcf, int width,
     return AOMMIN(oxcf->frm_dim_cfg.width, oxcf->frm_dim_cfg.height) > 720
                ? BLOCK_128X128
                : BLOCK_64X64;
-  } else if (oxcf->mode == REALTIME) {
+  } else if (oxcf->mode == REALTIME && oxcf->gf_cfg.lag_in_frames == 0) {
     if (oxcf->tune_cfg.content == AOM_CONTENT_SCREEN) {
       const TileConfig *const tile_cfg = &oxcf->tile_cfg;
       const int num_tiles =
