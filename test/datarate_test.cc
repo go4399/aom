@@ -307,6 +307,29 @@ class DatarateTestLarge
     RunBasicRateTargetingTestReversed(&video, bitrate_array[GET_PARAM(4)], 0.85,
                                       1.15);
   }
+
+  virtual void BasicRateTargetingVBRLagRealtime() {
+    ::libaom_test::I420VideoSource video("niklas_640_480_30.yuv", 640, 480, 30,
+                                         1, 0, 400);
+    cfg_.rc_min_quantizer = 0;
+    cfg_.rc_max_quantizer = 63;
+    cfg_.g_error_resilient = 0;
+    cfg_.rc_end_usage = AOM_VBR;
+    cfg_.g_lag_in_frames = 48;
+    cfg_.g_pass = AOM_RC_ONE_PASS;
+    cfg_.g_usage = AOM_USAGE_REALTIME;
+    cfg_.g_profile = 0;
+    cfg_.g_timebase = video.timebase();
+    cfg_.g_threads = 1;
+
+    ResetModel();
+    lag_realtime_mode_ = 1;
+    ASSERT_NO_FATAL_FAILURE(RunLoop(&video));
+    ASSERT_GE(effective_datarate_, cfg_.rc_target_bitrate * 0.85)
+        << " The datarate for the file is lower than target by too much!";
+    ASSERT_LE(effective_datarate_, cfg_.rc_target_bitrate * 2.0)
+        << " The datarate for the file is greater than target by too much!";
+  }
 };
 
 // Params: test mode, speed, aq mode.
@@ -545,6 +568,11 @@ TEST_P(DatarateTestRealtime, BasicRateTargetingSuperresCBR) {
 // Check basic rate targeting for Superres mode with CBR and multi-threads.
 TEST_P(DatarateTestRealtime, BasicRateTargetingSuperresCBRMultiThreads) {
   BasicRateTargetingSuperresCBRMultiThreads();
+}
+
+// Check basic rate targeting for Superres mode with CBR and multi-threads.
+TEST_P(DatarateTestRealtime, BasicRateTargetingVBRLagRealtime) {
+  BasicRateTargetingVBRLagRealtime();
 }
 
 // Check that (1) the first dropped frame gets earlier and earlier
