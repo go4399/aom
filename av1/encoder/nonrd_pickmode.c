@@ -2407,9 +2407,26 @@ static AOM_FORCE_INLINE void set_params_nonrd_pick_inter_mode(
                     &search_state->use_scaled_ref_frame[LAST_FRAME]);
   }
   // Update mask to use all reference frame
-  get_ref_frame_use_mask(cpi, x, mi, mi_row, mi_col, bsize, gf_temporal_ref,
-                         search_state->use_ref_frame_mask,
-                         force_skip_low_temp_var);
+  if (!is_one_pass_realtime_lag(cpi)) {
+    get_ref_frame_use_mask(cpi, x, mi, mi_row, mi_col, bsize, gf_temporal_ref,
+                           search_state->use_ref_frame_mask,
+                           force_skip_low_temp_var);
+  } else {
+    search_state->use_ref_frame_mask[LAST_FRAME] =
+        cpi->ref_frame_flags & AOM_LAST_FLAG;
+    search_state->use_ref_frame_mask[LAST2_FRAME] =
+        cpi->ref_frame_flags & AOM_LAST2_FLAG;
+    search_state->use_ref_frame_mask[LAST3_FRAME] =
+        cpi->ref_frame_flags & AOM_LAST3_FLAG;
+    search_state->use_ref_frame_mask[GOLDEN_FRAME] =
+        cpi->ref_frame_flags & AOM_GOLD_FLAG;
+    search_state->use_ref_frame_mask[ALTREF_FRAME] =
+        cpi->ref_frame_flags & AOM_ALT_FLAG;
+    search_state->use_ref_frame_mask[ALTREF2_FRAME] =
+        cpi->ref_frame_flags & AOM_ALT2_FLAG;
+    search_state->use_ref_frame_mask[BWDREF_FRAME] =
+        cpi->ref_frame_flags & AOM_BWD_FLAG;
+  }
 
   skip_pred_mv = x->force_zeromv_skip_for_blk ||
                  (x->nonrd_prune_ref_frame_search > 2 &&
@@ -2459,9 +2476,14 @@ static AOM_FORCE_INLINE bool skip_inter_mode_nonrd(
     }
     *is_single_pred = 0;
   } else {
-    *this_mode = ref_mode_set[idx].pred_mode;
-    *ref_frame = ref_mode_set[idx].ref_frame;
     *ref_frame2 = NONE_FRAME;
+    if (is_one_pass_realtime_lag(cpi)) {
+      *this_mode = ref_mode_set_full[idx].pred_mode;
+      *ref_frame = ref_mode_set_full[idx].ref_frame;
+    } else {
+      *this_mode = ref_mode_set[idx].pred_mode;
+      *ref_frame = ref_mode_set[idx].ref_frame;
+    }
   }
 
   if (cpi->sf.rt_sf.skip_newmv_mode_sad_screen && cpi->rc.high_source_sad &&
@@ -3268,7 +3290,8 @@ void av1_nonrd_pick_inter_mode_sb(AV1_COMP *cpi, TileDataEnc *tile_data,
   int best_early_term = 0;
   int force_skip_low_temp_var = 0;
   unsigned int sse_zeromv_norm = UINT_MAX;
-  const int num_inter_modes = NUM_INTER_MODES;
+  const int num_inter_modes =
+      is_one_pass_realtime_lag(cpi) ? NUM_INTER_MODES_FULL : NUM_INTER_MODES;
   const REAL_TIME_SPEED_FEATURES *const rt_sf = &cpi->sf.rt_sf;
   bool check_globalmv = rt_sf->check_globalmv_on_single_ref;
   PRED_BUFFER tmp_buffer[4];
@@ -3396,9 +3419,14 @@ void av1_nonrd_pick_inter_mode_sb(AV1_COMP *cpi, TileDataEnc *tile_data,
              tx_mode_to_biggest_tx_size[txfm_params->tx_mode_search_type]),
       TX_16X16);
 
-  fill_single_inter_mode_costs(search_state.single_inter_mode_costs,
-                               num_inter_modes, ref_mode_set, mode_costs,
-                               mbmi_ext->mode_context);
+  if (is_one_pass_realtime_lag(cpi))
+    fill_single_inter_mode_costs(search_state.single_inter_mode_costs,
+                                 num_inter_modes, ref_mode_set, mode_costs,
+                                 mbmi_ext->mode_context);
+  else
+    fill_single_inter_mode_costs(search_state.single_inter_mode_costs,
+                                 num_inter_modes, ref_mode_set_full, mode_costs,
+                                 mbmi_ext->mode_context);
 
   MV_REFERENCE_FRAME last_comp_ref_frame = NONE_FRAME;
 
