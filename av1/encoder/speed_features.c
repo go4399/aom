@@ -1836,6 +1836,8 @@ static void set_rt_speed_feature_framesize_dependent(const AV1_COMP *const cpi,
   // disable for now.
   if (cpi->active_map.enabled)
     sf->rt_sf.set_zeromv_skip_based_on_source_sad = 0;
+
+  if (is_one_pass_realtime_lag(cpi)) sf->rt_sf.use_rtc_tf = 0;
 }
 
 static void set_rt_speed_features_framesize_independent(AV1_COMP *cpi,
@@ -1974,7 +1976,7 @@ static void set_rt_speed_features_framesize_independent(AV1_COMP *cpi,
   sf->rt_sf.mode_search_skip_flags |= FLAG_SKIP_INTRA_DIRMISMATCH;
   sf->rt_sf.num_inter_modes_for_tx_search = 5;
   sf->rt_sf.prune_inter_modes_using_temp_var = 1;
-  sf->rt_sf.use_real_time_ref_set = 1;
+  sf->rt_sf.use_real_time_ref_set = is_one_pass_realtime_lag(cpi) ? 0 : 1;
   sf->rt_sf.use_simple_rd_model = 1;
   sf->rt_sf.prune_inter_modes_with_golden_ref = boosted ? 0 : 1;
   // TODO(any): This sf could be removed.
