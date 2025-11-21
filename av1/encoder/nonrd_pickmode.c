@@ -374,7 +374,8 @@ static void estimate_single_ref_frame_costs(const AV1_COMMON *cm,
                                             const MACROBLOCKD *xd,
                                             const ModeCosts *mode_costs,
                                             int segment_id, BLOCK_SIZE bsize,
-                                            unsigned int *ref_costs_single) {
+                                            unsigned int *ref_costs_single,
+                                            int is_one_pass_rt_lag) {
   int seg_ref_active =
       segfeature_active(&cm->seg, segment_id, SEG_LVL_REF_FRAME);
   if (seg_ref_active) {
@@ -392,6 +393,12 @@ static void estimate_single_ref_frame_costs(const AV1_COMMON *cm,
     ref_costs_single[LAST_FRAME] = base_cost;
     ref_costs_single[GOLDEN_FRAME] = base_cost;
     ref_costs_single[ALTREF_FRAME] = base_cost;
+    if (is_one_pass_rt_lag) {
+      ref_costs_single[ALTREF2_FRAME] = base_cost;
+      ref_costs_single[BWDREF_FRAME] = base_cost;
+      ref_costs_single[LAST2_FRAME] = base_cost;
+      ref_costs_single[LAST3_FRAME] = base_cost;
+    }
     // add cost for last, golden, altref
     ref_costs_single[LAST_FRAME] += mode_costs->single_ref_cost[0][0][0];
     ref_costs_single[GOLDEN_FRAME] += mode_costs->single_ref_cost[0][0][1];
@@ -2232,10 +2239,16 @@ static inline int setup_compound_params_from_comp_idx(
     const int *use_ref_frame_mask, int comp_index,
     bool comp_use_zero_zeromv_only, MV_REFERENCE_FRAME *last_comp_ref_frame,
     BLOCK_SIZE bsize) {
-  const MV_REFERENCE_FRAME *rf = comp_ref_mode_set[comp_index].ref_frame;
+  const MV_REFERENCE_FRAME *rf =
+      is_one_pass_rt_lag_params(cpi)
+          ? comp_ref_mode_set_full[comp_index].ref_frame
+          : comp_ref_mode_set[comp_index].ref_frame;
   int skip_gf = 0;
   int skip_alt = 0;
-  *this_mode = comp_ref_mode_set[comp_index].pred_mode;
+  if (is_one_pass_rt_lag_params(cpi))
+    *this_mode = comp_ref_mode_set_full[comp_index].pred_mode;
+  else
+    *this_mode = comp_ref_mode_set[comp_index].pred_mode;
   *ref_frame = rf[0];
   *ref_frame2 = rf[1];
   assert(*ref_frame == LAST_FRAME);
@@ -2371,7 +2384,8 @@ static AOM_FORCE_INLINE void set_params_nonrd_pick_inter_mode(
 
   // Estimate cost for single reference frames
   estimate_single_ref_frame_costs(cm, xd, mode_costs, segment_id, bsize,
-                                  search_state->ref_costs_single);
+                                  search_state->ref_costs_single,
+                                  is_one_pass_rt_lag_params(cpi));
 
   // Reset flag to indicate modes evaluated
   av1_zero(search_state->mode_checked);
@@ -2407,9 +2421,26 @@ static AOM_FORCE_INLINE void set_params_nonrd_pick_inter_mode(
                     &search_state->use_scaled_ref_frame[LAST_FRAME]);
   }
   // Update mask to use all reference frame
-  get_ref_frame_use_mask(cpi, x, mi, mi_row, mi_col, bsize, gf_temporal_ref,
-                         search_state->use_ref_frame_mask,
-                         force_skip_low_temp_var);
+  if (!is_one_pass_rt_lag_params(cpi)) {
+    get_ref_frame_use_mask(cpi, x, mi, mi_row, mi_col, bsize, gf_temporal_ref,
+                           search_state->use_ref_frame_mask,
+                           force_skip_low_temp_var);
+  } else {
+    search_state->use_ref_frame_mask[LAST_FRAME] =
+        cpi->ref_frame_flags & AOM_LAST_FLAG;
+    search_state->use_ref_frame_mask[LAST2_FRAME] =
+        cpi->ref_frame_flags & AOM_LAST2_FLAG;
+    search_state->use_ref_frame_mask[LAST3_FRAME] =
+        cpi->ref_frame_flags & AOM_LAST3_FLAG;
+    search_state->use_ref_frame_mask[GOLDEN_FRAME] =
+        cpi->ref_frame_flags & AOM_GOLD_FLAG;
+    search_state->use_ref_frame_mask[ALTREF_FRAME] =
+        cpi->ref_frame_flags & AOM_ALT_FLAG;
+    search_state->use_ref_frame_mask[ALTREF2_FRAME] =
+        cpi->ref_frame_flags & AOM_ALT2_FLAG;
+    search_state->use_ref_frame_mask[BWDREF_FRAME] =
+        cpi->ref_frame_flags & AOM_BWD_FLAG;
+  }
 
   skip_pred_mv = x->force_zeromv_skip_for_blk ||
                  (x->nonrd_prune_ref_frame_search > 2 &&
@@ -2459,9 +2490,14 @@ static AOM_FORCE_INLINE bool skip_inter_mode_nonrd(
     }
     *is_single_pred = 0;
   } else {
-    *this_mode = ref_mode_set[idx].pred_mode;
-    *ref_frame = ref_mode_set[idx].ref_frame;
     *ref_frame2 = NONE_FRAME;
+    if (is_one_pass_rt_lag_params(cpi)) {
+      *this_mode = ref_mode_set_full[idx].pred_mode;
+      *ref_frame = ref_mode_set_full[idx].ref_frame;
+    } else {
+      *this_mode = ref_mode_set[idx].pred_mode;
+      *ref_frame = ref_mode_set[idx].ref_frame;
+    }
   }
 
   if (cpi->sf.rt_sf.skip_newmv_mode_sad_screen && cpi->rc.high_source_sad &&
@@ -3268,7 +3304,8 @@ void av1_nonrd_pick_inter_mode_sb(AV1_COMP *cpi, TileDataEnc *tile_data,
   int best_early_term = 0;
   int force_skip_low_temp_var = 0;
   unsigned int sse_zeromv_norm = UINT_MAX;
-  const int num_inter_modes = NUM_INTER_MODES;
+  const int num_inter_modes =
+      is_one_pass_rt_lag_params(cpi) ? NUM_INTER_MODES_FULL : NUM_INTER_MODES;
   const REAL_TIME_SPEED_FEATURES *const rt_sf = &cpi->sf.rt_sf;
   bool check_globalmv = rt_sf->check_globalmv_on_single_ref;
   PRED_BUFFER tmp_buffer[4];
@@ -3299,7 +3336,9 @@ void av1_nonrd_pick_inter_mode_sb(AV1_COMP *cpi, TileDataEnc *tile_data,
   int_mv svc_mv = { .as_int = 0 };
   int force_mv_inter_layer = 0;
   bool comp_use_zero_zeromv_only = 0;
-  int tot_num_comp_modes = NUM_COMP_INTER_MODES_RT;
+  int tot_num_comp_modes = is_one_pass_rt_lag_params(cpi)
+                               ? NUM_COMP_INTER_MODES_RT_FULL
+                               : NUM_COMP_INTER_MODES_RT;
 #if CONFIG_AV1_TEMPORAL_DENOISING
   const int denoise_recheck_zeromv = 1;
   AV1_PICKMODE_CTX_DEN ctx_den;
@@ -3396,9 +3435,14 @@ void av1_nonrd_pick_inter_mode_sb(AV1_COMP *cpi, TileDataEnc *tile_data,
              tx_mode_to_biggest_tx_size[txfm_params->tx_mode_search_type]),
       TX_16X16);
 
-  fill_single_inter_mode_costs(search_state.single_inter_mode_costs,
-                               num_inter_modes, ref_mode_set, mode_costs,
-                               mbmi_ext->mode_context);
+  if (!is_one_pass_rt_lag_params(cpi))
+    fill_single_inter_mode_costs(search_state.single_inter_mode_costs,
+                                 num_inter_modes, ref_mode_set, mode_costs,
+                                 mbmi_ext->mode_context);
+  else
+    fill_single_inter_mode_costs(search_state.single_inter_mode_costs,
+                                 num_inter_modes, ref_mode_set_full, mode_costs,
+                                 mbmi_ext->mode_context);
 
   MV_REFERENCE_FRAME last_comp_ref_frame = NONE_FRAME;
 
