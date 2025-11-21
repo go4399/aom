@@ -975,6 +975,9 @@ void av1_cdef_search(AV1_COMP *cpi) {
   if (cdef_control == CDEF_ADAPTIVE && cpi->oxcf.mode == ALLINTRA &&
       (cpi->oxcf.rc_cfg.mode == AOM_Q || cpi->oxcf.rc_cfg.mode == AOM_CQ) &&
       cpi->oxcf.rc_cfg.cq_level <= 220) {
+    int smallest_luma_strength = INT_MAX;
+    int smallest_chroma_strength = INT_MAX;
+
     for (int j = 0; j < cdef_info->nb_cdef_strengths; j++) {
       const int luma_strength = cdef_info->cdef_strengths[j];
       const int chroma_strength = cdef_info->cdef_uv_strengths[j];
@@ -988,11 +991,51 @@ void av1_cdef_search(AV1_COMP *cpi) {
       const int new_sec_chroma_strength =
           (chroma_strength % CDEF_SEC_STRENGTHS) >> 1;
 
+      const int abs_luma_strength =
+          new_pri_luma_strength + new_sec_luma_strength;
+      const int abs_chroma_strength =
+          new_pri_chroma_strength + new_sec_chroma_strength;
+
+      // Keep track of the smallest absolute luma and chroma strengths (defined
+      // as the sum of the primary and secondary strengths)
+      if (abs_luma_strength > 0) {
+        smallest_luma_strength =
+            AOMMIN(smallest_luma_strength, abs_luma_strength);
+      }
+      if (abs_chroma_strength > 0) {
+        smallest_chroma_strength =
+            AOMMIN(smallest_chroma_strength, abs_chroma_strength);
+      }
+
       cdef_info->cdef_strengths[j] =
           new_pri_luma_strength * CDEF_SEC_STRENGTHS + new_sec_luma_strength;
       cdef_info->cdef_uv_strengths[j] =
           new_pri_chroma_strength * CDEF_SEC_STRENGTHS +
           new_sec_chroma_strength;
+    }
+
+    if (cpi->oxcf.rc_cfg.cq_level <= 140 && cdef_info->nb_cdef_strengths > 1) {
+      // Loop over CDEF strengths again, and zero-out entries with the lowest
+      // luma and chroma absolute strengths. This is done to reduce decode time,
+      // as CDEF is a relatively-expensive filter to compute.
+      for (int j = 0; j < cdef_info->nb_cdef_strengths; j++) {
+        const int luma_strength = cdef_info->cdef_strengths[j];
+        const int chroma_strength = cdef_info->cdef_uv_strengths[j];
+
+        const int pri_luma_strength = luma_strength / CDEF_SEC_STRENGTHS;
+        const int sec_luma_strength = luma_strength % CDEF_SEC_STRENGTHS;
+        const int pri_chroma_strength = chroma_strength / CDEF_SEC_STRENGTHS;
+        const int sec_chroma_strength = chroma_strength % CDEF_SEC_STRENGTHS;
+
+        if (pri_luma_strength + sec_luma_strength == smallest_luma_strength) {
+          cdef_info->cdef_strengths[j] = 0;
+        }
+
+        if (pri_chroma_strength + sec_chroma_strength ==
+            smallest_chroma_strength) {
+          cdef_info->cdef_uv_strengths[j] = 0;
+        }
+      }
     }
   }
 
