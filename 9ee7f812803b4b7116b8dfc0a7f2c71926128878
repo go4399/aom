@@ -34,6 +34,57 @@
       "parentUuid": "616529a5_8bb20c83",
       "revId": "9ee7f812803b4b7116b8dfc0a7f2c71926128878",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e14315b8_164d78fc",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 979,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-11-25T17:29:50Z",
+      "side": 1,
+      "message": "Nit/optional: Change \"smallest\" to \"min\" ?",
+      "revId": "9ee7f812803b4b7116b8dfc0a7f2c71926128878",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "064fe692_4cc78c2d",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1001,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-11-25T17:29:50Z",
+      "side": 1,
+      "message": "Can the strengths be negative?\n\nAre you excluding both negative and zero strengths, or only zero strengths? I guess it is the latter.\n\nIt would be good to explain why zero is excluded. It is only clear after reading the next for loop.",
+      "revId": "9ee7f812803b4b7116b8dfc0a7f2c71926128878",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a35111f5_f9c6d7a1",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1008,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-11-25T17:29:50Z",
+      "side": 1,
+      "message": "Should we put the new code inside `if (cpi-\u003eoxcf.rc_cfg.cq_level \u003c\u003d 140 \u0026\u0026 cdef_info-\u003enb_cdef_strengths \u003e 1)`?\n\nThis is okay if the condition `cpi-\u003eoxcf.rc_cfg.cq_level \u003c\u003d 140 \u0026\u0026 cdef_info-\u003enb_cdef_strengths \u003e 1` is usually true.",
+      "revId": "9ee7f812803b4b7116b8dfc0a7f2c71926128878",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
