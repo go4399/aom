@@ -38,6 +38,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "c792809c_66ade3d4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-11-25T20:00:07Z",
+      "side": 1,
+      "message": "Thanks! Will do on the next push.",
+      "parentUuid": "b73943e1_2be8bb0a",
+      "revId": "9ee7f812803b4b7116b8dfc0a7f2c71926128878",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "84dd1e27_c6eb7eea",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
@@ -83,6 +101,24 @@
       "writtenOn": "2025-11-25T19:01:20Z",
       "side": 1,
       "message": "Just curious: Why is the sum of primary and secondary strengths called the \"absolute strength\"?",
+      "revId": "9ee7f812803b4b7116b8dfc0a7f2c71926128878",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc20b9f2_3890cb09",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1000,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-11-25T20:00:07Z",
+      "side": 1,
+      "message": "No special reason, but I can see how calling it absolute can be misleading due to an \"absolute value\" implication. Something like \"total strength\" would be a better name anyway.",
+      "parentUuid": "7713d55b_8002f85f",
       "revId": "9ee7f812803b4b7116b8dfc0a7f2c71926128878",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
