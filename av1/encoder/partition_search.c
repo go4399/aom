@@ -41,9 +41,9 @@
 #include "av1/encoder/tune_vmaf.h"
 #endif
 
-#define COLLECT_MOTION_SEARCH_FEATURE_SB 0
-
 #if CONFIG_PARTITION_SEARCH_ORDER
+#define COLLECT_MOTION_SEARCH_FEATURE_SB 1
+
 void av1_reset_part_sf(PARTITION_SPEED_FEATURES *part_sf) {
   part_sf->partition_search_type = SEARCH_PARTITION;
   part_sf->less_rectangular_check_level = 0;
@@ -93,9 +93,12 @@ void av1_reset_part_sf(PARTITION_SPEED_FEATURES *part_sf) {
 void av1_reset_sf_for_ext_part(AV1_COMP *const cpi) {
   cpi->sf.inter_sf.prune_ref_frame_for_rect_partitions = 0;
 }
+#else
+#define COLLECT_MOTION_SEARCH_FEATURE_SB 0
 #endif  // CONFIG_PARTITION_SEARCH_ORDER
 
 #if !CONFIG_REALTIME_ONLY
+#if COLLECT_MOTION_SEARCH_FEATURE_SB
 // If input |features| is NULL, write tpl stats to file for each super block.
 // Otherwise, store tpl stats to |features|.
 // The tpl stats is computed in the unit of tpl_bsize_1d (16x16).
@@ -204,6 +207,7 @@ static void collect_tpl_stats_sb(const AV1_COMP *const cpi,
     }
   }
 }
+#endif  // COLLECT_MOTION_SEARCH_FEATURE_SB
 #endif  // !CONFIG_REALTIME_ONLY
 
 static void update_txfm_count(MACROBLOCK *x, MACROBLOCKD *xd,
@@ -4560,6 +4564,8 @@ static void split_partition_search(
     av1_restore_context(x, x_ctx, mi_row, mi_col, bsize, av1_num_planes(cm));
 }
 
+
+#if COLLECT_MOTION_SEARCH_FEATURE_SB
 // The max number of nodes in the partition tree.
 // The number of leaf nodes is (128x128) / (4x4) = 1024.
 // The number of All possible parent nodes is 1 + 2 + ... + 512 = 1023.
@@ -4623,6 +4629,7 @@ static void write_partition_tree(AV1_COMP *const cpi,
 
   fclose(pfile);
 }
+#endif // COLLECT_MOTION_SEARCH_FEATURE_SB
 
 #if CONFIG_PARTITION_SEARCH_ORDER
 static void verify_write_partition_tree(const AV1_COMP *const cpi,
@@ -5584,12 +5591,13 @@ bool av1_rd_pick_partition(AV1_COMP *const cpi, ThreadData *td,
   // external ML model.
   // TODO(chengchen): reduce motion search. This function is similar to
   // av1_get_max_min_partition_features().
-  if (COLLECT_MOTION_SEARCH_FEATURE_SB && !frame_is_intra_only(cm) &&
-      bsize == cm->seq_params->sb_size) {
+#if COLLECT_MOTION_SEARCH_FEATURE_SB
+  if (!frame_is_intra_only(cm) && bsize == cm->seq_params->sb_size) {
     av1_collect_motion_search_features_sb(cpi, td, tile_data, mi_row, mi_col,
                                           bsize, /*features=*/NULL);
     collect_tpl_stats_sb(cpi, bsize, mi_row, mi_col, /*features=*/NULL);
   }
+#endif  // !COLLECT_MOTION_SEARCH_FEATURE_SB
 
   // Update rd cost of the bound using the current multiplier.
   av1_rd_cost_update(x->rdmult, &best_rdc);
@@ -5852,11 +5860,10 @@ BEGIN_PARTITION_SEARCH:
       const RUN_TYPE run_type = emit_output ? OUTPUT_ENABLED : DRY_RUN_NORMAL;
 
       // Write partition tree to file. Not used by default.
-      if (COLLECT_MOTION_SEARCH_FEATURE_SB) {
-        write_partition_tree(cpi, pc_tree, bsize, mi_row, mi_col);
-        ++cpi->sb_counter;
-      }
-
+#if COLLECT_MOTION_SEARCH_FEATURE_SB
+      write_partition_tree(cpi, pc_tree, bsize, mi_row, mi_col);
+      ++cpi->sb_counter;
+#endif  // COLLECT_MOTION_SEARCH_FEATURE_SB
       set_cb_offsets(x->cb_offset, 0, 0);
       encode_sb(cpi, td, tile_data, tp, mi_row, mi_col, run_type, bsize,
                 pc_tree, NULL);
