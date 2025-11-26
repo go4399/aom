@@ -153,7 +153,6 @@ typedef struct TplDepFrame {
   int height;
   int mi_rows;
   int mi_cols;
-  int base_rdmult;
   uint32_t frame_display_index;
   // When set, SAD metric is used for intra and inter mode decision.
   int use_pred_sad;
@@ -261,6 +260,11 @@ typedef struct TplParams {
    * Factor to adjust r0 if TPL uses a subset of frames in the gf group.
    */
   double r0_adjust_factor;
+
+  /*!
+   * Base rdmult.
+   */
+  int base_rdmult;
 } TplParams;
 
 #if CONFIG_BITRATE_ACCURACY || CONFIG_RATECTRL_LOG

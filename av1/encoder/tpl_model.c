@@ -476,8 +476,7 @@ static inline int32_t get_inter_cost(const AV1_COMP *cpi, MACROBLOCKD *xd,
                                      MV *rfidx_mv, int use_pred_sad) {
   const BitDepthInfo bd_info = get_bit_depth_info(xd);
   TplParams *tpl_data = &cpi->ppi->tpl_data;
-  const YV12_BUFFER_CONFIG *const ref_frame_ptr =
-      tpl_data->src_ref_frame[rf_idx];
+  const YV12_BUFFER_CONFIG *const ref_frame_ptr = tpl_data->ref_frame[rf_idx];
   int16_t *src_diff = tpl_tmp_buffers->src_diff;
   tran_low_t *coeff = tpl_tmp_buffers->coeff;
   const int bw = 4 << mi_size_wide_log2[bsize];
@@ -1384,7 +1383,7 @@ static inline void init_mc_flow_dispenser(AV1_COMP *cpi, int frame_idx,
   xd->block_ref_scale_factors[1] = &tpl_data->sf;
 
   const int base_qindex =
-      cpi->use_ducky_encode ? gf_group->q_val[frame_idx] : pframe_qindex;
+      (cpi->use_ducky_encode || 1) ? gf_group->q_val[frame_idx] : pframe_qindex;
   // The TPL model is only meant to be run in inter mode, so ensure that we are
   // not running in all intra mode, which implies we are not tuning for image
   // quality (IQ) or SSIMULACRA2.
@@ -1410,13 +1409,13 @@ static inline void init_mc_flow_dispenser(AV1_COMP *cpi, int frame_idx,
   const BitDepthInfo bd_info = get_bit_depth_info(xd);
   const FRAME_UPDATE_TYPE update_type =
       gf_group->update_type[cpi->gf_frame_index];
-  tpl_frame->base_rdmult = av1_compute_rd_mult_based_on_qindex(
-                               bd_info.bit_depth, update_type, base_qindex,
-                               cpi->oxcf.tune_cfg.tuning) /
-                           6;
+  tpl_data->base_rdmult = av1_compute_rd_mult_based_on_qindex(
+                              bd_info.bit_depth, LF_UPDATE, pframe_qindex,
+                              cpi->oxcf.tune_cfg.tuning) /
+                          6;
 
   if (cpi->use_ducky_encode)
-    tpl_frame->base_rdmult = gf_group->rdmult_val[frame_idx];
+    tpl_data->base_rdmult = gf_group->rdmult_val[frame_idx];
 
   av1_init_tpl_txfm_stats(tpl_txfm_stats);
 
@@ -1908,7 +1907,7 @@ static double get_frame_importance(const TplParams *tpl_data,
           row, col, tpl_stride, tpl_data->tpl_stats_block_mis_log2)];
       double cbcmp = (double)this_stats->srcrf_dist;
       const int64_t mc_dep_delta =
-          RDCOST(tpl_frame->base_rdmult, this_stats->mc_dep_rate,
+          RDCOST(tpl_data->base_rdmult, this_stats->mc_dep_rate,
                  this_stats->mc_dep_dist);
       double dist_scaled = (double)(this_stats->recrf_dist << RDDIV_BITS);
       dist_scaled = AOMMAX(dist_scaled, 1);
@@ -2198,7 +2197,7 @@ void av1_tpl_rdmult_setup(AV1_COMP *cpi) {
           const TplDepStats *this_stats = &tpl_stats[av1_tpl_ptr_pos(
               mi_row, mi_col, tpl_stride, tpl_data->tpl_stats_block_mis_log2)];
           int64_t mc_dep_delta =
-              RDCOST(tpl_frame->base_rdmult, this_stats->mc_dep_rate,
+              RDCOST(tpl_data->base_rdmult, this_stats->mc_dep_rate,
                      this_stats->mc_dep_dist);
           intra_cost += (double)(this_stats->recrf_dist << RDDIV_BITS);
           mc_dep_cost +=

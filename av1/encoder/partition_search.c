@@ -173,7 +173,7 @@ static void collect_tpl_stats_sb(const AV1_COMP *const cpi,
             &tpl_stats[av1_tpl_ptr_pos(mi_row + row, mi_col + col, tpl_stride,
                                        tpl_data->tpl_stats_block_mis_log2)];
         const int64_t mc_dep_delta =
-            RDCOST(tpl_frame->base_rdmult, this_stats->mc_dep_rate,
+            RDCOST(tpl_data->base_rdmult, this_stats->mc_dep_rate,
                    this_stats->mc_dep_dist);
         fprintf(pfile, "%.0f", (double)mc_dep_delta);
         if (count < num_blocks - 1) fprintf(pfile, ",");
@@ -192,7 +192,7 @@ static void collect_tpl_stats_sb(const AV1_COMP *const cpi,
             &tpl_stats[av1_tpl_ptr_pos(mi_row + row, mi_col + col, tpl_stride,
                                        tpl_data->tpl_stats_block_mis_log2)];
         const int64_t mc_dep_delta =
-            RDCOST(tpl_frame->base_rdmult, this_stats->mc_dep_rate,
+            RDCOST(tpl_data->base_rdmult, this_stats->mc_dep_rate,
                    this_stats->mc_dep_dist);
         features->sb_features.tpl_features.intra_cost[count] =
             this_stats->intra_cost;
