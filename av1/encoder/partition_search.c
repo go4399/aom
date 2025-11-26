@@ -41,9 +41,9 @@
 #include "av1/encoder/tune_vmaf.h"
 #endif
 
-#define COLLECT_MOTION_SEARCH_FEATURE_SB 0
-
 #if CONFIG_PARTITION_SEARCH_ORDER
+#define COLLECT_MOTION_SEARCH_FEATURE_SB 1
+
 void av1_reset_part_sf(PARTITION_SPEED_FEATURES *part_sf) {
   part_sf->partition_search_type = SEARCH_PARTITION;
   part_sf->less_rectangular_check_level = 0;
@@ -93,6 +93,8 @@ void av1_reset_part_sf(PARTITION_SPEED_FEATURES *part_sf) {
 void av1_reset_sf_for_ext_part(AV1_COMP *const cpi) {
   cpi->sf.inter_sf.prune_ref_frame_for_rect_partitions = 0;
 }
+#else
+#define COLLECT_MOTION_SEARCH_FEATURE_SB 0
 #endif  // CONFIG_PARTITION_SEARCH_ORDER
 
 #if !CONFIG_REALTIME_ONLY
@@ -5594,12 +5596,13 @@ bool av1_rd_pick_partition(AV1_COMP *const cpi, ThreadData *td,
   // external ML model.
   // TODO(chengchen): reduce motion search. This function is similar to
   // av1_get_max_min_partition_features().
-  if (COLLECT_MOTION_SEARCH_FEATURE_SB && !frame_is_intra_only(cm) &&
-      bsize == cm->seq_params->sb_size) {
+#if COLLECT_MOTION_SEARCH_FEATURE_SB
+  if (!frame_is_intra_only(cm) && bsize == cm->seq_params->sb_size) {
     av1_collect_motion_search_features_sb(cpi, td, tile_data, mi_row, mi_col,
                                           bsize, /*features=*/NULL);
     collect_tpl_stats_sb(cpi, bsize, mi_row, mi_col, /*features=*/NULL);
   }
+#endif  // !COLLECT_MOTION_SEARCH_FEATURE_SB
 
   // Update rd cost of the bound using the current multiplier.
   av1_rd_cost_update(x->rdmult, &best_rdc);
@@ -5862,11 +5865,10 @@ BEGIN_PARTITION_SEARCH:
       const RUN_TYPE run_type = emit_output ? OUTPUT_ENABLED : DRY_RUN_NORMAL;
 
       // Write partition tree to file. Not used by default.
-      if (COLLECT_MOTION_SEARCH_FEATURE_SB) {
-        write_partition_tree(cpi, pc_tree, bsize, mi_row, mi_col);
-        ++cpi->sb_counter;
-      }
-
+#if COLLECT_MOTION_SEARCH_FEATURE_SB
+      write_partition_tree(cpi, pc_tree, bsize, mi_row, mi_col);
+      ++cpi->sb_counter;
+#endif  // COLLECT_MOTION_SEARCH_FEATURE_SB
       set_cb_offsets(x->cb_offset, 0, 0);
       encode_sb(cpi, td, tile_data, tp, mi_row, mi_col, run_type, bsize,
                 pc_tree, NULL);
