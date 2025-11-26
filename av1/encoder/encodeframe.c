@@ -2240,6 +2240,10 @@ static inline void encode_frame_internal(AV1_COMP *cpi) {
   init_encode_frame_mb_context(cpi);
   set_default_interp_skip_flags(cm, &cpi->interp_search_flags);
 
+
+  fprintf(stderr, "encode frame %d, QP = %d\n",
+          cpi->gf_frame_index, cm->quant_params.base_qindex);
+
   if (cm->prev_frame && cm->prev_frame->seg.enabled &&
       cpi->svc.number_spatial_layers == 1)
     cm->last_frame_seg_map = cm->prev_frame->seg_map;
