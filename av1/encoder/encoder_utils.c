@@ -612,7 +612,7 @@ static void process_tpl_stats_frame(AV1_COMP *cpi) {
             row, col, tpl_stride, tpl_data->tpl_stats_block_mis_log2)];
         double cbcmp = (double)(this_stats->srcrf_dist);
         int64_t mc_dep_delta =
-            RDCOST(tpl_frame->base_rdmult, this_stats->mc_dep_rate,
+            RDCOST(tpl_data->base_rdmult, this_stats->mc_dep_rate,
                    this_stats->mc_dep_dist);
         double dist_scaled = (double)(this_stats->recrf_dist << RDDIV_BITS);
         intra_cost_base += log(dist_scaled) * cbcmp;

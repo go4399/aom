@@ -123,7 +123,7 @@ int av1_get_cb_rdmult(const AV1_COMP *const cpi, MACROBLOCK *const x,
 
       double cbcmp = (double)this_stats->srcrf_dist;
       int64_t mc_dep_delta =
-          RDCOST(tpl_frame->base_rdmult, this_stats->mc_dep_rate,
+          RDCOST(tpl_data->base_rdmult, this_stats->mc_dep_rate,
                  this_stats->mc_dep_dist);
       double dist_scaled = (double)(this_stats->recrf_dist << RDDIV_BITS);
       intra_cost_base += log(dist_scaled) * cbcmp;
@@ -722,7 +722,7 @@ int av1_get_rdmult_delta(AV1_COMP *cpi, BLOCK_SIZE bsize, int mi_row,
       TplDepStats *this_stats =
           &tpl_stats[av1_tpl_ptr_pos(row, col, tpl_stride, block_mis_log2)];
       int64_t mc_dep_delta =
-          RDCOST(tpl_frame->base_rdmult, this_stats->mc_dep_rate,
+          RDCOST(tpl_data->base_rdmult, this_stats->mc_dep_rate,
                  this_stats->mc_dep_dist);
       intra_cost += this_stats->recrf_dist << RDDIV_BITS;
       mc_dep_cost += (this_stats->recrf_dist << RDDIV_BITS) + mc_dep_delta;
@@ -936,7 +936,7 @@ int av1_get_q_for_deltaq_objective(AV1_COMP *const cpi, ThreadData *td,
           &tpl_stats[av1_tpl_ptr_pos(row, col, tpl_stride, block_mis_log2)];
       double cbcmp = (double)this_stats->srcrf_dist;
       int64_t mc_dep_delta =
-          RDCOST(tpl_frame->base_rdmult, this_stats->mc_dep_rate,
+          RDCOST(tpl_data->base_rdmult, this_stats->mc_dep_rate,
                  this_stats->mc_dep_dist);
       double dist_scaled = (double)(this_stats->recrf_dist << RDDIV_BITS);
       intra_cost += log(dist_scaled) * cbcmp;
@@ -983,8 +983,8 @@ int av1_get_q_for_deltaq_objective(AV1_COMP *const cpi, ThreadData *td,
     double sbs_rate = srcrf_rate * ((double)frm_qstep / sbs_qstep);
     sbs_dist = AOMMIN(sbs_dist, srcrf_sse);
     *delta_dist = (int64_t)((sbs_dist - srcrf_dist) / rk);
-    *delta_dist += RDCOST(tpl_frame->base_rdmult, 4 * 256, 0);
-    *delta_dist += RDCOST(tpl_frame->base_rdmult, sbs_rate - srcrf_rate, 0);
+    *delta_dist += RDCOST(tpl_data->base_rdmult, 4 * 256, 0);
+    *delta_dist += RDCOST(tpl_data->base_rdmult, sbs_rate - srcrf_rate, 0);
   }
   return qindex;
 }
