@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4c4be0e_b9fcdae8",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 986,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-11-26T19:17:14Z",
+      "side": 1,
+      "message": "Part of this comment block describes the complicated conditional expression in the original if statement. Now that the conditional expression has been moved forward to initialize the new `should_reduce_cdef_strengths` variable, we should edit this comment block and move some of it before the `should_reduce_cdef_strengths` variable declaration.",
+      "revId": "12b6622a37b801b89a20e5ffc5676ce7e73d8175",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac3a643c_91e01374",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1010,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-11-26T19:17:14Z",
+      "side": 1,
+      "message": "The new code doesn\u0027t use `smallest_luma_strength` and `abs_chroma_strength`. Therefore I think we can merge the second for loop into the first. Agreed?",
+      "revId": "12b6622a37b801b89a20e5ffc5676ce7e73d8175",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
