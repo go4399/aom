@@ -88,6 +88,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "798fc96d_75b2bd56",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 979,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-11-26T03:29:56Z",
+      "side": 1,
+      "message": "Switched to a threshold-based algorithm, so this does no longer apply.",
+      "parentUuid": "e14315b8_164d78fc",
+      "revId": "9ee7f812803b4b7116b8dfc0a7f2c71926128878",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7713d55b_8002f85f",
@@ -141,6 +159,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c65baf29_0403f3f3",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1000,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-11-26T03:29:56Z",
+      "side": 1,
+      "message": "Refactored code so I removed this specific calculation.",
+      "parentUuid": "66863870_5c229fcc",
+      "revId": "9ee7f812803b4b7116b8dfc0a7f2c71926128878",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "064fe692_4cc78c2d",
@@ -176,6 +212,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd6a1e14_c4aa6bc3",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1001,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-11-26T03:29:56Z",
+      "side": 1,
+      "message": "Switched to a threshold-based algorithm, so this does no longer apply.",
+      "parentUuid": "45b807e9_bec515ac",
+      "revId": "9ee7f812803b4b7116b8dfc0a7f2c71926128878",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a35111f5_f9c6d7a1",
@@ -207,6 +261,24 @@
       "side": 1,
       "message": "Good question. The condition is usually true for the default q level in libavif, but this code is used for video as well, which warrants putting the new code inside the condition.",
       "parentUuid": "a35111f5_f9c6d7a1",
+      "revId": "9ee7f812803b4b7116b8dfc0a7f2c71926128878",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "20b25c74_bfa1c5d2",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1008,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-11-26T03:29:56Z",
+      "side": 1,
+      "message": "Switched to a threshold-based algorithm, so this does no longer apply.",
+      "parentUuid": "d1263c46_010c37e0",
       "revId": "9ee7f812803b4b7116b8dfc0a7f2c71926128878",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
