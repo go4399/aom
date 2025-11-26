@@ -20,6 +20,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "897d3204_163adafd",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 907,
+      "author": {
+        "id": 6585
+      },
+      "writtenOn": "2025-11-26T20:29:46Z",
+      "side": 1,
+      "message": "Missing cpi-\u003eoxcf.rc_cfg.cq_level \u003e\u003d 33?",
+      "range": {
+        "startLine": 907,
+        "startChar": 6,
+        "endLine": 907,
+        "endChar": 38
+      },
+      "revId": "6058a5e8f95695724f494a6cbb0770827e04f29e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e20afde7_27e1ab25",
         "filename": "av1/encoder/pickcdef.c",
         "patchSetId": 7
