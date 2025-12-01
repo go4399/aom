@@ -153,6 +153,24 @@
       "parentUuid": "96c5b9d1_2da7a1ca",
       "revId": "36944b5779f8f174401a50d47cc57487d285d744",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f196db9d_356a3291",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 911,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-12-01T19:58:51Z",
+      "side": 1,
+      "message": "Thanks Yunqing, those are good suggestions. I think you\u0027ve convinced me -- I\u0027ll take a look at making this change a speed feature.",
+      "parentUuid": "68a5af52_21c8fbbd",
+      "revId": "36944b5779f8f174401a50d47cc57487d285d744",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
