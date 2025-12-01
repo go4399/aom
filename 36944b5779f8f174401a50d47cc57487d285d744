@@ -36,6 +36,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e92d190b_393ef8a4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-12-01T19:42:53Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "f7286dca_77eb23db",
+      "revId": "36944b5779f8f174401a50d47cc57487d285d744",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "925d26f5_cca147b3",
@@ -115,6 +133,24 @@
       "side": 1,
       "message": "Hi Yunqing, correct this is just for images, more specifically libavif encoding.\n\nShort story is: we (Wan-Teh, Yannis and I) are working on making tune iq (Image Quality) the default in libavif. We\u0027ve found CDEF has coding and subjective quality gains, but fully turning it on resulted in a significant decode time (\u003e20%) increase over no CDEF (the current default), which was found unacceptable for our requisites.\n\nThis change only affects Adaptive CDEF, which is only used by tune iq. Also, this change is meant to be effective independently of encode speed (cpu-used).\n\nHope this explains things.",
       "parentUuid": "925d26f5_cca147b3",
+      "revId": "36944b5779f8f174401a50d47cc57487d285d744",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68a5af52_21c8fbbd",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 911,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2025-12-01T19:42:53Z",
+      "side": 1,
+      "message": "Thanks for the explanation. A general practice in libaom is to keep all speed features (for encoder speed or decoder speed) in one place (speed_features file), so people don\u0027t have to look at every file to know what is going on. We have ALLINTRA features. If you want to enable it for all speeds, just enable it at speed 0 for example. We also have qindex based speed feature (av1_set_speed_features_qindex_dependent()) if that is a proper place for it.",
+      "parentUuid": "96c5b9d1_2da7a1ca",
       "revId": "36944b5779f8f174401a50d47cc57487d285d744",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
