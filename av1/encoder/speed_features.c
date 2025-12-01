@@ -1780,6 +1780,7 @@ static void set_rt_speed_feature_framesize_dependent(const AV1_COMP *const cpi,
       }
     }
     if (speed >= 11 && cpi->rc.high_motion_content_screen_rtc) {
+      sf->rt_sf.reduce_mv_pel_precision_highmotion = 3;
       sf->rt_sf.higher_thresh_scene_detection = 1;
       sf->rt_sf.force_only_last_ref = 1;
       sf->rt_sf.use_nonrd_filter_search = 0;

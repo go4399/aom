@@ -3364,12 +3364,12 @@ static void rc_scene_detection_onepass_rt(AV1_COMP *cpi,
     cpi->rc.high_motion_content_screen_rtc = 0;
     if (cpi->oxcf.speed >= 11 &&
         cpi->oxcf.tune_cfg.content == AOM_CONTENT_SCREEN &&
-        rc->num_col_blscroll_last_tl0 < 5 &&
-        rc->num_row_blscroll_last_tl0 < 5 &&
+        rc->num_col_blscroll_last_tl0 < 10 &&
+        rc->num_row_blscroll_last_tl0 < 10 &&
         rc->percent_blocks_with_motion > 40 &&
         rc->prev_avg_source_sad > thresh_high_motion &&
         rc->avg_source_sad > thresh_high_motion &&
-        rc->frame_number_encoded - rc->last_frame_low_source_sad > 12 &&
+        rc->frame_number_encoded - rc->last_frame_low_source_sad > 15 &&
         rc->avg_frame_low_motion < 60 && unscaled_src->y_width >= 1280 &&
         unscaled_src->y_height >= 720) {
       cpi->rc.high_motion_content_screen_rtc = 1;
