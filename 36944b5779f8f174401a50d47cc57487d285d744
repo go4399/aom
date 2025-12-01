@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f7286dca_77eb23db",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-12-01T18:56:56Z",
+      "side": 1,
+      "message": "`--enable-cdef 0` in this case. No CDEF is the current default in libavif.",
+      "parentUuid": "a174a2bc_cc4d503b",
+      "revId": "36944b5779f8f174401a50d47cc57487d285d744",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "925d26f5_cca147b3",
         "filename": "av1/encoder/pickcdef.c",
         "patchSetId": 8
@@ -79,6 +97,24 @@
           ]
         }
       ],
+      "revId": "36944b5779f8f174401a50d47cc57487d285d744",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "96c5b9d1_2da7a1ca",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 911,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-12-01T18:56:56Z",
+      "side": 1,
+      "message": "Hi Yunqing, correct this is just for images, more specifically libavif encoding.\n\nShort story is: we (Wan-Teh, Yannis and I) are working on making tune iq (Image Quality) the default in libavif. We\u0027ve found CDEF has coding and subjective quality gains, but fully turning it on resulted in a significant decode time (\u003e20%) increase over no CDEF (the current default), which was found unacceptable for our requisites.\n\nThis change only affects Adaptive CDEF, which is only used by tune iq. Also, this change is meant to be effective independently of encode speed (cpu-used).\n\nHope this explains things.",
+      "parentUuid": "925d26f5_cca147b3",
       "revId": "36944b5779f8f174401a50d47cc57487d285d744",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
