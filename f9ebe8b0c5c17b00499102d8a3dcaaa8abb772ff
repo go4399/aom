@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d9c96834_63fa3337",
+        "filename": "aom_dsp/arm/highbd_convolve8_sve.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-12-02T13:57:55Z",
+      "side": 1,
+      "message": "Let\u0027s make this the current year, 2025.",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "c63c83f0_f584e7ab",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "aom_dsp/arm/highbd_convolve8_sve.h",
+              "range": {
+                "startLine": 2,
+                "startChar": 0,
+                "endLine": 3,
+                "endChar": 0
+              },
+              "replacement": " * Copyright (c) 2025, Alliance for Open Media. All rights reserved.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "f9ebe8b0c5c17b00499102d8a3dcaaa8abb772ff",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
