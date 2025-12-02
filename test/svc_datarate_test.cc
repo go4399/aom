@@ -1225,6 +1225,42 @@ class DatarateTestSVC
 #endif
   }
 
+  virtual void BasicRateTargetingSVC3TL1SLQvgaTest() {
+    SetUpCbr();
+    cfg_.g_error_resilient = 0;
+    cfg_.g_threads = 2;
+    cfg_.kf_max_dist = 30;
+    cfg_.kf_min_dist = 30;
+    cfg_.rc_dropframe_thresh = 0;
+
+    ::libaom_test::I420VideoSource video("desktop1.320_180.yuv", 320, 180, 10,
+                                         1, 0, 800);
+    const int bitrate_array[2] = { 50, 200 };
+    cfg_.rc_target_bitrate = bitrate_array[GET_PARAM(4)];
+    ResetModel();
+    tile_columns_ = 1;
+    SetTargetBitratesFor1SL3TL();
+    ASSERT_NO_FATAL_FAILURE(RunLoop(&video));
+  }
+
+  virtual void BasicRateTargetingSVC3TL1SLQvga2Test() {
+    SetUpCbr();
+    cfg_.g_error_resilient = 0;
+    cfg_.g_threads = 2;
+    cfg_.kf_max_dist = 30;
+    cfg_.kf_min_dist = 30;
+    cfg_.rc_dropframe_thresh = 0;
+
+    ::libaom_test::I420VideoSource video("desktop1.320_180.yuv", 320, 180, 10,
+                                         1, 0, 800);
+    const int bitrate_array[2] = { 1000, 4000 };
+    cfg_.rc_target_bitrate = bitrate_array[GET_PARAM(4)];
+    ResetModel();
+    tile_columns_ = 1;
+    SetTargetBitratesFor1SL3TL();
+    ASSERT_NO_FATAL_FAILURE(RunLoop(&video));
+  }
+
   virtual void SetFrameQpSVC3TL1SLTest() {
     SetUpCbr();
     cfg_.g_error_resilient = 1;
@@ -2347,6 +2383,18 @@ TEST_P(DatarateTestSVC, BasicRateTargetingSVC3TL1SL) {
   BasicRateTargetingSVC3TL1SLTest();
 }
 
+// Check basic rate targeting for CBR, for 3 temporal layers, 1 spatial,
+// QVGA, low framerate.
+TEST_P(DatarateTestSVC, BasicRateTargetingSVC3TL1SLQvga) {
+  BasicRateTargetingSVC3TL1SLQvgaTest();
+}
+
+// Check basic rate targeting for CBR, for 3 temporal layers, 1 spatial,
+// QVGA, high bitrate.
+TEST_P(DatarateTestSVC, BasicRateTargetingSVC3TL1SLQvga2) {
+  BasicRateTargetingSVC3TL1SLQvga2Test();
+}
+
 TEST_P(DatarateTestSVC, SetFrameQpSVC3TL1SL) { SetFrameQpSVC3TL1SLTest(); }
 
 TEST_P(DatarateTestSVC, SetFrameQpSVC3TL3SL) { SetFrameQpSVC3TL3SLTest(); }
@@ -2725,7 +2773,7 @@ TEST(SvcParams, BitrateOverflow) {
 
 AV1_INSTANTIATE_TEST_SUITE(DatarateTestSVC,
                            ::testing::Values(::libaom_test::kRealTime),
-                           ::testing::Range(7, 12), ::testing::Values(0, 3),
+                           ::testing::Range(6, 12), ::testing::Values(0, 3),
                            ::testing::Values(0, 1));
 
 }  // namespace
