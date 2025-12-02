@@ -1225,6 +1225,31 @@ class DatarateTestSVC
 #endif
   }
 
+  virtual void BasicRateTargetingSVC3TL1SLQvgaTest() {
+    SetUpCbr();
+    cfg_.g_error_resilient = 0;
+    cfg_.g_threads = 2;
+    cfg_.kf_max_dist = 30;
+    cfg_.kf_min_dist = 30;
+
+    ::libaom_test::I420VideoSource video("desktop1.320_180.yuv", 320, 180, 13,
+                                         1, 0, 800);
+    const int bitrate_array[2] = { 50, 200 };
+    cfg_.rc_target_bitrate = bitrate_array[GET_PARAM(4)];
+    ResetModel();
+    tile_columns_ = 1;
+    SetTargetBitratesFor1SL3TL();
+    ASSERT_NO_FATAL_FAILURE(RunLoop(&video));
+    CheckDatarate(0.40, 2.0);
+#if CONFIG_AV1_DECODER
+    // Top temporal layers are non_reference, so exlcude them from
+    // mismatch count, since loopfilter/cdef is not applied for these on
+    // encoder side, but is always applied on decoder.
+    // This means 150 = #frames(300) - #TL2_frames(150).
+    EXPECT_EQ((int)GetMismatchFrames(), 150);
+#endif
+  }
+
   virtual void SetFrameQpSVC3TL1SLTest() {
     SetUpCbr();
     cfg_.g_error_resilient = 1;
@@ -2347,6 +2372,12 @@ TEST_P(DatarateTestSVC, BasicRateTargetingSVC3TL1SL) {
   BasicRateTargetingSVC3TL1SLTest();
 }
 
+// Check basic rate targeting for CBR, for 3 temporal layers, 1 spatial,
+// QVGA, low framerate.
+TEST_P(DatarateTestSVC, BasicRateTargetingSVC3TL1SLQvga) {
+  BasicRateTargetingSVC3TL1SLQvgaTest();
+}
+
 TEST_P(DatarateTestSVC, SetFrameQpSVC3TL1SL) { SetFrameQpSVC3TL1SLTest(); }
 
 TEST_P(DatarateTestSVC, SetFrameQpSVC3TL3SL) { SetFrameQpSVC3TL3SLTest(); }
@@ -2725,7 +2756,7 @@ TEST(SvcParams, BitrateOverflow) {
 
 AV1_INSTANTIATE_TEST_SUITE(DatarateTestSVC,
                            ::testing::Values(::libaom_test::kRealTime),
-                           ::testing::Range(7, 12), ::testing::Values(0, 3),
+                           ::testing::Range(6, 12), ::testing::Values(0, 3),
                            ::testing::Values(0, 1));
 
 }  // namespace
