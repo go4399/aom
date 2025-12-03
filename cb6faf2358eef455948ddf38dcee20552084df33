@@ -139,6 +139,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "160a9aa8_d040af39",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 912,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-12-03T19:19:13Z",
+      "side": 1,
+      "message": "Please ignore this comment. I mistakenly thought that `should_reduce_cdef_strengths` was an intermediate variable only used in the calculation of `should_zero_cdef_strengths`. But `should_reduce_cdef_strengths` is also used directly. So my suggestion is wrong.",
+      "parentUuid": "23eb9788_075a63a4",
+      "revId": "cb6faf2358eef455948ddf38dcee20552084df33",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "445cbdde_a7a8862e",
