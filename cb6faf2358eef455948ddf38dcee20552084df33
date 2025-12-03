@@ -123,6 +123,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "445cbdde_a7a8862e",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 1014,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-12-03T18:15:44Z",
+      "side": 1,
+      "message": "Optional: Note that the code at lines 1029-1031 recomputes the primary and secondary chroma strengths even though they are readily available within this block. It would be good to merge the if statements to avoid the recomputation. This restructuring needs to be done carefully to avoid mistakes.",
+      "revId": "cb6faf2358eef455948ddf38dcee20552084df33",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8d974738_b3dadba5",
         "filename": "av1/encoder/pickcdef.c",
         "patchSetId": 10
