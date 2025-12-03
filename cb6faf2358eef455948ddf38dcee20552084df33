@@ -1,0 +1,198 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec99f545_5daa4587",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-12-03T18:11:10Z",
+      "side": 1,
+      "message": "Nit: Should this be \"middle to high\"?\n\nYour checks for base_qindex and cq_level do not exclude the lowest QP (highest quality).\n\nUPDATE: I see the following comment in the original code:\n\n```\n  // For CDEF_ADAPTIVE, set primary and secondary CDEF at reduced strength for\n  // qindexes 33 through 220.\n```\n\nSo perhaps this used to be the middle quality levels?",
+      "range": {
+        "startLine": 7,
+        "startChar": 40,
+        "endLine": 7,
+        "endChar": 61
+      },
+      "revId": "cb6faf2358eef455948ddf38dcee20552084df33",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "180e1982_e7b72a46",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-12-03T18:11:10Z",
+      "side": 1,
+      "message": "LGTM. Thanks!\n\nI suggest several simple changes. The suggestions marked as \"Optional\" are probably a matter of personal preference; feel free to ignore them.",
+      "revId": "cb6faf2358eef455948ddf38dcee20552084df33",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36261538_c88e058c",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 905,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-12-03T18:11:10Z",
+      "side": 1,
+      "message": "Delete the `cpi-\u003eoxcf.mode \u003d\u003d ALLINTRA` check. This is handled by the new speed feature now.",
+      "range": {
+        "startLine": 905,
+        "startChar": 39,
+        "endLine": 905,
+        "endChar": 65
+      },
+      "revId": "cb6faf2358eef455948ddf38dcee20552084df33",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10762816_47fe0ba6",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 907,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-12-03T18:11:10Z",
+      "side": 1,
+      "message": "IMPORTANT: With the `cm-\u003equant_params.base_qindex \u003c\u003d 140` check in the new speed feature, do we still need to check `cpi-\u003eoxcf.rc_cfg.cq_level \u003c\u003d 220`?\n\n(This is a question, not a suggestion.) These two checks seem a litte redundant. Perhaps we just need to check one of them?",
+      "revId": "cb6faf2358eef455948ddf38dcee20552084df33",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0454363b_e3feb5b2",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 908,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-12-03T18:11:10Z",
+      "side": 1,
+      "message": "Optional: (This is the same as my comment at av1/encoder/speed_features.h:1567.) Is it possible to replace \"entries\" with something more specific?\n\nIt seems that we could change \"zero out entries with low strengths\" to \"zero out low strengths\" (which you used in line 916) or \"zero out CDEF strenghts with low values\".",
+      "range": {
+        "startLine": 908,
+        "startChar": 57,
+        "endLine": 908,
+        "endChar": 64
+      },
+      "revId": "cb6faf2358eef455948ddf38dcee20552084df33",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23eb9788_075a63a4",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 912,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-12-03T18:11:10Z",
+      "side": 1,
+      "message": "Optional: We can restructure these two assignments so that the complicated expression for `should_reduce_cdef_strengths` is evaluated only when necessary.\n\n```\n  bool should_zero_cdef_strengths \u003d false;\n  if (cpi-\u003esf.lpf_sf.zero_low_cdef_strengths) {\n    should_zero_cdef_strengths \u003d\n      cdef_control \u003d\u003d CDEF_ADAPTIVE \u0026\u0026 cpi-\u003eoxcf.mode \u003d\u003d ALLINTRA \u0026\u0026\n      (cpi-\u003eoxcf.rc_cfg.mode \u003d\u003d AOM_Q || cpi-\u003eoxcf.rc_cfg.mode \u003d\u003d AOM_CQ) \u0026\u0026\n      cpi-\u003eoxcf.rc_cfg.cq_level \u003c\u003d 220;\n  }\n```\n\nAlternatively we can omit the intermediate variable `should_reduce_cdef_strengths` and chain everything:\n\n```\n  const bool should_zero_cdef_strengths \u003d\n      cpi-\u003esf.lpf_sf.zero_low_cdef_strengths \u0026\u0026\n      cdef_control \u003d\u003d CDEF_ADAPTIVE \u0026\u0026 cpi-\u003eoxcf.mode \u003d\u003d ALLINTRA \u0026\u0026\n      (cpi-\u003eoxcf.rc_cfg.mode \u003d\u003d AOM_Q || cpi-\u003eoxcf.rc_cfg.mode \u003d\u003d AOM_CQ) \u0026\u0026\n      cpi-\u003eoxcf.rc_cfg.cq_level \u003c\u003d 220;\n\n```",
+      "revId": "cb6faf2358eef455948ddf38dcee20552084df33",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d974738_b3dadba5",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 1047,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-12-03T18:11:10Z",
+      "side": 1,
+      "message": "Optional: The new `num_planes \u003e 1` check makes the nesting of these if statements a little hard to understand. I suggest we first reduce the luma strengths, and then reduce the chroma strengths if `num_planes \u003e 1`. This structure mirrors the code above that calculates the luma and chroma strengths.\n\n```\n        if (is_low_luma_strength) {\n          cdef_info-\u003ecdef_strengths[j] \u003d 0;\n        }\n        if (num_planes \u003e 1) {\n          const int chroma_strength \u003d cdef_info-\u003ecdef_uv_strengths[j];\n          const int pri_chroma_strength \u003d chroma_strength / CDEF_SEC_STRENGTHS;\n          const int sec_chroma_strength \u003d chroma_strength % CDEF_SEC_STRENGTHS;\n          const bool is_low_chroma_strength \u003d\n              pri_chroma_strength \u003c\u003d 4 \u0026\u0026 sec_chroma_strength \u003c\u003d 1;\n\n          // Disable CDEF on chroma if we\u0027ve disabled it on luma\n          if (is_low_luma_strength || is_low_chroma_strength) {\n            cdef_info-\u003ecdef_uv_strengths[j] \u003d 0;\n          }\n        }\n```\n\nWe can even have an early continue if `is_low_chroma_strength` doesn\u0027t need to be evaluated.\n\n```\n        if (is_low_luma_strength) {\n          cdef_info-\u003ecdef_strengths[j] \u003d 0;\n        }\n        if (num_planes \u003e 1) {\n          if (is_low_luma_strength) {\n            // Disable CDEF on chroma if we\u0027ve disabled it on luma\n            cdef_info-\u003ecdef_uv_strengths[j] \u003d 0;\n            continue;\n          }\n          const int chroma_strength \u003d cdef_info-\u003ecdef_uv_strengths[j];\n          const int pri_chroma_strength \u003d chroma_strength / CDEF_SEC_STRENGTHS;\n          const int sec_chroma_strength \u003d chroma_strength % CDEF_SEC_STRENGTHS;\n          const bool is_low_chroma_strength \u003d\n              pri_chroma_strength \u003c\u003d 4 \u0026\u0026 sec_chroma_strength \u003c\u003d 1;\n\n          if (is_low_chroma_strength) {\n            cdef_info-\u003ecdef_uv_strengths[j] \u003d 0;\n          }\n        }\n```",
+      "revId": "cb6faf2358eef455948ddf38dcee20552084df33",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ca054d7_25711ccc",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 2432,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-12-03T18:11:10Z",
+      "side": 1,
+      "message": "Nit: Put this line between `cdef_pick_method` and `dual_sgr_penalty_level` to match the declaration order of these fields.",
+      "revId": "cb6faf2358eef455948ddf38dcee20552084df33",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "60b38283_f9cc0578",
+        "filename": "av1/encoder/speed_features.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1566,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-12-03T18:11:10Z",
+      "side": 1,
+      "message": "Optional: It may be useful to note that this feature is only enabled in all intra mode.\n\nNote: \"Decoder side speed feature\" can be misinterpreted as a speed feature of the decoder. We can use your description in the commit message. For example,\n\n```\n  // Make adaptive CDEF more decoder-friendly with strength reduction.\n```\n\nBut I see you copied this from the comment for `dual_sgr_penalty_level`. So it\u0027s okay to not change this.",
+      "revId": "cb6faf2358eef455948ddf38dcee20552084df33",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a7065b2_07c33d90",
+        "filename": "av1/encoder/speed_features.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1567,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-12-03T18:11:10Z",
+      "side": 1,
+      "message": "Nit/optional: (This is the same as my comment at av1/encoder/pickcdef.c:908.) Is it possible to replace \"entries\" with something more specific?",
+      "range": {
+        "startLine": 1567,
+        "startChar": 14,
+        "endLine": 1567,
+        "endChar": 21
+      },
+      "revId": "cb6faf2358eef455948ddf38dcee20552084df33",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
