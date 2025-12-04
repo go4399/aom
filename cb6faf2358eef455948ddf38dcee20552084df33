@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "8b99d150_57830d49",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-12-04T03:31:48Z",
+      "side": 1,
+      "message": "Correct, there\u0027s a check in the CDEF picking code that early-exits when picture qindex is equal or smaller than 32. This implies reduced strength doesn\u0027t run at the highest quality QPs.",
+      "parentUuid": "ec99f545_5daa4587",
+      "range": {
+        "startLine": 7,
+        "startChar": 40,
+        "endLine": 7,
+        "endChar": 61
+      },
+      "revId": "cb6faf2358eef455948ddf38dcee20552084df33",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "180e1982_e7b72a46",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 10
@@ -78,6 +102,30 @@
       "side": 1,
       "message": "I am no longer sure if this suggestion is correct, because it is based on the incorrect assumption that `should_reduce_cdef_strengths` was an intermediate variable used only in the calculation of `should_zero_cdef_strengths`. So please check this carefully and feel free to reject this suggestion.",
       "parentUuid": "36261538_c88e058c",
+      "range": {
+        "startLine": 905,
+        "startChar": 39,
+        "endLine": 905,
+        "endChar": 65
+      },
+      "revId": "cb6faf2358eef455948ddf38dcee20552084df33",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a99aa5c4_6f4db26e",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 905,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-12-04T03:31:48Z",
+      "side": 1,
+      "message": "You\u0027re correct, Wan-Teh. `should_reduce_cdef_strengths` is a separate variable, so it also has to be guarded by the `cpi-\u003eoxcf.mode \u003d\u003d ALLINTRA` check.",
+      "parentUuid": "556d0772_479e5a69",
       "range": {
         "startLine": 905,
         "startChar": 39,
@@ -164,6 +212,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c061bffb_997c3277",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 908,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-12-04T03:31:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0454363b_e3feb5b2",
+      "range": {
+        "startLine": 908,
+        "startChar": 57,
+        "endLine": 908,
+        "endChar": 64
+      },
+      "revId": "cb6faf2358eef455948ddf38dcee20552084df33",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "23eb9788_075a63a4",
@@ -216,6 +288,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9549e59b_a1fcec9f",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 1014,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-12-04T03:31:48Z",
+      "side": 1,
+      "message": "Good call. I did initially try with the merged if statement approach, however I found the code to be harder to read than what the current patchset proposes.",
+      "parentUuid": "445cbdde_a7a8862e",
+      "revId": "cb6faf2358eef455948ddf38dcee20552084df33",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8d974738_b3dadba5",
@@ -229,6 +319,24 @@
       "writtenOn": "2025-12-03T18:11:10Z",
       "side": 1,
       "message": "Optional: The new `num_planes \u003e 1` check makes the nesting of these if statements a little hard to understand. I suggest we first reduce the luma strengths, and then reduce the chroma strengths if `num_planes \u003e 1`. This structure mirrors the code above that calculates the luma and chroma strengths.\n\n```\n        if (is_low_luma_strength) {\n          cdef_info-\u003ecdef_strengths[j] \u003d 0;\n        }\n        if (num_planes \u003e 1) {\n          const int chroma_strength \u003d cdef_info-\u003ecdef_uv_strengths[j];\n          const int pri_chroma_strength \u003d chroma_strength / CDEF_SEC_STRENGTHS;\n          const int sec_chroma_strength \u003d chroma_strength % CDEF_SEC_STRENGTHS;\n          const bool is_low_chroma_strength \u003d\n              pri_chroma_strength \u003c\u003d 4 \u0026\u0026 sec_chroma_strength \u003c\u003d 1;\n\n          // Disable CDEF on chroma if we\u0027ve disabled it on luma\n          if (is_low_luma_strength || is_low_chroma_strength) {\n            cdef_info-\u003ecdef_uv_strengths[j] \u003d 0;\n          }\n        }\n```\n\nWe can even have an early continue if `is_low_chroma_strength` doesn\u0027t need to be evaluated.\n\n```\n        if (is_low_luma_strength) {\n          cdef_info-\u003ecdef_strengths[j] \u003d 0;\n        }\n        if (num_planes \u003e 1) {\n          if (is_low_luma_strength) {\n            // Disable CDEF on chroma if we\u0027ve disabled it on luma\n            cdef_info-\u003ecdef_uv_strengths[j] \u003d 0;\n            continue;\n          }\n          const int chroma_strength \u003d cdef_info-\u003ecdef_uv_strengths[j];\n          const int pri_chroma_strength \u003d chroma_strength / CDEF_SEC_STRENGTHS;\n          const int sec_chroma_strength \u003d chroma_strength % CDEF_SEC_STRENGTHS;\n          const bool is_low_chroma_strength \u003d\n              pri_chroma_strength \u003c\u003d 4 \u0026\u0026 sec_chroma_strength \u003c\u003d 1;\n\n          if (is_low_chroma_strength) {\n            cdef_info-\u003ecdef_uv_strengths[j] \u003d 0;\n          }\n        }\n```",
+      "revId": "cb6faf2358eef455948ddf38dcee20552084df33",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1789a35_6736fbcd",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 1047,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-12-04T03:31:48Z",
+      "side": 1,
+      "message": "Thanks Wan-Teh! I\u0027ve incorporated your first suggestion.",
+      "parentUuid": "8d974738_b3dadba5",
       "revId": "cb6faf2358eef455948ddf38dcee20552084df33",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -250,6 +358,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "55a8932c_942963f7",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 2432,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-12-04T03:31:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ca054d7_25711ccc",
+      "revId": "cb6faf2358eef455948ddf38dcee20552084df33",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "60b38283_f9cc0578",
@@ -267,6 +393,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a33c3d5_5b43a8db",
+        "filename": "av1/encoder/speed_features.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1566,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-12-04T03:31:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "60b38283_f9cc0578",
+      "revId": "cb6faf2358eef455948ddf38dcee20552084df33",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9a7065b2_07c33d90",
@@ -280,6 +424,30 @@
       "writtenOn": "2025-12-03T18:11:10Z",
       "side": 1,
       "message": "Nit/optional: (This is the same as my comment at av1/encoder/pickcdef.c:908.) Is it possible to replace \"entries\" with something more specific?",
+      "range": {
+        "startLine": 1567,
+        "startChar": 14,
+        "endLine": 1567,
+        "endChar": 21
+      },
+      "revId": "cb6faf2358eef455948ddf38dcee20552084df33",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a0af83fd_d551d328",
+        "filename": "av1/encoder/speed_features.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1567,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-12-04T03:31:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a7065b2_07c33d90",
       "range": {
         "startLine": 1567,
         "startChar": 14,
