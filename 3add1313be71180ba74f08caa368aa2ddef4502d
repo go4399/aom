@@ -1,0 +1,137 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b7ce0e2_244132f6",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 31
+      },
+      "lineNbr": 3528,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-12-04T21:05:31Z",
+      "side": 1,
+      "message": "I don\u0027t understand why this gets turned off here and then turned back on later down below.",
+      "range": {
+        "startLine": 3528,
+        "startChar": 20,
+        "endLine": 3528,
+        "endChar": 31
+      },
+      "revId": "3add1313be71180ba74f08caa368aa2ddef4502d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e37d092_3b2c2a63",
+        "filename": "av1/encoder/nonrd_pickmode.c",
+        "patchSetId": 31
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-12-04T21:05:31Z",
+      "side": 1,
+      "message": "do they also need to be added with `mode_costs-\u003esingle_ref_cost`?",
+      "range": {
+        "startLine": 398,
+        "startChar": 6,
+        "endLine": 398,
+        "endChar": 22
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "27429a63_ef0261c8",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/nonrd_pickmode.c",
+              "range": {
+                "startLine": 402,
+                "startChar": 0,
+                "endLine": 402,
+                "endChar": 0
+              },
+              "replacement": "      ref_costs_single[LAST2_FRAME] +\u003d mode_costs-\u003esingle_ref_cost[0][0][0];\n      ref_costs_single[LAST3_FRAME] +\u003d mode_costs-\u003esingle_ref_cost[0][0][0];\n      ref_costs_single[BWDREF_FRAME] +\u003d mode_costs-\u003esingle_ref_cost[0][0][1];\n      ref_costs_single[BWDREF_FRAME] +\u003d mode_costs-\u003esingle_ref_cost[0][1][0];\n      ref_costs_single[ALTREF2_FRAME] +\u003d mode_costs-\u003esingle_ref_cost[0][0][1];\n      ref_costs_single[ALTREF2_FRAME] +\u003d mode_costs-\u003esingle_ref_cost[0][2][0];\n"
+            }
+          ]
+        }
+      ],
+      "revId": "3add1313be71180ba74f08caa368aa2ddef4502d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c844b20_07b6b600",
+        "filename": "av1/encoder/nonrd_pickmode.c",
+        "patchSetId": 31
+      },
+      "lineNbr": 2250,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-12-04T21:05:31Z",
+      "side": 1,
+      "message": "this is an input parameter for this function, maybe you can modify this in where this is called instead of in this function.",
+      "range": {
+        "startLine": 2250,
+        "startChar": 5,
+        "endLine": 2250,
+        "endChar": 14
+      },
+      "revId": "3add1313be71180ba74f08caa368aa2ddef4502d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b33b759e_59c1920f",
+        "filename": "av1/encoder/nonrd_pickmode.c",
+        "patchSetId": 31
+      },
+      "lineNbr": 2443,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-12-04T21:05:31Z",
+      "side": 1,
+      "message": "you can add a loop iterating over REF_FRAMES and use `(1 \u003c\u003c (ref - 1))` for the flags. And add a comment explaining the logic.",
+      "range": {
+        "startLine": 2430,
+        "startChar": 4,
+        "endLine": 2443,
+        "endChar": 44
+      },
+      "revId": "3add1313be71180ba74f08caa368aa2ddef4502d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c83901b1_b43deb05",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 31
+      },
+      "lineNbr": 1843,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-12-04T21:05:31Z",
+      "side": 1,
+      "message": "testing",
+      "range": {
+        "startLine": 1843,
+        "startChar": 21,
+        "endLine": 1843,
+        "endChar": 29
+      },
+      "revId": "3add1313be71180ba74f08caa368aa2ddef4502d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
