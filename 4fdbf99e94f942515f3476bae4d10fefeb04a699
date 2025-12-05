@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "186a9b9e_633e7a25",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-12-05T14:41:46Z",
+      "side": 1,
+      "message": "LGTM. Thanks!\n\nCheng: Please take a look.",
+      "revId": "4fdbf99e94f942515f3476bae4d10fefeb04a699",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26f65120_9d104c23",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1004,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-12-05T14:41:46Z",
+      "side": 1,
+      "message": "Nit: I suggest we move these declarationa after the next statement, so that they don\u0027t interrupt the code that reduces luma CDEF strenghths.",
+      "revId": "4fdbf99e94f942515f3476bae4d10fefeb04a699",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "58e7a3d4_ef73329b",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1010,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-12-05T14:41:46Z",
+      "side": 1,
+      "message": "Nit: I just realized that `chroma_strength` is only used inside this block, so we should still declare it here.",
+      "revId": "4fdbf99e94f942515f3476bae4d10fefeb04a699",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
