@@ -186,8 +186,8 @@ void av1_update_state(const AV1_COMP *const cpi, ThreadData *td,
   const struct segmentation *const seg = &cm->seg;
   assert(bsize < BLOCK_SIZES_ALL);
   assert(mi != NULL && mi->bsize == bsize);
-  const int bw = mi_size_wide[mi->bsize];
-  const int bh = mi_size_high[mi->bsize];
+  const int bw = mi_size_wide[bsize];
+  const int bh = mi_size_high[bsize];
   const int mis = mi_params->mi_stride;
   const int mi_width = mi_size_wide[bsize];
   const int mi_height = mi_size_high[bsize];
