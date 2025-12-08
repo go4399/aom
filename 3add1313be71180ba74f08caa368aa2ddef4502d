@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9cb47a0b_d2a427f9",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 31
+      },
+      "lineNbr": 3528,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2025-12-08T17:35:11Z",
+      "side": 1,
+      "message": "removed this in latest patch (done to avoid 1st pass processing - lap_stage), prefer to modify the functions in encoder.h.",
+      "parentUuid": "4b7ce0e2_244132f6",
+      "range": {
+        "startLine": 3528,
+        "startChar": 20,
+        "endLine": 3528,
+        "endChar": 31
+      },
+      "revId": "3add1313be71180ba74f08caa368aa2ddef4502d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3e37d092_3b2c2a63",
         "filename": "av1/encoder/nonrd_pickmode.c",
         "patchSetId": 31
@@ -65,6 +89,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "265b207f_cf3dd52c",
+        "filename": "av1/encoder/nonrd_pickmode.c",
+        "patchSetId": 31
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2025-12-08T17:35:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e37d092_3b2c2a63",
+      "range": {
+        "startLine": 398,
+        "startChar": 6,
+        "endLine": 398,
+        "endChar": 22
+      },
+      "revId": "3add1313be71180ba74f08caa368aa2ddef4502d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7c844b20_07b6b600",
@@ -78,6 +126,30 @@
       "writtenOn": "2025-12-04T21:05:31Z",
       "side": 1,
       "message": "this is an input parameter for this function, maybe you can modify this in where this is called instead of in this function.",
+      "range": {
+        "startLine": 2250,
+        "startChar": 5,
+        "endLine": 2250,
+        "endChar": 14
+      },
+      "revId": "3add1313be71180ba74f08caa368aa2ddef4502d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b5ef1b0d_732d9878",
+        "filename": "av1/encoder/nonrd_pickmode.c",
+        "patchSetId": 31
+      },
+      "lineNbr": 2250,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2025-12-08T17:35:11Z",
+      "side": 1,
+      "message": "this parameter is meant to be set in this function for compound modes, as in line 2252 (existing code), so prefer to leave it as is.",
+      "parentUuid": "7c844b20_07b6b600",
       "range": {
         "startLine": 2250,
         "startChar": 5,
@@ -111,6 +183,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7bca534b_6a349146",
+        "filename": "av1/encoder/nonrd_pickmode.c",
+        "patchSetId": 31
+      },
+      "lineNbr": 2443,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2025-12-08T17:35:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b33b759e_59c1920f",
+      "range": {
+        "startLine": 2430,
+        "startChar": 4,
+        "endLine": 2443,
+        "endChar": 44
+      },
+      "revId": "3add1313be71180ba74f08caa368aa2ddef4502d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c83901b1_b43deb05",
@@ -124,6 +220,30 @@
       "writtenOn": "2025-12-04T21:05:31Z",
       "side": 1,
       "message": "testing",
+      "range": {
+        "startLine": 1843,
+        "startChar": 21,
+        "endLine": 1843,
+        "endChar": 29
+      },
+      "revId": "3add1313be71180ba74f08caa368aa2ddef4502d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0dfe1fbe_f5bfb0bb",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 31
+      },
+      "lineNbr": 1843,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2025-12-08T17:35:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c83901b1_b43deb05",
       "range": {
         "startLine": 1843,
         "startChar": 21,
