@@ -793,9 +793,8 @@ void av1_update_film_grain_parameters(struct AV1_COMP *cpi,
       if (oxcf->tool_cfg.enable_monochrome)
         reset_film_grain_chroma_params(&cm->film_grain_params);
       cm->film_grain_params.bit_depth = cm->seq_params->bit_depth;
-      if (cm->seq_params->color_range == AOM_CR_FULL_RANGE) {
-        cm->film_grain_params.clip_to_restricted_range = 0;
-      }
+      cm->film_grain_params.clip_to_restricted_range =
+          cm->seq_params->color_range == AOM_CR_STUDIO_RANGE;
     }
   } else if (tune_cfg->film_grain_table_filename) {
     CHECK_MEM_ERROR(cm, cpi->film_grain_table,
@@ -807,8 +806,8 @@ void av1_update_film_grain_parameters(struct AV1_COMP *cpi,
     cm->film_grain_params.bit_depth = cm->seq_params->bit_depth;
     if (oxcf->tool_cfg.enable_monochrome)
       reset_film_grain_chroma_params(&cm->film_grain_params);
-    if (cm->seq_params->color_range == AOM_CR_FULL_RANGE)
-      cm->film_grain_params.clip_to_restricted_range = 0;
+    cm->film_grain_params.clip_to_restricted_range =
+        cm->seq_params->color_range == AOM_CR_STUDIO_RANGE;
   } else {
     memset(&cm->film_grain_params, 0, sizeof(cm->film_grain_params));
   }
