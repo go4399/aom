@@ -24,6 +24,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b1231e4_fc2b5691",
+        "filename": "av1/encoder/partition_search.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 5022
+      },
+      "writtenOn": "2025-12-09T19:48:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6a50f56_7e6e89cf",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 42
+      },
+      "revId": "bde6ce03b16f57a5823049d0a485127ab138635e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "191f40b1_44f3f150",
@@ -71,6 +95,30 @@
           ]
         }
       ],
+      "revId": "bde6ce03b16f57a5823049d0a485127ab138635e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "50668eae_20accb4e",
+        "filename": "av1/encoder/partition_search.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 5861,
+      "author": {
+        "id": 5022
+      },
+      "writtenOn": "2025-12-09T19:48:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "191f40b1_44f3f150",
+      "range": {
+        "startLine": 5861,
+        "startChar": 0,
+        "endLine": 5861,
+        "endChar": 59
+      },
       "revId": "bde6ce03b16f57a5823049d0a485127ab138635e",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
