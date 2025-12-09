@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6a50f56_7e6e89cf",
+        "filename": "av1/encoder/partition_search.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-12-09T18:10:01Z",
+      "side": 1,
+      "message": "it seems like you can just do \n\n```\n#ifndef COLLECT_MOTION_SEARCH_FEATURE_SB\n#define COLLECT_MOTION_SEARCH_FEATURE_SB CONFIG_PARTITION_SEARCH_ORDER\n#endif\n```\n\nbefore this line",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 42
+      },
+      "revId": "bde6ce03b16f57a5823049d0a485127ab138635e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "191f40b1_44f3f150",
+        "filename": "av1/encoder/partition_search.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 5861,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2025-12-09T18:10:01Z",
+      "side": 1,
+      "message": "this comment should be inside the #if / #endif scope",
+      "range": {
+        "startLine": 5861,
+        "startChar": 0,
+        "endLine": 5861,
+        "endChar": 59
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "d9c2440d_a50434cc",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/partition_search.c",
+              "range": {
+                "startLine": 5861,
+                "startChar": 0,
+                "endLine": 5862,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "av1/encoder/partition_search.c",
+              "range": {
+                "startLine": 5863,
+                "startChar": 0,
+                "endLine": 5863,
+                "endChar": 0
+              },
+              "replacement": "      // Write partition tree to file. Not used by default.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "bde6ce03b16f57a5823049d0a485127ab138635e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
