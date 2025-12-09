@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5a673dcd_3ab6dcdd",
+        "filename": "av1/encoder/nonrd_pickmode.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2631,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2025-12-09T22:27:29Z",
+      "side": 1,
+      "message": "When I build libaom with `-DCONFIG_AV1_TEMPORAL_DENOISING\u003d1`, I get compilation error and warnings:\n\n```\n/home/wtc/aom.3/aom/av1/encoder/nonrd_pickmode.c:2631:24: error: redefinition of parameter ‘ctx’\n 2631 |     PICK_MODE_CONTEXT *ctx, int64_t *zero_last_cost_orig,\n      |     ~~~~~~~~~~~~~~~~~~~^~~\n/home/wtc/aom.3/aom/av1/encoder/nonrd_pickmode.c:2627:24: note: previous definition of ‘ctx’ with type ‘PICK_MODE_CONTEXT *’\n 2627 |     PICK_MODE_CONTEXT *ctx, PRED_BUFFER **this_mode_pred,\n      |     ~~~~~~~~~~~~~~~~~~~^~~\n/home/wtc/aom.3/aom/av1/encoder/nonrd_pickmode.c: In function ‘handle_inter_mode_nonrd’:\n/home/wtc/aom.3/aom/av1/encoder/nonrd_pickmode.c:2631:24: warning: declaration of ‘ctx’ shadows a parameter [-Wshadow]\n 2631 |     PICK_MODE_CONTEXT *ctx, int64_t *zero_last_cost_orig,\n      |     ~~~~~~~~~~~~~~~~~~~^~~\n/home/wtc/aom.3/aom/av1/encoder/nonrd_pickmode.c:2627:24: note: shadowed declaration is here\n 2627 |     PICK_MODE_CONTEXT *ctx, PRED_BUFFER **this_mode_pred,\n      |     ~~~~~~~~~~~~~~~~~~~^~~\n/home/wtc/aom.3/aom/av1/encoder/nonrd_pickmode.c:2627:24: warning: unused parameter ‘ctx’ [-Wunused-parameter]\n```",
+      "revId": "e07d47bb60b52e92f4ac0790750a1e0f52180edd",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
