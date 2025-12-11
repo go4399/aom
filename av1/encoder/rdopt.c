@@ -3582,6 +3582,10 @@ void av1_rd_pick_intra_mode_sb(const struct AV1_COMP *cpi, struct macroblock *x,
   int64_t dist_y = 0, dist_uv = 0;
 
   ctx->rd_stats.skip_txfm = 0;
+  if (cpi->sf.part_sf.partition_search_type == FIXED_PARTITION ||
+      cpi->sf.part_sf.partition_search_type == VAR_BASED_PARTITION) {
+    ctx->mic.bsize = bsize;
+  }
   mbmi->ref_frame[0] = INTRA_FRAME;
   mbmi->ref_frame[1] = NONE_FRAME;
   mbmi->use_intrabc = 0;
