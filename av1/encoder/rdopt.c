@@ -3582,6 +3582,18 @@ void av1_rd_pick_intra_mode_sb(const struct AV1_COMP *cpi, struct macroblock *x,
   int64_t dist_y = 0, dist_uv = 0;
 
   ctx->rd_stats.skip_txfm = 0;
+  if (cpi->oxcf.mode == REALTIME) {
+    // In case there is early return due to rd_cost->rate == INT_MAX
+    // set defaults here.  This is done as a possible fix to a crash
+    // in realtime mode: issue: b:457951958.
+    mbmi->mode = DC_PRED;
+    mbmi->bsize = bsize;
+    mbmi->tx_size = (bsize >= BLOCK_8X8) ? TX_8X8 : TX_4X4;
+    memset(xd->tx_type_map, DCT_DCT, ctx->num_4x4_blk);
+    ctx->mic.bsize = bsize;
+    ctx->mic.tx_size = (bsize >= BLOCK_8X8) ? TX_8X8 : TX_4X4;
+    memset(ctx->tx_type_map, DCT_DCT, ctx->num_4x4_blk);
+  }
   mbmi->ref_frame[0] = INTRA_FRAME;
   mbmi->ref_frame[1] = NONE_FRAME;
   mbmi->use_intrabc = 0;
