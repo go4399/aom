@@ -1,0 +1,56 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96a146c7_730dddd7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-12-11T18:37:49Z",
+      "side": 1,
+      "message": "Thanks for the fix.",
+      "revId": "845fa9315d2ac4139cedacbc4ecbbbd7a919f30e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c707ebf_6ab7f98a",
+        "filename": "av1/common/arm/convolve_sve2.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-12-11T18:37:49Z",
+      "side": 1,
+      "message": "Is this one still needed? It would be good if this file didn\u0027t include highbd files as that may put us at risk of missing symbols when highbd is disabled like in this case.",
+      "fixSuggestions": [
+        {
+          "fixId": "cd4b6873_1b520344",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/common/arm/convolve_sve2.c",
+              "range": {
+                "startLine": 28,
+                "startChar": 0,
+                "endLine": 29,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "845fa9315d2ac4139cedacbc4ecbbbd7a919f30e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
