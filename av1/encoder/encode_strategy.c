@@ -1643,6 +1643,8 @@ int av1_encode_strategy(AV1_COMP *const cpi, size_t *const size,
         if (frame_order == cur_frame_disp)
           frame_params.existing_fb_idx_to_show = frame;
       }
+      if (frame_params.existing_fb_idx_to_show == INVALID_IDX)
+        return AOM_CODEC_ERROR;
     }
   }
 
