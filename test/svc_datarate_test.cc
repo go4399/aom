@@ -1225,6 +1225,24 @@ class DatarateTestSVC
 #endif
   }
 
+  virtual void BasicRateTargetingSVC3TL1SLRandomInputTest() {
+    SetUpCbr();
+    cfg_.g_error_resilient = 1;
+    cfg_.g_w = 320;
+    cfg_.g_h = 180;
+    cfg_.kf_max_dist = 20;
+    cfg_.kf_min_dist = 20;
+    cfg_.rc_dropframe_thresh = 0;
+    cfg_.rc_min_quantizer = 2;
+    cfg_.rc_max_quantizer = 50;
+    const int bitrate_array[2] = { 600, 1200 };
+    cfg_.rc_target_bitrate = bitrate_array[GET_PARAM(4)];
+    ResizingVideoSource video(0, 320, 180);
+    ResetModel();
+    SetTargetBitratesFor1SL3TL();
+    ASSERT_NO_FATAL_FAILURE(RunLoop(&video));
+  }
+
   virtual void BasicRateTargetingSVC3TL1SLQvgaLowFramerateTest() {
     SetUpCbr();
     cfg_.g_error_resilient = 0;
@@ -2385,6 +2403,10 @@ class DatarateTestSVC
 // Check basic rate targeting for CBR, for 3 temporal layers, 1 spatial.
 TEST_P(DatarateTestSVC, BasicRateTargetingSVC3TL1SL) {
   BasicRateTargetingSVC3TL1SLTest();
+}
+
+TEST_P(DatarateTestSVC, BasicRateTargetingSVC3TL1SLRandomInput) {
+  BasicRateTargetingSVC3TL1SLRandomInputTest();
 }
 
 // Check basic rate targeting for CBR, for 3 temporal layers, 1 spatial,
