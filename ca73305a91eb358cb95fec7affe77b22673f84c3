@@ -35,6 +35,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "862ee93a_b1b28e0b",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 848,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-12-12T04:13:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9ae3eb8c_04644732",
+      "revId": "ca73305a91eb358cb95fec7affe77b22673f84c3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cf342bf0_d12f5c6b",
@@ -48,6 +66,24 @@
       "writtenOn": "2025-12-11T19:00:18Z",
       "side": 1,
       "message": "Question: In the `set_allintra_speed_features_framesize_independent()` function in av1/encoder/speed_features.c, we have the following code:\n\n```\n  // The following should make all-intra mode speed 7 approximately equal\n  // to real-time speed 6,\n  // all-intra speed 8 close to real-time speed 7, and all-intra speed 9\n  // close to real-time speed 8\n  if (speed \u003e\u003d 7) {\n    ...\n    sf-\u003elpf_sf.cdef_pick_method \u003d CDEF_PICK_FROM_Q;\n    ...\n  }\n```\n\nThis is why all-intra speed \u003e\u003d 7 reaches the code here, right?",
+      "revId": "ca73305a91eb358cb95fec7affe77b22673f84c3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1f7868c_e5be9967",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 852,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-12-12T04:13:09Z",
+      "side": 1,
+      "message": "That\u0027s correct! `CDEF_PICK_FROM_Q` is the fastest pick mode, so that\u0027s why all-intra speed \u003e\u003d 7 use it.",
+      "parentUuid": "cf342bf0_d12f5c6b",
       "revId": "ca73305a91eb358cb95fec7affe77b22673f84c3",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -75,6 +111,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c4556731_c0e6bbae",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 864,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-12-12T04:13:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75f5c57e_a345364d",
+      "range": {
+        "startLine": 863,
+        "startChar": 0,
+        "endLine": 864,
+        "endChar": 76
+      },
+      "revId": "ca73305a91eb358cb95fec7affe77b22673f84c3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d8b5cede_6d701684",
@@ -88,6 +148,24 @@
       "writtenOn": "2025-12-11T19:00:18Z",
       "side": 1,
       "message": "Question: In all-intra speed \u003c\u003d 6, we set `sf-\u003elpf_sf.cdef_pick_method` to `CDEF_FAST_SEARCH_LVL1`, `CDEF_FAST_SEARCH_LVL3`, or `CDEF_FAST_SEARCH_LVL4`. So we will reach the rest of this function and benefit from the CDEF-related changes you made below. Is this correct?",
+      "revId": "ca73305a91eb358cb95fec7affe77b22673f84c3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5459972_3a8b629b",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 869,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-12-12T04:13:09Z",
+      "side": 1,
+      "message": "Correct. `av1_cdef_search()` is structured in a way that \"trivial\" cases (i.e. no CDEF, adaptive CDEF for qindex \u003c\u003d 32 or `CDEF_PICK_FROM_Q`) perform early returns.\n\nThe \"non-trivial\" cases (i.e. `CDEF_FAST_SEARCH_LVL*` or `CDEF_FULL_SEARCH`) are part of the \"main\" code path, and were addressed by my previous CL.",
+      "parentUuid": "d8b5cede_6d701684",
       "revId": "ca73305a91eb358cb95fec7affe77b22673f84c3",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -127,6 +205,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "113c6938_a8a82119",
+        "filename": "av1/encoder/pickcdef.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-12-12T04:13:09Z",
+      "side": 1,
+      "message": "Done. I went with your suggestion to pass `cpi-\u003esf.rt_sf.skip_cdef_sb !\u003d 0` as the parameter.",
+      "parentUuid": "fa9d1fbc_067dd532",
+      "revId": "ca73305a91eb358cb95fec7affe77b22673f84c3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "161609bd_b5499b55",
@@ -144,6 +240,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc715d41_4826f504",
+        "filename": "av1/encoder/pickcdef.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-12-12T04:13:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "161609bd_b5499b55",
+      "revId": "ca73305a91eb358cb95fec7affe77b22673f84c3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6da7b581_55c651c1",
@@ -157,6 +271,24 @@
       "writtenOn": "2025-12-11T19:00:18Z",
       "side": 1,
       "message": "Nit: Add parameter name comments:\n\n```\nav1_pick_cdef_from_qp(cm, /*skip_cdef\u003d*/0, /*is_screen_content\u003d*/0,\n                      /*avoid_uv_cdef\u003d*/false);\n```",
+      "revId": "ca73305a91eb358cb95fec7affe77b22673f84c3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ba5d4e9_601f0cf4",
+        "filename": "av1/ratectrl_rtc.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2025-12-12T04:13:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6da7b581_55c651c1",
       "revId": "ca73305a91eb358cb95fec7affe77b22673f84c3",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
