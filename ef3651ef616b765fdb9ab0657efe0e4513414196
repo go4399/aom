@@ -16,6 +16,24 @@
       "message": "Remya: You added the code here in https://aomedia-review.googlesource.com/c/aom/+/136602.\n\nIf we enter the for loop at line 1639, is it guaranteed that line 1644 is always reached?",
       "revId": "ef3651ef616b765fdb9ab0657efe0e4513414196",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8be193f_1dbf0b51",
+        "filename": "av1/encoder/encode_strategy.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1645,
+      "author": {
+        "id": 6245
+      },
+      "writtenOn": "2025-12-15T14:11:35Z",
+      "side": 1,
+      "message": "Wan-Teh, The code change looks correct to us. Based on our understanding, when show_existing_frame \u003d 1, the reference frame buffer pool is expected to hold the frame which needs to be displayed. With that assumption, once we enter the loop at line 1639, we believe line 1644 should always be executed. Please let us know if you see any scenario where this may not hold.",
+      "parentUuid": "ced49240_e9d2118f",
+      "revId": "ef3651ef616b765fdb9ab0657efe0e4513414196",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
