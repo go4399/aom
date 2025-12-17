@@ -185,6 +185,12 @@ void av1_update_state(const AV1_COMP *const cpi, ThreadData *td,
   struct macroblock_plane *const p = x->plane;
   struct macroblockd_plane *const pd = xd->plane;
   const MB_MODE_INFO *const mi = &ctx->mic;
+  if (ctx == NULL) {
+    aom_internal_error(cm->error, AOM_CODEC_ERROR,
+                       "ctx is NULL in av1_update_state: %d %d %d %d \n",
+                       cm->current_frame.frame_type, cm->width, cm->height,
+                       bsize);
+  }
   if (mi == NULL) {
     aom_internal_error(cm->error, AOM_CODEC_ERROR,
                        "mi is NULL in av1_update_state: %d %d %d %d \n",
