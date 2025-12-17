@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bbc80d45_c9a03d19",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2025-12-17T00:30:50Z",
+      "side": 1,
+      "message": "Did we ever get a repro? It would be good to add unit test coverage if we can.",
+      "revId": "2178cf9a35c5fae268e10daaea37a3b0e1e8d617",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0cd957f9_fd95d9f1",
