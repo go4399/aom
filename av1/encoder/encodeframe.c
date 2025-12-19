@@ -1160,7 +1160,9 @@ static inline void grade_source_content_sb(AV1_COMP *cpi, MACROBLOCK *const x,
                                            TileDataEnc *tile_data, int mi_row,
                                            int mi_col) {
   AV1_COMMON *const cm = &cpi->common;
+  const RefreshFrameInfo *const refresh_frame = &cpi->refresh_frame;
   if (cm->current_frame.frame_type == KEY_FRAME ||
+      (refresh_frame->alt_ref_frame && is_one_pass_rt_lag_params(cpi)) ||
       (cpi->ppi->use_svc &&
        cpi->svc.layer_context[cpi->svc.temporal_layer_id].is_key_frame)) {
     assert(x->content_state_sb.source_sad_nonrd == kMedSad);
