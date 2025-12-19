@@ -1316,7 +1316,8 @@ static int fast_detect_non_zero_motion(AV1_COMP *cpi, const uint8_t *src_y,
 // its collocated block in the last frame.
 void av1_source_content_sb(AV1_COMP *cpi, MACROBLOCK *x, TileDataEnc *tile_data,
                            int mi_row, int mi_col) {
-  if (cpi->last_source->y_width != cpi->source->y_width ||
+  if (cpi->last_source == NULL ||
+      cpi->last_source->y_width != cpi->source->y_width ||
       cpi->last_source->y_height != cpi->source->y_height)
     return;
 #if CONFIG_AV1_HIGHBITDEPTH
