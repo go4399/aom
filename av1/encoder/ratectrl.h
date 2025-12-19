@@ -190,10 +190,12 @@ typedef struct {
   int sframe_due;
 
   int high_source_sad;
+  int high_source_sad_lag[MAX_GF_INTERVAL];
   int high_motion_content_screen_rtc;
   uint64_t avg_source_sad;
   uint64_t prev_avg_source_sad;
   uint64_t frame_source_sad;
+  uint64_t frame_source_sad_lag[MAX_GF_INTERVAL];
   unsigned int last_frame_low_source_sad;
   uint64_t frame_spatial_variance;
   int static_since_last_scene_change;
@@ -830,6 +832,9 @@ int av1_encodedframe_overshoot_cbr(struct AV1_COMP *cpi, int *q);
  * function returns 1 (frame is dropped).
  */
 int av1_postencode_drop_cbr(struct AV1_COMP *cpi, size_t *size);
+
+void av1_rc_scene_detection_onepass_rt(
+    struct AV1_COMP *cpi, const struct EncodeFrameInput *frame_input);
 
 #ifdef __cplusplus
 }  // extern "C"
