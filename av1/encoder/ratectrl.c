@@ -3172,8 +3172,8 @@ static unsigned int estimate_scroll_motion(
  * \remark Nothing is returned. Instead the flag \c cpi->rc.high_source_sad
  * is set if scene change is detected, and \c cpi->rc.avg_source_sad is updated.
  */
-static void rc_scene_detection_onepass_rt(AV1_COMP *cpi,
-                                          const EncodeFrameInput *frame_input) {
+void av1_rc_scene_detection_onepass_rt(AV1_COMP *cpi,
+                                       const EncodeFrameInput *frame_input) {
   AV1_COMMON *const cm = &cpi->common;
   RATE_CONTROL *const rc = &cpi->rc;
   YV12_BUFFER_CONFIG const *const unscaled_src = frame_input->source;
@@ -3833,7 +3833,7 @@ void av1_get_one_pass_rt_params(AV1_COMP *cpi, FRAME_TYPE *const frame_type,
              svc->spatial_layer_id == 0) {
     if (rc->prev_coded_width == cm->width &&
         rc->prev_coded_height == cm->height) {
-      rc_scene_detection_onepass_rt(cpi, frame_input);
+      av1_rc_scene_detection_onepass_rt(cpi, frame_input);
     } else {
       aom_free(cpi->src_sad_blk_64x64);
       cpi->src_sad_blk_64x64 = NULL;
