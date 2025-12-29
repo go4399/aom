@@ -178,6 +178,8 @@ typedef struct TEMPORAL_FILTER_INFO {
    * definition of second_arf in detail
    */
   YV12_BUFFER_CONFIG tf_buf_second_arf;
+  YV12_BUFFER_CONFIG tf_buf_tpl;
+  YV12_BUFFER_CONFIG tf_buf_tpl_second_arf;
   /*!
    * whether to show the buffer directly or not.
    */

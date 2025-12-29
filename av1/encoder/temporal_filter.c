@@ -1525,6 +1525,8 @@ void av1_tf_info_free(TEMPORAL_FILTER_INFO *tf_info) {
     aom_free_frame_buffer(&tf_info->tf_buf[i]);
   }
   aom_free_frame_buffer(&tf_info->tf_buf_second_arf);
+  aom_free_frame_buffer(&tf_info->tf_buf_tpl);
+  aom_free_frame_buffer(&tf_info->tf_buf_tpl_second_arf);
 }
 
 void av1_tf_info_reset(TEMPORAL_FILTER_INFO *tf_info) {

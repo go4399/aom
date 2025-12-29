@@ -92,6 +92,10 @@ void av1_get_ref_frames(RefFrameMapPair ref_frame_map_pairs[REF_FRAMES],
                         int is_parallel_encode,
                         int remapped_ref_idx[REF_FRAMES]);
 
+void av1_get_ref_frames_simple(RefFrameMapPair ref_frame_map_pairs[REF_FRAMES],
+                               int cur_frame_disp, const AV1_COMP *cpi,
+                               int remapped_ref_idx[REF_FRAMES]);
+
 int is_forced_keyframe_pending(struct lookahead_ctx *lookahead,
                                const int up_to_index,
                                const COMPRESSOR_STAGE compressor_stage);

@@ -25,7 +25,7 @@ extern "C" {
 #endif
 
 /*!\cond */
-#define MAX_LAG_BUFFERS 48
+#define MAX_LAG_BUFFERS 72
 #define MAX_LAP_BUFFERS 48
 #define MAX_TOTAL_BUFFERS (MAX_LAG_BUFFERS + MAX_LAP_BUFFERS)
 #define LAP_LAG_IN_FRAMES 17

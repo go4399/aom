@@ -13,6 +13,7 @@
 #include <float.h>
 #include <stdint.h>
 
+#include "av1/encoder/ratectrl.h"
 #include "config/aom_config.h"
 
 #if CONFIG_THREE_PASS
@@ -1578,6 +1579,154 @@ static void mc_flow_synthesizer(TplParams *tpl_data, int frame_idx, int mi_rows,
   }
 }
 
+static void tpl_gop_add_frame(AV1_COMP *cpi, int gf_index,
+                              TplParams *const tpl_data,
+                              FRAME_UPDATE_TYPE frame_update_type,
+                              int lookahead_index,
+                              EncodeFrameParams *frame_params,
+                              FRAME_TYPE frame_type, int *process_frame_count,
+                              RefFrameMapPair *ref_frame_map_pairs,
+                              int *remapped_ref_idx, int *ref_picture_map,
+                              int pyramid_level, int base_q_idx) {
+  // printf("\nadding a %d frame at %d\n", frame_update_type, lookahead_index);
+
+  GF_GROUP *gf_group = &cpi->ppi->gf_group;
+  gf_group->update_type[gf_index] = frame_update_type;
+  gf_group->frame_type[gf_index] = frame_type;
+  gf_group->refbuf_state[gf_index] = REFBUF_UPDATE;
+  gf_group->frame_parallel_level[gf_index] = 0;
+  gf_group->q_val[gf_index] = base_q_idx;
+
+  TplDepFrame *tpl_frame = &tpl_data->tpl_frame[gf_index];
+  AV1_COMMON *cm = &cpi->common;
+  frame_params->show_frame =
+      frame_update_type != ARF_UPDATE && frame_update_type != INTNL_ARF_UPDATE;
+  frame_params->show_existing_frame =
+      frame_update_type == INTNL_OVERLAY_UPDATE ||
+      frame_update_type == OVERLAY_UPDATE;
+  frame_params->frame_type = frame_type;
+
+  const struct lookahead_entry *buf = av1_lookahead_peek(
+      cpi->ppi->lookahead, lookahead_index, cpi->compressor_stage);
+  assert(buf != NULL);
+
+  tpl_frame->gf_picture = &buf->img;
+
+  // TODO: do tf filtering here.
+  FRAME_DIFF frame_diff;
+  const YV12_BUFFER_CONFIG *tf_buf =
+      av1_tf_info_get_filtered_buf(&cpi->ppi->tf_info, gf_index, &frame_diff);
+  if (tf_buf != NULL) {
+    tpl_frame->gf_picture = tf_buf;
+  } else if (frame_update_type == ARF_UPDATE ||
+             (frame_update_type == INTNL_ARF_UPDATE && pyramid_level == 2)) {
+    YV12_BUFFER_CONFIG *tf_buf_tpl =
+        frame_update_type == ARF_UPDATE
+            ? &cpi->ppi->tf_info.tf_buf_tpl
+            : &cpi->ppi->tf_info.tf_buf_tpl_second_arf;
+
+    const AV1EncoderConfig *const oxcf = &cpi->oxcf;
+    int ret = aom_realloc_frame_buffer(
+        tf_buf_tpl, oxcf->frm_dim_cfg.width,
+        oxcf->frm_dim_cfg.height, cm->seq_params->subsampling_x,
+        cm->seq_params->subsampling_y, cm->seq_params->use_highbitdepth,
+        cpi->oxcf.border_in_pixels, cm->features.byte_alignment, NULL, NULL,
+        NULL, cpi->alloc_pyramid, 0);
+    if (ret)
+      aom_internal_error(cm->error, AOM_CODEC_MEM_ERROR,
+                         "Failed to allocate tf_buf_tpl");
+
+    av1_temporal_filter(cpi, lookahead_index, gf_index, &frame_diff,
+                        tf_buf_tpl);
+    tpl_frame->gf_picture = tf_buf_tpl;
+  }
+
+  // 'cm->current_frame.frame_number' is the display number
+  // of the current frame.
+  // 'lookahead_index' is frame offset within the gf group.
+  // 'lookahead_index + cm->current_frame.frame_number'
+  // is the display index of the frame.
+  tpl_frame->frame_display_index =
+      lookahead_index + cm->current_frame.frame_number;
+  assert(buf->display_idx ==
+         cpi->frame_index_set.show_frame_count + lookahead_index);
+
+  if (frame_update_type != OVERLAY_UPDATE &&
+      frame_update_type != INTNL_OVERLAY_UPDATE) {
+    tpl_frame->rec_picture = &tpl_data->tpl_rec_pool[*process_frame_count];
+    tpl_frame->tpl_stats_ptr = tpl_data->tpl_stats_pool[*process_frame_count];
+    *process_frame_count = *process_frame_count + 1;
+  }
+  const int true_disp = (int)(tpl_frame->frame_display_index);
+
+  av1_get_ref_frames_simple(ref_frame_map_pairs, true_disp, cpi,
+                            remapped_ref_idx);
+
+  int refresh_mask = av1_get_refresh_frame_flags(
+      cpi, frame_params, frame_update_type,
+      /*gf_index=*/-1, true_disp, ref_frame_map_pairs);
+
+  int refresh_frame_map_index = av1_get_refresh_ref_frame_map(refresh_mask);
+
+  if (refresh_frame_map_index < REF_FRAMES &&
+      refresh_frame_map_index != INVALID_IDX) {
+    ref_frame_map_pairs[refresh_frame_map_index].disp_order =
+        AOMMAX(0, true_disp);
+    ref_frame_map_pairs[refresh_frame_map_index].pyr_level = pyramid_level;
+  }
+
+  // printf("\nrefs for %d: ", tpl_frame->frame_display_index);
+  for (int i = LAST_FRAME; i <= ALTREF_FRAME; ++i) {
+    tpl_frame->ref_map_index[i - LAST_FRAME] =
+        ref_picture_map[remapped_ref_idx[i - LAST_FRAME]];
+    // printf("%d ", tpl_data->tpl_frame[tpl_frame->ref_map_index[i - LAST_FRAME]]
+    //                   .frame_display_index);
+  }
+  // printf("\n");
+
+  if (refresh_mask) ref_picture_map[refresh_frame_map_index] = gf_index;
+}
+
+static void tpl_recur_add(AV1_COMP *cpi, int *gf_index,
+                          TplParams *const tpl_data,
+                          EncodeFrameParams *frame_params,
+                          int *process_frame_count, int *tpl_group_frames,
+                          int *extend_frame_count,
+                          RefFrameMapPair *ref_frame_map_pairs,
+                          int *remapped_ref_idx, int *ref_picture_map,
+                          int pyramid_level, int cur_left_lookahead,
+                          int cur_right_lookahead, int base_q_idx) {
+  if (cur_right_lookahead - cur_left_lookahead < 4) {
+    for (int cur_lookahead = cur_left_lookahead + 1;
+         cur_lookahead < cur_right_lookahead; cur_lookahead++) {
+      tpl_gop_add_frame(cpi, *gf_index, tpl_data, LF_UPDATE, cur_lookahead,
+                        frame_params, INTER_FRAME, process_frame_count,
+                        ref_frame_map_pairs, remapped_ref_idx, ref_picture_map,
+                        pyramid_level, base_q_idx);
+      ++*gf_index;
+      ++*tpl_group_frames;
+      ++*extend_frame_count;
+    }
+  } else {
+    int cur_mid_lookahead = (cur_right_lookahead + cur_left_lookahead) / 2;
+    tpl_gop_add_frame(
+        cpi, *gf_index, tpl_data, INTNL_ARF_UPDATE, cur_mid_lookahead,
+        frame_params, INTER_FRAME, process_frame_count, ref_frame_map_pairs,
+        remapped_ref_idx, ref_picture_map, pyramid_level, base_q_idx);
+    ++*gf_index;
+    ++*tpl_group_frames;
+    ++*extend_frame_count;
+    tpl_recur_add(cpi, gf_index, tpl_data, frame_params, process_frame_count,
+                  tpl_group_frames, extend_frame_count, ref_frame_map_pairs,
+                  remapped_ref_idx, ref_picture_map, pyramid_level + 1,
+                  cur_left_lookahead, cur_mid_lookahead, base_q_idx);
+    tpl_recur_add(cpi, gf_index, tpl_data, frame_params, process_frame_count,
+                  tpl_group_frames, extend_frame_count, ref_frame_map_pairs,
+                  remapped_ref_idx, ref_picture_map, pyramid_level + 1,
+                  cur_mid_lookahead, cur_right_lookahead, base_q_idx);
+  }
+}
+
 static inline int init_gop_frames_for_tpl(
     AV1_COMP *cpi, const EncodeFrameParams *const init_frame_params,
     GF_GROUP *gf_group, int *tpl_group_frames, int *pframe_qindex) {
@@ -1616,6 +1765,17 @@ static inline int init_gop_frames_for_tpl(
   }
 
   *tpl_group_frames = 0;
+
+  int num_lookahead = MAX_LAG_BUFFERS;
+  for (int i = 0; i < MAX_LAG_BUFFERS; i++) {
+    const struct lookahead_entry *buf =
+        av1_lookahead_peek(cpi->ppi->lookahead, i, cpi->compressor_stage);
+    if (buf == NULL) {
+      // printf("\npeek %d is null\n", i);
+      num_lookahead = i;
+      break;
+    }
+  }
 
   int gf_index;
   int process_frame_count = 0;
@@ -1716,83 +1876,117 @@ static inline int init_gop_frames_for_tpl(
   int frame_display_index = gf_group->cur_frame_idx[gop_length - 1] +
                             gf_group->arf_src_offset[gop_length - 1] + 1;
 
-  for (;
-       gf_index < MAX_TPL_FRAME_IDX && extend_frame_count < extend_frame_length;
-       ++gf_index) {
-    TplDepFrame *tpl_frame = &tpl_data->tpl_frame[gf_index];
-    FRAME_UPDATE_TYPE frame_update_type = LF_UPDATE;
-    frame_params.show_frame = frame_update_type != ARF_UPDATE &&
-                              frame_update_type != INTNL_ARF_UPDATE;
-    frame_params.show_existing_frame =
-        frame_update_type == INTNL_OVERLAY_UPDATE;
-    frame_params.frame_type = INTER_FRAME;
+  const RATE_CONTROL *const rc = &cpi->rc;
+  PRIMARY_RATE_CONTROL *const p_rc = &cpi->ppi->p_rc;
+  int max_next_gop_size = num_lookahead - 1 - (frame_display_index - 1);
+  // printf("\nremaining lookahead %d\n", max_next_gop_size);
+  if (rc->intervals_till_gf_calculate_due > 1) {
+    max_next_gop_size = AOMMIN(max_next_gop_size, p_rc->gf_intervals[1]);
+    // printf("\nnext interval %d\n", p_rc->gf_intervals[1]);
+  } else {
+    max_next_gop_size = AOMMIN(max_next_gop_size, p_rc->gf_intervals[0]);
+  }
 
-    int lookahead_index = frame_display_index;
-    struct lookahead_entry *buf = av1_lookahead_peek(
-        cpi->ppi->lookahead, lookahead_index, cpi->compressor_stage);
+  // printf("\nnext_gop_size %d, cur gop size %d\n", max_next_gop_size,
+  // p_rc->gf_intervals[0]);
 
-    if (buf == NULL) break;
+  if (max_next_gop_size < 4) {
+    // IPPP
+    for (; gf_index < MAX_TPL_FRAME_IDX &&
+           extend_frame_count < extend_frame_length;
+         ++gf_index) {
+      TplDepFrame *tpl_frame = &tpl_data->tpl_frame[gf_index];
+      FRAME_UPDATE_TYPE frame_update_type = LF_UPDATE;
+      frame_params.show_frame = frame_update_type != ARF_UPDATE &&
+                                frame_update_type != INTNL_ARF_UPDATE;
+      frame_params.show_existing_frame =
+          frame_update_type == INTNL_OVERLAY_UPDATE;
+      frame_params.frame_type = INTER_FRAME;
 
-    tpl_frame->gf_picture = &buf->img;
-    tpl_frame->rec_picture = &tpl_data->tpl_rec_pool[process_frame_count];
-    tpl_frame->tpl_stats_ptr = tpl_data->tpl_stats_pool[process_frame_count];
-    // 'cm->current_frame.frame_number' is the display number
-    // of the current frame.
-    // 'frame_display_index' is frame offset within the gf group.
-    // 'frame_display_index + cm->current_frame.frame_number'
-    // is the display index of the frame.
-    tpl_frame->frame_display_index =
-        frame_display_index + cm->current_frame.frame_number;
+      int lookahead_index = frame_display_index;
+      struct lookahead_entry *buf = av1_lookahead_peek(
+          cpi->ppi->lookahead, lookahead_index, cpi->compressor_stage);
 
-    ++process_frame_count;
+      if (buf == NULL) break;
 
-    gf_group->update_type[gf_index] = LF_UPDATE;
+      tpl_frame->gf_picture = &buf->img;
+      tpl_frame->rec_picture = &tpl_data->tpl_rec_pool[process_frame_count];
+      tpl_frame->tpl_stats_ptr = tpl_data->tpl_stats_pool[process_frame_count];
+      // 'cm->current_frame.frame_number' is the display number
+      // of the current frame.
+      // 'frame_display_index' is frame offset within the gf group.
+      // 'frame_display_index + cm->current_frame.frame_number'
+      // is the display index of the frame.
+      tpl_frame->frame_display_index =
+          frame_display_index + cm->current_frame.frame_number;
+
+      ++process_frame_count;
+
+      gf_group->update_type[gf_index] = LF_UPDATE;
 
 #if CONFIG_BITRATE_ACCURACY && CONFIG_THREE_PASS
-    if (cpi->oxcf.pass == AOM_RC_SECOND_PASS) {
-      if (cpi->oxcf.rc_cfg.mode == AOM_Q) {
-        *pframe_qindex = cpi->oxcf.rc_cfg.cq_level;
-      } else if (cpi->oxcf.rc_cfg.mode == AOM_VBR) {
-        // TODO(angiebird): Find a more adaptive method to decide pframe_qindex
-        // override the pframe_qindex in the second pass when bitrate accuracy
-        // is on. We found that setting this pframe_qindex make the tpl stats
-        // more stable.
-        *pframe_qindex = 128;
+      if (cpi->oxcf.pass == AOM_RC_SECOND_PASS) {
+        if (cpi->oxcf.rc_cfg.mode == AOM_Q) {
+          *pframe_qindex = cpi->oxcf.rc_cfg.cq_level;
+        } else if (cpi->oxcf.rc_cfg.mode == AOM_VBR) {
+          // TODO(angiebird): Find a more adaptive method to decide
+          // pframe_qindex override the pframe_qindex in the second pass when
+          // bitrate accuracy is on. We found that setting this pframe_qindex
+          // make the tpl stats more stable.
+          *pframe_qindex = 128;
+        }
       }
-    }
 #endif  // CONFIG_BITRATE_ACCURACY && CONFIG_THREE_PASS
-    gf_group->q_val[gf_index] = *pframe_qindex;
-    const int true_disp = (int)(tpl_frame->frame_display_index);
-    av1_get_ref_frames(ref_frame_map_pairs, true_disp, cpi, gf_index, 0,
-                       remapped_ref_idx);
-    int refresh_mask =
-        av1_get_refresh_frame_flags(cpi, &frame_params, frame_update_type,
-                                    gf_index, true_disp, ref_frame_map_pairs);
-    int refresh_frame_map_index = av1_get_refresh_ref_frame_map(refresh_mask);
+      gf_group->q_val[gf_index] = *pframe_qindex;
+      const int true_disp = (int)(tpl_frame->frame_display_index);
+      av1_get_ref_frames(ref_frame_map_pairs, true_disp, cpi, gf_index, 0,
+                         remapped_ref_idx);
+      int refresh_mask =
+          av1_get_refresh_frame_flags(cpi, &frame_params, frame_update_type,
+                                      gf_index, true_disp, ref_frame_map_pairs);
+      int refresh_frame_map_index = av1_get_refresh_ref_frame_map(refresh_mask);
 
-    if (refresh_frame_map_index < REF_FRAMES &&
-        refresh_frame_map_index != INVALID_IDX) {
-      ref_frame_map_pairs[refresh_frame_map_index].disp_order =
-          AOMMAX(0, true_disp);
-      ref_frame_map_pairs[refresh_frame_map_index].pyr_level =
-          get_true_pyr_level(gf_group->layer_depth[gf_index], true_disp,
-                             cpi->ppi->gf_group.max_layer_depth);
+      if (refresh_frame_map_index < REF_FRAMES &&
+          refresh_frame_map_index != INVALID_IDX) {
+        ref_frame_map_pairs[refresh_frame_map_index].disp_order =
+            AOMMAX(0, true_disp);
+        ref_frame_map_pairs[refresh_frame_map_index].pyr_level =
+            get_true_pyr_level(gf_group->layer_depth[gf_index], true_disp,
+                               cpi->ppi->gf_group.max_layer_depth);
+      }
+
+      for (int i = LAST_FRAME; i <= ALTREF_FRAME; ++i)
+        tpl_frame->ref_map_index[i - LAST_FRAME] =
+            ref_picture_map[remapped_ref_idx[i - LAST_FRAME]];
+
+      tpl_frame->ref_map_index[ALTREF_FRAME - LAST_FRAME] = -1;
+      tpl_frame->ref_map_index[LAST3_FRAME - LAST_FRAME] = -1;
+      tpl_frame->ref_map_index[BWDREF_FRAME - LAST_FRAME] = -1;
+      tpl_frame->ref_map_index[ALTREF2_FRAME - LAST_FRAME] = -1;
+
+      if (refresh_mask) ref_picture_map[refresh_frame_map_index] = gf_index;
+
+      ++*tpl_group_frames;
+      ++extend_frame_count;
+      ++frame_display_index;
     }
-
-    for (int i = LAST_FRAME; i <= ALTREF_FRAME; ++i)
-      tpl_frame->ref_map_index[i - LAST_FRAME] =
-          ref_picture_map[remapped_ref_idx[i - LAST_FRAME]];
-
-    tpl_frame->ref_map_index[ALTREF_FRAME - LAST_FRAME] = -1;
-    tpl_frame->ref_map_index[LAST3_FRAME - LAST_FRAME] = -1;
-    tpl_frame->ref_map_index[BWDREF_FRAME - LAST_FRAME] = -1;
-    tpl_frame->ref_map_index[ALTREF2_FRAME - LAST_FRAME] = -1;
-
-    if (refresh_mask) ref_picture_map[refresh_frame_map_index] = gf_index;
-
+  } else {
+    // Add ARF
+    tpl_gop_add_frame(cpi, gf_index, tpl_data, ARF_UPDATE,
+                      frame_display_index - 1 + max_next_gop_size,
+                      &frame_params, INTER_FRAME, &process_frame_count,
+                      ref_frame_map_pairs, remapped_ref_idx, ref_picture_map,
+                      /*pyramid_level=*/1, *pframe_qindex);
+    ++gf_index;
     ++*tpl_group_frames;
     ++extend_frame_count;
-    ++frame_display_index;
+
+    int cur_left_lookahead = frame_display_index - 1;
+    int cur_right_lookahead = cur_left_lookahead + max_next_gop_size;
+    tpl_recur_add(cpi, &gf_index, tpl_data, &frame_params, &process_frame_count,
+                  tpl_group_frames, &extend_frame_count, ref_frame_map_pairs,
+                  remapped_ref_idx, ref_picture_map, 2, cur_left_lookahead,
+                  cur_right_lookahead, *pframe_qindex);
   }
 
   return extend_frame_count;
@@ -2143,6 +2337,9 @@ int av1_tpl_setup_stats(AV1_COMP *cpi, int gop_eval,
                            reduce_num_frames))
       continue;
 
+    // printf("\nsynthesizing frame %d, type %d, disp_order %d ", frame_idx,
+    //        gf_group->update_type[frame_idx],
+    //        tpl_data->tpl_frame[frame_idx].frame_display_index);
     mc_flow_synthesizer(tpl_data, frame_idx, cm->mi_params.mi_rows,
                         cm->mi_params.mi_cols);
   }

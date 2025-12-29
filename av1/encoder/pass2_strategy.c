@@ -4011,7 +4011,7 @@ void av1_get_second_pass_params(AV1_COMP *cpi,
             // A shorter gf interval is better.
             // TODO(jingning): Remove redundant computations here.
             max_gop_length = 16;
-            calculate_gf_length(cpi, max_gop_length, 1);
+            calculate_gf_length(cpi, max_gop_length, 3);
             if (is_last_scenecut &&
                 (ori_gf_int - p_rc->gf_intervals[p_rc->cur_gf_index] < 4)) {
               p_rc->gf_intervals[p_rc->cur_gf_index] = ori_gf_int;
