@@ -696,9 +696,15 @@ void av1_set_size_dependent_vars(AV1_COMP *cpi, int *q, int *bottom_index,
       cpi->ppi->tpl_data.tpl_frame[cpi->gf_frame_index].is_valid &&
       !is_lossless_requested(&cpi->oxcf.rc_cfg)) {
     const RateControlCfg *const rc_cfg = &cpi->oxcf.rc_cfg;
+    double more_boosting = 1.0;
+    if (gf_group->size > 40 && gf_group->layer_depth[cpi->gf_frame_index] < 6) {
+      printf("\nlayer %d\n", gf_group->layer_depth[cpi->gf_frame_index]);
+      int layer = AOMMAX(gf_group->layer_depth[cpi->gf_frame_index], 2);
+      more_boosting = 0.7 + 0.05 * layer;
+    }
     const int tpl_q = av1_tpl_get_q_index(
         &cpi->ppi->tpl_data, cpi->gf_frame_index, cpi->rc.active_worst_quality,
-        cm->seq_params->bit_depth);
+        cm->seq_params->bit_depth, more_boosting);
     *q = clamp(tpl_q, rc_cfg->best_allowed_q, rc_cfg->worst_allowed_q);
     *top_index = *bottom_index = *q;
     if (gf_group->update_type[cpi->gf_frame_index] == ARF_UPDATE)

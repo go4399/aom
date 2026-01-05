@@ -2611,8 +2611,12 @@ int av1_get_q_index_from_qstep_ratio(int leaf_qindex, double qstep_ratio,
 }
 
 int av1_tpl_get_q_index(const TplParams *tpl_data, int gf_frame_index,
-                        int leaf_qindex, aom_bit_depth_t bit_depth) {
-  const double qstep_ratio = av1_tpl_get_qstep_ratio(tpl_data, gf_frame_index);
+                        int leaf_qindex, aom_bit_depth_t bit_depth,
+                        double boosting_factor) {
+  double qstep_ratio = av1_tpl_get_qstep_ratio(tpl_data, gf_frame_index);
+  printf("\norig ratio %.3f", qstep_ratio);
+  qstep_ratio *= boosting_factor;
+  printf(", new ratio %.3f\n", qstep_ratio);
   return av1_get_q_index_from_qstep_ratio(leaf_qindex, qstep_ratio, bit_depth);
 }
 

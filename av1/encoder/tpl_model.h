@@ -645,7 +645,8 @@ int av1_get_overlap_area(int row_a, int col_a, int row_b, int col_b, int width,
  * \return q_index
  */
 int av1_tpl_get_q_index(const TplParams *tpl_data, int gf_frame_index,
-                        int leaf_qindex, aom_bit_depth_t bit_depth);
+                        int leaf_qindex, aom_bit_depth_t bit_depth,
+                        double boosting_factor);
 
 /*!\brief Compute the ratio between arf q step and the leaf q step based on
  * TPL stats
