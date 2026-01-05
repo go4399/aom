@@ -8,6 +8,8 @@
  * Media Patent License 1.0 was not distributed with this source code in the
  * PATENTS file, you can obtain it at www.aomedia.org/license/patent.
  */
+
+#include <assert.h>
 #include <limits.h>
 #include <math.h>
 #include <stdbool.h>
@@ -3583,6 +3585,9 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
           aom_internal_error(&ppi->error, AOM_CODEC_ERROR,
                              "cpi->gf_frame_index is out of range");
         }
+        // This assertion helps static analyzers that don't know the
+        // aom_internal_error() call above doesn't return.
+        assert(cpi->gf_frame_index < MAX_STATIC_GF_GROUP_LENGTH);
 
         // May need a better way for checking the frame's frame_parallel_level,
         // especially for the first frame of the following gop.
