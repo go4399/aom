@@ -52,6 +52,24 @@
       "parentUuid": "636ce58b_9539c5dc",
       "revId": "bf9db06f2615af582f19d443d6e2f8c32d31da6d",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e97462a_bab97649",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 3585,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-01-05T23:32:51Z",
+      "side": 1,
+      "message": "I just did three Coverity scans (the maximum daily quota).\n\nThe first scan was on the current tip of the main branch, to establish the baseline.\n\nThe second scan tested adding the assertion:\n\n```\ndiff --git a/av1/av1_cx_iface.c b/av1/av1_cx_iface.c\nindex 3210f77399..bcb389c98a 100644\n--- a/av1/av1_cx_iface.c\n+++ b/av1/av1_cx_iface.c\n@@ -8,6 +8,8 @@\n  * Media Patent License 1.0 was not distributed with this source code in the\n  * PATENTS file, you can obtain it at www.aomedia.org/license/patent.\n  */\n+\n+#include \u003cassert.h\u003e\n #include \u003climits.h\u003e\n #include \u003cmath.h\u003e\n #include \u003cstdbool.h\u003e\n@@ -3583,6 +3585,7 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,\n           aom_internal_error(\u0026ppi-\u003eerror, AOM_CODEC_ERROR,\n                              \"cpi-\u003egf_frame_index is out of range\");\n         }\n+        assert(cpi-\u003egf_frame_index \u003c MAX_STATIC_GF_GROUP_LENGTH);\n \n         // May need a better way for checking the frame\u0027s frame_parallel_level,\n         // especially for the first frame of the following gop.\n```\n\nThe third scan tested adding a return statement after the `aom_internal_error()` call:\n\n```\ndiff --git a/av1/av1_cx_iface.c b/av1/av1_cx_iface.c\nindex 3210f77399..435b025660 100644\n--- a/av1/av1_cx_iface.c\n+++ b/av1/av1_cx_iface.c\n@@ -3582,6 +3582,7 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,\n         if (cpi-\u003egf_frame_index \u003e\u003d MAX_STATIC_GF_GROUP_LENGTH) {\n           aom_internal_error(\u0026ppi-\u003eerror, AOM_CODEC_ERROR,\n                              \"cpi-\u003egf_frame_index is out of range\");\n+          return AOM_CODEC_ERROR;\n         }\n \n         // May need a better way for checking the frame\u0027s frame_parallel_level,\n```\n\nBoth changes fixed the Coverity defects. This confirms our theory that Coverity doesn\u0027t know the `aom_internal_error()` call doesn\u0027t return.\n\nI wrote a CL to add the assertion:\nhttps://aomedia-review.googlesource.com/c/aom/+/205562",
+      "parentUuid": "5ab3acd8_1626d2a2",
+      "revId": "bf9db06f2615af582f19d443d6e2f8c32d31da6d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
