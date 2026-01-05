@@ -34,6 +34,24 @@
       "parentUuid": "658741e0_0ab538b6",
       "revId": "bf9db06f2615af582f19d443d6e2f8c32d31da6d",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ab3acd8_1626d2a2",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 3585,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-01-05T22:11:57Z",
+      "side": 1,
+      "message": "Let me test this change first with Coverity.\n\nI will also test a new variant of `aom_internal_error()` that always calls `longjmp()` and is declared with the \"noreturn\" attribute.",
+      "parentUuid": "636ce58b_9539c5dc",
+      "revId": "bf9db06f2615af582f19d443d6e2f8c32d31da6d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
