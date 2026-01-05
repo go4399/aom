@@ -186,6 +186,23 @@
       "message": "Coverity reported defect CID 556348 (Identical code for different branches) on this change, because the if and else branches are now identical.\n\nIf this clamping is correct, we should fix this Coverity defect by changing this function as follows (I edited the second comment based on the comment in the if branch):\n\n```\nstatic inline void update_gf_group_index(AV1_COMP *cpi) {\n  // Increment the gf group index ready for the next frame.\n  ++cpi-\u003egf_frame_index;\n  // Reset gf_frame_index in case it reaches MAX_STATIC_GF_GROUP_LENGTH.\n  if (cpi-\u003egf_frame_index \u003d\u003d MAX_STATIC_GF_GROUP_LENGTH)\n    cpi-\u003egf_frame_index \u003d 0;\n}\n```",
       "revId": "2178cf9a35c5fae268e10daaea37a3b0e1e8d617",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "daa7efa2_c867f5f9",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 5644,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-01-05T20:55:55Z",
+      "side": 1,
+      "message": "This is another place where we set `gf_frame_index`. We should verify that the new value of `gf_frame_index` is \u003c `MAX_STATIC_GF_GROUP_LENGTH`.",
+      "revId": "2178cf9a35c5fae268e10daaea37a3b0e1e8d617",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ],
   "submitRequirementResults": [
