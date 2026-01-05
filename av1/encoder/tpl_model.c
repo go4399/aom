@@ -1808,7 +1808,7 @@ static inline int init_gop_frames_for_tpl(
         av1_tf_info_get_filtered_buf(&cpi->ppi->tf_info, gf_index, &frame_diff);
     if (tf_buf != NULL) {
       int use_tf = 1;
-      if (frame_update_type == INTNL_ARF_UPDATE) {
+      if (0 && frame_update_type == INTNL_ARF_UPDATE) {
         const int show_existing = av1_check_show_filtered_frame(
             tf_buf, &frame_diff, gf_group->q_val[gf_index],
             cm->seq_params->bit_depth);
