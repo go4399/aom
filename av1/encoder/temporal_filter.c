@@ -710,6 +710,7 @@ void av1_apply_temporal_filter_c(
     // Larger noise -> larger filtering weight.
     const double n_decay = 0.5 + log(2 * noise_levels[plane] + 5.0);
     decay_factor[plane] = 1 / (n_decay * q_decay * s_decay);
+    decay_factor[plane] *= 2.0;
   }
   double d_factor[4] = { 0 };
   for (int subblock_idx = 0; subblock_idx < 4; subblock_idx++) {
@@ -1007,7 +1008,7 @@ void av1_tf_do_filtering_row(AV1_COMP *cpi, ThreadData *td, int mb_row) {
         if (is_frame_high_bitdepth(frame_to_filter)) {  // for high bit-depth
 #if CONFIG_AV1_HIGHBITDEPTH
           if (TF_BLOCK_SIZE == BLOCK_32X32 && TF_WINDOW_LENGTH == 5) {
-            av1_highbd_apply_temporal_filter(
+            av1_highbd_apply_temporal_filter_c(
                 frame_to_filter, mbd, block_size, mb_row, mb_col, num_planes,
                 noise_levels, subblock_mvs, subblock_mses, q_factor,
                 filter_strength, weight_calc_level_in_tf, pred, accum, count);
@@ -1023,7 +1024,7 @@ void av1_tf_do_filtering_row(AV1_COMP *cpi, ThreadData *td, int mb_row) {
         } else {
           // for 8-bit
           if (TF_BLOCK_SIZE == BLOCK_32X32 && TF_WINDOW_LENGTH == 5) {
-            av1_apply_temporal_filter(
+            av1_apply_temporal_filter_c(
                 frame_to_filter, mbd, block_size, mb_row, mb_col, num_planes,
                 noise_levels, subblock_mvs, subblock_mses, q_factor,
                 filter_strength, weight_calc_level_in_tf, pred, accum, count);
