@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "658741e0_0ab538b6",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 3585,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-01-05T21:01:06Z",
+      "side": 1,
+      "message": "Coverity reported defect CID 556347 (Out-of-bounds read) on the expression `ppi-\u003egf_group.frame_parallel_level[cpi-\u003egf_frame_index]` in line 3589 and 3591.\n\nThe reason is that Coverity does not know this `aom_internal_error()` call calls `longjmp()` and doesn\u0027t return.\n\nI suggest we try adding an assertion after this line to give Coverity additional information:\n\n```\n         if (cpi-\u003egf_frame_index \u003e\u003d MAX_STATIC_GF_GROUP_LENGTH) {\n           aom_internal_error(\u0026ppi-\u003eerror, AOM_CODEC_ERROR,\n                              \"cpi-\u003egf_frame_index is out of range\");\n         }\n+        assert(cpi-\u003egf_frame_index \u003c MAX_STATIC_GF_GROUP_LENGTH);\n```\n\nNote: Coverity defect CID 556349 (Out-of-bounds access) is also caused by this if statement (lines 3582-3585).",
+      "revId": "bf9db06f2615af582f19d443d6e2f8c32d31da6d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
