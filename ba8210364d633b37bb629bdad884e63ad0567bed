@@ -52,6 +52,24 @@
       "parentUuid": "fe7f36de_52af1f88",
       "revId": "ba8210364d633b37bb629bdad884e63ad0567bed",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "07e04e04_d38f77c4",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 3587,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-01-06T18:32:33Z",
+      "side": 1,
+      "message": "Adding assertion won\u0027t cause any performance issue. I am ok with it.\nAlso, we have many range checks in the encoder. Of course, no other defects are shown since these values are not used as array index. Do we want to add assertions for similar situations later? Maybe marking the defects as false positive is better? Please feel free to make the call.",
+      "parentUuid": "45fe00b7_c257ce8d",
+      "revId": "ba8210364d633b37bb629bdad884e63ad0567bed",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
