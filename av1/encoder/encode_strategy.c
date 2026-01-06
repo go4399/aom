@@ -1143,7 +1143,7 @@ void av1_get_ref_frames(RefFrameMapPair ref_frame_map_pairs[REF_FRAMES],
     if (remapped_ref_idx[frame - LAST_FRAME] != INVALID_IDX) continue;
     // Find the next unmapped reference buffer
     // in decreasing ouptut order relative to current picture.
-    int next_buf_max = 0;
+    int next_buf_max = -1;
     int next_disp_order = INT_MIN;
     for (buf_map_idx = n_bufs - 1; buf_map_idx >= 0; buf_map_idx--) {
       if (!buffer_map[buf_map_idx].used &&
