@@ -16,6 +16,24 @@
       "message": "Yunqing: I am pretty sure that removing this if statement (3582-3587) will also fix the Coverity defects, but I can\u0027t verify that today because I have hit the daily Coverity quota.\n\nWould you prefer removing this if statement?",
       "revId": "ba8210364d633b37bb629bdad884e63ad0567bed",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe7f36de_52af1f88",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 3587,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-01-06T00:45:47Z",
+      "side": 1,
+      "message": "This if statement is to give a clear error message when this is broken instead of an encoder crash. Maybe we want it here?\n\nBy the way, is there a way to block a piece of code from Coverity scan?",
+      "parentUuid": "083aa464_9b4f5896",
+      "revId": "ba8210364d633b37bb629bdad884e63ad0567bed",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
