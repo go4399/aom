@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54d3717d_4da0e74b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-01-06T19:40:02Z",
+      "side": 1,
+      "message": "Thanks for signing the contributor agreement. For your first patch one of the reviewers will need to upload a version of the patch to get the tests to run. We can do that after the initial reviews are complete.",
+      "revId": "e1032127143d4f79bc6f7a275b2bb9b60767ca5b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
