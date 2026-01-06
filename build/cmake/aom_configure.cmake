@@ -14,6 +14,7 @@ endif() # AOM_BUILD_CMAKE_AOM_CONFIGURE_CMAKE_
 set(AOM_BUILD_CMAKE_AOM_CONFIGURE_CMAKE_ 1)
 
 include(FindThreads)
+include(CheckCXXSymbolExists)
 
 include("${AOM_ROOT}/build/cmake/aom_config_defaults.cmake")
 include("${AOM_ROOT}/build/cmake/aom_experiment_deps.cmake")
@@ -257,6 +258,13 @@ fix_experiment_configs()
 # including a linking check in FindThreads above.
 set(HAVE_PTHREAD_H ${CMAKE_USE_PTHREADS_INIT})
 aom_check_source_compiles("unistd_check" "#include <unistd.h>" HAVE_UNISTD_H)
+
+if(HAVE_PTHREAD_H)
+  # Check for pthread setname_np API
+  check_cxx_symbol_exists(pthread_setname_np pthread.h _HAS_PTHREAD_SETNAME_NP)
+
+  set(HAVE_PTHREAD_SETNAME_NP ${_HAS_PTHREAD_SETNAME_NP})
+endif()
 
 if(NOT WIN32)
   aom_push_var(CMAKE_REQUIRED_LIBRARIES "m")
