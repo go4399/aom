@@ -24,6 +24,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b10fcef_17bd414e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2026-01-07T22:38:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "68ee1a41_71863cf0",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 4
+      },
+      "revId": "994070cdb63fe3b376f7a3a15546424ba1a6b3af",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a3a41d89_58b56516",
@@ -37,6 +61,30 @@
       "writtenOn": "2026-01-07T20:50:51Z",
       "side": 1,
       "message": "assert",
+      "range": {
+        "startLine": 1738,
+        "startChar": 3,
+        "endLine": 1738,
+        "endChar": 9
+      },
+      "revId": "994070cdb63fe3b376f7a3a15546424ba1a6b3af",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "388e593f_be6ef15e",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1738,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2026-01-07T22:38:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3a41d89_58b56516",
       "range": {
         "startLine": 1738,
         "startChar": 3,
