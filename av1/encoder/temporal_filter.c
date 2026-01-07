@@ -1392,8 +1392,8 @@ static void init_tf_ctx(AV1_COMP *cpi, int filter_frame_lookahead_idx,
   TemporalFilterCtx *tf_ctx = &cpi->tf_ctx;
   // Setup frame buffer for filtering.
   YV12_BUFFER_CONFIG **frames = tf_ctx->frames;
-  tf_ctx->num_frames = 0;
-  tf_ctx->filter_frame_idx = -1;
+  tf_ctx->num_frames = -1;
+  tf_ctx->filter_frame_idx = 0;
   tf_ctx->output_frame = output_frame;
   tf_ctx->compute_frame_diff = compute_frame_diff;
   tf_setup_filtering_buffer(cpi, filter_frame_lookahead_idx, gf_frame_index);
@@ -1473,7 +1473,8 @@ void av1_temporal_filter(AV1_COMP *cpi, const int filter_frame_lookahead_idx,
 
   // Initialize temporal filter context structure.
   init_tf_ctx(cpi, filter_frame_lookahead_idx, gf_frame_index,
-              compute_frame_diff, output_frame);
+              compute_frame_diff, &cpi->ppi->tf_info.tf_buf[2]);
+  tf_ctx->itr = 0;
 
   // Allocate and reset temporal filter buffers.
   const int is_highbitdepth = tf_ctx->is_highbitdepth;
@@ -1483,6 +1484,19 @@ void av1_temporal_filter(AV1_COMP *cpi, const int filter_frame_lookahead_idx,
   }
 
   // Perform temporal filtering process.
+  if (mt_info->num_workers > 1)
+    av1_tf_do_filtering_mt(cpi);
+  else
+    tf_do_filtering(cpi);
+
+  init_tf_ctx(cpi, filter_frame_lookahead_idx, gf_frame_index,
+              compute_frame_diff, output_frame);
+  tf_ctx->itr = 1;
+
+  memset(&tf_data->diff, 0, sizeof(tf_data->diff));
+  cpi->tf_ctx.frames[cpi->tf_ctx.filter_frame_idx] =
+      &cpi->ppi->tf_info.tf_buf[2];
+
   if (mt_info->num_workers > 1)
     av1_tf_do_filtering_mt(cpi);
   else

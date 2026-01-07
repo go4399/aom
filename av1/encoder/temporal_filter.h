@@ -146,6 +146,10 @@ typedef struct {
    * Quantization factor used in temporal filtering.
    */
   int q_factor;
+  /*!
+   * Quantization factor used in temporal filtering.
+   */
+  int itr;
 } TemporalFilterCtx;
 
 /*!
@@ -153,7 +157,7 @@ typedef struct {
  * Currently we only apply filtering on KEY and ARF after
  * define_gf_group(). Hence, the count is two.
  */
-#define TF_INFO_BUF_COUNT 2
+#define TF_INFO_BUF_COUNT 3
 
 /*!
  * \brief Temporal filter info for a gop
