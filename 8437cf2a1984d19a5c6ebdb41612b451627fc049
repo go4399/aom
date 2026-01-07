@@ -34,6 +34,24 @@
       "parentUuid": "2e2a4f03_d13918d7",
       "revId": "8437cf2a1984d19a5c6ebdb41612b451627fc049",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b1c17e3_f05400e8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-01-07T19:01:58Z",
+      "side": 1,
+      "message": "\u003e \u003e James: We don\u0027t need to accept this patch, because we don\u0027t support Mac OS X versions \u003c 10.6. I defer this decision to you.\n\u003e \n\u003e This is a relatively simple change, so I think it\u0027s OK. We\u0027ve been more strict on toolchains and Windows versions than Mac. It is true that at some point if we wanted to fully align with https://github.com/google/oss-policies-info/blob/main/foundational-cxx-support-matrix.md we could drop this (macOS 12 is the current supported version).\n\nI also submitted this for libvpx, so I wanted to keep both projects in sync.",
+      "parentUuid": "c4d8a7a3_65038c76",
+      "revId": "8437cf2a1984d19a5c6ebdb41612b451627fc049",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ],
   "submitRequirementResults": [
