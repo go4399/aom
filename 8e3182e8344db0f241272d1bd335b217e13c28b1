@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "44c0571b_c7df08a0",
+        "filename": "av1/common/arm/reconintra_neon_i8mm.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-01-07T21:11:32Z",
+      "side": 1,
+      "message": "contain",
+      "range": {
+        "startLine": 24,
+        "startChar": 11,
+        "endLine": 24,
+        "endChar": 19
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "b1baad53_8e11e2fd",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/common/arm/reconintra_neon_i8mm.c",
+              "range": {
+                "startLine": 24,
+                "startChar": 0,
+                "endLine": 25,
+                "endChar": 0
+              },
+              "replacement": "// vectors contain the upper elements. This layout allows all 8 multiplications\n"
+            }
+          ]
+        }
+      ],
+      "revId": "8e3182e8344db0f241272d1bd335b217e13c28b1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
