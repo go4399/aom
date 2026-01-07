@@ -46,6 +46,30 @@
       },
       "revId": "21784b029e5bdd79a8546c0d5d7d6ffa1bd11461",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56e3e0be_50b66f8b",
+        "filename": "av1/common/x86/av1_inv_txfm_avx2.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2237,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-01-07T23:13:23Z",
+      "side": 1,
+      "message": "Done. Is patchset 2 what you meant by \"default with an assert\"?",
+      "parentUuid": "de5e4805_50cc5553",
+      "range": {
+        "startLine": 2229,
+        "startChar": 0,
+        "endLine": 2237,
+        "endChar": 18
+      },
+      "revId": "21784b029e5bdd79a8546c0d5d7d6ffa1bd11461",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
