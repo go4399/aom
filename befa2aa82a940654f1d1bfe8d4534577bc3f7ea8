@@ -1,0 +1,68 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5126cb2_a1e4e728",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 16
+      },
+      "lineNbr": 3829,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-01-07T15:44:34Z",
+      "side": 1,
+      "message": "frame_source_sad_lag",
+      "range": {
+        "startLine": 3829,
+        "startChar": 43,
+        "endLine": 3829,
+        "endChar": 62
+      },
+      "revId": "befa2aa82a940654f1d1bfe8d4534577bc3f7ea8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd773c78_11be08ff",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 16
+      },
+      "lineNbr": 3829,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-01-07T15:44:34Z",
+      "side": 1,
+      "message": "high_source_sad_lag?",
+      "range": {
+        "startLine": 3829,
+        "startChar": 19,
+        "endLine": 3829,
+        "endChar": 35
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "1287006c_5b4c222d",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/pass2_strategy.c",
+              "range": {
+                "startLine": 3829,
+                "startChar": 0,
+                "endLine": 3830,
+                "endChar": 0
+              },
+              "replacement": "        // Use rc-\u003ehigh_source_sad_lag[i] and frame_source_sad_lag[i] to\n"
+            }
+          ]
+        }
+      ],
+      "revId": "befa2aa82a940654f1d1bfe8d4534577bc3f7ea8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
