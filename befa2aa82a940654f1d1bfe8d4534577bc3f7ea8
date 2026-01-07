@@ -63,6 +63,54 @@
       ],
       "revId": "befa2aa82a940654f1d1bfe8d4534577bc3f7ea8",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1abf32a1_42ade0d3",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 16
+      },
+      "lineNbr": 3829,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2026-01-07T17:47:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5126cb2_a1e4e728",
+      "range": {
+        "startLine": 3829,
+        "startChar": 43,
+        "endLine": 3829,
+        "endChar": 62
+      },
+      "revId": "befa2aa82a940654f1d1bfe8d4534577bc3f7ea8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f6bc5d2c_a841806a",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 16
+      },
+      "lineNbr": 3829,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2026-01-07T17:47:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fd773c78_11be08ff",
+      "range": {
+        "startLine": 3829,
+        "startChar": 19,
+        "endLine": 3829,
+        "endChar": 35
+      },
+      "revId": "befa2aa82a940654f1d1bfe8d4534577bc3f7ea8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
