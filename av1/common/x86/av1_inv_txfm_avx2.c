@@ -2235,7 +2235,6 @@ void av1_lowbd_inv_txfm2d_add_avx2(const int32_t *input, uint8_t *output,
     case TX_64X32:
     case TX_16X64:
     case TX_64X16:
-    default:
       lowbd_inv_txfm2d_add_universe_avx2(input, output, stride, tx_type,
                                          tx_size, eob);
       break;
