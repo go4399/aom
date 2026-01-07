@@ -1,5 +1,23 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f93ba8a1_6fb20ffa",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-01-07T18:16:22Z",
+      "side": 1,
+      "message": "This morning\u0027s Coverity scan verified this defect is fixed.",
+      "revId": "6269d4011a47e6821b4a6d815d83461e1234d351",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
