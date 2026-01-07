@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e2a4f03_d13918d7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-01-07T17:50:05Z",
+      "side": 1,
+      "message": "James: We don\u0027t need to accept this patch, because we don\u0027t support Mac OS X versions \u003c 10.6. I defer this decision to you.",
+      "revId": "8437cf2a1984d19a5c6ebdb41612b451627fc049",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
