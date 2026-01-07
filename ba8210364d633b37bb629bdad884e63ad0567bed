@@ -70,6 +70,24 @@
       "parentUuid": "45fe00b7_c257ce8d",
       "revId": "ba8210364d633b37bb629bdad884e63ad0567bed",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1da2021d_c57cae04",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 3587,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-01-07T18:34:35Z",
+      "side": 1,
+      "message": "OK, I have marked these two Coverity defects as \"Falst positive\" and \"Ignore\". I will abandon this CL.\n\nWe should try to make sure `aom_internal_error()` always calls `longjmp()`. Then we can mark the `aom_internal_error()` function with the \"noreturn\" attribute, which Coverity should honor.",
+      "parentUuid": "07e04e04_d38f77c4",
+      "revId": "ba8210364d633b37bb629bdad884e63ad0567bed",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
