@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "10916aab_678954ab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-01-08T00:39:29Z",
+      "side": 1,
+      "message": "This improves vmaf by 1.8 - 2% at speed 0 and 1 with 0.3% psnr loss.",
+      "revId": "ebc7ee09e1619809b10f171e0c8724354be52a80",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
