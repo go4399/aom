@@ -264,8 +264,8 @@ static inline int av1_cost_skip_txb(const CoeffCosts *coeff_costs,
 /*!\cond */
 // These numbers are empirically obtained.
 static const int plane_rd_mult[REF_TYPES][PLANE_TYPES] = {
-  { 17, 13 },
-  { 16, 10 },
+  { 17, 20 },
+  { 16, 20 },
 };
 /*!\endcond */
 
