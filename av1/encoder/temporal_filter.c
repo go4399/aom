@@ -84,16 +84,21 @@ static inline void get_log_var_4x4sub_blk(
 }
 
 // Helper function to get `q` used for encoding.
-static int get_q(const AV1_COMP *cpi) {
+static int get_q(AV1_COMP *cpi) {
   const GF_GROUP *gf_group = &cpi->ppi->gf_group;
   const FRAME_TYPE frame_type = gf_group->frame_type[cpi->gf_frame_index];
 
   if (cpi->oxcf.rc_cfg.mode == AOM_Q) {
     int cq_level = cpi->oxcf.rc_cfg.cq_level;
+    cpi->common.quant_params.base_qindex = cq_level;
+    av1_frame_init_quantizer(cpi);
     return (int)av1_convert_qindex_to_q(cq_level,
                                         cpi->common.seq_params->bit_depth);
   }
 
+  cpi->common.quant_params.base_qindex =
+      cpi->ppi->p_rc.avg_frame_qindex[frame_type];
+  av1_frame_init_quantizer(cpi);
   const int q =
       (int)av1_convert_qindex_to_q(cpi->ppi->p_rc.avg_frame_qindex[frame_type],
                                    cpi->common.seq_params->bit_depth);
@@ -442,7 +447,8 @@ static void tf_build_predictor(const YV12_BUFFER_CONFIG *ref_frame,
                                const BLOCK_SIZE block_size, const int mb_row,
                                const int mb_col, const int num_planes,
                                const struct scale_factors *scale,
-                               const MV *subblock_mvs, uint8_t *pred) {
+                               const MV *subblock_mvs, int *subblock_mses,
+                               uint8_t *pred) {
   // Information of the entire block.
   const int mb_height = block_size_high[block_size];  // Height.
   const int mb_width = block_size_wide[block_size];   // Width.
@@ -451,6 +457,8 @@ static void tf_build_predictor(const YV12_BUFFER_CONFIG *ref_frame,
   const int bit_depth = mbd->bd;                      // Bit depth.
   const int is_intrabc = 0;                           // Is intra-copied?
   const int is_high_bitdepth = is_frame_high_bitdepth(ref_frame);
+
+  (void)subblock_mses;
 
   // Default interpolation filters.
   const int_interpfilters interp_filters =
@@ -495,7 +503,15 @@ static void tf_build_predictor(const YV12_BUFFER_CONFIG *ref_frame,
         inter_pred_params.conv_params = get_conv_params(0, plane, bit_depth);
         av1_enc_build_one_inter_predictor(&pred[plane_offset + i * plane_w + j],
                                           plane_w, &mv, &inter_pred_params);
-      }
+
+        const BitDepthInfo bd_info = get_bit_depth_info(mbd);
+        uint16_t eob;
+        av1_subtract_block(bd_info, h, w, src_diff, diff_stride, src,
+                           src_stride, dst, dst_stride);
+
+
+
+                          }
     }
     plane_offset += plane_h * plane_w;
   }
@@ -996,7 +1012,8 @@ void av1_tf_do_filtering_row(AV1_COMP *cpi, ThreadData *td, int mb_row) {
                                       mb_col, num_planes, accum, count);
       } else {  // Other reference frames.
         tf_build_predictor(frames[frame], mbd, block_size, mb_row, mb_col,
-                           num_planes, scale, subblock_mvs, pred);
+                           num_planes, scale, subblock_mvs, subblock_mses,
+                           pred);
 
         // All variants of av1_apply_temporal_filter() contain floating point
         // operations. Hence, clear the system state.
@@ -1007,7 +1024,7 @@ void av1_tf_do_filtering_row(AV1_COMP *cpi, ThreadData *td, int mb_row) {
         if (is_frame_high_bitdepth(frame_to_filter)) {  // for high bit-depth
 #if CONFIG_AV1_HIGHBITDEPTH
           if (TF_BLOCK_SIZE == BLOCK_32X32 && TF_WINDOW_LENGTH == 5) {
-            av1_highbd_apply_temporal_filter(
+            av1_highbd_apply_temporal_filter_c(
                 frame_to_filter, mbd, block_size, mb_row, mb_col, num_planes,
                 noise_levels, subblock_mvs, subblock_mses, q_factor,
                 filter_strength, weight_calc_level_in_tf, pred, accum, count);
@@ -1023,7 +1040,7 @@ void av1_tf_do_filtering_row(AV1_COMP *cpi, ThreadData *td, int mb_row) {
         } else {
           // for 8-bit
           if (TF_BLOCK_SIZE == BLOCK_32X32 && TF_WINDOW_LENGTH == 5) {
-            av1_apply_temporal_filter(
+            av1_apply_temporal_filter_c(
                 frame_to_filter, mbd, block_size, mb_row, mb_col, num_planes,
                 noise_levels, subblock_mvs, subblock_mses, q_factor,
                 filter_strength, weight_calc_level_in_tf, pred, accum, count);
@@ -1113,6 +1130,15 @@ static void tf_setup_filtering_buffer(AV1_COMP *cpi,
 
   TemporalFilterCtx *tf_ctx = &cpi->tf_ctx;
   YV12_BUFFER_CONFIG **frames = tf_ctx->frames;
+
+  CommonModeInfoParams *const mi_params = &cpi->common.mi_params;
+  mi_params->setup_mi(mi_params);
+
+  ThreadData *const td = &cpi->td;
+  MACROBLOCK *const x = &td->mb;
+  MACROBLOCKD *const xd = &x->e_mbd;
+  set_mi_offsets(mi_params, xd, 0, 0);
+
   // Number of frames used for filtering. Set `arnr_max_frames` as 1 to disable
   // temporal filtering.
   int num_frames = AOMMAX(cpi->oxcf.algo_cfg.arnr_max_frames, 1);
