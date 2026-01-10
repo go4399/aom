@@ -720,6 +720,8 @@ void av1_apply_temporal_filter_c(
     distance_threshold = AOMMAX(distance_threshold, 1);
     d_factor[subblock_idx] = distance / distance_threshold;
     d_factor[subblock_idx] = AOMMAX(d_factor[subblock_idx], 1);
+
+    d_factor[subblock_idx] = 1;
   }
 
   // Allocate memory for pixel-wise squared differences. They,
@@ -1007,7 +1009,7 @@ void av1_tf_do_filtering_row(AV1_COMP *cpi, ThreadData *td, int mb_row) {
         if (is_frame_high_bitdepth(frame_to_filter)) {  // for high bit-depth
 #if CONFIG_AV1_HIGHBITDEPTH
           if (TF_BLOCK_SIZE == BLOCK_32X32 && TF_WINDOW_LENGTH == 5) {
-            av1_highbd_apply_temporal_filter(
+            av1_highbd_apply_temporal_filter_c(
                 frame_to_filter, mbd, block_size, mb_row, mb_col, num_planes,
                 noise_levels, subblock_mvs, subblock_mses, q_factor,
                 filter_strength, weight_calc_level_in_tf, pred, accum, count);
@@ -1023,7 +1025,7 @@ void av1_tf_do_filtering_row(AV1_COMP *cpi, ThreadData *td, int mb_row) {
         } else {
           // for 8-bit
           if (TF_BLOCK_SIZE == BLOCK_32X32 && TF_WINDOW_LENGTH == 5) {
-            av1_apply_temporal_filter(
+            av1_apply_temporal_filter_c(
                 frame_to_filter, mbd, block_size, mb_row, mb_col, num_planes,
                 noise_levels, subblock_mvs, subblock_mses, q_factor,
                 filter_strength, weight_calc_level_in_tf, pred, accum, count);
@@ -1110,6 +1112,12 @@ static void tf_setup_filtering_buffer(AV1_COMP *cpi,
   const FRAME_TYPE frame_type = gf_group->frame_type[gf_frame_index];
   const int is_forward_keyframe =
       av1_gop_check_forward_keyframe(gf_group, gf_frame_index);
+
+  fprintf(stderr, "gf_frame_index = %d\n", gf_frame_index);
+
+  for (int idx = gf_frame_index; idx < 6; ++idx)
+    fprintf(stderr, "idx = %d, frame offset = %d\n", idx,
+            gf_group->arf_src_offset[idx]);
 
   TemporalFilterCtx *tf_ctx = &cpi->tf_ctx;
   YV12_BUFFER_CONFIG **frames = tf_ctx->frames;
