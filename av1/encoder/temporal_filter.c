@@ -84,16 +84,21 @@ static inline void get_log_var_4x4sub_blk(
 }
 
 // Helper function to get `q` used for encoding.
-static int get_q(const AV1_COMP *cpi) {
+static int get_q(AV1_COMP *cpi) {
   const GF_GROUP *gf_group = &cpi->ppi->gf_group;
   const FRAME_TYPE frame_type = gf_group->frame_type[cpi->gf_frame_index];
 
   if (cpi->oxcf.rc_cfg.mode == AOM_Q) {
     int cq_level = cpi->oxcf.rc_cfg.cq_level;
+    cpi->common.quant_params.base_qindex = cq_level;
+    av1_frame_init_quantizer(cpi);
     return (int)av1_convert_qindex_to_q(cq_level,
                                         cpi->common.seq_params->bit_depth);
   }
 
+  cpi->common.quant_params.base_qindex =
+      cpi->ppi->p_rc.avg_frame_qindex[frame_type];
+  av1_frame_init_quantizer(cpi);
   const int q =
       (int)av1_convert_qindex_to_q(cpi->ppi->p_rc.avg_frame_qindex[frame_type],
                                    cpi->common.seq_params->bit_depth);
@@ -437,12 +442,14 @@ static inline int is_frame_high_bitdepth(const YV12_BUFFER_CONFIG *frame) {
  *
  * \remark Nothing returned, But the contents of `pred` will be modified
  */
-static void tf_build_predictor(const YV12_BUFFER_CONFIG *ref_frame,
-                               const MACROBLOCKD *mbd,
+static void tf_build_predictor(const YV12_BUFFER_CONFIG *const frame_to_filter,
+                               const YV12_BUFFER_CONFIG *ref_frame,
+                               MACROBLOCK *mb, const MACROBLOCKD *mbd,
                                const BLOCK_SIZE block_size, const int mb_row,
                                const int mb_col, const int num_planes,
                                const struct scale_factors *scale,
-                               const MV *subblock_mvs, uint8_t *pred) {
+                               const MV *subblock_mvs, int *subblock_mses,
+                               uint8_t *pred) {
   // Information of the entire block.
   const int mb_height = block_size_high[block_size];  // Height.
   const int mb_width = block_size_wide[block_size];   // Width.
@@ -451,6 +458,13 @@ static void tf_build_predictor(const YV12_BUFFER_CONFIG *ref_frame,
   const int bit_depth = mbd->bd;                      // Bit depth.
   const int is_intrabc = 0;                           // Is intra-copied?
   const int is_high_bitdepth = is_frame_high_bitdepth(ref_frame);
+
+  DECLARE_ALIGNED(16, int16_t, src_diff[16 * 16]);
+  DECLARE_ALIGNED(16, tran_low_t, coeff[16 * 16]);
+  DECLARE_ALIGNED(16, tran_low_t, qcoeff[16 * 16]);
+  DECLARE_ALIGNED(16, tran_low_t, dqcoeff[16 * 16]);
+
+  (void)subblock_mses;
 
   // Default interpolation filters.
   const int_interpfilters interp_filters =
@@ -495,6 +509,46 @@ static void tf_build_predictor(const YV12_BUFFER_CONFIG *ref_frame,
         inter_pred_params.conv_params = get_conv_params(0, plane, bit_depth);
         av1_enc_build_one_inter_predictor(&pred[plane_offset + i * plane_w + j],
                                           plane_w, &mv, &inter_pred_params);
+
+        if (plane == 0) {
+          const BitDepthInfo bd_info = get_bit_depth_info(mbd);
+          uint16_t eob;
+
+          const int src_stride = frame_to_filter->y_stride;
+          const int y_offset =
+              (mb_row * mb_height + i) * src_stride + (mb_col * mb_width + j);
+
+
+          fprintf(stderr, "h = %d, w = %d\n",h, w);
+
+          av1_subtract_block(bd_info, h, w, src_diff, w,
+                             frame_to_filter->y_buffer + y_offset, src_stride,
+                             &pred[plane_offset + i * plane_w + j], plane_w);
+
+          TX_SIZE tx_size = TX_16X16;
+          av1_quick_txfm(0, tx_size, bd_info, src_diff, w, coeff);
+
+          const struct macroblock_plane *const p = &mb->plane[plane];
+          const SCAN_ORDER *const scan_order =
+              &av1_scan_orders[tx_size][DCT_DCT];
+          int pix_num = 1 << num_pels_log2_lookup[txsize_to_bsize[tx_size]];
+          QUANT_PARAM quant_param;
+          av1_setup_quant(tx_size, 0, AV1_XFORM_QUANT_FP, 0, &quant_param);
+
+#if CONFIG_AV1_HIGHBITDEPTH
+          if (is_cur_buf_hbd(mbd)) {
+            av1_highbd_quantize_fp_facade(coeff, pix_num, p, qcoeff, dqcoeff,
+                                          &eob, scan_order, &quant_param);
+          } else {
+            av1_quantize_fp_facade(coeff, pix_num, p, qcoeff, dqcoeff, &eob,
+                                   scan_order, &quant_param);
+          }
+#else
+          (void)xd;
+          av1_quantize_fp_facade(coeff, pix_num, p, qcoeff, dqcoeff, eob,
+                                 scan_order, &quant_param);
+#endif  // CONFIG_AV1_HIGHBITDEPTH
+        }
       }
     }
     plane_offset += plane_h * plane_w;
@@ -995,8 +1049,9 @@ void av1_tf_do_filtering_row(AV1_COMP *cpi, ThreadData *td, int mb_row) {
         tf_apply_temporal_filter_self(frames[frame], mbd, block_size, mb_row,
                                       mb_col, num_planes, accum, count);
       } else {  // Other reference frames.
-        tf_build_predictor(frames[frame], mbd, block_size, mb_row, mb_col,
-                           num_planes, scale, subblock_mvs, pred);
+        tf_build_predictor(frame_to_filter, frames[frame], mb, mbd, block_size,
+                           mb_row, mb_col, num_planes, scale, subblock_mvs,
+                           subblock_mses, pred);
 
         // All variants of av1_apply_temporal_filter() contain floating point
         // operations. Hence, clear the system state.
@@ -1007,7 +1062,7 @@ void av1_tf_do_filtering_row(AV1_COMP *cpi, ThreadData *td, int mb_row) {
         if (is_frame_high_bitdepth(frame_to_filter)) {  // for high bit-depth
 #if CONFIG_AV1_HIGHBITDEPTH
           if (TF_BLOCK_SIZE == BLOCK_32X32 && TF_WINDOW_LENGTH == 5) {
-            av1_highbd_apply_temporal_filter(
+            av1_highbd_apply_temporal_filter_c(
                 frame_to_filter, mbd, block_size, mb_row, mb_col, num_planes,
                 noise_levels, subblock_mvs, subblock_mses, q_factor,
                 filter_strength, weight_calc_level_in_tf, pred, accum, count);
@@ -1023,7 +1078,7 @@ void av1_tf_do_filtering_row(AV1_COMP *cpi, ThreadData *td, int mb_row) {
         } else {
           // for 8-bit
           if (TF_BLOCK_SIZE == BLOCK_32X32 && TF_WINDOW_LENGTH == 5) {
-            av1_apply_temporal_filter(
+            av1_apply_temporal_filter_c(
                 frame_to_filter, mbd, block_size, mb_row, mb_col, num_planes,
                 noise_levels, subblock_mvs, subblock_mses, q_factor,
                 filter_strength, weight_calc_level_in_tf, pred, accum, count);
@@ -1113,6 +1168,15 @@ static void tf_setup_filtering_buffer(AV1_COMP *cpi,
 
   TemporalFilterCtx *tf_ctx = &cpi->tf_ctx;
   YV12_BUFFER_CONFIG **frames = tf_ctx->frames;
+
+  CommonModeInfoParams *const mi_params = &cpi->common.mi_params;
+  mi_params->setup_mi(mi_params);
+
+  ThreadData *const td = &cpi->td;
+  MACROBLOCK *const x = &td->mb;
+  MACROBLOCKD *const xd = &x->e_mbd;
+  set_mi_offsets(mi_params, xd, 0, 0);
+
   // Number of frames used for filtering. Set `arnr_max_frames` as 1 to disable
   // temporal filtering.
   int num_frames = AOMMAX(cpi->oxcf.algo_cfg.arnr_max_frames, 1);
