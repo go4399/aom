@@ -389,9 +389,9 @@ static inline bool tf_alloc_and_reset_data(TemporalFilterData *tf_data,
 static inline void tf_setup_macroblockd(MACROBLOCKD *mbd,
                                         TemporalFilterData *tf_data,
                                         const struct scale_factors *scale) {
+  (void)tf_data;
   mbd->block_ref_scale_factors[0] = scale;
   mbd->block_ref_scale_factors[1] = scale;
-  mbd->mi = &tf_data->tmp_mbmi;
   mbd->mi[0]->motion_mode = SIMPLE_TRANSLATION;
 }
 
