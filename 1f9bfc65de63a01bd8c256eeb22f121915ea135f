@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0283e22f_863c7eee",
+        "filename": "test/invalid_file_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-01-12T22:41:27Z",
+      "side": 1,
+      "message": "Here is the diff between versions 4 and 5 of this result file:\n\n```\n--- invalid-oss-fuzz-10389.ivf.res.4\t2026-01-12 14:34:46.860404379 -0800\n+++ invalid-oss-fuzz-10389.ivf.res.5\t2026-01-12 14:31:06.711159721 -0800\n@@ -2,7 +2,7 @@\n 5\n 7\n 7\n-5\n+7\n 5\n 5\n 7\n```\n\nThe expected error for frame #4 changed from `AOM_CODEC_UNSUP_BITSTREAM` (5) to `AOM_CODEC_CORRUPT_FRAME` (7).",
+      "revId": "1f9bfc65de63a01bd8c256eeb22f121915ea135f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab153329_15e72c9f",
+        "filename": "test/invalid_file_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-01-12T22:41:27Z",
+      "side": 1,
+      "message": "Here is the diff between versions 2 and 3 of this result file:\n\n```\n--- invalid-oss-fuzz-10723.ivf.res.2\t2026-01-12 14:31:06.521399635 -0800\n+++ invalid-oss-fuzz-10723.ivf.res.3\t2026-01-12 14:31:06.752611893 -0800\n@@ -1,3 +1,3 @@\n 7\n 7\n-5\n+7\n```\n\nThe expected error for frame #2 changed from `AOM_CODEC_UNSUP_BITSTREAM` (5) to `AOM_CODEC_CORRUPT_FRAME` (7).",
+      "revId": "1f9bfc65de63a01bd8c256eeb22f121915ea135f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
