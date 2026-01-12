@@ -16,6 +16,24 @@
       "message": "Chi Yo, Hui: In this CL we want to make the libaom decoder allow a level that is not yet defined. We need to verify that it is safe to pass a value of `seq_params-\u003eseq_level_idx[i]` that is not yet defined to this `av1_max_level_bitrate()` call.\n\nI think this is related to your change to av1/common/timing.c in https://aomedia-review.googlesource.com/c/aom/+/100562. Could please take a look? Thanks.",
       "revId": "25f9dc462f554ffd7884117959306c7079671eb0",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4b0b72a_31cbf40c",
+        "filename": "av1/decoder/obu.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-01-12T23:59:37Z",
+      "side": 1,
+      "message": "I am answering my own question.\n\nI verified that `seq_params-\u003eseq_level_idx[i]` is only used here to set `seq_params-\u003eop_params[i].bitrate`.\n\n`seq_params-\u003eop_params[i].bitrate` is only used at line 187 to set `seq_params-\u003eop_params[i].buffer_size`.\n\nThen, `seq_params-\u003eop_params[i].bitrate` and `seq_params-\u003eop_params[i].buffer_size` are not used again.\n\nI also verified that `av1_max_level_bitrate()` returns the same result (`UNDEFINED_RATE` \u003d 1 \u003c\u003c 21) for an undefined level and for the maximum parameters level (31).\n\nSo we conclude that after this CL, libaom treats an undefined level and the maximum parameters level (31) in the same way, except in the if-else statement at lines 159-162.",
+      "parentUuid": "411f570e_8e8622d4",
+      "revId": "25f9dc462f554ffd7884117959306c7079671eb0",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
