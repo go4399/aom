@@ -71,30 +71,61 @@ aom_rc_status_t mock_get_gop_decision(aom_rc_model_t /*ratectrl_model*/,
   for (int i = 0; i < kGopFrameCount; ++i) {
     auto current_gop_frame = &gop_decision->gop_frame_list[i];
     current_gop_frame->coding_idx = i;
+    for (int j = 0; j < AOM_RC_MAX_REF_FRAMES; ++j) {
+      current_gop_frame->ref_frame_list.name[j] = AOM_RC_INVALID_REF_FRAME;
+      current_gop_frame->ref_frame_list.index[j] = -1;
+    }
+    current_gop_frame->update_ref_idx = -1;
+    current_gop_frame->primary_ref_frame.name = AOM_RC_INVALID_REF_FRAME;
+    current_gop_frame->primary_ref_frame.index = -1;
+
     if (i == 0) {
       // Key frame
       current_gop_frame->is_key_frame = true;
       current_gop_frame->update_type = AOM_RC_KF_UPDATE;
       current_gop_frame->layer_depth = 0;
       current_gop_frame->display_idx = 0;
-    } else if (i == 1) {
-      // ALTREF
-      current_gop_frame->is_key_frame = false;
-      current_gop_frame->update_type = AOM_RC_ARF_UPDATE;
-      current_gop_frame->layer_depth = 1;
-      current_gop_frame->display_idx = 4;
-    } else if (i == 5) {
-      // Overlay frame
-      current_gop_frame->is_key_frame = false;
-      current_gop_frame->update_type = AOM_RC_OVERLAY_UPDATE;
-      current_gop_frame->layer_depth = AOM_RC_MAX_ARF_LAYERS - 1;
-      current_gop_frame->display_idx = 4;
+      current_gop_frame->update_ref_idx = 0;
     } else {
-      // Leaf frames
       current_gop_frame->is_key_frame = false;
-      current_gop_frame->update_type = AOM_RC_LF_UPDATE;
-      current_gop_frame->layer_depth = AOM_RC_MAX_ARF_LAYERS - 1;
-      current_gop_frame->display_idx = i - 2;  // Key and ARF in the front
+      if (i == 1) {
+        // ALTREF
+        current_gop_frame->update_type = AOM_RC_ARF_UPDATE;
+        current_gop_frame->layer_depth = 1;
+        current_gop_frame->display_idx = 4;
+        current_gop_frame->update_ref_idx = 1;
+      } else if (i == 5) {
+        // Overlay frame
+        current_gop_frame->is_key_frame = false;
+        current_gop_frame->update_type = AOM_RC_OVERLAY_UPDATE;
+        current_gop_frame->layer_depth = AOM_RC_MAX_ARF_LAYERS - 1;
+        current_gop_frame->display_idx = 4;
+      } else {
+        // Leaf frames
+        current_gop_frame->is_key_frame = false;
+        current_gop_frame->update_type = AOM_RC_LF_UPDATE;
+        current_gop_frame->layer_depth = AOM_RC_MAX_ARF_LAYERS - 1;
+        current_gop_frame->display_idx = i - 2;  // Key and ARF in the front
+      }
+
+      // Set all references to buffer 0 (KF) by default.
+      static const aom_rc_ref_name_t ref_names[] = {
+        AOM_RC_LAST_FRAME,   AOM_RC_LAST2_FRAME,  AOM_RC_LAST3_FRAME,
+        AOM_RC_GOLDEN_FRAME, AOM_RC_BWDREF_FRAME, AOM_RC_ALTREF2_FRAME,
+        AOM_RC_ALTREF_FRAME
+      };
+      for (int j = 0; j < 7; ++j) {
+        current_gop_frame->ref_frame_list.name[j] = ref_names[j];
+        current_gop_frame->ref_frame_list.index[j] = 0;
+      }
+
+      // For frames after ARF, set ALTREF to buffer 1.
+      if (i >= 2) {
+        current_gop_frame->ref_frame_list.index[6] = 1;  // ALTREF_FRAME
+      }
+
+      current_gop_frame->primary_ref_frame.name = AOM_RC_LAST_FRAME;
+      current_gop_frame->primary_ref_frame.index = 0;
     }
   }
   gop_decision->global_order_idx_offset = 0;
