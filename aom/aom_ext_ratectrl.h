@@ -454,6 +454,10 @@ typedef struct aom_rc_gop_frame {
    * Candidate reference frames which may be used for coding the current frame.
    */
   aom_rc_ref_frame_t ref_frame_list;
+  /**
+   * Whether to use the ref_frame_list to override the reference frame map.
+   */
+  int use_ext_ref_frame_map;
   int layer_depth; /**< Layer depth in the GOP structure. */
   /**
    * Primary reference frame (used to update current frame's initial probability
