@@ -69,6 +69,24 @@
       "parentUuid": "b590e118_3c88dc0b",
       "revId": "bbe4f782bfe1dc41dac2fa6c9caa1d16fea0ffa6",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23fc04c3_fdb63b7a",
+        "filename": "build/cmake/aom_config_defaults.cmake",
+        "patchSetId": 2
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-01-15T22:15:27Z",
+      "side": 1,
+      "message": "\u003e I can move to CONFIG_INSPECTION or CONFIG_ANALYZER.\n\u003e I don\u0027t see many lines of code under these two macros.\n\u003e Do you know is there any specific use case of them?\n\u003e I want to avoid that the new print disrupts existing functionality.\n\u003e If no specific use case, I can move the code under CONFIG_INSPECTION.\n\n(I think I meant `CONFIG_ACCOUNTING` instead of `CONFIG_ANALYZER` above.) They were meant to add accounting in the arithmetic decoder (`CONFIG_ACCOUNTING`) and supply this data (if enabled) as well as frame/block level, etc. data (`CONFIG_INSPECTION`) to a bitstream analyzer, similar to VQAnalyzer. With `-DCONFIG_INSPECTION\u003d1` an `inspect` binary will be created that dumps this information. Try it out:\n\n```\nUsage: ./inspect src_filename \u003coptions\u003e\n\nOptions:\n            --limit\u003d\u003carg\u003e               Stop decoding after n frames\n  -A,       --all                       Dump All\n  -x,       --compress                  Compress JSON using RLE\n  -a,       --accounting                Dump Accounting\n  -bs,       --blockSize                Dump Block Size\n  -ts,       --transformSize            Dump Transform Size\n  -tt,       --transformType            Dump Transform Type\n  -m,       --mode                      Dump Mode\n  -uvm,       --uv_mode                 Dump UV Intra Prediction Modes\n  -mm,       --motion_mode              Dump Motion Modes\n  -ct,       --compound_type            Dump Compound Types\n  -s,       --skip                      Dump Skip\n  -f,       --filter                    Dump Filter\n  -c,       --cdef                      Dump CDEF\n  -df,       --dualFilterType           Dump Dual Filter Type\n  -cfl,       --chroma_from_luma        Dump Chroma from Luma Alphas\n  -r,       --referenceFrame            Dump Reference Frame\n  -mv,       --motionVectors            Dump Motion Vectors\n  -dq,       --delta_q                  Dump QIndex\n  -si,       --seg_id                   Dump Segment ID\n  -ibc,       --intrabc                 Dump If IntraBC Is Used\n  -plt,       --palette                 Dump Palette Size\n  -uvp,       --uv_palette              Dump UV Palette Size\n  -h,       --help                      Help\n  -snt \u003carg\u003e, --skip_non_transform\u003d\u003carg\u003e\n                                        Skip is counted as a non transform.\n  -comb \u003carg\u003e, --combined\u003d\u003carg\u003e         combinining parameters into one output.\n```",
+      "parentUuid": "df80e13f_50300893",
+      "revId": "bbe4f782bfe1dc41dac2fa6c9caa1d16fea0ffa6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
