@@ -2786,9 +2786,20 @@ static inline void decode_tile(AV1Decoder *pbi, ThreadData *const td,
          mi_col += cm->seq_params->mib_size) {
       set_cb_buffer(pbi, dcb, &td->cb_buffer_base, num_planes, 0, 0);
 
+#if CONFIG_PRINT_DECODE_BITS
+      const int start_bits = aom_reader_tell(td->bit_reader);
+#endif
       // Bit-stream parsing and decoding of the superblock
       decode_partition(pbi, td, mi_row, mi_col, td->bit_reader,
                        cm->seq_params->sb_size, 0x3);
+#if CONFIG_PRINT_DECODE_BITS
+      CurrentFrame *const current_frame = &cm->current_frame;
+      const int end_bits = aom_reader_tell(td->bit_reader);
+      printf(
+          "decoding frame with order hint %d, block mi_row = %d, "
+          "mi_col = %d, decoded bits = %d\n",
+          current_frame->order_hint, mi_row, mi_col, end_bits - start_bits);
+#endif
 
       if (aom_reader_has_overflowed(td->bit_reader)) {
         aom_merge_corrupted_flag(&dcb->corrupted, 1);
