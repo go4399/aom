@@ -144,6 +144,8 @@ set_aom_config_var(CONFIG_BITSTREAM_DEBUG 0
 set_aom_config_var(
   CONFIG_COLLECT_COMPONENT_TIMING 0
   "AV1 experiment: Collect encoding component timing information.")
+set_aom_config_var(CONFIG_PRINT_DECODE_BITS 0
+                   "AV1 experiment: Print decoded bits per superblock.")
 set_aom_config_var(
   CONFIG_COLLECT_PARTITION_STATS 0
   "AV1 experiment: Collect partition timing stats. Can be 1 or 2.")
