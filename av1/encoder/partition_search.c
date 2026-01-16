@@ -2367,6 +2367,9 @@ static void pick_sb_modes_nonrd(AV1_COMP *const cpi, TileDataEnc *tile_data,
       mi_sb[0]->cdef_strength =
           mi_sb[0]->cdef_strength &&
           (allow_cdef_skipping || x->source_variance == 0);
+      // For high_motion_content_screen_rtc flag force skip cdef.
+      if (cpi->rc.high_motion_content_screen_rtc)
+        mi_sb[0]->cdef_strength = 1;
     } else {
       mi_sb[0]->cdef_strength =
           mi_sb[0]->cdef_strength && allow_cdef_skipping &&
