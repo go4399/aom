@@ -16,6 +16,24 @@
       "message": "The results for different resolutions are as follows:\n```\n                 Encoder Instruction         BD-Rate Loss(%)\ncpu   Resolution Count Reduction(%)   avg.psnr  ovr.psnr  ssim     vmaf    vmaf_neg   \n4     LOWRES2       -0.58             -0.0641   -0.0616  -0.0766   0.0679  -0.1164\n4     MIDRES2       -1.43             -0.305    -0.2960  -0.3171  -0.4521  -0.4287\n4     SHORTS608p    -1.50             -0.3521   -0.3637  -0.5254  -0.5324  -0.5215\n4     SHORTS720p    -1.38             -0.4262   -0.4500  -0.5602  -0.6704  -0.5992\n4     SHORTS1080p   -1.54             -0.6818   -0.7339  -0.8993  -0.8175  -0.7884\n4     HDRES2        -1.80             -0.4762   -0.5240  -0.5746  -0.5306  -0.5267\n4     Average       -1.38             -0.3935   -0.4150  -0.5076  -0.5059  -0.5095\n                                                                             \n5     LOWRES2       -0.52             -0.0899   -0.0838  -0.1338  -0.0029  -0.0677\n5     MIDRES2       -1.01             -0.3132   -0.2984  -0.3841  -0.4535  -0.3915\n5     SHORTS608p    -0.91             -0.475    -0.5682  -0.7847  -0.8887  -0.8742\n5     SHORTS720p    -1.17             -0.4946   -0.5379  -0.7365  -0.6525  -0.6468\n5     SHORTS1080p   -1.56             -0.7392   -0.8402  -0.9613  -0.9265  -0.8890\n5     HDRES2        -1.55             -0.6423   -0.6450  -0.7318  -0.7734  -0.7470\n5     Average       -1.13             -0.4691   -0.5095  -0.6407  -0.6350  -0.6209\n                                                                             \n6     LOWRES2       -0.48             -0.1287   -0.1379  -0.1983  -0.1832  -0.1818\n6     MIDRES2       -0.71             -0.3830   -0.3770  -0.4260  -0.4801  -0.6091\n6     SHORTS608p    -0.88             -0.5123   -0.5379  -0.7129  -0.7081  -0.6537\n6     SHORTS720p    -1.09             -0.6261   -0.6725  -0.8985  -0.8485  -0.8437\n6     SHORTS1080p   -1.38             -1.1259   -1.2289  -1.4407  -1.3554  -1.3398\n6     HDRES2        -1.26             -0.9730   -1.0062  -1.1137  -1.1529  -1.0853\n6     Average       -0.98             -0.6367   -0.6740  -0.8182  -0.8046  -0.8001\n```\nThe instruction count reduction specified has been measured using command:\n```\n$ perf stat -e instructions:u ./aomenc\n```\nPlease review.",
       "revId": "510952ccfd9fd1e5d592bc82c6f7df48c46e62fe",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dfe76cc3_675047c5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-01-16T19:26:50Z",
+      "side": 1,
+      "message": "Nice tuning - very good tradeoff. Thanks.",
+      "parentUuid": "d8bc4b97_e8ee095b",
+      "revId": "510952ccfd9fd1e5d592bc82c6f7df48c46e62fe",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
