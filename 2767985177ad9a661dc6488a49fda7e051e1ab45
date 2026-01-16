@@ -1,0 +1,79 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7fa045bd_f65282d1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-01-16T00:25:32Z",
+      "side": 1,
+      "message": "Looking quickly, it seems like there isn\u0027t anything to capture information at the superblock level, so you\u0027re stuck with duplicating the data for now.",
+      "revId": "2767985177ad9a661dc6488a49fda7e051e1ab45",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "78c7e7df_d20d1462",
+        "filename": "av1/decoder/decodeframe.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2835,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-01-16T00:25:32Z",
+      "side": 1,
+      "message": "Use `CHECK_MEM_ERROR` instead and prefer `sizeof(*pbi-\u003esb_bits)` or `sizeof(pbi-sb_bits[0])` instead of `sizeof(int)`.",
+      "range": {
+        "startLine": 2835,
+        "startChar": 19,
+        "endLine": 2835,
+        "endChar": 66
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "db97583d_d3abe29d",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/decoder/decodeframe.c",
+              "range": {
+                "startLine": 2835,
+                "startChar": 0,
+                "endLine": 2836,
+                "endChar": 0
+              },
+              "replacement": "    CHECK_MEM_ERROR(\n        cm, pbi-\u003esb_bits,\n        (int *)aom_malloc(sizeof(*pbi-\u003esb_bits) * required_size));\n"
+            }
+          ]
+        }
+      ],
+      "revId": "2767985177ad9a661dc6488a49fda7e051e1ab45",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "755025f8_009079cc",
+        "filename": "examples/inspect.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-01-16T00:25:32Z",
+      "side": 1,
+      "message": "Should this be named `sb_bits` to avoid confusion?",
+      "revId": "2767985177ad9a661dc6488a49fda7e051e1ab45",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
