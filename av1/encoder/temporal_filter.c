@@ -963,6 +963,8 @@ void av1_tf_do_filtering_row(AV1_COMP *cpi, ThreadData *td, int mb_row) {
         allow_me_for_sub_blks = false;
     }
 
+    MV be_ref_mv = kZeroMv;
+
     for (int frame = 0; frame < num_frames; frame++) {
       if (frames[frame] == NULL) continue;
 
@@ -974,14 +976,16 @@ void av1_tf_do_filtering_row(AV1_COMP *cpi, ThreadData *td, int mb_row) {
 
       if (frame == filter_frame_idx) {
         // Change ref_mv sign for following frames.
-        ref_mv.row *= -1;
-        ref_mv.col *= -1;
+        ref_mv.row = -be_ref_mv.row;
+        ref_mv.col = -be_ref_mv.col;
       } else {  // Other reference frames.
         tf_motion_search(cpi, mb, frame_to_filter, frames[frame], block_size,
                          mb_row, mb_col, &ref_mv, allow_me_for_sub_blks,
                          subblock_mvs, subblock_mses, &is_dc_diff_large,
                          &is_low_cntras);
       }
+
+      if (frame == 0) be_ref_mv = ref_mv;
 
       if (cpi->oxcf.kf_cfg.enable_keyframe_filtering == 1 &&
           frame_type == KEY_FRAME && is_dc_diff_large)
@@ -1007,7 +1011,7 @@ void av1_tf_do_filtering_row(AV1_COMP *cpi, ThreadData *td, int mb_row) {
         if (is_frame_high_bitdepth(frame_to_filter)) {  // for high bit-depth
 #if CONFIG_AV1_HIGHBITDEPTH
           if (TF_BLOCK_SIZE == BLOCK_32X32 && TF_WINDOW_LENGTH == 5) {
-            av1_highbd_apply_temporal_filter(
+            av1_highbd_apply_temporal_filter_c(
                 frame_to_filter, mbd, block_size, mb_row, mb_col, num_planes,
                 noise_levels, subblock_mvs, subblock_mses, q_factor,
                 filter_strength, weight_calc_level_in_tf, pred, accum, count);
@@ -1023,7 +1027,7 @@ void av1_tf_do_filtering_row(AV1_COMP *cpi, ThreadData *td, int mb_row) {
         } else {
           // for 8-bit
           if (TF_BLOCK_SIZE == BLOCK_32X32 && TF_WINDOW_LENGTH == 5) {
-            av1_apply_temporal_filter(
+            av1_apply_temporal_filter_c(
                 frame_to_filter, mbd, block_size, mb_row, mb_col, num_planes,
                 noise_levels, subblock_mvs, subblock_mses, q_factor,
                 filter_strength, weight_calc_level_in_tf, pred, accum, count);
@@ -1257,6 +1261,31 @@ static void tf_setup_filtering_buffer(AV1_COMP *cpi,
     assert(buf != NULL);
     frames[frame] = &buf->img;
   }
+
+  for (int frame = 0; frame < num_before; ++frame) {
+    const int lookahead_idx = filter_frame_lookahead_idx - frame - 1;
+    struct lookahead_entry *buf = av1_lookahead_peek(
+        cpi->ppi->lookahead, lookahead_idx, cpi->compressor_stage);
+    assert(buf != NULL);
+    frames[frame] = &buf->img;
+  }
+
+  {
+    const int lookahead_idx = filter_frame_lookahead_idx;
+    struct lookahead_entry *buf = av1_lookahead_peek(
+        cpi->ppi->lookahead, lookahead_idx, cpi->compressor_stage);
+    assert(buf != NULL);
+    frames[num_before] = &buf->img;
+  }
+
+  for (int frame = num_before + 1; frame < num_frames; ++frame) {
+    const int lookahead_idx = filter_frame_lookahead_idx + frame - num_before;
+    struct lookahead_entry *buf = av1_lookahead_peek(
+        cpi->ppi->lookahead, lookahead_idx, cpi->compressor_stage);
+    assert(buf != NULL);
+    frames[frame] = &buf->img;
+  }
+
   tf_ctx->num_frames = num_frames;
   tf_ctx->filter_frame_idx = num_before;
   assert(frames[tf_ctx->filter_frame_idx] == to_filter_frame);
@@ -1385,7 +1414,8 @@ void av1_estimate_noise_level(const YV12_BUFFER_CONFIG *frame,
 //   filter_frame_lookahead_idx: The index of the frame to be filtered in the
 //                               lookahead buffer cpi->lookahead.
 // Returns:
-//   Nothing will be returned. But the contents of cpi->tf_ctx will be modified.
+//   Nothing will be returned. But the contents of cpi->tf_ctx will be
+//   modified.
 static void init_tf_ctx(AV1_COMP *cpi, int filter_frame_lookahead_idx,
                         int gf_frame_index, int compute_frame_diff,
                         YV12_BUFFER_CONFIG *output_frame) {
@@ -1544,8 +1574,8 @@ void av1_tf_info_filtering(TEMPORAL_FILTER_INFO *tf_info, AV1_COMP *cpi,
       int lookahead_idx = gf_group->arf_src_offset[gf_index] +
                           gf_group->cur_frame_idx[gf_index];
       // This function is designed to be called multiple times after
-      // av1_tf_info_reset(). It will only generate the filtered frame that does
-      // not exist yet.
+      // av1_tf_info_reset(). It will only generate the filtered frame that
+      // does not exist yet.
       if (tf_info->tf_buf_valid[buf_idx] == 0 ||
           tf_info->tf_buf_display_index_offset[buf_idx] != lookahead_idx) {
         YV12_BUFFER_CONFIG *out_buf = &tf_info->tf_buf[buf_idx];
