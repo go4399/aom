@@ -148,6 +148,7 @@ TEST_P(MonochromeTest, TestMonochromeEncoding) {
   cfg_.rc_target_bitrate = 40;
   // Set monochrome encoding flag
   cfg_.monochrome = 1;
+  cfg_.g_lag_in_frames = 0;
 
   ASSERT_NO_FATAL_FAILURE(RunLoop(&video));
 
