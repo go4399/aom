@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0cea6de3_45b98254",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31322
+      },
+      "writtenOn": "2026-01-21T16:23:21Z",
+      "side": 1,
+      "message": "The results for different resolutions are as follows for commit 6269d40:\n\n```\n              Instruction Count        BD-Rate Loss(%)\ncpu Resolution  Reduction(%) avg.psnr  ovr.psnr    ssim     vmaf    vmaf_neg   \n1\tLOWRES2\t   20.68\t  0.5229\t0.531\t 0.2951\t0.527\t0.5301\n1\tMIDRES2\t   20.54\t  0.3416\t0.3541\t0.1836\t0.2555   0.3385\n1\tSHORTS608p\t21.63\t  0.4802\t0.4755\t0.3548\t0.2952   0.3695\n1\tSHORTS720p\t24.30\t  0.4995\t0.4952\t0.3597\t0.3531   0.4102\n1\tSHORTS1080p   24.29\t  0.4698\t0.4705\t0.3635\t0.2259   0.321\n1\tHDRES2\t    23.53\t  0.3465\t0.3342\t0.1838\t0.1817   0.282\n1\tAverage\t   22.58\t  0.447\t 0.4468\t0.2964\t0.305\t0.3745\n```\nOn latest commit c2581a4:\n```\n             Instruction Count       BD-Rate Loss(%)\ncpu Resolution Reduction(%)   avg.psnr  ovr.psnr    ssim     vmaf    vmaf_neg   \n1\tLOWRES2\t 20.834\t    0.5079\t0.5263\t0.2557   0.4761\t0.4663\n```\n\nThe instruction count reduction specified has been measured using command:\n`$ perf stat -e instructions:u ./aomenc`\nPlease review.",
+      "revId": "8cbde56f4ca07b09107e0219b1459e7116f3f8a7",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
