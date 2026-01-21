@@ -40,6 +40,30 @@
       ],
       "revId": "dce6876ec3861572dc6f4e605368166e93be165b",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e13a3d2d_69e677ee",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 3442,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-01-21T21:12:29Z",
+      "side": 1,
+      "message": "I think we can safely assume there is no resize on the fly when used with external RC...",
+      "parentUuid": "caa845c0_564525b7",
+      "range": {
+        "startLine": 3442,
+        "startChar": 6,
+        "endLine": 3442,
+        "endChar": 21
+      },
+      "revId": "dce6876ec3861572dc6f4e605368166e93be165b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
