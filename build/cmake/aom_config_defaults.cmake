@@ -187,6 +187,7 @@ set_aom_config_var(CONFIG_LIBVMAF_PSNR_PEAK 1
 
 set_aom_config_var(CONFIG_HIGHWAY 0 "Use Highway for SIMD.")
 
+set_aom_config_var(CONFIG_HW_ML_PART 0 "HW ML based Partition.")
 #
 # Variables in this section control optional features of the build system.
 #

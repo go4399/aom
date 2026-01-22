@@ -49,6 +49,196 @@ extern "C" {
 //! Enable timer statistics of mode search in non-rd
 #define COLLECT_NONRD_PICK_MODE_STAT 0
 
+#if CONFIG_HW_ML_PART
+#define kSMSMaxStartMVs 1
+#define NUMBER_OF_CACHED_MODES 2
+
+/*!\cond */
+/*! \brief MV cost types
+ */
+enum {
+  MV_COST_ENTROPY,    // Use the entropy rate of the mv as the cost
+  MV_COST_L1_LOWRES,  // Use the l1 norm of the mv as the cost (<480p)
+  MV_COST_L1_MIDRES,  // Use the l1 norm of the mv as the cost (>=480p)
+  MV_COST_L1_HDRES,   // Use the l1 norm of the mv as the cost (>=720p)
+  MV_COST_NONE        // Use 0 as as cost irrespective of the current mv
+} UENUM1BYTE(MV_COST_TYPE);
+/*!\endcond */
+
+/*! \brief Contains aggregate quantities of the residual of a coded block.
+ *
+ * This is used by the ML models to learn certain encoder decisions, for ex. in
+ * partition pruning ML.
+ */
+typedef struct {
+  //! Maximum absolute value of all quantized coefficients of the residual.
+  int q_coeff_max;
+  //! Total number of non-zero quantized coefficients of the residual.
+  int q_coeff_nonz;
+  //! PSNR after trans-quant-dquant-itrans of the residual.
+  float psnr;
+  //! Sum of the transformed and quantized coefficients of the residual.
+  int satdq;
+  //! Sum of the transformed coefficients of the residual before quantization.
+  int satd;
+
+  //! SSE of the residual.
+  unsigned int sse;
+  //! Variance of the residual.
+  unsigned int var;
+} ResidualStats;
+
+typedef struct SimpleMotionData {
+  MV mv_ref;                         /*!< mv reference */
+  MV fullmv;                         /*!< mv full */
+  MV submv;                          /*!< mv subpel */
+  unsigned int sse;                  /*!< sse */
+  unsigned int var;                  /*!< variance */
+  int64_t dist;                      /*!< distortion */
+  int rate;                          /*!< rate */
+  int64_t rdcost;                    /*!< rdcost */
+  int valid;                         /*!< whether valid */
+  BLOCK_SIZE bsize;                  /*!< blocksize */
+  int mi_row;                        /*!< row position in mi units */
+  int mi_col;                        /*!< col position in mi units */
+  MV_COST_TYPE mv_cost_type;         /*!< mv cost type */
+  int sadpb;                         /*!< sad per bit */
+  int errorperbit;                   /*!< error per bit */
+  MV start_mv_list[kSMSMaxStartMVs]; /*!< start mv list */
+  int num_start_mvs;                 /*!< number of start mvs */
+  int has_prev_partition;            /*!< has previous partition */
+  PARTITION_TYPE prev_partition;     /*!< previous partition */
+  struct PICK_MODE_CONTEXT
+      *mode_cache[NUMBER_OF_CACHED_MODES]; /*!< mode cache */
+  struct SIMPLE_MOTION_DATA_TREE *old_sms; /*!< old sms */
+
+  int ref_frame; /*!< ref frame used */
+  int rdmult;    /*!< rd_mult for the block */
+  //! Has residual stats been computed, this is controlled by the flag.
+  bool residual_stats_valid;
+  //! Residual stats used by ML models.
+  ResidualStats residual_stats;
+} SimpleMotionData;
+
+/*!\cond */
+#define BLOCK_256_COUNT 1
+#define BLOCK_128_COUNT 3
+#define BLOCK_64_COUNT 7
+#define BLOCK_32_COUNT 31
+#define BLOCK_16_COUNT 63
+#define BLOCK_8_COUNT 64
+#define BLOCK_4_COUNT 64
+
+#define MAKE_SM_DATA_BUF(width, height, sdp_flag)                            \
+  SimpleMotionData b_##width##x##height##_##sdp_flag[BLOCK_##width##_COUNT * \
+                                                     BLOCK_##height##_COUNT]
+/*!\endcond */
+
+/*! \brief Simple motion data buffers
+ */
+typedef struct SimpleMotionDataBufs {
+  /*!\cond */
+  // Square blocks
+  MAKE_SM_DATA_BUF(256, 256, 0);
+  MAKE_SM_DATA_BUF(128, 128, 0);
+  MAKE_SM_DATA_BUF(64, 64, 0);
+  MAKE_SM_DATA_BUF(32, 32, 0);
+  MAKE_SM_DATA_BUF(16, 16, 0);
+  MAKE_SM_DATA_BUF(8, 8, 0);
+  MAKE_SM_DATA_BUF(4, 4, 0);
+
+  // 1:2 blocks
+  MAKE_SM_DATA_BUF(128, 256, 0);
+  MAKE_SM_DATA_BUF(64, 128, 0);
+  MAKE_SM_DATA_BUF(32, 64, 0);
+  MAKE_SM_DATA_BUF(16, 32, 0);
+  MAKE_SM_DATA_BUF(8, 16, 0);
+  MAKE_SM_DATA_BUF(4, 8, 0);
+
+  // 2:1 blocks
+  MAKE_SM_DATA_BUF(256, 128, 0);
+  MAKE_SM_DATA_BUF(128, 64, 0);
+  MAKE_SM_DATA_BUF(64, 32, 0);
+  MAKE_SM_DATA_BUF(32, 16, 0);
+  MAKE_SM_DATA_BUF(16, 8, 0);
+  MAKE_SM_DATA_BUF(8, 4, 0);
+
+  // 1:4 blocks
+  MAKE_SM_DATA_BUF(16, 64, 0);
+  MAKE_SM_DATA_BUF(8, 32, 0);
+  MAKE_SM_DATA_BUF(4, 16, 0);
+
+  // 4:1 blocks
+  MAKE_SM_DATA_BUF(64, 16, 0);
+  MAKE_SM_DATA_BUF(32, 8, 0);
+  MAKE_SM_DATA_BUF(16, 4, 0);
+
+  // 1:8 blocks
+  MAKE_SM_DATA_BUF(8, 64, 0);
+  MAKE_SM_DATA_BUF(4, 32, 0);
+
+  // 8:1 blocks
+  MAKE_SM_DATA_BUF(64, 8, 0);
+  MAKE_SM_DATA_BUF(32, 4, 0);
+
+  // 1:16 blocks
+  MAKE_SM_DATA_BUF(4, 64, 0);
+
+  // 16:1 blocks
+  MAKE_SM_DATA_BUF(64, 4, 0);
+
+  // Square blocks
+  MAKE_SM_DATA_BUF(256, 256, 1);
+  MAKE_SM_DATA_BUF(128, 128, 1);
+  MAKE_SM_DATA_BUF(64, 64, 1);
+  MAKE_SM_DATA_BUF(32, 32, 1);
+  MAKE_SM_DATA_BUF(16, 16, 1);
+  MAKE_SM_DATA_BUF(8, 8, 1);
+  MAKE_SM_DATA_BUF(4, 4, 1);
+
+  // 1:2 blocks
+  MAKE_SM_DATA_BUF(128, 256, 1);
+  MAKE_SM_DATA_BUF(64, 128, 1);
+  MAKE_SM_DATA_BUF(32, 64, 1);
+  MAKE_SM_DATA_BUF(16, 32, 1);
+  MAKE_SM_DATA_BUF(8, 16, 1);
+  MAKE_SM_DATA_BUF(4, 8, 1);
+
+  // 2:1 blocks
+  MAKE_SM_DATA_BUF(256, 128, 1);
+  MAKE_SM_DATA_BUF(128, 64, 1);
+  MAKE_SM_DATA_BUF(64, 32, 1);
+  MAKE_SM_DATA_BUF(32, 16, 1);
+  MAKE_SM_DATA_BUF(16, 8, 1);
+  MAKE_SM_DATA_BUF(8, 4, 1);
+
+  // 1:4 blocks
+  MAKE_SM_DATA_BUF(16, 64, 1);
+  MAKE_SM_DATA_BUF(8, 32, 1);
+  MAKE_SM_DATA_BUF(4, 16, 1);
+
+  // 4:1 blocks
+  MAKE_SM_DATA_BUF(64, 16, 1);
+  MAKE_SM_DATA_BUF(32, 8, 1);
+  MAKE_SM_DATA_BUF(16, 4, 1);
+
+  // 1:8 blocks
+  MAKE_SM_DATA_BUF(8, 64, 1);
+  MAKE_SM_DATA_BUF(4, 32, 1);
+
+  // 8:1 blocks
+  MAKE_SM_DATA_BUF(64, 8, 1);
+  MAKE_SM_DATA_BUF(32, 4, 1);
+
+  // 1:16 blocks
+  MAKE_SM_DATA_BUF(4, 64, 1);
+
+  // 16:1 blocks
+  MAKE_SM_DATA_BUF(64, 4, 1);
+  /*!\endcond */
+} SimpleMotionDataBufs;
+#endif  // CONFIG_HW_ML_PART
+
 /*!\cond */
 #if COLLECT_NONRD_PICK_MODE_STAT
 #include "aom_ports/aom_timer.h"
@@ -1415,6 +1605,10 @@ typedef struct macroblock {
    */
   RD_STATS *rdcost;
 #endif  // CONFIG_PARTITION_SEARCH_ORDER
+#if CONFIG_HW_ML_PART
+  /*! Simple motion search buffers. */
+  SimpleMotionDataBufs *sms_bufs;
+#endif
 } MACROBLOCK;
 #undef SINGLE_REF_MODES
 

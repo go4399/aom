@@ -1530,6 +1530,9 @@ void av1_ml_predict_breakout(AV1_COMP *const cpi, const MACROBLOCK *const x,
                              const RD_STATS *const rd_stats,
                              unsigned int pb_source_variance, int bit_depth,
                              PartitionSearchState *part_state) {
+#if CONFIG_HW_ML_PART
+  return;
+#endif
   const PartitionBlkParams *blk_params = &part_state->part_blk_params;
   const int mi_row = blk_params->mi_row, mi_col = blk_params->mi_col;
   const BLOCK_SIZE bsize = blk_params->bsize;

@@ -5469,6 +5469,363 @@ static inline void set_sms_tree_partitioning(SIMPLE_MOTION_DATA_TREE *sms_tree,
   sms_tree->partitioning = partition;
 }
 
+#if CONFIG_HW_ML_PART
+// Whether or not the ML training data should be collected for the block.
+static bool collect_ml_part_data(TileInfo *tile_info, int mi_row, int mi_col,
+                                 BLOCK_SIZE bsize) {
+  // Support block sizes 64x64, 32x32, 16x16, and 8x8.
+  if (block_size_wide[bsize] > 64) return false;
+  if (block_size_wide[bsize] <= 8) return false;
+  // No partial blocks.
+  if (mi_size_wide[bsize] + mi_col > tile_info->mi_col_end ||
+      mi_size_high[bsize] + mi_row > tile_info->mi_row_end) {
+    return false;
+  }
+  return true;
+}
+
+static float log_mag(MV mv) {
+  double mag = sqrt(mv.col * mv.col + mv.row * mv.row);
+  return (float)logl(1.0f + mag);
+}
+
+static float angle_rad(MV mv) {
+  double mag = sqrt(mv.col * mv.col + mv.row * mv.row);
+  return (float)(mag == 0 ? 0 : asin(mv.row / mag));
+}
+
+static void blk_features(float *out_features, int o_psnr, int o_log_mag,
+                         int o_satdq, int o_satd, SimpleMotionData *sms,
+                         int blk_area) {
+  out_features[o_psnr + 0] = sms->residual_stats.psnr - 35;
+  out_features[o_psnr + 1] = ((float)sms->residual_stats.q_coeff_max) / 1024;
+  out_features[o_psnr + 2] =
+      ((float)sms->residual_stats.q_coeff_nonz) / blk_area;
+  out_features[o_log_mag + 0] = log_mag(sms->submv);
+  out_features[o_log_mag + 1] = angle_rad(sms->submv);
+  out_features[o_satdq] = logf(1.0f + sms->residual_stats.satdq);
+  out_features[o_satd] = logf(1.0f + sms->residual_stats.satd);
+}
+
+static void get_ml_part_features_interframe(AV1_COMP *const cpi, ThreadData *td,
+                                            TileDataEnc *tile_data, int mi_row,
+                                            int mi_col, BLOCK_SIZE bsize,
+                                            float *out_features) {
+  TileInfo *const tile_info = &tile_data->tile_info;
+  MACROBLOCK *const x = &td->mb;
+  const BLOCK_SIZE subsize_sq = get_partition_subsize(bsize, PARTITION_SPLIT);
+  const BLOCK_SIZE subsize_hor = get_partition_subsize(bsize, PARTITION_HORZ);
+  const BLOCK_SIZE subsize_ver = get_partition_subsize(bsize, PARTITION_VERT);
+  int w_sub_mi = mi_size_wide[subsize_sq];
+  int h_sub_mi = mi_size_high[subsize_sq];
+  SimpleMotionData *blk_none =
+      av1_get_sms_data(cpi, tile_info, x, mi_row, mi_col, bsize, td, true, 1);
+  SimpleMotionData *blk_sq_0 = av1_get_sms_data(
+      cpi, tile_info, x, mi_row, mi_col, subsize_sq, td, true, 1);
+  SimpleMotionData *blk_sq_1 = av1_get_sms_data(
+      cpi, tile_info, x, mi_row, mi_col + w_sub_mi, subsize_sq, td, true, 1);
+  SimpleMotionData *blk_sq_2 = av1_get_sms_data(
+      cpi, tile_info, x, mi_row + h_sub_mi, mi_col, subsize_sq, td, true, 1);
+  SimpleMotionData *blk_sq_3 =
+      av1_get_sms_data(cpi, tile_info, x, mi_row + h_sub_mi, mi_col + w_sub_mi,
+                       subsize_sq, td, true, 1);
+  int blk_area = block_size_wide[bsize] * block_size_high[bsize];
+  out_features[FEATURE_INTER_RD_MULT] = logf(1.0f + blk_none->rdmult);
+  // Not applicable for AV1.
+  // out_features[FEATURE_INTER_SWITCH] = search_none_after_rect;
+  // out_features[FEATURE_INTER_PART_T] = xd->tree_type;
+  out_features[FEATURE_INTER_SWITCH] = 0;
+  out_features[FEATURE_INTER_PART_T] = 0;
+
+  blk_features(out_features, FEATURE_INTER_FULL_PSNR,
+               FEATURE_INTER_FULL_LOG_MAG, FEATURE_INTER_FULL_LOG_SATDQ,
+               FEATURE_INTER_FULL_LOG_SATD, blk_none, blk_area);
+  blk_features(out_features, FEATURE_INTER_SQ_0_PSNR,
+               FEATURE_INTER_SQ_0_LOG_MAG, FEATURE_INTER_SQ_0_LOG_SATDQ,
+               FEATURE_INTER_SQ_0_LOG_SATD, blk_sq_0, blk_area);
+  blk_features(out_features, FEATURE_INTER_SQ_1_PSNR,
+               FEATURE_INTER_SQ_1_LOG_MAG, FEATURE_INTER_SQ_1_LOG_SATDQ,
+               FEATURE_INTER_SQ_1_LOG_SATD, blk_sq_1, blk_area);
+  blk_features(out_features, FEATURE_INTER_SQ_2_PSNR,
+               FEATURE_INTER_SQ_2_LOG_MAG, FEATURE_INTER_SQ_2_LOG_SATDQ,
+               FEATURE_INTER_SQ_2_LOG_SATD, blk_sq_2, blk_area);
+  blk_features(out_features, FEATURE_INTER_SQ_3_PSNR,
+               FEATURE_INTER_SQ_3_LOG_MAG, FEATURE_INTER_SQ_3_LOG_SATDQ,
+               FEATURE_INTER_SQ_3_LOG_SATD, blk_sq_3, blk_area);
+
+  // Horizontal subblocks.
+  h_sub_mi = mi_size_high[subsize_hor];
+  SimpleMotionData *blk_hor_0 = av1_get_sms_data(
+      cpi, tile_info, x, mi_row, mi_col, subsize_hor, td, true, 1);
+  SimpleMotionData *blk_hor_1 = av1_get_sms_data(
+      cpi, tile_info, x, mi_row + h_sub_mi, mi_col, subsize_hor, td, true, 1);
+  // Note blk_area is based on parent block size.
+  blk_area = block_size_wide[bsize] * block_size_high[bsize];
+  blk_features(out_features, FEATURE_INTER_HOR_0_PSNR,
+               FEATURE_INTER_HOR_0_LOG_MAG, FEATURE_INTER_HOR_0_LOG_SATDQ,
+               FEATURE_INTER_HOR_0_LOG_SATD, blk_hor_0, blk_area);
+  blk_features(out_features, FEATURE_INTER_HOR_1_PSNR,
+               FEATURE_INTER_HOR_1_LOG_MAG, FEATURE_INTER_HOR_1_LOG_SATDQ,
+               FEATURE_INTER_HOR_1_LOG_SATD, blk_hor_1, blk_area);
+
+  // Vertical subblocks.
+  w_sub_mi = mi_size_wide[subsize_ver];
+  SimpleMotionData *blk_ver_0 = av1_get_sms_data(
+      cpi, tile_info, x, mi_row, mi_col, subsize_ver, td, true, 1);
+  SimpleMotionData *blk_ver_1 = av1_get_sms_data(
+      cpi, tile_info, x, mi_row, mi_col + w_sub_mi, subsize_ver, td, true, 1);
+  // Note blk_area is based on parent block size.
+  blk_area = block_size_wide[bsize] * block_size_high[bsize];
+  blk_features(out_features, FEATURE_INTER_VER_0_PSNR,
+               FEATURE_INTER_VER_0_LOG_MAG, FEATURE_INTER_VER_0_LOG_SATDQ,
+               FEATURE_INTER_VER_0_LOG_SATD, blk_ver_0, blk_area);
+  blk_features(out_features, FEATURE_INTER_VER_1_PSNR,
+               FEATURE_INTER_VER_1_LOG_MAG, FEATURE_INTER_VER_1_LOG_SATDQ,
+               FEATURE_INTER_VER_1_LOG_SATD, blk_ver_1, blk_area);
+}
+
+static void ml_part_features_intra_split(AV1_COMP *const cpi, ThreadData *td,
+                                          TileDataEnc *tile_data,
+                                          int mi_row, int mi_col,
+                                          BLOCK_SIZE bsize,
+                                          float *out_features) {
+  //const AV1_COMMON *const cm = &cpi->common;
+  TileInfo *const tile_info = &tile_data->tile_info;
+  MACROBLOCK *const x = &td->mb;
+  MACROBLOCKD *xd = &x->e_mbd;
+  MB_MODE_INFO *const mbmi = xd->mi[0];
+  const int w_mi = mi_size_wide[bsize];
+  const int h_mi = mi_size_high[bsize];
+  //DECLARE_ALIGNED(16, uint8_t, intrapred[MAX_TX_SQUARE * 2]);
+  BLOCK_SIZE subsize_sq = get_partition_subsize(bsize, PARTITION_SPLIT);
+  if (subsize_sq == BLOCK_INVALID) {
+    return;
+  }
+
+  const int sb_size = cpi->common.seq_params->sb_size;
+  const int w_sub_mi = mi_size_wide[subsize_sq];
+  const int h_sub_mi = mi_size_high[subsize_sq];
+  TX_SIZE tx_sub_size = max_txsize_rect_lookup[subsize_sq];
+  unsigned int best_sub_sse[2][2][3] = {
+    { { INT_MAX, INT_MAX, INT_MAX }, { INT_MAX, INT_MAX, INT_MAX } },
+    { { INT_MAX, INT_MAX, INT_MAX }, { INT_MAX, INT_MAX, INT_MAX } }
+  };
+  unsigned int best_sub_var[2][2][3] = {
+    { { INT_MAX, INT_MAX, INT_MAX }, { INT_MAX, INT_MAX, INT_MAX } },
+    { { INT_MAX, INT_MAX, INT_MAX }, { INT_MAX, INT_MAX, INT_MAX } }
+  };
+  PREDICTION_MODE best_sub_mode[2][2][3] = {
+    { { PRED_MODE_INVALID, PRED_MODE_INVALID, PRED_MODE_INVALID },
+      { PRED_MODE_INVALID, PRED_MODE_INVALID, PRED_MODE_INVALID } },
+    { { PRED_MODE_INVALID, PRED_MODE_INVALID, PRED_MODE_INVALID },
+      { PRED_MODE_INVALID, PRED_MODE_INVALID, PRED_MODE_INVALID } }
+  };
+
+  for (int row_off = 0, r_idx = 0; row_off < h_mi;
+       row_off += h_sub_mi, ++r_idx) {
+    int mi_row_left = xd->tile.mi_row_end - mi_row - row_off;
+    // Don't process beyond the tile boundary
+    if (mi_row_left < 0) break;
+    for (int col_off = 0, c_idx = 0; col_off < w_mi;
+         col_off += w_sub_mi, ++c_idx) {
+      int mi_col_left = xd->tile.mi_col_end - mi_col - col_off;
+      // Don't process beyond the tile boundary
+      if (mi_col_left < 0) break;
+      int src_off = (row_off << 2) * x->plane[0].src.stride + (col_off << 2);
+      xd->mb_to_top_edge = -GET_MV_SUBPEL((mi_row + row_off) * MI_SIZE);
+      xd->mb_to_left_edge = -GET_MV_SUBPEL((mi_col + col_off) * MI_SIZE);
+      // mbmi->sb_type[0] = subsize_sq;
+      mbmi->bsize = subsize_sq;
+      xd->up_available = (mi_row + row_off) > tile_info->mi_row_start;
+      xd->left_available = (mi_col + col_off) > tile_info->mi_col_start;
+
+      for (PREDICTION_MODE intra_sub_mode = INTRA_MODE_START;
+           intra_sub_mode < INTRA_MODE_END; ++intra_sub_mode) {
+        DECLARE_ALIGNED(16, uint16_t, intrapred_buf[MAX_TX_SQUARE]);
+        memset(intrapred_buf, 0, sizeof(intrapred_buf));
+        uint8_t* intrapred = CONVERT_TO_BYTEPTR(intrapred_buf);
+        av1_predict_intra_block(
+            xd, sb_size, 0, w_sub_mi << MI_SIZE_LOG2, h_sub_mi << MI_SIZE_LOG2,
+            tx_sub_size, intra_sub_mode, 0, 0, FILTER_INTRA_MODES, x->plane[0].src.buf + src_off,
+            x->plane[0].src.stride, intrapred, MAX_TX_SIZE, 0, 0, 0);
+        unsigned int curr_sse = 0, curr_var = 0;
+        curr_var = cpi->ppi->fn_ptr[txsize_to_bsize[tx_sub_size]].vf(
+            x->plane[0].src.buf + src_off, x->plane[0].src.stride, intrapred,
+            MAX_TX_SIZE, &curr_sse);
+        for (int cand = 0; cand < 3; cand++) {
+          if (curr_sse < best_sub_sse[r_idx][c_idx][cand]) {
+            for (int s = 2; s > cand; s--) {
+              best_sub_sse[r_idx][c_idx][s] = best_sub_sse[r_idx][c_idx][s - 1];
+              best_sub_var[r_idx][c_idx][s] = best_sub_var[r_idx][c_idx][s - 1];
+              best_sub_mode[r_idx][c_idx][s] =
+                  best_sub_mode[r_idx][c_idx][s - 1];
+            }
+            best_sub_sse[r_idx][c_idx][cand] = curr_sse;
+            best_sub_var[r_idx][c_idx][cand] = curr_var;
+            best_sub_mode[r_idx][c_idx][cand] = intra_sub_mode;
+            break;
+          }
+        }
+      }
+      const int sub_area_log2 =
+          mi_size_wide_log2[subsize_sq] + mi_size_high_log2[subsize_sq] + 4;
+      for (int cand = 0; cand < 3; ++cand) {
+        int foff = r_idx * 4 + c_idx * 2 + cand * 8;
+        out_features[FEATURE_INTRA_NORM_BEST_SSE_0_00 + foff] =
+            logf(1.0f + (best_sub_sse[r_idx][c_idx][cand] >> sub_area_log2));
+        out_features[FEATURE_INTRA_NORM_BEST_VAR_0_00 + foff] =
+            logf(1.0f + (best_sub_var[r_idx][c_idx][cand] >> sub_area_log2));
+      }
+    }
+  }
+}
+
+#define MAX_BLK_SIZE (MAX_TX_SIZE << 1)
+// #define MAX_BLK_SIZE 128
+#define MAX_BLK_SQUARE (MAX_BLK_SIZE * MAX_BLK_SIZE)
+// #define MAX_TX_RECT (MAX_TX_SIZE * MAX_BLK_SIZE)
+static void ml_part_features_intra_none(AV1_COMP *const cpi, ThreadData *td,
+                                          TileDataEnc *tile_data,
+                                        int mi_row, int mi_col,
+                                        BLOCK_SIZE bsize, float *out_features) {
+  TileInfo *const tile_info = &tile_data->tile_info;
+  MACROBLOCK *const x = &td->mb;
+  MACROBLOCKD *xd = &x->e_mbd;
+  MB_MODE_INFO *const mbmi = xd->mi[0];
+  const int sb_size = cpi->common.seq_params->sb_size;
+  const int w_mi = mi_size_wide[bsize];
+  const int h_mi = mi_size_high[bsize];
+  TX_SIZE tx_size = max_txsize_rect_lookup[bsize];
+  unsigned int tx_w = tx_size_wide_unit[tx_size];
+  unsigned int tx_h = tx_size_high_unit[tx_size];
+
+  xd->mb_to_top_edge = -GET_MV_SUBPEL(mi_row * MI_SIZE);
+  xd->mb_to_left_edge = -GET_MV_SUBPEL(mi_col * MI_SIZE);
+  // mbmi->sb_type[0] = bsize;
+  mbmi->bsize = bsize;
+  unsigned int best_sse[3] = { INT_MAX, INT_MAX, INT_MAX };
+  unsigned int best_var[3] = { 0, 0, 0 };
+  PREDICTION_MODE best_mode[3] = { PRED_MODE_INVALID, PRED_MODE_INVALID,
+                                   PRED_MODE_INVALID };
+  for (PREDICTION_MODE intra_mode = INTRA_MODE_START;
+       intra_mode < INTRA_MODE_END; ++intra_mode) {
+    unsigned int curr_sse = 0, curr_var = 0;
+    for (int row_off = 0; row_off < h_mi; row_off += tx_h) {
+      for (int col_off = 0; col_off < w_mi; col_off += tx_w) {
+        int src_off = (row_off << 2) * x->plane[0].src.stride + (col_off << 2);
+        xd->up_available = (mi_row + row_off) > tile_info->mi_row_start;
+        xd->left_available = (mi_col + col_off) > tile_info->mi_col_start;
+        DECLARE_ALIGNED(16, uint16_t, intrapred_buf[MAX_BLK_SQUARE]);
+        memset(intrapred_buf, 0, sizeof(intrapred_buf));
+        uint8_t* intrapred = CONVERT_TO_BYTEPTR(intrapred_buf);
+        av1_predict_intra_block(
+            xd, sb_size, 0, w_mi << MI_SIZE_LOG2, h_mi << MI_SIZE_LOG2, tx_size,
+            intra_mode, 0, 0, FILTER_INTRA_MODES, x->plane[0].src.buf + src_off,
+            x->plane[0].src.stride, intrapred, MAX_BLK_SIZE, 0, 0, 0);
+        unsigned int tmp = 0;
+        curr_var += cpi->ppi->fn_ptr[txsize_to_bsize[tx_size]].vf(
+            x->plane[0].src.buf + src_off, x->plane[0].src.stride,
+            intrapred, MAX_BLK_SIZE, &tmp);
+        curr_sse += tmp;
+      }
+    }
+    for (int cand = 0; cand < 3; cand++) {
+      if (curr_sse < best_sse[cand]) {
+        for (int s = 2; s > cand; s--) {
+          best_sse[s] = best_sse[s - 1];
+          best_var[s] = best_var[s - 1];
+          best_mode[s] = best_mode[s - 1];
+        }
+        best_sse[cand] = curr_sse;
+        best_var[cand] = curr_var;
+        best_mode[cand] = intra_mode;
+        break;
+      }
+    }
+  }
+  const int blk_area_log2 =
+      mi_size_wide_log2[bsize] + mi_size_high_log2[bsize] + 4;
+  out_features[FEATURE_INTRA_NORM_BEST_0_SSE] =
+      logf(1.0f + (best_sse[0] >> blk_area_log2));
+  out_features[FEATURE_INTRA_NORM_BEST_0_VAR] =
+      logf(1.0f + (best_var[0] >> blk_area_log2));
+  out_features[FEATURE_INTRA_NORM_BEST_1_SSE] =
+      logf(1.0f + (best_sse[1] >> blk_area_log2));
+  out_features[FEATURE_INTRA_NORM_BEST_1_VAR] =
+      logf(1.0f + (best_var[1] >> blk_area_log2));
+  out_features[FEATURE_INTRA_NORM_BEST_2_SSE] =
+      logf(1.0f + (best_sse[2] >> blk_area_log2));
+  out_features[FEATURE_INTRA_NORM_BEST_2_VAR] =
+      logf(1.0f + (best_var[2] >> blk_area_log2));
+}
+
+#define QUANT_TABLE_BITS 3
+static void get_ml_part_features_keyframe(AV1_COMP *const cpi, ThreadData *td,
+                                          TileDataEnc *tile_data, int mi_row,
+                                          int mi_col, BLOCK_SIZE bsize,
+                                          float *out_features) {
+  //TileInfo *const tile_info = &tile_data->tile_info;
+  MACROBLOCK *const x = &td->mb;
+  MACROBLOCKD *xd = &x->e_mbd;
+  MB_MODE_INFO *const mbmi = xd->mi[0];
+
+  av1_setup_src_planes(x, cpi->source, mi_row, mi_col, 1, bsize);
+  // Q_INDEX
+  // const int dc_q =
+  //    av1_dc_quant_QTX(x->qindex, 0, cpi->common.seq_params.base_y_dc_delta_q,
+  //                     xd->bd) >>
+  //    (xd->bd - 8);
+  const int dc_q =
+      av1_dc_quant_QTX(x->qindex, cpi->common.quant_params.y_dc_delta_q,
+                       xd->bd) >> (xd->bd - 8);
+  out_features[FEATURE_INTRA_LOG_QP_SQUARED] =
+      logf(1.0f + (float)((int64_t)dc_q * (int64_t)dc_q) /
+                      (256 << (2 * QUANT_TABLE_BITS)));
+
+  // Neighbor stuff
+  const int has_above = !!xd->above_mbmi;
+  const int has_left = !!xd->left_mbmi;
+  const BLOCK_SIZE above_bsize = has_above ? xd->above_mbmi->bsize : bsize;
+  const BLOCK_SIZE left_bsize = has_left ? xd->left_mbmi->bsize : bsize;
+
+  out_features[FEATURE_INTRA_HAS_ABOVE] = (float)has_above;
+  out_features[FEATURE_INTRA_LOG_ABOVE_WIDTH] =
+      (float)mi_size_wide_log2[above_bsize];
+  out_features[FEATURE_INTRA_LOG_ABOVE_HEIGHT] =
+      (float)mi_size_high_log2[above_bsize];
+  out_features[FEATURE_INTRA_HAS_LEFT] = (float)has_left;
+  out_features[FEATURE_INTRA_LOG_LEFT_WIDTH] =
+      (float)mi_size_wide_log2[left_bsize];
+  out_features[FEATURE_INTRA_LOG_LEFT_HEIGHT] =
+      (float)mi_size_high_log2[left_bsize];
+
+  int old1 = xd->mb_to_top_edge;
+  int old2 = xd->mb_to_left_edge;
+  int old3 = mbmi->bsize;
+
+  ml_part_features_intra_split(cpi, td, tile_data, mi_row, mi_col, bsize, out_features);
+  ml_part_features_intra_none(cpi, td, tile_data, mi_row, mi_col, bsize, out_features);
+
+  xd->mb_to_top_edge = old1;
+  xd->mb_to_left_edge = old2;
+  mbmi->bsize = old3;
+}
+
+static long get_file_size_fseek(const char* filename) {
+    FILE* file = fopen(filename, "rb"); // Open in binary mode
+    if (file == NULL) {
+        return -1; // Return -1 on error
+    }
+
+    fseek(file, 0, SEEK_END); // Move the file pointer to the end of the file
+    long size = ftell(file);  // Get the current position (which is the size)
+    rewind(file);             // Reset the pointer to the beginning for subsequent reads
+    fclose(file);             // Close the file
+
+    return size;
+}
+#endif  // CONFIG_HW_ML_PART
+
 /*!\brief AV1 block partition search (full search).
 *
 * \ingroup partition_search
@@ -5564,6 +5921,18 @@ bool av1_rd_pick_partition(AV1_COMP *const cpi, ThreadData *td,
 
   // Set buffers and offsets.
   av1_set_offsets(cpi, tile_info, x, mi_row, mi_col, bsize);
+
+#if CONFIG_HW_ML_PART
+  bool collect_data = collect_ml_part_data(tile_info, mi_row, mi_col, bsize);
+  float out_features[FEATURE_INTER_MAX] = { 0.0f };
+  if (collect_data) {
+    if (frame_is_intra_only(cm)) {
+      get_ml_part_features_keyframe(cpi, td, tile_data, mi_row, mi_col, bsize, out_features);
+    } else {
+      get_ml_part_features_interframe(cpi, td, tile_data, mi_row, mi_col, bsize, out_features);
+    }
+  }
+#endif  // CONFIG_HW_ML_PART
 
   if (cpi->oxcf.mode == ALLINTRA) {
     if (bsize == cm->seq_params->sb_size) {
@@ -5884,6 +6253,101 @@ BEGIN_PARTITION_SEARCH:
 #if CONFIG_COLLECT_COMPONENT_TIMING
   end_timing(cpi, encode_sb_time);
 #endif
+
+#if CONFIG_HW_ML_PART
+  if (collect_data) {
+    const int is_keyframe = frame_is_intra_only(cm);
+    char file_name[200];
+#if 1
+    if (is_keyframe) {
+      sprintf(file_name, "ml_part_data_av1_intra.csv");
+    } else {
+      sprintf(file_name, "ml_part_data_av1_inter.csv");
+    }
+#else
+    sprintf(file_name, "ml_part_data_av1_frame%03d_qp%03d_keyframe%d.csv",
+            cm->cur_frame->display_order_hint, cm->quant_params.base_qindex,
+            is_keyframe);
+#endif
+    const long file_size = get_file_size_fseek(file_name);
+    FILE *fp = fopen(file_name, "a");
+    if (fp) {
+      if (file_size <= 0) {
+        fprintf(fp,
+                "frame_idx,is_keyframe,qp,mi_row,mi_col,block_width,block_"
+                "height,best_part,");
+        if (!is_keyframe) {
+          fprintf(
+              fp,
+              "INTER_RD_MULT,"
+              "INTER_FULL_PSNR,INTER_FULL_Q_COEFF_MAX,INTER_FULL_Q_COEFF_NONZ,"
+              "INTER_SQ_0_PSNR,INTER_SQ_0_Q_COEFF_MAX,INTER_SQ_0_Q_COEFF_NONZ,"
+              "INTER_SQ_1_PSNR,INTER_SQ_1_Q_COEFF_MAX,INTER_SQ_1_Q_COEFF_NONZ,"
+              "INTER_SQ_2_PSNR,INTER_SQ_2_Q_COEFF_MAX,INTER_SQ_2_Q_COEFF_NONZ,"
+              "INTER_SQ_3_PSNR,INTER_SQ_3_Q_COEFF_MAX,INTER_SQ_3_Q_COEFF_NONZ,"
+              "INTER_FULL_LOG_MAG,INTER_FULL_ANGLE_RAD,"
+              "INTER_SQ_0_LOG_MAG,INTER_SQ_0_LOG_MAG,"
+              "INTER_SQ_1_LOG_MAG,INTER_SQ_1_LOG_MAG,"
+              "INTER_SQ_2_LOG_MAG,INTER_SQ_2_LOG_MAG,"
+              "INTER_SQ_3_LOG_MAG,INTER_SQ_3_LOG_MAG,"
+              "INTER_FULL_LOG_SATDQ,INTER_SQ_0_LOG_SATDQ,INTER_SQ_1_LOG_SATDQ,"
+              "INTER_SQ_2_LOG_SATDQ,INTER_SQ_3_LOG_SATDQ,"
+              "INTER_FULL_LOG_SATD,INTER_SQ_0_LOG_SATD,INTER_SQ_1_LOG_SATD,"
+              "INTER_"
+              "SQ_2_LOG_SATD,INTER_SQ_3_LOG_SATD,"
+              "INTER_HOR_0_PSNR,INTER_HOR_0_Q_COEFF_MAX,INTER_HOR_0_Q_COEFF_"
+              "NONZ,"
+              "INTER_HOR_0_Q_COEFF_NONZ,INTER_HOR_0_ANGLE_RAD,INTER_HOR_0_LOG_"
+              "SATDQ,INTER_HOR_0_LOG_SATD,"
+              "INTER_HOR_1_PSNR,INTER_HOR_1_Q_COEFF_MAX,INTER_HOR_1_Q_COEFF_"
+              "NONZ,"
+              "INTER_HOR_1_Q_COEFF_NONZ,INTER_HOR_1_ANGLE_RAD,INTER_HOR_1_LOG_"
+              "SATDQ,INTER_HOR_1_LOG_SATD,"
+              "INTER_VER_0_PSNR,INTER_VER_0_Q_COEFF_MAX,INTER_VER_0_Q_COEFF_"
+              "NONZ,"
+              "INTER_VER_0_Q_COEFF_NONZ,INTER_VER_0_ANGLE_RAD,INTER_VER_0_LOG_"
+              "SATDQ,INTER_VER_0_LOG_SATD,"
+              "INTER_VER_1_PSNR,INTER_VER_1_Q_COEFF_MAX,INTER_VER_1_Q_COEFF_"
+              "NONZ,"
+              "INTER_VER_1_Q_COEFF_NONZ,INTER_VER_1_ANGLE_RAD,INTER_VER_1_LOG_"
+              "SATDQ,INTER_VER_1_LOG_SATD,INTER_SWITCH,INTER_PART_T\n");
+        } else {
+          fprintf(fp,
+                  "INTRA_LOG_QP_SQUARED,"
+                  "INTRA_HAS_ABOVE,INTRA_LOG_ABOVE_WIDTH,"
+                  "INTRA_LOG_ABOVE_HEIGHT,INTRA_HAS_LEFT,"
+                  "INTRA_LOG_LEFT_WIDTH,INTRA_LOG_LEFT_HEIGHT,"
+                  "INTRA_NORM_BEST_0_SSE,INTRA_NORM_BEST_0_VAR,"
+                  "INTRA_NORM_BEST_1_SSE,INTRA_NORM_BEST_1_VAR,"
+                  "INTRA_NORM_BEST_2_SSE,INTRA_NORM_BEST_2_VAR,"
+                  "INTRA_NORM_BEST_SSE_0_00,INTRA_NORM_BEST_VAR_0_00,"
+                  "INTRA_NORM_BEST_SSE_0_01,INTRA_NORM_BEST_VAR_0_01,"
+                  "INTRA_NORM_BEST_SSE_0_10,INTRA_NORM_BEST_VAR_0_10,"
+                  "INTRA_NORM_BEST_SSE_0_11,INTRA_NORM_BEST_VAR_0_11,"
+                  "INTRA_NORM_BEST_SSE_1_00,INTRA_NORM_BEST_VAR_1_00,"
+                  "INTRA_NORM_BEST_SSE_1_01,INTRA_NORM_BEST_VAR_1_01,"
+                  "INTRA_NORM_BEST_SSE_1_10,INTRA_NORM_BEST_VAR_1_10,"
+                  "INTRA_NORM_BEST_SSE_1_11,INTRA_NORM_BEST_VAR_1_11,"
+                  "INTRA_NORM_BEST_SSE_2_00,INTRA_NORM_BEST_VAR_2_00,"
+                  "INTRA_NORM_BEST_SSE_2_01,INTRA_NORM_BEST_VAR_2_01,"
+                  "INTRA_NORM_BEST_SSE_2_10,INTRA_NORM_BEST_VAR_2_10,"
+                  "INTRA_NORM_BEST_SSE_2_11,INTRA_NORM_BEST_VAR_2_11,"
+                  "\n");
+        }
+      }
+      fprintf(fp, "%d,%d,%d,%d,%d,%d,%d,%d,", cm->cur_frame->display_order_hint,
+              is_keyframe, cm->quant_params.base_qindex, mi_row, mi_col,
+              block_size_wide[bsize], block_size_high[bsize],
+              pc_tree->partitioning);
+      for (int i = 0; i < (is_keyframe ? FEATURE_INTRA_MAX : FEATURE_INTER_MAX);
+           ++i) {
+        fprintf(fp, "%.2f,", out_features[i]);
+      }
+      fprintf(fp, "\n");
+      fclose(fp);
+    }
+  }
+#endif  // CONFIG_HW_ML_PART
 
   // If the tree still exists (non-superblock), dealloc most nodes, only keep
   // nodes for the best partition and PARTITION_NONE.
@@ -6303,3 +6767,455 @@ void av1_nonrd_pick_partition(AV1_COMP *cpi, ThreadData *td,
   }
 }
 #endif  // CONFIG_RT_ML_PARTITIONING
+
+#if CONFIG_HW_ML_PART
+// Gets the number of sms data in a single dimension
+static inline int get_sms_count_from_length(int mi_length) {
+  switch (mi_length) {
+    case 64: return BLOCK_256_COUNT;
+    case 32: return BLOCK_128_COUNT;
+    case 16: return BLOCK_64_COUNT;
+    case 8: return BLOCK_32_COUNT;
+    case 4: return BLOCK_16_COUNT;
+    case 2: return BLOCK_8_COUNT;
+    case 1: return BLOCK_4_COUNT;
+    default: assert(0 && "Invalid mi_width"); return -1;
+  }
+}
+
+// Gets the linear index corresponds to the current block.
+static inline int get_sms_arr_1d_idx(int mi_bsize, int mi_in_sb) {
+  int idx = -1;
+  if (mi_bsize <= 2) {
+    idx = mi_in_sb;
+  } else if (mi_bsize <= 8) {
+    if (mi_in_sb % (mi_bsize / 4) != 0) return -1;
+    idx = mi_in_sb / (mi_bsize / 4);
+  } else {
+    if (mi_in_sb % (mi_bsize / 2) != 0) return -1;
+    idx = mi_in_sb / (mi_bsize / 2);
+  }
+  assert(idx >= 0 && idx < get_sms_count_from_length(mi_bsize));
+
+  return idx;
+}
+
+#define MAKE_SMS_ARR_SWITCH_CASE(width, height, sdp_flag) \
+  case BLOCK_##width##X##height: {                        \
+    return sms_bufs->b_##width##x##height##_##sdp_flag;   \
+  }
+
+// Returns the buffer in SimpleMotionDataBufs that correspond to bsize.
+static inline SimpleMotionData *get_sms_arr(SimpleMotionDataBufs *sms_bufs,
+                                            BLOCK_SIZE bsize,
+                                            int8_t region_type) {
+  if (region_type == 1) {
+    switch (bsize) {
+      // Square blocks
+      // MAKE_SMS_ARR_SWITCH_CASE(256, 256, 1);
+      MAKE_SMS_ARR_SWITCH_CASE(128, 128, 1);
+      MAKE_SMS_ARR_SWITCH_CASE(64, 64, 1);
+      MAKE_SMS_ARR_SWITCH_CASE(32, 32, 1);
+      MAKE_SMS_ARR_SWITCH_CASE(16, 16, 1);
+      MAKE_SMS_ARR_SWITCH_CASE(8, 8, 1);
+      MAKE_SMS_ARR_SWITCH_CASE(4, 4, 1);
+
+      // 1:2 blocks
+      // MAKE_SMS_ARR_SWITCH_CASE(128, 256, 1);
+      MAKE_SMS_ARR_SWITCH_CASE(64, 128, 1);
+      MAKE_SMS_ARR_SWITCH_CASE(32, 64, 1);
+      MAKE_SMS_ARR_SWITCH_CASE(16, 32, 1);
+      MAKE_SMS_ARR_SWITCH_CASE(8, 16, 1);
+      MAKE_SMS_ARR_SWITCH_CASE(4, 8, 1);
+
+      // 2:1 blocks
+      // MAKE_SMS_ARR_SWITCH_CASE(256, 128, 1);
+      MAKE_SMS_ARR_SWITCH_CASE(128, 64, 1);
+      MAKE_SMS_ARR_SWITCH_CASE(64, 32, 1);
+      MAKE_SMS_ARR_SWITCH_CASE(32, 16, 1);
+      MAKE_SMS_ARR_SWITCH_CASE(16, 8, 1);
+      MAKE_SMS_ARR_SWITCH_CASE(8, 4, 1);
+
+      // 1:4 blocks
+      MAKE_SMS_ARR_SWITCH_CASE(16, 64, 1);
+      MAKE_SMS_ARR_SWITCH_CASE(8, 32, 1);
+      MAKE_SMS_ARR_SWITCH_CASE(4, 16, 1);
+
+      // 4:1 blocks
+      MAKE_SMS_ARR_SWITCH_CASE(64, 16, 1);
+      MAKE_SMS_ARR_SWITCH_CASE(32, 8, 1);
+      MAKE_SMS_ARR_SWITCH_CASE(16, 4, 1);
+
+      // 1:8 blocks
+      // MAKE_SMS_ARR_SWITCH_CASE(8, 64, 1);
+      // MAKE_SMS_ARR_SWITCH_CASE(4, 32, 1);
+
+      // 8:1 blocks
+      // MAKE_SMS_ARR_SWITCH_CASE(64, 8, 1);
+      // MAKE_SMS_ARR_SWITCH_CASE(32, 4, 1);
+
+      // 16:1 blocks
+      // MAKE_SMS_ARR_SWITCH_CASE(64, 4, 1);
+
+      // 1:16 blocks
+      // MAKE_SMS_ARR_SWITCH_CASE(4, 64, 1);
+
+      default: assert(0 && "Invalid bsize"); return NULL;
+    }
+  } else {  // region_type = 0
+    switch (bsize) {
+      // Square blocks
+      // MAKE_SMS_ARR_SWITCH_CASE(256, 256, 0);
+      MAKE_SMS_ARR_SWITCH_CASE(128, 128, 0);
+      MAKE_SMS_ARR_SWITCH_CASE(64, 64, 0);
+      MAKE_SMS_ARR_SWITCH_CASE(32, 32, 0);
+      MAKE_SMS_ARR_SWITCH_CASE(16, 16, 0);
+      MAKE_SMS_ARR_SWITCH_CASE(8, 8, 0);
+      MAKE_SMS_ARR_SWITCH_CASE(4, 4, 0);
+
+      // 1:2 blocks
+      // MAKE_SMS_ARR_SWITCH_CASE(128, 256, 0);
+      MAKE_SMS_ARR_SWITCH_CASE(64, 128, 0);
+      MAKE_SMS_ARR_SWITCH_CASE(32, 64, 0);
+      MAKE_SMS_ARR_SWITCH_CASE(16, 32, 0);
+      MAKE_SMS_ARR_SWITCH_CASE(8, 16, 0);
+      MAKE_SMS_ARR_SWITCH_CASE(4, 8, 0);
+
+      // 2:1 blocks
+      // MAKE_SMS_ARR_SWITCH_CASE(256, 128, 0);
+      MAKE_SMS_ARR_SWITCH_CASE(128, 64, 0);
+      MAKE_SMS_ARR_SWITCH_CASE(64, 32, 0);
+      MAKE_SMS_ARR_SWITCH_CASE(32, 16, 0);
+      MAKE_SMS_ARR_SWITCH_CASE(16, 8, 0);
+      MAKE_SMS_ARR_SWITCH_CASE(8, 4, 0);
+
+      // 1:4 blocks
+      MAKE_SMS_ARR_SWITCH_CASE(16, 64, 0);
+      MAKE_SMS_ARR_SWITCH_CASE(8, 32, 0);
+      MAKE_SMS_ARR_SWITCH_CASE(4, 16, 0);
+
+      // 4:1 blocks
+      MAKE_SMS_ARR_SWITCH_CASE(64, 16, 0);
+      MAKE_SMS_ARR_SWITCH_CASE(32, 8, 0);
+      MAKE_SMS_ARR_SWITCH_CASE(16, 4, 0);
+
+      // 1:8 blocks
+      // MAKE_SMS_ARR_SWITCH_CASE(8, 64, 0);
+      // MAKE_SMS_ARR_SWITCH_CASE(4, 32, 0);
+
+      // 8:1 blocks
+      // MAKE_SMS_ARR_SWITCH_CASE(64, 8, 0);
+      // MAKE_SMS_ARR_SWITCH_CASE(32, 4, 0);
+
+      // 16:1 blocks
+      // MAKE_SMS_ARR_SWITCH_CASE(64, 4, 0);
+
+      // 1:16 blocks
+      // MAKE_SMS_ARR_SWITCH_CASE(4, 64, 0);
+
+      default: assert(0 && "Invalid bsize"); return NULL;
+    }
+  }
+}
+#undef MAKE_SMS_ARR_SWITCH_CASE
+
+// Retrieves the SimpleMotionData from SimpleMotionDataBufs
+SimpleMotionData *av1_get_sms_data_entry(SimpleMotionDataBufs *sms_bufs,
+                                         int mi_row, int mi_col,
+                                         BLOCK_SIZE bsize, BLOCK_SIZE sb_size,
+                                         int8_t region_type) {
+  assert(mi_size_high[sb_size] == mi_size_wide[sb_size]);
+  assert(bsize < BLOCK_SIZES_ALL);
+  const int mi_in_sb = mi_size_high[sb_size];
+  const int mi_row_in_sb = mi_row % mi_in_sb;
+  const int mi_col_in_sb = mi_col % mi_in_sb;
+  const int mi_high = mi_size_high[bsize];
+  const int mi_wide = mi_size_wide[bsize];
+  const int idx_row_in_sb = get_sms_arr_1d_idx(mi_high, mi_row_in_sb);
+  if (idx_row_in_sb == -1) return NULL;
+  const int idx_col_in_sb = get_sms_arr_1d_idx(mi_wide, mi_col_in_sb);
+  if (idx_col_in_sb == -1) return NULL;
+  const int arr_stride = get_sms_count_from_length(mi_wide);
+  SimpleMotionData *sms_arr = get_sms_arr(sms_bufs, bsize, region_type);
+  return &sms_arr[idx_row_in_sb * arr_stride + idx_col_in_sb];
+}
+
+// Computes residual stats on a transformed and quantized residual of the
+// block. This is used as ML features for prediction. The information computed
+// is NNZ (Number of Non-Zero coefficients of the transformed and quantized
+// residual), MAX_COEFF, PSNR.
+static void compute_residual_stats(AV1_COMP *const cpi, ThreadData *td, MACROBLOCK *x,
+                                   BLOCK_SIZE bsize, ResidualStats *out) {
+  AV1_COMMON *cm = &cpi->common;
+  MACROBLOCKD *const xd = &x->e_mbd;
+  TX_SIZE tx_size = max_txsize_rect_lookup[bsize];
+  const int plane = AOM_PLANE_Y;
+  const int block = 0;
+  struct macroblock_plane *const p = &x->plane[plane];
+  struct macroblockd_plane *const pd = &xd->plane[plane];
+  // int old_tree_type = xd->tree_type;
+  // xd->tree_type = LUMA_PART;
+  memset(out, 0, sizeof(ResidualStats));
+
+  av1_subtract_plane(x, bsize, plane);
+
+  const uint8_t *src = x->plane[0].src.buf;
+  const uint8_t *dst = xd->plane[0].dst.buf;
+  const int src_stride = x->plane[0].src.stride;
+  const int dst_stride = xd->plane[0].dst.stride;
+  out->var = cpi->ppi->fn_ptr[bsize].vf(src, src_stride, dst, dst_stride, &out->sse);
+
+  const int num_blk = mi_size_wide[bsize] * mi_size_high[bsize];
+  struct aom_internal_error_info error;
+  AOM_CHECK_MEM_ERROR(&error, p->eobs,
+                      aom_memalign(32, num_blk * sizeof(p->eobs[0])));
+  p->coeff = td->shared_coeff_buf.coeff_buf[plane];
+  p->qcoeff = td->shared_coeff_buf.qcoeff_buf[plane];
+  p->dqcoeff = td->shared_coeff_buf.dqcoeff_buf[plane];
+  tran_low_t *const dqcoeff = p->dqcoeff + BLOCK_OFFSET(block);
+  tran_low_t *const qcoeff = p->qcoeff + BLOCK_OFFSET(block);
+  tran_low_t *const coeff = p->coeff + BLOCK_OFFSET(block);
+  // AOM_CHECK_MEM_ERROR(&error, p->bobs,
+  //                     aom_memalign(32, num_blk * sizeof(p->bobs[0])));
+  AOM_CHECK_MEM_ERROR(
+      &error, p->txb_entropy_ctx,
+      aom_memalign(32, num_blk * sizeof(p->txb_entropy_ctx[0])));
+
+  TxfmParam txfm_param;
+  QUANT_PARAM quant_param;
+
+  av1_setup_xform(cm, x, tx_size, DCT_DCT, &txfm_param);
+  av1_setup_quant(tx_size, 0, AV1_XFORM_QUANT_B, cpi->oxcf.q_cfg.quant_b_adapt,
+                  &quant_param);
+  av1_setup_qmatrix(&cm->quant_params, xd, plane, tx_size, DCT_DCT,
+                    &quant_param);
+  av1_xform_quant(x, plane, block, 0, 0, bsize, &txfm_param, &quant_param);
+  const int n_coeffs = av1_get_max_eob(txfm_param.tx_size);
+  for (int i = 0; i < n_coeffs; i++) {
+    int abs_qcoeff = abs(qcoeff[i]);
+    out->satd += abs(coeff[i]);
+    out->satdq += abs_qcoeff;
+    out->q_coeff_max = AOMMAX(out->q_coeff_max, abs_qcoeff);
+    out->q_coeff_nonz += qcoeff[i] != 0;
+  }
+
+  if (p->eobs[block]) {
+    txfm_param.eob = p->eobs[block];
+    av1_highbd_inv_txfm_add(dqcoeff, pd->dst.buf, pd->dst.stride, &txfm_param);
+  }
+  int sse = 0;
+#if 1
+  // only consider HBD config.
+  uint16_t *src16 = CONVERT_TO_SHORTPTR(x->plane[plane].src.buf);
+  uint16_t *dst16 = CONVERT_TO_SHORTPTR(pd->dst.buf);
+  for (int i = 0; i < block_size_high[bsize]; i++) {
+    for (int j = 0; j < block_size_wide[bsize]; j++) {
+      const int d = dst16[i * pd->dst.stride + j] -
+                    src16[i * x->plane[plane].src.stride + j];
+      sse += d * d;
+    }
+  }
+#else
+  for (int i = 0; i < block_size_high[bsize]; i++) {
+    for (int j = 0; j < block_size_wide[bsize]; j++) {
+      int d = pd->dst.buf[i * pd->dst.stride + j] -
+              x->plane[plane].src.buf[i * x->plane[plane].src.stride + j];
+      sse += d * d;
+    }
+  }
+#endif
+
+  double mse =
+      ((double)sse) / (block_size_high[bsize] * block_size_wide[bsize]);
+  out->psnr = (float)(sse == 0 ? 70 : AOMMIN(70, 20 * log10(255 / sqrt(mse))));
+
+  // TODO: figure out the way to do it w/o allocations
+  p->coeff = NULL;
+  p->qcoeff = NULL;
+  p->dqcoeff = NULL;
+  aom_free(p->eobs);
+  p->eobs = NULL;
+  aom_free(p->txb_entropy_ctx);
+  p->txb_entropy_ctx = NULL;
+}
+
+// Performs a simple motion search and store the result in sms_data.
+static void compute_sms_data(AV1_COMP *const cpi, const TileInfo *const tile,
+                             MACROBLOCK *x, SimpleMotionData *sms_data,
+                             int mi_row, int mi_col, BLOCK_SIZE bsize,
+                             ThreadData *td, bool need_residual_stats
+) {
+  // const AV1_COMMON *const cm = &cpi->common;
+  // const int ref_frame = get_closest_pastcur_ref_or_ref0(cm);
+  const MV_REFERENCE_FRAME ref_frame =
+      cpi->rc.is_src_frame_alt_ref ? ALTREF_FRAME : LAST_FRAME;
+  assert(ref_frame >= 0);
+  if (mi_col >= tile->mi_col_end || mi_row >= tile->mi_row_end) {
+    // If the whole block is outside of the tile, set the var and sse to 0.
+    sms_data->sse = 0;
+    sms_data->var = 0;
+    sms_data->dist = 0;
+    sms_data->rate = 0;
+    sms_data->rdcost = 0;
+    sms_data->ref_frame = -1;
+    sms_data->rdmult = 0;
+    sms_data->valid = 1;
+    if (need_residual_stats) {
+      sms_data->residual_stats_valid = true;
+      memset(&sms_data->residual_stats, 0, sizeof(sms_data->residual_stats));
+    }
+    return;
+  }
+  set_offsets_for_motion_search(cpi, x, mi_row, mi_col, bsize);
+  //  We need to update the rd-mult here to in case we are doing simple motion
+  //  search on a subblock of the current coding block.
+  const int orig_rdmult = x->rdmult;
+  const AQ_MODE aq_mode = cpi->oxcf.q_cfg.aq_mode;
+  MB_MODE_INFO *mbmi = x->e_mbd.mi[0];
+  // These values need to be initialized in the context in order for the
+  // motion search to work correctly, otherwise the values will be picked up
+  // from what they were set in the previous coding blocks and which is not
+  // the intended behaviour.
+  mbmi->mode = NEWMV;
+  mbmi->bsize = bsize;
+  // The following are not applicable to AV1.
+  // mbmi->refinemv_flag = 0;
+  // mbmi->pb_mv_precision = MV_PRECISION_ONE_EIGHTH_PEL;
+  // mbmi->warpmv_with_mvd_flag = 0;
+  // mbmi->sb_type[0] = mbmi->sb_type[1] = bsize;
+  // mbmi->chroma_ref_info.bsize_base = bsize;
+  // mbmi->chroma_ref_info.is_chroma_ref = 1;
+  // only if NONE part pruning is enabled
+  // if (cpi->sf.part_sf.prune_none_with_ml) {
+    mbmi->interinter_comp.type = COMPOUND_AVERAGE;
+    mbmi->motion_mode = SIMPLE_TRANSLATION;
+    mbmi->comp_group_idx = 0;
+    // mbmi->use_intrabc[0] = 0;
+    // mbmi->use_intrabc[1] = 0;
+    mbmi->use_intrabc = 0;
+    // mbmi->interp_fltr = MULTITAP_SHARP;
+    mbmi->interp_filters = av1_broadcast_interp_filter(MULTITAP_SHARP);
+    // mbmi->bawp_flag[0] = 0;
+    // mbmi->cwp_idx = CWP_EQUAL;
+  // }
+  // mbmi->use_amvd = 0;
+  setup_block_rdmult(cpi, x, mi_row, mi_col, bsize, aq_mode, mbmi);
+  // Set error per bit for current rdmult
+  // av1_set_error_per_bit(&x->mv_costs, x->rdmult);
+  av1_set_error_per_bit(&x->errorperbit, x->rdmult);
+  if (cpi->ext_flags.ref_frame_flags & av1_ref_frame_flag_list[ref_frame]) {
+    const MACROBLOCKD *xd = &x->e_mbd;
+    //const uint16_t *src_buf = x->plane[0].src.buf;
+    //const uint16_t *dst_buf = xd->plane[0].dst.buf;
+    const uint8_t *src_buf = x->plane[0].src.buf;
+    const uint8_t *dst_buf = xd->plane[0].dst.buf;
+    const int src_stride = x->plane[0].src.stride;
+    const int dst_stride = xd->plane[0].dst.stride;
+    if (sms_data->num_start_mvs == 0) {
+      sms_data->start_mv_list[sms_data->num_start_mvs++] = kZeroMv;
+    }
+    sms_data->rdcost = INT64_MAX;
+    SimpleMotionData best_data = *sms_data;
+    for (int idx = 0; idx < sms_data->num_start_mvs; idx++) {
+      const MV start_mv = sms_data->start_mv_list[idx];
+      const FULLPEL_MV start_mv_full = get_fullmv_from_mv(&start_mv);
+      av1_simple_motion_search_ext(cpi, tile, x, mi_row, mi_col, bsize,
+                                   ref_frame, start_mv_full, 1, 1, sms_data);
+      sms_data->var = cpi->ppi->fn_ptr[bsize].vf(src_buf, src_stride, dst_buf,
+                                                 dst_stride, &sms_data->sse);
+      if (need_residual_stats) {
+        compute_residual_stats(cpi, td, x, bsize, &sms_data->residual_stats);
+        sms_data->residual_stats_valid = true;
+        assert(sms_data->var == sms_data->residual_stats.var);
+        assert(sms_data->sse == sms_data->residual_stats.sse);
+      }
+      sms_data->dist = 16 * sms_data->sse;
+      sms_data->rate = 0;
+      sms_data->rdcost = RDCOST(x->rdmult, sms_data->rate, sms_data->dist);
+      if (sms_data->rdcost <= best_data.rdcost) {
+        best_data = *sms_data;
+      }
+    }
+    *sms_data = best_data;
+  }
+  // If the above code didn't actually execute the residual stats computation
+  // but all of the downstream code assumes the residual stats have been
+  // computed.
+  if (need_residual_stats && !sms_data->residual_stats_valid) {
+    sms_data->residual_stats_valid = true;
+    memset(&sms_data->residual_stats, 0, sizeof(sms_data->residual_stats));
+  }
+  sms_data->valid = 1;
+  sms_data->bsize = bsize;
+  sms_data->mi_row = mi_row;
+  sms_data->mi_col = mi_col;
+  sms_data->ref_frame = ref_frame;
+  sms_data->rdmult = x->rdmult;
+  x->rdmult = orig_rdmult;
+  return;
+}
+
+static inline void add_start_mv_to_block(SimpleMotionData *block, MV start_mv) {
+  if (block->num_start_mvs == kSMSMaxStartMVs) {
+    return;
+  }
+  for (int idx = 0; idx < block->num_start_mvs; idx++) {
+    const int_mv *cur_mv = (int_mv *)&block->start_mv_list[idx];
+    if (((int_mv *)&start_mv)->as_int == cur_mv->as_int) {
+      return;
+    }
+  }
+  block->start_mv_list[block->num_start_mvs++] = start_mv;
+}
+
+// Computes and stores the simple motion search data for the block at mi_row,
+// mi_col with block size bsize.
+SimpleMotionData *av1_get_sms_data(AV1_COMP *const cpi,
+                                   const TileInfo *const tile, MACROBLOCK *x,
+                                   int mi_row, int mi_col, BLOCK_SIZE bsize,
+                                   ThreadData *td, bool need_residual_stats,
+                                   int8_t region_type) {
+  assert(region_type == 1);
+  const AV1_COMMON *const cm = &cpi->common;
+  const BLOCK_SIZE sb_size = cm->seq_params->sb_size;
+  SimpleMotionDataBufs *sms_bufs = x->sms_bufs;
+  SimpleMotionData *cur_block = av1_get_sms_data_entry(
+      sms_bufs, mi_row, mi_col, bsize, sb_size, region_type);
+  if (!cur_block->valid ||
+      (need_residual_stats && !cur_block->residual_stats_valid)) {
+    compute_sms_data(cpi, tile, x, cur_block, mi_row, mi_col, bsize, td,
+                     need_residual_stats);
+#if 1
+    // Add MV to subblock start_mv list
+    for (PARTITION_TYPE part = 0; part < EXT_PARTITION_TYPES; ++part) {
+      // Currently only need HORZ, VERT, and SPLIT.
+      if (part != PARTITION_HORZ && part != PARTITION_VERT &&
+          part != PARTITION_SPLIT) {
+        continue;
+      }
+      const BLOCK_SIZE part_subsize = get_partition_subsize(bsize, part);
+      if (part_subsize == BLOCK_INVALID) continue;
+      const int sub_bw_mi = mi_size_wide[part_subsize];
+      const int sub_bh_mi = mi_size_high[part_subsize];
+      for (int row = mi_row; row < mi_row + mi_size_high[bsize];
+           row += sub_bh_mi) {
+        for (int col = mi_col; col < mi_col + mi_size_wide[bsize];
+             col += sub_bw_mi) {
+          SimpleMotionData *subblock = av1_get_sms_data_entry(
+              sms_bufs, row, col, part_subsize, sb_size, 1);
+          add_start_mv_to_block(subblock, cur_block->fullmv);
+        }
+      }
+    }
+#else
+    for (PARTITION_TYPE partition = PARTITION_NONE;
+         partition < EXT_PARTITION_TYPES; partition++) {
+      add_start_mv_to_partition(sms_bufs, mi_row, mi_col, bsize, sb_size,
+                                partition, cur_block->fullmv);
+    }
+#endif
+  }
+
+  return cur_block;
+}
+#endif  // CONFIG_HW_ML_PART
