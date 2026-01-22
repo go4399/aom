@@ -1530,6 +1530,9 @@ void av1_ml_predict_breakout(AV1_COMP *const cpi, const MACROBLOCK *const x,
                              const RD_STATS *const rd_stats,
                              unsigned int pb_source_variance, int bit_depth,
                              PartitionSearchState *part_state) {
+#if CONFIG_HW_ML_PART
+  return;
+#endif
   const PartitionBlkParams *blk_params = &part_state->part_blk_params;
   const int mi_row = blk_params->mi_row, mi_col = blk_params->mi_col;
   const BLOCK_SIZE bsize = blk_params->bsize;
@@ -1911,6 +1914,15 @@ void av1_prune_ab_partitions(AV1_COMP *cpi, const MACROBLOCK *x,
   const PartitionCfg *const part_cfg = &cpi->oxcf.part_cfg;
   // The standard AB partitions are allowed initially if ext-partition-types are
   // allowed.
+#if CONFIG_HW_ML_PART
+  if (!part_cfg->enable_ab_partitions) {
+    ab_partitions_allowed[HORZ_A] = 0;
+    ab_partitions_allowed[HORZ_B] = 0;
+    ab_partitions_allowed[VERT_A] = 0;
+    ab_partitions_allowed[VERT_B] = 0;
+    return;
+  }
+#endif
   int horzab_partition_allowed = ext_partition_allowed &&
                                  part_cfg->enable_ab_partitions &&
                                  part_state->partition_rect_allowed[HORZ];

@@ -1514,6 +1514,9 @@ typedef struct ThreadData {
   Block4x4VarInfo *src_var_info_of_4x4_sub_blocks;
   // Pointer to pc tree root.
   PC_TREE *pc_root;
+#if CONFIG_HW_ML_PART
+  SimpleMotionDataBufs sms_bufs;
+#endif  // 
 } ThreadData;
 
 struct EncWorkerData;

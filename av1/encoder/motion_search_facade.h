@@ -134,6 +134,15 @@ static inline SEARCH_METHODS av1_get_default_mv_search_method(
   return search_method;
 }
 
+#if CONFIG_HW_ML_PART
+int_mv av1_simple_motion_search_ext(AV1_COMP *const cpi,
+                                    const TileInfo *const tile, MACROBLOCK *x,
+                                    int mi_row, int mi_col, BLOCK_SIZE bsize,
+                                    int ref, FULLPEL_MV start_mv,
+                                    int num_planes, int use_subpixel,
+                                    SimpleMotionData *sms_data);
+#endif  // CONFIG_HW_ML_PART
+
 #ifdef __cplusplus
 }  // extern "C"
 #endif
