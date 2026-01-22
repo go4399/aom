@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "65de0ed5_a5ef989c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 33002
+      },
+      "writtenOn": "2026-01-22T14:18:05Z",
+      "side": 1,
+      "message": "Performance results of the encoder are provided below for all resolutions wrt commit [07ab3721](https://aomedia.googlesource.com/aom/+/07ab3721a1efe908377891e75bd920948ca2618d):\n**Exp 1**\n```\n                  Encoder Instruction              BD-Rate Loss(%)\ncpu   Resolution   Count Reduction(%)   avg.psnr  ovr.psnr   ssim     vmaf    vmaf_neg \n 6    LOWRES2        -0.42\t           0.0190     0.0216  -0.0142  -0.0555   0.0053\n 6    MIDRES2        -1.00\t          -0.2082\t-0.2254  -0.2590  -0.2204  -0.2293\n 6    SHORTS608p     -0.79\t          -0.2748\t-0.1752  -0.2401  -0.2991  -0.3264\n 6    SHORTS720p     -1.58\t          -0.3527\t-0.3820  -0.4538  -0.5106  -0.4926\n 6    SHORTS1080p    -2.38\t          -0.5544\t-0.5921  -0.6254  -0.7382  -0.7038\n 6    HDRES2         -2.09\t          -0.3747\t-0.4332  -0.4295  -0.5062  -0.4858\n 6    Average        -1.40\t          -0.3003\t-0.3055  -0.3463  -0.3999  -0.3844\n```\n\nPerformance results of the encoder when disabling the speed feature `use_bsize_dependent_search_method` are provided below for all resolutions wrt commit [07ab3721](https://aomedia.googlesource.com/aom/+/07ab3721a1efe908377891e75bd920948ca2618d):\n**Exp 2**\n```\n                  Encoder Instruction              BD-Rate Loss(%)\ncpu   Resolution   Count Reduction(%)   avg.psnr  ovr.psnr   ssim     vmaf    vmaf_neg \n 6    LOWRES2        -0.62\t          -0.0150\t-0.0090  -0.0557  -0.0608   0.0078\n 6    MIDRES2        -1.77\t          -0.1923\t-0.2267  -0.2080  -0.1467  -0.1662\n 6    SHORTS608p     -1.80\t          -0.2517\t-0.1802  -0.2420  -0.2296  -0.2887\n 6    SHORTS720p     -1.99\t          -0.3435\t-0.4091  -0.4672  -0.5818  -0.5543\n 6    SHORTS1080p    -2.91\t          -0.6471\t-0.7274  -0.7317  -0.7853  -0.7819\n 6    HDRES2         -2.48\t          -0.3975\t-0.4352  -0.4627  -0.5483  -0.5037\n 6    Average        -1.96\t          -0.3175\t-0.3411  -0.3720  -0.4048  -0.3957\n ```\n\nPerformance results of the encoder when setting the speed feature `use_bsize_dependent_search_method` to 2 always (min bsize \u003e\u003d 64)  are provided below for all resolutions wrt commit [07ab3721](https://aomedia.googlesource.com/aom/+/07ab3721a1efe908377891e75bd920948ca2618d):\n**Exp 3**\n```\n                  Encoder Instruction              BD-Rate Loss(%)\ncpu   Resolution   Count Reduction(%)   avg.psnr  ovr.psnr   ssim     vmaf    vmaf_neg \n 6    LOWRES2        -0.41\t           0.0190\t 0.0216  -0.0142  -0.0555   0.0053\n 6    MIDRES2        -1.00\t          -0.2082\t-0.2254  -0.2590  -0.2204  -0.2293\n 6    SHORTS608p     -0.79\t          -0.2748\t-0.1752  -0.2401  -0.2991  -0.3264\n 6    SHORTS720p     -1.01\t          -0.2307\t-0.2683  -0.3134  -0.3933  -0.3572\n 6    SHORTS1080p    -1.31\t          -0.4272\t-0.4821  -0.5014  -0.5225  -0.4985\n 6    HDRES2         -1.15\t          -0.2232\t-0.2440  -0.2357  -0.2575  -0.2581\n 6    Average        -0.95\t          -0.2321\t-0.2361  -0.2689  -0.3017  -0.2880\n```\n\nThe instruction count reduction specified has been measured using command:\n`$ perf stat -e instructions:u ./aomenc …`\n\nAs Exp 1 shows better results as compared to Exp 2 and Exp 3, we have enabled the same for speed\u003d6. Please review.",
+      "revId": "53fd2483dc7f3db11f49bfcf252a6275cf7691b9",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
