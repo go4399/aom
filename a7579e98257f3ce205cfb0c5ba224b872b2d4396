@@ -79,6 +79,24 @@
       ],
       "revId": "a7579e98257f3ce205cfb0c5ba224b872b2d4396",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77cc375b_b12b418a",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 982,
+      "author": {
+        "id": 8893
+      },
+      "writtenOn": "2026-01-23T17:54:53Z",
+      "side": 1,
+      "message": "We noticed assertion failure in the unit test `AV1/FilmGrainEncodeTest.Test/11` with this patch (Patchset 3). There was an assertion failure as stale CDEF filter strengths were stored for UV planes for monochrome video. We have fixed the same by avoiding the storing of cdef_uv_strengths when num_planes \u003d\u003d 1.",
+      "parentUuid": "6422367b_242d9792",
+      "revId": "a7579e98257f3ce205cfb0c5ba224b872b2d4396",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
