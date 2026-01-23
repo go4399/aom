@@ -16,6 +16,24 @@
       "message": "The results for different resolutions are as follows:\n\n```\n          Encoder Instruction                     BD-Rate Loss(%)\ncpu   Resolution Count Reduction(%)   avg.psnr  ovr.psnr  ssim     vmaf    vmaf_neg\n4     LOWRES2       -1.45             -0.5184   -0.5136  -0.6295  -0.3797  -0.4327\n4     MIDRES2       -1.47             -0.6292   -0.6419  -0.6737  -0.6678  -0.6157\n4     SHORTS608p    -2.39             -0.7637   -0.7874  -0.8392  -0.6513  -0.6387\n4     SHORTS720p    -1.92             -0.7009   -0.6992  -0.7162  -0.6205  -0.5702\n4     SHORTS1080p   -1.54             -0.4875   -0.4934  -0.5008  -0.4943  -0.441\n4     HDRES2        -1.80             -0.5172   -0.5304  -0.6158  -0.2826  -0.2115\n4     Average       -1.78             -0.6072   -0.6154  -0.6646  -0.5226  -0.4909\n\n5     LOWRES2       -2.44             -0.5560   -0.5499  -0.5658  -0.4337  -0.4668\n5     MIDRES2       -1.27             -0.5330   -0.5165  -0.7033  -0.5943  -0.5763\n5     SHORTS608p    -2.67             -0.7681   -0.8008  -0.8496  -0.7452  -0.6945\n5     SHORTS720p    -1.88             -0.5806   -0.6348  -0.6218  -0.3843  -0.4276\n5     SHORTS1080p   -0.28             -0.3052   -0.3897  -0.4323  -0.4523  -0.4051\n5     HDRES2        -1.41             -0.6122   -0.5907  -0.6432  -0.7391  -0.6767\n5     Average       -1.65             -0.5585   -0.583   -0.6359  -0.5554  -0.5383\n\n6     LOWRES2       -1.77             -0.5885   -0.5916  -0.7049  -0.6280  -0.5209\n6     MIDRES2       -2.01             -0.7579   -0.8112  -0.8707  -0.6743  -0.6677\n6     SHORTS608p    -2.31             -0.8845   -0.8236  -0.8464  -0.7985  -0.7966\n6     SHORTS720p    -2.12             -0.8232   -0.8245  -0.8562  -0.8172  -0.7968\n6     SHORTS1080p   -1.62             -0.7022   -0.7117  -0.7435  -0.6935  -0.677\n6     HDRES2        -1.21             -0.5952   -0.6125  -0.6942  -0.6803  -0.6448\n6     Average       -1.86             -0.7323   -0.7344  -0.7886  -0.7203  -0.6906\n```\n\nThe instruction count reduction specified has been measured using command:\n```\n$ perf stat -e instructions:u ./aomenc\n```\n\nWe noticed assertion failure in the unit test `AV1/FilmGrainEncodeTest.Test/11` with this patch. There was an assertion failure as stale CDEF filter strengths were stored for UV planes for monochrome video. We have fixed the same by avoiding the storing of `cdef_uv_strengths` when `num_planes \u003d\u003d 1`. \n\nPlease review.",
       "revId": "a7579e98257f3ce205cfb0c5ba224b872b2d4396",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f9bd58e1_d0f8d681",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-01-23T17:23:25Z",
+      "side": 1,
+      "message": "Nice tuning and really good tradeoff - thanks!",
+      "parentUuid": "29bd44cf_0ccb0014",
+      "revId": "a7579e98257f3ce205cfb0c5ba224b872b2d4396",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
