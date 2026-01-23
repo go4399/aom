@@ -60,6 +60,30 @@
       ],
       "revId": "80ec9e1fc65be38d55b152ba2dfcfb0cd8092529",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ffead15d_d8f93685",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 3821,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2026-01-23T02:24:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d97f830a_ea0644a0",
+      "range": {
+        "startLine": 3821,
+        "startChar": 8,
+        "endLine": 3821,
+        "endChar": 13
+      },
+      "revId": "80ec9e1fc65be38d55b152ba2dfcfb0cd8092529",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
