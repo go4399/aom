@@ -16,6 +16,24 @@
       "message": "The guidance from legal teams is to use the date a file was first published, all source code should have a copyright. In this case the file is auto generated, so it\u0027s more of a local \u0027published\u0027 date. I won\u0027t update this without guidance from legal council.\n\nWhat issue are you running into? Regenerating builds from an earlier year? These files are local to the project and not distributed, so there shouldn\u0027t be any external affect.",
       "revId": "8b0012dd9d313aa2832a0fdee58c79e96088e741",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7d825cef_3a4b1aeb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4583889
+      },
+      "writtenOn": "2026-01-24T11:47:12Z",
+      "side": 1,
+      "message": "Please check with legal there. When I build today\u0027s software next year, it should not claim a Copyright for 2027. IMHO that is not legal.\n\nIn openSUSE, we publish a libaom-debugsource rpm package that also contains these generated .h files for debuggers such as gdb. And we would like to be able to reproducible bit-identical packages anytime later. See https://reproducible-builds.org/ for why that matters.",
+      "parentUuid": "da5d3c4e_4320da4f",
+      "revId": "8b0012dd9d313aa2832a0fdee58c79e96088e741",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
