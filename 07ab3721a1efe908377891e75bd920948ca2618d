@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "94d3dd1a_473b9ad6",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1236,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-01-27T22:21:37Z",
+      "side": 0,
+      "message": "Could you test to see if \"cpi-\u003erc.frames_to_key \u003e 1\" helps any? I think I added it before, but not sure if this is still a good condition.",
+      "revId": "07ab3721a1efe908377891e75bd920948ca2618d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
