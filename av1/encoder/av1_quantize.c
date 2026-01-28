@@ -902,7 +902,9 @@ void av1_set_quantizer(AV1_COMMON *const cm, int min_qmlevel, int max_qmlevel,
         // The ramp-down of chroma increase was determined by generating the
         // convex hull of SSIMULACRA 2 scores (for all boosts from 0-16), and
         // finding a linear equation that fits the convex hull.
-        chroma_dc_delta_q = -clamp((quant_params->base_qindex / 2) - 14, 0, 16);
+        int offset = (tuning == AOM_TUNE_SSIMULACRA2) ? 20 : 16;
+        chroma_dc_delta_q =
+            -clamp((quant_params->base_qindex / 2) - 14, 0, offset);
         chroma_ac_delta_q = chroma_dc_delta_q;
       } else if (cm->seq_params->subsampling_x == 1 &&
                  cm->seq_params->subsampling_y == 0) {
@@ -995,7 +997,12 @@ void av1_set_quantizer(AV1_COMMON *const cm, int min_qmlevel, int max_qmlevel,
         // compared to 4:2:0 (2x on each dimension). This means the encoder
         // should use lower chroma QM levels that more closely match the scaling
         // of an equivalent 4:2:0 chroma QM.
-        get_chroma_qmlevel = aom_get_qmlevel_444_chroma;
+        if (tuning == AOM_TUNE_SSIMULACRA2) {
+          // Use chroma QM formula specifically tailored for tune SSIMULACRA2
+          get_chroma_qmlevel = aom_get_qmlevel_444_chroma_ssimulacra2;
+        } else {
+          get_chroma_qmlevel = aom_get_qmlevel_444_chroma;
+        }
       } else {
         // For all other chroma subsampling modes, use the all intra QM formula
         get_chroma_qmlevel = aom_get_qmlevel_allintra;

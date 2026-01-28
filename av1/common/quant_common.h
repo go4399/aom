@@ -116,17 +116,17 @@ static inline int aom_get_qmlevel_luma_ssimulacra2(int qindex, int first,
     qm_level = 10;
   } else if (qindex <= 60) {
     qm_level = 9;
-  } else if (qindex <= 100) {
+  } else if (qindex <= 90) {
     qm_level = 8;
   } else if (qindex <= 120) {
     qm_level = 7;
-  } else if (qindex <= 140) {
+  } else if (qindex <= 130) {
     qm_level = 6;
-  } else if (qindex <= 160) {
+  } else if (qindex <= 140) {
     qm_level = 5;
-  } else if (qindex <= 200) {
+  } else if (qindex <= 160) {
     qm_level = 4;
-  } else if (qindex <= 220) {
+  } else if (qindex <= 200) {
     qm_level = 3;
   } else {
     qm_level = 2;
@@ -148,6 +148,33 @@ static inline int aom_get_qmlevel_luma_ssimulacra2(int qindex, int first,
 // For more information on quantization matrices, please refer to
 // https://arxiv.org/pdf/2008.06091, section F.
 static inline int aom_get_qmlevel_444_chroma(int qindex, int first, int last) {
+  int chroma_qm_level = 0;
+
+  if (qindex <= 12) {
+    chroma_qm_level = 10;
+  } else if (qindex <= 24) {
+    chroma_qm_level = 9;
+  } else if (qindex <= 32) {
+    chroma_qm_level = 8;
+  } else if (qindex <= 36) {
+    chroma_qm_level = 7;
+  } else if (qindex <= 44) {
+    chroma_qm_level = 6;
+  } else if (qindex <= 48) {
+    chroma_qm_level = 5;
+  } else if (qindex <= 56) {
+    chroma_qm_level = 4;
+  } else if (qindex <= 88) {
+    chroma_qm_level = 3;
+  } else {
+    chroma_qm_level = 2;
+  }
+
+  return clamp(chroma_qm_level, first, last);
+}
+
+static inline int aom_get_qmlevel_444_chroma_ssimulacra2(int qindex, int first,
+                                                         int last) {
   int chroma_qm_level = 0;
 
   if (qindex <= 12) {
