@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "70777814_f0ebb5ad",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31012
+      },
+      "writtenOn": "2026-01-28T12:01:05Z",
+      "side": 1,
+      "message": "The patch [CL199121](https://aomedia-review.googlesource.com/c/aom/+/199121) that refactors the x86_simd_caps() function unintentionally removed the SSE4.2 instruction set support from the codec. Due to this change SSE4.2 optimization of av1_get_crc32c_value() is not enabled even if the hardware is capable. This patch re-enables the SSE4.2 support with appropriate changes in x86_simd_caps() function.\nThe results for different resolutions are as follows:\n\n`cpu  Resolution  Encoder ICR(%)`  \n\n`2     LOWRES2           0.80`        \n`2     MIDRES2           1.19`        \n`2     SHORTS608p        1.03`        \n`2     SHORTS720p        1.23`        \n`2     SHORTS1080p       1.35`       \n`2     HDRES2            1.59`        \n`2     Average           1.17`\n\n`3     LOWRES2           0.97`        \n`3     MIDRES2           1.59`        \n`3     SHORTS608p        1.20`        \n`3     SHORTS720p        1.27`        \n`3     SHORTS1080p       1.35`        \n`3     HDRES2            1.80`        \n`3     Average           1.34` \n\n`4     LOWRES2           0.72`        \n`4     MIDRES2           1.11`        \n`4     SHORTS608p        0.86`        \n`4     SHORTS720p        0.99`        \n`4     SHORTS1080p       1.00`        \n`4     HDRES2            1.30`        \n`4     Average           0.98`        \n\n`5     LOWRES2           0.93`        \n`5     MIDRES2           1.30`        \n`5     SHORTS608p        1.10`        \n`5     SHORTS720p        1.23`        \n`5     SHORTS1080p       1.32`        \n`5     HDRES2            1.46`        \n`5     Average           1.21`        \n\n`6     LOWRES2           1.06`        \n`6     MIDRES2           1.52`        \n`6     SHORTS608p        1.25`        \n`6     SHORTS720p        1.42`        \n`6     SHORTS1080p       1.54`        \n`6     HDRES2            1.72`        \n`6     Average           1.41`\n                   \nThe instruction count reduction specified has been measured using command:\n\n`$ perf stat -e instructions:u ./aomenc`\n\n\nPlease review the patch.",
+      "revId": "6287954709850d3ec41d38915ef82cecdbc8ca64",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
