@@ -34,6 +34,24 @@
       "parentUuid": "da5d3c4e_4320da4f",
       "revId": "8b0012dd9d313aa2832a0fdee58c79e96088e741",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8b6ecf0_0315803f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-01-28T18:34:05Z",
+      "side": 1,
+      "message": "\u003e Please check with legal there. When I build today\u0027s software next year, it should not claim a Copyright for 2027. IMHO that is not legal.\n\u003e \n\u003e In openSUSE, we publish a libaom-debugsource rpm package that also contains these generated .h files for debuggers such as gdb. And we would like to be able to reproducible bit-identical packages anytime later. See https://reproducible-builds.org/ for why that matters.\n\nThanks for the background. I\u0027ve asked our legal counsel, I haven\u0027t gotten a response yet.",
+      "parentUuid": "7d825cef_3a4b1aeb",
+      "revId": "8b0012dd9d313aa2832a0fdee58c79e96088e741",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
