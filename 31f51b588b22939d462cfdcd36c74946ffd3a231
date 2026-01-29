@@ -16,6 +16,24 @@
       "message": "The results for different resolutions are as follows:\n```\n           Encoder Instruction                     BD-Rate Loss(%)\ncpu   Resolution Count Reduction(%)   avg.psnr  ovr.psnr  ssim     vmaf    vmaf_neg\n4     LOWRES2       1.52              0.0745    0.0498    0.0647   0.0161   0.0353\n4     MIDRES2       1.71              0.052     0.0002    0.0284   0.06     0.0599\n4     SHORTS608p    1.89              0.1177    0.0823    0.0887   0.0334  -0.002\n4     SHORTS720p    0.39             -0.0257   -0.0256   -0.08     0.0564   0.0224\n4     SHORTS1080p   2.30             -0.0054   -0.0183    0.0191   0.0635   0.0249\n4     HDRES2        1.72              0.0343    0.0177   -0.0479  -0.0313  -0.0523\n4     Average       1.58              0.0401    0.0172    0.0119   0.0346   0.0147\n```\n\nThe instruction count reduction specified has been measured using command:\n```\n$ perf stat -e instructions:u ./aomenc\n```\nFor 608p and 720p shorts, a slightly higher BD-RATE loss in terms of avg.psnr and vmaf is observed.\n\nPlease review.",
       "revId": "31f51b588b22939d462cfdcd36c74946ffd3a231",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "822c1d1a_f080b552",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-01-29T16:56:16Z",
+      "side": 1,
+      "message": "Ok - overall tradeoff is good enough. Thanks.",
+      "parentUuid": "442c336c_e073bab1",
+      "revId": "31f51b588b22939d462cfdcd36c74946ffd3a231",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
