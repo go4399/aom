@@ -16,6 +16,24 @@
       "message": "This patch refactors `update_coeff_eob()`, `update_coeff_simple()` functions to\nremove redundant calls to `get_dqv()` and refactors the loops in the switch case of `update_coeff_eob_facade()` , `update_coeff_simple_facade()` functions.\n\nThe performance results across different resolutions are as follows:\n\n`cpu  Resolution    Encoder ICR(%)`\n`1\tLOWRES2\t        1.27`\n`1\tMIDRES2\t        1.44`\n`1\tSHORTS608P\t     1.20`\n`1\tSHORTS720P\t     1.06`\n`1\tSHORTS1080P\t    0.75`\n`1\tHDRES2\t         1.39`\n`1\tAverage\t        1.17`\n\n`2\tLOWRES2\t        1.26`\n`2\tMIDRES2\t        1.33`\n`2\tSHORTS608P\t     0.98`\n`2\tSHORTS720P\t     0.89`\n`2\tSHORTS1080P\t    0.61`\n`2\tHDRES2\t         1.23`\n`2\tAverage\t        1.03`\n\n`3\tLOWRES2\t        1.25`\n`3\tMIDRES2\t        1.12`\n`3\tSHORTS608P\t     0.74`\n`3\tSHORTS720P\t     0.67`\n`3\tSHORTS1080P\t    0.45`\n`3\tHDRES2\t         1.02`\n`3\tAverage\t        0.85`\n\n`4\tLOWRES2\t        0.87`\n`4\tMIDRES2\t        0.58`\n`4\tSHORTS608P\t     0.43`\n`4\tSHORTS720P\t     0.41`\n`4\tSHORTS1080P\t    0.28`\n`4\tHDRES2\t         0.49`\n`4\tAverage\t        0.50`\n\n`5\tLOWRES2\t        0.89`\n`5\tMIDRES2\t        0.66`\n`5\tSHORTS608P\t     0.54`\n`5\tSHORTS720P\t     0.50`\n`5\tSHORTS1080P\t    0.36`\n`5\tHDRES2\t         0.52`\n`5\tAverage\t        0.57`\n\n`6\tLOWRES2\t        0.69`\n`6\tMIDRES2\t        0.54`\n`6\tSHORTS608P\t     0.43`\n`6\tSHORTS720P\t     0.42`\n`6\tSHORTS1080P\t    0.28`\n`6\tHDRES2\t         0.47`\n`6\tAverage\t        0.46`\n\nThe instruction count reduction was measured using the following\ncommand:\n`$ perf stat -e instructions:u ./aomenc`\n\nPlease review the patch.",
       "revId": "459bf3c2b9bad3876c8fdb96a808ae16a4d8e00f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d72b639f_92daaba4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-02-06T17:06:27Z",
+      "side": 1,
+      "message": "Thanks - looks good",
+      "parentUuid": "4dbfb2e3_c3a10461",
+      "revId": "459bf3c2b9bad3876c8fdb96a808ae16a4d8e00f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
