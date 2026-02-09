@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "703439e0_f6c14962",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-02-09T20:07:25Z",
+      "side": 1,
+      "message": "\u003e James: This statement (the assignment of `ctx-\u003ebase.err_detail`) is not in the original code. Is this a bug fix?\n\u003e \n\u003e This is done in `update_error_state()`. I guess the `ENABLE_SET_JMP` macro is used by functions that don\u0027t call `update_error_state()`, right?\n\nYes you could view it as a bug fix. I added it for consistency after I noticed it was missing in a few of the blocks. The ones that were missing were related to allocation failures, so it\u0027s unlikely we would see them in most cases.",
+      "parentUuid": "b0edbb8e_b32872b6",
+      "revId": "2ee6ab474d805b2fec100e28fcb1851a19c8e3e7",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "c460a7ea_d0f20300",
         "filename": "av1/av1_cx_iface.c",
         "patchSetId": 1
