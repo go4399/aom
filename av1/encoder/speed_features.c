@@ -1093,7 +1093,7 @@ static void set_good_speed_features_framesize_independent(
   sf->gm_sf.disable_gm_search_based_on_stats = 1;
 
   sf->part_sf.less_rectangular_check_level = 1;
-  sf->part_sf.ml_prune_partition = 1;
+  // sf->part_sf.ml_prune_partition = 1;
   sf->part_sf.prune_ext_partition_types_search_level = 1;
   sf->part_sf.prune_part4_search = 2;
   sf->part_sf.simple_motion_search_prune_rect = 1;
