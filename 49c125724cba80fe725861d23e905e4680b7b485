@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2845191d_10de814a",
+        "filename": "test/datarate_test.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-02-10T20:01:29Z",
+      "side": 1,
+      "message": "This should be `1` with the current ordering of parameters. Alternatively, `raw_size_` and `1` could be swapped in the call.",
+      "range": {
+        "startLine": 56,
+        "startChar": 14,
+        "endLine": 56,
+        "endChar": 23
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "87ff03ef_929f685a",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/datarate_test.cc",
+              "range": {
+                "startLine": 56,
+                "startChar": 0,
+                "endLine": 57,
+                "endChar": 0
+              },
+              "replacement": "              1);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "49c125724cba80fe725861d23e905e4680b7b485",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
