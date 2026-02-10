@@ -1250,7 +1250,6 @@ static void set_good_speed_features_framesize_independent(
     sf->rd_sf.perform_coeff_opt = is_boosted_arf2_bwd_type ? 3 : 4;
     sf->rd_sf.use_mb_rd_hash = 1;
 
-    sf->lpf_sf.prune_wiener_based_on_src_var = 1;
     sf->lpf_sf.prune_sgr_based_on_wiener = 1;
     sf->lpf_sf.disable_loop_restoration_chroma = boosted ? 0 : 1;
 
