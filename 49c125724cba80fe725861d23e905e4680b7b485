@@ -40,6 +40,30 @@
       ],
       "revId": "49c125724cba80fe725861d23e905e4680b7b485",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8daece06_7248a9f5",
+        "filename": "test/datarate_test.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 8305
+      },
+      "writtenOn": "2026-02-12T03:43:06Z",
+      "side": 1,
+      "message": "Fix applied",
+      "parentUuid": "2845191d_10de814a",
+      "range": {
+        "startLine": 56,
+        "startChar": 14,
+        "endLine": 56,
+        "endChar": 23
+      },
+      "revId": "49c125724cba80fe725861d23e905e4680b7b485",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
