@@ -18,6 +18,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1409142_4c37738f",
+        "filename": "examples/low_complexity_mode_encoder.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-02-13T19:37:41Z",
+      "side": 1,
+      "message": "Yes, this is similar to aomenc. I wrote this as it is easy to control the encoder in this way. For the decoder, the existing one is used.",
+      "parentUuid": "4b7347ca_9b8a4cb3",
+      "revId": "acc4a8bced733a504460c9543db4bc785b39a684",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fec457f5_01318e7e",
@@ -31,6 +49,24 @@
       "writtenOn": "2026-02-13T19:20:32Z",
       "side": 1,
       "message": "Break this line:\n\n```\n if [ ! \"$(av1_encode_available)\" \u003d \"yes\" ] \\\n   || [ ! \"$(av1_decode_available)\" \u003d \"yes\" ]; then\n```\n\nor like some of the existing scripts:\n\n```\n if [ ! \"$(av1_encode_available)\" \u003d \"yes\" ] || \\\n    [ ! \"$(av1_decode_available)\" \u003d \"yes\" ]; then\n```",
+      "revId": "acc4a8bced733a504460c9543db4bc785b39a684",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "563a26d1_314c9209",
+        "filename": "test/low_complexity_test.sh",
+        "patchSetId": 10
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-02-13T19:37:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fec457f5_01318e7e",
       "revId": "acc4a8bced733a504460c9543db4bc785b39a684",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -52,6 +88,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "53ade343_10ed90f9",
+        "filename": "test/low_complexity_test.sh",
+        "patchSetId": 10
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-02-13T19:37:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b465151_7098986c",
+      "revId": "acc4a8bced733a504460c9543db4bc785b39a684",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d826e67f_4f8b1125",
@@ -65,6 +119,24 @@
       "writtenOn": "2026-02-13T19:20:32Z",
       "side": 1,
       "message": "Break this line after `low_complexity_test_verify_environment`.",
+      "revId": "acc4a8bced733a504460c9543db4bc785b39a684",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32528c5d_b8199d9d",
+        "filename": "test/low_complexity_test.sh",
+        "patchSetId": 10
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-02-13T19:37:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d826e67f_4f8b1125",
       "revId": "acc4a8bced733a504460c9543db4bc785b39a684",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
