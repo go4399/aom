@@ -1266,7 +1266,8 @@ static void set_good_speed_features_framesize_independent(
     sf->gm_sf.prune_zero_mv_with_sse = 1;
     sf->gm_sf.num_refinement_steps = 0;
 
-    sf->part_sf.less_rectangular_check_level = 2;
+    sf->part_sf.less_rectangular_check_level =
+        cm->quant_params.base_qindex >= 170 ? 1 : 2;
     sf->part_sf.simple_motion_search_prune_agg =
         allow_screen_content_tools
             ? SIMPLE_AGG_LVL0
@@ -1341,6 +1342,7 @@ static void set_good_speed_features_framesize_independent(
     sf->gm_sf.prune_zero_mv_with_sse = 2;
     sf->gm_sf.downsample_level = 1;
 
+    sf->part_sf.less_rectangular_check_level = 2;
     sf->part_sf.simple_motion_search_prune_agg =
         allow_screen_content_tools ? SIMPLE_AGG_LVL0 : SIMPLE_AGG_LVL4;
     sf->part_sf.simple_motion_search_reduce_search_steps = 4;
@@ -2917,9 +2919,9 @@ void av1_set_speed_features_qindex_dependent(AV1_COMP *cpi, int speed) {
     }
   }
 
-  if (speed >= 4) {
+  if (speed >= 3) {
     // Disable rectangular partitions for lower quantizers
-    const int aggr = AOMMIN(1, speed - 4);
+    const int aggr = (speed <= 4) ? 0 : 1;
     const int qindex_thresh[2] = { 65, 80 };
     int disable_rect_part;
     disable_rect_part = !boosted;
