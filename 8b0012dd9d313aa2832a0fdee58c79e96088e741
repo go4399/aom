@@ -52,6 +52,47 @@
       "parentUuid": "7d825cef_3a4b1aeb",
       "revId": "8b0012dd9d313aa2832a0fdee58c79e96088e741",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0536930_15873dc3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-02-13T23:15:11Z",
+      "side": 1,
+      "message": "\u003e \u003e Please check with legal there. When I build today\u0027s software next year, it should not claim a Copyright for 2027. IMHO that is not legal.\n\u003e \u003e \n\u003e \u003e In openSUSE, we publish a libaom-debugsource rpm package that also contains these generated .h files for debuggers such as gdb. And we would like to be able to reproducible bit-identical packages anytime later. See https://reproducible-builds.org/ for why that matters.\n\u003e \n\u003e Thanks for the background. I\u0027ve asked our legal counsel, I haven\u0027t gotten a response yet.\n\nSorry for the delay on this. After discussion with others, we\u0027ve decided to fix the year at the date of the generator script: 2017. I\u0027ve posted a change for libvpx to do this.",
+      "parentUuid": "d8b6ecf0_0315803f",
+      "revId": "8b0012dd9d313aa2832a0fdee58c79e96088e741",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17987c9f_3a5c9ef2",
+        "filename": "build/cmake/rtcd.pl",
+        "patchSetId": 1
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-02-13T23:15:11Z",
+      "side": 1,
+      "message": "Make this 2017.",
+      "range": {
+        "startLine": 226,
+        "startChar": 17,
+        "endLine": 226,
+        "endChar": 21
+      },
+      "revId": "8b0012dd9d313aa2832a0fdee58c79e96088e741",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
