@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "207d0892_ddb78b2f",
+        "filename": "examples/low_complexity_mode_encoder.c",
+        "patchSetId": 12
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-16T22:39:52Z",
+      "side": 1,
+      "message": "The test fails here in the real-time only configuration:\nhttps://build.aomedia.org/jenkins/job/libaom__example_test-multi-target/2626/\n\nThe console output has the following messages:\n\n```\n21:35:53   RUN  low_complexity_mode_test\n21:35:53 The LC mode encoder is started.\n21:35:53 Failed to get default codec config.: Unrecognized error code\n21:35:53     ELF\u0002\u0001\u0001\u0003\n21:35:53 Using AOMedia Project AV1 Encoder 3.13.1-239-g3c18637ca0\n21:35:53 FAIL: low_complexity_mode_test\n```",
+      "revId": "c3315eeb3e5e1ef4c6b932e8b1b2d4ce22421738",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
