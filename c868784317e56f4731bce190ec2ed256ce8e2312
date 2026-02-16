@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d13794e_3d259df6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 33002
+      },
+      "writtenOn": "2026-02-16T14:11:22Z",
+      "side": 1,
+      "message": "Performance results of the encoder are provided below for all resolutions wrt commit [4e089263](https://aomedia.googlesource.com/aom/+/4e08926396d912f0cbf9ee1d26c3b1c262914019):\n```\n                     Instruction\ncpu   Resolution   Count Reduction(%)\n1     LOWRES2\t      1.740\n1     MIDRES2\t      1.508\n1     SHORTS608p       1.348\n1     SHORTS720p       1.201\n1     SHORTS1080p      1.097\n1     HDRES2\t       1.218\n1     Average\t      1.339\n\t        \n2     LOWRES2\t      1.473\n2     MIDRES2\t      1.177\n2     SHORTS608p       1.072\n2     SHORTS720p       0.871\n2     SHORTS1080p      0.803\n2     HDRES2\t       0.845\n2     Average\t      1.029\n```\nAlso, the performance results of the encoder for CPU 0 are provided below for limited resolutions:\n```\n                     Instruction\ncpu   Resolution   Count Reduction(%)\n0\t  LOWRES2         1.510\n0\t  MIDRES2         1.220\n0\t  Average         1.365\n```\n\nThe instruction count reduction specified has been measured using command:\n$ `perf stat -e instructions:u ./aomenc …`\n\n Please review.",
+      "revId": "c868784317e56f4731bce190ec2ed256ce8e2312",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
