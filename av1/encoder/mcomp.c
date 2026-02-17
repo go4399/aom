@@ -2895,7 +2895,7 @@ static AOM_FORCE_INLINE void second_level_check_v2(
                             best_mv->col + diag_step.col };
   int has_better_mv = 0;
 
-  if (var_params->subpel_search_type != USE_2_TAPS_ORIG) {
+  if (var_params->subpel_search_type > USE_2_TAPS) {
     check_better(xd, cm, &row_bias_mv, best_mv, mv_limits, var_params,
                  mv_cost_params, besterr, sse1, distortion, &has_better_mv);
     check_better(xd, cm, &col_bias_mv, best_mv, mv_limits, var_params,
@@ -3326,7 +3326,7 @@ int av1_find_best_sub_pixel_tree(MACROBLOCKD *xd, const AV1_COMMON *const cm,
     *distortion = start_mv_stats->distortion;
     *sse1 = start_mv_stats->sse;
   } else {
-    if (subpel_search_type != USE_2_TAPS_ORIG) {
+    if (subpel_search_type > USE_2_TAPS) {
       besterr = upsampled_setup_center_error(xd, cm, bestmv, var_params,
                                              mv_cost_params, sse1, distortion);
     } else {
@@ -3346,7 +3346,7 @@ int av1_find_best_sub_pixel_tree(MACROBLOCKD *xd, const AV1_COMMON *const cm,
     }
 
     MV diag_step;
-    if (subpel_search_type != USE_2_TAPS_ORIG) {
+    if (subpel_search_type > USE_2_TAPS) {
       diag_step = first_level_check(xd, cm, iter_center_mv, bestmv, hstep,
                                     mv_limits, var_params, mv_cost_params,
                                     &besterr, sse1, distortion);
@@ -3829,7 +3829,7 @@ static AOM_FORCE_INLINE MV obmc_first_level_check(
   const MV top_mv = { this_mv.row - hstep, this_mv.col };
   const MV bottom_mv = { this_mv.row + hstep, this_mv.col };
 
-  if (var_params->subpel_search_type != USE_2_TAPS_ORIG) {
+  if (var_params->subpel_search_type > USE_2_TAPS) {
     const unsigned int left =
         obmc_check_better(xd, cm, &left_mv, best_mv, mv_limits, var_params,
                           mv_cost_params, besterr, sse1, distortion, &dummy);
@@ -3905,7 +3905,7 @@ static AOM_FORCE_INLINE void obmc_second_level_check_v2(
                             best_mv->col + diag_step.col };
   int has_better_mv = 0;
 
-  if (var_params->subpel_search_type != USE_2_TAPS_ORIG) {
+  if (var_params->subpel_search_type > USE_2_TAPS) {
     obmc_check_better(xd, cm, &row_bias_mv, best_mv, mv_limits, var_params,
                       mv_cost_params, besterr, sse1, distortion,
                       &has_better_mv);
@@ -3958,7 +3958,7 @@ int av1_find_best_obmc_sub_pixel_tree_up(
   unsigned int besterr = INT_MAX;
   *bestmv = start_mv;
 
-  if (subpel_search_type != USE_2_TAPS_ORIG)
+  if (subpel_search_type > USE_2_TAPS)
     besterr = upsampled_setup_obmc_center_error(
         xd, cm, bestmv, var_params, mv_cost_params, sse1, distortion);
   else
