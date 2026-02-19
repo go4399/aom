@@ -777,6 +777,7 @@ static aom_codec_err_t validate_config(aom_codec_alg_priv_t *ctx,
   RANGE_CHECK(extra_cfg, cpu_used, 0,
               (cfg->g_usage == AOM_USAGE_REALTIME) ? 12 : 9);
   RANGE_CHECK_HI(extra_cfg, noise_sensitivity, 6);
+
   RANGE_CHECK(extra_cfg, superblock_size, AOM_SUPERBLOCK_SIZE_64X64,
               AOM_SUPERBLOCK_SIZE_DYNAMIC);
   RANGE_CHECK_HI(cfg, large_scale_tile, 1);
@@ -1660,6 +1661,10 @@ static aom_codec_err_t encoder_set_config(aom_codec_alg_priv_t *ctx,
   if (cfg->g_lag_in_frames != ctx->cfg.g_lag_in_frames &&
       ctx->num_lap_buffers > 0)
     ERROR("Cannot change lag_in_frames if LAP is enabled");
+
+  // Disable denoiser for spatial layers. Bug: 485332522.
+  if (ctx->ppi->cpi->svc.number_spatial_layers > 1)
+    ctx->extra_cfg.noise_sensitivity = 0;
 
   res = validate_config(ctx, cfg, &ctx->extra_cfg);
 
