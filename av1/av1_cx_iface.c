@@ -1661,6 +1661,10 @@ static aom_codec_err_t encoder_set_config(aom_codec_alg_priv_t *ctx,
       ctx->num_lap_buffers > 0)
     ERROR("Cannot change lag_in_frames if LAP is enabled");
 
+  // Disable denoiser for spatial layers. Bug: 485332522.
+  if (ctx->ppi->cpi->svc.number_spatial_layers > 1)
+    ctx->extra_cfg.noise_sensitivity = 0;
+
   res = validate_config(ctx, cfg, &ctx->extra_cfg);
 
   if (res == AOM_CODEC_OK) {
