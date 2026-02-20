@@ -24,6 +24,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a30a9825_f9c031fc",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 1770,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-02-20T03:07:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1cf9092_a7f05c70",
+      "range": {
+        "startLine": 1770,
+        "startChar": 5,
+        "endLine": 1770,
+        "endChar": 9
+      },
+      "revId": "d9766d6653c01d1dd34fb5bc9985a7f07f19c5ea",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c7f96f7c_735f9a0c",
@@ -37,6 +61,24 @@
       "writtenOn": "2026-02-19T23:36:34Z",
       "side": 1,
       "message": "Nit: Change `AOM_TUNE_VMAF` to `AOM_TUNE_VMAF_*`",
+      "revId": "d9766d6653c01d1dd34fb5bc9985a7f07f19c5ea",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1f2277b9_0ebbd370",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 1772,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-02-20T03:07:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c7f96f7c_735f9a0c",
       "revId": "d9766d6653c01d1dd34fb5bc9985a7f07f19c5ea",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -58,6 +100,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fcfac0f0_f91785cc",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 1779,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-02-20T03:07:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd04eee7_1fa71eba",
+      "revId": "d9766d6653c01d1dd34fb5bc9985a7f07f19c5ea",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6662c278_61e1a5d5",
@@ -71,6 +131,24 @@
       "writtenOn": "2026-02-19T23:36:34Z",
       "side": 1,
       "message": "Nit: Please use either this form:\n\n```\n  /* line 1\n   * line 2\n   * line 3\n   */\n```\n\nor\n\n```\n  // line 1\n  // line 2\n  // line 3\n```",
+      "revId": "d9766d6653c01d1dd34fb5bc9985a7f07f19c5ea",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f850c1a2_19a03047",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 1781,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-02-20T03:07:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6662c278_61e1a5d5",
       "revId": "d9766d6653c01d1dd34fb5bc9985a7f07f19c5ea",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
