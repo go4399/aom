@@ -63,6 +63,30 @@
       },
       "revId": "764b4e117523a5da426c1b4146788099e3e1f51f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d79cf549_5f773ad2",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 1780,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-02-20T19:59:39Z",
+      "side": 1,
+      "message": "@chengchen@google.com you\u0027re correct. Basically, tune\u003diq is the best option for subjective quality.\n\nI\u0027ll rephrase the last sentence so it doesn\u0027t sound negative, but still encourage users to prefer tune\u003diq over tune\u003dssimulacra2.",
+      "parentUuid": "e4afa969_c884b5dd",
+      "range": {
+        "startLine": 1778,
+        "startChar": 18,
+        "endLine": 1780,
+        "endChar": 17
+      },
+      "revId": "764b4e117523a5da426c1b4146788099e3e1f51f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
