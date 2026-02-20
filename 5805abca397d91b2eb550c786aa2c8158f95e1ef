@@ -35,6 +35,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cad15cb3_29b09aa8",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1601,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-02-20T17:24:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23dbeead_7292c288",
+      "revId": "5805abca397d91b2eb550c786aa2c8158f95e1ef",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a3c80711_74cdb003",
@@ -48,6 +66,24 @@
       "writtenOn": "2026-02-20T16:14:15Z",
       "side": 1,
       "message": "Nit: I suggest changing this line to:\n\n```\n    // Here we set the default values to --enable-cdef\u003d0, --screen-detection-mode\u003d2, --qm-min\u003d4, and --qm-max\u003d10 when\n```",
+      "revId": "5805abca397d91b2eb550c786aa2c8158f95e1ef",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "60861e32_7a7e2e9f",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 3015,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-02-20T17:24:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3c80711_74cdb003",
       "revId": "5805abca397d91b2eb550c786aa2c8158f95e1ef",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
