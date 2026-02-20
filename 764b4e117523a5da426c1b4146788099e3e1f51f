@@ -39,6 +39,30 @@
       },
       "revId": "764b4e117523a5da426c1b4146788099e3e1f51f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e4afa969_c884b5dd",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 1780,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-20T18:11:56Z",
+      "side": 1,
+      "message": "Julio: I also think this last sentence sounds negative. I think you are saying that in some cases where SSIMULACRA 2 scores and subjective quality disagree, tune\u003dssimulacra2 give priority to SSIMULACRA 2 scores, Is this correct?",
+      "parentUuid": "c0df62af_4ffda43f",
+      "range": {
+        "startLine": 1778,
+        "startChar": 18,
+        "endLine": 1780,
+        "endChar": 17
+      },
+      "revId": "764b4e117523a5da426c1b4146788099e3e1f51f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
