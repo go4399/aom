@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f8ba59e6_beed258a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-20T18:27:06Z",
+      "side": 1,
+      "message": "LGTM.\n\nJames: Please review. Thanks!\n\nCheng: Just FYI.",
+      "revId": "2008d973c417cd33731ba4347f37d9ae69a0c770",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bef8f316_13b4d1a0",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 3016,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-20T18:27:06Z",
+      "side": 1,
+      "message": "Nit: the word \"respectively\" is not needed now.",
+      "revId": "2008d973c417cd33731ba4347f37d9ae69a0c770",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
