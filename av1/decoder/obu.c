@@ -47,6 +47,8 @@ aom_codec_err_t aom_get_num_layers_from_operating_point_idc(
     for (int j = 0; j < MAX_NUM_TEMPORAL_LAYERS; j++) {
       *number_temporal_layers += (operating_point_idc >> j) & 0x1;
     }
+    if (*number_spatial_layers == 0 || *number_temporal_layers == 0)
+      return AOM_CODEC_UNSUP_BITSTREAM;
   }
 
   return AOM_CODEC_OK;
