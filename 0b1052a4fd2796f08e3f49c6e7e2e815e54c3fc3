@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee051ff6_87a8d957",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1823,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-02-23T20:35:39Z",
+      "side": 1,
+      "message": "Add a link to the bug here. The name of the test is fine as it\u0027s clear what\u0027s being tested. In other cases (for fuzzing mostly) we\u0027ve used `Buganizer...` or `OssFuzz...` to provide a reference to the bug.",
+      "range": {
+        "startLine": 1823,
+        "startChar": 5,
+        "endLine": 1823,
+        "endChar": 30
+      },
+      "revId": "0b1052a4fd2796f08e3f49c6e7e2e815e54c3fc3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ff845ae_1f6fa54a",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1825,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-02-23T20:35:39Z",
+      "side": 1,
+      "message": "use `/*d_w\u003d*/16` style comments for these.",
+      "range": {
+        "startLine": 1825,
+        "startChar": 56,
+        "endLine": 1825,
+        "endChar": 58
+      },
+      "revId": "0b1052a4fd2796f08e3f49c6e7e2e815e54c3fc3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80921339_29566c72",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1833,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-02-23T20:35:39Z",
+      "side": 1,
+      "message": "You can annotate these parameters too.",
+      "range": {
+        "startLine": 1833,
+        "startChar": 39,
+        "endLine": 1833,
+        "endChar": 48
+      },
+      "revId": "0b1052a4fd2796f08e3f49c6e7e2e815e54c3fc3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
