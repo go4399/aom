@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "be166821_d054fe2b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-23T23:00:14Z",
+      "side": 1,
+      "message": "James: I am sorry this CL is a little long. Please review it carefully and I would also appreciate your comments on style issues. Thanks!",
+      "revId": "8e7964ae3d874c8b5d335f7a6b1b4e29414fea38",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "75193aa3_7ba57f40",
+        "filename": "av1/decoder/obu.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-23T23:00:14Z",
+      "side": 1,
+      "message": "James: This is the change I originally wanted to make. While making this change, I noticed stale comments and other minor issues. I did not try to separate those cleanup changes from this change. Sorry about that.",
+      "revId": "8e7964ae3d874c8b5d335f7a6b1b4e29414fea38",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ff22a97a_b2eab8f7",
+        "filename": "av1/decoder/obu.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-23T23:00:14Z",
+      "side": 1,
+      "message": "Since this function has only one return statement (at line 328) and the expression it returns is of the `uint32_t` type, there is no reason for this function to return `int32_t` now.",
+      "revId": "8e7964ae3d874c8b5d335f7a6b1b4e29414fea38",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5cdeb74_2f370bed",
+        "filename": "av1/decoder/obu.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-23T23:00:14Z",
+      "side": 1,
+      "message": "I did not check whether this `uint32_t` cast is safe. I also did not check whether the sum `header_size + tg_payload_size` in line 353 will not overflow. I have to stop somewhere. Sigh.",
+      "revId": "8e7964ae3d874c8b5d335f7a6b1b4e29414fea38",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
