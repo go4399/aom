@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ab0ee58_6720d0b5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31322
+      },
+      "writtenOn": "2026-02-23T13:21:11Z",
+      "side": 1,
+      "message": "In the current codebase, we observed that the function av1_find_best_sub_pixel_tree() is not calling optimized functions (like check_better_fast(), first_level_check_fast(), setup_center_error()) when  bilinear filter is used for sub-pel search. This seems to be due the [CL71101](https://aomedia-review.googlesource.com/c/aom/+/71101) which introduced “USE_2_TAPS_ORIG“ as the first member of the enum SUBPEL_SEARCH_TYPE which is used to call the “fast” suffixed functions. As the tpl module uses bilinear filter for sub-pel search this results in sub-optimal performance for speed\u003d0, 1, 2 (as the function av1_find_best_sub_pixel_tree() is called only when “subpel_search_method” is set as SUBPEL_TREE). We have fixed this issue in this patch.\n\nWe have not made a similar change in av1_find_best_obmc_sub_pixel_tree_up() as it would only impact the RT preset where subpel_search_type is set to USE_2_TAPS. Additionally, the functions obmc_check_better() and obmc_check_better_fast() seem to return different costs (mv_err_cost_() and estimate_obmc_mvcost()) which may not produce bit-exact results.\n\nPerformance results of the encoder are provided below for all resolutions wrt commit a27d804:\n\n```\n                  Instruction\ncpu Resolution  Count Reduction(%)\n----------------------------------\n1    LOWRES2         1.02\n1    MIDRES2         1.89     \n1    SHORTS608p      1.74\n1    SHORTS720p      1.75\n1    SHORTS1080p     2.17\n1    HDRES2          2.37\n1    Average         1.83\n\n2    LOWRES2         1.07\n2    MIDRES2         1.76     \n2    SHORTS608p      1.74\n2    SHORTS720p      1.86\n2    SHORTS1080p     2.35\n2    HDRES2          2.21\n2    Average         1.84\n```\nAlso, the performance results of the encoder for CPU 0 are provided below for limited resolutions:\n```\n                   Instruction\ncpu Resolution   Count Reduction(%)\n----------------------------------\n0    LOWRES2         0.45\n0    MIDRES2         0.73\n0    Average         0.59\n```\nSince this patch avoids calling upsampled_pref_error() and the [CL207021](https://aomedia-review.googlesource.com/c/aom/+/207021) optimizes the same, the instruction count reduction w.r.t [CL207021](https://aomedia-review.googlesource.com/c/aom/+/207021) is ~0.2% smaller as follows \n\n```\n                   Instruction\ncpu Resolution   Count Reduction(%)\n----------------------------------\n2    LOWRES2         0.98\n2    SHORTS608p      1.48\n2    HDRES2          1.89\n2    Average         1.44\n```\n\nThe instruction count reduction specified has been measured using command:\n```\n`$ perf stat -e instructions:u ./aomenc`\n```\nPlease review.",
+      "revId": "26f8e2471d1f9602537e35e56e8636b7d8096e65",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
