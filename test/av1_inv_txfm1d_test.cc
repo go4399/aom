@@ -152,4 +152,18 @@ TEST(av1_inv_txfm1d, round_trip) {
   }
 }
 
+TEST(av1_inv_txfm1d, iadst4_overflow) {
+  // Test case to trigger integer overflow in av1_iadst4
+  // These inputs combined with sinpi values trigger an overflow in the
+  // unscaled intermediate values if accumulated as int32_t.
+  int32_t input[64] = { 300000, 0, 100000, 160000 };
+  int32_t output[64];
+
+  av1_iadst4(input, output, cos_bit, range_bit);
+
+  // Verify that the transform completes without UBSan errors and
+  // the output is non-zero.
+  EXPECT_NE(output[0], 0);
+}
+
 }  // namespace
