@@ -2895,7 +2895,7 @@ static AOM_FORCE_INLINE void second_level_check_v2(
                             best_mv->col + diag_step.col };
   int has_better_mv = 0;
 
-  if (var_params->subpel_search_type != USE_2_TAPS_ORIG) {
+  if (var_params->subpel_search_type != USE_2_TAPS) {
     check_better(xd, cm, &row_bias_mv, best_mv, mv_limits, var_params,
                  mv_cost_params, besterr, sse1, distortion, &has_better_mv);
     check_better(xd, cm, &col_bias_mv, best_mv, mv_limits, var_params,
@@ -3326,7 +3326,7 @@ int av1_find_best_sub_pixel_tree(MACROBLOCKD *xd, const AV1_COMMON *const cm,
     *distortion = start_mv_stats->distortion;
     *sse1 = start_mv_stats->sse;
   } else {
-    if (subpel_search_type != USE_2_TAPS_ORIG) {
+    if (subpel_search_type != USE_2_TAPS) {
       besterr = upsampled_setup_center_error(xd, cm, bestmv, var_params,
                                              mv_cost_params, sse1, distortion);
     } else {
@@ -3346,7 +3346,7 @@ int av1_find_best_sub_pixel_tree(MACROBLOCKD *xd, const AV1_COMMON *const cm,
     }
 
     MV diag_step;
-    if (subpel_search_type != USE_2_TAPS_ORIG) {
+    if (subpel_search_type != USE_2_TAPS) {
       diag_step = first_level_check(xd, cm, iter_center_mv, bestmv, hstep,
                                     mv_limits, var_params, mv_cost_params,
                                     &besterr, sse1, distortion);
@@ -3641,24 +3641,6 @@ unsigned int av1_refine_warped_mv(MACROBLOCKD *xd, const AV1_COMMON *const cm,
 // =============================================================================
 //  Subpixel Motion Search: OBMC
 // =============================================================================
-// Estimates the variance of prediction residue
-static inline int estimate_obmc_pref_error(
-    const MV *this_mv, const SUBPEL_SEARCH_VAR_PARAMS *var_params,
-    unsigned int *sse) {
-  const aom_variance_fn_ptr_t *vfp = var_params->vfp;
-
-  const MSBuffers *ms_buffers = &var_params->ms_buffers;
-  const int32_t *src = ms_buffers->wsrc;
-  const int32_t *mask = ms_buffers->obmc_mask;
-  const uint8_t *ref = get_buf_from_mv(ms_buffers->ref, *this_mv);
-  const int ref_stride = ms_buffers->ref->stride;
-
-  const int subpel_x_q3 = get_subpel_part(this_mv->col);
-  const int subpel_y_q3 = get_subpel_part(this_mv->row);
-
-  return vfp->osvf(ref, ref_stride, subpel_x_q3, subpel_y_q3, src, mask, sse);
-}
-
 // Calculates the variance of prediction residue
 static int upsampled_obmc_pref_error(MACROBLOCKD *xd, const AV1_COMMON *cm,
                                      const MV *this_mv,
@@ -3705,23 +3687,6 @@ static int upsampled_obmc_pref_error(MACROBLOCKD *xd, const AV1_COMMON *cm,
   return besterr;
 }
 
-static unsigned int setup_obmc_center_error(
-    const MV *this_mv, const SUBPEL_SEARCH_VAR_PARAMS *var_params,
-    const MV_COST_PARAMS *mv_cost_params, unsigned int *sse1, int *distortion) {
-  // TODO(chiyotsai@google.com): There might be a bug here where we didn't use
-  // get_buf_from_mv(ref, *this_mv).
-  const MSBuffers *ms_buffers = &var_params->ms_buffers;
-  const int32_t *wsrc = ms_buffers->wsrc;
-  const int32_t *mask = ms_buffers->obmc_mask;
-  const uint8_t *ref = ms_buffers->ref->buf;
-  const int ref_stride = ms_buffers->ref->stride;
-  unsigned int besterr =
-      var_params->vfp->ovf(ref, ref_stride, wsrc, mask, sse1);
-  *distortion = besterr;
-  besterr += mv_err_cost_(this_mv, mv_cost_params);
-  return besterr;
-}
-
 static unsigned int upsampled_setup_obmc_center_error(
     MACROBLOCKD *xd, const AV1_COMMON *const cm, const MV *this_mv,
     const SUBPEL_SEARCH_VAR_PARAMS *var_params,
@@ -3731,61 +3696,6 @@ static unsigned int upsampled_setup_obmc_center_error(
   *distortion = besterr;
   besterr += mv_err_cost_(this_mv, mv_cost_params);
   return besterr;
-}
-
-// Estimates the variance of prediction residue
-// TODO(chiyotsai@google.com): the cost does does not match the cost in
-// mv_cost_. Investigate this later.
-static inline int estimate_obmc_mvcost(const MV *this_mv,
-                                       const MV_COST_PARAMS *mv_cost_params) {
-  const MV *ref_mv = mv_cost_params->ref_mv;
-  const int *mvjcost = mv_cost_params->mvjcost;
-  const int *const *mvcost = mv_cost_params->mvcost;
-  const int error_per_bit = mv_cost_params->error_per_bit;
-  const MV_COST_TYPE mv_cost_type = mv_cost_params->mv_cost_type;
-  const MV diff_mv = { GET_MV_SUBPEL(this_mv->row - ref_mv->row),
-                       GET_MV_SUBPEL(this_mv->col - ref_mv->col) };
-
-  switch (mv_cost_type) {
-    case MV_COST_ENTROPY:
-      return (unsigned)((mv_cost(&diff_mv, mvjcost,
-                                 CONVERT_TO_CONST_MVCOST(mvcost)) *
-                             error_per_bit +
-                         4096) >>
-                        13);
-    case MV_COST_NONE: return 0;
-    default:
-      assert(0 && "L1 norm is not tuned for estimated obmc mvcost");
-      return 0;
-  }
-}
-
-// Estimates whether this_mv is better than best_mv. This function incorporates
-// both prediction error and residue into account.
-static inline unsigned int obmc_check_better_fast(
-    const MV *this_mv, MV *best_mv, const SubpelMvLimits *mv_limits,
-    const SUBPEL_SEARCH_VAR_PARAMS *var_params,
-    const MV_COST_PARAMS *mv_cost_params, unsigned int *besterr,
-    unsigned int *sse1, int *distortion, int *has_better_mv) {
-  unsigned int cost;
-  if (av1_is_subpelmv_in_range(mv_limits, *this_mv)) {
-    unsigned int sse;
-    const int thismse = estimate_obmc_pref_error(this_mv, var_params, &sse);
-
-    cost = estimate_obmc_mvcost(this_mv, mv_cost_params);
-    cost += thismse;
-
-    if (cost < *besterr) {
-      *besterr = cost;
-      *best_mv = *this_mv;
-      *distortion = thismse;
-      *sse1 = sse;
-      *has_better_mv |= 1;
-    }
-  } else {
-    cost = INT_MAX;
-  }
-  return cost;
 }
 
 // Estimates whether this_mv is better than best_mv. This function incorporates
@@ -3798,6 +3708,9 @@ static inline unsigned int obmc_check_better(
   unsigned int cost;
   if (av1_is_subpelmv_in_range(mv_limits, *this_mv)) {
     unsigned int sse;
+    // When subpel_search_type is USE_2_TAPS(i.e., bilinear filter is used to
+    // estimate the prediction), consider using "aom_obmc_subpixvariance_fn_t"
+    // to estimate the variance of prediction residue for better speed.
     const int thismse =
         upsampled_obmc_pref_error(xd, cm, this_mv, var_params, &sse);
     cost = mv_err_cost_(this_mv, mv_cost_params);
@@ -3829,55 +3742,28 @@ static AOM_FORCE_INLINE MV obmc_first_level_check(
   const MV top_mv = { this_mv.row - hstep, this_mv.col };
   const MV bottom_mv = { this_mv.row + hstep, this_mv.col };
 
-  if (var_params->subpel_search_type != USE_2_TAPS_ORIG) {
-    const unsigned int left =
-        obmc_check_better(xd, cm, &left_mv, best_mv, mv_limits, var_params,
-                          mv_cost_params, besterr, sse1, distortion, &dummy);
-    const unsigned int right =
-        obmc_check_better(xd, cm, &right_mv, best_mv, mv_limits, var_params,
-                          mv_cost_params, besterr, sse1, distortion, &dummy);
-    const unsigned int up =
-        obmc_check_better(xd, cm, &top_mv, best_mv, mv_limits, var_params,
-                          mv_cost_params, besterr, sse1, distortion, &dummy);
-    const unsigned int down =
-        obmc_check_better(xd, cm, &bottom_mv, best_mv, mv_limits, var_params,
-                          mv_cost_params, besterr, sse1, distortion, &dummy);
+  const unsigned int left =
+      obmc_check_better(xd, cm, &left_mv, best_mv, mv_limits, var_params,
+                        mv_cost_params, besterr, sse1, distortion, &dummy);
+  const unsigned int right =
+      obmc_check_better(xd, cm, &right_mv, best_mv, mv_limits, var_params,
+                        mv_cost_params, besterr, sse1, distortion, &dummy);
+  const unsigned int up =
+      obmc_check_better(xd, cm, &top_mv, best_mv, mv_limits, var_params,
+                        mv_cost_params, besterr, sse1, distortion, &dummy);
+  const unsigned int down =
+      obmc_check_better(xd, cm, &bottom_mv, best_mv, mv_limits, var_params,
+                        mv_cost_params, besterr, sse1, distortion, &dummy);
 
-    const MV diag_step = get_best_diag_step(hstep, left, right, up, down);
-    const MV diag_mv = { this_mv.row + diag_step.row,
-                         this_mv.col + diag_step.col };
+  const MV diag_step = get_best_diag_step(hstep, left, right, up, down);
+  const MV diag_mv = { this_mv.row + diag_step.row,
+                       this_mv.col + diag_step.col };
 
-    // Check the diagonal direction with the best mv
-    obmc_check_better(xd, cm, &diag_mv, best_mv, mv_limits, var_params,
-                      mv_cost_params, besterr, sse1, distortion, &dummy);
+  // Check the diagonal direction with the best mv
+  obmc_check_better(xd, cm, &diag_mv, best_mv, mv_limits, var_params,
+                    mv_cost_params, besterr, sse1, distortion, &dummy);
 
-    return diag_step;
-  } else {
-    const unsigned int left = obmc_check_better_fast(
-        &left_mv, best_mv, mv_limits, var_params, mv_cost_params, besterr, sse1,
-        distortion, &dummy);
-    const unsigned int right = obmc_check_better_fast(
-        &right_mv, best_mv, mv_limits, var_params, mv_cost_params, besterr,
-        sse1, distortion, &dummy);
-
-    const unsigned int up = obmc_check_better_fast(
-        &top_mv, best_mv, mv_limits, var_params, mv_cost_params, besterr, sse1,
-        distortion, &dummy);
-
-    const unsigned int down = obmc_check_better_fast(
-        &bottom_mv, best_mv, mv_limits, var_params, mv_cost_params, besterr,
-        sse1, distortion, &dummy);
-
-    const MV diag_step = get_best_diag_step(hstep, left, right, up, down);
-    const MV diag_mv = { this_mv.row + diag_step.row,
-                         this_mv.col + diag_step.col };
-
-    // Check the diagonal direction with the best mv
-    obmc_check_better_fast(&diag_mv, best_mv, mv_limits, var_params,
-                           mv_cost_params, besterr, sse1, distortion, &dummy);
-
-    return diag_step;
-  }
+  return diag_step;
 }
 
 // A newer version of second level check for obmc that gives better quality.
@@ -3905,34 +3791,16 @@ static AOM_FORCE_INLINE void obmc_second_level_check_v2(
                             best_mv->col + diag_step.col };
   int has_better_mv = 0;
 
-  if (var_params->subpel_search_type != USE_2_TAPS_ORIG) {
-    obmc_check_better(xd, cm, &row_bias_mv, best_mv, mv_limits, var_params,
+  obmc_check_better(xd, cm, &row_bias_mv, best_mv, mv_limits, var_params,
+                    mv_cost_params, besterr, sse1, distortion, &has_better_mv);
+  obmc_check_better(xd, cm, &col_bias_mv, best_mv, mv_limits, var_params,
+                    mv_cost_params, besterr, sse1, distortion, &has_better_mv);
+
+  // Do an additional search if the second iteration gives a better mv
+  if (has_better_mv) {
+    obmc_check_better(xd, cm, &diag_bias_mv, best_mv, mv_limits, var_params,
                       mv_cost_params, besterr, sse1, distortion,
                       &has_better_mv);
-    obmc_check_better(xd, cm, &col_bias_mv, best_mv, mv_limits, var_params,
-                      mv_cost_params, besterr, sse1, distortion,
-                      &has_better_mv);
-
-    // Do an additional search if the second iteration gives a better mv
-    if (has_better_mv) {
-      obmc_check_better(xd, cm, &diag_bias_mv, best_mv, mv_limits, var_params,
-                        mv_cost_params, besterr, sse1, distortion,
-                        &has_better_mv);
-    }
-  } else {
-    obmc_check_better_fast(&row_bias_mv, best_mv, mv_limits, var_params,
-                           mv_cost_params, besterr, sse1, distortion,
-                           &has_better_mv);
-    obmc_check_better_fast(&col_bias_mv, best_mv, mv_limits, var_params,
-                           mv_cost_params, besterr, sse1, distortion,
-                           &has_better_mv);
-
-    // Do an additional search if the second iteration gives a better mv
-    if (has_better_mv) {
-      obmc_check_better_fast(&diag_bias_mv, best_mv, mv_limits, var_params,
-                             mv_cost_params, besterr, sse1, distortion,
-                             &has_better_mv);
-    }
   }
 }
 
@@ -3948,8 +3816,6 @@ int av1_find_best_obmc_sub_pixel_tree_up(
   const int iters_per_step = ms_params->iters_per_step;
   const MV_COST_PARAMS *mv_cost_params = &ms_params->mv_cost_params;
   const SUBPEL_SEARCH_VAR_PARAMS *var_params = &ms_params->var_params;
-  const SUBPEL_SEARCH_TYPE subpel_search_type =
-      ms_params->var_params.subpel_search_type;
   const SubpelMvLimits *mv_limits = &ms_params->mv_limits;
 
   int hstep = INIT_SUBPEL_STEP_SIZE;
@@ -3958,12 +3824,8 @@ int av1_find_best_obmc_sub_pixel_tree_up(
   unsigned int besterr = INT_MAX;
   *bestmv = start_mv;
 
-  if (subpel_search_type != USE_2_TAPS_ORIG)
-    besterr = upsampled_setup_obmc_center_error(
-        xd, cm, bestmv, var_params, mv_cost_params, sse1, distortion);
-  else
-    besterr = setup_obmc_center_error(bestmv, var_params, mv_cost_params, sse1,
-                                      distortion);
+  besterr = upsampled_setup_obmc_center_error(xd, cm, bestmv, var_params,
+                                              mv_cost_params, sse1, distortion);
 
   for (int iter = 0; iter < round; ++iter) {
     MV iter_center_mv = *bestmv;

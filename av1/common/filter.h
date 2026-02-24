@@ -43,7 +43,6 @@ typedef enum ATTRIBUTE_PACKED {
 } InterpFilter;
 
 enum {
-  USE_2_TAPS_ORIG = 0,  // This is used in temporal filtering.
   USE_2_TAPS,
   USE_4_TAPS,
   USE_8_TAPS,
