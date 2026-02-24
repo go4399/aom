@@ -677,8 +677,8 @@ void av1_fadst4(const int32_t *input, int32_t *output, int8_t cos_bit,
                 const int8_t *stage_range) {
   int bit = cos_bit;
   const int32_t *sinpi = sinpi_arr(bit);
-  int32_t x0, x1, x2, x3;
-  int32_t s0, s1, s2, s3, s4, s5, s6, s7;
+  int64_t x0, x1, x2, x3;
+  int64_t s0, s1, s2, s3, s4, s5, s6, s7;
 
   // stage 0
   av1_range_check_buf(0, input, input, 4, stage_range[0]);
@@ -725,10 +725,10 @@ void av1_fadst4(const int32_t *input, int32_t *output, int8_t cos_bit,
   s3 = range_check_value(s3 + x3, bit + stage_range[6]);
 
   // 1-D transform scaling factor is sqrt(2).
-  output[0] = round_shift(s0, bit);
-  output[1] = round_shift(s1, bit);
-  output[2] = round_shift(s2, bit);
-  output[3] = round_shift(s3, bit);
+  output[0] = (int32_t)round_shift(s0, bit);
+  output[1] = (int32_t)round_shift(s1, bit);
+  output[2] = (int32_t)round_shift(s2, bit);
+  output[3] = (int32_t)round_shift(s3, bit);
   av1_range_check_buf(6, input, output, 4, stage_range[6]);
 }
 

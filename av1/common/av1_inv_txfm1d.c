@@ -657,12 +657,12 @@ void av1_iadst4(const int32_t *input, int32_t *output, int8_t cos_bit,
                 const int8_t *stage_range) {
   int bit = cos_bit;
   const int32_t *sinpi = sinpi_arr(bit);
-  int32_t s0, s1, s2, s3, s4, s5, s6, s7;
+  int64_t s0, s1, s2, s3, s4, s5, s6, s7;
 
-  int32_t x0 = input[0];
-  int32_t x1 = input[1];
-  int32_t x2 = input[2];
-  int32_t x3 = input[3];
+  int64_t x0 = input[0];
+  int64_t x1 = input[1];
+  int64_t x2 = input[2];
+  int64_t x3 = input[3];
 
   if (!(x0 | x1 | x2 | x3)) {
     output[0] = output[1] = output[2] = output[3] = 0;
