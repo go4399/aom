@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a43496db_4e9eb831",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-24T22:54:37Z",
+      "side": 1,
+      "message": "James: Please review. Thanks.\n\nYannis: Just FYI.",
+      "revId": "8405ea69a958971a48742d94f941982b4683937a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f53ee79_aa2696ec",
+        "filename": "aom/aomdx.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-24T22:54:37Z",
+      "side": 1,
+      "message": "James: I am not sure whether the prefix should be `AOMD_` or `AV1D_`. Is there a policy on this?",
+      "revId": "8405ea69a958971a48742d94f941982b4683937a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed6795d1_759c21e8",
+        "filename": "av1/common/av1_common_int.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 829,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-24T22:54:37Z",
+      "side": 1,
+      "message": "Ideally this should be added to the `AV1Decoder` struct. Please see my comment at av1/decoder/decodeframe.c:1953 for the reason why it\u0027s added to the `AV1_COMMON` struct.",
+      "revId": "8405ea69a958971a48742d94f941982b4683937a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e7002f72_990272de",
+        "filename": "av1/decoder/decodeframe.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1953,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-24T22:54:37Z",
+      "side": 1,
+      "message": "Note that this function and its callers only have `cm` and don\u0027t have access to `pbi`. This is why I have to add `decode_frame_size_limit` to `AV1_COMMON` even though the encoder doesn\u0027t use this.",
+      "revId": "8405ea69a958971a48742d94f941982b4683937a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
