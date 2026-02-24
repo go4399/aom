@@ -677,8 +677,8 @@ void av1_fadst4(const int32_t *input, int32_t *output, int8_t cos_bit,
                 const int8_t *stage_range) {
   int bit = cos_bit;
   const int32_t *sinpi = sinpi_arr(bit);
-  int32_t x0, x1, x2, x3;
-  int32_t s0, s1, s2, s3, s4, s5, s6, s7;
+  int64_t x0, x1, x2, x3;
+  int64_t s0, s1, s2, s3, s4, s5, s6, s7;
 
   // stage 0
   av1_range_check_buf(0, input, input, 4, stage_range[0]);
@@ -693,36 +693,36 @@ void av1_fadst4(const int32_t *input, int32_t *output, int8_t cos_bit,
   }
 
   // stage 1
-  s0 = range_check_value(sinpi[1] * x0, bit + stage_range[1]);
-  s1 = range_check_value(sinpi[4] * x0, bit + stage_range[1]);
-  s2 = range_check_value(sinpi[2] * x1, bit + stage_range[1]);
-  s3 = range_check_value(sinpi[1] * x1, bit + stage_range[1]);
-  s4 = range_check_value(sinpi[3] * x2, bit + stage_range[1]);
-  s5 = range_check_value(sinpi[4] * x3, bit + stage_range[1]);
-  s6 = range_check_value(sinpi[2] * x3, bit + stage_range[1]);
-  s7 = range_check_value(x0 + x1, stage_range[1]);
+  s0 = range_check_value64(sinpi[1] * x0, bit + stage_range[1]);
+  s1 = range_check_value64(sinpi[4] * x0, bit + stage_range[1]);
+  s2 = range_check_value64(sinpi[2] * x1, bit + stage_range[1]);
+  s3 = range_check_value64(sinpi[1] * x1, bit + stage_range[1]);
+  s4 = range_check_value64(sinpi[3] * x2, bit + stage_range[1]);
+  s5 = range_check_value64(sinpi[4] * x3, bit + stage_range[1]);
+  s6 = range_check_value64(sinpi[2] * x3, bit + stage_range[1]);
+  s7 = range_check_value64(x0 + x1, stage_range[1]);
 
   // stage 2
-  s7 = range_check_value(s7 - x3, stage_range[2]);
+  s7 = range_check_value64(s7 - x3, stage_range[2]);
 
   // stage 3
-  x0 = range_check_value(s0 + s2, bit + stage_range[3]);
-  x1 = range_check_value(sinpi[3] * s7, bit + stage_range[3]);
-  x2 = range_check_value(s1 - s3, bit + stage_range[3]);
-  x3 = range_check_value(s4, bit + stage_range[3]);
+  x0 = range_check_value64(s0 + s2, bit + stage_range[3]);
+  x1 = range_check_value64(sinpi[3] * s7, bit + stage_range[3]);
+  x2 = range_check_value64(s1 - s3, bit + stage_range[3]);
+  x3 = range_check_value64(s4, bit + stage_range[3]);
 
   // stage 4
-  x0 = range_check_value(x0 + s5, bit + stage_range[4]);
-  x2 = range_check_value(x2 + s6, bit + stage_range[4]);
+  x0 = range_check_value64(x0 + s5, bit + stage_range[4]);
+  x2 = range_check_value64(x2 + s6, bit + stage_range[4]);
 
   // stage 5
-  s0 = range_check_value(x0 + x3, bit + stage_range[5]);
-  s1 = range_check_value(x1, bit + stage_range[5]);
-  s2 = range_check_value(x2 - x3, bit + stage_range[5]);
-  s3 = range_check_value(x2 - x0, bit + stage_range[5]);
+  s0 = range_check_value64(x0 + x3, bit + stage_range[5]);
+  s1 = range_check_value64(x1, bit + stage_range[5]);
+  s2 = range_check_value64(x2 - x3, bit + stage_range[5]);
+  s3 = range_check_value64(x2 - x0, bit + stage_range[5]);
 
   // stage 6
-  s3 = range_check_value(s3 + x3, bit + stage_range[6]);
+  s3 = range_check_value64(s3 + x3, bit + stage_range[6]);
 
   // 1-D transform scaling factor is sqrt(2).
   output[0] = round_shift(s0, bit);
