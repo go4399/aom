@@ -894,7 +894,10 @@ typedef struct aom_codec_enc_cfg {
    *
    * If a value of 1 is provided, encoder will use fixed QP offsets for frames
    * at different levels of the pyramid.
-   * If a value of 0 is provided, encoder will NOT use fixed QP offsets.
+   * If a value of 2 is provided, encoder will use the same QP for all frames
+   * at different levels of the pyramid.
+   * If a value of 0 is provided and fixed_qp_offset are not provided, encoder
+   * will NOT use fixed QP offsets.
    * Note: This option is only relevant for --end-usage=q.
    */
   unsigned int use_fixed_qp_offsets;
