@@ -328,6 +328,10 @@ typedef struct {
    */
   int gfu_boost;
 
+  int gfu_boost_average;
+
+  bool accumulate_stats_stage;
+
   /*!
    * Stores the determined gf group lengths for a set of gf groups
    */
