@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3601a863_064c89d8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-25T16:49:34Z",
+      "side": 1,
+      "message": "James: Thanks for the review. I have some follow-up questions on the API design.",
+      "revId": "da421578f7c223f73f1514573d77acedd75c20b7",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a842b0cf_3c53febe",
+        "filename": "aom/aomdx.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-25T16:49:34Z",
+      "side": 1,
+      "message": "James: I chose \"unlimited\" as the default for backward compatibility. I wonder if we should be \"secure by default\" and choose a default like 2^28 - 1 that is large enough in practice.",
+      "revId": "da421578f7c223f73f1514573d77acedd75c20b7",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3eb35d9_6161da88",
+        "filename": "aom/aomdx.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-25T16:49:34Z",
+      "side": 1,
+      "message": "Optional: An alternative definition of \"frame size\" is width * height * bytes-per-channel, which allows bit depth 8 to have twice the maximum frame area as high bit depths. Chrome\u0027s `blink::ImageDecoder::SetSize()` does this:\n\n```\nbool ImageDecoder::SetSize(unsigned width, unsigned height) {\n  unsigned decoded_bytes_per_pixel \u003d 4;\n  if (ImageIsHighBitDepth() \u0026\u0026\n      high_bit_depth_decoding_option_ \u003d\u003d kHighBitDepthToHalfFloat) {\n    decoded_bytes_per_pixel \u003d 8;\n  }\n  if (SizeCalculationMayOverflow(width, height, decoded_bytes_per_pixel)) {\n    return SetFailed();\n  }\n  ...\n}\n```\n\nI am not sure if our API needs to be this sophisticated. (The check performed inside `blink::ImageDecoder::SetSize()` doesn\u0027t depend on any API option.) Also, the `uint32_t` type would not be able to represent the maximum AV1 frame size of high bit depths (2^16 * 2^16 * 2).",
+      "revId": "da421578f7c223f73f1514573d77acedd75c20b7",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "298547b0_4b0109de",
+        "filename": "test/decode_frame_size_limit_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-25T16:49:34Z",
+      "side": 1,
+      "message": "James: I just realized that using \"Large\" in this test\u0027s name may cause it to be incorrectly classified as a \"large\" test. Is this correct?\n\nI changed \"Large\" to \"Big\" to avoid this potential problem.",
+      "revId": "da421578f7c223f73f1514573d77acedd75c20b7",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
