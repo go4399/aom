@@ -35,6 +35,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c469f3b_92c4f8ad",
+        "filename": "aom/aomdx.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-02-25T00:18:29Z",
+      "side": 1,
+      "message": "\u003e James: I am not sure whether the prefix should be `AOMD_` or `AV1D_`. Is there a policy on this?\n\nNo, any policy was lost when vp9 was added and reused vp8 controls. The idea was that `VPXD_` or `VP[89]D` would be used for things that are codec agnostic versus codec specific. Since this is a single codec library it could go either way, though this definitely could be viewed as codec agnostic.",
+      "parentUuid": "2f53ee79_aa2696ec",
+      "revId": "8405ea69a958971a48742d94f941982b4683937a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "ed6795d1_759c21e8",
