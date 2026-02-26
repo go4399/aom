@@ -16,6 +16,29 @@
       "message": "Please review.",
       "revId": "b21c2f71dded1ce2178d6a84e1f12ad4770e3551",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1a44fdf6_fffc7380",
+        "filename": "av1/encoder/compound_type.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1527,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-02-26T18:56:02Z",
+      "side": 1,
+      "message": "To avoid the flag name inconsistency, feel free to just use \"(!enable_fast_compound_mode_search \u0026\u0026 cur_type \u003d\u003d COMPOUND_DIFFWTD)\" directly here, which might be easier?",
+      "range": {
+        "startLine": 1527,
+        "startChar": 15,
+        "endLine": 1527,
+        "endChar": 43
+      },
+      "revId": "b21c2f71dded1ce2178d6a84e1f12ad4770e3551",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
