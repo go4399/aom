@@ -36,6 +36,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "40367968_6ce1857e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-02-26T16:31:02Z",
+      "side": 1,
+      "message": "This happens from decoder side, not encoder.",
+      "parentUuid": "eba46782_5ad47eef",
+      "revId": "ed3353fc7d0c3ef7c18f0a4bf2a386a9c1874bce",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a295758d_8aa09972",
