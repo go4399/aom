@@ -179,6 +179,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cf7ca393_bac08bb4",
+        "filename": "av1/common/av1_txfm.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-26T19:24:08Z",
+      "side": 1,
+      "message": "To cap the value in the range of int32_t, we should have\n\n```\n  bit \u003d AOMMIN(bit, 32);\n```\n\nBut the original code uses 31, not 32. (Also, the new function now returns `int64_t`.) I didn\u0027t write the original code. The following is the rationale I reversed-engineered for the original code.\n\nLet\u0027s first consider the original code:\n\n```\n  bit \u003d AOMMIN(bit, 31);\n  return clamp(value, -(1 \u003c\u003c (bit - 1)), (1 \u003c\u003c (bit - 1)) - 1);\n```\n\nIn the expression `1 \u003c\u003c (bit - 1)`, it is undefined behavior to left-shift the (signed) `int` constant 1 to the sign bit. So `bit - 1` must be \u003c\u003d 30, or equivalently `bit \u003c\u003d 31`. I think that is the reason for `bit \u003d AOMMIN(bit, 31);`\n\nNext, in the new code, we have a different expression:\n\n```\n  return clamp64(value, -(1LL \u003c\u003c (bit - 1)), (1LL \u003c\u003c (bit - 1)) - 1);\n```\n\nWe are left-shifting the (signed) 64-bit constant `1LL`. To avoid the undefined behavior, we should have:\n\n```\n  bit \u003d AOMMIN(bit, 63);\n```\n\nNote: My analysis of the libaom code and the AV1 spec shows that `bit` is unlikely to be greater than 63. That\u0027s why I think we could also just delete `bit \u003d AOMMIN(bit, 63);`",
+      "parentUuid": "5a0360c2_e3763ea5",
+      "revId": "ed3353fc7d0c3ef7c18f0a4bf2a386a9c1874bce",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0e4f1b76_d8ad872d",
         "filename": "av1/encoder/av1_fwd_txfm1d.c",
         "patchSetId": 3
