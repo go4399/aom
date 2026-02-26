@@ -38,6 +38,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a295758d_8aa09972",
+        "filename": "av1/common/av1_txfm.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-26T07:52:31Z",
+      "side": 1,
+      "message": "The function should return the same type as the input parameter `value`. If necessary we should add a new function `range_check_value64` and leave `range_check_value` unchanged.",
+      "revId": "ed3353fc7d0c3ef7c18f0a4bf2a386a9c1874bce",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "928d9950_ca41c60a",
         "filename": "av1/common/av1_txfm.h",
         "patchSetId": 3
@@ -49,6 +66,40 @@
       "writtenOn": "2026-02-26T03:01:34Z",
       "side": 1,
       "message": "Use `int64_t` and `PRId64` from `\u003cinttypes.h\u003e`.",
+      "revId": "ed3353fc7d0c3ef7c18f0a4bf2a386a9c1874bce",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cdf3de25_e6dcab31",
+        "filename": "av1/common/av1_txfm.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-26T07:52:31Z",
+      "side": 1,
+      "message": "Change 31 to 63 because you changed 1 to 1LL in the next line. Or just delete this line.",
+      "revId": "ed3353fc7d0c3ef7c18f0a4bf2a386a9c1874bce",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e4f1b76_d8ad872d",
+        "filename": "av1/encoder/av1_fwd_txfm1d.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 731,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-26T07:52:31Z",
+      "side": 1,
+      "message": "Delete the `int32_t` casts. `round_shift()` returns `int32_t`.",
       "revId": "ed3353fc7d0c3ef7c18f0a4bf2a386a9c1874bce",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -83,6 +134,23 @@
       "writtenOn": "2026-02-26T06:49:56Z",
       "side": 1,
       "message": "The `input` and `output` arrays should be of size 4.",
+      "revId": "ed3353fc7d0c3ef7c18f0a4bf2a386a9c1874bce",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd1666ae_aca4330e",
+        "filename": "test/av1_inv_txfm1d_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-26T07:52:31Z",
+      "side": 1,
+      "message": "IMPORTANT: For inverse transforms, use cos_bit\u003d12.\n\nNote: If I change cos_bit to 12 here, I also need to change the `input` array to cause signed integer overflow:\n\n```\n  int32_t input[4] \u003d { 300000, 0, 300000, 300000 };\n  int32_t output[4];\n\n  av1_iadst4(input, output, 12, range_bit);\n```\n\nSee libaom source code:\n\n```\n// Values in both av1_inv_cos_bit_col and av1_inv_cos_bit_row are always 12\n// for each valid row and col combination\n#define INV_COS_BIT 12\n```\n\nand the AV1 spec, section 7.13.2.6. Inverse ADST4 process:\n\n```\nT[ 0 ] \u003d Round2( x[ 0 ], 12 )\nT[ 1 ] \u003d Round2( x[ 1 ], 12 )\nT[ 2 ] \u003d Round2( x[ 2 ], 12 )\nT[ 3 ] \u003d Round2( x[ 3 ], 12 )\n```",
       "revId": "ed3353fc7d0c3ef7c18f0a4bf2a386a9c1874bce",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
