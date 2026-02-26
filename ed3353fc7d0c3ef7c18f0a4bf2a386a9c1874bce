@@ -106,6 +106,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "25842741_fcc8a9b0",
+        "filename": "av1/common/av1_txfm.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-02-26T18:33:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "928d9950_ca41c60a",
+      "revId": "ed3353fc7d0c3ef7c18f0a4bf2a386a9c1874bce",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cdf3de25_e6dcab31",
@@ -119,6 +137,24 @@
       "writtenOn": "2026-02-26T07:52:31Z",
       "side": 1,
       "message": "Change 31 to 63 because you changed 1 to 1LL in the next line. Or just delete this line.",
+      "revId": "ed3353fc7d0c3ef7c18f0a4bf2a386a9c1874bce",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5a0360c2_e3763ea5",
+        "filename": "av1/common/av1_txfm.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-02-26T18:33:00Z",
+      "side": 1,
+      "message": "hmm, don\u0027t we want to cap the value in the range of int32_t?",
+      "parentUuid": "cdf3de25_e6dcab31",
       "revId": "ed3353fc7d0c3ef7c18f0a4bf2a386a9c1874bce",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
