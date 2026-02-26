@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "eba46782_5ad47eef",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-02-26T03:02:22Z",
+      "side": 1,
+      "message": "\u003e What are the inputs to the encode call? Are the pixel values in range for the bitdepth?\n\nI\u0027m asking because we\u0027ve been taking a stance that only inputs in the valid range warrant a fix for overflows.",
+      "parentUuid": "8145bfd5_84fc794f",
+      "revId": "ed3353fc7d0c3ef7c18f0a4bf2a386a9c1874bce",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "928d9950_ca41c60a",
         "filename": "av1/common/av1_txfm.h",
         "patchSetId": 3
