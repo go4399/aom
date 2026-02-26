@@ -130,7 +130,8 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TemporalFilterTest);
 void TemporalFilterTest::RunTest(int isRandom, int run_times,
                                  ColorFormat color_fmt) {
   aom_usec_timer ref_timer, test_timer;
-  const BLOCK_SIZE block_size = TF_BLOCK_SIZE;
+  // Modify the block_size to TF_BLOCK_SIZE after the SIMD support is added.
+  const BLOCK_SIZE block_size = BLOCK_32X32;
   static_assert(block_size == BLOCK_32X32, "");
   const int width = 32;
   const int height = 32;
@@ -174,6 +175,7 @@ void TemporalFilterTest::RunTest(int isRandom, int run_times,
     memset(accumulator_mod, 0, 1024 * 3 * sizeof(accumulator_mod[0]));
     memset(count_mod, 0, 1024 * 3 * sizeof(count_mod[0]));
 
+    // Modify width/height size to 64 after the SIMD support is added.
     static_assert(width == 32 && height == 32, "");
     const MV subblock_mvs[4] = { { 0, 0 }, { 5, 5 }, { 7, 8 }, { 2, 10 } };
     const int subblock_mses[4] = { 15, 16, 17, 18 };
@@ -513,7 +515,8 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(HBDTemporalFilterTest);
 void HBDTemporalFilterTest::RunTest(int isRandom, int run_times, int BD,
                                     ColorFormat color_fmt) {
   aom_usec_timer ref_timer, test_timer;
-  const BLOCK_SIZE block_size = TF_BLOCK_SIZE;
+  // Modify the block_size to TF_BLOCK_SIZE after the SIMD support is added.
+  const BLOCK_SIZE block_size = BLOCK_32X32;
   static_assert(block_size == BLOCK_32X32, "");
   const int width = 32;
   const int height = 32;
