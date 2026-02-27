@@ -36,13 +36,16 @@
 #include "av1/encoder/tokenize.h"
 #include "av1/encoder/var_based_part.h"
 #include "av1/encoder/av1_ml_partition_models.h"
-
 #if CONFIG_TUNE_VMAF
 #include "av1/encoder/tune_vmaf.h"
 #endif
 
 #ifndef COLLECT_MOTION_SEARCH_FEATURE_SB
 #define COLLECT_MOTION_SEARCH_FEATURE_SB CONFIG_PARTITION_SEARCH_ORDER
+#endif
+
+#if CONFIG_HW_ML_PART
+#include "av1/encoder/partitions_prune_model.h"
 #endif
 
 #if CONFIG_PARTITION_SEARCH_ORDER
@@ -5927,14 +5930,11 @@ bool av1_rd_pick_partition(AV1_COMP *const cpi, ThreadData *td,
 #if CONFIG_HW_ML_PART
   bool collect_data = collect_ml_part_data(tile_info, mi_row, mi_col, bsize);
   float out_features[FEATURE_INTER_MAX] = { 0.0f };
-  if (collect_data) {
-    if (frame_is_intra_only(cm)) {
-      get_ml_part_features_keyframe(cpi, td, tile_data, mi_row, mi_col, bsize,
-                                    out_features);
-    } else {
-      get_ml_part_features_interframe(cpi, td, tile_data, mi_row, mi_col, bsize,
-                                      out_features);
-    }
+  int ml_part_mask = 0xF;  // Default: allow all NONE(0), HORZ(1), VERT(2), SPLIT(3)
+  if (collect_data && frame_is_intra_only(cm)) {
+    get_ml_part_features_keyframe(cpi, td, tile_data, mi_row, mi_col, bsize,
+                                  out_features);
+    ml_part_mask = av1_partitions_prune_inference(out_features, /*max_modes=*/2);
   }
 #endif  // CONFIG_HW_ML_PART
 
@@ -6059,9 +6059,15 @@ BEGIN_PARTITION_SEARCH:
 
   // PARTITION_NONE search stage.
   int64_t part_none_rd = INT64_MAX;
+#if CONFIG_HW_ML_PART
+  if (!frame_is_intra_only(cm) || (ml_part_mask & (1 << PARTITION_NONE))) {
+#endif
   none_partition_search(cpi, td, tile_data, x, pc_tree, sms_tree, &x_ctx,
                         &part_search_state, &best_rdc, &pb_source_variance,
                         none_rd, &part_none_rd);
+#if CONFIG_HW_ML_PART
+  }
+#endif
 
 #if CONFIG_COLLECT_COMPONENT_TIMING
   end_timing(cpi, none_partition_search_time);
@@ -6071,9 +6077,15 @@ BEGIN_PARTITION_SEARCH:
 #endif
   // PARTITION_SPLIT search stage.
   int64_t part_split_rd = INT64_MAX;
+#if CONFIG_HW_ML_PART
+  if (!frame_is_intra_only(cm) || (ml_part_mask & (1 << PARTITION_SPLIT))) {
+#endif
   split_partition_search(cpi, td, tile_data, tp, x, pc_tree, sms_tree, &x_ctx,
                          &part_search_state, &best_rdc, multi_pass_mode,
                          &part_split_rd);
+#if CONFIG_HW_ML_PART
+  }
+#endif
 #if CONFIG_COLLECT_COMPONENT_TIMING
   end_timing(cpi, split_partition_search_time);
 #endif
@@ -6103,9 +6115,31 @@ BEGIN_PARTITION_SEARCH:
   start_timing(cpi, rectangular_partition_search_time);
 #endif
   // Rectangular partitions search stage.
+#if CONFIG_HW_ML_PART
+  if (frame_is_intra_only(cm)) {
+    RECT_PART_TYPE new_start_type = HORZ;
+    if (!(ml_part_mask & (1 << PARTITION_HORZ))) {
+      new_start_type = (RECT_PART_TYPE)(HORZ + 1);
+    }
+    RECT_PART_TYPE new_end_type = VERT;
+    if (!(ml_part_mask & (1 << PARTITION_VERT))) {
+      new_end_type = (RECT_PART_TYPE)(VERT - 1);
+    }
+    if (new_start_type <= new_end_type) {
+      rectangular_partition_search(cpi, td, tile_data, tp, x, pc_tree, &x_ctx,
+                                   &part_search_state, &best_rdc,
+                                   rect_part_win_info, new_start_type, new_end_type);
+    }
+  } else {
+    rectangular_partition_search(cpi, td, tile_data, tp, x, pc_tree, &x_ctx,
+                                 &part_search_state, &best_rdc,
+                                 rect_part_win_info, HORZ, VERT);
+  }
+#else
   rectangular_partition_search(cpi, td, tile_data, tp, x, pc_tree, &x_ctx,
                                &part_search_state, &best_rdc,
                                rect_part_win_info, HORZ, VERT);
+#endif  // CONFIG_HW_ML_PART
 #if CONFIG_COLLECT_COMPONENT_TIMING
   end_timing(cpi, rectangular_partition_search_time);
 #endif
@@ -6258,7 +6292,7 @@ BEGIN_PARTITION_SEARCH:
   end_timing(cpi, encode_sb_time);
 #endif
 
-#if CONFIG_HW_ML_PART
+#if 0 // CONFIG_HW_ML_PART
   if (collect_data && part_search_state.found_best_partition) {
     const int is_keyframe = frame_is_intra_only(cm);
     char file_name[200];
