@@ -50,6 +50,24 @@
       "message": "Is it because `output[0]` is the DC component, so it should be equal to the average of the input?",
       "revId": "1e9dda0a79046fbb895e74b72f9914ebc4a5fa08",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f56e9c5f_dc555be9",
+        "filename": "test/av1_inv_txfm1d_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-02-27T16:33:11Z",
+      "side": 1,
+      "message": "This is inverse transform, so the output is in pixel domain...\nThis is just a sanity check to make sure the inverse transform doesn\u0027t produce nonsensical output.",
+      "parentUuid": "bd93a6d1_f0619741",
+      "revId": "1e9dda0a79046fbb895e74b72f9914ebc4a5fa08",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
