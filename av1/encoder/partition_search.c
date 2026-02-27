@@ -5803,8 +5803,10 @@ static void get_ml_part_features_keyframe(AV1_COMP *const cpi, ThreadData *td,
   int old2 = xd->mb_to_left_edge;
   int old3 = mbmi->bsize;
 
-  ml_part_features_intra_split(cpi, td, tile_data, mi_row, mi_col, bsize, out_features);
-  ml_part_features_intra_none(cpi, td, tile_data, mi_row, mi_col, bsize, out_features);
+  ml_part_features_intra_split(cpi, td, tile_data, mi_row, mi_col, bsize,
+                               out_features);
+  ml_part_features_intra_none(cpi, td, tile_data, mi_row, mi_col, bsize,
+                              out_features);
 
   xd->mb_to_top_edge = old1;
   xd->mb_to_left_edge = old2;
@@ -5927,9 +5929,11 @@ bool av1_rd_pick_partition(AV1_COMP *const cpi, ThreadData *td,
   float out_features[FEATURE_INTER_MAX] = { 0.0f };
   if (collect_data) {
     if (frame_is_intra_only(cm)) {
-      get_ml_part_features_keyframe(cpi, td, tile_data, mi_row, mi_col, bsize, out_features);
+      get_ml_part_features_keyframe(cpi, td, tile_data, mi_row, mi_col, bsize,
+                                    out_features);
     } else {
-      get_ml_part_features_interframe(cpi, td, tile_data, mi_row, mi_col, bsize, out_features);
+      get_ml_part_features_interframe(cpi, td, tile_data, mi_row, mi_col, bsize,
+                                      out_features);
     }
   }
 #endif  // CONFIG_HW_ML_PART
@@ -6310,7 +6314,7 @@ BEGIN_PARTITION_SEARCH:
               "INTER_VER_1_PSNR,INTER_VER_1_Q_COEFF_MAX,INTER_VER_1_Q_COEFF_"
               "NONZ,"
               "INTER_VER_1_Q_COEFF_NONZ,INTER_VER_1_ANGLE_RAD,INTER_VER_1_LOG_"
-              "SATDQ,INTER_VER_1_LOG_SATD,INTER_SWITCH,INTER_PART_T\n");
+              "SATDQ,INTER_VER_1_LOG_SATD,INTER_SWITCH,INTER_PART_T,PIXELS\n");
         } else {
           fprintf(fp,
                   "INTRA_LOG_QP_SQUARED,"
@@ -6332,7 +6336,7 @@ BEGIN_PARTITION_SEARCH:
                   "INTRA_NORM_BEST_SSE_2_01,INTRA_NORM_BEST_VAR_2_01,"
                   "INTRA_NORM_BEST_SSE_2_10,INTRA_NORM_BEST_VAR_2_10,"
                   "INTRA_NORM_BEST_SSE_2_11,INTRA_NORM_BEST_VAR_2_11,"
-                  "\n");
+                  "PIXELS\n");
         }
       }
       fprintf(fp, "%d,%d,%d,%d,%d,%d,%d,%d,", cm->cur_frame->display_order_hint,
@@ -6342,6 +6346,19 @@ BEGIN_PARTITION_SEARCH:
       for (int i = 0; i < (is_keyframe ? FEATURE_INTRA_MAX : FEATURE_INTER_MAX);
            ++i) {
         fprintf(fp, "%.2f,", out_features[i]);
+      }
+      for (int r = 0; r < block_size_high[bsize]; ++r) {
+        for (int c = 0; c < block_size_wide[bsize]; ++c) {
+          // fprintf(fp, "%d,", x->plane[0].src.buf[r * x->plane[0].src.stride + c]);
+          if (is_cur_buf_hbd(xd)) {
+            fprintf(fp, "%d,",
+                    CONVERT_TO_SHORTPTR(
+                        x->plane[0].src.buf)[r * x->plane[0].src.stride + c]);
+          } else {
+            fprintf(fp, "%d,",
+                    x->plane[0].src.buf[r * x->plane[0].src.stride + c]);
+          }
+        }
       }
       fprintf(fp, "\n");
       fclose(fp);
