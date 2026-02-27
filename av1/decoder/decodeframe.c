@@ -1949,19 +1949,20 @@ static inline void setup_superres(AV1_COMMON *const cm,
   }
 }
 
-static inline void resize_context_buffers(AV1_COMMON *cm, int width,
+static inline void resize_context_buffers(AV1Decoder *pbi, int width,
                                           int height) {
+  AV1_COMMON *cm = &pbi->common;
 #if CONFIG_SIZE_LIMIT
   if (width > DECODE_WIDTH_LIMIT || height > DECODE_HEIGHT_LIMIT)
     aom_internal_error(cm->error, AOM_CODEC_CORRUPT_FRAME,
                        "Dimensions of %dx%d beyond allowed size of %dx%d.",
                        width, height, DECODE_WIDTH_LIMIT, DECODE_HEIGHT_LIMIT);
 #endif
-  if (cm->decode_frame_size_limit &&
-      (uint64_t)width * height > cm->decode_frame_size_limit) {
+  if (pbi->frame_size_limit &&
+      (uint64_t)width * height > pbi->frame_size_limit) {
     aom_internal_error(cm->error, AOM_CODEC_CORRUPT_FRAME,
                        "Dimensions of %dx%d beyond allowed size of %u.", width,
-                       height, cm->decode_frame_size_limit);
+                       height, pbi->frame_size_limit);
   }
   if (cm->width != width || cm->height != height) {
     const int new_mi_rows = CEIL_POWER_OF_TWO(height, MI_SIZE_LOG2);
@@ -2023,9 +2024,10 @@ static inline void setup_buffer_pool(AV1_COMMON *cm) {
   cm->cur_frame->buf.render_height = cm->render_height;
 }
 
-static inline void setup_frame_size(AV1_COMMON *cm,
+static inline void setup_frame_size(AV1Decoder *pbi,
                                     int frame_size_override_flag,
                                     struct aom_read_bit_buffer *rb) {
+  AV1_COMMON *cm = &pbi->common;
   const SequenceHeader *const seq_params = cm->seq_params;
   int width, height;
 
@@ -2044,7 +2046,7 @@ static inline void setup_frame_size(AV1_COMMON *cm,
   }
 
   setup_superres(cm, rb, &width, &height);
-  resize_context_buffers(cm, width, height);
+  resize_context_buffers(pbi, width, height);
   setup_render_size(cm, rb);
   setup_buffer_pool(cm);
 }
@@ -2062,8 +2064,9 @@ static inline int valid_ref_frame_img_fmt(aom_bit_depth_t ref_bit_depth,
          ref_yss == this_yss;
 }
 
-static inline void setup_frame_size_with_refs(AV1_COMMON *cm,
+static inline void setup_frame_size_with_refs(AV1Decoder *pbi,
                                               struct aom_read_bit_buffer *rb) {
+  AV1_COMMON *cm = &pbi->common;
   int width, height;
   int found = 0;
   int has_valid_ref_frame = 0;
@@ -2085,7 +2088,7 @@ static inline void setup_frame_size_with_refs(AV1_COMMON *cm,
         cm->render_width = buf->render_width;
         cm->render_height = buf->render_height;
         setup_superres(cm, rb, &width, &height);
-        resize_context_buffers(cm, width, height);
+        resize_context_buffers(pbi, width, height);
         found = 1;
         break;
       }
@@ -2099,7 +2102,7 @@ static inline void setup_frame_size_with_refs(AV1_COMMON *cm,
 
     read_frame_size(rb, num_bits_width, num_bits_height, &width, &height);
     setup_superres(cm, rb, &width, &height);
-    resize_context_buffers(cm, width, height);
+    resize_context_buffers(pbi, width, height);
     setup_render_size(cm, rb);
   }
 
@@ -4927,7 +4930,7 @@ static int read_uncompressed_header(AV1Decoder *pbi,
   }
 
   if (current_frame->frame_type == KEY_FRAME) {
-    setup_frame_size(cm, frame_size_override_flag, rb);
+    setup_frame_size(pbi, frame_size_override_flag, rb);
 
     if (features->allow_screen_content_tools && !av1_superres_scaled(cm))
       features->allow_intrabc = aom_rb_read_bit(rb);
@@ -4939,7 +4942,7 @@ static int read_uncompressed_header(AV1Decoder *pbi,
     if (current_frame->frame_type == INTRA_ONLY_FRAME) {
       cm->cur_frame->film_grain_params_present =
           seq_params->film_grain_params_present;
-      setup_frame_size(cm, frame_size_override_flag, rb);
+      setup_frame_size(pbi, frame_size_override_flag, rb);
       if (features->allow_screen_content_tools && !av1_superres_scaled(cm))
         features->allow_intrabc = aom_rb_read_bit(rb);
 
@@ -5016,9 +5019,9 @@ static int read_uncompressed_header(AV1Decoder *pbi,
       }
 
       if (!features->error_resilient_mode && frame_size_override_flag) {
-        setup_frame_size_with_refs(cm, rb);
+        setup_frame_size_with_refs(pbi, rb);
       } else {
-        setup_frame_size(cm, frame_size_override_flag, rb);
+        setup_frame_size(pbi, frame_size_override_flag, rb);
       }
 
       if (features->cur_frame_force_integer_mv) {
