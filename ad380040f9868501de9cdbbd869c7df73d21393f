@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1f364d5b_f5c04329",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-02-27T17:07:23Z",
+      "side": 1,
+      "message": "Thanks @wtc@google.com for the thorough review! I\u0027ll take a look at your addressing your feedback.",
+      "parentUuid": "dbc44833_a532dba8",
+      "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fd139407_51c324b2",
         "filename": "aom/aom_encoder.h",
         "patchSetId": 3
@@ -101,6 +119,24 @@
       "side": 1,
       "message": "Changing `use_fixed_qp_offsets` to effectively an enum (of values 0, 1, 2) is not ideal because the name \"use_fixed_qp_offsets\" just sounds like a boolean. So I just wanted to confirm with you that this is the simplest API design (ignoring the confusing name).",
       "parentUuid": "65f6128e_c1f7c9d4",
+      "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed10f5a4_e688238e",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 898,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-02-27T17:07:23Z",
+      "side": 1,
+      "message": "Yeah, I agree having that the nature of the name doesn\u0027t neatly fit the possible values anymore.\n\nThe current proposal is the simplest API design, in that having no QP offsets is technically a subset of having fixed QP offsets, so introducing such an extension for the encoder option comes intuitively.\n\nAs a precedent: I discovered SVT-AV1 worked in the same way for its equivalent encoder option `use-fixed-qindex-offsets` (0, 1, 2), and I quickly got what I needed because the enum values were documented. So if do the same thing for libaom, I think we should be fine.\n\nWith that said: I\u0027m okay with making this into its own encoder option, if anybody feels strongly about it.",
+      "parentUuid": "4fdf57f2_15a6f115",
       "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
