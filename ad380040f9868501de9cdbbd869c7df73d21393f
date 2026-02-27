@@ -18,6 +18,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dbc44833_a532dba8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-27T16:43:42Z",
+      "side": 1,
+      "message": "Julio: You may want to first review my comment marked with \"API DESIGN\" at aom/aom_encoder.h:898.",
+      "parentUuid": "f5513e7d_021e87f3",
+      "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fd139407_51c324b2",
@@ -65,6 +83,24 @@
       "writtenOn": "2026-02-27T16:28:43Z",
       "side": 1,
       "message": "API DESIGN: The description of value 2 does not mention QP offsets at all, so my first reaction is that this should become a separate encoder option. I guess you made it a new value of `use_fixed_qp_offsets` because it is mutually exclusive with the current two values of `use_fixed_qp_offsets`?",
+      "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4fdf57f2_15a6f115",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 898,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-02-27T16:43:42Z",
+      "side": 1,
+      "message": "Changing `use_fixed_qp_offsets` to effectively an enum (of values 0, 1, 2) is not ideal because the name \"use_fixed_qp_offsets\" just sounds like a boolean. So I just wanted to confirm with you that this is the simplest API design (ignoring the confusing name).",
+      "parentUuid": "65f6128e_c1f7c9d4",
       "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
