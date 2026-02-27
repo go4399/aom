@@ -856,6 +856,9 @@ static inline void encode_rd_sb(AV1_COMP *cpi, ThreadData *td,
 #if CONFIG_REALTIME_ONLY
   (void)seg_skip;
 #endif  // CONFIG_REALTIME_ONLY
+#if CONFIG_HW_ML_PART
+  x->sms_bufs = &td->sms_bufs;
+#endif  // CONFIG_HW_ML_PART
 
   init_encode_rd_sb(cpi, td, tile_data, sms_root, &dummy_rdc, mi_row, mi_col,
                     1);

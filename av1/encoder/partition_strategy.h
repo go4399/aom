@@ -163,6 +163,12 @@ static inline void set_offsets_for_motion_search(const AV1_COMP *const cpi,
   av1_setup_src_planes(x, cpi->source, mi_row, mi_col, num_planes, bsize);
 }
 
+#if CONFIG_HW_ML_PART
+void av1_set_offsets(const AV1_COMP *const cpi, const TileInfo *const tile,
+                     MACROBLOCK *const x, int mi_row, int mi_col,
+                     BLOCK_SIZE bsize);
+#endif  // CONFIG_HW_ML_PART
+
 void av1_init_simple_motion_search_mvs_for_sb(const AV1_COMP *cpi,
                                               const TileInfo *tile_info,
                                               MACROBLOCK *x,

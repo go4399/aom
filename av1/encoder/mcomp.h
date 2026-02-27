@@ -29,6 +29,7 @@ struct SPEED_FEATURES;
 //  Cost functions
 // =============================================================================
 
+#if !CONFIG_HW_ML_PART
 enum {
   MV_COST_ENTROPY,    // Use the entropy rate of the mv as the cost
   MV_COST_L1_LOWRES,  // Use the l1 norm of the mv as the cost (<480p)
@@ -36,6 +37,7 @@ enum {
   MV_COST_L1_HDRES,   // Use the l1 norm of the mv as the cost (>=720p)
   MV_COST_NONE        // Use 0 as as cost irrespective of the current mv
 } UENUM1BYTE(MV_COST_TYPE);
+#endif  // CONFIG_HW_ML_PART
 
 typedef struct {
   // The reference mv used to compute the mv cost
