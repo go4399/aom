@@ -71,6 +71,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3cc5ead_17953765",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-02-27T18:13:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fd139407_51c324b2",
+      "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "84ec3945_da5b50c5",
@@ -84,6 +102,24 @@
       "writtenOn": "2026-02-27T16:28:43Z",
       "side": 1,
       "message": "I suggest describing the values in the order of 0, 1, 2.",
+      "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1923aaa5_187f601b",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 896,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-02-27T18:13:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "84ec3945_da5b50c5",
       "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -158,6 +194,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc177a56_7e636f30",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 899,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-02-27T18:13:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed13b564_fc1288cc",
+      "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "656d0422_633a27ed",
@@ -171,6 +225,24 @@
       "writtenOn": "2026-02-27T16:28:43Z",
       "side": 1,
       "message": "In av1/arg_defs.c, the help messages for these two command-line options needs to be reviewed and updated if needed:\n\n```\n  .use_fixed_qp_offsets \u003d\n      ARG_DEF(NULL, \"use-fixed-qp-offsets\", 1,\n              \"Enable fixed QP offsets for frames at different levels of the \"\n              \"pyramid. Selected automatically from --cq-level if \"\n              \"--fixed-qp-offsets is not provided. If this option is not \"\n              \"specified (default), offsets are adaptively chosen by the \"\n              \"encoder.\"),\n\n  .fixed_qp_offsets \u003d ARG_DEF(\n      NULL, \"fixed-qp-offsets\", 1,\n      \"Set fixed QP offsets for frames at different levels of the \"\n      \"pyramid. Comma-separated list of 5 offsets for keyframe, ALTREF, \"\n      \"and 3 levels of internal alt-refs. If this option is not \"\n      \"specified (default), offsets are adaptively chosen by the \"\n      \"encoder.\"),\n```",
+      "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac475c7b_17461736",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 902,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-02-27T18:13:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "656d0422_633a27ed",
       "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -192,6 +264,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a52ff56c_b76d543f",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1293,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-02-27T18:13:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3b15b23c_4c095329",
+      "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "49ee7209_98de909e",
@@ -205,6 +295,24 @@
       "writtenOn": "2026-02-27T16:28:43Z",
       "side": 1,
       "message": "I suggest breaking the next statement (a chain of assignments) into three statements to facilitate pattern matching with the original code:\n\n```\n    *q \u003d cpi-\u003eoxcf.rc_cfg.cq_level;\n    *top_index \u003d *bottom_index \u003d *q;\n    cpi-\u003eppi-\u003ep_rc.arf_q \u003d *q;\n```",
+      "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4854aad7_5a61944a",
+        "filename": "av1/encoder/encoder_utils.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 687,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-02-27T18:13:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "49ee7209_98de909e",
       "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -228,6 +336,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c3473d33_16d9cae2",
+        "filename": "av1/encoder/encoder_utils.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 689,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-02-27T18:13:15Z",
+      "side": 1,
+      "message": "So, the underlying approach I took was to write this code was that the encoder can uphold unconditional guarantees for frame QPs in `use_fixed_qp_offsets \u003d 2` that `use_fixed_qp_offsets \u003d 0` and `use_fixed_qp_offsets \u003d 1` do not have. As a result, the mismatches on index assignments are intentional.\n\nWith that said (to other reviewers): if I\u0027m missing something here, please let me know.",
+      "parentUuid": "f51d0efd_70f18931",
+      "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c8cfaa3b_f84e4d76",
         "filename": "av1/encoder/encoder_utils.c",
         "patchSetId": 3
@@ -239,6 +365,24 @@
       "writtenOn": "2026-02-27T16:28:43Z",
       "side": 1,
       "message": "Change `cpi-\u003eoxcf.q_cfg.use_fixed_qp_offsets` to `cpi-\u003eoxcf.q_cfg.use_fixed_qp_offsets \u003d\u003d 1` for clarity.",
+      "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b28b0b18_4a32a45c",
+        "filename": "av1/encoder/encoder_utils.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 714,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-02-27T18:13:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c8cfaa3b_f84e4d76",
       "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -273,6 +417,42 @@
       "writtenOn": "2026-02-27T16:28:43Z",
       "side": 1,
       "message": "In the `av1_compute_rd_mult()` function, update the following code to test `use_fixed_qp_offsets` as an enum (of values 0, 1, 2) rather than a boolean:\n\n```\n  if (is_stat_consumption_stage \u0026\u0026 !use_fixed_qp_offsets \u0026\u0026\n      (frame_type !\u003d KEY_FRAME)) {\n```",
+      "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "31828a47_42380a8f",
+        "filename": "av1/encoder/encoder_utils.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 742,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-02-27T18:13:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "714ff8c3_ec496c63",
+      "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "97aefb88_92dfa116",
+        "filename": "av1/encoder/encoder_utils.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 742,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-02-27T18:13:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f758903_78598701",
       "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
