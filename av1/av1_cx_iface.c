@@ -713,12 +713,6 @@ static aom_codec_err_t validate_config(aom_codec_alg_priv_t *ctx,
   RANGE_CHECK_BOOL(extra_cfg, lossless);
   RANGE_CHECK_HI(extra_cfg, aq_mode, AQ_MODE_COUNT - 1);
   RANGE_CHECK_HI(extra_cfg, deltaq_mode, DELTA_Q_MODE_COUNT - 1);
-
-  if (cfg->g_usage != ALLINTRA &&
-      extra_cfg->deltaq_mode == DELTA_Q_VARIANCE_BOOST) {
-    ERROR("Variance Boost (deltaq_mode = 6) can only be set in all intra mode");
-  }
-
   RANGE_CHECK_HI(extra_cfg, deltalf_mode, 1);
   RANGE_CHECK_HI(extra_cfg, frame_periodic_boost, 1);
 #if CONFIG_REALTIME_ONLY
@@ -1900,9 +1894,9 @@ static aom_codec_err_t ctrl_set_arnr_strength(aom_codec_alg_priv_t *ctx,
 
 static aom_codec_err_t handle_tuning(aom_codec_alg_priv_t *ctx,
                                      struct av1_extracfg *extra_cfg) {
+  (void)ctx;
   if (extra_cfg->tuning == AOM_TUNE_IQ ||
       extra_cfg->tuning == AOM_TUNE_SSIMULACRA2) {
-    if (ctx->cfg.g_usage != AOM_USAGE_ALL_INTRA) return AOM_CODEC_INCAPABLE;
     // Enable QMs as they've been found to be beneficial for images, when used
     // with alternative QM formulas:
     // - aom_get_qmlevel_allintra()
@@ -1911,8 +1905,8 @@ static aom_codec_err_t handle_tuning(aom_codec_alg_priv_t *ctx,
     extra_cfg->enable_qm = 1;
     extra_cfg->qm_min = QM_FIRST_IQ_SSIMULACRA2;
     extra_cfg->qm_max = QM_LAST_IQ_SSIMULACRA2;
-    // We can turn on sharpness, as frames do not have to serve as references to
-    // others.
+    // Sharpness has been found to be beneficial for images (better perceptual
+    // quality).
     extra_cfg->sharpness = 7;
     // Using the QM-PSNR metric was found to be beneficial for images (over the
     // default PSNR metric), as it correlates better with subjective image
@@ -1930,6 +1924,8 @@ static aom_codec_err_t handle_tuning(aom_codec_alg_priv_t *ctx,
     extra_cfg->enable_chroma_deltaq = 1;
     // Enable "Variance Boost" deltaq mode, optimized for images.
     extra_cfg->deltaq_mode = DELTA_Q_VARIANCE_BOOST;
+    // Enable "anti-aliased text and graphics aware" screen detection mode.
+    extra_cfg->screen_detection_mode = AOM_SCREEN_DETECTION_ANTIALIASING_AWARE;
   }
   if (extra_cfg->tuning == AOM_TUNE_IQ) {
     // Enable adaptive sharpness to adjust loop filter levels according to QP.
