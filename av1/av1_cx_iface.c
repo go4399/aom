@@ -713,12 +713,6 @@ static aom_codec_err_t validate_config(aom_codec_alg_priv_t *ctx,
   RANGE_CHECK_BOOL(extra_cfg, lossless);
   RANGE_CHECK_HI(extra_cfg, aq_mode, AQ_MODE_COUNT - 1);
   RANGE_CHECK_HI(extra_cfg, deltaq_mode, DELTA_Q_MODE_COUNT - 1);
-
-  if (cfg->g_usage != ALLINTRA &&
-      extra_cfg->deltaq_mode == DELTA_Q_VARIANCE_BOOST) {
-    ERROR("Variance Boost (deltaq_mode = 6) can only be set in all intra mode");
-  }
-
   RANGE_CHECK_HI(extra_cfg, deltalf_mode, 1);
   RANGE_CHECK_HI(extra_cfg, frame_periodic_boost, 1);
 #if CONFIG_REALTIME_ONLY
@@ -1900,9 +1894,9 @@ static aom_codec_err_t ctrl_set_arnr_strength(aom_codec_alg_priv_t *ctx,
 
 static aom_codec_err_t handle_tuning(aom_codec_alg_priv_t *ctx,
                                      struct av1_extracfg *extra_cfg) {
+  (void)ctx;
   if (extra_cfg->tuning == AOM_TUNE_IQ ||
       extra_cfg->tuning == AOM_TUNE_SSIMULACRA2) {
-    if (ctx->cfg.g_usage != AOM_USAGE_ALL_INTRA) return AOM_CODEC_INCAPABLE;
     // Enable QMs as they've been found to be beneficial for images, when used
     // with alternative QM formulas:
     // - aom_get_qmlevel_allintra()
@@ -1936,6 +1930,8 @@ static aom_codec_err_t handle_tuning(aom_codec_alg_priv_t *ctx,
     // Takes a small SSIMULACRA2 hit on the lower quality end, so enable it
     // just for tune IQ.
     extra_cfg->enable_adaptive_sharpness = 1;
+    // Enable "anti-aliased text and graphics aware" screen detection mode.
+    extra_cfg->screen_detection_mode = AOM_SCREEN_DETECTION_ANTIALIASING_AWARE;
   }
   return AOM_CODEC_OK;
 }
