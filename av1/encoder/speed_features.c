@@ -2827,6 +2827,13 @@ void av1_set_speed_features_qindex_dependent(AV1_COMP *cpi, int speed) {
   const int is_arf2_bwd_type =
       cpi->ppi->gf_group.update_type[cpi->gf_frame_index] == INTNL_ARF_UPDATE;
 
+  if (cpi->oxcf.mode == ALLINTRA || cpi->oxcf.tune_cfg.tuning == AOM_TUNE_IQ ||
+      cpi->oxcf.tune_cfg.tuning == AOM_TUNE_SSIMULACRA2) {
+    if (cm->quant_params.base_qindex <= 140) {
+      sf->lpf_sf.zero_low_cdef_strengths = 1;
+    }
+  }
+
   if (cpi->oxcf.mode == REALTIME) {
     if (speed >= 6) {
       const int qindex_thresh = boosted ? 190 : (is_720p_or_larger ? 120 : 150);
@@ -2836,12 +2843,6 @@ void av1_set_speed_features_qindex_dependent(AV1_COMP *cpi, int speed) {
               : cm->quant_params.base_qindex > qindex_thresh;
     }
     return;
-  }
-
-  if (cpi->oxcf.mode == ALLINTRA) {
-    if (cm->quant_params.base_qindex <= 140) {
-      sf->lpf_sf.zero_low_cdef_strengths = 1;
-    }
   }
 
   if (speed == 0) {
