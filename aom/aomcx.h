@@ -1744,6 +1744,7 @@ typedef enum {
  *   * --enable-cdef=3
  *   * --enable-chroma-deltaq=1
  *   * --deltaq-mode=6
+ *   * --screen-detection-mode=2
  * AOM_TUNE_IQ additionally sets the following options:
  *   * --enable-adaptive-sharpness=1
  */
@@ -1759,9 +1760,9 @@ typedef enum {
   AOM_TUNE_VMAF_SALIENCY_MAP = 9,
 /*!\brief Allows detection of the presence of AOM_TUNE_IQ at compile time. */
 #define AOM_HAVE_TUNE_IQ 1
-  /* Image quality (or intra quality). Increases image quality and consistency,
-   * guided by the SSIMULACRA 2 metric and subjective quality checks. Shares
-   * the rdmult code with AOM_TUNE_SSIM.
+  /* Image quality. Increases image quality and consistency, guided by the
+   * SSIMULACRA 2 metric and subjective quality checks. Shares the rdmult code
+   * with AOM_TUNE_SSIM.
    */
   AOM_TUNE_IQ = 10,
 /*!\brief Allows detection of the presence of AOM_TUNE_SSIMULACRA2 at compile
