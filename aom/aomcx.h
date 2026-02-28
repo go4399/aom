@@ -1732,10 +1732,10 @@ typedef enum {
  * Changes the encoder to tune for certain types of input material.
  *
  * \note
- * AOM_TUNE_IQ and AOM_TUNE_SSIMULACRA2 are restricted to all intra mode
- * (AOM_USAGE_ALL_INTRA). Setting the tuning option to either AOM_TUNE_IQ or
- * AOM_TUNE_SSIMULACRA2 causes the following options to be set (expressed as
- * command-line options):
+ * AOM_TUNE_IQ and AOM_TUNE_SSIMULACRA2 are meant for image encoding. Using
+ * these tuning modes for videos isn't recommended.
+ * Setting the tuning option to either AOM_TUNE_IQ or AOM_TUNE_SSIMULACRA2
+ * causes the following options to be set (expressed as command-line options):
  *   * --enable-qm=1
  *   * --qm-min=2
  *   * --qm-max=10
@@ -1744,6 +1744,7 @@ typedef enum {
  *   * --enable-cdef=3
  *   * --enable-chroma-deltaq=1
  *   * --deltaq-mode=6
+ *   * --screen-detection-mode=2
  * AOM_TUNE_IQ additionally sets the following options:
  *   * --enable-adaptive-sharpness=1
  */
@@ -1759,7 +1760,7 @@ typedef enum {
   AOM_TUNE_VMAF_SALIENCY_MAP = 9,
 /*!\brief Allows detection of the presence of AOM_TUNE_IQ at compile time. */
 #define AOM_HAVE_TUNE_IQ 1
-  /* Image quality (or intra quality). Increases image quality and consistency,
+  /* "Image Quality" tuning mode. Increases image quality and consistency,
    * guided by the SSIMULACRA 2 metric and subjective quality checks. Shares
    * the rdmult code with AOM_TUNE_SSIM.
    */

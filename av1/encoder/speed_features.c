@@ -2838,7 +2838,8 @@ void av1_set_speed_features_qindex_dependent(AV1_COMP *cpi, int speed) {
     return;
   }
 
-  if (cpi->oxcf.mode == ALLINTRA) {
+  if (cpi->oxcf.mode == ALLINTRA || cpi->oxcf.tune_cfg.tuning == AOM_TUNE_IQ ||
+      cpi->oxcf.tune_cfg.tuning == AOM_TUNE_SSIMULACRA2) {
     if (cm->quant_params.base_qindex <= 140) {
       sf->lpf_sf.zero_low_cdef_strengths = 1;
     }
