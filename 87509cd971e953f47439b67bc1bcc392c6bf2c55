@@ -16,6 +16,23 @@
       "message": "The results for different resolutions are as follows for commit bb0be28:\n\n```\n                Encoder Instruction                              BD-Rate Loss (%)\ncpu  Resolution  Count Reduction(%) avg.psnr   ovr.psnr     ssim      vmaf    vmaf_neg\n----------------------------------------------------------------------------------------\n0    LOWRES2         12.94           0.0778     0.0727     0.0199    0.0713    0.0111\n0    MIDRES2         15.64          -0.0059     0.0723     0.0610    0.1350    0.1367\n0    SHORTS608p      16.30           0.1154     0.1300     0.0967    0.1051    0.0874\n0    SHORTS720p      18.44           0.1201     0.1282     0.0753    0.0522    0.0620\n0    SHORTS1080p     19.31           0.1193     0.1129     0.1035    0.0451    0.0741\n0    HDRES2          17.22           0.0655     0.0626     0.0179   -0.0343    0.0198\n0    Average         16.77           0.0853     0.0989     0.0651    0.0629    0.0812\n\n```\nThe instruction count reduction specified has been measured using command:\n```\n`$ perf stat -e instructions:u ./aomenc`\n```\nPlease review.",
       "revId": "87509cd971e953f47439b67bc1bcc392c6bf2c55",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc17205e_4cada7d8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31322
+      },
+      "writtenOn": "2026-03-03T11:51:36Z",
+      "side": 1,
+      "message": "Please review.",
+      "revId": "87509cd971e953f47439b67bc1bcc392c6bf2c55",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
