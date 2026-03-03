@@ -450,6 +450,20 @@ execute_process(
           -DAOM_CONFIG_DIR=${AOM_CONFIG_DIR} -DAOM_ROOT=${AOM_ROOT} -P
           "${AOM_ROOT}/build/cmake/generate_aom_config_templates.cmake")
 
+# Sanitize boolean variables to ensure they are 0 or 1.
+foreach(aom_config_var ${AOM_CONFIG_VARS})
+  if(
+    NOT aom_config_var MATCHES
+    "AOM_RTCD_FLAGS|CONFIG_MAX_DECODE_PROFILE|DECODE_HEIGHT_LIMIT|DECODE_WIDTH_LIMIT"
+    )
+    if(${aom_config_var})
+      set(${aom_config_var} 1)
+    else()
+      set(${aom_config_var} 0)
+    endif()
+  endif()
+endforeach()
+
 # Generate aom_config.{asm,h}.
 configure_file("${aom_config_asm_template}"
                "${AOM_CONFIG_DIR}/config/aom_config.asm")
