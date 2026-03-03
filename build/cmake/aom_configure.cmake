@@ -46,7 +46,10 @@ endif()
 # Generate the user config settings.
 list(APPEND aom_build_vars ${AOM_CONFIG_VARS} ${AOM_OPTION_VARS})
 foreach(cache_var ${aom_build_vars})
-  get_property(cache_var_helpstring CACHE ${cache_var} PROPERTY HELPSTRING)
+  get_property(
+    cache_var_helpstring
+    CACHE ${cache_var}
+    PROPERTY HELPSTRING)
   if(cache_var_helpstring STREQUAL cmake_cmdline_helpstring)
     set(AOM_CMAKE_CONFIG "${AOM_CMAKE_CONFIG} -D${cache_var}=${${cache_var}}")
   endif()
@@ -63,10 +66,11 @@ if(NOT AOM_TARGET_CPU)
       set(AOM_TARGET_CPU "x86_64")
     else()
       message(
-        FATAL_ERROR "--- Unexpected pointer size (${CMAKE_SIZEOF_VOID_P}) for\n"
-                    "      CMAKE_SYSTEM_NAME=${CMAKE_SYSTEM_NAME}\n"
-                    "      CMAKE_SYSTEM_PROCESSOR=${CMAKE_SYSTEM_PROCESSOR}\n"
-                    "      CMAKE_GENERATOR=${CMAKE_GENERATOR}\n")
+        FATAL_ERROR
+          "--- Unexpected pointer size (${CMAKE_SIZEOF_VOID_P}) for\n"
+          "      CMAKE_SYSTEM_NAME=${CMAKE_SYSTEM_NAME}\n"
+          "      CMAKE_SYSTEM_PROCESSOR=${CMAKE_SYSTEM_PROCESSOR}\n"
+          "      CMAKE_GENERATOR=${CMAKE_GENERATOR}\n")
     endif()
   elseif(cpu_lowercase STREQUAL "i386" OR cpu_lowercase STREQUAL "x86")
     set(AOM_TARGET_CPU "x86")
@@ -120,14 +124,20 @@ elseif(NOT CONFIG_PIC)
   # string for variables specified via the command line. This allows the user to
   # force CONFIG_PIC=0.
   unset(cache_helpstring)
-  get_property(cache_helpstring CACHE CONFIG_PIC PROPERTY HELPSTRING)
+  get_property(
+    cache_helpstring
+    CACHE CONFIG_PIC
+    PROPERTY HELPSTRING)
   if(NOT "${cache_helpstring}" STREQUAL "${cmake_cmdline_helpstring}")
-    aom_check_c_compiles("pie_check" "
+    aom_check_c_compiles(
+      "pie_check"
+      "
                           #if !(__pie__ || __PIE__)
                           #error Neither __pie__ or __PIE__ are set
                           #endif
                           extern void unused(void);
-                          void unused(void) {}" HAVE_PIE)
+                          void unused(void) {}"
+      HAVE_PIE)
 
     if(HAVE_PIE)
       # If -fpie or -fPIE are used ensure the assembly code has PIC enabled to
@@ -146,8 +156,8 @@ if(NOT MSVC)
     # TODO(tomfinegan): clang needs -pie in CMAKE_EXE_LINKER_FLAGS for this to
     # work.
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-    if(AOM_TARGET_SYSTEM STREQUAL "Linux"
-       AND AOM_TARGET_CPU MATCHES "^armv[78]")
+    if(AOM_TARGET_SYSTEM STREQUAL "Linux" AND AOM_TARGET_CPU MATCHES
+                                              "^armv[78]")
       set(AOM_AS_FLAGS ${AOM_AS_FLAGS} --defsym PIC=1)
     else()
       set(AOM_AS_FLAGS ${AOM_AS_FLAGS} -DPIC)
@@ -270,12 +280,15 @@ endif()
 
 if(NOT WIN32)
   aom_push_var(CMAKE_REQUIRED_LIBRARIES "m")
-  aom_check_c_compiles("fenv_check" "#define _GNU_SOURCE
+  aom_check_c_compiles(
+    "fenv_check"
+    "#define _GNU_SOURCE
                         #include <fenv.h>
                         void unused(void) {
                           (void)unused;
                           (void)feenableexcept(FE_DIVBYZERO | FE_INVALID);
-                        }" HAVE_FEXCEPT)
+                        }"
+    HAVE_FEXCEPT)
   aom_pop_var(CMAKE_REQUIRED_LIBRARIES)
 endif()
 
@@ -422,8 +435,8 @@ endif()
 # also be addressed by reworking the flag tests and adding the results directly
 # to target_compile_options() as in e.g., libgav1, but that's a larger task.
 # https://github.com/android/ndk/wiki/Changelog-r23#changes
-if(ANDROID
-   AND ("${ANDROID_NDK_MAJOR}" LESS 23 OR ANDROID_USE_LEGACY_TOOLCHAIN_FILE))
+if(ANDROID AND ("${ANDROID_NDK_MAJOR}" LESS 23
+                OR ANDROID_USE_LEGACY_TOOLCHAIN_FILE))
   foreach(lang C;CXX)
     string(STRIP "${AOM_${lang}_FLAGS}" AOM_${lang}_FLAGS)
     if(AOM_${lang}_FLAGS)
@@ -446,9 +459,24 @@ endif()
 set(aom_config_asm_template "${AOM_CONFIG_DIR}/config/aom_config.asm.cmake")
 set(aom_config_h_template "${AOM_CONFIG_DIR}/config/aom_config.h.cmake")
 execute_process(
-  COMMAND ${CMAKE_COMMAND}
-          -DAOM_CONFIG_DIR=${AOM_CONFIG_DIR} -DAOM_ROOT=${AOM_ROOT} -P
-          "${AOM_ROOT}/build/cmake/generate_aom_config_templates.cmake")
+  COMMAND
+    ${CMAKE_COMMAND} -DAOM_CONFIG_DIR=${AOM_CONFIG_DIR} -DAOM_ROOT=${AOM_ROOT}
+    -P "${AOM_ROOT}/build/cmake/generate_aom_config_templates.cmake")
+
+# Sanitize boolean variables to ensure they are 0 or 1.
+foreach(aom_config_var ${AOM_CONFIG_VARS})
+  if(NOT
+     aom_config_var
+     MATCHES
+     "AOM_RTCD_FLAGS|CONFIG_MAX_DECODE_PROFILE|DECODE_HEIGHT_LIMIT|DECODE_WIDTH_LIMIT"
+  )
+    if(${aom_config_var})
+      set(${aom_config_var} 1)
+    else()
+      set(${aom_config_var} 0)
+    endif()
+  endif()
+endforeach()
 
 # Generate aom_config.{asm,h}.
 configure_file("${aom_config_asm_template}"
@@ -472,15 +500,18 @@ if(NOT PERL_FOUND)
   message(FATAL_ERROR "Perl is required to build libaom.")
 endif()
 
-set(AOM_RTCD_CONFIG_FILE_LIST "${AOM_ROOT}/aom_dsp/aom_dsp_rtcd_defs.pl"
-                              "${AOM_ROOT}/aom_scale/aom_scale_rtcd.pl"
-                              "${AOM_ROOT}/av1/common/av1_rtcd_defs.pl")
-set(AOM_RTCD_HEADER_FILE_LIST "${AOM_CONFIG_DIR}/config/aom_dsp_rtcd.h"
-                              "${AOM_CONFIG_DIR}/config/aom_scale_rtcd.h"
-                              "${AOM_CONFIG_DIR}/config/av1_rtcd.h")
-set(AOM_RTCD_SOURCE_FILE_LIST "${AOM_ROOT}/aom_dsp/aom_dsp_rtcd.c"
-                              "${AOM_ROOT}/aom_scale/aom_scale_rtcd.c"
-                              "${AOM_ROOT}/av1/common/av1_rtcd.c")
+set(AOM_RTCD_CONFIG_FILE_LIST
+    "${AOM_ROOT}/aom_dsp/aom_dsp_rtcd_defs.pl"
+    "${AOM_ROOT}/aom_scale/aom_scale_rtcd.pl"
+    "${AOM_ROOT}/av1/common/av1_rtcd_defs.pl")
+set(AOM_RTCD_HEADER_FILE_LIST
+    "${AOM_CONFIG_DIR}/config/aom_dsp_rtcd.h"
+    "${AOM_CONFIG_DIR}/config/aom_scale_rtcd.h"
+    "${AOM_CONFIG_DIR}/config/av1_rtcd.h")
+set(AOM_RTCD_SOURCE_FILE_LIST
+    "${AOM_ROOT}/aom_dsp/aom_dsp_rtcd.c"
+    "${AOM_ROOT}/aom_scale/aom_scale_rtcd.c"
+    "${AOM_ROOT}/av1/common/av1_rtcd.c")
 set(AOM_RTCD_SYMBOL_LIST aom_dsp_rtcd aom_scale_rtcd av1_rtcd)
 list(LENGTH AOM_RTCD_SYMBOL_LIST AOM_RTCD_CUSTOM_COMMAND_COUNT)
 math(EXPR AOM_RTCD_CUSTOM_COMMAND_COUNT "${AOM_RTCD_CUSTOM_COMMAND_COUNT} - 1")
@@ -493,16 +524,14 @@ foreach(NUM RANGE ${AOM_RTCD_CUSTOM_COMMAND_COUNT})
   execute_process(
     COMMAND
       ${PERL_EXECUTABLE} "${AOM_ROOT}/build/cmake/rtcd.pl"
-      --arch=${AOM_TARGET_CPU}
-      --sym=${AOM_RTCD_SYMBOL} ${AOM_RTCD_FLAGS}
+      --arch=${AOM_TARGET_CPU} --sym=${AOM_RTCD_SYMBOL} ${AOM_RTCD_FLAGS}
       --config=${AOM_CONFIG_DIR}/config/aom_config.h ${AOM_RTCD_CONFIG_FILE}
     OUTPUT_FILE ${AOM_RTCD_HEADER_FILE})
 endforeach()
 
 # Generate aom_version.h.
-execute_process(COMMAND ${CMAKE_COMMAND}
-                        -DAOM_CONFIG_DIR=${AOM_CONFIG_DIR}
-                        -DAOM_ROOT=${AOM_ROOT}
-                        -DGIT_EXECUTABLE=${GIT_EXECUTABLE}
-                        -DPERL_EXECUTABLE=${PERL_EXECUTABLE} -P
-                        "${AOM_ROOT}/build/cmake/version.cmake")
+execute_process(
+  COMMAND
+    ${CMAKE_COMMAND} -DAOM_CONFIG_DIR=${AOM_CONFIG_DIR} -DAOM_ROOT=${AOM_ROOT}
+    -DGIT_EXECUTABLE=${GIT_EXECUTABLE} -DPERL_EXECUTABLE=${PERL_EXECUTABLE} -P
+    "${AOM_ROOT}/build/cmake/version.cmake")
