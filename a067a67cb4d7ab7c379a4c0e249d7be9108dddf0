@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "198e9d0c_55a6f385",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 991,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2026-03-04T21:30:17Z",
+      "side": 0,
+      "message": "Can you explain on why this is removed? I think this is usedfor static videos, where we will just use long IPPP gops.",
+      "range": {
+        "startLine": 991,
+        "startChar": 18,
+        "endLine": 991,
+        "endChar": 34
+      },
+      "revId": "a067a67cb4d7ab7c379a4c0e249d7be9108dddf0",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a6dcfcfb_d67780a1",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1310,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2026-03-04T21:30:17Z",
+      "side": 0,
+      "message": "How much change does this give? Should we also use this for Q mode as well?",
+      "range": {
+        "startLine": 1310,
+        "startChar": 15,
+        "endLine": 1310,
+        "endChar": 41
+      },
+      "revId": "a067a67cb4d7ab7c379a4c0e249d7be9108dddf0",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
