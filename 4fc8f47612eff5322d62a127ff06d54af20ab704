@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "97f1f75b_87ff1f56",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 2427,
+      "author": {
+        "id": 31132
+      },
+      "writtenOn": "2026-03-04T22:12:46Z",
+      "side": 1,
+      "message": "You are right. Done.",
+      "parentUuid": "e0c07bd7_58eb9e80",
+      "range": {
+        "startLine": 2422,
+        "startChar": 10,
+        "endLine": 2427,
+        "endChar": 11
+      },
+      "revId": "4fc8f47612eff5322d62a127ff06d54af20ab704",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "446c3db9_92fd1b0d",
         "filename": "av1/encoder/ratectrl.c",
         "patchSetId": 6
@@ -49,6 +73,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "48a13012_92f22ad1",
+        "filename": "av1/encoder/ratectrl.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 31132
+      },
+      "writtenOn": "2026-03-04T22:12:46Z",
+      "side": 1,
+      "message": "This implies that arf frames with the same gfu_boost will be assigned a higher QP than before. They were trained offline.",
+      "parentUuid": "446c3db9_92fd1b0d",
+      "range": {
+        "startLine": 108,
+        "startChar": 11,
+        "endLine": 108,
+        "endChar": 20
+      },
+      "revId": "4fc8f47612eff5322d62a127ff06d54af20ab704",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e5f8fd9c_843bca66",
         "filename": "av1/encoder/ratectrl.h",
         "patchSetId": 6
@@ -60,6 +108,30 @@
       "writtenOn": "2026-03-04T21:30:17Z",
       "side": 1,
       "message": "Nit: typo",
+      "range": {
+        "startLine": 337,
+        "startChar": 14,
+        "endLine": 337,
+        "endChar": 16
+      },
+      "revId": "4fc8f47612eff5322d62a127ff06d54af20ab704",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7bc809c2_c294171a",
+        "filename": "av1/encoder/ratectrl.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 31132
+      },
+      "writtenOn": "2026-03-04T22:12:46Z",
+      "side": 1,
+      "message": "Fixed. Thanks.",
+      "parentUuid": "e5f8fd9c_843bca66",
       "range": {
         "startLine": 337,
         "startChar": 14,
