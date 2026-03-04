@@ -35,6 +35,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "42740748_0c4021d2",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 900,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-04T22:08:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70044c9c_e724ee3d",
+      "revId": "bb8cb3470c4373647fd74c22e6e85f0d86b79533",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2ef7f491_b0aa9ce3",
@@ -48,6 +66,24 @@
       "writtenOn": "2026-03-04T18:17:18Z",
       "side": 1,
       "message": "Optional: We can just say `cpi-\u003eoxcf.q_cfg.use_fixed_qp_offsets !\u003d 0`. Comparing with 1 and 2 is fine if you think that is clearer.",
+      "revId": "bb8cb3470c4373647fd74c22e6e85f0d86b79533",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a4aa375_3817f427",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 4605,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-04T22:08:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ef7f491_b0aa9ce3",
       "revId": "bb8cb3470c4373647fd74c22e6e85f0d86b79533",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -69,6 +105,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "147e1472_3aff03b4",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 794,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-04T22:08:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff8495c8_daf3f848",
+      "revId": "bb8cb3470c4373647fd74c22e6e85f0d86b79533",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "00ecb8c5_eae68bf9",
@@ -82,6 +136,24 @@
       "writtenOn": "2026-03-04T18:17:18Z",
       "side": 1,
       "message": "Nit: Also document value 0.",
+      "revId": "bb8cb3470c4373647fd74c22e6e85f0d86b79533",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b93978ca_57b6f6f5",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 798,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-04T22:08:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "00ecb8c5_eae68bf9",
       "revId": "bb8cb3470c4373647fd74c22e6e85f0d86b79533",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
