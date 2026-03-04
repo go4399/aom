@@ -34,6 +34,23 @@
       "parentUuid": "4926bcc1_30a3bc3b",
       "revId": "4908e2ae5a42b813c3a8859dd3e7fb2d638618e8",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "07b6f808_6bc84f85",
+        "filename": "build/cmake/aom_configure.cmake",
+        "patchSetId": 2
+      },
+      "lineNbr": 453,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-04T19:58:32Z",
+      "side": 1,
+      "message": "It might be better to move this before line 445. That way it\u0027s before there\u0027s anything done with config files at all.",
+      "revId": "4908e2ae5a42b813c3a8859dd3e7fb2d638618e8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
