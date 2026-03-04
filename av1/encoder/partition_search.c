@@ -5684,8 +5684,170 @@ static void ml_part_features_intra_split(AV1_COMP *const cpi, ThreadData *td,
 }
 
 #define MAX_BLK_SIZE (MAX_TX_SIZE << 1)
-// #define MAX_BLK_SIZE 128
 #define MAX_BLK_SQUARE (MAX_BLK_SIZE * MAX_BLK_SIZE)
+
+static void ml_part_features_intra_horz(AV1_COMP *const cpi, ThreadData *td,
+                                         TileDataEnc *tile_data,
+                                         int mi_row, int mi_col,
+                                         BLOCK_SIZE bsize,
+                                         float *out_features) {
+  TileInfo *const tile_info = &tile_data->tile_info;
+  MACROBLOCK *const x = &td->mb;
+  MACROBLOCKD *xd = &x->e_mbd;
+  MB_MODE_INFO *const mbmi = xd->mi[0];
+  const int h_mi = mi_size_high[bsize];
+  BLOCK_SIZE subsize_hor = get_partition_subsize(bsize, PARTITION_HORZ);
+  if (subsize_hor == BLOCK_INVALID) {
+    return;
+  }
+
+  const int sb_size = cpi->common.seq_params->sb_size;
+  const int w_sub_mi = mi_size_wide[subsize_hor];
+  const int h_sub_mi = mi_size_high[subsize_hor];
+  TX_SIZE tx_sub_size = max_txsize_rect_lookup[subsize_hor];
+  unsigned int best_sub_sse[2][3] = {
+    { INT_MAX, INT_MAX, INT_MAX }, { INT_MAX, INT_MAX, INT_MAX }
+  };
+  unsigned int best_sub_var[2][3] = {
+    { INT_MAX, INT_MAX, INT_MAX }, { INT_MAX, INT_MAX, INT_MAX }
+  };
+  PREDICTION_MODE best_sub_mode[2][3] = {
+    { PRED_MODE_INVALID, PRED_MODE_INVALID, PRED_MODE_INVALID },
+    { PRED_MODE_INVALID, PRED_MODE_INVALID, PRED_MODE_INVALID }
+  };
+
+  for (int row_off = 0, r_idx = 0; row_off < h_mi;
+       row_off += h_sub_mi, ++r_idx) {
+    int mi_row_left = xd->tile.mi_row_end - mi_row - row_off;
+    if (mi_row_left < 0) break;
+    int col_off = 0;
+    int src_off = (row_off << 2) * x->plane[0].src.stride + (col_off << 2);
+    xd->mb_to_top_edge = -GET_MV_SUBPEL((mi_row + row_off) * MI_SIZE);
+    xd->mb_to_left_edge = -GET_MV_SUBPEL((mi_col + col_off) * MI_SIZE);
+    mbmi->bsize = subsize_hor;
+    xd->up_available = (mi_row + row_off) > tile_info->mi_row_start;
+    xd->left_available = (mi_col + col_off) > tile_info->mi_col_start;
+
+    for (PREDICTION_MODE intra_sub_mode = INTRA_MODE_START;
+         intra_sub_mode < INTRA_MODE_END; ++intra_sub_mode) {
+      DECLARE_ALIGNED(16, uint16_t, intrapred_buf[MAX_BLK_SQUARE]);
+      memset(intrapred_buf, 0, sizeof(intrapred_buf));
+      uint8_t* intrapred = CONVERT_TO_BYTEPTR(intrapred_buf);
+      av1_predict_intra_block(
+          xd, sb_size, 0, w_sub_mi << MI_SIZE_LOG2, h_sub_mi << MI_SIZE_LOG2,
+          tx_sub_size, intra_sub_mode, 0, 0, FILTER_INTRA_MODES, x->plane[0].src.buf + src_off,
+          x->plane[0].src.stride, intrapred, MAX_BLK_SIZE, 0, 0, 0);
+      unsigned int curr_sse = 0, curr_var = 0;
+      curr_var = cpi->ppi->fn_ptr[txsize_to_bsize[tx_sub_size]].vf(
+          x->plane[0].src.buf + src_off, x->plane[0].src.stride, intrapred,
+          MAX_BLK_SIZE, &curr_sse);
+      for (int cand = 0; cand < 3; cand++) {
+        if (curr_sse < best_sub_sse[r_idx][cand]) {
+          for (int s = 2; s > cand; s--) {
+            best_sub_sse[r_idx][s] = best_sub_sse[r_idx][s - 1];
+            best_sub_var[r_idx][s] = best_sub_var[r_idx][s - 1];
+            best_sub_mode[r_idx][s] = best_sub_mode[r_idx][s - 1];
+          }
+          best_sub_sse[r_idx][cand] = curr_sse;
+          best_sub_var[r_idx][cand] = curr_var;
+          best_sub_mode[r_idx][cand] = intra_sub_mode;
+          break;
+        }
+      }
+    }
+    const int sub_area_log2 =
+        mi_size_wide_log2[subsize_hor] + mi_size_high_log2[subsize_hor] + 4;
+    for (int cand = 0; cand < 3; ++cand) {
+      int foff = r_idx * 2 + cand * 4;
+      out_features[FEATURE_INTRA_HOR_NORM_BEST_SSE_0_0 + foff] =
+          logf(1.0f + (best_sub_sse[r_idx][cand] >> sub_area_log2));
+      out_features[FEATURE_INTRA_HOR_NORM_BEST_VAR_0_0 + foff] =
+          logf(1.0f + (best_sub_var[r_idx][cand] >> sub_area_log2));
+    }
+  }
+}
+
+static void ml_part_features_intra_vert(AV1_COMP *const cpi, ThreadData *td,
+                                         TileDataEnc *tile_data,
+                                         int mi_row, int mi_col,
+                                         BLOCK_SIZE bsize,
+                                         float *out_features) {
+  TileInfo *const tile_info = &tile_data->tile_info;
+  MACROBLOCK *const x = &td->mb;
+  MACROBLOCKD *xd = &x->e_mbd;
+  MB_MODE_INFO *const mbmi = xd->mi[0];
+  const int w_mi = mi_size_wide[bsize];
+  BLOCK_SIZE subsize_ver = get_partition_subsize(bsize, PARTITION_VERT);
+  if (subsize_ver == BLOCK_INVALID) {
+    return;
+  }
+
+  const int sb_size = cpi->common.seq_params->sb_size;
+  const int w_sub_mi = mi_size_wide[subsize_ver];
+  const int h_sub_mi = mi_size_high[subsize_ver];
+  TX_SIZE tx_sub_size = max_txsize_rect_lookup[subsize_ver];
+  unsigned int best_sub_sse[2][3] = {
+    { INT_MAX, INT_MAX, INT_MAX }, { INT_MAX, INT_MAX, INT_MAX }
+  };
+  unsigned int best_sub_var[2][3] = {
+    { INT_MAX, INT_MAX, INT_MAX }, { INT_MAX, INT_MAX, INT_MAX }
+  };
+  PREDICTION_MODE best_sub_mode[2][3] = {
+    { PRED_MODE_INVALID, PRED_MODE_INVALID, PRED_MODE_INVALID },
+    { PRED_MODE_INVALID, PRED_MODE_INVALID, PRED_MODE_INVALID }
+  };
+
+  int row_off = 0;
+  for (int col_off = 0, c_idx = 0; col_off < w_mi;
+       col_off += w_sub_mi, ++c_idx) {
+    int mi_col_left = xd->tile.mi_col_end - mi_col - col_off;
+    if (mi_col_left < 0) break;
+    int src_off = (row_off << 2) * x->plane[0].src.stride + (col_off << 2);
+    xd->mb_to_top_edge = -GET_MV_SUBPEL((mi_row + row_off) * MI_SIZE);
+    xd->mb_to_left_edge = -GET_MV_SUBPEL((mi_col + col_off) * MI_SIZE);
+    mbmi->bsize = subsize_ver;
+    xd->up_available = (mi_row + row_off) > tile_info->mi_row_start;
+    xd->left_available = (mi_col + col_off) > tile_info->mi_col_start;
+
+    for (PREDICTION_MODE intra_sub_mode = INTRA_MODE_START;
+         intra_sub_mode < INTRA_MODE_END; ++intra_sub_mode) {
+      DECLARE_ALIGNED(16, uint16_t, intrapred_buf[MAX_BLK_SQUARE]);
+      memset(intrapred_buf, 0, sizeof(intrapred_buf));
+      uint8_t* intrapred = CONVERT_TO_BYTEPTR(intrapred_buf);
+      av1_predict_intra_block(
+          xd, sb_size, 0, w_sub_mi << MI_SIZE_LOG2, h_sub_mi << MI_SIZE_LOG2,
+          tx_sub_size, intra_sub_mode, 0, 0, FILTER_INTRA_MODES, x->plane[0].src.buf + src_off,
+          x->plane[0].src.stride, intrapred, MAX_BLK_SIZE, 0, 0, 0);
+      unsigned int curr_sse = 0, curr_var = 0;
+      curr_var = cpi->ppi->fn_ptr[txsize_to_bsize[tx_sub_size]].vf(
+          x->plane[0].src.buf + src_off, x->plane[0].src.stride, intrapred,
+          MAX_BLK_SIZE, &curr_sse);
+      for (int cand = 0; cand < 3; cand++) {
+        if (curr_sse < best_sub_sse[c_idx][cand]) {
+          for (int s = 2; s > cand; s--) {
+            best_sub_sse[c_idx][s] = best_sub_sse[c_idx][s - 1];
+            best_sub_var[c_idx][s] = best_sub_var[c_idx][s - 1];
+            best_sub_mode[c_idx][s] = best_sub_mode[c_idx][s - 1];
+          }
+          best_sub_sse[c_idx][cand] = curr_sse;
+          best_sub_var[c_idx][cand] = curr_var;
+          best_sub_mode[c_idx][cand] = intra_sub_mode;
+          break;
+        }
+      }
+    }
+    const int sub_area_log2 =
+        mi_size_wide_log2[subsize_ver] + mi_size_high_log2[subsize_ver] + 4;
+    for (int cand = 0; cand < 3; ++cand) {
+      int foff = c_idx * 2 + cand * 4;
+      out_features[FEATURE_INTRA_VER_NORM_BEST_SSE_0_0 + foff] =
+          logf(1.0f + (best_sub_sse[c_idx][cand] >> sub_area_log2));
+      out_features[FEATURE_INTRA_VER_NORM_BEST_VAR_0_0 + foff] =
+          logf(1.0f + (best_sub_var[c_idx][cand] >> sub_area_log2));
+    }
+  }
+}
+
 // #define MAX_TX_RECT (MAX_TX_SIZE * MAX_BLK_SIZE)
 static void ml_part_features_intra_none(AV1_COMP *const cpi, ThreadData *td,
                                           TileDataEnc *tile_data,
@@ -5808,6 +5970,10 @@ static void get_ml_part_features_keyframe(AV1_COMP *const cpi, ThreadData *td,
 
   ml_part_features_intra_split(cpi, td, tile_data, mi_row, mi_col, bsize,
                                out_features);
+  ml_part_features_intra_horz(cpi, td, tile_data, mi_row, mi_col, bsize,
+                              out_features);
+  ml_part_features_intra_vert(cpi, td, tile_data, mi_row, mi_col, bsize,
+                              out_features);
   ml_part_features_intra_none(cpi, td, tile_data, mi_row, mi_col, bsize,
                               out_features);
 
@@ -5929,12 +6095,19 @@ bool av1_rd_pick_partition(AV1_COMP *const cpi, ThreadData *td,
 
 #if CONFIG_HW_ML_PART
   bool collect_data = collect_ml_part_data(tile_info, mi_row, mi_col, bsize);
-  float out_features[FEATURE_INTER_MAX] = { 0.0f };
+#define ML_FEAT_MAX \
+  (FEATURE_INTER_MAX > FEATURE_INTRA_MAX ? FEATURE_INTER_MAX : FEATURE_INTRA_MAX)
+  float out_features[ML_FEAT_MAX] = { 0.0f };
   int ml_part_mask = 0xF;  // Default: allow all NONE(0), HORZ(1), VERT(2), SPLIT(3)
-  if (collect_data && frame_is_intra_only(cm)) {
-    get_ml_part_features_keyframe(cpi, td, tile_data, mi_row, mi_col, bsize,
-                                  out_features);
-    ml_part_mask = av1_partitions_prune_inference(out_features, /*max_modes=*/2);
+  if (collect_data) {
+    if (frame_is_intra_only(cm)) {
+      get_ml_part_features_keyframe(cpi, td, tile_data, mi_row, mi_col, bsize,
+                                    out_features);
+      // ml_part_mask = av1_partitions_prune_inference(out_features, /*max_modes=*/2);
+    } else {
+      get_ml_part_features_interframe(cpi, td, tile_data, mi_row, mi_col, bsize,
+                                      out_features);
+    }
   }
 #endif  // CONFIG_HW_ML_PART
 
@@ -6292,7 +6465,7 @@ BEGIN_PARTITION_SEARCH:
   end_timing(cpi, encode_sb_time);
 #endif
 
-#if 0 // CONFIG_HW_ML_PART
+#if CONFIG_HW_ML_PART
   if (collect_data && part_search_state.found_best_partition) {
     const int is_keyframe = frame_is_intra_only(cm);
     char file_name[200];
@@ -6324,10 +6497,10 @@ BEGIN_PARTITION_SEARCH:
               "INTER_SQ_2_PSNR,INTER_SQ_2_Q_COEFF_MAX,INTER_SQ_2_Q_COEFF_NONZ,"
               "INTER_SQ_3_PSNR,INTER_SQ_3_Q_COEFF_MAX,INTER_SQ_3_Q_COEFF_NONZ,"
               "INTER_FULL_LOG_MAG,INTER_FULL_ANGLE_RAD,"
-              "INTER_SQ_0_LOG_MAG,INTER_SQ_0_LOG_MAG,"
-              "INTER_SQ_1_LOG_MAG,INTER_SQ_1_LOG_MAG,"
-              "INTER_SQ_2_LOG_MAG,INTER_SQ_2_LOG_MAG,"
-              "INTER_SQ_3_LOG_MAG,INTER_SQ_3_LOG_MAG,"
+              "INTER_SQ_0_LOG_MAG,INTER_SQ_0_ANGLE_RAD,"
+              "INTER_SQ_1_LOG_MAG,INTER_SQ_1_ANGLE_RAD,"
+              "INTER_SQ_2_LOG_MAG,INTER_SQ_2_ANGLE_RAD,"
+              "INTER_SQ_3_LOG_MAG,INTER_SQ_3_ANGLE_RAD,"
               "INTER_FULL_LOG_SATDQ,INTER_SQ_0_LOG_SATDQ,INTER_SQ_1_LOG_SATDQ,"
               "INTER_SQ_2_LOG_SATDQ,INTER_SQ_3_LOG_SATDQ,"
               "INTER_FULL_LOG_SATD,INTER_SQ_0_LOG_SATD,INTER_SQ_1_LOG_SATD,"
@@ -6335,20 +6508,14 @@ BEGIN_PARTITION_SEARCH:
               "SQ_2_LOG_SATD,INTER_SQ_3_LOG_SATD,"
               "INTER_HOR_0_PSNR,INTER_HOR_0_Q_COEFF_MAX,INTER_HOR_0_Q_COEFF_"
               "NONZ,"
-              "INTER_HOR_0_Q_COEFF_NONZ,INTER_HOR_0_ANGLE_RAD,INTER_HOR_0_LOG_"
-              "SATDQ,INTER_HOR_0_LOG_SATD,"
-              "INTER_HOR_1_PSNR,INTER_HOR_1_Q_COEFF_MAX,INTER_HOR_1_Q_COEFF_"
-              "NONZ,"
-              "INTER_HOR_1_Q_COEFF_NONZ,INTER_HOR_1_ANGLE_RAD,INTER_HOR_1_LOG_"
-              "SATDQ,INTER_HOR_1_LOG_SATD,"
-              "INTER_VER_0_PSNR,INTER_VER_0_Q_COEFF_MAX,INTER_VER_0_Q_COEFF_"
-              "NONZ,"
-              "INTER_VER_0_Q_COEFF_NONZ,INTER_VER_0_ANGLE_RAD,INTER_VER_0_LOG_"
-              "SATDQ,INTER_VER_0_LOG_SATD,"
-              "INTER_VER_1_PSNR,INTER_VER_1_Q_COEFF_MAX,INTER_VER_1_Q_COEFF_"
-              "NONZ,"
-              "INTER_VER_1_Q_COEFF_NONZ,INTER_VER_1_ANGLE_RAD,INTER_VER_1_LOG_"
-              "SATDQ,INTER_VER_1_LOG_SATD,INTER_SWITCH,INTER_PART_T,PIXELS\n");
+              "INTER_HOR_0_ANGLE_RAD,INTER_HOR_0_LOG_SATDQ,INTER_HOR_0_LOG_SATD,"
+              "INTER_HOR_1_PSNR,INTER_HOR_1_Q_COEFF_MAX,INTER_HOR_1_Q_COEFF_NONZ,"
+              "INTER_HOR_1_ANGLE_RAD,INTER_HOR_1_LOG_SATDQ,INTER_HOR_1_LOG_SATD,"
+              "INTER_VER_0_PSNR,INTER_VER_0_Q_COEFF_MAX,INTER_VER_0_Q_COEFF_NONZ,"
+              "INTER_VER_0_ANGLE_RAD,INTER_VER_0_LOG_SATDQ,INTER_VER_0_LOG_SATD,"
+              "INTER_VER_1_PSNR,INTER_VER_1_Q_COEFF_MAX,INTER_VER_1_Q_COEFF_NONZ,"
+              "INTER_VER_1_ANGLE_RAD,INTER_VER_1_LOG_SATDQ,INTER_VER_1_LOG_SATD,"
+              "INTER_SWITCH,INTER_PART_T,PIXELS\n");
         } else {
           fprintf(fp,
                   "INTRA_LOG_QP_SQUARED,"
@@ -6370,6 +6537,18 @@ BEGIN_PARTITION_SEARCH:
                   "INTRA_NORM_BEST_SSE_2_01,INTRA_NORM_BEST_VAR_2_01,"
                   "INTRA_NORM_BEST_SSE_2_10,INTRA_NORM_BEST_VAR_2_10,"
                   "INTRA_NORM_BEST_SSE_2_11,INTRA_NORM_BEST_VAR_2_11,"
+                  "INTRA_HOR_NORM_BEST_SSE_0_0,INTRA_HOR_NORM_BEST_VAR_0_0,"
+                  "INTRA_HOR_NORM_BEST_SSE_0_1,INTRA_HOR_NORM_BEST_VAR_0_1,"
+                  "INTRA_HOR_NORM_BEST_SSE_1_0,INTRA_HOR_NORM_BEST_VAR_1_0,"
+                  "INTRA_HOR_NORM_BEST_SSE_1_1,INTRA_HOR_NORM_BEST_VAR_1_1,"
+                  "INTRA_HOR_NORM_BEST_SSE_2_0,INTRA_HOR_NORM_BEST_VAR_2_0,"
+                  "INTRA_HOR_NORM_BEST_SSE_2_1,INTRA_HOR_NORM_BEST_VAR_2_1,"
+                  "INTRA_VER_NORM_BEST_SSE_0_0,INTRA_VER_NORM_BEST_VAR_0_0,"
+                  "INTRA_VER_NORM_BEST_SSE_0_1,INTRA_VER_NORM_BEST_VAR_0_1,"
+                  "INTRA_VER_NORM_BEST_SSE_1_0,INTRA_VER_NORM_BEST_VAR_1_0,"
+                  "INTRA_VER_NORM_BEST_SSE_1_1,INTRA_VER_NORM_BEST_VAR_1_1,"
+                  "INTRA_VER_NORM_BEST_SSE_2_0,INTRA_VER_NORM_BEST_VAR_2_0,"
+                  "INTRA_VER_NORM_BEST_SSE_2_1,INTRA_VER_NORM_BEST_VAR_2_1,"
                   "PIXELS\n");
         }
       }
