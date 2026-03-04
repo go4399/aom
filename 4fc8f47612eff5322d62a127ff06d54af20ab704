@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "269f00e9_c5d0fdb5",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 2427,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2026-03-04T23:25:02Z",
+      "side": 1,
+      "message": "This might introduce out-of-bound errors if `stats_in + new_i` is above `stats_in_end`. If you believe it should never happen then probably we should add an assert. Otherwise we can add a check to make sure it doesn\u0027t go out of bound.",
+      "parentUuid": "97f1f75b_87ff1f56",
+      "range": {
+        "startLine": 2422,
+        "startChar": 10,
+        "endLine": 2427,
+        "endChar": 11
+      },
+      "revId": "4fc8f47612eff5322d62a127ff06d54af20ab704",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "446c3db9_92fd1b0d",
         "filename": "av1/encoder/ratectrl.c",
         "patchSetId": 6
@@ -85,6 +109,30 @@
       "side": 1,
       "message": "This implies that arf frames with the same gfu_boost will be assigned a higher QP than before. They were trained offline.",
       "parentUuid": "446c3db9_92fd1b0d",
+      "range": {
+        "startLine": 108,
+        "startChar": 11,
+        "endLine": 108,
+        "endChar": 20
+      },
+      "revId": "4fc8f47612eff5322d62a127ff06d54af20ab704",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b476314d_d3eb0d38",
+        "filename": "av1/encoder/ratectrl.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2026-03-04T23:25:02Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "48a13012_92f22ad1",
       "range": {
         "startLine": 108,
         "startChar": 11,
@@ -132,6 +180,30 @@
       "side": 1,
       "message": "Fixed. Thanks.",
       "parentUuid": "e5f8fd9c_843bca66",
+      "range": {
+        "startLine": 337,
+        "startChar": 14,
+        "endLine": 337,
+        "endChar": 16
+      },
+      "revId": "4fc8f47612eff5322d62a127ff06d54af20ab704",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b9a34276_399e95c6",
+        "filename": "av1/encoder/ratectrl.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2026-03-04T23:25:02Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "7bc809c2_c294171a",
       "range": {
         "startLine": 337,
         "startChar": 14,

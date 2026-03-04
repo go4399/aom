@@ -48,6 +48,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6dd1ea6a_133c7a8f",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 991,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2026-03-04T23:25:02Z",
+      "side": 0,
+      "message": "I don\u0027t, just wanted to point this out. If it doesn\u0027t help then I\u0027m fine with removing it.",
+      "parentUuid": "1174c3ac_2f30e442",
+      "range": {
+        "startLine": 991,
+        "startChar": 18,
+        "endLine": 991,
+        "endChar": 34
+      },
+      "revId": "a067a67cb4d7ab7c379a4c0e249d7be9108dddf0",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a6dcfcfb_d67780a1",
@@ -85,6 +109,30 @@
       "side": 0,
       "message": "It gave -0.3% to -0.6% vmaf-neg gain, and -0.3% to +0.1% psnr impact across speed 0 to speed 2 on average. It has neutral impact on Q mode.",
       "parentUuid": "a6dcfcfb_d67780a1",
+      "range": {
+        "startLine": 1310,
+        "startChar": 15,
+        "endLine": 1310,
+        "endChar": 41
+      },
+      "revId": "a067a67cb4d7ab7c379a4c0e249d7be9108dddf0",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "825e1e78_da6ceeaf",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1310,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2026-03-04T23:25:02Z",
+      "side": 0,
+      "message": "Acknowledged",
+      "parentUuid": "34766b07_9a485947",
       "range": {
         "startLine": 1310,
         "startChar": 15,
