@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c8c2cb8_329d96c2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-04T18:17:18Z",
+      "side": 1,
+      "message": "Julio: This looks good to me now. After addressing this round of review comments, we can ask Jingning or his teammates to take a look. Thanks!",
+      "revId": "bb8cb3470c4373647fd74c22e6e85f0d86b79533",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70044c9c_e724ee3d",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 900,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-04T18:17:18Z",
+      "side": 1,
+      "message": "Nit: Elaborate that this means \"no QP offsets\" or \"fixed QP offsets of 0\".",
+      "revId": "bb8cb3470c4373647fd74c22e6e85f0d86b79533",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ef7f491_b0aa9ce3",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 4605,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-04T18:17:18Z",
+      "side": 1,
+      "message": "Optional: We can just say `cpi-\u003eoxcf.q_cfg.use_fixed_qp_offsets !\u003d 0`. Comparing with 1 and 2 is fine if you think that is clearer.",
+      "revId": "bb8cb3470c4373647fd74c22e6e85f0d86b79533",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff8495c8_daf3f848",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 794,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-04T18:17:18Z",
+      "side": 1,
+      "message": "Nit: Change \"uses\" to \"applies\" to match the comment in aom/aom_encoder.h and the help message in av1/arg_defs.c?",
+      "revId": "bb8cb3470c4373647fd74c22e6e85f0d86b79533",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00ecb8c5_eae68bf9",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 798,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-04T18:17:18Z",
+      "side": 1,
+      "message": "Nit: Also document value 0.",
+      "revId": "bb8cb3470c4373647fd74c22e6e85f0d86b79533",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "55731608_03948d1e",
+        "filename": "test/use_fixed_qp_offsets_test.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-04T18:17:18Z",
+      "side": 1,
+      "message": "Does the `LE` mean the QP offsets (adaptive or fixed) are negative or 0?",
+      "revId": "bb8cb3470c4373647fd74c22e6e85f0d86b79533",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
