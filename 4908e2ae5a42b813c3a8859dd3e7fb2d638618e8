@@ -16,6 +16,24 @@
       "message": "I haven\u0027t tested this, but I wonder if instead we just need stronger typing for the variables. All of the config variables are `STRING` at the moment:\n\nhttps://aomedia.googlesource.com/aom/+/refs/tags/v3.13.1/build/cmake/util.cmake#147",
       "revId": "4908e2ae5a42b813c3a8859dd3e7fb2d638618e8",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ea9757f_e5dd9f16",
+        "filename": "build/cmake/aom_configure.cmake",
+        "patchSetId": 2
+      },
+      "lineNbr": 453,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-04T19:56:13Z",
+      "side": 1,
+      "message": "\u003e I haven\u0027t tested this, but I wonder if instead we just need stronger typing for the variables. All of the config variables are `STRING` at the moment:\n\u003e \n\u003e https://aomedia.googlesource.com/aom/+/refs/tags/v3.13.1/build/cmake/util.cmake#147\n\nLooking more closely, we don\u0027t have a much better type option. Technically these could be BOOL, but I think you\u0027d still need to normalize.",
+      "parentUuid": "4926bcc1_30a3bc3b",
+      "revId": "4908e2ae5a42b813c3a8859dd3e7fb2d638618e8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
