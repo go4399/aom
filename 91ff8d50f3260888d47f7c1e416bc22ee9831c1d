@@ -16,6 +16,24 @@
       "message": "Nit: I suggest we also note that these boolean variables will be defined as C preprocessor macros in aom_config.h, so their values need to be 0 or 1.",
       "revId": "91ff8d50f3260888d47f7c1e416bc22ee9831c1d",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a0064d06_28c37b37",
+        "filename": "build/cmake/aom_configure.cmake",
+        "patchSetId": 4
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 31132
+      },
+      "writtenOn": "2026-03-05T01:28:17Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "51e8ca9f_7aa19057",
+      "revId": "91ff8d50f3260888d47f7c1e416bc22ee9831c1d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
