@@ -36,6 +36,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5fb791e2_0d385568",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 33002
+      },
+      "writtenOn": "2026-03-05T11:17:19Z",
+      "side": 1,
+      "message": "Yes, av1_convolve_x_sr() and av1_convolve_y_sr() are the single reference functions that have SIMD other than Convolve 2D.",
+      "parentUuid": "438e2c85_cca3a007",
+      "revId": "1058acdea8a20df2e3497e6170fca415e3079ea2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "32988928_843b77e3",
@@ -49,6 +67,24 @@
       "writtenOn": "2026-03-04T17:15:56Z",
       "side": 1,
       "message": "Why change this?",
+      "revId": "1058acdea8a20df2e3497e6170fca415e3079ea2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a15f6f87_efd3704e",
+        "filename": "av1/common/filter.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 33002
+      },
+      "writtenOn": "2026-03-05T11:17:19Z",
+      "side": 1,
+      "message": "Bitwise OR looks not appropriate here. Hence, we have changed it to logical OR for better readability.",
+      "parentUuid": "32988928_843b77e3",
       "revId": "1058acdea8a20df2e3497e6170fca415e3079ea2",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -70,6 +106,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "756cff3a_2efb7b6c",
+        "filename": "av1/common/filter.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 33002
+      },
+      "writtenOn": "2026-03-05T11:17:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e12d4e22_10bf7b02",
+      "revId": "1058acdea8a20df2e3497e6170fca415e3079ea2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0a0426dc_b8487dcb",
@@ -83,6 +137,30 @@
       "writtenOn": "2026-03-04T17:15:56Z",
       "side": 1,
       "message": "This can be removed?",
+      "range": {
+        "startLine": 17,
+        "startChar": 1,
+        "endLine": 17,
+        "endChar": 8
+      },
+      "revId": "1058acdea8a20df2e3497e6170fca415e3079ea2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a5da6f8_fef6a1fb",
+        "filename": "av1/common/x86/convolve_2d_avx2.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 33002
+      },
+      "writtenOn": "2026-03-05T11:17:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a0426dc_b8487dcb",
       "range": {
         "startLine": 17,
         "startChar": 1,
