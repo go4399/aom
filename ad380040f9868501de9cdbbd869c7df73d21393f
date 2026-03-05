@@ -195,6 +195,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "68d41cc9_5949f4d0",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 898,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-05T21:45:28Z",
+      "side": 1,
+      "message": "Now that I see \"no QP offsets are applied\" can be interpreted as applying fixed QP offsets of 0, I think the current approach is reasonable and it aligns with SVT-AV1\u0027s `use-fixed-qindex-offsets` option.",
+      "parentUuid": "ed10f5a4_e688238e",
+      "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ed13b564_fc1288cc",
