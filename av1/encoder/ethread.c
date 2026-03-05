@@ -1743,7 +1743,7 @@ void av1_encode_tiles_mt(AV1_COMP *cpi) {
 
   assert(IMPLIES(cpi->tile_data == NULL,
                  cpi->allocated_tiles < tile_cols * tile_rows));
-  if (cpi->allocated_tiles < tile_cols * tile_rows) av1_alloc_tile_data(cpi);
+  if (cpi->allocated_tiles != tile_cols * tile_rows) av1_alloc_tile_data(cpi);
 
   av1_init_tile_data(cpi);
   num_workers = AOMMIN(num_workers, mt_info->num_workers);
@@ -1931,7 +1931,7 @@ void av1_encode_tiles_row_mt(AV1_COMP *cpi) {
        enc_row_mt->allocated_rows != max_sb_rows_in_tile ||
        enc_row_mt->allocated_cols != (max_sb_cols_in_tile - 1) ||
        enc_row_mt->allocated_sb_rows != sb_rows_in_frame);
-  const bool alloc_tile_data = cpi->allocated_tiles < tile_cols * tile_rows;
+  const bool alloc_tile_data = cpi->allocated_tiles != tile_cols * tile_rows;
 
   assert(IMPLIES(cpi->tile_data == NULL, alloc_tile_data));
   if (alloc_tile_data) {
