@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c40ee264_19046f1c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-06T19:23:04Z",
+      "side": 1,
+      "message": "Julio: Is this sentence correct? Our `use_fixed_qp_offsets \u003d 2` does not seem similar to SVT-AV1\u0027s `use-fixed-qindex-offsets \u003d 1`.\n\nIn SVT-AV1\u0027s `use-fixed-qindex-offsets \u003d 1`, offsets will be added to frames:\n\nSource/Lib/Codec/rc_crf_cqp.c\n\n```\n    uint8_t scs_qp \u003d ppcs-\u003eis_startup_gop ? clamp_qp(scs, scs-\u003estatic_config.qp + scs-\u003estatic_config.startup_qp_offset)\n                                          : (uint8_t)scs-\u003estatic_config.qp;\n    int     scs_qindex \u003d clamp_qindex(scs, quantizer_to_qindex[scs_qp] + scs-\u003estatic_config.extended_crf_qindex_offset);\n\n    ...\n\n    int32_t new_qindex \u003d scs_qindex;\n    if (ppcs-\u003eqp_on_the_fly) {\n        new_qindex \u003d quantizer_to_qindex[ppcs-\u003epicture_qp];\n    } else {\n        if (scs-\u003eenable_qp_scaling_flag) {\n            // if CRF\n            if (ppcs-\u003etpl_ctrls.enable) {\n                if (pcs-\u003epicture_number \u003d\u003d 0) {\n                    rc-\u003eactive_worst_quality \u003d scs_qindex;\n                    svt_av1_rc_init(scs);\n                }\n                new_qindex \u003d crf_qindex_calc(pcs, rc, rc-\u003eactive_worst_quality);\n            } else { // if CQP\n                new_qindex \u003d cqp_qindex_calc(pcs, scs_qindex);\n            }\n            new_qindex \u003d clamp_qindex(scs, new_qindex);\n        }\n\n        if (scs-\u003estatic_config.use_fixed_qindex_offsets) {\n            if (scs-\u003estatic_config.use_fixed_qindex_offsets \u003d\u003d 1) {\n                new_qindex \u003d scs_qindex;\n            }\n            if (!frame_is_intra_only(ppcs)) {\n                new_qindex +\u003d scs-\u003estatic_config.qindex_offsets[pcs-\u003etemporal_layer_index];\n            } else {\n                new_qindex +\u003d scs-\u003estatic_config.key_frame_qindex_offset;\n            }\n            new_qindex \u003d clamp_qindex(scs, new_qindex);\n        }\n        ...\n```\n\nNote the two statements containing `new_qindex +\u003d ...` are executed if `scs-\u003estatic_config.use_fixed_qindex_offsets \u003d\u003d 1` is true.",
+      "revId": "0d2c77675bd66e45034269e6ae60aa8c5dd32eb8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
