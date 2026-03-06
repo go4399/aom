@@ -70,6 +70,24 @@
       "parentUuid": "fb0ba8b7_f1467960",
       "revId": "0d2c77675bd66e45034269e6ae60aa8c5dd32eb8",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b77a68de_966f7a4a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-06T23:12:36Z",
+      "side": 1,
+      "message": "@wtc@google.com, I think I might know where part of the confusion comes from.\n\nIn libaom, the `fixed_qp_offsets` array is deprecated. Currently, this array is NOT being used anywhere in the code. The array was first removed but then re-added (just the array, not the functionality) for ABI compat reasons with commit https://aomedia.googlesource.com/aom/+/010cd6c6.\n\nThis means the following comment in `encoder.h` is actually wrong:\n```\n  // If the value is 1, fixed QP offsets are either:\n  // - Given by the user, and stored in \u0027fixed_qp_offsets\u0027 array, OR\n  // - Picked automatically from cq_level.\r\n```\n\nOnly the second entry on the list is correct. This comment has been incorrect for a while -- I\u0027ll go fix it with a follow-up CL.\n\nThis means libaom\u0027s `use_fixed_qp_offsets \u003d 1` and SVT-AV1\u0027s `use-fixed-qindex-offsets \u003d 1` (with no qindex offset array values defined for SVT-AV1) differ only in the following way:\n- libaom: encoder applies a fixed QP scaling strategy for each frame type\n- SVT-AV1: encoder doesn\u0027t apply QP scaling, so encoder QP \u003d frame QP (i.e. the new functionality that `use_fixed_qp_offsets \u003d 2` introduces)\n\nDoes that make sense? The sentence in question is still correct.",
+      "parentUuid": "9ab1f837_489cab9f",
+      "revId": "0d2c77675bd66e45034269e6ae60aa8c5dd32eb8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
