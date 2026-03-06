@@ -233,6 +233,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "22a3fa61_bd866c22",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 898,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-06T16:35:16Z",
+      "side": 1,
+      "message": "You\u0027re correct. My comments for the new value `use_fixed_qp_offsets \u003d 2` factor in that the \"fixed_qindex_offsets\" array has been deprecated in libaom, and so  only get the first part of the feature in libaom (i.e. the encoder doesn\u0027t start adding offsets on top of the encoder-assigned frame QPs).\n\nHaving said that: if we *really* wanted to copy SVT-AV1\u0027s behavior as close as possible, we can make `use-fixed-qindex-offsets \u003d 2` be aware of the `fixed_qindex_offsets` array. It\u0027s just that we don\u0027t have a use case for it, and adding more functionality that relies on the deprecated array doesn\u0027t sit well with me.",
+      "parentUuid": "1bb28653_eae3ccb3",
+      "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ed13b564_fc1288cc",
         "filename": "aom/aom_encoder.h",
         "patchSetId": 3
