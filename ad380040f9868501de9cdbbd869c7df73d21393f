@@ -285,6 +285,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b23722d1_0ebaed48",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 898,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-06T16:59:19Z",
+      "side": 1,
+      "message": "Julio: I missed your last comment \"This convo made me realize I actually had a typo in my commit message.\" So my last comment was in response to your comment:\n\n\u003e You\u0027re correct. My comments for the new value `use_fixed_qp_offsets \u003d 2` factor in that the \"fixed_qindex_offsets\" array has been deprecated in libaom, ...\n\nI believe I was confused by that typo. (But I also got the same impression from our previous conversations...)",
+      "parentUuid": "7dd8f761_bec05e4e",
+      "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ed13b564_fc1288cc",
