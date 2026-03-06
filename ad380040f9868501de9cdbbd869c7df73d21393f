@@ -269,6 +269,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7dd8f761_bec05e4e",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 898,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-06T16:54:07Z",
+      "side": 1,
+      "message": "Julio: In SVT-AV1, `use-fixed-qindex-offsets \u003d 2` can be described as combining `use-fixed-qindex-offsets \u003d 0` and `use-fixed-qindex-offsets \u003d 1`:\n\n```\n    * 0: off (use the auto mode QP)\n    * 1: on (the offset is applied on top of the user QP)\n    * 2: on (the offset is applied on top of the auto mode QP)\n```\n\n(I verified that the SVT-AV1 code matches the comment.) Value 2 is the combination of \"the offset is applied on top of\" (value 1) and \"the auto mode QP\" (value 0).\n\nSo SVT-AV1\u0027s `use-fixed-qindex-offsets \u003d 2` seems very different from our `use_fixed_qp_offsets \u003d 2`.\n\nTo clarify, it is fine for our `use_fixed_qp_offsets \u003d 2` to be different. I am just aiming for full understanding of the difference and similarity.",
+      "parentUuid": "22a3fa61_bd866c22",
+      "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ed13b564_fc1288cc",
         "filename": "aom/aom_encoder.h",
         "patchSetId": 3
