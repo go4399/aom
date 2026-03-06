@@ -34,6 +34,24 @@
       "parentUuid": "c40ee264_19046f1c",
       "revId": "0d2c77675bd66e45034269e6ae60aa8c5dd32eb8",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b593dc0b_05497152",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-06T20:07:43Z",
+      "side": 1,
+      "message": "Small correction: \"In SVT-AV1, passing in frame **qindex** offsets is optional, which is interpreted by the encoder as all **qindex** offsets being set as zero.\"",
+      "parentUuid": "fb0ba8b7_f1467960",
+      "revId": "0d2c77675bd66e45034269e6ae60aa8c5dd32eb8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
