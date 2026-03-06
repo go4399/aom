@@ -16,6 +16,40 @@
       "message": "James: This CL can also fix the crash in your EncodeAPI.Buganizer487259772RowMT test (included in this CL for testing). I figured out how `enc_row_mt-\u003eallocated_tile_cols` and `enc_row_mt-\u003eallocated_tile_rows` are intended to be used, so this CL has its own merit. We can submit [your CL](https://aomedia-review.git.corp.google.com/c/aom/+/207901) first, and then I will rebase this CL on top of your CL.",
       "revId": "183c62d41895a7fed05dc82f6cb90d2b8ddda821",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1dc2827_7c1ff81c",
+        "filename": "av1/encoder/encodeframe.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1373,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-06T16:40:02Z",
+      "side": 1,
+      "message": "We always call `av1_row_mt_mem_dealloc(cpi)` before `aom_free(cpi-\u003etile_data)`.\n\nIt is obvious in this function. It is not obvious in the `dealloc_compressor_data()` function, so I added an annotation at av1/encoder/encoder_alloc.h:191.",
+      "revId": "183c62d41895a7fed05dc82f6cb90d2b8ddda821",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e34e7d52_dfd9ebbf",
+        "filename": "av1/encoder/encoder_alloc.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-06T16:40:02Z",
+      "side": 1,
+      "message": "Before we reach here, `av1_row_mt_mem_dealloc()` has been called:\n\n```\nvoid av1_remove_compressor(AV1_COMP *cpi) {\n  ...\n  av1_row_mt_mem_dealloc(cpi);\n\n  ...\n\n  dealloc_compressor_data(cpi);\n\n  ...\n}\n```",
+      "revId": "183c62d41895a7fed05dc82f6cb90d2b8ddda821",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
