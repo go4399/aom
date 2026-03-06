@@ -3,6 +3,74 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "82e97dd8_3c3bf51d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-06T21:49:19Z",
+      "side": 1,
+      "message": "LGTM. Thanks!",
+      "revId": "2be2723d834405d09c4c4250deb0655869ed9dfe",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e61846b_e131f7e1",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-06T21:49:19Z",
+      "side": 1,
+      "message": "Nit: parenthesize `col + bx_pos` here and in line 458 and line 481.",
+      "revId": "2be2723d834405d09c4c4250deb0655869ed9dfe",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3727910b_5c65ab35",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-06T21:49:19Z",
+      "side": 1,
+      "message": "Nit: Omit the parentheses around `1 \u003c\u003c bh_log2`",
+      "revId": "2be2723d834405d09c4c4250deb0655869ed9dfe",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c3cc848_b07c378e",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-06T21:49:19Z",
+      "side": 1,
+      "message": "Optional: I would also use the `ptrdiff_t` type so that readers don\u0027t need to pause and think why this variable fits in `int`.",
+      "revId": "2be2723d834405d09c4c4250deb0655869ed9dfe",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "82444f66_cc8b091f",
         "filename": "test/encode_large_width_height_test.cc",
         "patchSetId": 7
