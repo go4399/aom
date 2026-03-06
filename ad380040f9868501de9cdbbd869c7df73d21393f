@@ -251,6 +251,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ea8979c0_a3b8d4c0",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 898,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-06T16:48:06Z",
+      "side": 1,
+      "message": "This convo made me realize I actually had a typo in my commit message. libaom\u0027s `use_fixed_qp_offsets \u003d 2` is closer in behavior to SVT-AV1\u0027s `use-fixed-qindex-offsets \u003d 1` (excluding the adding offsets from the `fixed_qindex_offsets` array part).",
+      "parentUuid": "22a3fa61_bd866c22",
+      "revId": "ad380040f9868501de9cdbbd869c7df73d21393f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ed13b564_fc1288cc",
         "filename": "aom/aom_encoder.h",
         "patchSetId": 3
