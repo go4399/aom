@@ -106,6 +106,24 @@
       "parentUuid": "b77a68de_966f7a4a",
       "revId": "0d2c77675bd66e45034269e6ae60aa8c5dd32eb8",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "deeb66a0_051398b8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-06T23:59:32Z",
+      "side": 1,
+      "message": "No worries! Glad to be of help.\n\nSVT-AV1 has two ways to perform frame QP scaling (one static, one dynamic based on TPL). Confusingly enough, this scaling type is controlled by the `aq-mode` parameter.\n\nThe closest equivalent to libaom\u0027s `use_fixed_qp_offsets \u003d 1` in SVT-AV1 is `use-fixed-qindex-offsets \u003d 0, aq-mode \u003d 0`.",
+      "parentUuid": "a37406d8_1501a908",
+      "revId": "0d2c77675bd66e45034269e6ae60aa8c5dd32eb8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
