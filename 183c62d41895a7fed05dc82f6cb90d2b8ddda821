@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "15555fdc_a2a52b0d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-06T16:30:38Z",
+      "side": 1,
+      "message": "James: This CL can also fix the crash in your EncodeAPI.Buganizer487259772RowMT test (included in this CL for testing). I figured out how `enc_row_mt-\u003eallocated_tile_cols` and `enc_row_mt-\u003eallocated_tile_rows` are intended to be used, so this CL has its own merit. We can submit [your CL](https://aomedia-review.git.corp.google.com/c/aom/+/207901) first, and then I will rebase this CL on top of your CL.",
+      "revId": "183c62d41895a7fed05dc82f6cb90d2b8ddda821",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
