@@ -1526,14 +1526,6 @@ struct EncWorkerData;
  */
 typedef struct {
   /*!
-   * Number of tile rows for which row synchronization memory is allocated.
-   */
-  int allocated_tile_rows;
-  /*!
-   * Number of tile cols for which row synchronization memory is allocated.
-   */
-  int allocated_tile_cols;
-  /*!
    * Number of rows for which row synchronization memory is allocated
    * per tile. During first-pass/look-ahead stage this equals the
    * maximum number of macroblock rows in a tile. During encode stage,
@@ -3249,8 +3241,17 @@ typedef struct AV1_COMP {
   TileDataEnc *tile_data;
   /*!
    * Number of tiles for which memory has been allocated for tile_data.
+   * Equal to allocated_tile_cols * allocated_tile_rows.
    */
   int allocated_tiles;
+  /*!
+   * Number of tile cols for which memory has been allocated for tile_data.
+   */
+  int allocated_tile_cols;
+  /*!
+   * Number of tile rows for which memory has been allocated for tile_data.
+   */
+  int allocated_tile_rows;
 
   /*!
    * Structure to store the palette token related information.

@@ -277,8 +277,8 @@ static void row_mt_mem_alloc(AV1_COMP *cpi, int max_rows, int max_cols,
 
 void av1_row_mt_mem_dealloc(AV1_COMP *cpi) {
   AV1EncRowMultiThreadInfo *const enc_row_mt = &cpi->mt_info.enc_row_mt;
-  const int tile_cols = enc_row_mt->allocated_tile_cols;
-  const int tile_rows = enc_row_mt->allocated_tile_rows;
+  const int tile_cols = cpi->allocated_tile_cols;
+  const int tile_rows = cpi->allocated_tile_rows;
   int tile_col, tile_row;
 
   // Free row based multi-threading sync memory
@@ -1926,8 +1926,8 @@ void av1_encode_tiles_row_mt(AV1_COMP *cpi) {
 
   compute_max_sb_rows_cols(cm, &max_sb_rows_in_tile, &max_sb_cols_in_tile);
   const bool alloc_row_mt_mem =
-      (enc_row_mt->allocated_tile_cols != tile_cols ||
-       enc_row_mt->allocated_tile_rows != tile_rows ||
+      (cpi->allocated_tile_cols != tile_cols ||
+       cpi->allocated_tile_rows != tile_rows ||
        enc_row_mt->allocated_rows != max_sb_rows_in_tile ||
        enc_row_mt->allocated_cols != (max_sb_cols_in_tile - 1) ||
        enc_row_mt->allocated_sb_rows != sb_rows_in_frame);
@@ -2006,8 +2006,8 @@ void av1_fp_encode_tiles_row_mt(AV1_COMP *cpi) {
   int max_mb_rows = 0;
 
   max_mb_rows = fp_compute_max_mb_rows(cm, cpi->fp_block_size);
-  const bool alloc_row_mt_mem = enc_row_mt->allocated_tile_cols != tile_cols ||
-                                enc_row_mt->allocated_tile_rows != tile_rows ||
+  const bool alloc_row_mt_mem = cpi->allocated_tile_cols != tile_cols ||
+                                cpi->allocated_tile_rows != tile_rows ||
                                 enc_row_mt->allocated_rows != max_mb_rows;
   const bool alloc_tile_data = cpi->allocated_tiles < tile_cols * tile_rows;
 
