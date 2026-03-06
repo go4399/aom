@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e09fa4be_6730ef04",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-06T22:49:56Z",
+      "side": 1,
+      "message": "The explanation in the code should be added here. You should also note which tests are fixed in the subject (nightly build is just an artifact of our testing, the tests are broken regardless of where they run).",
+      "revId": "ec1ec3676851357992c1a59d57f9efe8171d97d0",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "33348e15_4cbf98cf",
+        "filename": "test/datarate_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-06T22:49:56Z",
+      "side": 1,
+      "message": "The \"threshold needed...\"",
+      "range": {
+        "startLine": 377,
+        "startChar": 11,
+        "endLine": 377,
+        "endChar": 24
+      },
+      "revId": "ec1ec3676851357992c1a59d57f9efe8171d97d0",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "07843a39_e5ba0ca4",
+        "filename": "test/datarate_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-06T22:49:56Z",
+      "side": 1,
+      "message": "This part is wrong. `g_lag_in_frames\u003d0` causes the problem.",
+      "range": {
+        "startLine": 378,
+        "startChar": 26,
+        "endLine": 379,
+        "endChar": 64
+      },
+      "revId": "ec1ec3676851357992c1a59d57f9efe8171d97d0",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
