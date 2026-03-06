@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "6b693be9_a4549c01",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-06T23:59:14Z",
+      "side": 1,
+      "message": "\u003e Chun-Min Chang\u0027s patch uses the `int` type for `buf_offset`, etc. I guess the `int` type is not big enough for AV1\u0027s maximum frame size of 65536x65536?\n\nYes, this is what you and I were talking about related to the max frame area. Since we don\u0027t want to rely on that it\u0027s going to be safer to use a larger type (we assume 32-bit will not be able to make the allocations necessary to overflow).",
+      "parentUuid": "b7f3ba8d_df26ecef",
+      "revId": "2be2723d834405d09c4c4250deb0655869ed9dfe",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "82e97dd8_3c3bf51d",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 7
@@ -52,6 +70,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "091266a5_253620a6",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-06T23:59:14Z",
+      "side": 1,
+      "message": "Done. I removed them from the original, but since there are multiple terms being added after the multiply maybe it helps readability. Otherwise it\u0027s a pretty common pattern to have `y * stride + x`.",
+      "parentUuid": "6e61846b_e131f7e1",
+      "revId": "2be2723d834405d09c4c4250deb0655869ed9dfe",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3727910b_5c65ab35",
@@ -69,6 +105,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e3acabe_690ead28",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-06T23:59:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3727910b_5c65ab35",
+      "revId": "2be2723d834405d09c4c4250deb0655869ed9dfe",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5c3cc848_b07c378e",
@@ -82,6 +136,24 @@
       "writtenOn": "2026-03-06T21:49:19Z",
       "side": 1,
       "message": "Optional: I would also use the `ptrdiff_t` type so that readers don\u0027t need to pause and think why this variable fits in `int`.",
+      "revId": "2be2723d834405d09c4c4250deb0655869ed9dfe",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d561f1c7_d6c5b4d7",
+        "filename": "av1/encoder/pickcdef.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-06T23:59:14Z",
+      "side": 1,
+      "message": "Done. In general I don\u0027t like to promote values if we don\u0027t need to, but in this case it make sense for the reason you give.",
+      "parentUuid": "5c3cc848_b07c378e",
       "revId": "2be2723d834405d09c4c4250deb0655869ed9dfe",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
