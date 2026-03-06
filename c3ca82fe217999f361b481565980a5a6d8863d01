@@ -73,6 +73,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9c1b6e70_fc226519",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1376,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-03-06T16:48:26Z",
+      "side": 1,
+      "message": "AOMMIN(2048, 1080) is still 1080?",
+      "parentUuid": "5c1b986a_42883a68",
+      "revId": "c3ca82fe217999f361b481565980a5a6d8863d01",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "94462562_db78f2c8",
         "filename": "av1/encoder/speed_features.c",
         "patchSetId": 1
@@ -143,6 +161,30 @@
       "side": 1,
       "message": "We have used \"is_between_720p_and_2160p\" condition to include all the contents of hdres2. Hope it is fine.",
       "parentUuid": "89deecb7_c072d028",
+      "range": {
+        "startLine": 672,
+        "startChar": 28,
+        "endLine": 672,
+        "endChar": 45
+      },
+      "revId": "c3ca82fe217999f361b481565980a5a6d8863d01",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7df23d4a_522563fe",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 672,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-03-06T16:48:26Z",
+      "side": 1,
+      "message": "Please see my previous comment - is 2160p necessary?",
+      "parentUuid": "842684f2_fbad2f7f",
       "range": {
         "startLine": 672,
         "startChar": 28,
