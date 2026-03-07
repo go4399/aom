@@ -1,5 +1,23 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "232363fc_f3b0a864",
+        "filename": "av1/common/x86/convolve_avx2.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 933,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-07T19:04:31Z",
+      "side": 1,
+      "message": "With `-DCONFIG_SVT_AV1\u003d0`:\n\n```\nav1/common/x86/convolve_avx2.c: In function ‘av1_convolve_x_sr_general_avx2’:\nav1/common/x86/convolve_avx2.c:933:13: error: implicit declaration of function ‘pack_store_4x2_sse2’; did you mean ‘pack_store_x_4x2_sse2’? [-Wimplicit-function-declaration]\n  933 |             pack_store_4x2_sse2(reg, dst, dst_stride);\n      |             ^~~~~~~~~~~~~~~~~~~\n      |             pack_store_x_4x2_sse2\n```\n\nPlease take a look. New code should not depend on functions declared under third_party/SVT-AV1.",
+      "revId": "153c72c6705e6622c1d74679c30c20bcbdebad42",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
