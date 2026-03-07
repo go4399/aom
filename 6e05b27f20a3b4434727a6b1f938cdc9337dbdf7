@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8aa14345_19618d63",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-07T00:03:28Z",
+      "side": 1,
+      "message": "\"Fix BasicRateTargetingVBRLagRealtime after 2fed9c389\" might also work as a title.",
+      "range": {
+        "startLine": 9,
+        "startChar": 15,
+        "endLine": 9,
+        "endChar": 47
+      },
+      "revId": "6e05b27f20a3b4434727a6b1f938cdc9337dbdf7",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "604a31db_5300078b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-07T00:03:28Z",
+      "side": 1,
+      "message": "Reflow this line and add the reference to the commit that caused the behavior change.",
+      "revId": "6e05b27f20a3b4434727a6b1f938cdc9337dbdf7",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86ebbea4_7618f60f",
+        "filename": "test/datarate_test.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-07T00:03:28Z",
+      "side": 1,
+      "message": "Also add the reference to the commit that changed the behavior.",
+      "revId": "6e05b27f20a3b4434727a6b1f938cdc9337dbdf7",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
