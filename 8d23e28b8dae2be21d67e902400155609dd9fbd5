@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6cb71f54_024d6e16",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-07T00:21:58Z",
+      "side": 1,
+      "message": "This hash still works, but be careful in cutting them too far down as there can be conflicts in codebases with many commits like this one.",
+      "range": {
+        "startLine": 7,
+        "startChar": 43,
+        "endLine": 7,
+        "endChar": 49
+      },
+      "revId": "8d23e28b8dae2be21d67e902400155609dd9fbd5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1eff3a65_abf675b9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-07T00:21:58Z",
+      "side": 1,
+      "message": "Don\u0027t forget to mark comments as \u0027Done\u0027 or otherwise reply to them to let reviewers know to take a look. All comments need to be resolved before submitting in any caae.",
+      "revId": "8d23e28b8dae2be21d67e902400155609dd9fbd5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
