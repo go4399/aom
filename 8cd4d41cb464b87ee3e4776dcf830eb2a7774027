@@ -16,6 +16,24 @@
       "message": "```\n...\n[ RUN      ] AV1/UseFixedQPOffsetsTest.TestQPOffsets/0\n\u003d\u003d1690123\u003d\u003d Conditional jump or move depends on uninitialised value(s)\n\u003d\u003d1690123\u003d\u003d    at 0xC1B0A5: (anonymous namespace)::UseFixedQPOffsetsTest::PostEncodeFrameHook(libaom_test::Encoder*) (use_fixed_qp_offsets_test.cc:60)\n\u003d\u003d1690123\u003d\u003d    by 0x9510B4: libaom_test::EncoderTest::RunLoop(libaom_test::VideoSource*) (encode_test_driver.cc:228)\n\u003d\u003d1690123\u003d\u003d    by 0xC1F32B: DoTest (use_fixed_qp_offsets_test.cc:73)\n\u003d\u003d1690123\u003d\u003d    by 0xC1F32B: (anonymous namespace)::UseFixedQPOffsetsTest_TestQPOffsets_Test::TestBody() (use_fixed_qp_offsets_test.cc:80)\n\u003d\u003d1690123\u003d\u003d    by 0x1397E1C: HandleSehExceptionsInMethodIfSupported\u003ctesting::Test, void\u003e (gtest.cc:2599)\n\u003d\u003d1690123\u003d\u003d    by 0x1397E1C: void testing::internal::HandleExceptionsInMethodIfSupported\u003ctesting::Test, void\u003e(testing::Test*, void (testing::Test::*)(), char const*) (gtest.cc:2635)\n\u003d\u003d1690123\u003d\u003d    by 0x13866ED: Run (gtest.cc:2674)\n\u003d\u003d1690123\u003d\u003d    by 0x13866ED: testing::Test::Run() (gtest.cc:2664)\n\u003d\u003d1690123\u003d\u003d    by 0x13868A4: testing::TestInfo::Run() (gtest.cc:2853)\n\u003d\u003d1690123\u003d\u003d    by 0x13869C4: Run (gtest.cc:3012)\n\u003d\u003d1690123\u003d\u003d    by 0x13869C4: testing::TestSuite::Run() (gtest.cc:2985)\n\u003d\u003d1690123\u003d\u003d    by 0x138E20B: testing::internal::UnitTestImpl::RunAllTests() (gtest.cc:5870)\n\u003d\u003d1690123\u003d\u003d    by 0x1386B83: HandleSehExceptionsInMethodIfSupported\u003ctesting::internal::UnitTestImpl, bool\u003e (gtest.cc:2599)\n\u003d\u003d1690123\u003d\u003d    by 0x1386B83: HandleExceptionsInMethodIfSupported\u003ctesting::internal::UnitTestImpl, bool\u003e (gtest.cc:2635)\n\u003d\u003d1690123\u003d\u003d    by 0x1386B83: testing::UnitTest::Run() (gtest.cc:5444)\n\u003d\u003d1690123\u003d\u003d    by 0x3B1958: RUN_ALL_TESTS (gtest.h:2293)\n\u003d\u003d1690123\u003d\u003d    by 0x3B1958: main (test_libaom.cc:92)\n\u003d\u003d1690123\u003d\u003d \n```\n\nLooks like the parameter value is being stored to `cfg_.use_fixed_qp_offsets`.",
       "revId": "8cd4d41cb464b87ee3e4776dcf830eb2a7774027",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "09e2226e_60fe8c89",
+        "filename": "test/use_fixed_qp_offsets_test.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-08T01:46:49Z",
+      "side": 1,
+      "message": "James: Thanks. I will convert your suggestion to a CL.",
+      "parentUuid": "cd707842_23f18626",
+      "revId": "8cd4d41cb464b87ee3e4776dcf830eb2a7774027",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
