@@ -105,6 +105,7 @@ static int arfgf_high_motion_minq_12[RES_NUM][QINDEX_RANGE];
 static int inter_minq_12[RES_NUM][QINDEX_RANGE];
 static int rtc_minq_12[QINDEX_RANGE];
 
+#if !CONFIG_REALTIME_ONLY
 static int gf_high_1 = 2875;
 static int gf_low_1 = 562;
 static int gf_high_2 = 4994;
@@ -112,6 +113,16 @@ static int gf_low_2 = 100;
 
 static int kf_high = 8000;
 static int kf_low = 553;
+#else
+static int gf_high = 2400;
+static int gf_low = 300;
+#ifdef STRICT_RC
+static int kf_high = 3200;
+#else
+static int kf_high = 5000;
+#endif
+static int kf_low = 400;
+#endif
 // How many times less pixels there are to encode given the current scaling.
 // Temporary replacement for rcf_mult and rate_thresh_mult.
 static double resize_rate_factor(const FrameDimensionCfg *const frm_dim_cfg,
@@ -134,10 +145,17 @@ static int get_minq_index(double maxq, double x3, double x2, double x1,
   return av1_find_qindex(minqtarget, bit_depth, 0, QINDEX_RANGE - 1);
 }
 
+#if !CONFIG_REALTIME_ONLY
 static double x1[RES_NUM][5] = {
   { 0.1771, 0.379, 0.3279, 0.6634, 1.385 },
   { 0.1917, 0.3760, 0.34570, 0.6916, 1.14820 },
 };
+#else
+static double x1[RES_NUM][5] = {
+  { 0.15, 0.45, 0.30, 0.55, 0.90 },
+  { 0.15, 0.45, 0.30, 0.55, 0.90 },
+};
+#endif
 
 static void init_minq_luts(int kf_low_m[RES_NUM][QINDEX_RANGE],
                            int kf_high_m[RES_NUM][QINDEX_RANGE],
@@ -1151,8 +1169,9 @@ static int get_active_quality(int q, int gfu_boost, int low, int high,
     return low_motion_minq[q] + adjustment;
   }
 }
-
+#if !CONFIG_REALTIME_ONLY
 static int gfboost_thresh[3] = { 4000, 4000, 3000 };
+#endif
 
 static int get_kf_active_quality(const PRIMARY_RATE_CONTROL *const p_rc, int q,
                                  aom_bit_depth_t bit_depth, const int res_idx) {
@@ -1172,11 +1191,17 @@ static int get_gf_active_quality_no_rc(const PRIMARY_RATE_CONTROL *const p_rc,
   ASSIGN_MINQ_TABLE_2(bit_depth, arfgf_low_motion_minq, res_idx > 1);
   ASSIGN_MINQ_TABLE_2(bit_depth, arfgf_high_motion_minq, res_idx > 1);
 
+#if !CONFIG_REALTIME_ONLY
   int gf_low_local =
       (p_rc->gfu_boost_average < gfboost_thresh[res_idx]) ? gf_low_1 : gf_low_2;
   int gf_high_local = (p_rc->gfu_boost_average < gfboost_thresh[res_idx])
                           ? gf_high_1
                           : gf_high_2;
+#else
+  int gf_low_local = gf_low;
+  int gf_high_local = gf_high;
+#endif
+
   return get_active_quality(q, p_rc->gfu_boost, gf_low_local, gf_high_local,
                             arfgf_low_motion_minq, arfgf_high_motion_minq);
 }
