@@ -1068,6 +1068,12 @@ static void set_good_speed_feature_framesize_dependent(
 
   if (cpi->oxcf.enable_low_complexity_decode)
     set_good_speed_features_lc_dec_framesize_dependent(cpi, sf, speed);
+
+  // Speed features for the IQ and SSIMULACRA2 tuning modes
+  if (cpi->oxcf.tune_cfg.tuning == AOM_TUNE_IQ ||
+      cpi->oxcf.tune_cfg.tuning == AOM_TUNE_SSIMULACRA2) {
+    sf->intra_sf.skip_intra_in_interframe = 0;
+  }
 }
 
 static void set_good_speed_features_framesize_independent(
@@ -1362,6 +1368,8 @@ static void set_good_speed_features_framesize_independent(
     sf->interp_sf.skip_sharp_interp_filter_search = 1;
     sf->interp_sf.use_interp_filter = 2;
 
+    sf->intra_sf.chroma_intra_pruning_with_hog = 4;
+    sf->intra_sf.intra_pruning_with_hog = 4;
     sf->intra_sf.intra_uv_mode_mask[TX_16X16] = UV_INTRA_DC_H_V_CFL;
     sf->intra_sf.intra_uv_mode_mask[TX_32X32] = UV_INTRA_DC_H_V_CFL;
     sf->intra_sf.intra_uv_mode_mask[TX_64X64] = UV_INTRA_DC_H_V_CFL;
@@ -1447,9 +1455,6 @@ static void set_good_speed_features_framesize_independent(
     sf->inter_sf.selective_ref_frame = 6;
     sf->inter_sf.prune_single_ref = is_boosted_arf2_bwd_type ? 0 : 2;
     sf->inter_sf.prune_ext_comp_using_neighbors = 3;
-
-    sf->intra_sf.chroma_intra_pruning_with_hog = 4;
-    sf->intra_sf.intra_pruning_with_hog = 4;
     sf->intra_sf.intra_uv_mode_mask[TX_32X32] = UV_INTRA_DC;
     sf->intra_sf.intra_uv_mode_mask[TX_64X64] = UV_INTRA_DC;
     sf->intra_sf.intra_y_mode_mask[TX_32X32] = INTRA_DC;
@@ -1479,6 +1484,14 @@ static void set_good_speed_features_framesize_independent(
   if (cpi->oxcf.algo_cfg.sharpness == 3) {
     sf->tx_sf.adaptive_txb_search_level = 0;
     sf->tx_sf.tx_type_search.use_skip_flag_prediction = 0;
+  }
+
+  // Speed features for the IQ and SSIMULACRA2 tuning modes
+  if (cpi->oxcf.tune_cfg.tuning == AOM_TUNE_IQ ||
+      cpi->oxcf.tune_cfg.tuning == AOM_TUNE_SSIMULACRA2) {
+    sf->intra_sf.skip_intra_in_interframe = 0;
+    sf->inter_sf.inter_mode_rd_model_estimation = 0;
+    sf->mv_sf.use_intrabc = 1;
   }
 }
 
@@ -2164,6 +2177,12 @@ static void set_rt_speed_features_framesize_independent(AV1_COMP *cpi,
   if (speed >= 11 && !frame_is_intra_only(cm) &&
       cpi->oxcf.tune_cfg.content == AOM_CONTENT_SCREEN) {
     sf->winner_mode_sf.dc_blk_pred_level = 3;
+  }
+
+  // Speed features for the IQ and SSIMULACRA2 tuning modes
+  if (cpi->oxcf.tune_cfg.tuning == AOM_TUNE_IQ ||
+      cpi->oxcf.tune_cfg.tuning == AOM_TUNE_SSIMULACRA2) {
+    sf->intra_sf.skip_intra_in_interframe = 0;
   }
 }
 
