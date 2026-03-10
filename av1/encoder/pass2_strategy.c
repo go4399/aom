@@ -604,8 +604,10 @@ static double calc_frame_boost(const PRIMARY_RATE_CONTROL *p_rc,
   // (zoom in). The range for this_frame_mv_in_out is -1.0 to +1.0.
   if (this_frame_mv_in_out > 0.0) {
     frame_boost += frame_boost * (this_frame_mv_in_out * 2.0);
+#if !CONFIG_REALTIME_ONLY
     if (!p_rc->accumulate_stats_stage)
       max_boost += max_boost * (this_frame_mv_in_out * 2.0);
+#endif
   }
   // In the extreme case the boost is halved.
   else {
@@ -991,6 +993,23 @@ static void allocate_gf_group_bits(GF_GROUP *gf_group,
     gf_group->bit_allocation[gf_group_size] = 0;
 }
 
+#if CONFIG_REALTIME_ONLY
+// Returns true if KF group and GF group both are almost completely static.
+static inline int is_almost_static(double gf_zero_motion, int kf_zero_motion,
+                                   int is_lap_enabled) {
+  if (is_lap_enabled) {
+    /*
+     * when LAP enabled kf_zero_motion is not reliable, so use strict
+     * constraint on gf_zero_motion.
+     */
+    return (gf_zero_motion >= 0.999);
+  } else {
+    return (gf_zero_motion >= 0.995) &&
+           (kf_zero_motion >= STATIC_KF_GROUP_THRESH);
+  }
+}
+#endif
+
 #define ARF_ABS_ZOOM_THRESH 4.4
 static inline int detect_gf_cut(AV1_COMP *cpi, int frame_index, int cur_start,
                                 int flash_detected, int active_max_gf_interval,
@@ -1030,7 +1049,12 @@ static inline int detect_gf_cut(AV1_COMP *cpi, int frame_index, int cur_start,
 
   // If almost totally static, we will not use the the max GF length later,
   // so we can continue for more frames.
-  if ((frame_index - cur_start) >= active_max_gf_interval + 1) {
+  if ((frame_index - cur_start) >= active_max_gf_interval + 1
+#if CONFIG_REALTIME_ONLY
+      && !is_almost_static(gf_stats->zero_motion_accumulator,
+                           twopass->kf_zeromotion_pct, cpi->ppi->lap_enabled)
+#endif
+  ) {
     return 1;
   }
   return 0;
@@ -2397,6 +2421,7 @@ static void set_gop_bits_boost(AV1_COMP *cpi, int i, int is_intra_only,
   const AV1EncoderConfig *const oxcf = &cpi->oxcf;
   const RateControlCfg *const rc_cfg = &oxcf->rc_cfg;
 
+#if !CONFIG_REALTIME_ONLY
   TWO_PASS_FRAME stats_in_backup = cpi->twopass_frame;
   int gfu_boost_sum = 0;
   int gfu_count = 0;
@@ -2441,6 +2466,7 @@ static void set_gop_bits_boost(AV1_COMP *cpi, int i, int is_intra_only,
   }
   cpi->twopass_frame = stats_in_backup;
   p_rc->accumulate_stats_stage = false;
+#endif
 
   int ext_len = i - is_intra_only;
   if (use_alt_ref) {
@@ -2562,6 +2588,9 @@ static void define_gf_group(AV1_COMP *cpi, EncodeFrameParams *frame_params,
   RATE_CONTROL *const rc = &cpi->rc;
   PRIMARY_RATE_CONTROL *const p_rc = &cpi->ppi->p_rc;
   const AV1EncoderConfig *const oxcf = &cpi->oxcf;
+#if CONFIG_REALTIME_ONLY
+  TWO_PASS *const twopass = &cpi->ppi->twopass;
+#endif
   FIRSTPASS_STATS next_frame;
   const FIRSTPASS_STATS *const start_pos = cpi->twopass_frame.stats_in;
   GF_GROUP *gf_group = &cpi->ppi->gf_group;
@@ -2626,8 +2655,14 @@ static void define_gf_group(AV1_COMP *cpi, EncodeFrameParams *frame_params,
 
   int use_alt_ref;
   if (can_disable_arf) {
-    use_alt_ref = p_rc->use_arf_in_this_kf_group &&
-                  (i < gf_cfg->lag_in_frames) && (i >= MIN_GF_INTERVAL);
+    use_alt_ref =
+        p_rc->use_arf_in_this_kf_group && (i < gf_cfg->lag_in_frames) &&
+        (i >= MIN_GF_INTERVAL)
+#if CONFIG_REALTIME_ONLY
+        && !is_almost_static(gf_stats.zero_motion_accumulator,
+                             twopass->kf_zeromotion_pct, cpi->ppi->lap_enabled)
+#endif
+        ;
   } else {
     use_alt_ref = p_rc->use_arf_in_this_kf_group &&
                   (i < gf_cfg->lag_in_frames) && (i > 2);

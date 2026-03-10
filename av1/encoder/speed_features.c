@@ -1301,6 +1301,9 @@ static void set_good_speed_features_framesize_independent(
     sf->tpl_sf.prune_intra_modes = 1;
     sf->tpl_sf.reduce_first_step_size = 6;
     sf->tpl_sf.subpel_force_stop = QUARTER_PEL;
+#if CONFIG_REALTIME_ONLY
+    sf->tpl_sf.gop_length_decision_method = 1;
+#endif
 
     sf->tx_sf.adaptive_txb_search_level = boosted ? 2 : 3;
     sf->tx_sf.tx_type_search.use_skip_flag_prediction = 2;
@@ -2187,7 +2190,11 @@ static inline void init_fp_sf(FIRST_PASS_SPEED_FEATURES *fp_sf) {
 }
 
 static inline void init_tpl_sf(TPL_SPEED_FEATURES *tpl_sf) {
+#if !CONFIG_REALTIME_ONLY
   tpl_sf->gop_length_decision_method = 1;
+#else
+  tpl_sf->gop_length_decision_method = 0;
+#endif
   tpl_sf->prune_intra_modes = 0;
   tpl_sf->prune_starting_mv = 0;
   tpl_sf->reduce_first_step_size = 0;
@@ -2550,8 +2557,8 @@ static inline void init_rt_sf(REAL_TIME_SPEED_FEATURES *rt_sf) {
   rt_sf->skip_newmv_mode_sad_screen = 0;
 }
 
-static fractional_mv_step_fp
-    *const fractional_mv_search[SUBPEL_SEARCH_METHODS] = {
+static fractional_mv_step_fp *const
+    fractional_mv_search[SUBPEL_SEARCH_METHODS] = {
       av1_find_best_sub_pixel_tree,             // SUBPEL_TREE = 0
       av1_find_best_sub_pixel_tree_pruned,      // SUBPEL_TREE_PRUNED = 1
       av1_find_best_sub_pixel_tree_pruned_more  // SUBPEL_TREE_PRUNED_MORE = 2
