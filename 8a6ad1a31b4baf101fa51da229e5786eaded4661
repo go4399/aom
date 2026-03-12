@@ -53,6 +53,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b293b06_48d5b6dc",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 823,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-12T18:19:09Z",
+      "side": 1,
+      "message": "\u003e The early return skips the macroblock x completely, which seems bad.\n\nIn this case it\u0027s okay to skip `x`, because applying the bias doesn\u0027t depend on specific properties of the `MACROBLOCK` (i.e. super block), just for the block candidate\u0027s RDO costs.\n\nThe proposed refactor also works. That said, the variance-preserving RDO adjusting code (enabled with sharpness \u003d 3) can also be seen as a form of biasing, so for all intents and purposes we only need a single function anyway.",
+      "parentUuid": "b3280df6_304c8350",
+      "revId": "8a6ad1a31b4baf101fa51da229e5786eaded4661",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "a5559170_560e8ceb",
