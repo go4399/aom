@@ -50,6 +50,74 @@
       "message": "Optional: I found that these two functions share a lot of code. We can move the middle part of this function to a helper function:\n\n```\n// Return 0 to indicate the cost should not be adjusted.\nstatic int64_t get_var_offset(const AV1_COMP *cpi, const MACROBLOCK *x) {\n  if (cpi-\u003eoxcf.algo_cfg.sharpness !\u003d 3) return 0;\n\n  if (frame_is_kf_gf_arf(cpi)) return 0;\n\n  int64_t src_var, rec_var;\n  const bool is_hbd \u003d is_cur_buf_hbd(\u0026x-\u003ee_mbd);\n\n  if (is_hbd)\n    get_variance_stats_hbd(x, \u0026src_var, \u0026rec_var);\n  else\n    get_variance_stats(x, \u0026src_var, \u0026rec_var);\n\n  if (src_var \u003c\u003d rec_var) return 0;\n\n  return src_var - rec_var;\n}\n```\n\nThen these two functions (before your changes) would become:\n\n```\nstatic void adjust_rdcost(const AV1_COMP *cpi, const MACROBLOCK *x,\n                          RD_STATS *rd_cost) {\n  int64_t var_offset \u003d get_var_offset(cpi, x);\n  if (var_offset \u003d\u003d 0) return;\n\n  rd_cost-\u003edist +\u003d var_offset;\n\n  rd_cost-\u003erdcost \u003d RDCOST(x-\u003erdmult, rd_cost-\u003erate, rd_cost-\u003edist);\n}\n\nstatic void adjust_cost(const AV1_COMP *cpi, const MACROBLOCK *x,\n                        int64_t *rd_cost) {\n  int64_t var_offset \u003d get_var_offset(cpi, x);\n  if (var_offset \u003d\u003d 0) return;\n\n  *rd_cost +\u003d RDCOST(x-\u003erdmult, 0, var_offset);\n}                    \n```\n\nDo you think this is worth doing (in a separate CL)?",
       "revId": "8a6ad1a31b4baf101fa51da229e5786eaded4661",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "df73d520_b9ddeeab",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1772,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-12T00:43:44Z",
+      "side": 1,
+      "message": "`this_yrd` is declared and initialized to `INT64_MAX` here.",
+      "revId": "8a6ad1a31b4baf101fa51da229e5786eaded4661",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "05271ff0_98ee3b1f",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1855,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-12T00:43:44Z",
+      "side": 1,
+      "message": "`thid_yrd` is assigned a value here. We reach here if `do_tx_search` is true.",
+      "revId": "8a6ad1a31b4baf101fa51da229e5786eaded4661",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "31ef4154_8c1cf2bd",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1878,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-12T00:43:44Z",
+      "side": 1,
+      "message": "Therefore, if `do_tx_search` is false, `this_yrd` is equal to `INT64_MAX` when we pass it to `adjust_cost()`. So the addition to `this_yrd` inside `adjust_cost()` may overflow!\n\nThis means `adjust_cost()` needs to handle overflow, e.g, by using saturating arithmetic.",
+      "revId": "8a6ad1a31b4baf101fa51da229e5786eaded4661",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf779ca1_02af362c",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1076,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-12T00:43:44Z",
+      "side": 1,
+      "message": "If the changes to these two files are independent of each other, I suggest moving the speed_features.c changes to a separate CL for faster review and checkin.",
+      "revId": "8a6ad1a31b4baf101fa51da229e5786eaded4661",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
