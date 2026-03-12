@@ -656,6 +656,7 @@ static void set_good_speed_features_lc_dec_framesize_dependent(
 
     sf->hl_sf.ref_frame_mvs_lvl = 2;
 
+    sf->lpf_sf.adaptive_cdef_mode = 1;
     sf->lpf_sf.dual_sgr_penalty_level = boosted ? 1 : 3;
     sf->lpf_sf.switchable_lr_with_bias_level = 1;
 
@@ -674,6 +675,8 @@ static void set_good_speed_features_lc_dec_framesize_dependent(
     sf->gm_sf.gm_erroradv_tr_level = 1;
 
     sf->hl_sf.ref_frame_mvs_lvl = 1;
+
+    sf->lpf_sf.adaptive_cdef_mode = 1;
 
     sf->inter_sf.bias_warp_mode_rd_scale_pct = 4;
     sf->inter_sf.bias_obmc_mode_rd_scale_pct = 1.5f;
@@ -2513,6 +2516,7 @@ static inline void init_lpf_sf(LOOP_FILTER_SPEED_FEATURES *lpf_sf) {
   lpf_sf->disable_wiener_coeff_refine_search = false;
   lpf_sf->use_downsampled_wiener_stats = 0;
   lpf_sf->switchable_lr_with_bias_level = 0;
+  lpf_sf->adaptive_cdef_mode = 0;
 }
 
 static inline void init_rt_sf(REAL_TIME_SPEED_FEATURES *rt_sf) {
