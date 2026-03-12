@@ -195,6 +195,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "71764c02_35cf829c",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1878,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-12T18:55:47Z",
+      "side": 1,
+      "message": "Actually, another part of the code has this pattern in place:\n\n```\n    if (intra_rd_y \u003c INT64_MAX) {\n      adjust_cost(cpi, x, \u0026intra_rd_y, /*is_inter_pred\u003d*/false);\n    }\n```\n\nSo we can just use this pattern with `this_yrd`. I think the original author just forgot to add this particular check.",
+      "parentUuid": "cbfcafe4_11c3ff5e",
+      "revId": "8a6ad1a31b4baf101fa51da229e5786eaded4661",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bf779ca1_02af362c",
         "filename": "av1/encoder/speed_features.c",
         "patchSetId": 8
