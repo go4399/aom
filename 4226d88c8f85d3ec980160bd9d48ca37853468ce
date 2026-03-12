@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1ebcaf2_77a1248f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31012
+      },
+      "writtenOn": "2026-03-12T15:56:12Z",
+      "side": 1,
+      "message": "The results for different resolutions are as follows:\n```\n                Encoder Instruction                     \ncpu  Resolution  Count Reduction(%) \n-----------------------------------\n1    LOWRES2         0.61           \n1    MIDRES2         0.99           \n1    SHORTS608p      1.05           \n1    SHORTS720p      1.07           \n1    SHORTS1080p     1.21           \n1    HDRES2          1.05         \n1    Average         1.01\n\n\n2    LOWRES2         1.43           \n2    MIDRES2         2.19           \n2    SHORTS608p      2.27          \n2    SHORTS720p      2.52           \n2    SHORTS1080p     2.97           \n2    HDRES2          2.36          \n2    Average         2.40           \n\n\n3    LOWRES2         3.35           \n3    MIDRES2         4.91          \n3    SHORTS608p      5.52\n3    SHORTS720p      5.90          \n3    SHORTS1080p     6.38\n3    HDRES2          5.47\n3    Average         5.32\n\n\n4    LOWRES2         6.00          \n4    MIDRES2         8.18          \n4    SHORTS608p      8.72          \n4    SHORTS720p      9.53        \n4    SHORTS1080p    10.05          \n4    HDRES2          8.89         \n4    Average         8.64         \n\n\n5    LOWRES2          9.42           \n5    MIDRES2         12.26          \n5    SHORTS608p      12.09           \n5    SHORTS720p      13.07         \n5    SHORTS1080p     13.32          \n5    HDRES2          13.43         \n5    Average         12.32        \n\n\n6    LOWRES2          7.54          \n6    MIDRES2         10.97           \n6    SHORTS608p      10.90           \n6    SHORTS720p      12.11         \n6    SHORTS1080p     12.95         \n6    HDRES2          12.09        \n6    Average         11.18         \n```\n\nThe instruction count reduction specified has been measured using command:\n```\n`$ perf stat -e instructions:u ./aomenc`\n```\nThis is a bit-exact change. Please review.",
+      "revId": "4226d88c8f85d3ec980160bd9d48ca37853468ce",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
