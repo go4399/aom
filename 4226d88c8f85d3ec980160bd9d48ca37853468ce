@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9a16e47d_dc41e6c2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31012
+      },
+      "writtenOn": "2026-03-13T08:13:00Z",
+      "side": 1,
+      "message": "Yes, We shall plan to modify the HBD variants for TF_BLOCK_SIZE\u003d64x64.",
+      "parentUuid": "8830d837_82029deb",
+      "revId": "4226d88c8f85d3ec980160bd9d48ca37853468ce",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d89e2af3_0cf7641e",
         "filename": "av1/encoder/temporal_filter.c",
         "patchSetId": 3
@@ -48,6 +66,24 @@
       "writtenOn": "2026-03-12T16:48:44Z",
       "side": 1,
       "message": "If this is changed, would it affect arm SIMD? Should we disable arm SIMD now in av1_rtcd_defs.pl?",
+      "revId": "4226d88c8f85d3ec980160bd9d48ca37853468ce",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0792a987_a8421d6d",
+        "filename": "av1/encoder/temporal_filter.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1176,
+      "author": {
+        "id": 31012
+      },
+      "writtenOn": "2026-03-13T08:13:00Z",
+      "side": 1,
+      "message": "Thank you for pointing this out.  We have disabled the ARM and SSE2 SIMD variants by calling C functions. Removing the SIMD variants in “av1_rtcd_defs.pl”  results in the warning “no previous prototype” due to missing function declarations. We shall plan to modify these variants for TF_BLOCK_SIZE\u003d64x64.",
+      "parentUuid": "d89e2af3_0cf7641e",
       "revId": "4226d88c8f85d3ec980160bd9d48ca37853468ce",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
