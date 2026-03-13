@@ -75,6 +75,24 @@
       "parentUuid": "b4d3d7fa_19a36fbc",
       "revId": "bf26f329d8e34a1cad43ccf33ca78880032dae8b",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dda39c6e_215f236a",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1827,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-13T23:19:02Z",
+      "side": 0,
+      "message": "OK. What about re-enabling it for spatial layers? James and I have tested this CL for that bug on Linux and Windows, respectively.\n\nThe proof of correctness I have is a mathematical proof. So for spatial layers we have shown the CL works by proving and by testing.\n\nNote: I also tried to test this CL for resizing, but I cannot reproduce that bug using the tests you added in https://aomedia-review.git.corp.google.com/c/aom/+/185881. So I can only show those tests still pass with no errors under AddressSanitizer.",
+      "parentUuid": "777296c4_e55f552c",
+      "revId": "bf26f329d8e34a1cad43ccf33ca78880032dae8b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
