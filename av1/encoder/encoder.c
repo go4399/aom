@@ -3160,17 +3160,18 @@ static int encode_without_recode(AV1_COMP *cpi) {
     const SequenceHeader *seq_params = cm->seq_params;
 
     if (cpi->orig_source.buffer_alloc_sz == 0 ||
-        cpi->rc.prev_coded_width != cpi->oxcf.frm_dim_cfg.width ||
-        cpi->rc.prev_coded_height != cpi->oxcf.frm_dim_cfg.height) {
+        cpi->orig_source.y_crop_width != cpi->source->y_crop_width ||
+        cpi->orig_source.y_crop_height != cpi->source->y_crop_height) {
       // Allocate a source buffer to store the true source for psnr calculation.
       if (aom_alloc_frame_buffer(
-              &cpi->orig_source, cpi->oxcf.frm_dim_cfg.width,
-              cpi->oxcf.frm_dim_cfg.height, seq_params->subsampling_x,
+              &cpi->orig_source, cpi->source->y_crop_width,
+              cpi->source->y_crop_height, seq_params->subsampling_x,
               seq_params->subsampling_y, seq_params->use_highbitdepth,
               cpi->oxcf.border_in_pixels, cm->features.byte_alignment, false,
               0))
-        aom_internal_error(cm->error, AOM_CODEC_MEM_ERROR,
-                           "Failed to allocate scaled buffer");
+        aom_internal_error(
+            cm->error, AOM_CODEC_MEM_ERROR,
+            "Failed to allocate true source buffer for psnr calculation");
     }
 
     aom_yv12_copy_y(cpi->source, &cpi->orig_source, 1);
