@@ -73,7 +73,7 @@ static inline void highbd_convolve_y_sr_6tap_rvv(
   const uint16_t max = (1 << bd) - 1;
   size_t vl = __riscv_vsetvl_e16m1(w);
 
-  if (w == 4) {
+  if (w <= 4) {
     const int16_t *s = (const int16_t *)(src_ptr + src_stride);
     uint16_t *d = dst_ptr;
 
@@ -82,7 +82,7 @@ static inline void highbd_convolve_y_sr_6tap_rvv(
     load_s16_4x5(s, src_stride, &s0, &s1, &s2, &s3, &s4, vl);
     s += 5 * src_stride;
 
-    do {
+    while (h >= 4) {
       // Load next 4 rows of data
       vint16mf2_t s5, s6, s7, s8;
       load_s16_4x4(s, src_stride, &s5, &s6, &s7, &s8, vl);
@@ -110,7 +110,24 @@ static inline void highbd_convolve_y_sr_6tap_rvv(
       s += 4 * src_stride;
       d += 4 * dst_stride;
       h -= 4;
-    } while (h != 0);
+    }
+    // Handle remaining rows one at a time
+    while (h > 0) {
+      vint16mf2_t s5 = __riscv_vle16_v_i16mf2(s, vl);
+      vuint16mf2_t d0 =
+          highbd_convolve6_4_y_rvv(s0, s1, s2, s3, s4, s5, y_filter, max, vl);
+      __riscv_vse16_v_u16mf2(d, d0, vl);
+
+      s0 = __riscv_vmv_v_v_i16mf2(s1, vl);
+      s1 = __riscv_vmv_v_v_i16mf2(s2, vl);
+      s2 = __riscv_vmv_v_v_i16mf2(s3, vl);
+      s3 = __riscv_vmv_v_v_i16mf2(s4, vl);
+      s4 = __riscv_vmv_v_v_i16mf2(s5, vl);
+
+      s += src_stride;
+      d += dst_stride;
+      h--;
+    }
   } else {
     do {
       int height = h;
@@ -122,7 +139,7 @@ static inline void highbd_convolve_y_sr_6tap_rvv(
       load_s16_8x5(s, src_stride, &s0, &s1, &s2, &s3, &s4, vl);
       s += 5 * src_stride;
 
-      do {
+      while (height >= 4) {
         // Load next 4 rows of data
         vint16m1_t s5, s6, s7, s8;
         load_s16_8x4(s, src_stride, &s5, &s6, &s7, &s8, vl);
@@ -150,7 +167,24 @@ static inline void highbd_convolve_y_sr_6tap_rvv(
         s += 4 * src_stride;
         d += 4 * dst_stride;
         height -= 4;
-      } while (height != 0);
+      }
+      // Handle remaining rows one at a time
+      while (height > 0) {
+        vint16m1_t s5 = __riscv_vle16_v_i16m1(s, vl);
+        vuint16m1_t d0 =
+            highbd_convolve6_8_y_rvv(s0, s1, s2, s3, s4, s5, y_filter, max, vl);
+        __riscv_vse16_v_u16m1(d, d0, vl);
+
+        s0 = __riscv_vmv_v_v_i16m1(s1, vl);
+        s1 = __riscv_vmv_v_v_i16m1(s2, vl);
+        s2 = __riscv_vmv_v_v_i16m1(s3, vl);
+        s3 = __riscv_vmv_v_v_i16m1(s4, vl);
+        s4 = __riscv_vmv_v_v_i16m1(s5, vl);
+
+        s += src_stride;
+        d += dst_stride;
+        height--;
+      }
 
       src_ptr += vl;
       dst_ptr += vl;
@@ -213,7 +247,7 @@ static inline void highbd_convolve_y_sr_8tap_rvv(
   const uint16_t max = (1 << bd) - 1;
   size_t vl = __riscv_vsetvl_e16m1(w);
 
-  if (w == 4) {
+  if (w <= 4) {
     const int16_t *s = (const int16_t *)src_ptr;
     uint16_t *d = dst_ptr;
 
@@ -222,7 +256,7 @@ static inline void highbd_convolve_y_sr_8tap_rvv(
     load_s16_4x7(s, src_stride, &s0, &s1, &s2, &s3, &s4, &s5, &s6, vl);
     s += 7 * src_stride;
 
-    do {
+    while (h >= 4) {
       // Load next 4 rows of data
       vint16mf2_t s7, s8, s9, s10;
       load_s16_4x4(s, src_stride, &s7, &s8, &s9, &s10, vl);
@@ -252,7 +286,26 @@ static inline void highbd_convolve_y_sr_8tap_rvv(
       s += 4 * src_stride;
       d += 4 * dst_stride;
       h -= 4;
-    } while (h != 0);
+    }
+    // Handle remaining rows one at a time
+    while (h > 0) {
+      vint16mf2_t s7 = __riscv_vle16_v_i16mf2(s, vl);
+      vuint16mf2_t d0 = highbd_convolve8_4_y_rvv(s0, s1, s2, s3, s4, s5, s6, s7,
+                                                 y_filter, max, vl);
+      __riscv_vse16_v_u16mf2(d, d0, vl);
+
+      s0 = __riscv_vmv_v_v_i16mf2(s1, vl);
+      s1 = __riscv_vmv_v_v_i16mf2(s2, vl);
+      s2 = __riscv_vmv_v_v_i16mf2(s3, vl);
+      s3 = __riscv_vmv_v_v_i16mf2(s4, vl);
+      s4 = __riscv_vmv_v_v_i16mf2(s5, vl);
+      s5 = __riscv_vmv_v_v_i16mf2(s6, vl);
+      s6 = __riscv_vmv_v_v_i16mf2(s7, vl);
+
+      s += src_stride;
+      d += dst_stride;
+      h--;
+    }
   } else {
     do {
       int height = h;
@@ -264,7 +317,7 @@ static inline void highbd_convolve_y_sr_8tap_rvv(
       load_s16_8x7(s, src_stride, &s0, &s1, &s2, &s3, &s4, &s5, &s6, vl);
       s += 7 * src_stride;
 
-      do {
+      while (height >= 4) {
         // Load next 4 rows of data
         vint16m1_t s7, s8, s9, s10;
         load_s16_8x4(s, src_stride, &s7, &s8, &s9, &s10, vl);
@@ -294,7 +347,26 @@ static inline void highbd_convolve_y_sr_8tap_rvv(
         s += 4 * src_stride;
         d += 4 * dst_stride;
         height -= 4;
-      } while (height != 0);
+      }
+      // Handle remaining rows one at a time
+      while (height > 0) {
+        vint16m1_t s7 = __riscv_vle16_v_i16m1(s, vl);
+        vuint16m1_t d0 = highbd_convolve8_8_y_rvv(s0, s1, s2, s3, s4, s5, s6,
+                                                  s7, y_filter, max, vl);
+        __riscv_vse16_v_u16m1(d, d0, vl);
+
+        s0 = __riscv_vmv_v_v_i16m1(s1, vl);
+        s1 = __riscv_vmv_v_v_i16m1(s2, vl);
+        s2 = __riscv_vmv_v_v_i16m1(s3, vl);
+        s3 = __riscv_vmv_v_v_i16m1(s4, vl);
+        s4 = __riscv_vmv_v_v_i16m1(s5, vl);
+        s5 = __riscv_vmv_v_v_i16m1(s6, vl);
+        s6 = __riscv_vmv_v_v_i16m1(s7, vl);
+
+        s += src_stride;
+        d += dst_stride;
+        height--;
+      }
 
       src_ptr += vl;
       dst_ptr += vl;
@@ -367,7 +439,7 @@ static inline void highbd_convolve_y_sr_12tap_rvv(
   const uint16_t max = (1 << bd) - 1;
   size_t vl = __riscv_vsetvl_e16m1(w);
 
-  if (w == 4) {
+  if (w <= 4) {
     const int16_t *s = (const int16_t *)src_ptr;
     uint16_t *d = dst_ptr;
 
@@ -377,7 +449,7 @@ static inline void highbd_convolve_y_sr_12tap_rvv(
                   &s9, &s10, vl);
     s += 11 * src_stride;
 
-    do {
+    while (h >= 4) {
       // Load next 4 rows of data
       vint16mf2_t s11, s12, s13, s14;
       load_s16_4x4(s, src_stride, &s11, &s12, &s13, &s14, vl);
@@ -413,7 +485,30 @@ static inline void highbd_convolve_y_sr_12tap_rvv(
       s += 4 * src_stride;
       d += 4 * dst_stride;
       h -= 4;
-    } while (h != 0);
+    }
+    // Handle remaining rows one at a time
+    while (h > 0) {
+      vint16mf2_t s11 = __riscv_vle16_v_i16mf2(s, vl);
+      vuint16mf2_t d0 = highbd_convolve12_4_y_rvv(
+          s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, y_filter, max, vl);
+      __riscv_vse16_v_u16mf2(d, d0, vl);
+
+      s0 = __riscv_vmv_v_v_i16mf2(s1, vl);
+      s1 = __riscv_vmv_v_v_i16mf2(s2, vl);
+      s2 = __riscv_vmv_v_v_i16mf2(s3, vl);
+      s3 = __riscv_vmv_v_v_i16mf2(s4, vl);
+      s4 = __riscv_vmv_v_v_i16mf2(s5, vl);
+      s5 = __riscv_vmv_v_v_i16mf2(s6, vl);
+      s6 = __riscv_vmv_v_v_i16mf2(s7, vl);
+      s7 = __riscv_vmv_v_v_i16mf2(s8, vl);
+      s8 = __riscv_vmv_v_v_i16mf2(s9, vl);
+      s9 = __riscv_vmv_v_v_i16mf2(s10, vl);
+      s10 = __riscv_vmv_v_v_i16mf2(s11, vl);
+
+      s += src_stride;
+      d += dst_stride;
+      h--;
+    }
   } else {
     do {
       int height = h;
@@ -426,7 +521,7 @@ static inline void highbd_convolve_y_sr_12tap_rvv(
                     &s9, &s10, vl);
       s += 11 * src_stride;
 
-      do {
+      while (height >= 4) {
         // Load next 4 rows of data
         vint16m1_t s11, s12, s13, s14;
         load_s16_8x4(s, src_stride, &s11, &s12, &s13, &s14, vl);
@@ -464,7 +559,31 @@ static inline void highbd_convolve_y_sr_12tap_rvv(
         s += 4 * src_stride;
         d += 4 * dst_stride;
         height -= 4;
-      } while (height != 0);
+      }
+      // Handle remaining rows one at a time
+      while (height > 0) {
+        vint16m1_t s11 = __riscv_vle16_v_i16m1(s, vl);
+        vuint16m1_t d0 =
+            highbd_convolve12_8_y_rvv(s0, s1, s2, s3, s4, s5, s6, s7, s8, s9,
+                                      s10, s11, y_filter, max, vl);
+        __riscv_vse16_v_u16m1(d, d0, vl);
+
+        s0 = __riscv_vmv_v_v_i16m1(s1, vl);
+        s1 = __riscv_vmv_v_v_i16m1(s2, vl);
+        s2 = __riscv_vmv_v_v_i16m1(s3, vl);
+        s3 = __riscv_vmv_v_v_i16m1(s4, vl);
+        s4 = __riscv_vmv_v_v_i16m1(s5, vl);
+        s5 = __riscv_vmv_v_v_i16m1(s6, vl);
+        s6 = __riscv_vmv_v_v_i16m1(s7, vl);
+        s7 = __riscv_vmv_v_v_i16m1(s8, vl);
+        s8 = __riscv_vmv_v_v_i16m1(s9, vl);
+        s9 = __riscv_vmv_v_v_i16m1(s10, vl);
+        s10 = __riscv_vmv_v_v_i16m1(s11, vl);
+
+        s += src_stride;
+        d += dst_stride;
+        height--;
+      }
 
       src_ptr += vl;
       dst_ptr += vl;
@@ -477,12 +596,6 @@ void av1_highbd_convolve_y_sr_rvv(const uint16_t *src, int src_stride,
                                   uint16_t *dst, int dst_stride, int w, int h,
                                   const InterpFilterParams *filter_params_y,
                                   const int subpel_y_qn, int bd) {
-  if (w == 2 || h == 2) {
-    av1_highbd_convolve_y_sr_c(src, src_stride, dst, dst_stride, w, h,
-                               filter_params_y, subpel_y_qn, bd);
-    return;
-  }
-
   const int y_filter_taps = get_filter_tap(filter_params_y, subpel_y_qn);
   const int vert_offset = filter_params_y->taps / 2 - 1;
   const int16_t *y_filter_ptr = av1_get_interp_filter_subpel_kernel(
@@ -541,7 +654,7 @@ static inline void highbd_convolve_x_sr_6tap_rvv(
   int height = h;
   size_t vl = __riscv_vsetvl_e16m1(w);
 
-  do {
+  while (height >= 4) {
     int width = w;
     const int16_t *s = (const int16_t *)src_ptr;
     uint16_t *d = dst_ptr;
@@ -583,7 +696,32 @@ static inline void highbd_convolve_x_sr_6tap_rvv(
     src_ptr += 4 * src_stride;
     dst_ptr += 4 * dst_stride;
     height -= 4;
-  } while (height != 0);
+  }
+  // Handle remaining rows one at a time
+  while (height > 0) {
+    int width = w;
+    const int16_t *s = (const int16_t *)src_ptr;
+    uint16_t *d = dst_ptr;
+
+    do {
+      vint16m1_t s00, s01, s02, s03, s04, s05;
+
+      load_s16_8x6(s, 1, &s00, &s01, &s02, &s03, &s04, &s05, vl);
+
+      vuint16m1_t d0 = highbd_convolve6_8_x_rvv(s00, s01, s02, s03, s04, s05,
+                                                x_filter, offset, max, vl);
+
+      __riscv_vse16_v_u16m1(d, d0, vl);
+
+      s += vl;
+      d += vl;
+      width -= vl;
+    } while (width > 0);
+
+    src_ptr += src_stride;
+    dst_ptr += dst_stride;
+    height--;
+  }
 }
 
 static inline vuint16mf2_t highbd_convolve4_4_x_rvv(
@@ -644,13 +782,13 @@ static inline void highbd_convolve_x_sr_rvv(const uint16_t *src_ptr,
   const uint16_t max = (1 << bd) - 1;
   size_t vl = __riscv_vsetvl_e16m1(w);
 
-  if (w == 4) {
-    // 4-tap filters are used for blocks having width == 4.
+  if (w <= 4) {
+    // 4-tap filters are used for blocks having width <= 4.
     const int16_t *s = (const int16_t *)(src_ptr + 2);
     uint16_t *d = dst_ptr;
     const int16_t *x_filter_ptr = x_filter + 2;
 
-    do {
+    while (h >= 4) {
       vint16mf2_t s00, s01, s02, s03;
       vint16mf2_t s10, s11, s12, s13;
       vint16mf2_t s20, s21, s22, s23;
@@ -678,10 +816,25 @@ static inline void highbd_convolve_x_sr_rvv(const uint16_t *src_ptr,
       s += 4 * src_stride;
       d += 4 * dst_stride;
       h -= 4;
-    } while (h != 0);
+    }
+    // Handle remaining rows one at a time
+    while (h > 0) {
+      vint16mf2_t s00, s01, s02, s03;
+
+      load_s16_4x4(s, 1, &s00, &s01, &s02, &s03, vl);
+
+      vuint16mf2_t d0 = highbd_convolve4_4_x_rvv(s00, s01, s02, s03,
+                                                 x_filter_ptr, offset, max, vl);
+
+      __riscv_vse16_v_u16mf2(d, d0, vl);
+
+      s += src_stride;
+      d += dst_stride;
+      h--;
+    }
   } else {
     int height = h;
-    do {
+    while (height >= 4) {
       int width = w;
       const int16_t *s = (const int16_t *)src_ptr;
       uint16_t *d = dst_ptr;
@@ -723,7 +876,32 @@ static inline void highbd_convolve_x_sr_rvv(const uint16_t *src_ptr,
       src_ptr += 4 * src_stride;
       dst_ptr += 4 * dst_stride;
       height -= 4;
-    } while (height != 0);
+    }
+    // Handle remaining rows one at a time
+    while (height > 0) {
+      int width = w;
+      const int16_t *s = (const int16_t *)src_ptr;
+      uint16_t *d = dst_ptr;
+
+      do {
+        vint16m1_t s00, s01, s02, s03, s04, s05, s06, s07;
+
+        load_s16_8x8(s, 1, &s00, &s01, &s02, &s03, &s04, &s05, &s06, &s07, vl);
+
+        vuint16m1_t d0 = highbd_convolve8_8_x_rvv(
+            s00, s01, s02, s03, s04, s05, s06, s07, x_filter, offset, max, vl);
+
+        __riscv_vse16_v_u16m1(d, d0, vl);
+
+        s += vl;
+        d += vl;
+        width -= vl;
+      } while (width > 0);
+
+      src_ptr += src_stride;
+      dst_ptr += dst_stride;
+      height--;
+    }
   }
 }
 
@@ -798,11 +976,11 @@ static inline void highbd_convolve_x_sr_12tap_rvv(
   const uint16_t max = (1 << bd) - 1;
   size_t vl = __riscv_vsetvl_e16m1(w);
 
-  if (w == 4) {
+  if (w <= 4) {
     const int16_t *s = (const int16_t *)src_ptr;
     uint16_t *d = dst_ptr;
 
-    do {
+    while (h >= 4) {
       vint16mf2_t s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s010, s011;
       vint16mf2_t s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s110, s111;
       vint16mf2_t s20, s21, s22, s23, s24, s25, s26, s27, s28, s29, s210, s211;
@@ -838,10 +1016,27 @@ static inline void highbd_convolve_x_sr_12tap_rvv(
       s += 4 * src_stride;
       d += 4 * dst_stride;
       h -= 4;
-    } while (h != 0);
+    }
+    // Handle remaining rows one at a time
+    while (h > 0) {
+      vint16mf2_t s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s010, s011;
+
+      load_s16_4x12(s, 1, &s00, &s01, &s02, &s03, &s04, &s05, &s06, &s07, &s08,
+                    &s09, &s010, &s011, vl);
+
+      vuint16mf2_t d0 =
+          highbd_convolve12_4_x_rvv(s00, s01, s02, s03, s04, s05, s06, s07, s08,
+                                    s09, s010, s011, x_filter, offset, max, vl);
+
+      __riscv_vse16_v_u16mf2(d, d0, vl);
+
+      s += src_stride;
+      d += dst_stride;
+      h--;
+    }
   } else {
     int height = h;
-    do {
+    while (height >= 4) {
       const int16_t *s = (const int16_t *)src_ptr;
       uint16_t *d = dst_ptr;
       int width = w;
@@ -887,7 +1082,34 @@ static inline void highbd_convolve_x_sr_12tap_rvv(
       src_ptr += 4 * src_stride;
       dst_ptr += 4 * dst_stride;
       height -= 4;
-    } while (height != 0);
+    }
+    // Handle remaining rows one at a time
+    while (height > 0) {
+      const int16_t *s = (const int16_t *)src_ptr;
+      uint16_t *d = dst_ptr;
+      int width = w;
+
+      do {
+        vint16m1_t s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s010, s011;
+
+        load_s16_8x12(s, 1, &s00, &s01, &s02, &s03, &s04, &s05, &s06, &s07,
+                      &s08, &s09, &s010, &s011, vl);
+
+        vuint16m1_t d0 = highbd_convolve12_8_x_rvv(
+            s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s010, s011,
+            x_filter, offset, max, vl);
+
+        __riscv_vse16_v_u16m1(d, d0, vl);
+
+        s += vl;
+        d += vl;
+        width -= vl;
+      } while (width > 0);
+
+      src_ptr += src_stride;
+      dst_ptr += dst_stride;
+      height--;
+    }
   }
 }
 
@@ -896,11 +1118,6 @@ void av1_highbd_convolve_x_sr_rvv(const uint16_t *src, int src_stride,
                                   const InterpFilterParams *filter_params_x,
                                   const int subpel_x_qn,
                                   ConvolveParams *conv_params, int bd) {
-  if (w == 2 || h == 2) {
-    av1_highbd_convolve_x_sr_c(src, src_stride, dst, dst_stride, w, h,
-                               filter_params_x, subpel_x_qn, conv_params, bd);
-    return;
-  }
   const int x_filter_taps = get_filter_tap(filter_params_x, subpel_x_qn);
   const int horiz_offset = filter_params_x->taps / 2 - 1;
   const int16_t *x_filter_ptr = av1_get_interp_filter_subpel_kernel(
@@ -966,7 +1183,7 @@ static inline void highbd_convolve_2d_sr_vert_12tap_rvv(
   const int32_t offset_s32 = offset;
   const uint16_t max_u16 = (1 << bd) - 1;
 
-  if (w == 4) {
+  if (w <= 4) {
     int16_t *s = (int16_t *)src_ptr;
     vl = vl << 1;
 
@@ -991,7 +1208,7 @@ static inline void highbd_convolve_2d_sr_vert_12tap_rvv(
     vint16m1_t s9 = load_strided_i16_4xN(s, src_stride, vl);
     s += src_stride;
 
-    do {
+    while (h >= 4) {
       vint16m1_t s10 = load_strided_i16_4xN(s, src_stride, vl);
       s += src_stride;
       vint16m1_t s11 = load_strided_i16_4xN(s, src_stride, vl);
@@ -1025,7 +1242,34 @@ static inline void highbd_convolve_2d_sr_vert_12tap_rvv(
       s9 = s13;
 
       h -= 4;
-    } while (h != 0);
+    }
+    // Handle remaining rows one at a time
+    while (h > 0) {
+      vint16m1_t s10 = load_strided_i16_4xN(s, src_stride, vl);
+      s += src_stride;
+      vint16m1_t s11 = load_strided_i16_4xN(s, src_stride, vl);
+      s += src_stride;
+
+      vuint16m1_t d0 = highbd_convolve12_2d_v_rvv(
+          s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, y_filter_ptr,
+          offset_s32, shift_s32, max_u16, vl);
+
+      store_strided_u16_4xN(dst_ptr, d0, dst_stride, vl);
+      dst_ptr += dst_stride << 1;
+
+      s0 = s2;
+      s1 = s3;
+      s2 = s4;
+      s3 = s5;
+      s4 = s6;
+      s5 = s7;
+      s6 = s8;
+      s7 = s9;
+      s8 = s10;
+      s9 = s11;
+
+      h -= 2;
+    }
   } else {
     do {
       int height = h;
@@ -1055,7 +1299,7 @@ static inline void highbd_convolve_2d_sr_vert_12tap_rvv(
       vint16m1_t s10 = __riscv_vle16_v_i16m1(s, vl);
       s += src_stride;
 
-      do {
+      while (height >= 4) {
         vint16m1_t s11 = __riscv_vle16_v_i16m1(s, vl);
         s += src_stride;
         vint16m1_t s12 = __riscv_vle16_v_i16m1(s, vl);
@@ -1100,7 +1344,33 @@ static inline void highbd_convolve_2d_sr_vert_12tap_rvv(
         s10 = s14;
 
         height -= 4;
-      } while (height != 0);
+      }
+      // Handle remaining rows one at a time
+      while (height > 0) {
+        vint16m1_t s11 = __riscv_vle16_v_i16m1(s, vl);
+        s += src_stride;
+
+        vuint16m1_t d0 = highbd_convolve12_2d_v_rvv(
+            s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, y_filter_ptr,
+            offset_s32, shift_s32, max_u16, vl);
+
+        __riscv_vse16_v_u16m1(d, d0, vl);
+        d += dst_stride;
+
+        s0 = s1;
+        s1 = s2;
+        s2 = s3;
+        s3 = s4;
+        s4 = s5;
+        s5 = s6;
+        s6 = s7;
+        s7 = s8;
+        s8 = s9;
+        s9 = s10;
+        s10 = s11;
+
+        height--;
+      }
 
       src_ptr += vl;
       dst_ptr += vl;
@@ -1252,7 +1522,7 @@ static inline void highbd_convolve_2d_sr_vert_6tap_rvv(
   const uint16_t max_u16 = (1 << bd) - 1;
   const int16_t *yfilter_6tap = y_filter_ptr + 1;
 
-  if (w == 4) {
+  if (w <= 4) {
     int16_t *s = (int16_t *)src_ptr;
     vl = vl << 1;
 
@@ -1265,7 +1535,7 @@ static inline void highbd_convolve_2d_sr_vert_6tap_rvv(
     vint16m1_t s3 = load_strided_i16_4xN(s, src_stride, vl);
     s += src_stride;
 
-    do {
+    while (h >= 4) {
       vint16m1_t s4 = load_strided_i16_4xN(s, src_stride, vl);
       s += src_stride;
       vint16m1_t s5 = load_strided_i16_4xN(s, src_stride, vl);
@@ -1293,7 +1563,28 @@ static inline void highbd_convolve_2d_sr_vert_6tap_rvv(
       s3 = s7;
 
       h -= 4;
-    } while (h != 0);
+    }
+    // Handle remaining rows (2 at a time due to strided layout)
+    while (h > 0) {
+      vint16m1_t s4 = load_strided_i16_4xN(s, src_stride, vl);
+      s += src_stride;
+      vint16m1_t s5 = load_strided_i16_4xN(s, src_stride, vl);
+      s += src_stride;
+
+      vuint16m1_t d0 =
+          highbd_convolve6_2d_v_rvv(s0, s1, s2, s3, s4, s5, yfilter_6tap,
+                                    offset_s32, shift_s32, max_u16, vl);
+
+      store_strided_u16_4xN(dst_ptr, d0, dst_stride, vl);
+      dst_ptr += dst_stride << 1;
+
+      s0 = s2;
+      s1 = s3;
+      s2 = s4;
+      s3 = s5;
+
+      h -= 2;
+    }
   } else {
     do {
       int height = h;
@@ -1311,7 +1602,7 @@ static inline void highbd_convolve_2d_sr_vert_6tap_rvv(
       vint16m1_t s4 = __riscv_vle16_v_i16m1(s, vl);
       s += src_stride;
 
-      do {
+      while (height >= 4) {
         vint16m1_t s5 = __riscv_vle16_v_i16m1(s, vl);
         s += src_stride;
         vint16m1_t s6 = __riscv_vle16_v_i16m1(s, vl);
@@ -1350,7 +1641,27 @@ static inline void highbd_convolve_2d_sr_vert_6tap_rvv(
         s4 = s8;
 
         height -= 4;
-      } while (height != 0);
+      }
+      // Handle remaining rows one at a time
+      while (height > 0) {
+        vint16m1_t s5 = __riscv_vle16_v_i16m1(s, vl);
+        s += src_stride;
+
+        vuint16m1_t d0 =
+            highbd_convolve6_2d_v_rvv(s0, s1, s2, s3, s4, s5, yfilter_6tap,
+                                      offset_s32, shift_s32, max_u16, vl);
+
+        __riscv_vse16_v_u16m1(d, d0, vl);
+        d += dst_stride;
+
+        s0 = s1;
+        s1 = s2;
+        s2 = s3;
+        s3 = s4;
+        s4 = s5;
+
+        height--;
+      }
 
       src_ptr += vl;
       dst_ptr += vl;
@@ -1392,7 +1703,7 @@ static inline void highbd_convolve_2d_sr_horiz_12tap_rvv(
   const int32_t shift_s32 = conv_params->round_0;
   const int32_t offset_s32 = offset;
 
-  if (w == 4) {
+  if (w <= 4) {
     const int16_t *s = (int16_t *)src_ptr;
     int16_t *d = (int16_t *)dst_ptr;
 
@@ -1483,7 +1794,7 @@ static inline void highbd_convolve_2d_sr_horiz_rvv(
   const int32_t shift_s32 = conv_params->round_0;
   const int32_t offset_s32 = offset;
 
-  if (w == 4) {
+  if (w <= 4) {
     const int16_t *x_filter = (x_filter_ptr + 2);
     const int16_t *s = (int16_t *)(src_ptr + 1);
     int16_t *d = (int16_t *)dst_ptr;
@@ -1583,12 +1894,6 @@ void av1_highbd_convolve_2d_sr_rvv(const uint16_t *src, int src_stride,
                                    const InterpFilterParams *filter_params_y,
                                    const int subpel_x_qn, const int subpel_y_qn,
                                    ConvolveParams *conv_params, int bd) {
-  if (w == 2 || h == 2) {
-    av1_highbd_convolve_2d_sr_c(src, src_stride, dst, dst_stride, w, h,
-                                filter_params_x, filter_params_y, subpel_x_qn,
-                                subpel_y_qn, conv_params, bd);
-    return;
-  }
   DECLARE_ALIGNED(16, uint16_t,
                   im_block[(MAX_SB_SIZE + MAX_FILTER_TAP) * MAX_SB_SIZE]);
   const int x_filter_taps = get_filter_tap(filter_params_x, subpel_x_qn);
