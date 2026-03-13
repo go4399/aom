@@ -39,6 +39,24 @@
       "message": "prefer not re-enable the feature. it doesn\u0027t have much impact and is risky to do with resizing or spatial layers.",
       "revId": "bf26f329d8e34a1cad43ccf33ca78880032dae8b",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b4d3d7fa_19a36fbc",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1827,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-13T22:26:45Z",
+      "side": 0,
+      "message": "Marco: I understand your concern. I can prove (by logical reasoning, not by testing) that the new condition for resizing `cpi-\u003eorig_source` will avoid memory errors when we copy `cpi-\u003esource` to `cpi-\u003eorig_source`. The new condition will also avoid potential memory errors when the encoder changes chroma subsampling or bit depth.\n\nI am confident it is safe to re-enable the use_rtc_tf feature.",
+      "parentUuid": "c423caaf_6ebed6e5",
+      "revId": "bf26f329d8e34a1cad43ccf33ca78880032dae8b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
