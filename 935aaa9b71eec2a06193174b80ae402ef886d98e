@@ -16,6 +16,24 @@
       "message": "Lin: Please confirm you want to set `p_rc-\u003eaccumulate_stats_stage` to true here.\n\nWe are inside the `if (cpi-\u003eoxcf.mode !\u003d REALTIME)` block. So the statement:\n\n```\n  p_rc-\u003eaccumulate_stats_stage \u003d (cpi-\u003eoxcf.mode \u003d\u003d REALTIME);\n```\n\nwould set `p_rc-\u003eaccumulate_stats_stage` to false here. This is why I am not sure if you intend to set it to true here.",
       "revId": "935aaa9b71eec2a06193174b80ae402ef886d98e",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ccaec2e_3ee38b8e",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 2423,
+      "author": {
+        "id": 31132
+      },
+      "writtenOn": "2026-03-14T20:24:29Z",
+      "side": 1,
+      "message": "yes, this is the intended behavior. We only want to set accumulate_stats_stage to be true inside this function (to derive some stats).",
+      "parentUuid": "3f5cc6bd_79f7cb3f",
+      "revId": "935aaa9b71eec2a06193174b80ae402ef886d98e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
