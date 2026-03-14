@@ -36,7 +36,7 @@
 
 // Use a stub Notification class.
 //
-// The built-in Notification class in GoogleTest v1.12.1 uses std::mutex and
+// The built-in Notification class in GoogleTest uses std::mutex and
 // std::condition_variable. The <mutex> and <condition_variable> headers of
 // mingw32 g++ (GNU 10.0.0) define std::mutex and std::condition_variable only
 // when configured with the posix threads option but don't define them when
@@ -60,7 +60,10 @@ class Notification {
   Notification(const Notification&) = delete;
   Notification& operator=(const Notification&) = delete;
   // void Notify();
-  void WaitForNotification() {}
+  void WaitForNotification() {
+    int* p = nullptr;
+    *p = 0;
+  }
 };
 }  // namespace internal
 }  // namespace testing
