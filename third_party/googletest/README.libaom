@@ -1,9 +1,9 @@
 Name: Google Test: Google's C++ Testing Framework
 Short Name: googletest
 URL: https://github.com/google/googletest
-Version: 1.12.1
+Version: 1.17.0
 Update Mechanism: Manual
-Revision: 58d77fa8070e8cec2dc1ed015d66b454c8d78850
+Revision: 52eb8108c5bdec04579160ae17225d66034bd723
 License: BSD-3-Clause
 License File: src/LICENSE
 Shipped in Chromium: no
@@ -11,11 +11,11 @@ Security Critical: no
 
 Description:
 Google's framework for writing C++ tests on a variety of platforms
-(Linux, Mac OS X, Windows, Windows CE, Symbian, etc).  Based on the
-xUnit architecture.  Supports automatic test discovery, a rich set of
+(Linux, macOS, Windows, Android NDK, etc).  Based on the xUnit
+testing framework.  Supports automatic test discovery, a rich set of
 assertions, user-defined assertions, death tests, fatal and non-fatal
-failures, various options for running the tests, and XML test report
-generation.
+failures, value-parameterized tests, type-parameterized tests, and
+various options for running the tests.
 
 Local Modifications:
 - Remove everything but:
