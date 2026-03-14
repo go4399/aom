@@ -33,6 +33,24 @@
       "message": "ThreadSanitizer reported a data race at this line when assigning a value to `cpi-\u003eppi-\u003ep_rc.rtc_mode`:\n\nhttps://build.aomedia.org/jenkins/job/libaom__nightly_unit_tests-sanitized/2316/\n\nI don\u0027t think the `cpi-\u003eoxcf.mode` field of an encoder can change. Since we already initialize `cpi-\u003eppi-\u003ep_rc.rtc_mode` to `(cpi-\u003eoxcf.mode \u003d\u003d REALTIME)` in `av1_create_compressor()` at av1/encoder/encoder.c:1540, the fix may be as simple as deleting this line.",
       "revId": "c7bc020e9216b4f5b6dcb4cd1f5b3d1a9a5ec730",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04c52584_bf3d44dd",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2639,
+      "author": {
+        "id": 31132
+      },
+      "writtenOn": "2026-03-14T15:16:05Z",
+      "side": 1,
+      "message": "This line of code is necessary to initialize `rtc_mode` for svc multi-layer testcases. Need to find another place to do it due to the data race.",
+      "parentUuid": "e9dc13e2_3c4e3dd2",
+      "revId": "c7bc020e9216b4f5b6dcb4cd1f5b3d1a9a5ec730",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
