@@ -20,6 +20,23 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "9e13bcef_26b7fe3d",
+        "filename": "third_party/googletest/README.libaom",
+        "patchSetId": 5
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-14T18:38:34Z",
+      "side": 1,
+      "message": "I noticed the list of platforms was out of date. I updated it based on https://github.com/google/googletest?tab\u003dreadme-ov-file#supported-platforms.\n\nI also took the opportunity to update the list of features based on https://github.com/google/googletest?tab\u003dreadme-ov-file#features.",
+      "revId": "e1e36864c799a6a5551e47303eccdd3ededa0dae",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "71ed6382_5320485b",
         "filename": "third_party/googletest/src/googletest/include/gtest/internal/custom/gtest-port.h",
         "patchSetId": 5
