@@ -36,7 +36,7 @@
 
 // Use a stub Notification class.
 //
-// The built-in Notification class in GoogleTest v1.12.1 uses std::mutex and
+// The built-in Notification class in GoogleTest uses std::mutex and
 // std::condition_variable. The <mutex> and <condition_variable> headers of
 // mingw32 g++ (GNU 10.0.0) define std::mutex and std::condition_variable only
 // when configured with the posix threads option but don't define them when
@@ -44,22 +44,25 @@
 // used in GoogleTest's internal tests. Since we don't build GoogleTest's
 // internal tests, we don't need a working Notification class. Although it's
 // not hard to fix the mingw32 g++ compilation errors by implementing the
-// Notification class using Windows CRITICAL_SECTION and CONDITION_VARIABLE,
-// it's simpler to just use a stub Notification class on all platforms.
+// Notification class using a Windows manual-reset event object, it's simpler
+// to just use a stub Notification class on all platforms.
 //
-// The default constructor of the stub class is deleted and the declaration of
-// the Notify() method is commented out, so that compilation will fail if any
-// code actually uses the Notification class.
+// The default constructor of the stub class dereferences a null pointer so
+// that the process will crash if any code actually uses the Notification
+// class.
 
 #define GTEST_HAS_NOTIFICATION_ 1
 namespace testing {
 namespace internal {
 class Notification {
  public:
-  Notification() = delete;
+  Notification() {
+    int* p = nullptr;
+    *p = 0;
+  }
   Notification(const Notification&) = delete;
   Notification& operator=(const Notification&) = delete;
-  // void Notify();
+  void Notify() {}
   void WaitForNotification() {}
 };
 }  // namespace internal
