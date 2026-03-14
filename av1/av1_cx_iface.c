@@ -3574,7 +3574,6 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
       }
     }
 #endif  // CONFIG_MULTITHREAD
-
     // Call for LAP stage
     if (cpi_lap != NULL && !is_one_pass_rt_lag_params(cpi)) {
       if (cpi_lap->ppi->b_freeze_internal_state) {
