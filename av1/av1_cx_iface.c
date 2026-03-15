@@ -971,6 +971,8 @@ static aom_codec_err_t validate_img(aom_codec_alg_priv_t *ctx,
     case AOM_IMG_FMT_YV12:
     case AOM_IMG_FMT_NV12:
     case AOM_IMG_FMT_I420:
+    case AOM_IMG_FMT_AOMYV12:
+    case AOM_IMG_FMT_AOMI420:
     case AOM_IMG_FMT_YV1216:
     case AOM_IMG_FMT_I42016: break;
     case AOM_IMG_FMT_I444:
@@ -995,6 +997,10 @@ static aom_codec_err_t validate_img(aom_codec_alg_priv_t *ctx,
 
   if (img->d_w != ctx->cfg.g_w || img->d_h != ctx->cfg.g_h)
     ERROR("Image size must match encoder init configuration size");
+  assert(img->fmt & AOM_IMG_FMT_PLANAR);
+  if (!img->monochrome && img->fmt != AOM_IMG_FMT_NV12 &&
+      img->stride[AOM_PLANE_U] != img->stride[AOM_PLANE_V])
+    ERROR("Image U/V strides must match");
 
   // 6.4.2 Color config semantics
   // If matrix_coefficients is equal to MC_IDENTITY, it is a requirement of
