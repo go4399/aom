@@ -287,6 +287,24 @@ TEST(EncodeAPI, InvalidUVStrides) {
   }
 }
 
+TEST(EncodeAPI, InvalidImageFormats) {
+  EXPECT_EQ(aom_img_alloc(/*img=*/nullptr, AOM_IMG_FMT_NONE, /*d_w=*/32,
+                          /*d_h=*/32, /*align=*/1),
+            nullptr);
+  EXPECT_EQ(aom_img_alloc(/*img=*/nullptr,
+                          static_cast<aom_img_fmt_t>(AOM_IMG_FMT_NONE - 1),
+                          /*d_w=*/32, /*d_h=*/32, /*align=*/1),
+            nullptr);
+  EXPECT_EQ(aom_img_alloc(/*img=*/nullptr,
+                          static_cast<aom_img_fmt_t>(AOM_IMG_FMT_NV12 + 1),
+                          /*d_w=*/32, /*d_h=*/32, /*align=*/1),
+            nullptr);
+  EXPECT_EQ(aom_img_alloc(/*img=*/nullptr,
+                          static_cast<aom_img_fmt_t>(AOM_IMG_FMT_I44416 + 1),
+                          /*d_w=*/32, /*d_h=*/32, /*align=*/1),
+            nullptr);
+}
+
 TEST(EncodeAPI, TuneIqNotAllIntra) {
   aom_codec_iface_t *iface = aom_codec_av1_cx();
   aom_codec_enc_cfg_t cfg;
