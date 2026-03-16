@@ -34,6 +34,75 @@
       "parentUuid": "3f5cc6bd_79f7cb3f",
       "revId": "935aaa9b71eec2a06193174b80ae402ef886d98e",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd61117c_366c7e7d",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 2423,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-16T15:29:17Z",
+      "side": 1,
+      "message": "`p_rc-\u003eaccumulate_stats_stage` is only used by the `av1_calc_arf_boost()` function.\n\nThere are only three calls to `av1_calc_arf_boost()` in this file (and they are all in this function), which I labled below. But there are calls to `av1_calc_arf_boost()` in two other files:\n- av1/encoder/temporal_filter.c\n- av1/encoder/gop_structure.c\n\nIn this CL, the value of `p_rc-\u003eaccumulate_stats_stage` does not seem to matter to the `av1_calc_arf_boost()` calls in av1/encoder/temporal_filter.c and av1/encoder/gop_structure.c. Why? This is worth a comment.",
+      "parentUuid": "2ccaec2e_3ee38b8e",
+      "revId": "935aaa9b71eec2a06193174b80ae402ef886d98e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "91beee9b_d240238d",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 2450,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-16T15:29:17Z",
+      "side": 1,
+      "message": "The first av1_calc_arf_boost() call in this function. It sees `p_rc-\u003eaccumulate_stats_stage \u003d true`. Why can\u0027t we pass `p_rc-\u003eaccumulate_stats_stage \u003d (cpi-\u003eoxcf.mode \u003d\u003d REALTIME)` to this `av1_calc_arf_boost()` call? This is worth a comment.",
+      "revId": "935aaa9b71eec2a06193174b80ae402ef886d98e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cde8c45a_0b66c6c3",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 2474,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-16T15:29:17Z",
+      "side": 1,
+      "message": "The second av1_calc_arf_boost() call in this function. It sees `p_rc-\u003eaccumulate_stats_stage \u003d (cpi-\u003eoxcf.mode \u003d\u003d REALTIME)`.",
+      "revId": "935aaa9b71eec2a06193174b80ae402ef886d98e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cb73e410_8d0f43fd",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 2482,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-16T15:29:17Z",
+      "side": 1,
+      "message": "The third (and last) av1_calc_arf_boost() call in this function. It sees `p_rc-\u003eaccumulate_stats_stage \u003d (cpi-\u003eoxcf.mode \u003d\u003d REALTIME)`.",
+      "revId": "935aaa9b71eec2a06193174b80ae402ef886d98e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ],
   "submitRequirementResults": [
