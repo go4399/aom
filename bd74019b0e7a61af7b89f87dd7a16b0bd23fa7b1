@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6beb788_5a4a7a2d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-16T19:56:01Z",
+      "side": 1,
+      "message": "Cherry-picking to libaom\u0027s \"opaline\" branch for the libaom v3.13.2 patch release.",
+      "revId": "bd74019b0e7a61af7b89f87dd7a16b0bd23fa7b1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
