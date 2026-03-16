@@ -54,6 +54,23 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "a6e50831_15df8072",
+        "filename": "third_party/googletest/src/googletest/include/gtest/internal/custom/gtest-port.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-16T17:26:29Z",
+      "side": 1,
+      "message": "James: My testing on Windows showed that we reach here in the EncodeAPI.InvalidParams test. It is caused by the `SCOPED_TRACE` line in the test:\n\n```\nTEST(EncodeAPI, InvalidParams) {\n  ...\n\n  aom_codec_iface_t *iface \u003d aom_codec_av1_cx();\n  SCOPED_TRACE(aom_codec_iface_name(iface));\n  EXPECT_EQ(AOM_CODEC_INVALID_PARAM,\n            aom_codec_enc_init(nullptr, iface, nullptr, 0));\n  EXPECT_EQ(AOM_CODEC_INVALID_PARAM,\n            aom_codec_enc_init(\u0026enc, iface, nullptr, 0));\n  ...\n}\n```\n\n`SCOPED_TRACE` is also used in the TestVectorTest.MD5Match test. So we need a working `Notification` class for Windows (at least for MinGW).",
+      "revId": "e1e36864c799a6a5551e47303eccdd3ededa0dae",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "71ed6382_5320485b",
         "filename": "third_party/googletest/src/googletest/include/gtest/internal/custom/gtest-port.h",
         "patchSetId": 5
