@@ -18,6 +18,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "150ef93a_00638dd2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-16T20:52:52Z",
+      "side": 1,
+      "message": "\u003e These should be available in `config/av1_rtcd.h` unless you set `CONFIG_RUNTIME_CPU_DETECT\u003d1`. In that case the fix would make sense. What was your build configuration out of curiosity?\n\nI meant `CONFIG_RUNTIME_CPU_DETECT\u003d0`, but they both build correctly for me using `riscv64-linux-gnu-gcc (Debian 15.2.0-4) 15.2.0`.\n\nTo double check the error, can you reproduce this with a clean check out or in a clean build directory? From you cmake command line it looks like you\u0027re building in tree. You can clean up the tree with `git clean -fdx`, then make a build directory outside of the libaom directory (or as a subdirectory) to avoid polluting the source tree with generated files from earlier configurations.",
+      "parentUuid": "b9e326bf_c16e0edd",
+      "revId": "d162dd4fc8cb7240a8ffc897569231f5b4b17415",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "9c86ae73_9a2e467f",
