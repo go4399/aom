@@ -68,6 +68,24 @@
       "message": "Thanks for the review and for getting the CLA sorted, James.\n\nI see the implicit declaration error for av1_highbd_convolve_2d_sr_c. I\u0027ll look into it and upload a new patchset with the fix. I\u0027ll also check the style against the project conventions.\n\nRegarding CI: if it helps, I can test locally on native riscv64 hardware (BananaPi F3, rv64imafdcv) and include the test results in the commit message.",
       "revId": "d162dd4fc8cb7240a8ffc897569231f5b4b17415",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "14ea8e6b_683cb67c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-16T20:46:20Z",
+      "side": 1,
+      "message": "\u003e Thanks for the review and for getting the CLA sorted, James.\n\u003e \n\u003e I see the implicit declaration error for av1_highbd_convolve_2d_sr_c. I\u0027ll look into it and upload a new patchset with the fix. I\u0027ll also check the style against the project conventions.\n\u003e \n\u003e Regarding CI: if it helps, I can test locally on native riscv64 hardware (BananaPi F3, rv64imafdcv) and include the test results in the commit message.\n\nThat or a comment to the review thread would work. What was your `cmake` command line when configuring libaom?",
+      "parentUuid": "1533e9c8_5f30754d",
+      "revId": "d162dd4fc8cb7240a8ffc897569231f5b4b17415",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
