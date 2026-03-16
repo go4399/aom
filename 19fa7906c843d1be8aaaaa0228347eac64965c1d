@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d370de8_8436cc8b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-16T19:25:32Z",
+      "side": 1,
+      "message": "James, Marco: I moved the contentious part (re-enable the use_rtc_tf speed feature for spatial layers) to [a separate CL](https://aomedia-review.googlesource.com/c/aom/+/208563). This CL now focuses on correcting the condition for allocating the `cpi-\u003eorig_source` buffer and is ready for review.\n\nPlease take a look. Thanks!",
+      "revId": "19fa7906c843d1be8aaaaa0228347eac64965c1d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
