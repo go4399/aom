@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e75be097_14860ec3",
+        "filename": "av1/encoder/extend.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-16T22:22:59Z",
+      "side": 1,
+      "message": "I am worried about the `ALIGN_POWER_OF_TWO(src-\u003ey_crop_width, 6)` term here. Do you know why we need it?\n\nIf `ALIGN_POWER_OF_TWO(src-\u003ey_crop_width, 6)` is greater than `src-\u003ey_crop_width + dst-\u003eborder`, I think the code below will malfunction because the `dst` buffer doesn\u0027t have that much space to the right of each row.",
+      "revId": "7343efd164afc3c0f9f2a212052d77a3d7ea1a49",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8994663_d3777eda",
+        "filename": "av1/encoder/extend.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-16T22:22:59Z",
+      "side": 1,
+      "message": "Note that `et_y` and `el_y` are both equal to `dst-\u003eborder`. Apparently we assume `dst-\u003eborder` is an even number so that we can divide it by 2.",
+      "revId": "7343efd164afc3c0f9f2a212052d77a3d7ea1a49",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
