@@ -287,6 +287,24 @@ TEST(EncodeAPI, InvalidUVStrides) {
   }
 }
 
+TEST(EncodeAPI, InvalidImageFormats) {
+  EXPECT_EQ(aom_img_alloc(/*img=*/nullptr, AOM_IMG_FMT_NONE, /*d_w=*/32,
+                          /*d_h=*/32, /*align=*/1),
+            nullptr);
+  EXPECT_EQ(aom_img_alloc(/*img=*/nullptr,
+                          static_cast<aom_img_fmt_t>(AOM_IMG_FMT_NONE - 1),
+                          /*d_w=*/32, /*d_h=*/32, /*align=*/1),
+            nullptr);
+  EXPECT_EQ(aom_img_alloc(/*img=*/nullptr,
+                          static_cast<aom_img_fmt_t>(AOM_IMG_FMT_NV12 + 1),
+                          /*d_w=*/32, /*d_h=*/32, /*align=*/1),
+            nullptr);
+  EXPECT_EQ(aom_img_alloc(/*img=*/nullptr,
+                          static_cast<aom_img_fmt_t>(AOM_IMG_FMT_I44416 + 1),
+                          /*d_w=*/32, /*d_h=*/32, /*align=*/1),
+            nullptr);
+}
+
 void EncodeSetSFrameOnFirstFrame(aom_img_fmt fmt, aom_codec_flags_t flag) {
   constexpr int kWidth = 2;
   constexpr int kHeight = 128;
