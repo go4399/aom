@@ -1,0 +1,22 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5026a841_6d42645b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4706525
+      },
+      "writtenOn": "2026-03-16T22:35:06Z",
+      "side": 1,
+      "message": "My cmake configuration: cmake /tmp/aom -DCONFIG_RUNTIME_CPU_DETECT\u003d1 -DCMAKE_BUILD_TYPE\u003dRelease -DENABLE_TESTS\u003d0 -DENABLE_EXAMPLES\u003d0 Native build on BananaPi F3 (SpacemiT K1, rv64imafdcv), GCC 14.2.0, Debian Trixie. Build completes cleanly in 11m27s wall / 41m59s CPU (8 cores). I uploaded PS4 with clang-format fixes and this config in the commit message, but it got Verified -1 because the CI rejects uploads from non-committers (\"committer/uploader not found\"). Could you re-upload PS4 or add me to the committer list so CI can run?\n\nOn Mon, Mar 16, 2026 at 9:52 PM James Zern (Gerrit) \u003cnoreply-gerritcodereview+JlcqwUOe8mK38LJ-UwTVZQ\u003d\u003d@\u003e wrote: google.com\n\nBruno Verachten",
+      "tag": "mailMessageId\u003d\u003cCACtV\u003ddfMNx6XmpNsNJ95Y9wrqb4h60BQp\u003dQNpR2BY__AcV8-YQ@mail.gmail.com\u003e",
+      "revId": "4608dadac51f857d0f5208071e816554c68d64af",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
