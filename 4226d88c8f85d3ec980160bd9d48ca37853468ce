@@ -122,6 +122,24 @@
       "parentUuid": "0792a987_a8421d6d",
       "revId": "4226d88c8f85d3ec980160bd9d48ca37853468ce",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "902b35c5_2aed16c9",
+        "filename": "av1/encoder/temporal_filter.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1176,
+      "author": {
+        "id": 31012
+      },
+      "writtenOn": "2026-03-16T13:27:18Z",
+      "side": 1,
+      "message": "Thank you for the suggestion. We have filed an issue for the missing NEON support for 64×64 TF block size and added a TODO referencing the issue before the NEON code change.\nYes. We changed :\n`specialize qw/av1_apply_temporal_filter sse2 avx2 neon neon_dotprod/;`\nto\n`specialize qw/av1_apply_temporal_filter sse2 avx2/;`\nwithout calling C functions in av1_apply_temporal_filter_neon() and av1_apply_temporal_filter_neon_dotprod(). This triggers the warning as in Patchset5:\u003chttps://build.aomedia.org/jenkins/job/libaom__compile/62774/arch\u003darmv8-linux-gcc,config\u003dshared/consoleFull#:~:text\u003d13%3A22%3A58,22%3A58%20%20%20%20%20%20%20%7C%20%20%20%20%20%20%5E~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\u003e.",
+      "parentUuid": "5cade5b8_f27a9198",
+      "revId": "4226d88c8f85d3ec980160bd9d48ca37853468ce",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
