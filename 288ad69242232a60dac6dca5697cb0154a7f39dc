@@ -26,6 +26,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4483f331_5d706167",
+        "filename": "av1/encoder/ethread.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 844,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-17T17:41:19Z",
+      "side": 0,
+      "message": "This function didn\u0027t really \"initialize\" anything. Its only purpose was to make the last \"visible\" worker have the restoration buffers assigned from `AV1_COMMON` if the total number of workers changed. However, the references for the buffers that were previously dynamically generated are completely lost (and so they can no longer be free\u0027d), causing a resource lifetime issue.\n\nMaking the first worker always reuse the buffers from `AV1_COMMON` obviates doing the reassignment that this function did.",
+      "range": {
+        "startLine": 830,
+        "startChar": 1,
+        "endLine": 844,
+        "endChar": 6
+      },
+      "revId": "288ad69242232a60dac6dca5697cb0154a7f39dc",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "05f358a3_a4d0a819",
         "filename": "av1/encoder/reconinter_enc.c",
         "patchSetId": 1
