@@ -827,22 +827,6 @@ void av1_init_cdef_worker(AV1_COMP *cpi) {
   cpi->mt_info.cdef_worker = p_mt_info->cdef_worker;
 }
 
-#if !CONFIG_REALTIME_ONLY
-void av1_init_lr_mt_buffers(AV1_COMP *cpi) {
-  AV1_COMMON *const cm = &cpi->common;
-  AV1LrSync *lr_sync = &cpi->mt_info.lr_row_sync;
-  if (lr_sync->sync_range) {
-    if (cpi->ppi->gf_group.frame_parallel_level[cpi->gf_frame_index] > 0)
-      return;
-    int num_lr_workers =
-        av1_get_num_mod_workers_for_alloc(&cpi->ppi->p_mt_info, MOD_LR);
-    assert(num_lr_workers <= lr_sync->num_workers);
-    lr_sync->lrworkerdata[num_lr_workers - 1].rst_tmpbuf = cm->rst_tmpbuf;
-    lr_sync->lrworkerdata[num_lr_workers - 1].rlbs = cm->rlbs;
-  }
-}
-#endif
-
 #if CONFIG_MULTITHREAD
 void av1_init_mt_sync(AV1_COMP *cpi, int is_first_pass) {
   AV1_COMMON *const cm = &cpi->common;
