@@ -159,6 +159,9 @@ typedef struct aom_sb_parameters {
 typedef struct aom_rc_encodeframe_decision {
   int q_index; /**< Required: Quantizer step index [0..255]*/
   int rdmult;  /**< Required: Frame level Lagrangian multiplier*/
+  // Whether per-superblock delta Q should be used.
+  // A pointer to the flag in cpi->ext_ratectrl.
+  int *use_delta_q;
   /*!
    * Optional: Superblock quantization parameters
    * It is zero initialized by default. It will be set for key and ARF frames
