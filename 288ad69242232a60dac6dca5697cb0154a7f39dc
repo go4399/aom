@@ -68,6 +68,30 @@
       },
       "revId": "288ad69242232a60dac6dca5697cb0154a7f39dc",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c18547f_d825786a",
+        "filename": "av1/encoder/reconinter_enc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-17T19:29:51Z",
+      "side": 0,
+      "message": "\u003e The shortcut this function uses (`subpel_x_q3 | subpel_y_q3`) to conditionally upsample the prediction buffer with `aom_upsampled_pred()` is particularly strange (premature optimization?), and breaks frame scaling.\n\u003e \n\u003e Other functions like `aom_highbd_comp_mask_upsampled_pred()` or `aom_highbd_comp_avg_upsampled_pred_[c|neon|sse2]()` unconditionally call `aom_upsampled_pred()`, so this change follows the same pattern for this function as well.\n\u003e \n\u003e `aom_upsampled_pred()` itself optimizes for the \"no subpel, no scaling\" special case, so it\u0027d be most correct for the function to handle the case.\n\nIt looks like that behavior came from https://aomedia-review.git.corp.google.com/c/aom/+/44241.",
+      "parentUuid": "05f358a3_a4d0a819",
+      "range": {
+        "startLine": 526,
+        "startChar": 0,
+        "endLine": 533,
+        "endChar": 75
+      },
+      "revId": "288ad69242232a60dac6dca5697cb0154a7f39dc",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
