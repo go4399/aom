@@ -18,6 +18,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "004768ec_2a91fb23",
+        "filename": "av1/arg_defs.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-17T01:00:14Z",
+      "side": 1,
+      "message": "Looks like it\u0027s only deltaq mode 1 the one that truly requires TPL; the remaining deltaq modes only require the super block info that\u0027s currently being encoded.\n\n```c\n  } else if (cpi-\u003eoxcf.q_cfg.deltaq_mode \u003d\u003d DELTA_Q_OBJECTIVE \u0026\u0026\n             cpi-\u003eoxcf.algo_cfg.enable_tpl_model) {\n    // Setup deltaq based on tpl stats\n    current_qindex \u003d\n        av1_get_q_for_deltaq_objective(cpi, td, NULL, sb_size, mi_row, mi_col);\n  } \n```\n\nI\u0027ll go ahead and rephrase the description.",
+      "parentUuid": "76f4ec70_ccbab378",
+      "revId": "0bd5747cb8d52c6266f7e84c1fe9584322b154fd",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fffdc583_fd1734d7",
@@ -41,6 +59,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "77e396e3_e7a56780",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 2846,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-17T01:00:14Z",
+      "side": 1,
+      "message": "Yes! Good catch.",
+      "parentUuid": "fffdc583_fd1734d7",
+      "range": {
+        "startLine": 2841,
+        "startChar": 0,
+        "endLine": 2846,
+        "endChar": 3
+      },
+      "revId": "0bd5747cb8d52c6266f7e84c1fe9584322b154fd",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a0a507f5_792a809a",
@@ -54,6 +96,24 @@
       "writtenOn": "2026-03-16T22:56:24Z",
       "side": 1,
       "message": "So when progressive coding is used for images, this function will be called? I think it might be unnecessary.",
+      "revId": "0bd5747cb8d52c6266f7e84c1fe9584322b154fd",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9634a630_f699cb53",
+        "filename": "av1/encoder/tpl_model.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 1416,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-17T01:00:14Z",
+      "side": 1,
+      "message": "I now remember why we added this assert, back when we first introduced tune IQ -- to indirectly detect the case where the encoder was accidentally running in good-quality/realtime modes with tune IQ.\n\nSo you\u0027re right, this assert is unnecessary with the changes from this CL.",
+      "parentUuid": "a0a507f5_792a809a",
       "revId": "0bd5747cb8d52c6266f7e84c1fe9584322b154fd",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
