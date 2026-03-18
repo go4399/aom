@@ -89,7 +89,13 @@ class TemporalFilterTest
       for (int ii = 0; ii < plane_h; ii++) {
         for (int jj = 0; jj < plane_w; jj++) {
           src1p[jj] = rnd_.Rand8();
-          src2p[jj] = rnd_.Rand8();
+          // Keep each pixel of `src2_` within [-7, 7] of `src1_` so the
+          // window_error stays small in apply_temporal_filter. Otherwise
+          // scaled_error clamps to 7 regardless of other factors and masks bugs
+          // in subblock_mvs and subblock_mses handling.
+          do {
+            src2p[jj] = rnd_.Rand8();
+          } while (abs(src2p[jj] - src1p[jj]) >= 8);
         }
         src1p += plane_stride;
         src2p += plane_stride2;
