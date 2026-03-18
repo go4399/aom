@@ -18,6 +18,40 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "70717d47_aa532479",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-18T17:25:07Z",
+      "side": 1,
+      "message": "Julio: Overall the code looks good. I have some suggestions.",
+      "revId": "34eb963ec694e46d9122e2938791be3a4afe302a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e1155d2_fc3df60d",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 792,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-18T17:25:07Z",
+      "side": 1,
+      "message": "IMPORTANT: We need to ensure this assumption is true as follows:\n- Document this assumption as an API contract for tune IQ and SSIMULACRA2: they can only be used to encode a normal still image or a layered AVIF image; or\n- Detect that we are encoding a layered AVIF image, e.g., by checking the condition `g_limit !\u003d 0 \u0026\u0026 g_limit \u003c\u003d 4` or by adding a new codec control to enable this mode.\n\nEither option is fine.",
+      "revId": "34eb963ec694e46d9122e2938791be3a4afe302a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "77633194_de70d617",
@@ -85,6 +119,40 @@
         "endLine": 795,
         "endChar": 41
       },
+      "revId": "34eb963ec694e46d9122e2938791be3a4afe302a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "53097521_47fdecdd",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 798,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-18T17:25:07Z",
+      "side": 1,
+      "message": "Nit: clarify what kind of efficiency this is, e.g., \"compression efficiency\".",
+      "revId": "34eb963ec694e46d9122e2938791be3a4afe302a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc208f70_7d12b291",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-18T17:25:07Z",
+      "side": 1,
+      "message": "Optional but recommended: Unless we are confident that there is no risk of overflow here, I would recommend checking for overflow and handling it with saturating arithmetic.\n\nNote: I hope the answer is that there is no risk of overflow. Otherwise we also need to protect the addition at line 821 and possibly line 823.",
       "revId": "34eb963ec694e46d9122e2938791be3a4afe302a",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -179,6 +247,40 @@
         "endLine": 6371,
         "endChar": 61
       },
+      "revId": "34eb963ec694e46d9122e2938791be3a4afe302a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c5f0657_dbf88a1d",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 1072,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-18T17:25:07Z",
+      "side": 1,
+      "message": "Note: This suggestion also applies to the similar comments below.\n\nOptional: This comment could be omitted because it merely repeats the code.\n\nIf you prefer to keep this comment, e.g., as the heading for a section of code, please add the word \"Set\" before \"speed features\". Otherwise, this comment could be misinterpreted as saying that skip_intra_in_interframe is a speed feature for the IQ and SSIMULACRA2 tuning modes.",
+      "revId": "34eb963ec694e46d9122e2938791be3a4afe302a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba6603e7_c143dc02",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 1075,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-18T17:25:07Z",
+      "side": 1,
+      "message": "Note: This suggestion also applies to the similar code below.\n\nIf you have insights on why these speed features should be set to these values, please add comments to explain the rationale.",
       "revId": "34eb963ec694e46d9122e2938791be3a4afe302a",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
