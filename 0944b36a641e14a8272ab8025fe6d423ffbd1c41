@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea842afa_eaefcff4",
+        "filename": "av1/encoder/ethread.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 838,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-18T19:32:44Z",
+      "side": 1,
+      "message": "Please move the assertion before this line (see patch below). The location you used for the assertion may be correct too, but it is best to avoid unnecessary risk.\n\n```\ndiff --git a/av1/encoder/ethread.c b/av1/encoder/ethread.c\nindex cce2bcc0c5..e76912c11c 100644\n--- a/av1/encoder/ethread.c\n+++ b/av1/encoder/ethread.c\n@@ -832,9 +832,9 @@ void av1_init_lr_mt_buffers(AV1_COMP *cpi) {\n   AV1_COMMON *const cm \u003d \u0026cpi-\u003ecommon;\n   AV1LrSync *lr_sync \u003d \u0026cpi-\u003emt_info.lr_row_sync;\n \n-  assert(lr_sync-\u003enum_workers \u003e 0);\n   if (lr_sync-\u003esync_range \u0026\u0026\n       cpi-\u003eppi-\u003egf_group.frame_parallel_level[cpi-\u003egf_frame_index] \u003d\u003d 0) {\n+    assert(lr_sync-\u003enum_workers \u003e 0);\n     lr_sync-\u003elrworkerdata[0].rst_tmpbuf \u003d cm-\u003erst_tmpbuf;\n     lr_sync-\u003elrworkerdata[0].rlbs \u003d cm-\u003erlbs;\n   }\n```\n\n---\n\nJustification for the assertion: The `lr_sync-\u003elrworkerdata` array is allocated as follows:\n\n```\n  CHECK_MEM_ERROR(cm, lr_sync-\u003elrworkerdata,\n                  aom_calloc(num_workers, sizeof(*(lr_sync-\u003elrworkerdata))));\n  lr_sync-\u003enum_workers \u003d num_workers;\n```\n\nSo `lr_sync-\u003enum_workers` is the size of the `lr_sync-\u003elrworkerdata` array.\n\nBefore we access the first array element `lr_sync-\u003elrworkerdata[0]`, we assert that the array size is nonzero.",
+      "revId": "0944b36a641e14a8272ab8025fe6d423ffbd1c41",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
