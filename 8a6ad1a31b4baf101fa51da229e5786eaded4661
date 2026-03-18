@@ -107,6 +107,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b10232a_251804e0",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 823,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-18T20:07:14Z",
+      "side": 1,
+      "message": "Let me think about this a bit more, especially because Cheng had a similar suggestion about function names being confusing (he wondered if I was the one who introduced `adjust_rdcost()`).\n\nI might perform the rdcost adjusting refactor as part of another CL -- I\u0027ll let you know.",
+      "parentUuid": "6b5672e6_0b1698ff",
+      "revId": "8a6ad1a31b4baf101fa51da229e5786eaded4661",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "a5559170_560e8ceb",

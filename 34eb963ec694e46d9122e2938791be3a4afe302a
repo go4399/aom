@@ -52,6 +52,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb2119b7_7104807a",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 792,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-18T20:07:14Z",
+      "side": 1,
+      "message": "Heads up: the documentation was done with the other CL: https://aomedia-review.googlesource.com/c/aom/+/207681.",
+      "parentUuid": "7e1155d2_fc3df60d",
+      "revId": "34eb963ec694e46d9122e2938791be3a4afe302a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "77633194_de70d617",
@@ -140,6 +158,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f53bef3b_43f84fa2",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 798,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-18T20:07:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53097521_47fdecdd",
+      "revId": "34eb963ec694e46d9122e2938791be3a4afe302a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fc208f70_7d12b291",
@@ -153,6 +189,24 @@
       "writtenOn": "2026-03-18T17:25:07Z",
       "side": 1,
       "message": "Optional but recommended: Unless we are confident that there is no risk of overflow here, I would recommend checking for overflow and handling it with saturating arithmetic.\n\nNote: I hope the answer is that there is no risk of overflow. Otherwise we also need to protect the addition at line 821 and possibly line 823.",
+      "revId": "34eb963ec694e46d9122e2938791be3a4afe302a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "809297a9_65f50542",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-18T20:07:14Z",
+      "side": 1,
+      "message": "I\u0027m confident there\u0027s no risk of overflow.\n\nLogging rdcosts for the worst case scenario (depth 12, high QP), the highest I\u0027ve seen it go (after applying the bias) is `6,762,139,195`, multiple orders of magnitude below `INT64_MAX` (`9,223,372,036,854,775,807`).\n\nUnless we\u0027re not multiplying rdcosts by like a 1000 or more, and we\u0027re checking for the special \"invalid\" (`INT64_MAX`) rdcost, we should be fine.",
+      "parentUuid": "fc208f70_7d12b291",
       "revId": "34eb963ec694e46d9122e2938791be3a4afe302a",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -268,6 +322,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e543e96_4f6db7e5",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 1072,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-18T20:07:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2c5f0657_dbf88a1d",
+      "revId": "34eb963ec694e46d9122e2938791be3a4afe302a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ba6603e7_c143dc02",
@@ -281,6 +353,24 @@
       "writtenOn": "2026-03-18T17:25:07Z",
       "side": 1,
       "message": "Note: This suggestion also applies to the similar code below.\n\nIf you have insights on why these speed features should be set to these values, please add comments to explain the rationale.",
+      "revId": "34eb963ec694e46d9122e2938791be3a4afe302a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eba7d9e7_cbb15309",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 1075,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-18T20:07:14Z",
+      "side": 1,
+      "message": "I added a comment to explain the rationale, in `set_good_speed_features_framesize_independent()`. I removed the comments from other places.",
+      "parentUuid": "ba6603e7_c143dc02",
       "revId": "34eb963ec694e46d9122e2938791be3a4afe302a",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
