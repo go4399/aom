@@ -352,8 +352,8 @@ void av1_temporal_filter(struct AV1_COMP *cpi,
  */
 int av1_check_show_filtered_frame(const YV12_BUFFER_CONFIG *frame,
                                   const FRAME_DIFF *frame_diff, int q_index,
-                                  aom_bit_depth_t bit_depth,
-                                  int enable_overlay);
+                                  aom_bit_depth_t bit_depth, int enable_overlay,
+                                  int is_second_arf);
 
 /*!\cond */
 // Allocates memory for members of TemporalFilterData.
