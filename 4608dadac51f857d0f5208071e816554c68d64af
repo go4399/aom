@@ -53,6 +53,24 @@
       "parentUuid": "86821662_b0e441a1",
       "revId": "4608dadac51f857d0f5208071e816554c68d64af",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3244118b_4477af9d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-18T18:38:12Z",
+      "side": 1,
+      "message": "\u003e \u003e \u003e My cmake configuration: cmake /tmp/aom -DCONFIG_RUNTIME_CPU_DETECT\u003d1 -DCMAKE_BUILD_TYPE\u003dRelease -DENABLE_TESTS\u003d0 -DENABLE_EXAMPLES\u003d0 Native build on BananaPi F3 (SpacemiT K1, rv64imafdcv), GCC 14.2.0, Debian Trixie. Build completes cleanly in 11m27s wall / 41m59s CPU (8 cores). I uploaded PS4 with clang-format fixes and this config in the commit message, but it got Verified -1 because the CI rejects uploads from non-committers (\"committer/uploader not found\"). Could you re-upload PS4 or add me to the committer list so CI can run?\n\u003e \u003e \u003e \n\u003e \u003e \n\u003e \u003e Thank you. It\u0027s not clear to me why there\u0027s a difference in behavior for your native build and my cross compile. Please upload the `av1_rtcd.h` file from the `config/` directory in your build directory to the bug.\n\u003e \u003e \n\u003e \n\u003e I responded to this yesterday assuming you meant this patchset built cleanly and not the main branch. I don\u0027t have a native device, but can probably run trixie under qemu to confirm.\n\u003e \n\nI tried quickly, but wasn\u0027t getting the netboot option to work:\n\nhttps://wiki.debian.org/DebianInstaller/Qemu#Netboot_without_a_CD_image\n\n\u003e I ran the tests under emulation, which passed.\n\u003e \n\u003e \u003e \u003e On Mon, Mar 16, 2026 at 9:52 PM James Zern (Gerrit) \u003cnoreply-gerritcodereview+JlcqwUOe8mK38LJ-UwTVZQ\u003d\u003d@\u003e wrote: google.com\n\u003e \u003e \u003e \n\u003e \u003e \u003e Bruno Verachten",
+      "parentUuid": "7797b124_fdd9e892",
+      "revId": "4608dadac51f857d0f5208071e816554c68d64af",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
