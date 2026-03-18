@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba6a7ede_5b0502a1",
+        "filename": "av1/encoder/reconinter_enc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 529,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-18T20:28:52Z",
+      "side": 1,
+      "message": "See https://aomedia-review.git.corp.google.com/c/aom/+/208701/1/av1/encoder/reconinter_enc.c#b533 for more information on this change.\n\n---\n\nI verified the new code matches `aom_highbd_comp_mask_upsampled_pred()`:\n\n```\nvoid aom_highbd_comp_mask_upsampled_pred(\n    MACROBLOCKD *xd, const struct AV1Common *const cm, int mi_row, int mi_col,\n    const MV *const mv, uint8_t *comp_pred8, const uint8_t *pred8, int width,\n    int height, int subpel_x_q3, int subpel_y_q3, const uint8_t *ref8,\n    int ref_stride, const uint8_t *mask, int mask_stride, int invert_mask,\n    int bd, int subpel_search) {\n  aom_highbd_upsampled_pred(xd, cm, mi_row, mi_col, mv, comp_pred8, width,\n                            height, subpel_x_q3, subpel_y_q3, ref8, ref_stride,\n                            bd, subpel_search);\n  aom_highbd_comp_mask_pred(comp_pred8, pred8, width, height, comp_pred8, width,\n                            mask, mask_stride, invert_mask);\n}\n```",
+      "revId": "c2921269a2895c9e69a2ed9ca89ce09183acd3ed",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
