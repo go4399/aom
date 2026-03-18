@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "121a44a2_779a4ebd",
+        "filename": "av1/common/thread_common.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-18T01:21:35Z",
+      "side": 1,
+      "message": "At this point, `cm-\u003erst_tmpbuf` and `cm-\u003erlbs` are null.",
+      "revId": "7a53d59c3c0cf1e309e34592b81be63d8cb173e2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba4225cb_4a7a229d",
+        "filename": "av1/encoder/encoder.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2699,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-18T01:21:35Z",
+      "side": 1,
+      "message": "`cm-\u003erst_tmpbuf` and `cm-\u003erlbs` are allocated in the `av1_alloc_restoration_buffers()` function. So it is important to call `av1_init_lr_mt_buffers(cpi)`.\n\nThe following patch fixes the crash. I inlined the `av1_init_lr_mt_buffers()` call. You may want to add the `av1_init_lr_mt_buffers()` function back.\n\n```\ndiff --git a/av1/encoder/encoder.c b/av1/encoder/encoder.c\nindex 4852157c2a..f050bebc26 100644\n--- a/av1/encoder/encoder.c\n+++ b/av1/encoder/encoder.c\n@@ -2697,6 +2697,15 @@ void av1_set_frame_size(AV1_COMP *cpi, int width, int height) {\n \n     const bool is_sgr_enabled \u003d !cpi-\u003esf.lpf_sf.disable_sgr_filter;\n     av1_alloc_restoration_buffers(cm, is_sgr_enabled);\n+    // Store the allocated restoration buffers in MT object.\n+    if (cpi-\u003eppi-\u003ep_mt_info.num_workers \u003e 1) {\n+      AV1LrSync *lr_sync \u003d \u0026cpi-\u003emt_info.lr_row_sync;\n+      if (lr_sync-\u003esync_range \u0026\u0026\n+          cpi-\u003eppi-\u003egf_group.frame_parallel_level[cpi-\u003egf_frame_index] \u003d\u003d 0) {\n+        lr_sync-\u003elrworkerdata[0].rst_tmpbuf \u003d cm-\u003erst_tmpbuf;\n+        lr_sync-\u003elrworkerdata[0].rlbs \u003d cm-\u003erlbs;\n+      }\n+    }\n   }\n #endif\n \n```",
+      "revId": "7a53d59c3c0cf1e309e34592b81be63d8cb173e2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
