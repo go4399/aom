@@ -1357,6 +1357,7 @@ TEST(EncodeAPI, PerFramePsnrNotSupportedWithLagInFrames) {
 }
 #endif  // !CONFIG_REALTIME_ONLY
 
+<<<<<<< HEAD   (04d4ac92f009a2ed451836793d7aacd6ae0e1861 Extend tune IQ/SSIMULACRA2 to inter-frame encoding modes)
 TEST(EncodeAPI, FreezeInternalState) {
   aom_codec_iface_t *iface = aom_codec_av1_cx();
   aom_codec_enc_cfg_t cfg;
@@ -1872,6 +1873,9 @@ TEST_F(GetGopInfoTest, GetGopInfo) {
 }
 #endif  // !CONFIG_REALTIME_ONLY
 
+||||||| BASE   (d772e334cc724105040382a977ebb10dfd393293 CMakeLists.txt: bump LT_REVISION for v3.13.1)
+=======
+>>>>>>> BRANCH (ad44980d7f3c7a2605c25d51ea96946949000841 Update CHANGELOG for v3.13.2)
 TEST(EncodeAPI, SizeAlignOverflow) {
   aom_codec_iface_t *iface = aom_codec_av1_cx();
   aom_codec_enc_cfg_t cfg;
