@@ -73,6 +73,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "ea4c937d_d95efcde",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 15
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-19T01:17:40Z",
+      "side": 1,
+      "message": "I see. The `--progressive` and `--layered` options of `avifenc` encode the same kind of image, a layered image.\n\n* `--progressive` was added first. It is an automatic way to encode a layered image. Note: Although this option currently uses two layers, that is an implementation detail, not an API contract.\n\n* `--layered` was added later. It is a manual way to encode a layered image.\n\nThe names of these two options were chosen arbitrarily. You can imagine as if the two options were named `--layered-automatic` and `--layered-manual`, respectively.",
+      "parentUuid": "80a0c24a_ff53bc93",
+      "revId": "6b8bb3dcc3f97fb2ad9051005ac68d905defe9e8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "93bc7d1f_c9c9f124",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 15
@@ -137,6 +155,24 @@
       "side": 1,
       "message": "The addition of the functionality predates my changes, but I think it\u0027s just a \"soft\" requirement (i.e. delta-q 1 will silently be disabled if the TPL model is off), not a \"hard\" one (i.e. the library will error out).",
       "parentUuid": "53a5ee29_86589fc2",
+      "revId": "6b8bb3dcc3f97fb2ad9051005ac68d905defe9e8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d90d3a5_e22fcb15",
+        "filename": "av1/arg_defs.c",
+        "patchSetId": 15
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-19T01:17:40Z",
+      "side": 1,
+      "message": "Thanks!",
+      "parentUuid": "ed94973c_e6dfd55a",
       "revId": "6b8bb3dcc3f97fb2ad9051005ac68d905defe9e8",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },

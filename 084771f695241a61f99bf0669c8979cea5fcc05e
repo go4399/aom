@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1764350d_338e3d86",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 16
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-19T01:17:40Z",
+      "side": 1,
+      "message": "Nit: two layered \u003d\u003e two-layered\n\nOtherwise it may be misinterpreted as encoding two layered images.",
+      "revId": "084771f695241a61f99bf0669c8979cea5fcc05e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
