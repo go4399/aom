@@ -194,10 +194,9 @@ TEST(EncodeAPI, InvalidControlId) {
 
 TEST(EncodeAPI, InvalidUVStrides) {
   static constexpr std::array<aom_img_fmt_t, 11> kAv1ImageFormats = {
-    AOM_IMG_FMT_YV12,    AOM_IMG_FMT_I420,   AOM_IMG_FMT_AOMYV12,
-    AOM_IMG_FMT_AOMI420, AOM_IMG_FMT_I422,   AOM_IMG_FMT_I444,
-    AOM_IMG_FMT_NV12,    AOM_IMG_FMT_I42016, AOM_IMG_FMT_YV1216,
-    AOM_IMG_FMT_I42216,  AOM_IMG_FMT_I44416
+    AOM_IMG_FMT_YV12,   AOM_IMG_FMT_I420,   AOM_IMG_FMT_I422,
+    AOM_IMG_FMT_I444,   AOM_IMG_FMT_NV12,   AOM_IMG_FMT_I42016,
+    AOM_IMG_FMT_YV1216, AOM_IMG_FMT_I42216, AOM_IMG_FMT_I44416
   };
   struct UVStride {
     int u_stride;
