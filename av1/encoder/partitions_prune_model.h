@@ -15,6 +15,10 @@
 
 #include "av1/encoder/ml.h"
 #include "partitions_prune_model_definition.h"
+#include "partitions_prune_model_16x16_definition.h"
+#include "partitions_prune_model_32x32_definition.h"
+#include "partitions_prune_model_64x64_definition.h"
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -22,9 +26,20 @@ extern "C" {
 
 #define NUM_CLASSES 4  // Number of partition types supported to prune
 
-static inline int av1_partitions_prune_inference(const float *features, int max_modes) {
+static inline int av1_partitions_prune_inference(const float *features, int max_modes, BLOCK_SIZE bsize) {
   float logits[NUM_CLASSES];
-  av1_nn_predict_c(features, &partitions_prune_nn_config, 1, logits);
+  if (bsize == BLOCK_16X16) {
+    av1_nn_predict_c(features, &partitions_prune_16x16_nn_config, 1, logits);
+  } else if (bsize == BLOCK_32X32) {
+    av1_nn_predict_c(features, &partitions_prune_32x32_nn_config, 1, logits);
+  } else if (bsize == BLOCK_64X64) {
+    av1_nn_predict_c(features, &partitions_prune_64x64_nn_config, 1, logits);
+  } else {
+    // error out
+    assert(0);
+  }
+  // av1_nn_predict_c(features, &partitions_prune_nn_config, 1, logits);
+  
 
   int indices[NUM_CLASSES];
   for (int i = 0; i < NUM_CLASSES; i++) indices[i] = i;

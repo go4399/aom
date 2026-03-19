@@ -6103,7 +6103,7 @@ bool av1_rd_pick_partition(AV1_COMP *const cpi, ThreadData *td,
     if (frame_is_intra_only(cm)) {
       get_ml_part_features_keyframe(cpi, td, tile_data, mi_row, mi_col, bsize,
                                     out_features);
-      // ml_part_mask = av1_partitions_prune_inference(out_features, /*max_modes=*/2);
+      ml_part_mask = av1_partitions_prune_inference(out_features, /*max_modes=*/2, bsize);
     } else {
       get_ml_part_features_interframe(cpi, td, tile_data, mi_row, mi_col, bsize,
                                       out_features);
@@ -6459,13 +6459,13 @@ BEGIN_PARTITION_SEARCH:
       // Encode the smaller blocks in DRY_RUN mode.
       encode_sb(cpi, td, tile_data, tp, mi_row, mi_col, DRY_RUN_NORMAL, bsize,
                 pc_tree, NULL);
-    }
+    } 
   }
 #if CONFIG_COLLECT_COMPONENT_TIMING
   end_timing(cpi, encode_sb_time);
 #endif
 
-#if CONFIG_HW_ML_PART
+#if 0 // CONFIG_HW_ML_PART
   if (collect_data && part_search_state.found_best_partition) {
     const int is_keyframe = frame_is_intra_only(cm);
     char file_name[200];
@@ -6548,8 +6548,8 @@ BEGIN_PARTITION_SEARCH:
                   "INTRA_VER_NORM_BEST_SSE_1_0,INTRA_VER_NORM_BEST_VAR_1_0,"
                   "INTRA_VER_NORM_BEST_SSE_1_1,INTRA_VER_NORM_BEST_VAR_1_1,"
                   "INTRA_VER_NORM_BEST_SSE_2_0,INTRA_VER_NORM_BEST_VAR_2_0,"
-                  "INTRA_VER_NORM_BEST_SSE_2_1,INTRA_VER_NORM_BEST_VAR_2_1,"
-                  "PIXELS\n");
+                  "INTRA_VER_NORM_BEST_SSE_2_1,INTRA_VER_NORM_BEST_VAR_2_1,PIXELS"
+                  "\n");
         }
       }
       fprintf(fp, "%d,%d,%d,%d,%d,%d,%d,%d,", cm->cur_frame->display_order_hint,
