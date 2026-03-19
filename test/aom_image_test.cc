@@ -51,9 +51,9 @@ TEST(AomImageTest, AomImgSetRectOverflow) {
 }
 
 TEST(AomImageTest, AomImgAllocInvalidImageFormats) {
-  static constexpr std::array<int, 4> kImageFormats = {
-    AOM_IMG_FMT_NONE, AOM_IMG_FMT_NONE - 1, AOM_IMG_FMT_NV12 + 1,
-    AOM_IMG_FMT_I44416 + 1
+  static constexpr std::array<int, 6> kImageFormats = {
+    AOM_IMG_FMT_NONE,       AOM_IMG_FMT_NONE - 1, AOM_IMG_FMT_NV12 + 1,
+    AOM_IMG_FMT_I44416 + 1, AOM_IMG_FMT_AOMYV12,  AOM_IMG_FMT_AOMI420
   };
 
   for (const auto img_fmt : kImageFormats) {
