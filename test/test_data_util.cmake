@@ -46,7 +46,8 @@ list(APPEND AOM_TEST_DATA_FILE_NAMES
             "SDR_Animal_oqo7.y4m"
             "SDR_Health_rtd0_720p.y4m"
             "SDR_Dance_ldsn_1080p.y4m"
-            "SDR_Sports_6mug_608p_30fps_90f.yuv")
+            "SDR_Sports_6mug_608p_30fps_90f.yuv"
+            "usnavy_444.y4m")
 
 if(ENABLE_DECODE_PERF_TESTS AND CONFIG_AV1_ENCODER)
   list(APPEND AOM_TEST_DATA_FILE_NAMES "niklas_1280_720_30.yuv")
