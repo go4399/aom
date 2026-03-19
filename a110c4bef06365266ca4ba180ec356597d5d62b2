@@ -34,6 +34,24 @@
       "parentUuid": "5d390b8c_1e43e4df",
       "revId": "a110c4bef06365266ca4ba180ec356597d5d62b2",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5118464_08cb811a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-19T22:47:42Z",
+      "side": 1,
+      "message": "OK, please remove the test or move it to a separate CL that depends on this CL.",
+      "parentUuid": "5d390b8c_1e43e4df",
+      "revId": "a110c4bef06365266ca4ba180ec356597d5d62b2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
