@@ -52,6 +52,24 @@
       "parentUuid": "b933a257_5036116d",
       "revId": "9eb87729778b12e55459947b4575fe197d0340cd",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ad41e7b_7c5f7e61",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-19T21:12:55Z",
+      "side": 1,
+      "message": "Wan-Teh: just added the test as a DISABLED_ test.",
+      "parentUuid": "1e4e3c30_1b20796f",
+      "revId": "9eb87729778b12e55459947b4575fe197d0340cd",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
