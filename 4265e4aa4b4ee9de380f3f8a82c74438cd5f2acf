@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d597e36_7c0e855a",
+        "filename": "av1/encoder/ethread.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 841,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-19T00:55:36Z",
+      "side": 0,
+      "message": "I analyzed the code more. I believe we could also have fixed this bug with the following patch:\n\n```\ndiff --git a/av1/encoder/ethread.c b/av1/encoder/ethread.c\nindex 4f5fe5d5f9..636a4186fb 100644\n--- a/av1/encoder/ethread.c\n+++ b/av1/encoder/ethread.c\n@@ -834,9 +834,7 @@ void av1_init_lr_mt_buffers(AV1_COMP *cpi) {\n   if (lr_sync-\u003esync_range) {\n     if (cpi-\u003eppi-\u003egf_group.frame_parallel_level[cpi-\u003egf_frame_index] \u003e 0)\n       return;\n-    int num_lr_workers \u003d\n-        av1_get_num_mod_workers_for_alloc(\u0026cpi-\u003eppi-\u003ep_mt_info, MOD_LR);\n-    assert(num_lr_workers \u003c\u003d lr_sync-\u003enum_workers);\n+    int num_lr_workers \u003d lr_sync-\u003enum_workers;\n     lr_sync-\u003elrworkerdata[num_lr_workers - 1].rst_tmpbuf \u003d cm-\u003erst_tmpbuf;\n     lr_sync-\u003elrworkerdata[num_lr_workers - 1].rlbs \u003d cm-\u003erlbs;\n   }\n```",
+      "revId": "4265e4aa4b4ee9de380f3f8a82c74438cd5f2acf",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
