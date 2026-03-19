@@ -965,8 +965,6 @@ static aom_codec_err_t validate_img(aom_codec_alg_priv_t *ctx,
     case AOM_IMG_FMT_YV12:
     case AOM_IMG_FMT_NV12:
     case AOM_IMG_FMT_I420:
-    case AOM_IMG_FMT_AOMYV12:
-    case AOM_IMG_FMT_AOMI420:
     case AOM_IMG_FMT_YV1216:
     case AOM_IMG_FMT_I42016: break;
     case AOM_IMG_FMT_I444:
