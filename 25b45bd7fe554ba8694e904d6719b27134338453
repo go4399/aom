@@ -52,6 +52,24 @@
       "parentUuid": "121f6848_93137304",
       "revId": "25b45bd7fe554ba8694e904d6719b27134338453",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa871cb1_36a5b8f5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-19T01:45:23Z",
+      "side": 1,
+      "message": "Thanks @wtc@google.com! I already have a test written for this. The test depends on https://aomedia-review.googlesource.com/c/aom/+/207681, so I\u0027ll create a CL once it\u0027s merged.",
+      "parentUuid": "1c13a668_76c4043b",
+      "revId": "25b45bd7fe554ba8694e904d6719b27134338453",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ],
   "submitRequirementResults": [
