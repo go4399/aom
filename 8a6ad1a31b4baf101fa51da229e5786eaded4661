@@ -145,6 +145,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "0e7b7e03_b39a8cdb",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 823,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-19T00:14:01Z",
+      "side": 1,
+      "message": "We need to mark this comment resolved, otherwise we can\u0027t submit this CL.",
+      "parentUuid": "92f4a45e_ad87c3bf",
+      "revId": "8a6ad1a31b4baf101fa51da229e5786eaded4661",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "a5559170_560e8ceb",
         "filename": "av1/encoder/rdopt.c",
         "patchSetId": 8
