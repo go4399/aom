@@ -1352,21 +1352,19 @@ static void do_int_pro_motion_estimation(AV1_COMP *cpi, MACROBLOCK *x,
   int me_search_size_row = is_screen
                                ? source_sad_nonrd > kMedSad ? 512 : 192
                                : block_size_high[cm->seq_params->sb_size] >> 1;
-  if (cm->width * cm->height >= 3840 * 2160 &&
-      cpi->svc.temporal_layer_id == 0 && cpi->svc.number_temporal_layers > 1) {
-    me_search_size_row = me_search_size_row << 1;
-    me_search_size_col = me_search_size_col << 1;
-  }
   unsigned int y_sad_zero;
   *y_sad = av1_int_pro_motion_estimation(
       cpi, x, cm->seq_params->sb_size, mi_row, mi_col, &kZeroMv, &y_sad_zero,
-      me_search_size_col, me_search_size_row);
+      me_search_size_col, me_search_size_row, 1);
   // The logic below selects whether the motion estimated in the
   // int_pro_motion() will be used in nonrd_pickmode. Only do this
   // for screen for now.
   if (is_screen) {
     unsigned int thresh_sad =
         (cm->seq_params->sb_size == BLOCK_128X128) ? 50000 : 20000;
+    if (cm->width * cm->height >= 3840 * 2160 &&
+        cpi->svc.temporal_layer_id == 0 && cpi->svc.number_temporal_layers > 1)
+      thresh_sad = thresh_sad << 1;
     if (*y_sad < (y_sad_zero >> 1) && *y_sad < thresh_sad) {
       x->sb_me_partition = 1;
       x->sb_me_mv.as_int = mi->mv[0].as_int;
