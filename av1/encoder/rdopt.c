@@ -6316,6 +6316,8 @@ void av1_rd_pick_inter_mode(struct AV1_COMP *cpi, struct TileDataEnc *tile_data,
     const int64_t ref_best_rd = search_state.best_rd;
     RD_STATS rd_stats, rd_stats_y, rd_stats_uv;
     av1_init_rd_stats(&rd_stats);
+    av1_invalid_rd_stats(&rd_stats_y);
+    av1_invalid_rd_stats(&rd_stats_uv);
 
     const int ref_frame_cost = comp_pred
                                    ? ref_costs_comp[ref_frame][second_ref_frame]
