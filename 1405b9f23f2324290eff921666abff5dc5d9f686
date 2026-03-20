@@ -18,6 +18,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5796aeef_22215369",
+        "filename": "test/resize_test.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-20T00:07:04Z",
+      "side": 1,
+      "message": "Correct, the crash only appears in good-quality mode only.",
+      "parentUuid": "a154f5f4_7da3750d",
+      "revId": "1405b9f23f2324290eff921666abff5dc5d9f686",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7fc10c1b_bcc77e1d",
@@ -35,6 +53,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec1efe37_d0dfc60f",
+        "filename": "test/resize_test.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-20T00:07:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7fc10c1b_bcc77e1d",
+      "revId": "1405b9f23f2324290eff921666abff5dc5d9f686",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "36932e9b_b05fe138",
@@ -48,6 +84,24 @@
       "writtenOn": "2026-03-19T23:30:14Z",
       "side": 1,
       "message": "1. Let\u0027s test as few encoding speeds as possible. I suggest we just test the fastest speed that can reproduce the crash.\n\n2. Put this inside `#if !CONFIG_REALTIME_ONLY`",
+      "revId": "1405b9f23f2324290eff921666abff5dc5d9f686",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b685e3c5_29702876",
+        "filename": "test/resize_test.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 1245,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-20T00:07:04Z",
+      "side": 1,
+      "message": "For 1, I can do that. However, my concern is that future speed feature tweaks might switch the fastest encoding speed in which the crash reproduces, and would render the test useless (restoration filtering tends to be an expensive coding tool).\n\nThis particular issue reproduces at speed 4 or lower. In that case, keeping speed 3 and discarding speed 1 seems to be a good compromise. Does that sound good?",
+      "parentUuid": "36932e9b_b05fe138",
       "revId": "1405b9f23f2324290eff921666abff5dc5d9f686",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
