@@ -1880,9 +1880,7 @@ static int64_t motion_mode_rd(
       adjust_cost(cpi, x, &this_yrd, /*is_inter_pred=*/true);
     }
     adjust_rdcost(cpi, x, rd_stats, /*is_inter_pred=*/true);
-    if (rd_stats_y->rdcost < INT64_MAX) {
-      adjust_rdcost(cpi, x, rd_stats_y, /*is_inter_pred=*/true);
-    }
+    adjust_rdcost(cpi, x, rd_stats_y, /*is_inter_pred=*/true);
 
     const int64_t tmp_rd = RDCOST(x->rdmult, rd_stats->rate, rd_stats->dist);
     if (mode_index == 0) {
