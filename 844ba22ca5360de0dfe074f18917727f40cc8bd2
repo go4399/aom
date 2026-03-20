@@ -22,6 +22,30 @@
       },
       "revId": "844ba22ca5360de0dfe074f18917727f40cc8bd2",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd5d105a_d3d61ab5",
+        "filename": "test/resize_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 1263,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-20T00:32:51Z",
+      "side": 1,
+      "message": "This is the crash without the fix:\n\n```\n[ RUN      ] AV1/ResizeCrashTest.TestCompoundMaskPredictionCrash/0\n\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\n\u003d\u003d53129\u003d\u003dERROR: AddressSanitizer: heap-buffer-overflow on address 0x000119b4130a at pc 0x000106372250 bp 0x00016b19a590 sp 0x00016b19a588\nREAD of size 16 at 0x000119b4130a thread T0\n    #0 0x00010637224c in aom_comp_mask_pred_neon+0x5c8 (test_libaom:arm64+0x10171e24c)\n    #1 0x00010716d520 in aom_comp_mask_upsampled_pred+0x90 (test_libaom:arm64+0x102519520)\n    #2 0x00010703fbe8 in upsampled_pref_error+0x234 (test_libaom:arm64+0x1023ebbe8)\n    #3 0x0001070265a4 in av1_find_best_sub_pixel_tree+0x364 (test_libaom:arm64+0x1023d25a4)\n    #4 0x000107049320 in av1_compound_single_motion_search+0x6fc (test_libaom:arm64+0x1023f5320)\n    #5 0x000106eed87c in av1_handle_inter_intra_mode+0x1ac4 (test_libaom:arm64+0x10229987c)\n    #6 0x000107139c18 in motion_mode_rd+0x1c3c (test_libaom:arm64+0x1024e5c18)\n\n```",
+      "parentUuid": "3bf905de_b973c7ea",
+      "range": {
+        "startLine": 1263,
+        "startChar": 44,
+        "endLine": 1263,
+        "endChar": 66
+      },
+      "revId": "844ba22ca5360de0dfe074f18917727f40cc8bd2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
