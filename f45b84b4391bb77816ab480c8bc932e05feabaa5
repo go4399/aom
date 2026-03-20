@@ -24,6 +24,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e81dcc8d_b916b722",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T15:53:05Z",
+      "side": 1,
+      "message": "Done. I switched to a commit hash.",
+      "parentUuid": "4fb0de60_c81e622f",
+      "range": {
+        "startLine": 10,
+        "startChar": 23,
+        "endLine": 10,
+        "endChar": 38
+      },
+      "revId": "f45b84b4391bb77816ab480c8bc932e05feabaa5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c6668d01_8d516dca",
@@ -37,6 +61,30 @@
       "writtenOn": "2026-03-20T05:41:14Z",
       "side": 1,
       "message": "...don\u0027t need to be using... or ...don\u0027t end up using...?",
+      "range": {
+        "startLine": 15,
+        "startChar": 7,
+        "endLine": 15,
+        "endChar": 21
+      },
+      "revId": "f45b84b4391bb77816ab480c8bc932e05feabaa5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "39a0e99c_9cdcfb06",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T15:53:05Z",
+      "side": 1,
+      "message": "Thanks. It should be \"we won\u0027t be using ...\"",
+      "parentUuid": "c6668d01_8d516dca",
       "range": {
         "startLine": 15,
         "startChar": 7,
