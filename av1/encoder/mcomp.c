@@ -2148,9 +2148,21 @@ unsigned int av1_int_pro_motion_estimation(const AV1_COMP *cpi, MACROBLOCK *x,
   if (((mi_col << 2) - search_size_width < -border) ||
       ((mi_col << 2) + search_size_width > cm->width + border))
     search_size_width = border;
-  if (((mi_row << 2) - search_size_height < -border) ||
-      ((mi_row << 2) + search_size_height > cm->height + border))
-    search_size_height = border;
+  // Allow for larger search size for row/vertical screen motion.
+  if (screen_scroll_superblock) {
+    int search_size_height_top = search_size_height;
+    int search_size_height_bottom = search_size_height;
+    if (((mi_row << 2) - search_size_height) < -border)
+      search_size_height_top = (mi_row << 2) + border - 1;
+    if (((mi_row << 2) + search_size_height) > cm->height + border)
+      search_size_height_bottom = cm->height - (mi_row << 2) + border - 1;
+    search_size_height =
+        AOMMIN(search_size_height_top, search_size_height_bottom);
+  } else {
+    if (((mi_row << 2) - search_size_height < -border) ||
+        ((mi_row << 2) + search_size_height > cm->height + border))
+      search_size_height = border;
+  }
   const int src_stride = x->plane[0].src.stride;
   const int ref_stride = xd->plane[0].pre[0].stride;
   uint8_t const *ref_buf, *src_buf;
