@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36dae1cc_fd7690b1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-20T22:55:23Z",
+      "side": 1,
+      "message": "Make this `Bug: aomedia:493082083` or `Bug: 493082083` and delete the empty line before `Change-Id`.",
+      "revId": "54de025fd6e7e0f5441ba4a66c5c89f49b3f61b5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "230c4a4a_d9b6683f",
+        "filename": "av1/encoder/arm/temporal_filter_neon_dotprod.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-20T22:55:23Z",
+      "side": 1,
+      "message": "This seems like a regression if the condition for calling the optimized version is removed:\n\nhttps://source.chromium.org/chromium/chromium/src/+/main:third_party/libaom/source/libaom/av1/encoder/temporal_filter.c;l\u003d1176;drc\u003d82d69d832a42e7d877046d651a6e5e4b3f1ffadd\n\nDiksha, what are the plans for this?",
+      "revId": "54de025fd6e7e0f5441ba4a66c5c89f49b3f61b5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
