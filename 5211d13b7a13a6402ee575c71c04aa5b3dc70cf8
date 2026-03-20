@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "33785349_5fa85e78",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T21:23:37Z",
+      "side": 1,
+      "message": "Cheng, James: Please read my annotations in the order of A, B, C, D.",
+      "revId": "5211d13b7a13a6402ee575c71c04aa5b3dc70cf8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b785443_4e31c8d2",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2274,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T21:23:37Z",
+      "side": 1,
+      "message": "D. The first thing `simple_translation_pred_rd()` does with `rd_stats` is to initialize it. Since the caller doens\u0027t consume the `rd_stats` output when this function returns, we conclude that `rd_stats` can become a local variable inside this function.",
+      "revId": "5211d13b7a13a6402ee575c71c04aa5b3dc70cf8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ad81777_f7bf68ea",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2388,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T21:23:37Z",
+      "side": 1,
+      "message": "C. `ref_mv_idx_to_search()` itself doesn\u0027t use `rd_stats` and directly passes it to `simple_translation_pred_rd()`.",
+      "revId": "5211d13b7a13a6402ee575c71c04aa5b3dc70cf8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c65d779_feef6a19",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 3125,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T21:23:37Z",
+      "side": 1,
+      "message": "A. This is the only caller of `ref_mv_idx_to_search()`. After `ref_mv_idx_to_search()` returns, `rd_stats` is not consumed before it is reinitialized at line 3170.",
+      "revId": "5211d13b7a13a6402ee575c71c04aa5b3dc70cf8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0c44200_4050982f",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 3170,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T21:23:37Z",
+      "side": 1,
+      "message": "B. The caller of `ref_mv_idx_to_search()` doesn\u0027t consume the `rd_stats` output before it reinitializes `rd_stats` here.",
+      "revId": "5211d13b7a13a6402ee575c71c04aa5b3dc70cf8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
