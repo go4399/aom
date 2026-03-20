@@ -106,6 +106,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "869f0380_f1b6bc58",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 6319,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-20T21:52:48Z",
+      "side": 1,
+      "message": "\u003e Should we initialize rd_stats_y and rd_stats_uv here?\n\nThere is additional cost to that which may accumulate if this function is called frequently. If they\u0027re not used then leaving them uninitialized with the added documentation is all right. There might be better ways to structure this code, but I haven\u0027t looked at.",
+      "parentUuid": "6cf05d1e_c6f4c3ef",
+      "revId": "99c08b9f89de7dc6b97f33c96242b7f3bd33255f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "c68eb159_82122538",
         "filename": "av1/encoder/rdopt.c",
         "patchSetId": 1
