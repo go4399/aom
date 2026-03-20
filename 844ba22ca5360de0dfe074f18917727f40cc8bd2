@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c60c7657_f3da7d6d",
+        "filename": "test/resize_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-20T05:35:43Z",
+      "side": 1,
+      "message": "These aren\u0027t guaranteed to be stable links. I\u0027d prefer a commit hash (`git --oneline` or a Change-Id).",
+      "range": {
+        "startLine": 414,
+        "startChar": 12,
+        "endLine": 414,
+        "endChar": 66
+      },
+      "revId": "844ba22ca5360de0dfe074f18917727f40cc8bd2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3bf905de_b973c7ea",
