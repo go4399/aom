@@ -122,6 +122,24 @@
       "parentUuid": "b685e3c5_29702876",
       "revId": "1405b9f23f2324290eff921666abff5dc5d9f686",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d853889_e48c6821",
+        "filename": "test/resize_test.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 1245,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-20T00:35:34Z",
+      "side": 1,
+      "message": "Thanks. For future reference, this is the crash when running the test (without the fix) with asan.\n\n```\n[ RUN      ] AV1/ResizeCrashTest.TestRestorationFilterCrash/0\n\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\n\u003d\u003d37129\u003d\u003dERROR: AddressSanitizer: heap-use-after-free on address 0x00010d93c808 at pc 0x000102b0f504 bp 0x00016f309ab0 sp 0x00016f309aa8\nREAD of size 8 at 0x00010d93c808 thread T0\n    #0 0x000102b0f500 in aom_free+0x38 (test_libaom:arm64+0x10201b500)\n    #1 0x000102b18b4c in av1_free_restoration_buffers+0x5c (test_libaom:arm64+0x102024b4c)\n    #2 0x000102e181e0 in av1_remove_compressor+0x8e4 (test_libaom:arm64+0x1023241e0)\n    #3 0x000102d00afc in encoder_destroy+0x1c4 (test_libaom:arm64+0x10220cafc)\n    #4 0x000101ac3bf0 in aom_codec_destroy+0x6c (test_libaom:arm64+0x100fcfbf0)\n\n```",
+      "parentUuid": "d2012d88_4a50621c",
+      "revId": "1405b9f23f2324290eff921666abff5dc5d9f686",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
