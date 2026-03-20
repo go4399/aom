@@ -1,0 +1,174 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8891fa3_973a8c8c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T03:33:36Z",
+      "side": 1,
+      "message": "Valgrind reports that conditional jump or move depends on uninitialised value(s) after this CL:\nhttps://build.aomedia.org/jenkins/job/libaom__unit_tests-valgrind/2899/\n\nI annotated the relevant code using A, B, C, D, ..., H, I.\n\nI will revert the problematic change, but it doesn\u0027t fix the uninitialized variable.",
+      "revId": "4265e4aa4b4ee9de380f3f8a82c74438cd5f2acf",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ef117bc_f395d5d5",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 1775,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T03:33:36Z",
+      "side": 1,
+      "message": "D. We enter this if block if `do_tx_search` is false.",
+      "revId": "4265e4aa4b4ee9de380f3f8a82c74438cd5f2acf",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3960e449_0f9f845a",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 1817,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T03:33:36Z",
+      "side": 1,
+      "message": "E. `rd_stats_y` is uninitialized and used in `inter_modes_info_push()`.\n\nHowever, the uninitialized value is not used in a decision, so valgrind doesn\u0027t report it.",
+      "revId": "4265e4aa4b4ee9de380f3f8a82c74438cd5f2acf",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "090f4760_867f9d00",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 1823,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T03:33:36Z",
+      "side": 1,
+      "message": "F. `rd_stats_y` is uninitialized and used in `inter_modes_info_push()`.\n\nHowever, the uninitialized value is not used in a decision, so valgrind doesn\u0027t report it.",
+      "revId": "4265e4aa4b4ee9de380f3f8a82c74438cd5f2acf",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c3645bf_0d3e420d",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 1827,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T03:33:36Z",
+      "side": 1,
+      "message": "G. We enter this `else` block if `do_tx_search` is true.",
+      "revId": "4265e4aa4b4ee9de380f3f8a82c74438cd5f2acf",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "039ea668_f8d7fd72",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 1844,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T03:33:36Z",
+      "side": 1,
+      "message": "H. `rd_stats_y` is initialized in the `av1_txfm_search()` call.",
+      "revId": "4265e4aa4b4ee9de380f3f8a82c74438cd5f2acf",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ec30749_fbcee11e",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 1883,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T03:33:36Z",
+      "side": 1,
+      "message": "I. Therefore, if `do_tx_search` is false, `rd_stats_y-\u003erdcost` will be uninitialized and used in a decision.",
+      "revId": "4265e4aa4b4ee9de380f3f8a82c74438cd5f2acf",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7acd023a_28748ff9",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 3336,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T03:33:36Z",
+      "side": 1,
+      "message": "C. `handle_inter_mode()` doesn\u0027t touch `rd_stats_y` and passes `rd_stats_y` to `motion_mode_rd()`.",
+      "revId": "4265e4aa4b4ee9de380f3f8a82c74438cd5f2acf",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42d4a461_28e149ad",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 6317,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T03:33:36Z",
+      "side": 1,
+      "message": "A. The variable `rd_stats_y` is declared here.",
+      "revId": "4265e4aa4b4ee9de380f3f8a82c74438cd5f2acf",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "24277c12_9c640f03",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 6344,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T03:33:36Z",
+      "side": 1,
+      "message": "B. `rd_stats_y` is passed to `handle_inter_mode()`, uninitialized.",
+      "revId": "4265e4aa4b4ee9de380f3f8a82c74438cd5f2acf",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
