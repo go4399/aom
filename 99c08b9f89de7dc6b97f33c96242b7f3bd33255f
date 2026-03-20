@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "40cbb808_df52a310",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T21:38:43Z",
+      "side": 1,
+      "message": "Cheng, James: Please read my annotations in the order of A, B, C, D, E.",
+      "revId": "99c08b9f89de7dc6b97f33c96242b7f3bd33255f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "94817965_43103e5c",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 3005,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T21:38:43Z",
+      "side": 1,
+      "message": "C. Since the caller passes uninitialized `rd_stats_y` and `rd_stats_uv` to this function, these two parameters cannot possibly be in,out parameters.",
+      "revId": "99c08b9f89de7dc6b97f33c96242b7f3bd33255f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b3c2e7b_0dc8e9a5",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 3049,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T21:38:43Z",
+      "side": 1,
+      "message": "E. Therefore the caller should not use the output parameters if the function returns `INT64_MAX`.",
+      "revId": "99c08b9f89de7dc6b97f33c96242b7f3bd33255f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fcf19f4a_0bb12b4a",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 3379,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T21:38:43Z",
+      "side": 1,
+      "message": "D. This is the first return statement. Note that it is before the statements that set the output parameters (lines 3381-3386).",
+      "revId": "99c08b9f89de7dc6b97f33c96242b7f3bd33255f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cce3c9ca_459d0d80",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 6319,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T21:38:43Z",
+      "side": 1,
+      "message": "A. Although three variables are declared, only `rd_stats` is initialized.",
+      "revId": "99c08b9f89de7dc6b97f33c96242b7f3bd33255f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c68eb159_82122538",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 6344,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-20T21:38:43Z",
+      "side": 1,
+      "message": "B. This is the only call to `handle_inter_mode()`. Note that `rd_stats_y` and `rd_stats_uv` are passed to `handle_inter_mode()` uninitialized.",
+      "revId": "99c08b9f89de7dc6b97f33c96242b7f3bd33255f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
