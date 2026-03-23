@@ -22,6 +22,30 @@
       },
       "revId": "39799e074a32066172cf762dfd103923b339f118",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8d22c8e_7f2852bd",
+        "filename": "av1/common/enums.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-23T23:25:28Z",
+      "side": 1,
+      "message": "A reason against defining the encoder\u0027s `MODE` enum in av1/common/enums.h is that this file is shared by the encoder and decoder. (Note the \"common\" in the directory name.) It would be good to define `MODE` in a header under the av1/encoder directory.\n\nI took a quick look at av1/encoder/*.h. We can try av1/encoder/enc_enums.h.",
+      "parentUuid": "8fc6d2c7_4575fd39",
+      "range": {
+        "startLine": 464,
+        "startChar": 0,
+        "endLine": 473,
+        "endChar": 19
+      },
+      "revId": "39799e074a32066172cf762dfd103923b339f118",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
