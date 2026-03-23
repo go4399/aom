@@ -34,6 +34,24 @@
       "parentUuid": "f7f59151_f30d4a16",
       "revId": "c6d3e8ea201aed537d8266689c52e3cc58b705e1",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1541f79_6ed0ee34",
+        "filename": "third_party/googletest/README.libaom",
+        "patchSetId": 10
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-23T21:41:38Z",
+      "side": 1,
+      "message": "Good. I suggest we apply my patch first so that we can upgrade to GoogleTest v1.17.0 and you can take your time updating the platform of our Jenkins machines.\n\nAlso, I won\u0027t submit my patch to the GoogleTest upstream, especially given that the GCC team has dropped support for GCC 12. See the following note at the top of https://gcc.gnu.org/gcc-12/:\n\n\u003e (This release series is no longer supported.)",
+      "parentUuid": "5b95fed8_c6e37d23",
+      "revId": "c6d3e8ea201aed537d8266689c52e3cc58b705e1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
