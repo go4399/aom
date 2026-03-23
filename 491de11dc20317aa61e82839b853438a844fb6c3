@@ -16,6 +16,57 @@
       "message": "I relocated the test as there was an existing one in aom_image_test.cc checking for `AOM_IMG_FMT_NONE`.",
       "revId": "491de11dc20317aa61e82839b853438a844fb6c3",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a97d0662_7d9c9b92",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-23T22:14:43Z",
+      "side": 1,
+      "message": "LGTM.",
+      "revId": "491de11dc20317aa61e82839b853438a844fb6c3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "44346207_0cc31522",
+        "filename": "aom/src/aom_image.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-23T22:14:43Z",
+      "side": 1,
+      "message": "Optional: I suggest removing `AOM_IMG_FMT_AOMYV12` and `AOM_IMG_FMT_AOMI420` from this function.",
+      "revId": "491de11dc20317aa61e82839b853438a844fb6c3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d945e675_0db6a780",
+        "filename": "test/aom_image_test.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-23T22:14:43Z",
+      "side": 1,
+      "message": "Optional: Add `AOM_IMG_FMT_YV1216 - 1`.",
+      "revId": "491de11dc20317aa61e82839b853438a844fb6c3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
