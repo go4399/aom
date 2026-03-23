@@ -22,6 +22,30 @@
       },
       "revId": "0636acac6379d46aa40efa40689b82faf82874d6",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "38cee8eb_0815685c",
+        "filename": "test/temporal_filter_test.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 4389017
+      },
+      "writtenOn": "2026-03-23T16:10:34Z",
+      "side": 1,
+      "message": "Thanks for the detailed comment.\n\nYes, the plane offset calculation needs to be fixed. I’ve updated the patch accordingly.\n\nI also noticed that we were not actually checking the output for chroma planes in the final loop - I amended the patch to ensure all three planes are now covered.\n\nRegarding the change at lines 92–98, I believe it is still necessary. Without it, scaled_error will clamp to 7 regardless of other factors derived from subblock_mses and subblock_mvs inputs.",
+      "parentUuid": "7fc88b61_9b34d936",
+      "range": {
+        "startLine": 217,
+        "startChar": 40,
+        "endLine": 217,
+        "endChar": 78
+      },
+      "revId": "0636acac6379d46aa40efa40689b82faf82874d6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
