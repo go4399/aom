@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "511cb98d_eb918a6a",
+        "filename": "aom/aom_image.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-23T15:54:30Z",
+      "side": 0,
+      "message": "In this CL we can consider keeping these two enum constants here in aom_image.h but documenting them as unsupported and scheduled to be removed in a future release.",
+      "revId": "c9e04e2c56f99dcf596477deb0c50b0c69933022",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
