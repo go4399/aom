@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a09abd4e_214eb0ad",
+        "filename": "test/temporal_filter_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-23T21:01:09Z",
+      "side": 1,
+      "message": "Make this `(height + subsampling_y) \u003e\u003e subsampling_y`. And the same for stride.\n\nIt looks like this came from line line 208 in the original code, please update it there too.",
+      "range": {
+        "startLine": 266,
+        "startChar": 35,
+        "endLine": 266,
+        "endChar": 58
+      },
+      "revId": "31dca87134d461bfc66839c0275ab3ffa834d4af",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
