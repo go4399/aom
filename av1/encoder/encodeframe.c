@@ -1726,7 +1726,8 @@ static inline void setup_keep_single_ref_frame_mask(AV1_COMP *cpi) {
   const int prune_single_ref = cpi->sf.inter_sf.prune_single_ref;
   const AV1_COMMON *const cm = &cpi->common;
 
-  if (prune_single_ref != 1 || frame_is_intra_only(cm)) {
+  if (prune_single_ref == 0 || prune_single_ref > 2 ||
+      frame_is_intra_only(cm)) {
     cpi->keep_single_ref_frame_mask =
         (prune_single_ref == 0) ? ((1 << REF_FRAMES) - 1) : 0;
     return;
@@ -1756,7 +1757,7 @@ static inline void setup_keep_single_ref_frame_mask(AV1_COMP *cpi) {
         compare_score_data_asc);
 
   cpi->keep_single_ref_frame_mask = 0;
-  const int num_frames_to_keep = 3;
+  const int num_frames_to_keep = (prune_single_ref == 1) ? 5 : 3;
   for (int i = 0; i < num_frames_to_keep; ++i) {
     const int idx = ref_score_data[i].index;
     cpi->keep_single_ref_frame_mask |= 1 << idx;

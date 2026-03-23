@@ -1023,8 +1023,8 @@ typedef struct INTER_MODE_SPEED_FEATURES {
   int alt_ref_search_fp;
 
   // Prune reference frames for single prediction modes based on temporal
-  // distance and pred MV SAD. Feasible values are 0, 1, 2, 3. The feature is
-  // disabled for 0. An increasing value indicates more aggressive pruning
+  // distance and pred MV SAD. Feasible values are 0-4. The feature
+  // is disabled for 0. An increasing value indicates more aggressive pruning
   // threshold.
   int prune_single_ref;
 
