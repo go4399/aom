@@ -52,6 +52,24 @@
       "parentUuid": "5b95fed8_c6e37d23",
       "revId": "c6d3e8ea201aed537d8266689c52e3cc58b705e1",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ca58d23_889c3dd3",
+        "filename": "third_party/googletest/README.libaom",
+        "patchSetId": 10
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-23T22:10:48Z",
+      "side": 1,
+      "message": "\u003e Good. I suggest we apply my patch first so that we can upgrade to GoogleTest v1.17.0 and you can take your time updating the platform of our Jenkins machines.\n\u003e \n\u003e Also, I won\u0027t submit my patch to the GoogleTest upstream, especially given that the GCC team has dropped support for GCC 12. See the following note at the top of https://gcc.gnu.org/gcc-12/:\n\u003e \n\nNote https://github.com/google/oss-policies-info/blob/main/foundational-cxx-support-matrix.md still covers 7.5.0. Googletest mentions that document in their documentation: https://opensource.google/documentation/policies/cplusplus-support#c_language_standard. They do say that they want a compiler that supports C++17, so you could look at the mingw gcc-12 implementation as deficient.\n\n\u003e \u003e (This release series is no longer supported.)",
+      "parentUuid": "b1541f79_6ed0ee34",
+      "revId": "c6d3e8ea201aed537d8266689c52e3cc58b705e1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
