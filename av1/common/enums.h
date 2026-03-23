@@ -461,6 +461,17 @@ enum {
   SEQ_LEVEL_KEEP_STATS = 32,
 } UENUM1BYTE(AV1_LEVEL);
 
+enum {
+  // Good Quality Fast Encoding. The encoder balances quality with the amount of
+  // time it takes to encode the output. Speed setting controls how fast.
+  GOOD,
+  // Realtime Fast Encoding. Will force some restrictions on bitrate
+  // constraints.
+  REALTIME,
+  // All intra mode. All the frames are coded as intra frames.
+  ALLINTRA
+} UENUM1BYTE(MODE);
+
 #define LEVEL_BITS 5
 
 #define DIRECTIONAL_MODES 8
