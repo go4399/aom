@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7fc88b61_9b34d936",
+        "filename": "test/temporal_filter_test.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 31012
+      },
+      "writtenOn": "2026-03-23T12:42:13Z",
+      "side": 1,
+      "message": "Thank you for adding us in CC. We tried validating the CL and observed that the logic works fine for luma. However, chroma processing seems to have issue.  If we understand correctly, this offset `plane * plane_stride * plane_height` seems to be incorrect for chroma planes of 420 format (In fact, `frame_to_filter-\u003ebuffers[ AOM_PLANE_U]` points to a region in Y plane due to incorrect `plane_stride` and `plane_height`). This results in misalignment of the indices of `src1` and `src2` buffers passed to the function and the fix at line number 92-98 above seems to be ineffective for chroma planes. We believe the following code should fix this issue.\n```\nint plane_offset \u003d 0\n  for (int plane \u003d AOM_PLANE_Y; plane \u003c num_planes; plane++) {\n      int plane_height \u003d plane ? height \u003e\u003e subsampling_y : height;\n      int plane_stride \u003d plane ? stride \u003e\u003e subsampling_x : stride;\n      frame_to_filter-\u003ebuffers[plane] \u003d\n          frame_to_filter-\u003ebuffer_alloc + plane_offset;\n      mbd-\u003eplane[plane].subsampling_x \u003d plane ? subsampling_x : 0;\n      mbd-\u003eplane[plane].subsampling_y \u003d plane ? subsampling_y : 0;\n     plane_offset +\u003d plane_height * plane_stride;\n    }\n```",
+      "range": {
+        "startLine": 217,
+        "startChar": 40,
+        "endLine": 217,
+        "endChar": 78
+      },
+      "revId": "0636acac6379d46aa40efa40689b82faf82874d6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
