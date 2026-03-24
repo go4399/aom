@@ -106,6 +106,24 @@
       "parentUuid": "df692129_f1a4459b",
       "revId": "c6d3e8ea201aed537d8266689c52e3cc58b705e1",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d3bea0b_4222e7cd",
+        "filename": "third_party/googletest/README.libaom",
+        "patchSetId": 10
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-24T18:19:45Z",
+      "side": 1,
+      "message": "My patch has been committed in the GoogleTest upstream:\nhttps://github.com/google/googletest/commit/015950a936fc6b7cadca20eb0dbf6f054e6637fb",
+      "parentUuid": "00049a8b_16883799",
+      "revId": "c6d3e8ea201aed537d8266689c52e3cc58b705e1",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
