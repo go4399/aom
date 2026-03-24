@@ -22,6 +22,30 @@
       },
       "revId": "80c0e5da56a93618c138fce7abcb14ac758e15e4",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab3fb0b7_8b3001bf",
+        "filename": "test/aom_image_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-24T02:12:11Z",
+      "side": 1,
+      "message": "\u003e I suggested `AOM_IMG_FMT_YV1216 - 1` under the assumption that `AOM_IMG_FMT_YV1216` was the minimum of the high-bit-depth range. That assumption was incorrect. Sorry for the confusion. Fortunately `AOM_IMG_FMT_YV1216 - 1` is still an invalid image format.\n\nI was wondering about that. I can change it to `AOM_IMG_FMT_I42016 - 1` instead.",
+      "parentUuid": "2c245cb7_7ed9361b",
+      "range": {
+        "startLine": 56,
+        "startChar": 4,
+        "endLine": 56,
+        "endChar": 22
+      },
+      "revId": "80c0e5da56a93618c138fce7abcb14ac758e15e4",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
