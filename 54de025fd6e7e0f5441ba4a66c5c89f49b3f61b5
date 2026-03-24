@@ -87,6 +87,24 @@
       "parentUuid": "70e7cfd9_0d6826f8",
       "revId": "54de025fd6e7e0f5441ba4a66c5c89f49b3f61b5",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84788ecf_531f552e",
+        "filename": "av1/encoder/arm/temporal_filter_neon_dotprod.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 31012
+      },
+      "writtenOn": "2026-03-24T11:45:14Z",
+      "side": 1,
+      "message": "In the current codebase, `TF_BLOCK_SIZE` is set as 64x64 and `TF_WINDOW_LENGTH` is  5 and thus `av1_apply_temporal_filter_c` is being used only when encoding a 422 clip. We have  verified(for a few 422 clips)that  the SSE2 and AVX2 implementations of `av1_apply_temporal_filter()` function correctly even for 422 encoding (running the encoder by removing the `!is_yuv422_format` condition results in bit-exact output) However, we are not sure if NEON SIMD supports 422 encoding.",
+      "parentUuid": "f5e93050_20f25360",
+      "revId": "54de025fd6e7e0f5441ba4a66c5c89f49b3f61b5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
