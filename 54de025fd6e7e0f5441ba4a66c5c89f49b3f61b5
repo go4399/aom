@@ -123,6 +123,24 @@
       "parentUuid": "84788ecf_531f552e",
       "revId": "54de025fd6e7e0f5441ba4a66c5c89f49b3f61b5",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "641a2cec_622c39af",
+        "filename": "av1/encoder/arm/temporal_filter_neon_dotprod.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-24T18:10:15Z",
+      "side": 1,
+      "message": "\u003e I verified that both Neon and Neon Dotprod implementations produce bit-exact output compared to av1_apply_temporal_filter_c encoding a 422 clip. It should be safe to use the Neon/Neon Dotprod paths for this case.\n\nThanks for checking. It sounds like that can be done in a separate change after this lands. Diksha, do you want to make that change?",
+      "parentUuid": "ad28f1c4_08a212ec",
+      "revId": "54de025fd6e7e0f5441ba4a66c5c89f49b3f61b5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
