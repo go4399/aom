@@ -33,6 +33,24 @@
       "message": "Optional: Add the commit hash for the bug fix since we don\u0027t have a bug bumber.",
       "revId": "ce20f8e8c02633ff97ac7501441dac493766af91",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "240c952f_fe76b6e6",
+        "filename": "CHANGELOG",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 3678645
+      },
+      "writtenOn": "2026-03-24T21:57:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ac975fb4_4c56176f",
+      "revId": "ce20f8e8c02633ff97ac7501441dac493766af91",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
