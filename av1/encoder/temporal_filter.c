@@ -1064,6 +1064,7 @@ void av1_tf_do_filtering_row(AV1_COMP *cpi, ThreadData *td, int mb_row) {
   // Determine whether the video is with `YUV 4:2:2` format, since the avx2/sse2
   // function only supports square block size. We will use C function instead
   // for videos with `YUV 4:2:2` format.
+#if CONFIG_AV1_HIGHBITDEPTH
   int is_yuv422_format = 0;
   for (int plane = 1; plane < num_planes; ++plane) {
     if (mbd->plane[plane].subsampling_x != mbd->plane[plane].subsampling_y) {
@@ -1071,6 +1072,7 @@ void av1_tf_do_filtering_row(AV1_COMP *cpi, ThreadData *td, int mb_row) {
       break;
     }
   }
+#endif
 
   // Do filtering.
   FRAME_DIFF *diff = &td->tf_data.diff;
@@ -1173,18 +1175,10 @@ void av1_tf_do_filtering_row(AV1_COMP *cpi, ThreadData *td, int mb_row) {
 #endif  // CONFIG_AV1_HIGHBITDEPTH
         } else {
           // for 8-bit
-          if (!is_yuv422_format && TF_BLOCK_SIZE == BLOCK_64X64 &&
-              TF_WINDOW_LENGTH == 5) {
-            av1_apply_temporal_filter(
-                frame_to_filter, mbd, block_size, mb_row, mb_col, num_planes,
-                noise_levels, subblock_mvs, subblock_mses, q_factor,
-                filter_strength, weight_calc_level_in_tf, pred, accum, count);
-          } else {
-            av1_apply_temporal_filter_c(
-                frame_to_filter, mbd, block_size, mb_row, mb_col, num_planes,
-                noise_levels, subblock_mvs, subblock_mses, q_factor,
-                filter_strength, weight_calc_level_in_tf, pred, accum, count);
-          }
+          av1_apply_temporal_filter(
+              frame_to_filter, mbd, block_size, mb_row, mb_col, num_planes,
+              noise_levels, subblock_mvs, subblock_mses, q_factor,
+              filter_strength, weight_calc_level_in_tf, pred, accum, count);
         }
       }
     }
