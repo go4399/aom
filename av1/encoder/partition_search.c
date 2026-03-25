@@ -46,6 +46,12 @@
 
 #if CONFIG_HW_ML_PART
 #include "av1/encoder/partitions_prune_model.h"
+static bool collect_ml_part_data(TileInfo *tile_info, int mi_row, int mi_col,
+                                 BLOCK_SIZE bsize);
+static void get_ml_part_features_keyframe(AV1_COMP *const cpi, ThreadData *td,
+                                          TileDataEnc *tile_data, int mi_row,
+                                          int mi_col, BLOCK_SIZE bsize,
+                                          float *out_features);
 #endif
 
 #if CONFIG_PARTITION_SEARCH_ORDER
@@ -2082,6 +2088,7 @@ void av1_rd_use_partition(AV1_COMP *cpi, ThreadData *td, TileDataEnc *tile_data,
   *dist = chosen_rdc.dist;
   x->rdmult = orig_rdmult;
 }
+
 
 static void encode_b_nonrd(const AV1_COMP *const cpi, TileDataEnc *tile_data,
                            ThreadData *td, TokenExtra **tp, int mi_row,
@@ -4754,11 +4761,385 @@ static int read_partition_tree(AV1_COMP *const cpi, PC_TREE *const pc_tree,
   return num_configs;
 }
 
-static RD_STATS rd_search_for_fixed_partition(
+static bool is_final_split(PC_TREE *pc_tree){
+  if(pc_tree == NULL){
+    assert(false);
+    return false;
+  }
+
+  if(pc_tree->partitioning != PARTITION_SPLIT){
+    assert(false);
+    return false;
+  }
+
+  for(int i = 0; i < 4; ++i){
+    if(pc_tree->split[i]->partitioning != PARTITION_NONE){
+      return false;
+    }
+  }
+
+  return true;
+}
+
+static RD_STATS rd_search_for_fixed_partition_combine(
     AV1_COMP *const cpi, ThreadData *td, TileDataEnc *tile_data,
     TokenExtra **tp, SIMPLE_MOTION_DATA_TREE *sms_tree, int mi_row, int mi_col,
-    const BLOCK_SIZE bsize, PC_TREE *pc_tree) {
+    const BLOCK_SIZE bsize, PC_TREE *pc_tree, int do_additional_search) {
   const PARTITION_TYPE partition = pc_tree->partitioning;
+
+  const AV1_COMMON *const cm = &cpi->common;
+  const int num_planes = av1_num_planes(cm);
+  MACROBLOCK *const x = &td->mb;
+  MACROBLOCKD *const xd = &x->e_mbd;
+  TileInfo *const tile_info = &tile_data->tile_info;
+  RD_STATS best_rdc;
+  av1_invalid_rd_stats(&best_rdc);
+  int sum_subblock_rate = 0;
+  int64_t sum_subblock_dist = 0;
+  PartitionSearchState part_search_state;
+  init_partition_search_state_params(x, cpi, &part_search_state, mi_row, mi_col,
+                                     bsize);
+  // Override partition costs at the edges of the frame in the same
+  // way as in read_partition (see decodeframe.c).
+  PartitionBlkParams blk_params = part_search_state.part_blk_params;
+  if (!av1_blk_has_rows_and_cols(&blk_params))
+    set_partition_cost_for_edge_blk(cm, &part_search_state);
+
+  av1_set_offsets(cpi, tile_info, x, mi_row, mi_col, bsize);
+
+  // Save rdmult before it might be changed, so it can be restored later.
+  const int orig_rdmult = x->rdmult;
+  setup_block_rdmult(cpi, x, mi_row, mi_col, bsize, NO_AQ, NULL);
+  (void)orig_rdmult;
+
+  // Set the context.
+  RD_SEARCH_MACROBLOCK_CONTEXT x_ctx;
+  xd->above_txfm_context =
+      cm->above_contexts.txfm[tile_info->tile_row] + mi_col;
+  xd->left_txfm_context =
+      xd->left_txfm_context_buffer + (mi_row & MAX_MIB_MASK);
+
+  // if (pc_tree->none == NULL) {
+  //   pc_tree->none = av1_alloc_pmc(cpi, bsize, &td->shared_coeff_buf);
+  // }
+
+  av1_save_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
+
+  assert(bsize < BLOCK_SIZES_ALL);
+  unsigned int pb_source_variance = UINT_MAX;
+  int64_t part_none_rd = INT64_MAX;
+  int64_t none_rd = INT64_MAX;
+  int inc_step[NUM_PART4_TYPES] = { 0 };
+  if (partition == PARTITION_HORZ_4) inc_step[HORZ4] = mi_size_high[bsize] / 4;
+  if (partition == PARTITION_VERT_4) inc_step[VERT4] = mi_size_wide[bsize] / 4;
+
+  const int hbs = mi_size_wide[bsize] >> 1;
+  const int has_rows = (mi_row + hbs) < cm->mi_params.mi_rows;
+  const int has_cols = (mi_col + hbs) < cm->mi_params.mi_cols;
+  const bool additional_split_allowed = has_rows && has_cols;
+  const bool block_goes_oob = ((mi_row + mi_size_high[bsize]) > cm->mi_params.mi_rows) || ((mi_col + mi_size_wide[bsize]) > cm->mi_params.mi_cols);
+  // printf("mi_col: %3d, mi_row: %3d, bsize: %d, part %d, additional? %d oob? %d \n", mi_row, mi_col, bsize, partition, additional_split_allowed, block_goes_oob);
+
+
+  int ml_part_mask = 0xF;  // Default: allow all
+#if CONFIG_HW_ML_PART
+  bool collect_data = collect_ml_part_data(&tile_data->tile_info, mi_row, mi_col, bsize);
+  #define ML_FEAT_MAX_COMBINE \
+    ((int)FEATURE_INTER_MAX > (int)FEATURE_INTRA_MAX ? (int)FEATURE_INTER_MAX : (int)FEATURE_INTRA_MAX)
+  float out_features[ML_FEAT_MAX_COMBINE] = { 0.0f };
+  if (collect_data && do_additional_search > 0) {
+    if (frame_is_intra_only(cm)) {
+      get_ml_part_features_keyframe(cpi, td, tile_data, mi_row, mi_col, bsize, out_features);
+      ml_part_mask = av1_partitions_prune_inference(out_features, /*max_modes=*/2, bsize);
+    }
+  }
+#endif
+
+  switch (partition) {
+    case PARTITION_NONE:
+      none_partition_search(cpi, td, tile_data, x, pc_tree, sms_tree, &x_ctx,
+                            &part_search_state, &best_rdc, &pb_source_variance,
+                            &none_rd, &part_none_rd);
+
+      break;
+    case PARTITION_HORZ:
+      rectangular_partition_search(cpi, td, tile_data, tp, x, pc_tree, &x_ctx,
+                                   &part_search_state, &best_rdc, NULL, HORZ,
+                                   HORZ);
+
+      // Additional search for PARTITION_SPLIT
+      if (do_additional_search > 0 && !block_goes_oob && (ml_part_mask & (1 << PARTITION_NONE))) {
+
+        // Do I need this?
+        av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
+
+        if (pc_tree->none == NULL) {
+          pc_tree->none = av1_alloc_pmc(cpi, bsize, &td->shared_coeff_buf);
+        }
+
+        RD_STATS combine_rdc;
+        av1_invalid_rd_stats(&combine_rdc);
+        BLOCK_SIZE subsize = get_partition_subsize(bsize, PARTITION_NONE);
+        if (bsize >= BLOCK_8X8 && subsize < BLOCK_SIZES_ALL) {
+          none_partition_search(cpi, td, tile_data, x, pc_tree, sms_tree,
+                                &x_ctx, &part_search_state, &combine_rdc,
+                                &pb_source_variance, &none_rd, &part_none_rd);
+
+          if (combine_rdc.rdcost < best_rdc.rdcost) {
+            best_rdc = combine_rdc;
+            pc_tree->partitioning = PARTITION_NONE;
+            // printf("   split from none\n");
+
+          } else {
+            // Restore to PARTITION_SPLIT if combine is not better
+            pc_tree->partitioning = PARTITION_HORZ;
+          }
+        }
+      }
+
+      break;
+    case PARTITION_VERT:
+      rectangular_partition_search(cpi, td, tile_data, tp, x, pc_tree, &x_ctx,
+                                   &part_search_state, &best_rdc, NULL, VERT,
+                                   VERT);
+      // Additional search for PARTITION_SPLIT
+      if (do_additional_search > 0 && !block_goes_oob && (ml_part_mask & (1 << PARTITION_NONE))) {
+        // Do I need this?
+        av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
+        if (pc_tree->none == NULL) {
+          pc_tree->none = av1_alloc_pmc(cpi, bsize, &td->shared_coeff_buf);
+        }
+
+        RD_STATS combine_rdc;
+        av1_invalid_rd_stats(&combine_rdc);
+        BLOCK_SIZE subsize = get_partition_subsize(bsize, PARTITION_NONE);
+        if (bsize >= BLOCK_8X8 && subsize < BLOCK_SIZES_ALL) {
+          none_partition_search(cpi, td, tile_data, x, pc_tree, sms_tree,
+                                &x_ctx, &part_search_state, &combine_rdc,
+                                &pb_source_variance, &none_rd, &part_none_rd);
+
+          if (combine_rdc.rdcost < best_rdc.rdcost) {
+            best_rdc = combine_rdc;
+            pc_tree->partitioning = PARTITION_NONE;
+            // printf("   split from none\n");
+
+          } else {
+            // Restore to PARTITION_SPLIT if combine is not better
+            pc_tree->partitioning = PARTITION_VERT;
+          }
+        }
+      }
+      break;
+    case PARTITION_HORZ_A:
+      ab_partitions_search(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
+                           &part_search_state, &best_rdc, NULL,
+                           pb_source_variance, 1, HORZ_A, HORZ_A);
+      // Additional search for PARTITION_SPLIT
+      if (do_additional_search > 0 && !block_goes_oob && (ml_part_mask & (1 << PARTITION_NONE))) {
+        // Do I need this?
+        av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
+        if (pc_tree->none == NULL) {
+          pc_tree->none = av1_alloc_pmc(cpi, bsize, &td->shared_coeff_buf);
+        }
+        RD_STATS combine_rdc;
+        av1_invalid_rd_stats(&combine_rdc);
+        BLOCK_SIZE subsize = get_partition_subsize(bsize, PARTITION_NONE);
+        if (bsize >= BLOCK_8X8 && subsize < BLOCK_SIZES_ALL) {
+          none_partition_search(cpi, td, tile_data, x, pc_tree, sms_tree,
+                                &x_ctx, &part_search_state, &combine_rdc,
+                                &pb_source_variance, &none_rd, &part_none_rd);
+
+          if (combine_rdc.rdcost < best_rdc.rdcost) {
+            best_rdc = combine_rdc;
+            pc_tree->partitioning = PARTITION_NONE;
+            // printf("   split from none\n");
+
+          } else {
+            // Restore to PARTITION_SPLIT if combine is not better
+            pc_tree->partitioning = PARTITION_HORZ_A;
+          }
+        }
+      }
+      break;
+    case PARTITION_HORZ_B:
+      ab_partitions_search(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
+                           &part_search_state, &best_rdc, NULL,
+                           pb_source_variance, 1, HORZ_B, HORZ_B);
+
+                  // Additional search for PARTITION_SPLIT
+      if (do_additional_search > 0 && !block_goes_oob && (ml_part_mask & (1 << PARTITION_NONE))) {
+        // Do I need this?
+        av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
+        if (pc_tree->none == NULL) {
+          pc_tree->none = av1_alloc_pmc(cpi, bsize, &td->shared_coeff_buf);
+        }
+        RD_STATS combine_rdc;
+        av1_invalid_rd_stats(&combine_rdc);
+        BLOCK_SIZE subsize = get_partition_subsize(bsize, PARTITION_NONE);
+        if (bsize >= BLOCK_8X8 && subsize < BLOCK_SIZES_ALL) {
+          none_partition_search(cpi, td, tile_data, x, pc_tree, sms_tree,
+                                &x_ctx, &part_search_state, &combine_rdc,
+                                &pb_source_variance, &none_rd, &part_none_rd);
+
+          if (combine_rdc.rdcost < best_rdc.rdcost) {
+            best_rdc = combine_rdc;
+            pc_tree->partitioning = PARTITION_NONE;
+            // printf("   split from none\n");
+
+          } else {
+            // Restore to PARTITION_SPLIT if combine is not better
+            pc_tree->partitioning = PARTITION_HORZ_B;
+          }
+        }
+      }
+      break;
+    case PARTITION_VERT_A:
+      ab_partitions_search(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
+                           &part_search_state, &best_rdc, NULL,
+                           pb_source_variance, 1, VERT_A, VERT_A);
+                  // Additional search for PARTITION_SPLIT
+      if (do_additional_search > 0 && !block_goes_oob && (ml_part_mask & (1 << PARTITION_NONE))) {
+        // Do I need this?
+        av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
+        if (pc_tree->none == NULL) {
+          pc_tree->none = av1_alloc_pmc(cpi, bsize, &td->shared_coeff_buf);
+        }
+        RD_STATS combine_rdc;
+        av1_invalid_rd_stats(&combine_rdc);
+        BLOCK_SIZE subsize = get_partition_subsize(bsize, PARTITION_NONE);
+        if (bsize >= BLOCK_8X8 && subsize < BLOCK_SIZES_ALL) {
+          none_partition_search(cpi, td, tile_data, x, pc_tree, sms_tree,
+                                &x_ctx, &part_search_state, &combine_rdc,
+                                &pb_source_variance, &none_rd, &part_none_rd);
+
+          if (combine_rdc.rdcost < best_rdc.rdcost) {
+            best_rdc = combine_rdc;
+            pc_tree->partitioning = PARTITION_NONE;
+            // printf("   split from none\n");
+
+          } else {
+            // Restore to PARTITION_SPLIT if combine is not better
+            pc_tree->partitioning = PARTITION_VERT_A;
+          }
+        }
+      }
+      break;
+    case PARTITION_VERT_B:
+      ab_partitions_search(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
+                           &part_search_state, &best_rdc, NULL,
+                           pb_source_variance, 1, VERT_B, VERT_B);
+      // Additional search for PARTITION_SPLIT
+      if (do_additional_search > 0 && !block_goes_oob && (ml_part_mask & (1 << PARTITION_NONE))) {
+        // Do I need this?
+        av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
+        if (pc_tree->none == NULL) {
+          pc_tree->none = av1_alloc_pmc(cpi, bsize, &td->shared_coeff_buf);
+        }
+        RD_STATS combine_rdc;
+        av1_invalid_rd_stats(&combine_rdc);
+        BLOCK_SIZE subsize = get_partition_subsize(bsize, PARTITION_NONE);
+        if (bsize >= BLOCK_8X8 && subsize < BLOCK_SIZES_ALL) {
+          none_partition_search(cpi, td, tile_data, x, pc_tree, sms_tree,
+                                &x_ctx, &part_search_state, &combine_rdc,
+                                &pb_source_variance, &none_rd, &part_none_rd);
+
+          if (combine_rdc.rdcost < best_rdc.rdcost) {
+            best_rdc = combine_rdc;
+            pc_tree->partitioning = PARTITION_NONE;
+            // printf("   split from none\n");
+
+          } else {
+            // Restore to PARTITION_SPLIT if combine is not better
+            pc_tree->partitioning = PARTITION_VERT_B;
+          }
+        }
+      }
+      break;
+    case PARTITION_HORZ_4:
+      rd_pick_4partition(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
+                         pc_tree->horizontal4, &part_search_state, &best_rdc,
+                         inc_step, PARTITION_HORZ_4);
+      break;
+    case PARTITION_VERT_4:
+      rd_pick_4partition(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
+                         pc_tree->vertical4, &part_search_state, &best_rdc,
+                         inc_step, PARTITION_VERT_4);
+      break;
+    case PARTITION_SPLIT:
+      for (int idx = 0; idx < SUB_PARTITIONS_SPLIT; ++idx) {
+        const BLOCK_SIZE subsize =
+            get_partition_subsize(bsize, PARTITION_SPLIT);
+        assert(subsize < BLOCK_SIZES_ALL);
+        const int next_mi_row =
+            idx < 2 ? mi_row : mi_row + mi_size_high[subsize];
+        const int next_mi_col =
+            idx % 2 == 0 ? mi_col : mi_col + mi_size_wide[subsize];
+        if (next_mi_row >= cm->mi_params.mi_rows ||
+            next_mi_col >= cm->mi_params.mi_cols) {
+          continue;
+        }
+        const RD_STATS subblock_rdc = rd_search_for_fixed_partition_combine(
+            cpi, td, tile_data, tp, sms_tree->split[idx], next_mi_row,
+            next_mi_col, subsize, pc_tree->split[idx], do_additional_search);
+        sum_subblock_rate += subblock_rdc.rate;
+        sum_subblock_dist += subblock_rdc.dist;
+      }
+
+      best_rdc.rate = sum_subblock_rate;
+      best_rdc.rate += part_search_state.partition_cost[PARTITION_SPLIT];
+      best_rdc.dist = sum_subblock_dist;
+      best_rdc.rdcost = RDCOST(x->rdmult, best_rdc.rate, best_rdc.dist);
+
+      // Try a 16x16 combine as well
+      if (do_additional_search > 0 && is_final_split(pc_tree)  && !block_goes_oob && (ml_part_mask & (1 << PARTITION_NONE))) {
+        // Do I need this?
+        av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
+        if (pc_tree->none == NULL) {
+          pc_tree->none = av1_alloc_pmc(cpi, bsize, &td->shared_coeff_buf);
+        }
+        RD_STATS combine_rdc;
+        av1_invalid_rd_stats(&combine_rdc);
+        BLOCK_SIZE subsize = get_partition_subsize(bsize, PARTITION_NONE);
+        if (bsize >= BLOCK_8X8 && subsize < BLOCK_SIZES_ALL) {
+          none_partition_search(cpi, td, tile_data, x, pc_tree, sms_tree,
+                                &x_ctx, &part_search_state, &combine_rdc,
+                                &pb_source_variance, &none_rd, &part_none_rd);
+          if (combine_rdc.rdcost < best_rdc.rdcost) {
+            best_rdc = combine_rdc;
+            pc_tree->partitioning = PARTITION_NONE;
+            // printf("   split from none\n");
+
+          } else {
+            // Restore to PARTITION_SPLIT if combine is not better
+            pc_tree->partitioning = PARTITION_SPLIT;
+          }
+        }
+      }
+
+      break;
+    default:
+      // printf("PARTITION_???, %d\n", partition);
+      assert(0 && "invalid partition type.");
+      aom_internal_error(cm->error, AOM_CODEC_ERROR, "Invalid partition type.");
+  }
+  // Note: it is necessary to restore context information.
+  av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
+
+  if (bsize != cm->seq_params->sb_size) {
+    encode_sb(cpi, td, tile_data, tp, mi_row, mi_col, DRY_RUN_NORMAL, bsize,
+              pc_tree, NULL);
+  }
+  x->rdmult = orig_rdmult;
+
+  return best_rdc;
+      }
+
+static RD_STATS rd_search_for_fixed_partition_add16_add8(
+    AV1_COMP *const cpi, ThreadData *td, TileDataEnc *tile_data,
+    TokenExtra **tp, SIMPLE_MOTION_DATA_TREE *sms_tree, int mi_row, int mi_col,
+    const BLOCK_SIZE bsize, PC_TREE *pc_tree, int do_additional_search) {
+  const PARTITION_TYPE partition = pc_tree->partitioning;
+
   const AV1_COMMON *const cm = &cpi->common;
   const int num_planes = av1_num_planes(cm);
   MACROBLOCK *const x = &td->mb;
@@ -4800,21 +5181,717 @@ static RD_STATS rd_search_for_fixed_partition(
   if (partition == PARTITION_HORZ_4) inc_step[HORZ4] = mi_size_high[bsize] / 4;
   if (partition == PARTITION_VERT_4) inc_step[VERT4] = mi_size_wide[bsize] / 4;
 
+  const int hbs = mi_size_wide[bsize] >> 1;
+  const int has_rows = (mi_row + hbs) < cm->mi_params.mi_rows;
+  const int has_cols = (mi_col + hbs) < cm->mi_params.mi_cols;
+  const bool additional_split_allowed = has_rows && has_cols;
+  const bool block_goes_oob = ((mi_row + mi_size_high[bsize]) > cm->mi_params.mi_rows) || ((mi_col + mi_size_wide[bsize]) > cm->mi_params.mi_cols);
+  // printf("mi_col: %3d, mi_row: %3d, bsize: %d, part %d, additional? %d oob? %d \n", mi_row, mi_col, bsize, partition, additional_split_allowed, block_goes_oob);
+
+
   switch (partition) {
     case PARTITION_NONE:
       none_partition_search(cpi, td, tile_data, x, pc_tree, sms_tree, &x_ctx,
                             &part_search_state, &best_rdc, &pb_source_variance,
                             &none_rd, &part_none_rd);
+
+        // Additional search for PARTITION_SPLIT
+      if (bsize == BLOCK_64X64 && additional_split_allowed && !block_goes_oob) {
+        // printf("  additional split from none\n");
+
+        // Do I need this?
+        av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
+
+        RD_STATS split_rdc;
+        av1_invalid_rd_stats(&split_rdc);
+        BLOCK_SIZE subsize = get_partition_subsize(bsize, PARTITION_SPLIT);
+        if (bsize >= BLOCK_8X8 && subsize < BLOCK_SIZES_ALL) {
+          av1_init_rd_stats(&split_rdc);
+          split_rdc.rate = part_search_state.partition_cost[PARTITION_SPLIT];
+          split_rdc.rdcost = RDCOST(x->rdmult, split_rdc.rate, 0);
+
+          for (int i = 0; i < SUB_PARTITIONS_SPLIT; ++i) {
+            const int x_idx = (i & 1) * mi_size_wide[subsize];
+            const int y_idx = (i >> 1) * mi_size_high[subsize];
+
+
+            if (pc_tree->split[i] == NULL)
+              pc_tree->split[i] = av1_alloc_pc_tree_node(subsize);
+            if (!pc_tree->split[i])
+              aom_internal_error(x->e_mbd.error_info, AOM_CODEC_MEM_ERROR,
+                                 "Failed to allocate PC_TREE");
+            pc_tree->split[i]->index = i;
+
+            if (mi_row + y_idx >= cm->mi_params.mi_rows ||
+                mi_col + x_idx >= cm->mi_params.mi_cols)
+              continue;
+
+            const RD_STATS subblock_rdc = rd_search_for_fixed_partition_add16_add8(
+                cpi, td, tile_data, tp, sms_tree->split[i], mi_row + y_idx,
+                mi_col + x_idx, subsize, pc_tree->split[i], 1);
+            if (subblock_rdc.rate == INT_MAX) {
+              av1_invalid_rd_stats(&split_rdc);
+              break;
+            }
+            split_rdc.rate += subblock_rdc.rate;
+            split_rdc.dist += subblock_rdc.dist;
+            av1_rd_cost_update(x->rdmult, &split_rdc);
+            if (split_rdc.rdcost >= best_rdc.rdcost) break;
+          }
+
+          if (split_rdc.rdcost < best_rdc.rdcost) {
+            best_rdc = split_rdc;
+            pc_tree->partitioning = PARTITION_SPLIT;
+            // printf("   split from none\n");
+
+          } else {
+            // Restore to PARTITION_NONE if split is not better
+            pc_tree->partitioning = PARTITION_NONE;
+          }
+        }
+      } else if (do_additional_search > 0 && bsize == BLOCK_32X32 && additional_split_allowed && !block_goes_oob) {
+        // This partition size is invalid
+        av1_invalid_rd_stats(&best_rdc);
+
+        // Do I need this?
+        av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
+
+        RD_STATS split_rdc;
+        av1_invalid_rd_stats(&split_rdc);
+        BLOCK_SIZE subsize = get_partition_subsize(bsize, PARTITION_SPLIT);
+        if (bsize >= BLOCK_8X8 && subsize < BLOCK_SIZES_ALL) {
+          av1_init_rd_stats(&split_rdc);
+          split_rdc.rate = part_search_state.partition_cost[PARTITION_SPLIT];
+          split_rdc.rdcost = RDCOST(x->rdmult, split_rdc.rate, 0);
+
+          for (int i = 0; i < SUB_PARTITIONS_SPLIT; ++i) {
+            const int x_idx = (i & 1) * mi_size_wide[subsize];
+            const int y_idx = (i >> 1) * mi_size_high[subsize];
+
+
+            if (pc_tree->split[i] == NULL)
+              pc_tree->split[i] = av1_alloc_pc_tree_node(subsize);
+            if (!pc_tree->split[i])
+              aom_internal_error(x->e_mbd.error_info, AOM_CODEC_MEM_ERROR,
+                                 "Failed to allocate PC_TREE");
+            pc_tree->split[i]->index = i;
+
+            if (mi_row + y_idx >= cm->mi_params.mi_rows ||
+                mi_col + x_idx >= cm->mi_params.mi_cols)
+              continue;
+
+            const RD_STATS subblock_rdc = rd_search_for_fixed_partition_add16_add8(
+                cpi, td, tile_data, tp, sms_tree->split[i], mi_row + y_idx,
+                mi_col + x_idx, subsize, pc_tree->split[i], 1);
+            if (subblock_rdc.rate == INT_MAX) {
+              av1_invalid_rd_stats(&split_rdc);
+              break;
+            }
+            split_rdc.rate += subblock_rdc.rate;
+            split_rdc.dist += subblock_rdc.dist;
+            av1_rd_cost_update(x->rdmult, &split_rdc);
+            if (split_rdc.rdcost >= best_rdc.rdcost) break;
+          }
+
+          if (split_rdc.rdcost < best_rdc.rdcost) {
+            best_rdc = split_rdc;
+            pc_tree->partitioning = PARTITION_SPLIT;
+            // printf("   split from none\n");
+
+          } else {
+            // Restore to PARTITION_NONE if split is not better
+            pc_tree->partitioning = PARTITION_NONE;
+          }
+        }
+      } else if (do_additional_search == 0 && bsize == BLOCK_32X32 && additional_split_allowed && !block_goes_oob) {
+        // printf("  additional split from none\n");
+
+        // Do I need this?
+        av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
+
+        RD_STATS split_rdc;
+        av1_invalid_rd_stats(&split_rdc);
+        BLOCK_SIZE subsize = get_partition_subsize(bsize, PARTITION_SPLIT);
+        if (bsize >= BLOCK_8X8 && subsize < BLOCK_SIZES_ALL) {
+          av1_init_rd_stats(&split_rdc);
+          split_rdc.rate = part_search_state.partition_cost[PARTITION_SPLIT];
+          split_rdc.rdcost = RDCOST(x->rdmult, split_rdc.rate, 0);
+
+          for (int i = 0; i < SUB_PARTITIONS_SPLIT; ++i) {
+            const int x_idx = (i & 1) * mi_size_wide[subsize];
+            const int y_idx = (i >> 1) * mi_size_high[subsize];
+
+
+            if (pc_tree->split[i] == NULL)
+              pc_tree->split[i] = av1_alloc_pc_tree_node(subsize);
+            if (!pc_tree->split[i])
+              aom_internal_error(x->e_mbd.error_info, AOM_CODEC_MEM_ERROR,
+                                 "Failed to allocate PC_TREE");
+            pc_tree->split[i]->index = i;
+
+            if (mi_row + y_idx >= cm->mi_params.mi_rows ||
+                mi_col + x_idx >= cm->mi_params.mi_cols)
+              continue;
+
+            const RD_STATS subblock_rdc = rd_search_for_fixed_partition_add16_add8(
+                cpi, td, tile_data, tp, sms_tree->split[i], mi_row + y_idx,
+                mi_col + x_idx, subsize, pc_tree->split[i],1);
+            if (subblock_rdc.rate == INT_MAX) {
+              av1_invalid_rd_stats(&split_rdc);
+              break;
+            }
+            split_rdc.rate += subblock_rdc.rate;
+            split_rdc.dist += subblock_rdc.dist;
+            av1_rd_cost_update(x->rdmult, &split_rdc);
+            if (split_rdc.rdcost >= best_rdc.rdcost) break;
+          }
+
+          if (split_rdc.rdcost < best_rdc.rdcost) {
+            best_rdc = split_rdc;
+            pc_tree->partitioning = PARTITION_SPLIT;
+            // printf("   split from none\n");
+
+          } else {
+            // Restore to PARTITION_NONE if split is not better
+            pc_tree->partitioning = PARTITION_NONE;
+          }
+        }
+      } else if (bsize >= BLOCK_16X16 && additional_split_allowed && !block_goes_oob) {
+        // printf("  additional split from none\n");
+
+        // Do I need this?
+        av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
+
+        RD_STATS split_rdc;
+        av1_invalid_rd_stats(&split_rdc);
+        BLOCK_SIZE subsize = get_partition_subsize(bsize, PARTITION_SPLIT);
+        if (bsize >= BLOCK_8X8 && subsize < BLOCK_SIZES_ALL) {
+          av1_init_rd_stats(&split_rdc);
+          split_rdc.rate = part_search_state.partition_cost[PARTITION_SPLIT];
+          split_rdc.rdcost = RDCOST(x->rdmult, split_rdc.rate, 0);
+
+          for (int i = 0; i < SUB_PARTITIONS_SPLIT; ++i) {
+            const int x_idx = (i & 1) * mi_size_wide[subsize];
+            const int y_idx = (i >> 1) * mi_size_high[subsize];
+
+
+            if (pc_tree->split[i] == NULL)
+              pc_tree->split[i] = av1_alloc_pc_tree_node(subsize);
+            if (!pc_tree->split[i])
+              aom_internal_error(x->e_mbd.error_info, AOM_CODEC_MEM_ERROR,
+                                 "Failed to allocate PC_TREE");
+            pc_tree->split[i]->index = i;
+
+            if (mi_row + y_idx >= cm->mi_params.mi_rows ||
+                mi_col + x_idx >= cm->mi_params.mi_cols)
+              continue;
+
+            const RD_STATS subblock_rdc = rd_search_for_fixed_partition_add16_add8(
+                cpi, td, tile_data, tp, sms_tree->split[i], mi_row + y_idx,
+                mi_col + x_idx, subsize, pc_tree->split[i], 1);
+            if (subblock_rdc.rate == INT_MAX) {
+              av1_invalid_rd_stats(&split_rdc);
+              break;
+            }
+            split_rdc.rate += subblock_rdc.rate;
+            split_rdc.dist += subblock_rdc.dist;
+            av1_rd_cost_update(x->rdmult, &split_rdc);
+            if (split_rdc.rdcost >= best_rdc.rdcost) break;
+          }
+
+          if (split_rdc.rdcost < best_rdc.rdcost) {
+            best_rdc = split_rdc;
+            pc_tree->partitioning = PARTITION_SPLIT;
+            // printf("   split from none\n");
+
+          } else {
+            // Restore to PARTITION_NONE if split is not better
+            pc_tree->partitioning = PARTITION_NONE;
+          }
+        }
+      }
       break;
     case PARTITION_HORZ:
       rectangular_partition_search(cpi, td, tile_data, tp, x, pc_tree, &x_ctx,
                                    &part_search_state, &best_rdc, NULL, HORZ,
                                    HORZ);
+
+      // Additional search for PARTITION_SPLIT
+      if (bsize > BLOCK_8X8 && additional_split_allowed && !block_goes_oob) {
+        // printf("  additional split from horz\n");
+
+        // Do I need this?
+        av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
+
+        RD_STATS split_rdc;
+        av1_invalid_rd_stats(&split_rdc);
+        BLOCK_SIZE subsize = get_partition_subsize(bsize, PARTITION_SPLIT);
+        if (bsize >= BLOCK_8X8 && subsize < BLOCK_SIZES_ALL) {
+          av1_init_rd_stats(&split_rdc);
+          split_rdc.rate = part_search_state.partition_cost[PARTITION_SPLIT];
+          split_rdc.rdcost = RDCOST(x->rdmult, split_rdc.rate, 0);
+
+          for (int i = 0; i < SUB_PARTITIONS_SPLIT; ++i) {
+            const int x_idx = (i & 1) * mi_size_wide[subsize];
+            const int y_idx = (i >> 1) * mi_size_high[subsize];
+
+
+            if (pc_tree->split[i] == NULL){
+              pc_tree->split[i] = av1_alloc_pc_tree_node(subsize);
+            } else {
+              pc_tree->split[i]->block_size = subsize;
+            }
+            if (!pc_tree->split[i])
+              aom_internal_error(x->e_mbd.error_info, AOM_CODEC_MEM_ERROR,
+                                 "Failed to allocate PC_TREE");
+            pc_tree->split[i]->index = i;
+
+            if (mi_row + y_idx >= cm->mi_params.mi_rows ||
+                mi_col + x_idx >= cm->mi_params.mi_cols) {
+              continue;
+            }
+
+            const RD_STATS subblock_rdc = rd_search_for_fixed_partition_add16_add8(
+                cpi, td, tile_data, tp, sms_tree->split[i], mi_row + y_idx,
+                mi_col + x_idx, subsize, pc_tree->split[i],do_additional_search - 1);
+            if (subblock_rdc.rate == INT_MAX) {
+              av1_invalid_rd_stats(&split_rdc);
+              break;
+            }
+            split_rdc.rate += subblock_rdc.rate;
+            split_rdc.dist += subblock_rdc.dist;
+            av1_rd_cost_update(x->rdmult, &split_rdc);
+            if (split_rdc.rdcost >= best_rdc.rdcost) break;
+          }
+
+          if (split_rdc.rdcost < best_rdc.rdcost) {
+            best_rdc = split_rdc;
+            pc_tree->partitioning = PARTITION_SPLIT;
+            // printf("   split from horz\n");
+
+          } else {
+            // Restore to PARTITION_NONE if split is not better
+            pc_tree->partitioning = PARTITION_HORZ;
+            pc_tree->split[0]->block_size = get_partition_subsize(bsize, PARTITION_HORZ);
+            pc_tree->split[1]->block_size = get_partition_subsize(bsize, PARTITION_HORZ);
+          }
+        }
+      }
       break;
     case PARTITION_VERT:
       rectangular_partition_search(cpi, td, tile_data, tp, x, pc_tree, &x_ctx,
                                    &part_search_state, &best_rdc, NULL, VERT,
                                    VERT);
+      // Additional search for PARTITION_SPLIT
+      if (bsize > BLOCK_8X8 && additional_split_allowed && !block_goes_oob) {
+        // printf("  additional split from vert\n");
+
+        // Do I need this?
+        av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
+
+        RD_STATS split_rdc;
+        av1_invalid_rd_stats(&split_rdc);
+        BLOCK_SIZE subsize = get_partition_subsize(bsize, PARTITION_SPLIT);
+        if (bsize >= BLOCK_8X8 && subsize < BLOCK_SIZES_ALL) {
+          av1_init_rd_stats(&split_rdc);
+          split_rdc.rate = part_search_state.partition_cost[PARTITION_SPLIT];
+          split_rdc.rdcost = RDCOST(x->rdmult, split_rdc.rate, 0);
+
+          for (int i = 0; i < SUB_PARTITIONS_SPLIT; ++i) {
+            const int x_idx = (i & 1) * mi_size_wide[subsize];
+            const int y_idx = (i >> 1) * mi_size_high[subsize];
+
+
+            if (pc_tree->split[i] == NULL){
+              pc_tree->split[i] = av1_alloc_pc_tree_node(subsize);
+            } else {
+              pc_tree->split[i]->block_size = subsize;
+            }
+            if (!pc_tree->split[i])
+              aom_internal_error(x->e_mbd.error_info, AOM_CODEC_MEM_ERROR,
+                                 "Failed to allocate PC_TREE");
+            pc_tree->split[i]->index = i;
+
+            if (mi_row + y_idx >= cm->mi_params.mi_rows ||
+                mi_col + x_idx >= cm->mi_params.mi_cols) {
+              continue;
+            }
+
+            const RD_STATS subblock_rdc = rd_search_for_fixed_partition_add16_add8(
+                cpi, td, tile_data, tp, sms_tree->split[i], mi_row + y_idx,
+                mi_col + x_idx, subsize, pc_tree->split[i],do_additional_search - 1);
+            if (subblock_rdc.rate == INT_MAX) {
+              av1_invalid_rd_stats(&split_rdc);
+              break;
+            }
+            split_rdc.rate += subblock_rdc.rate;
+            split_rdc.dist += subblock_rdc.dist;
+            av1_rd_cost_update(x->rdmult, &split_rdc);
+            if (split_rdc.rdcost >= best_rdc.rdcost) break;
+          }
+
+          if (split_rdc.rdcost < best_rdc.rdcost) {
+            best_rdc = split_rdc;
+            pc_tree->partitioning = PARTITION_SPLIT;
+            // printf("   split from vert\n");
+          } else {
+            // Restore to PARTITION_NONE if split is not better
+            pc_tree->partitioning = PARTITION_VERT;
+            pc_tree->split[0]->block_size = get_partition_subsize(bsize, PARTITION_VERT);
+            pc_tree->split[1]->block_size = get_partition_subsize(bsize, PARTITION_VERT);
+          }
+        }
+      }
+      break;
+    case PARTITION_HORZ_A:
+      ab_partitions_search(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
+                           &part_search_state, &best_rdc, NULL,
+                           pb_source_variance, 1, HORZ_A, HORZ_A);
+      break;
+    case PARTITION_HORZ_B:
+      ab_partitions_search(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
+                           &part_search_state, &best_rdc, NULL,
+                           pb_source_variance, 1, HORZ_B, HORZ_B);
+      break;
+    case PARTITION_VERT_A:
+      ab_partitions_search(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
+                           &part_search_state, &best_rdc, NULL,
+                           pb_source_variance, 1, VERT_A, VERT_A);
+      break;
+    case PARTITION_VERT_B:
+      ab_partitions_search(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
+                           &part_search_state, &best_rdc, NULL,
+                           pb_source_variance, 1, VERT_B, VERT_B);
+      break;
+    case PARTITION_HORZ_4:
+      rd_pick_4partition(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
+                         pc_tree->horizontal4, &part_search_state, &best_rdc,
+                         inc_step, PARTITION_HORZ_4);
+      break;
+    case PARTITION_VERT_4:
+      rd_pick_4partition(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
+                         pc_tree->vertical4, &part_search_state, &best_rdc,
+                         inc_step, PARTITION_VERT_4);
+      break;
+    case PARTITION_SPLIT:
+      for (int idx = 0; idx < SUB_PARTITIONS_SPLIT; ++idx) {
+        const BLOCK_SIZE subsize =
+            get_partition_subsize(bsize, PARTITION_SPLIT);
+        assert(subsize < BLOCK_SIZES_ALL);
+        const int next_mi_row =
+            idx < 2 ? mi_row : mi_row + mi_size_high[subsize];
+        const int next_mi_col =
+            idx % 2 == 0 ? mi_col : mi_col + mi_size_wide[subsize];
+        if (next_mi_row >= cm->mi_params.mi_rows ||
+            next_mi_col >= cm->mi_params.mi_cols) {
+          continue;
+        }
+        const RD_STATS subblock_rdc = rd_search_for_fixed_partition_add16_add8(
+            cpi, td, tile_data, tp, sms_tree->split[idx], next_mi_row,
+            next_mi_col, subsize, pc_tree->split[idx], do_additional_search);
+        sum_subblock_rate += subblock_rdc.rate;
+        sum_subblock_dist += subblock_rdc.dist;
+      }
+
+      best_rdc.rate = sum_subblock_rate;
+      best_rdc.rate += part_search_state.partition_cost[PARTITION_SPLIT];
+      best_rdc.dist = sum_subblock_dist;
+      best_rdc.rdcost = RDCOST(x->rdmult, best_rdc.rate, best_rdc.dist);
+
+      // Try a 16x16 combine as well
+      if (do_additional_search == 0 && bsize == BLOCK_16X16 && !block_goes_oob) {
+        // Do I need this?
+        av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
+
+        RD_STATS combine_rdc;
+        av1_invalid_rd_stats(&combine_rdc);
+        BLOCK_SIZE subsize = get_partition_subsize(bsize, PARTITION_NONE);
+        if (bsize >= BLOCK_8X8 && subsize < BLOCK_SIZES_ALL) {
+
+
+          none_partition_search(cpi, td, tile_data, x, pc_tree, sms_tree,
+                                &x_ctx, &part_search_state, &combine_rdc,
+                                &pb_source_variance, &none_rd, &part_none_rd);
+
+          if (combine_rdc.rdcost < best_rdc.rdcost) {
+            best_rdc = combine_rdc;
+            pc_tree->partitioning = PARTITION_NONE;
+            // printf("   split from none\n");
+
+          } else {
+            // Restore to PARTITION_SPLIT if combine is not better
+            pc_tree->partitioning = PARTITION_SPLIT;
+          }
+        }
+      }
+
+      break;
+    default:
+      // printf("PARTITION_???, %d\n", partition);
+      assert(0 && "invalid partition type.");
+      aom_internal_error(cm->error, AOM_CODEC_ERROR, "Invalid partition type.");
+  }
+  // Note: it is necessary to restore context information.
+  av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
+
+  if (bsize != cm->seq_params->sb_size) {
+    encode_sb(cpi, td, tile_data, tp, mi_row, mi_col, DRY_RUN_NORMAL, bsize,
+              pc_tree, NULL);
+  }
+  x->rdmult = orig_rdmult;
+
+  return best_rdc;
+}
+
+
+static RD_STATS rd_search_for_fixed_partition(
+    AV1_COMP *const cpi, ThreadData *td, TileDataEnc *tile_data,
+    TokenExtra **tp, SIMPLE_MOTION_DATA_TREE *sms_tree, int mi_row, int mi_col,
+    const BLOCK_SIZE bsize, PC_TREE *pc_tree, int do_additional_search) {
+  const PARTITION_TYPE partition = pc_tree->partitioning;
+
+  const AV1_COMMON *const cm = &cpi->common;
+  const int num_planes = av1_num_planes(cm);
+  MACROBLOCK *const x = &td->mb;
+  MACROBLOCKD *const xd = &x->e_mbd;
+  TileInfo *const tile_info = &tile_data->tile_info;
+  RD_STATS best_rdc;
+  av1_invalid_rd_stats(&best_rdc);
+  int sum_subblock_rate = 0;
+  int64_t sum_subblock_dist = 0;
+  PartitionSearchState part_search_state;
+  init_partition_search_state_params(x, cpi, &part_search_state, mi_row, mi_col,
+                                     bsize);
+  // Override partition costs at the edges of the frame in the same
+  // way as in read_partition (see decodeframe.c).
+  PartitionBlkParams blk_params = part_search_state.part_blk_params;
+  if (!av1_blk_has_rows_and_cols(&blk_params))
+    set_partition_cost_for_edge_blk(cm, &part_search_state);
+
+  av1_set_offsets(cpi, tile_info, x, mi_row, mi_col, bsize);
+
+  // Save rdmult before it might be changed, so it can be restored later.
+  const int orig_rdmult = x->rdmult;
+  setup_block_rdmult(cpi, x, mi_row, mi_col, bsize, NO_AQ, NULL);
+  (void)orig_rdmult;
+
+  // Set the context.
+  RD_SEARCH_MACROBLOCK_CONTEXT x_ctx;
+  xd->above_txfm_context =
+      cm->above_contexts.txfm[tile_info->tile_row] + mi_col;
+  xd->left_txfm_context =
+      xd->left_txfm_context_buffer + (mi_row & MAX_MIB_MASK);
+  av1_save_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
+
+  assert(bsize < BLOCK_SIZES_ALL);
+  unsigned int pb_source_variance = UINT_MAX;
+  int64_t part_none_rd = INT64_MAX;
+  int64_t none_rd = INT64_MAX;
+  int inc_step[NUM_PART4_TYPES] = { 0 };
+  if (partition == PARTITION_HORZ_4) inc_step[HORZ4] = mi_size_high[bsize] / 4;
+  if (partition == PARTITION_VERT_4) inc_step[VERT4] = mi_size_wide[bsize] / 4;
+
+  const int hbs = mi_size_wide[bsize] >> 1;
+  const int has_rows = (mi_row + hbs) < cm->mi_params.mi_rows;
+  const int has_cols = (mi_col + hbs) < cm->mi_params.mi_cols;
+  const bool additional_split_allowed = has_rows && has_cols;
+  const bool block_goes_oob = ((mi_row + mi_size_high[bsize]) > cm->mi_params.mi_rows) || ((mi_col + mi_size_wide[bsize]) > cm->mi_params.mi_cols);
+  // printf("mi_col: %3d, mi_row: %3d, bsize: %d, part %d, additional? %d oob? %d \n", mi_row, mi_col, bsize, partition, additional_split_allowed, block_goes_oob);
+
+
+  switch (partition) {
+    case PARTITION_NONE:
+      none_partition_search(cpi, td, tile_data, x, pc_tree, sms_tree, &x_ctx,
+                            &part_search_state, &best_rdc, &pb_source_variance,
+                            &none_rd, &part_none_rd);
+
+        // Additional search for PARTITION_SPLIT
+      if (do_additional_search > 0 && bsize == BLOCK_64X64 && additional_split_allowed && !block_goes_oob) {
+        // printf("  additional split from none\n");
+
+        // Do I need this?
+        av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
+
+        RD_STATS split_rdc;
+        av1_invalid_rd_stats(&split_rdc);
+        BLOCK_SIZE subsize = get_partition_subsize(bsize, PARTITION_SPLIT);
+        if (bsize >= BLOCK_8X8 && subsize < BLOCK_SIZES_ALL) {
+          av1_init_rd_stats(&split_rdc);
+          split_rdc.rate = part_search_state.partition_cost[PARTITION_SPLIT];
+          split_rdc.rdcost = RDCOST(x->rdmult, split_rdc.rate, 0);
+
+          for (int i = 0; i < SUB_PARTITIONS_SPLIT; ++i) {
+            const int x_idx = (i & 1) * mi_size_wide[subsize];
+            const int y_idx = (i >> 1) * mi_size_high[subsize];
+
+
+            if (pc_tree->split[i] == NULL)
+              pc_tree->split[i] = av1_alloc_pc_tree_node(subsize);
+            if (!pc_tree->split[i])
+              aom_internal_error(x->e_mbd.error_info, AOM_CODEC_MEM_ERROR,
+                                 "Failed to allocate PC_TREE");
+            pc_tree->split[i]->index = i;
+
+            if (mi_row + y_idx >= cm->mi_params.mi_rows ||
+                mi_col + x_idx >= cm->mi_params.mi_cols)
+              continue;
+
+            const RD_STATS subblock_rdc = rd_search_for_fixed_partition(
+                cpi, td, tile_data, tp, sms_tree->split[i], mi_row + y_idx,
+                mi_col + x_idx, subsize, pc_tree->split[i], do_additional_search - 1);
+            if (subblock_rdc.rate == INT_MAX) {
+              av1_invalid_rd_stats(&split_rdc);
+              break;
+            }
+            split_rdc.rate += subblock_rdc.rate;
+            split_rdc.dist += subblock_rdc.dist;
+            av1_rd_cost_update(x->rdmult, &split_rdc);
+            if (split_rdc.rdcost >= best_rdc.rdcost) break;
+          }
+
+          if (split_rdc.rdcost < best_rdc.rdcost) {
+            best_rdc = split_rdc;
+            pc_tree->partitioning = PARTITION_SPLIT;
+            // printf("   split from none\n");
+
+          } else {
+            // Restore to PARTITION_NONE if split is not better
+            pc_tree->partitioning = PARTITION_NONE;
+          }
+        }
+      } 
+      break;
+    case PARTITION_HORZ:
+      rectangular_partition_search(cpi, td, tile_data, tp, x, pc_tree, &x_ctx,
+                                   &part_search_state, &best_rdc, NULL, HORZ,
+                                   HORZ);
+
+      // Additional search for PARTITION_SPLIT
+      if (do_additional_search > 0 && bsize >= BLOCK_8X8 && additional_split_allowed && !block_goes_oob) {
+        // printf("  additional split from horz\n");
+
+        // Do I need this?
+        av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
+
+        RD_STATS split_rdc;
+        av1_invalid_rd_stats(&split_rdc);
+        BLOCK_SIZE subsize = get_partition_subsize(bsize, PARTITION_SPLIT);
+        if (bsize >= BLOCK_8X8 && subsize < BLOCK_SIZES_ALL) {
+          av1_init_rd_stats(&split_rdc);
+          split_rdc.rate = part_search_state.partition_cost[PARTITION_SPLIT];
+          split_rdc.rdcost = RDCOST(x->rdmult, split_rdc.rate, 0);
+
+          for (int i = 0; i < SUB_PARTITIONS_SPLIT; ++i) {
+            const int x_idx = (i & 1) * mi_size_wide[subsize];
+            const int y_idx = (i >> 1) * mi_size_high[subsize];
+
+
+            if (pc_tree->split[i] == NULL){
+              pc_tree->split[i] = av1_alloc_pc_tree_node(subsize);
+            } else {
+              pc_tree->split[i]->block_size = subsize;
+            }
+            if (!pc_tree->split[i])
+              aom_internal_error(x->e_mbd.error_info, AOM_CODEC_MEM_ERROR,
+                                 "Failed to allocate PC_TREE");
+            pc_tree->split[i]->index = i;
+
+            if (mi_row + y_idx >= cm->mi_params.mi_rows ||
+                mi_col + x_idx >= cm->mi_params.mi_cols) {
+              continue;
+            }
+
+            const RD_STATS subblock_rdc = rd_search_for_fixed_partition(
+                cpi, td, tile_data, tp, sms_tree->split[i], mi_row + y_idx,
+                mi_col + x_idx, subsize, pc_tree->split[i],do_additional_search - 1);
+            if (subblock_rdc.rate == INT_MAX) {
+              av1_invalid_rd_stats(&split_rdc);
+              break;
+            }
+            split_rdc.rate += subblock_rdc.rate;
+            split_rdc.dist += subblock_rdc.dist;
+            av1_rd_cost_update(x->rdmult, &split_rdc);
+            if (split_rdc.rdcost >= best_rdc.rdcost) break;
+          }
+
+          if (split_rdc.rdcost < best_rdc.rdcost) {
+            best_rdc = split_rdc;
+            pc_tree->partitioning = PARTITION_SPLIT;
+            // printf("   split from horz\n");
+
+          } else {
+            // Restore to PARTITION_NONE if split is not better
+            pc_tree->partitioning = PARTITION_HORZ;
+            pc_tree->split[0]->block_size = get_partition_subsize(bsize, PARTITION_HORZ);
+            pc_tree->split[1]->block_size = get_partition_subsize(bsize, PARTITION_HORZ);
+          }
+        }
+      }
+      break;
+    case PARTITION_VERT:
+      rectangular_partition_search(cpi, td, tile_data, tp, x, pc_tree, &x_ctx,
+                                   &part_search_state, &best_rdc, NULL, VERT,
+                                   VERT);
+      // Additional search for PARTITION_SPLIT
+      if (do_additional_search > 0 && bsize >= BLOCK_8X8 && additional_split_allowed && !block_goes_oob) {
+        // printf("  additional split from vert\n");
+
+        // Do I need this?
+        av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
+
+        RD_STATS split_rdc;
+        av1_invalid_rd_stats(&split_rdc);
+        BLOCK_SIZE subsize = get_partition_subsize(bsize, PARTITION_SPLIT);
+        if (bsize >= BLOCK_8X8 && subsize < BLOCK_SIZES_ALL) {
+          av1_init_rd_stats(&split_rdc);
+          split_rdc.rate = part_search_state.partition_cost[PARTITION_SPLIT];
+          split_rdc.rdcost = RDCOST(x->rdmult, split_rdc.rate, 0);
+
+          for (int i = 0; i < SUB_PARTITIONS_SPLIT; ++i) {
+            const int x_idx = (i & 1) * mi_size_wide[subsize];
+            const int y_idx = (i >> 1) * mi_size_high[subsize];
+
+
+            if (pc_tree->split[i] == NULL){
+              pc_tree->split[i] = av1_alloc_pc_tree_node(subsize);
+            } else {
+              pc_tree->split[i]->block_size = subsize;
+            }
+            if (!pc_tree->split[i])
+              aom_internal_error(x->e_mbd.error_info, AOM_CODEC_MEM_ERROR,
+                                 "Failed to allocate PC_TREE");
+            pc_tree->split[i]->index = i;
+
+            if (mi_row + y_idx >= cm->mi_params.mi_rows ||
+                mi_col + x_idx >= cm->mi_params.mi_cols) {
+              continue;
+            }
+
+            const RD_STATS subblock_rdc = rd_search_for_fixed_partition(
+                cpi, td, tile_data, tp, sms_tree->split[i], mi_row + y_idx,
+                mi_col + x_idx, subsize, pc_tree->split[i],do_additional_search - 1);
+            if (subblock_rdc.rate == INT_MAX) {
+              av1_invalid_rd_stats(&split_rdc);
+              break;
+            }
+            split_rdc.rate += subblock_rdc.rate;
+            split_rdc.dist += subblock_rdc.dist;
+            av1_rd_cost_update(x->rdmult, &split_rdc);
+            if (split_rdc.rdcost >= best_rdc.rdcost) break;
+          }
+
+          if (split_rdc.rdcost < best_rdc.rdcost) {
+            best_rdc = split_rdc;
+            pc_tree->partitioning = PARTITION_SPLIT;
+            // printf("   split from vert\n");
+          } else {
+            // Restore to PARTITION_NONE if split is not better
+            pc_tree->partitioning = PARTITION_VERT;
+            pc_tree->split[0]->block_size = get_partition_subsize(bsize, PARTITION_VERT);
+            pc_tree->split[1]->block_size = get_partition_subsize(bsize, PARTITION_VERT);
+          }
+        }
+      }
       break;
     case PARTITION_HORZ_A:
       ab_partitions_search(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
@@ -4861,7 +5938,7 @@ static RD_STATS rd_search_for_fixed_partition(
         }
         const RD_STATS subblock_rdc = rd_search_for_fixed_partition(
             cpi, td, tile_data, tp, sms_tree->split[idx], next_mi_row,
-            next_mi_col, subsize, pc_tree->split[idx]);
+            next_mi_col, subsize, pc_tree->split[idx], do_additional_search);
         sum_subblock_rate += subblock_rdc.rate;
         sum_subblock_dist += subblock_rdc.dist;
       }
@@ -4871,6 +5948,7 @@ static RD_STATS rd_search_for_fixed_partition(
       best_rdc.rdcost = RDCOST(x->rdmult, best_rdc.rate, best_rdc.dist);
       break;
     default:
+      // printf("PARTITION_???, %d\n", partition);
       assert(0 && "invalid partition type.");
       aom_internal_error(cm->error, AOM_CODEC_ERROR, "Invalid partition type.");
   }
@@ -4920,22 +5998,98 @@ static void build_pc_tree_from_part_decision(
       node->partitioning = partitioning;
       bsize = node->block_size;
     }
-    if (partitioning == PARTITION_SPLIT) {
-      const BLOCK_SIZE subsize = get_partition_subsize(bsize, PARTITION_SPLIT);
-      for (int i = 0; i < 4; ++i) {
-        if (node != NULL) {  // Suppress warning
-          node->split[i] = av1_alloc_pc_tree_node(subsize);
-          if (!node->split[i])
-            aom_internal_error(error_info, AOM_CODEC_MEM_ERROR,
-                               "Failed to allocate PC_TREE");
-          node->split[i]->index = i;
-          tree_node_queue[last_idx] = node->split[i];
-          ++last_idx;
-        }
+    if (partitioning != PARTITION_NONE) {
+      const BLOCK_SIZE subsize = get_partition_subsize(bsize, partitioning);
+      // Smaller block size for AB partition
+      const BLOCK_SIZE subsize2 = get_partition_subsize(bsize, PARTITION_SPLIT);
+
+      switch (partitioning) {
+        case PARTITION_SPLIT:
+        case PARTITION_HORZ_4:
+        case PARTITION_VERT_4:
+          for (int i = 0; i < 4; ++i) {
+            if (node != NULL) {  // Suppress warning
+              node->split[i] = av1_alloc_pc_tree_node(subsize);
+              if (!node->split[i])
+                aom_internal_error(error_info, AOM_CODEC_MEM_ERROR,
+                                   "Failed to allocate PC_TREE");
+              node->split[i]->index = i;
+              tree_node_queue[last_idx] = node->split[i];
+              ++last_idx;
+            }
+          }
+          break;
+        case PARTITION_HORZ:
+        case PARTITION_VERT:
+          for (int i = 0; i < 2; ++i) {
+            if (node != NULL) {  // Suppress warning
+              node->split[i] = av1_alloc_pc_tree_node(subsize);
+              if (!node->split[i])
+                aom_internal_error(error_info, AOM_CODEC_MEM_ERROR,
+                                   "Failed to allocate PC_TREE");
+              node->split[i]->index = i;
+              tree_node_queue[last_idx] = node->split[i];
+              ++last_idx;
+            }
+          }
+          break;
+        case PARTITION_HORZ_A:
+        case PARTITION_VERT_A:
+          if (node != NULL) {  // Suppress warning
+            node->split[0] = av1_alloc_pc_tree_node(subsize2);
+            node->split[1] = av1_alloc_pc_tree_node(subsize2);
+            node->split[2] = av1_alloc_pc_tree_node(subsize);
+            for (int i = 0; i < 3; ++i) {
+              if (!node->split[i])
+                aom_internal_error(error_info, AOM_CODEC_MEM_ERROR,
+                                   "Failed to allocate PC_TREE");
+              node->split[i]->index = i;
+              tree_node_queue[last_idx] = node->split[i];
+              ++last_idx;
+            }
+          }
+          break;
+        case PARTITION_HORZ_B:
+        case PARTITION_VERT_B:
+          if (node != NULL) {  // Suppress warning
+            node->split[0] = av1_alloc_pc_tree_node(subsize);
+            node->split[1] = av1_alloc_pc_tree_node(subsize2);
+            node->split[2] = av1_alloc_pc_tree_node(subsize2);
+            for (int i = 0; i < 3; ++i) {
+              if (!node->split[i])
+                aom_internal_error(error_info, AOM_CODEC_MEM_ERROR,
+                                   "Failed to allocate PC_TREE");
+              node->split[i]->index = i;
+              tree_node_queue[last_idx] = node->split[i];
+              ++last_idx;
+            }
+          }
+          break;
+        case PARTITION_NONE:
+        default:
+          // Should not hit this case.
+          assert(0);
       }
     }
     --num_nodes;
     ++q_idx;
+  }
+}
+
+static void print_pc_tree(PC_TREE *pc_tree, int level){
+  for(int i = 0; i < level; ++i){
+    printf("  ");
+  }
+  printf("%d: %d \n", pc_tree->block_size, pc_tree->partitioning);
+  for(int i = 0; i < 4; ++i){
+    if(pc_tree->split[i] != NULL){
+      print_pc_tree(pc_tree->split[i], level + 1);
+    } else {
+      for (int i = 0; i < level + 1; ++i) {
+        printf("  ");
+      }
+      printf("NULL\n");
+    }
   }
 }
 
@@ -4958,6 +6112,7 @@ static bool ml_partition_search_whole_tree(AV1_COMP *const cpi, ThreadData *td,
   features.frame_width = cpi->frame_info.frame_width;
   features.frame_height = cpi->frame_info.frame_height;
   features.block_size = bsize;
+  features.frame_num = cpi->frame_index_set.show_frame_count;  // Added frame number
   av1_ext_part_send_features(ext_part_controller, &features);
 
   // rd mode search (dry run) for a valid partition decision from the ml model.
@@ -4974,11 +6129,21 @@ static bool ml_partition_search_whole_tree(AV1_COMP *const cpi, ThreadData *td,
     if (!td->pc_root)
       aom_internal_error(error_info, AOM_CODEC_MEM_ERROR,
                          "Failed to allocate PC_TREE");
-    build_pc_tree_from_part_decision(&partition_decision, bsize, td->pc_root,
-                                     error_info);
 
-    const RD_STATS this_rdcost = rd_search_for_fixed_partition(
-        cpi, td, tile_data, tp, sms_root, mi_row, mi_col, bsize, td->pc_root);
+    build_pc_tree_from_part_decision(&partition_decision, bsize, td->pc_root, error_info);
+    // print_pc_tree(td->pc_root, 0);
+
+    // extra search, set the last parameter to true
+    RD_STATS this_rdcost = rd_search_for_fixed_partition(
+        cpi, td, tile_data, tp, sms_root, mi_row, mi_col, bsize, td->pc_root, 2);
+
+    // RD_STATS this_rdcost = rd_search_for_fixed_partition_add16_add8(
+    //     cpi, td, tile_data, tp, sms_root, mi_row, mi_col, bsize, td->pc_root,
+    //     0);
+
+    // RD_STATS this_rdcost = rd_search_for_fixed_partition_combine(
+    //     cpi, td, tile_data, tp, sms_root, mi_row, mi_col, bsize, td->pc_root, 2);
+
     aom_partition_stats_t stats;
     update_partition_stats(&this_rdcost, &stats);
     av1_ext_part_send_partition_stats(ext_part_controller, &stats);
@@ -4993,6 +6158,11 @@ static bool ml_partition_search_whole_tree(AV1_COMP *const cpi, ThreadData *td,
   set_cb_offsets(x->cb_offset, 0, 0);
   encode_sb(cpi, td, tile_data, tp, mi_row, mi_col, OUTPUT_ENABLED, bsize,
             td->pc_root, NULL);
+
+
+  // set_cb_offsets(x->cb_offset, 0, 0);
+  // encode_sb(cpi, td, tile_data, tp, mi_row, mi_col, OUTPUT_ENABLED, bsize,
+  //           td->pc_root, NULL);
   av1_free_pc_tree_recursive(td->pc_root, av1_num_planes(cm), 0, 0,
                              cpi->sf.part_sf.partition_search_type);
   td->pc_root = NULL;
@@ -5211,6 +6381,7 @@ static bool recursive_partition(AV1_COMP *const cpi, ThreadData *td,
     features.tpl_intra_cost = tpl_intra_cost;
     features.tpl_inter_cost = tpl_inter_cost;
     features.tpl_mc_dep_cost = tpl_mc_dep_cost;
+    printf("bad send 1 encoder\n");
     av1_ext_part_send_features(ext_part_controller, &features);
     const bool valid_decision = av1_ext_part_get_partition_decision(
         ext_part_controller, &partition_decision);
@@ -5260,7 +6431,7 @@ static bool recursive_partition(AV1_COMP *const cpi, ThreadData *td,
       x->rdmult = orig_rdmult_tmp;
     } else {
       *this_rdcost = rd_search_for_fixed_partition(
-          cpi, td, tile_data, tp, sms_root, mi_row, mi_col, bsize, pc_tree);
+          cpi, td, tile_data, tp, sms_root, mi_row, mi_col, bsize, pc_tree, false);
     }
 
     aom_partition_stats_t stats;
@@ -5300,6 +6471,7 @@ static bool ml_partition_search_partial(AV1_COMP *const cpi, ThreadData *td,
   features.frame_width = cpi->frame_info.frame_width;
   features.frame_height = cpi->frame_info.frame_height;
   features.block_size = bsize;
+  printf("bad send 2 encoder\n");
   av1_ext_part_send_features(ext_part_controller, &features);
   td->pc_root = av1_alloc_pc_tree_node(bsize);
   if (!td->pc_root)
@@ -5379,7 +6551,7 @@ bool av1_rd_partition_search(AV1_COMP *const cpi, ThreadData *td,
     // Encode the block with the given partition tree. Get rdcost and encoding
     // time.
     x->rdcost[i] = rd_search_for_fixed_partition(
-        cpi, td, tile_data, tp, sms_root, mi_row, mi_col, bsize, td->pc_root);
+        cpi, td, tile_data, tp, sms_root, mi_row, mi_col, bsize, td->pc_root, false);
 
     if (x->rdcost[i].rdcost < min_rdcost) {
       min_rdcost = x->rdcost[i].rdcost;
@@ -5401,8 +6573,9 @@ bool av1_rd_partition_search(AV1_COMP *const cpi, ThreadData *td,
                        "Failed to allocate PC_TREE");
   read_partition_tree(cpi, td->pc_root, xd->error_info, best_idx);
   rd_search_for_fixed_partition(cpi, td, tile_data, tp, sms_root, mi_row,
-                                mi_col, bsize, td->pc_root);
+                                mi_col, bsize, td->pc_root, false);
   set_cb_offsets(x->cb_offset, 0, 0);
+  printf("nooo2\n");
   encode_sb(cpi, td, tile_data, tp, mi_row, mi_col, OUTPUT_ENABLED, bsize,
             td->pc_root, NULL);
   av1_free_pc_tree_recursive(td->pc_root, av1_num_planes(cm), 0, 0,
