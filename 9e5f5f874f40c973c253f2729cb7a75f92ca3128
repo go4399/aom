@@ -18,6 +18,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "d104cbdd_d71f9bba",
+        "filename": "aom/aom_image.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-25T20:32:03Z",
+      "side": 1,
+      "message": "For reference, here is the correponding AVM commit: https://gitlab.com/AOMediaCodec/avm/-/commit/fa332ad9157",
+      "parentUuid": "fc411705_61f791e4",
+      "revId": "9e5f5f874f40c973c253f2729cb7a75f92ca3128",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "0694b0d1_55ff8da0",
