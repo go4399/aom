@@ -81,7 +81,7 @@ static const struct arg_enum_list matrix_coefficients_enum[] = {
   { "fcc73", AOM_CICP_MC_FCC },
   { "bt470bg", AOM_CICP_MC_BT_470_B_G },
   { "bt601", AOM_CICP_MC_BT_601 },
-  { "smpte240", AOM_CICP_CP_SMPTE_240 },
+  { "smpte240", AOM_CICP_MC_SMPTE_240 },
   { "ycgco", AOM_CICP_MC_SMPTE_YCGCO },
   { "bt2020ncl", AOM_CICP_MC_BT_2020_NCL },
   { "bt2020cl", AOM_CICP_MC_BT_2020_CL },
