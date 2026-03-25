@@ -1201,8 +1201,10 @@ static uint16_t prune_txk_type_separ(
   QUANT_PARAM quant_param;
   TxfmParam txfm_param;
   av1_setup_xform(cm, x, tx_size, DCT_DCT, &txfm_param);
-  av1_setup_quant(tx_size, 1, AV1_XFORM_QUANT_B, cpi->oxcf.q_cfg.quant_b_adapt,
-                  &quant_param);
+  av1_setup_quant(tx_size, 1,
+                  xd->lossless[xd->mi[0]->segment_id] ? AV1_XFORM_QUANT_FP
+                                                      : AV1_XFORM_QUANT_B,
+                  cpi->oxcf.q_cfg.quant_b_adapt, &quant_param);
   int tx_type;
   // to ensure we can try ones even outside of ext_tx_set of current block
   // this function should only be called for size < 16
@@ -1330,8 +1332,10 @@ static uint16_t prune_txk_type(const AV1_COMP *cpi, MACROBLOCK *x, int plane,
   TxfmParam txfm_param;
   QUANT_PARAM quant_param;
   av1_setup_xform(cm, x, tx_size, DCT_DCT, &txfm_param);
-  av1_setup_quant(tx_size, 1, AV1_XFORM_QUANT_B, cpi->oxcf.q_cfg.quant_b_adapt,
-                  &quant_param);
+  av1_setup_quant(tx_size, 1,
+                  xd->lossless[xd->mi[0]->segment_id] ? AV1_XFORM_QUANT_FP
+                                                      : AV1_XFORM_QUANT_B,
+                  cpi->oxcf.q_cfg.quant_b_adapt, &quant_param);
 
   for (int idx = 0; idx < TX_TYPES; idx++) {
     tx_type = idx;
@@ -1999,7 +2003,7 @@ static int skip_trellis_opt_based_on_satd(MACROBLOCK *x,
 
   av1_setup_quant(
       tx_size, !skip_block_trellis,
-      skip_block_trellis
+      (skip_block_trellis && !x->e_mbd.lossless[x->e_mbd.mi[0]->segment_id])
           ? (USE_B_QUANT_NO_TRELLIS ? AV1_XFORM_QUANT_B : AV1_XFORM_QUANT_FP)
           : AV1_XFORM_QUANT_FP,
       quant_b_adapt, quant_param);
@@ -2187,11 +2191,12 @@ static void search_tx_type(const AV1_COMP *cpi, MACROBLOCK *x, int plane,
   QUANT_PARAM quant_param;
   int skip_trellis_based_on_satd[TX_TYPES] = { 0 };
   av1_setup_xform(cm, x, tx_size, DCT_DCT, &txfm_param);
-  av1_setup_quant(tx_size, !skip_trellis,
-                  skip_trellis ? (USE_B_QUANT_NO_TRELLIS ? AV1_XFORM_QUANT_B
-                                                         : AV1_XFORM_QUANT_FP)
-                               : AV1_XFORM_QUANT_FP,
-                  cpi->oxcf.q_cfg.quant_b_adapt, &quant_param);
+  av1_setup_quant(
+      tx_size, !skip_trellis,
+      (skip_trellis && !xd->lossless[mbmi->segment_id])
+          ? (USE_B_QUANT_NO_TRELLIS ? AV1_XFORM_QUANT_B : AV1_XFORM_QUANT_FP)
+          : AV1_XFORM_QUANT_FP,
+      cpi->oxcf.q_cfg.quant_b_adapt, &quant_param);
 
   // Iterate through all transform type candidates.
   for (int idx = 0; idx < TX_TYPES; ++idx) {
@@ -3190,7 +3195,10 @@ int64_t av1_estimate_txfm_yrd(const AV1_COMP *const cpi, MACROBLOCK *x,
       TxfmParam txfm_param;
       QUANT_PARAM quant_param;
       av1_setup_xform(&cpi->common, x, tx_size, DCT_DCT, &txfm_param);
-      av1_setup_quant(tx_size, 0, AV1_XFORM_QUANT_B, 0, &quant_param);
+      av1_setup_quant(tx_size, 0,
+                      xd->lossless[xd->mi[0]->segment_id] ? AV1_XFORM_QUANT_FP
+                                                          : AV1_XFORM_QUANT_B,
+                      0, &quant_param);
 
       av1_xform(x, 0, i, blk_row, blk_col, bs, &txfm_param);
       av1_quant(x, 0, i, &txfm_param, &quant_param);
