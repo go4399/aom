@@ -288,6 +288,7 @@ typedef struct aom_partition_features {
   int64_t tpl_intra_cost;   ///< Intra cost, ref to "TplDepStats" in tpl_model.h
   int64_t tpl_inter_cost;   ///< Inter cost in tpl model
   int64_t tpl_mc_dep_cost;  ///< Motion compensated dependency cost in tpl model
+  int64_t frame_num;
 } aom_partition_features_t;
 
 /*!\brief Partition decisions received from the external model.

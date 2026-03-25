@@ -552,6 +552,9 @@ if(CONFIG_AV1_ENCODER)
     add_executable(simple_encoder "${AOM_ROOT}/examples/simple_encoder.c"
                                   $<TARGET_OBJECTS:aom_common_app_util>
                                   $<TARGET_OBJECTS:aom_encoder_app_util>)
+    add_executable(partition_injection_encoder "${AOM_ROOT}/examples/partition_injection_encoder.c"
+                                  $<TARGET_OBJECTS:aom_common_app_util>
+                                  $<TARGET_OBJECTS:aom_encoder_app_util>)
     add_executable(twopass_encoder "${AOM_ROOT}/examples/twopass_encoder.c"
                                    $<TARGET_OBJECTS:aom_common_app_util>
                                    $<TARGET_OBJECTS:aom_encoder_app_util>)
@@ -574,7 +577,7 @@ if(CONFIG_AV1_ENCODER)
 
     # Maintain a list of encoder example targets.
     list(APPEND AOM_ENCODER_EXAMPLE_TARGETS aomenc lossless_encoder set_maps
-                simple_encoder scalable_encoder svc_encoder_rtc twopass_encoder)
+                simple_encoder partition_injection_encoder scalable_encoder svc_encoder_rtc twopass_encoder)
     if(NOT BUILD_SHARED_LIBS AND NOT CONFIG_REALTIME_ONLY)
       list(APPEND AOM_ENCODER_EXAMPLE_TARGETS noise_model photon_noise_table)
     endif()

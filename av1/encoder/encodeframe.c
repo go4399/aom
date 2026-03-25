@@ -674,6 +674,7 @@ static inline void init_encode_rd_sb(AV1_COMP *cpi, ThreadData *td,
                                              mi_row, mi_col);
   }
 
+  // printf("lag in frames: %d\n", cpi->oxcf.gf_cfg.lag_in_frames);
 #if !CONFIG_REALTIME_ONLY
   if (!(has_no_stats_stage(cpi) && cpi->oxcf.mode == REALTIME &&
         cpi->oxcf.gf_cfg.lag_in_frames == 0)) {
@@ -958,7 +959,9 @@ static inline void encode_rd_sb(AV1_COMP *cpi, ThreadData *td,
     }
     if (num_passes == 1) {
 #if CONFIG_PARTITION_SEARCH_ORDER
-      if (cpi->ext_part_controller.ready && !frame_is_intra_only(cm)) {
+      // if (cpi->ext_part_controller.ready && !frame_is_intra_only(cm)) {
+      // if (cpi->ext_part_controller.ready && frame_is_intra_only(cm)) {
+      if (cpi->ext_part_controller.ready) {
         av1_reset_part_sf(&cpi->sf.part_sf);
         av1_reset_sf_for_ext_part(cpi);
         RD_STATS this_rdc;

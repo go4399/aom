@@ -1930,6 +1930,18 @@ static void set_rt_speed_features_framesize_independent(AV1_COMP *cpi,
   sf->interp_sf.adaptive_interp_filter_search = 1;
   sf->interp_sf.disable_dual_filter = 1;
 
+#if 0
+  sf->part_sf.less_rectangular_check_level = 1;
+  sf->part_sf.ml_prune_partition = 1;
+  sf->part_sf.prune_ext_partition_types_search_level = 1;
+  sf->part_sf.prune_part4_search = 2;
+  sf->part_sf.simple_motion_search_prune_rect = 1;
+  sf->part_sf.ml_predict_breakout_level = use_hbd ? 1 : 3;
+  sf->part_sf.reuse_prev_rd_results_for_part_ab = 1;
+  sf->part_sf.use_best_rd_for_pruning = 1;
+  sf->part_sf.simple_motion_search_prune_agg =
+      allow_screen_content_tools ? NO_PRUNING : SIMPLE_AGG_LVL0;
+#else
   sf->part_sf.default_max_partition_size = BLOCK_128X128;
   sf->part_sf.default_min_partition_size = BLOCK_8X8;
   sf->part_sf.use_best_rd_for_pruning = 1;
@@ -1938,7 +1950,9 @@ static void set_rt_speed_features_framesize_independent(AV1_COMP *cpi,
   sf->part_sf.max_intra_bsize = BLOCK_16X16;
   sf->part_sf.partition_search_breakout_rate_thr = 500;
   sf->part_sf.partition_search_type = VAR_BASED_PARTITION;
+  // sf->part_sf.partition_search_type = SEARCH_PARTITION;
   sf->part_sf.adjust_var_based_rd_partitioning = 2;
+#endif
 
   sf->mv_sf.full_pixel_search_level = 1;
   sf->mv_sf.exhaustive_searches_thresh = INT_MAX;
