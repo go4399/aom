@@ -60,6 +60,30 @@
       ],
       "revId": "856fb8012c27196a22d8e8e81821ec8e98718fa9",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "807d65f8_e7777084",
+        "filename": "av1/encoder/tx_search.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1205,
+      "author": {
+        "id": 7060
+      },
+      "writtenOn": "2026-03-25T21:08:46Z",
+      "side": 1,
+      "message": "The issue with using AV1_XFORM_QUANT_B (Fast Quantization) in lossless mode is that its rounding approximations can trick the encoder into selecting a sub-optimal mode, thinking it is cheaper than it actually is. While a single block might still be written losslessly (albeit bloated), the encoder’s internal reference frame becomes de-synchronized from what the decoder actually reconstructs.\n\nThis discrepancy leads to Reference Frame Drift in subsequent frames. Because the encoder predicts future frames based on its flawed view of the reference, the prediction errors compound over time. Eventually, this accumulated drift breaks the strict bit-exact requirement of lossless encoding, causing the output files to diverge after a few frames. By forcing AV1_XFORM_QUANT_FP (Full Precision) during the search, we keep the encoder\u0027s assumptions perfectly aligned with the decoder, preventing any drift.\n\nNote: I added this text to the description.",
+      "parentUuid": "fc8e221f_b5b8e433",
+      "range": {
+        "startLine": 1205,
+        "startChar": 56,
+        "endLine": 1205,
+        "endChar": 74
+      },
+      "revId": "856fb8012c27196a22d8e8e81821ec8e98718fa9",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
