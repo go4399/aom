@@ -16,6 +16,24 @@
       "message": "James: Do you think we need to keep the old `AOM_CICP_MC_RESERVED_15` constant for backward compatibility?\n\nFrank kept it to fix the ABI check failure:\n\n```\ntype of \"aom_matrix_coefficients_t mc\" changed:\nunderlying type \"enum aom_matrix_coefficients\" at aom_image.h:119:1 changed:\ntype size hasn\"t changed\n1 enumerator deletion:\n\"aom_matrix_coefficients::AOM_CICP_MC_RESERVED_15\" value \"15\"\n4 enumerator insertions:\n\"aom_matrix_coefficients::AOM_CICP_MC_IPT_C2\" value \"15\"\n\"aom_matrix_coefficients::AOM_CICP_MC_YCGCO_RE\" value \"16\"\n\"aom_matrix_coefficients::AOM_CICP_MC_YCGCO_RO\" value \"17\"\n```\n\"aom_matrix_coefficients::AOM_CICP_MC_RESERVED_18\" value \"18\"",
       "revId": "d8a15f8ad5c8c1e2e2b1443b525c57c4ce87876c",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70ab63f4_548fd51e",
+        "filename": "aom/aom_image.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-03-26T03:55:10Z",
+      "side": 1,
+      "message": "\u003e James: Do you think we need to keep the old `AOM_CICP_MC_RESERVED_15` constant for backward compatibility?\n\u003e\n\nYes that probably makes sense. It\u0027s not clear why it was there to begin with since it only covers one value, not the whole range of reserved values. Do we need a new one at `_18`? Is the thought some piece of code would check whether the value is `\u003c  _15` (or `_18`) to validate it?\n \n\u003e Frank kept it to fix the ABI check failure:\n\u003e \n\u003e ```\n\u003e type of \"aom_matrix_coefficients_t mc\" changed:\n\u003e underlying type \"enum aom_matrix_coefficients\" at aom_image.h:119:1 changed:\n\u003e type size hasn\"t changed\n\u003e 1 enumerator deletion:\n\u003e \"aom_matrix_coefficients::AOM_CICP_MC_RESERVED_15\" value \"15\"\n\u003e 4 enumerator insertions:\n\u003e \"aom_matrix_coefficients::AOM_CICP_MC_IPT_C2\" value \"15\"\n\u003e \"aom_matrix_coefficients::AOM_CICP_MC_YCGCO_RE\" value \"16\"\n\u003e \"aom_matrix_coefficients::AOM_CICP_MC_YCGCO_RO\" value \"17\"\n\u003e ```\n\u003e \"aom_matrix_coefficients::AOM_CICP_MC_RESERVED_18\" value \"18\"",
+      "parentUuid": "181a2dd1_0c4f68e7",
+      "revId": "d8a15f8ad5c8c1e2e2b1443b525c57c4ce87876c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
