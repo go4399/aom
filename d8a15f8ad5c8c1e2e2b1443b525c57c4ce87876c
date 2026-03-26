@@ -52,6 +52,24 @@
       "parentUuid": "70ab63f4_548fd51e",
       "revId": "d8a15f8ad5c8c1e2e2b1443b525c57c4ce87876c",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9fb7359a_97b53b2c",
+        "filename": "aom/aom_image.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-26T04:07:35Z",
+      "side": 1,
+      "message": "`AOM_CICP_MC_RESERVED_MIN` is a bad idea, because we have `AOM_CICP_MC_RESERVED_3`, which is smaller.\n\nI am inclined to not adding `AOM_CICP_MC_RESERVED_18`.",
+      "parentUuid": "87d15f68_f77d4f1c",
+      "revId": "d8a15f8ad5c8c1e2e2b1443b525c57c4ce87876c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
