@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "181a2dd1_0c4f68e7",
+        "filename": "aom/aom_image.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-26T03:44:12Z",
+      "side": 1,
+      "message": "James: Do you think we need to keep the old `AOM_CICP_MC_RESERVED_15` constant for backward compatibility?\n\nFrank kept it to fix the ABI check failure:\n\n```\ntype of \"aom_matrix_coefficients_t mc\" changed:\nunderlying type \"enum aom_matrix_coefficients\" at aom_image.h:119:1 changed:\ntype size hasn\"t changed\n1 enumerator deletion:\n\"aom_matrix_coefficients::AOM_CICP_MC_RESERVED_15\" value \"15\"\n4 enumerator insertions:\n\"aom_matrix_coefficients::AOM_CICP_MC_IPT_C2\" value \"15\"\n\"aom_matrix_coefficients::AOM_CICP_MC_YCGCO_RE\" value \"16\"\n\"aom_matrix_coefficients::AOM_CICP_MC_YCGCO_RO\" value \"17\"\n```\n\"aom_matrix_coefficients::AOM_CICP_MC_RESERVED_18\" value \"18\"",
+      "revId": "d8a15f8ad5c8c1e2e2b1443b525c57c4ce87876c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
