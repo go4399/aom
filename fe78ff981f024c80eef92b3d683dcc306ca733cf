@@ -22,6 +22,30 @@
       },
       "revId": "fe78ff981f024c80eef92b3d683dcc306ca733cf",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "daa4becc_fbfa25ff",
+        "filename": "av1/encoder/temporal_filter.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1177,
+      "author": {
+        "id": 4464468
+      },
+      "writtenOn": "2026-03-26T06:41:51Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "34643da7_e6210c96",
+      "range": {
+        "startLine": 1176,
+        "startChar": 35,
+        "endLine": 1177,
+        "endChar": 35
+      },
+      "revId": "fe78ff981f024c80eef92b3d683dcc306ca733cf",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
