@@ -145,7 +145,9 @@ void av1_rc_init_minq_luts(void) {
 // quantizer tables easier. If necessary they can be replaced by lookup
 // tables if and when things settle down in the experimental bitstream
 double av1_convert_qindex_to_q(int qindex, aom_bit_depth_t bit_depth) {
-  // Convert the index to a real Q value (scaled down to match old Q values)
+  qindex = AOMMIN(qindex, MAXQ);  // clamp to valid ac_qlookup range
+// Convert the index to a real Q value (scaled down to match old Q values)
+#if CONFIG_HIGHBITDEPTH
   switch (bit_depth) {
     case AOM_BITS_8: return av1_ac_quant_QTX(qindex, 0, bit_depth) / 4.0;
     case AOM_BITS_10: return av1_ac_quant_QTX(qindex, 0, bit_depth) / 16.0;
