@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0abc740d_b948471b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5325
+      },
+      "writtenOn": "2026-03-27T22:27:50Z",
+      "side": 1,
+      "message": "In order to support AV2 subjective test, we want to extend the cq-level to qindex mapping in libaom encoder so that it can reach lower quality and bitrate range. This diff follows the same equations for calculating the qindex for each frame, when cq-level reaches 81, qindex for all frames reaches 255, the max allowed qindex.",
+      "revId": "98ce4f15eb68c6de02d8bf5f0b106e418291067b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
