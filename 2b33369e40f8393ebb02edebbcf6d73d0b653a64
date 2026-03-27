@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a4778f4_0275d19c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-27T16:50:33Z",
+      "side": 1,
+      "message": "Now that the SVT-AV1 bug has been fixed, there is no strong reason to allow bitstreams with an undefined level.\n\nWe can revisit this decision if we get new requests.",
+      "revId": "2b33369e40f8393ebb02edebbcf6d73d0b653a64",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
