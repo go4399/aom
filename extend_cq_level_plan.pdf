@@ -1,0 +1,143 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+2 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Length 3717 >>
+stream
+BT /F1 16 Tf 50 740 Td (Plan: Extend cq-level Range from [0, 63] to [0, 81]) Tj ET
+BT /F1 13 Tf 50 708 Td (Context) Tj ET
+BT /F2 9 Tf 50 680 Td (In AOM_Q \(constant quality\) mode, the user-facing cq-level parameter \(0-63\) maps to internal qindex) Tj ET
+BT /F2 9 Tf 50 667 Td (values \(0-255\) via a lookup table. Due to quality boost multipliers applied per hierarchical layer) Tj ET
+BT /F2 9 Tf 50 654 Td (\(key frame x0.25, ARF x0.40, etc.\), cq-level=63 only produces qindex ~183 for key frames. The full) Tj ET
+BT /F2 9 Tf 50 641 Td (qindex range [0, 255] is unreachable for boosted frame types.) Tj ET
+BT /F2 9 Tf 50 620 Td (Extending cq-level to 81 allows all frame types -- including key frames -- to reach qindex 255,) Tj ET
+BT /F2 9 Tf 50 607 Td (giving the encoder full quantizer coverage across all hierarchical layers.) Tj ET
+BT /F1 13 Tf 50 586 Td (Approach: Virtual qindex > 255) Tj ET
+BT /F2 9 Tf 50 558 Td (Store unclamped "virtual" qindex values \(259-327\) in oxcf->cq_level for cq-levels 64-81. The rate) Tj ET
+BT /F2 9 Tf 50 545 Td (control path computes q_val from the clamped qindex \(255\), applies the layer multiplier to get a) Tj ET
+BT /F2 9 Tf 50 532 Td (delta, then adds the delta to the unclamped base. The final qindex is clamped to [0, 255] by) Tj ET
+BT /F2 9 Tf 50 519 Td (existing clamp\(\) calls. This produces the smooth per-layer differentiation verified in our CSV) Tj ET
+BT /F2 9 Tf 50 506 Td (analysis.) Tj ET
+BT /F1 13 Tf 50 485 Td (Changes) Tj ET
+BT /F1 11 Tf 50 457 Td (1. Extend `quantizer_to_qindex` table and reverse function) Tj ET
+BT /F2 9 Tf 50 439 Td (File: av1/encoder/av1_quantize.c \(lines 1784-1805\)) Tj ET
+BT /F2 9 Tf 50 418 Td (- Update comment: "0-63" to "0-81") Tj ET
+BT /F2 9 Tf 50 405 Td (- Add 18 entries continuing from 255 with step +4 \(unclamped virtual values\):) Tj ET
+BT /F2 9 Tf 50 392 Td (  c) Tj ET
+BT /F2 9 Tf 50 379 Td (  259, 263, 267, 271, 275, 279, 283, 287, 291,) Tj ET
+BT /F2 9 Tf 50 366 Td (  295, 299, 303, 307, 311, 315, 319, 323, 327,) Tj ET
+BT /F2 9 Tf 50 353 Td (  ) Tj ET
+BT /F2 9 Tf 50 340 Td (- av1_qindex_to_quantizer\(\): change loop bound < 64 to < 82, fallback return 63 to return 81) Tj ET
+BT /F1 11 Tf 50 319 Td (2. Clamp `best_allowed_q` and `worst_allowed_q`) Tj ET
+BT /F2 9 Tf 50 301 Td (File: av1/av1_cx_iface.c \(lines 471-475\)) Tj ET
+BT /F2 9 Tf 50 280 Td (best_allowed_q and worst_allowed_q feed directly into quantization and must stay in [0, 255].) Tj ET
+BT /F2 9 Tf 50 267 Td (cq_level is only used in rate control delta math and can exceed 255:) Tj ET
+BT /F2 9 Tf 50 254 Td (oxcf->best_allowed_q =) Tj ET
+BT /F2 9 Tf 50 241 Td (    extra_cfg->lossless ? 0 : AOMMIN\(av1_quantizer_to_qindex\(cfg->rc_min_quantizer\), MAXQ\);) Tj ET
+BT /F2 9 Tf 50 228 Td (oxcf->worst_allowed_q =) Tj ET
+BT /F2 9 Tf 50 215 Td (    extra_cfg->lossless ? 0 : AOMMIN\(av1_quantizer_to_qindex\(cfg->rc_max_quantizer\), MAXQ\);) Tj ET
+BT /F2 9 Tf 50 202 Td (oxcf->cq_level = av1_quantizer_to_qindex\(extra_cfg->cq_level\);  // can be > 255) Tj ET
+BT /F1 11 Tf 50 181 Td (3. Guard `av1_convert_qindex_to_q\(\)` against qindex > 255) Tj ET
+BT /F2 9 Tf 50 163 Td (File: av1/encoder/ratectrl.c \(line 153\)) Tj ET
+BT /F2 9 Tf 50 142 Td (Add clamp at the top of the function so ac_qlookup[] is not accessed out of bounds:) Tj ET
+BT /F2 9 Tf 50 129 Td (double av1_convert_qindex_to_q\(int qindex, aom_bit_depth_t bit_depth\) {) Tj ET
+BT /F2 9 Tf 50 116 Td (  qindex = AOMMIN\(qindex, MAXQ\);  // clamp to valid ac_qlookup range) Tj ET
+BT /F2 9 Tf 50 103 Td (  // ... rest unchanged) Tj ET
+BT /F2 9 Tf 50 90 Td (}) Tj ET
+BT /F1 11 Tf 50 69 Td (4. Update range checks and defaults) Tj ET
+BT /F2 9 Tf 50 51 Td (File: av1/av1_cx_iface.c) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 8 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R >> >> >>
+endobj
+6 0 obj
+<< /Length 4957 >>
+stream
+BT /F2 7 Tf 50 740 Td (| Line | Current                                      | New  |) Tj ET
+BT /F2 7 Tf 50 730 Td (|------|----------------------------------------------|------|) Tj ET
+BT /F2 7 Tf 50 720 Td (| 231  | `RANGE_CHECK_HI\(cfg, rc_max_quantizer, 63\)`  | `81` |) Tj ET
+BT /F2 7 Tf 50 710 Td (| 320  | `RANGE_CHECK_HI\(extra_cfg, cq_level, 63\)`    | `81` |) Tj ET
+BT /F2 7 Tf 50 700 Td (| 1602 | `63,  // rc_max_quantizer`                    | `81` |) Tj ET
+BT /F1 11 Tf 50 682 Td (5. No changes needed) Tj ET
+BT /F2 9 Tf 50 664 Td (- aomenc.c: CLI option definitions have no hardcoded range -- validation is in av1_cx_iface.c) Tj ET
+BT /F2 9 Tf 50 651 Td (- warnings.c: check_quantizer\(\) only warns about narrow Q range) Tj ET
+BT /F2 9 Tf 50 638 Td (- QINDEX_RANGE, MAXQ, ac_qlookup[]: Internal qindex space [0, 255] is unchanged) Tj ET
+BT /F2 9 Tf 50 625 Td (- Rate control minq tables: Indexed by qindex [0, 255], unchanged) Tj ET
+BT /F2 9 Tf 50 612 Td (- Existing clamp\(\) calls in rc_pick_q_and_bounds_*: Already clamp final q to [rc->best_quality,) Tj ET
+BT /F2 9 Tf 50 599 Td (rc->worst_quality] = [0, 255]) Tj ET
+BT /F1 13 Tf 50 578 Td (Files to Modify) Tj ET
+BT /F2 7 Tf 50 550 Td (| File                          | Changes                                                        |) Tj ET
+BT /F2 7 Tf 50 540 Td (|-------------------------------|----------------------------------------------------------------|) Tj ET
+BT /F2 7 Tf 50 530 Td (| `av1/encoder/av1_quantize.c`  | Extend table to 82 entries; update reverse lookup              |) Tj ET
+BT /F2 7 Tf 50 520 Td (| `av1/av1_cx_iface.c`         | Range checks 63->81; default 63->81; clamp best/worst_allowed_q|) Tj ET
+BT /F2 7 Tf 50 510 Td (| `av1/encoder/ratectrl.c`     | Clamp qindex in `av1_convert_qindex_to_q\(\)`                    |) Tj ET
+BT /F1 13 Tf 50 492 Td (Safety Analysis: Impact on Other Rate Control Modes) Tj ET
+BT /F2 7 Tf 50 464 Td (| Mode             | Uses cq_level? | Impact                                                       ) Tj ET
+BT /F2 7 Tf 50 454 Td (| Status         |) Tj ET
+BT /F2 7 Tf 50 444 Td (|------------------|---------------|----------------------------------------------------------------) Tj ET
+BT /F2 7 Tf 50 434 Td (--------|----------------|) Tj ET
+BT /F2 7 Tf 50 424 Td (| **AOM_CBR**      | No            | Completely unaffected                                         ) Tj ET
+BT /F2 7 Tf 50 414 Td (| SAFE           |) Tj ET
+BT /F2 7 Tf 50 404 Td (| **AOM_VBR**      | No            | Completely unaffected                                         ) Tj ET
+BT /F2 7 Tf 50 394 Td (| SAFE           |) Tj ET
+BT /F2 7 Tf 50 384 Td (| **AOM_CQ**       | Yes \(comparisons\) | cq_level used in `if \(q < cq_level\)` -- final q clamped to) Tj ET
+BT /F2 7 Tf 50 374 Td ([0, 255] | SAFE           |) Tj ET
+BT /F2 7 Tf 50 364 Td (| **AOM_Q \(1-pass\)**| Yes \(direct\) | Passes cq_level to `av1_convert_qindex_to_q\(\)` -- requires Fix) Tj ET
+BT /F2 7 Tf 50 354 Td (#3    | SAFE with fix  |) Tj ET
+BT /F2 7 Tf 50 344 Td (| **AOM_Q \(2-pass\)**| Yes \(direct\) | Same as 1-pass AOM_Q                                          ) Tj ET
+BT /F2 7 Tf 50 334 Td (| SAFE with fix  |) Tj ET
+BT /F2 9 Tf 50 316 Td (Key safety guarantees:) Tj ET
+BT /F2 9 Tf 50 303 Td (- av1_ac_quant\(\) in quant_common.c already has internal clamp\(qindex + delta, 0, MAXQ\) --) Tj ET
+BT /F2 9 Tf 50 290 Td (defense-in-depth) Tj ET
+BT /F2 9 Tf 50 277 Td (- All rc_pick_q_and_bounds_* functions clamp final q to [rc->best_quality, rc->worst_quality] = [0,) Tj ET
+BT /F2 9 Tf 50 264 Td (255]) Tj ET
+BT /F2 9 Tf 50 251 Td (- best_allowed_q/worst_allowed_q flow into rc->worst_quality which is used as array index for) Tj ET
+BT /F2 9 Tf 50 238 Td (inter_minq[]/rtc_minq[] \(256 elements\) -- must stay <= 255 \(Fix #2\)) Tj ET
+BT /F2 9 Tf 50 225 Td (- cq_level is never used as a direct array index -- only in arithmetic and as input to) Tj ET
+BT /F2 9 Tf 50 212 Td (av1_convert_qindex_to_q\(\) \(Fix #3\)) Tj ET
+BT /F1 13 Tf 50 191 Td (Verification) Tj ET
+BT /F2 9 Tf 50 163 Td (1. Build: cmake path/to/aom && make -j$\(nproc\)) Tj ET
+BT /F2 9 Tf 50 150 Td (2. Original range: ./aomenc --end-usage=q --cq-level=32 -o out.ivf input.y4m -- no regression) Tj ET
+BT /F2 9 Tf 50 137 Td (3. Extended range: ./aomenc --end-usage=q --cq-level=70 -o out.ivf input.y4m -- runs, produces) Tj ET
+BT /F2 9 Tf 50 124 Td (valid output) Tj ET
+BT /F2 9 Tf 50 111 Td (4. Max cq: ./aomenc --end-usage=q --cq-level=81 -o out.ivf input.y4m -- key frames reach qindex ~255) Tj ET
+BT /F2 9 Tf 50 98 Td (5. Out of range: ./aomenc --end-usage=q --cq-level=82 -- rejected with error) Tj ET
+BT /F2 9 Tf 50 85 Td (6. CBR mode: ./aomenc --end-usage=cbr --target-bitrate=1000 -o out.ivf input.y4m -- no regression) Tj ET
+BT /F2 9 Tf 50 72 Td (7. CQ mode: ./aomenc --end-usage=cq --cq-level=70 -o out.ivf input.y4m -- runs correctly) Tj ET
+BT /F2 9 Tf 50 59 Td (8. Unit tests: make runtests) Tj ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 8 0 R /MediaBox [0 0 612 792] /Contents 6 0 R /Resources << /Font << /F1 1 0 R /F2 2 0 R /F3 3 0 R >> >> >>
+endobj
+8 0 obj
+<< /Type /Pages /Kids [5 0 R 7 0 R] /Count 2 >>
+endobj
+9 0 obj
+<< /Type /Catalog /Pages 8 0 R >>
+endobj
+xref
+0 10
+0000000000 65535 f 
+0000000009 00000 g 
+0000000084 00000 g 
+0000000152 00000 g 
+0000000222 00000 g 
+0000003991 00000 g 
+0000004137 00000 g 
+0000009146 00000 g 
+0000009292 00000 g 
+0000009355 00000 g 
+trailer
+<< /Size 10 /Root 9 0 R >>
+startxref
+9404
+%%EOF
