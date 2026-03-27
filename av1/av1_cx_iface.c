@@ -613,7 +613,7 @@ static aom_codec_err_t validate_config(aom_codec_alg_priv_t *ctx,
   RANGE_CHECK(cfg, g_timebase.num, 1, cfg->g_timebase.den);
   RANGE_CHECK_HI(cfg, g_profile, MAX_PROFILES - 1);
 
-  RANGE_CHECK_HI(cfg, rc_max_quantizer, 63);
+  RANGE_CHECK_HI(cfg, rc_max_quantizer, 81);
   RANGE_CHECK_HI(cfg, rc_min_quantizer, cfg->rc_max_quantizer);
   RANGE_CHECK_BOOL(extra_cfg, lossless);
   RANGE_CHECK_HI(extra_cfg, aq_mode, AQ_MODE_COUNT - 1);
@@ -704,7 +704,7 @@ static aom_codec_err_t validate_config(aom_codec_alg_priv_t *ctx,
   RANGE_CHECK_HI(extra_cfg, sharpness, 7);
   RANGE_CHECK_HI(extra_cfg, arnr_max_frames, 15);
   RANGE_CHECK_HI(extra_cfg, arnr_strength, 6);
-  RANGE_CHECK_HI(extra_cfg, cq_level, 63);
+  RANGE_CHECK_HI(extra_cfg, cq_level, 81);
   RANGE_CHECK(cfg, g_bit_depth, AOM_BITS_8, AOM_BITS_12);
   RANGE_CHECK(cfg, g_input_bit_depth, 8, 12);
   RANGE_CHECK(extra_cfg, content, AOM_CONTENT_DEFAULT, AOM_CONTENT_INVALID - 1);
@@ -1104,10 +1104,10 @@ static aom_codec_err_t set_encoder_config(AV1EncoderConfig *oxcf,
   rc_cfg->mode = cfg->rc_end_usage;
   rc_cfg->min_cr = extra_cfg->min_cr;
   rc_cfg->best_allowed_q =
-      extra_cfg->lossless ? 0 : av1_quantizer_to_qindex(cfg->rc_min_quantizer);
+      extra_cfg->lossless ? 0 : AOMMIN(av1_quantizer_to_qindex(cfg->rc_min_quantizer), MAXQ);
   rc_cfg->worst_allowed_q =
-      extra_cfg->lossless ? 0 : av1_quantizer_to_qindex(cfg->rc_max_quantizer);
-  rc_cfg->cq_level = av1_quantizer_to_qindex(extra_cfg->cq_level);
+      extra_cfg->lossless ? 0 : AOMMIN(av1_quantizer_to_qindex(cfg->rc_max_quantizer), MAXQ);
+  rc_cfg->cq_level = av1_quantizer_to_qindex(extra_cfg->cq_level);  // can be > 255
   rc_cfg->under_shoot_pct = cfg->rc_undershoot_pct;
   rc_cfg->over_shoot_pct = cfg->rc_overshoot_pct;
   rc_cfg->maximum_buffer_size_ms = is_vbr ? 240000 : cfg->rc_buf_sz;
@@ -4176,7 +4176,7 @@ static const aom_codec_enc_cfg_t encoder_usage_cfg[] = {
       { NULL, 0 },  // rc_firstpass_mb_stats_in
       256,          // rc_target_bitrate
       0,            // rc_min_quantizer
-      63,           // rc_max_quantizer
+      81,           // rc_max_quantizer
       25,           // rc_undershoot_pct
       25,           // rc_overshoot_pct
 
