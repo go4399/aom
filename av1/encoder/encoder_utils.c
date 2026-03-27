@@ -713,17 +713,31 @@ void av1_set_size_dependent_vars(AV1_COMP *cpi, int *q, int *bottom_index,
         cpi->ppi->p_rc.arf_q = *q;
     }
 
-    if (cpi->oxcf.q_cfg.use_fixed_qp_offsets == 1 &&
+    if (cpi->oxcf.q_cfg.use_fixed_qp_offsets &&
         cpi->oxcf.rc_cfg.mode == AOM_Q) {
+      const int cq_level = cpi->oxcf.rc_cfg.cq_level;
       if (is_frame_tpl_eligible(gf_group, cpi->gf_frame_index)) {
         const double qratio_grad =
             cpi->ppi->p_rc.baseline_gf_interval > 20 ? 0.2 : 0.3;
-        const double qstep_ratio =
-            0.2 +
-            (1.0 - (double)cpi->rc.active_worst_quality / MAXQ) * qratio_grad;
-        *q = av1_get_q_index_from_qstep_ratio(cpi->rc.active_worst_quality,
-                                              qstep_ratio,
-                                              cm->seq_params->bit_depth);
+        double qstep_ratio;
+        if (cq_level <= MAXQ) {
+          qstep_ratio =
+              0.2 +
+              (1.0 - (double)cpi->rc.active_worst_quality / MAXQ) * qratio_grad;
+        } else {
+          // Extended range: smoothly increase ratio from 0.2 toward 1.0
+          // so all layers converge to MAXQ at cq_level=323 (cq=80).
+          const int max_virtual_qindex = 323;  // quantizer_to_qindex[80]
+          qstep_ratio =
+              0.2 +
+              (double)(cq_level - MAXQ) / (max_virtual_qindex - MAXQ) * 0.8;
+        }
+        if (qstep_ratio >= 1.0)
+          *q = AOMMIN(cq_level, MAXQ);
+        else
+          *q = av1_get_q_index_from_qstep_ratio(
+              cpi->rc.active_worst_quality, qstep_ratio,
+              cm->seq_params->bit_depth);
         *top_index = *bottom_index = *q;
         if (gf_group->update_type[cpi->gf_frame_index] == ARF_UPDATE ||
             gf_group->update_type[cpi->gf_frame_index] == KF_UPDATE ||
@@ -733,14 +747,30 @@ void av1_set_size_dependent_vars(AV1_COMP *cpi, int *q, int *bottom_index,
                  gf_group->max_layer_depth) {
         int this_height = gf_group->layer_depth[cpi->gf_frame_index];
         int arf_q = cpi->ppi->p_rc.arf_q;
+        const int interp_q = AOMMIN(cq_level, MAXQ);
         while (this_height > 1) {
-          arf_q = (arf_q + cpi->oxcf.rc_cfg.cq_level + 1) / 2;
+          arf_q = AOMMIN((arf_q + interp_q + 1) / 2, MAXQ);
           --this_height;
         }
         *top_index = *bottom_index = *q = arf_q;
       }
     }
 #endif
+  }
+
+  // Log per-frame qindex for all frames (including hidden ARF/INTNL_ARF).
+  if (cpi->oxcf.rc_cfg.mode == AOM_Q) {
+    static const char *const update_type_names[] = {
+      "KF", "LF", "GF", "ARF", "OVL", "IOVL", "IARF"
+    };
+    const GF_GROUP *const gf = &cpi->ppi->gf_group;
+    const int ut = gf->update_type[cpi->gf_frame_index];
+    const int ld = gf->layer_depth[cpi->gf_frame_index];
+    const char *type_name = (ut >= 0 && ut < FRAME_UPDATE_TYPES)
+                                ? update_type_names[ut]
+                                : "???";
+    fprintf(stderr, "  [q] frame=%-3d type=%-4s depth=%d qindex=%d\n",
+            (int)cm->current_frame.frame_number, type_name, ld, *q);
   }
 
   // Configure experimental use of segmentation for enhanced coding of
