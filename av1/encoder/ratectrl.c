@@ -197,6 +197,7 @@ void av1_rc_init_minq_luts(void) { aom_once(rc_init_minq_luts); }
 // quantizer tables easier. If necessary they can be replaced by lookup
 // tables if and when things settle down in the experimental bitstream
 double av1_convert_qindex_to_q(int qindex, aom_bit_depth_t bit_depth) {
+  qindex = AOMMIN(qindex, MAXQ);  // clamp to valid ac_qlookup range
   // Convert the index to a real Q value (scaled down to match old Q values)
   switch (bit_depth) {
     case AOM_BITS_8: return av1_ac_quant_QTX(qindex, 0, bit_depth) / 4.0;
@@ -1867,6 +1868,26 @@ static void get_intra_q_and_bounds(const AV1_COMP *cpi, int width, int height,
                                         last_boosted_q * 0.50, bit_depth);
       active_best_quality = AOMMAX(qindex + delta_qindex, rc->best_quality);
     }
+  } else if (oxcf->rc_cfg.mode == AOM_Q && cq_level > MAXQ) {
+    // Extended cq-levels 64-80 (virtual qindex > 255): use cq_level with
+    // keyframe boost multiplier (0.25) so that the delta math correctly
+    // differentiates keyframes from other hierarchical layers.
+    const double q_val = av1_convert_qindex_to_q(cq_level, bit_depth);
+    const int delta_qindex =
+        av1_compute_qdelta(rc, q_val, q_val * 0.25, bit_depth);
+    active_best_quality = AOMMAX(cq_level + delta_qindex, rc->best_quality);
+
+    // Tweak active_best_quality when superres is on, as this
+    // will be used directly as 'q' later.
+    if ((cpi->superres_mode == AOM_SUPERRES_QTHRESH ||
+         cpi->superres_mode == AOM_SUPERRES_AUTO) &&
+        cm->superres_scale_denominator != SCALE_NUMERATOR) {
+      active_best_quality =
+          AOMMAX(active_best_quality -
+                     ((cm->superres_scale_denominator - SCALE_NUMERATOR) *
+                      SUPERRES_QADJ_PER_DENOM_KEYFRAME),
+                 0);
+    }
   } else {
     // Not forced keyframe.
     double q_adj_factor = 1.0;
@@ -2101,6 +2122,15 @@ static int get_active_best_quality(const AV1_COMP *const cpi,
   }
 
   // Determine active_best_quality for frames that are not leaf or overlay.
+  if (rc_mode == AOM_Q && !is_intrl_arf_boost) {
+    const double q_val = av1_convert_qindex_to_q(cq_level, bit_depth);
+    const int delta_qindex =
+        av1_compute_qdelta(rc, q_val, q_val * 0.40, bit_depth);
+    active_best_quality =
+        clamp(cq_level + delta_qindex, rc->best_quality, rc->worst_quality);
+    return active_best_quality;
+  }
+
   int q = active_worst_quality;
   // Use the lower of active_worst_quality and recent
   // average Q as basis for GF/ARF best Q limit unless last frame was
@@ -3979,7 +4009,7 @@ void av1_get_one_pass_rt_params(AV1_COMP *cpi, FRAME_TYPE *const frame_type,
     }
   }
   if (cpi->oxcf.rc_cfg.mode == AOM_Q)
-    rc->active_worst_quality = cpi->oxcf.rc_cfg.cq_level;
+    rc->active_worst_quality = AOMMIN(cpi->oxcf.rc_cfg.cq_level, MAXQ);
 
   av1_rc_set_frame_target(cpi, target, cm->width, cm->height);
   rc->base_frame_target = target;

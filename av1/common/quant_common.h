@@ -26,6 +26,10 @@ extern "C" {
 #define MAXQ 255
 #define QINDEX_RANGE (MAXQ - MINQ + 1)
 #define QINDEX_BITS 8
+// Maximum user-facing cq-level (extended from 63 to allow all hierarchical
+// layers to reach MAXQ). Maps to virtual qindex 323 via quantizer_to_qindex[].
+#define MAX_CQ_LEVEL 80
+#define MAX_CQ_LEVEL_QINDEX 323
 // Total number of QM sets stored
 #define QM_LEVEL_BITS 4
 #define NUM_QM_LEVELS (1 << QM_LEVEL_BITS)
