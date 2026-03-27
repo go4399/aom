@@ -567,14 +567,31 @@ void av1_set_size_dependent_vars(AV1_COMP *cpi, int *q, int *bottom_index,
   }
 
   if (cpi->oxcf.q_cfg.use_fixed_qp_offsets && cpi->oxcf.rc_cfg.mode == AOM_Q) {
+    const int cq_level = cpi->oxcf.rc_cfg.cq_level;
     if (is_frame_tpl_eligible(gf_group, cpi->gf_frame_index)) {
-      const double qratio_grad =
-          cpi->ppi->p_rc.baseline_gf_interval > 20 ? 0.2 : 0.3;
-      const double qstep_ratio =
-          0.2 +
-          (1.0 - (double)cpi->rc.active_worst_quality / MAXQ) * qratio_grad;
-      *q = av1_get_q_index_from_qstep_ratio(
-          cpi->rc.active_worst_quality, qstep_ratio, cm->seq_params->bit_depth);
+      if (cq_level <= MAXQ) {
+        // Original qstep_ratio approach for cq-levels 0-63.
+        const double qratio_grad =
+            cpi->ppi->p_rc.baseline_gf_interval > 20 ? 0.2 : 0.3;
+        const double qstep_ratio =
+            0.2 +
+            (1.0 - (double)cpi->rc.active_worst_quality / MAXQ) * qratio_grad;
+        *q = av1_get_q_index_from_qstep_ratio(
+            cpi->rc.active_worst_quality, qstep_ratio,
+            cm->seq_params->bit_depth);
+      } else {
+        // Delta approach for extended cq-levels 64-81 (virtual qindex > 255).
+        // av1_convert_qindex_to_q clamps internally, so the delta math
+        // correctly differentiates hierarchical layers.
+        const double q_val =
+            av1_convert_qindex_to_q(cq_level, cm->seq_params->bit_depth);
+        const double boost =
+            (gf_group->update_type[cpi->gf_frame_index] == KF_UPDATE) ? 0.25
+                                                                       : 0.40;
+        const int delta_qindex = av1_compute_qdelta(
+            &cpi->rc, q_val, q_val * boost, cm->seq_params->bit_depth);
+        *q = AOMMIN(AOMMAX(cq_level + delta_qindex, 0), MAXQ);
+      }
       *top_index = *bottom_index = *q;
       if (gf_group->update_type[cpi->gf_frame_index] == ARF_UPDATE ||
           gf_group->update_type[cpi->gf_frame_index] == KF_UPDATE ||
@@ -585,7 +602,7 @@ void av1_set_size_dependent_vars(AV1_COMP *cpi, int *q, int *bottom_index,
       int this_height = gf_group->layer_depth[cpi->gf_frame_index];
       int arf_q = cpi->ppi->p_rc.arf_q;
       while (this_height > 1) {
-        arf_q = (arf_q + cpi->oxcf.rc_cfg.cq_level + 1) / 2;
+        arf_q = AOMMIN((arf_q + cq_level + 1) / 2, MAXQ);
         --this_height;
       }
       *top_index = *bottom_index = *q = arf_q;

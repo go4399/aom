@@ -145,6 +145,7 @@ void av1_rc_init_minq_luts(void) {
 // quantizer tables easier. If necessary they can be replaced by lookup
 // tables if and when things settle down in the experimental bitstream
 double av1_convert_qindex_to_q(int qindex, aom_bit_depth_t bit_depth) {
+  qindex = AOMMIN(qindex, MAXQ);  // clamp to valid ac_qlookup range
   // Convert the index to a real Q value (scaled down to match old Q values)
   switch (bit_depth) {
     case AOM_BITS_8: return av1_ac_quant_QTX(qindex, 0, bit_depth) / 4.0;
@@ -1449,6 +1450,26 @@ static void get_intra_q_and_bounds(const AV1_COMP *cpi, int width, int height,
       delta_qindex = av1_compute_qdelta(rc, last_boosted_q,
                                         last_boosted_q * 0.50, bit_depth);
       active_best_quality = AOMMAX(qindex + delta_qindex, rc->best_quality);
+    }
+  } else if (oxcf->rc_cfg.mode == AOM_Q) {
+    // Not forced keyframe in AOM_Q mode: use cq_level with keyframe boost
+    // multiplier (0.25) so that extended cq-levels (64-81) produce the
+    // expected high qindex values for keyframes.
+    const double q_val = av1_convert_qindex_to_q(cq_level, bit_depth);
+    const int delta_qindex =
+        av1_compute_qdelta(rc, q_val, q_val * 0.25, bit_depth);
+    active_best_quality = AOMMAX(cq_level + delta_qindex, rc->best_quality);
+
+    // Tweak active_best_quality when superres is on, as this
+    // will be used directly as 'q' later.
+    if ((cpi->superres_mode == AOM_SUPERRES_QTHRESH ||
+         cpi->superres_mode == AOM_SUPERRES_AUTO) &&
+        cm->superres_scale_denominator != SCALE_NUMERATOR) {
+      active_best_quality =
+          AOMMAX(active_best_quality -
+                     ((cm->superres_scale_denominator - SCALE_NUMERATOR) *
+                      SUPERRES_QADJ_PER_DENOM_KEYFRAME),
+                 0);
     }
   } else {
     // Not forced keyframe.
@@ -3048,7 +3069,7 @@ void av1_get_one_pass_rt_params(AV1_COMP *cpi,
     }
   }
   if (cpi->oxcf.rc_cfg.mode == AOM_Q)
-    rc->active_worst_quality = cpi->oxcf.rc_cfg.cq_level;
+    rc->active_worst_quality = AOMMIN(cpi->oxcf.rc_cfg.cq_level, MAXQ);
 
   av1_rc_set_frame_target(cpi, target, cm->width, cm->height);
   rc->base_frame_target = target;
