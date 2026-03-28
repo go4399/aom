@@ -76,6 +76,16 @@ static inline void xx_storeu_128(void *const a, const __m128i v) {
   _mm_storeu_si128((__m128i *)a, v);
 }
 
+// Store lane 2 of a 128-bit register to memory
+static inline void xx_store_lane2_16(void *const a, const __m128i v) {
+  const uint16_t val = (uint16_t)_mm_extract_epi16(v, 2);
+  memcpy(a, &val, sizeof(val));
+}
+
+static inline void xx_store_lane2_32(void *const a, const __m128i v) {
+  xx_storel_32(a, _mm_srli_si128(v, 8));
+}
+
 // Fill an SSE register using an interleaved pair of values, ie. set the
 // 8 channels to {a, b, a, b, a, b, a, b}, using the same channel ordering
 // as when a register is stored to / loaded from memory.
