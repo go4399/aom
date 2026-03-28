@@ -1304,10 +1304,7 @@ void av1_convolve_x_sr_avx2(const uint8_t *src, int32_t src_stride,
           const __m128i reg1 = _mm_srli_si128(data, 1);
           const __m128i reg2 = _mm_avg_epu8(data, reg1);
           xx_storel_16(dst, reg2);
-          {
-            uint16_t val = (uint16_t)_mm_extract_epi16(reg2, 2);
-            memcpy(dst + dst_stride, &val, sizeof(val));
-          }
+          xx_store_lane2_16(dst + dst_stride, reg2);
           src_ptr += 2 * src_stride;
           dst += 2 * dst_stride;
           h -= 2;
@@ -1319,10 +1316,7 @@ void av1_convolve_x_sr_avx2(const uint8_t *src, int32_t src_stride,
           const __m128i reg1 = _mm_srli_si128(data, 1);
           const __m128i reg2 = _mm_avg_epu8(data, reg1);
           xx_storel_32(dst, reg2);
-          {
-            int32_t val = _mm_extract_epi32(reg2, 2);
-            memcpy(dst + dst_stride, &val, sizeof(val));
-          }
+          xx_store_lane2_32(dst + dst_stride, reg2);
 
           src_ptr += 2 * src_stride;
           dst += 2 * dst_stride;
