@@ -10,6 +10,7 @@
  */
 
 #include <assert.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <limits.h>
 
@@ -420,12 +421,10 @@ void av1_build_wedge_inter_predictor_from_buf(MACROBLOCKD *xd, BLOCK_SIZE bsize,
   }
 }
 
-// Get pred block from up-sampled reference.
-void aom_upsampled_pred_c(MACROBLOCKD *xd, const AV1_COMMON *const cm,
-                          int mi_row, int mi_col, const MV *const mv,
-                          uint8_t *comp_pred, int width, int height,
-                          int subpel_x_q3, int subpel_y_q3, const uint8_t *ref,
-                          int ref_stride, int subpel_search) {
+// Returns true if xd block ref is scaled.
+bool aom_upsampled_pred_scaled(MACROBLOCKD *xd, const AV1_COMMON *const cm,
+                               int mi_row, int mi_col, const MV *const mv,
+                               uint8_t *comp_pred, int width, int height) {
   // expect xd == NULL only in tests
   if (xd != NULL) {
     const MB_MODE_INFO *mi = xd->mi[0];
@@ -454,8 +453,21 @@ void aom_upsampled_pred_c(MACROBLOCKD *xd, const AV1_COMMON *const cm,
           xd->bd, is_cur_buf_hbd(xd), is_intrabc, sf, pre_buf, filters);
       av1_enc_build_one_inter_predictor(comp_pred, width, mv,
                                         &inter_pred_params);
-      return;
+      return true;
     }
+  }
+  return false;
+}
+
+// Get pred block from up-sampled reference.
+void aom_upsampled_pred_c(MACROBLOCKD *xd, const AV1_COMMON *const cm,
+                          int mi_row, int mi_col, const MV *const mv,
+                          uint8_t *comp_pred, int width, int height,
+                          int subpel_x_q3, int subpel_y_q3, const uint8_t *ref,
+                          int ref_stride, int subpel_search) {
+  if (aom_upsampled_pred_scaled(xd, cm, mi_row, mi_col, mv, comp_pred, width,
+                                height)) {
+    return;
   }
 
   const InterpFilterParams *filter = av1_get_filter(subpel_search);
