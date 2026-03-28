@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2002c73a_b5cec6d2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-28T13:54:51Z",
+      "side": 1,
+      "message": "Cherry-picking to the opaline branch for libaom v3.13.3.\n\nNote: There is a test for this bug fix in a separate commit. Although that test doesn\u0027t reproduce the bug on the opaline branch, I analyzed the code thoroughly and am confident this fix is correct. So it is safe to cherry-pick it.",
+      "revId": "62755547c5ec954832515ad643e92e834d862785",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
