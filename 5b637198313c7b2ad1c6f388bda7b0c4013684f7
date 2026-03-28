@@ -16,6 +16,24 @@
       "message": "Like NEON, these could be generalized to a `store_lane_xxx` function.",
       "revId": "5b637198313c7b2ad1c6f388bda7b0c4013684f7",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba1ebfbe_501a649b",
+        "filename": "av1/common/x86/convolve_avx2.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1308,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-03-28T00:21:51Z",
+      "side": 1,
+      "message": "Will address this in another CL.",
+      "parentUuid": "b46bfd21_7db5c450",
+      "revId": "5b637198313c7b2ad1c6f388bda7b0c4013684f7",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ],
   "submitRequirementResults": [
