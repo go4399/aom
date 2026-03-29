@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "189c2e37_02614fe3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-29T01:12:34Z",
+      "side": 1,
+      "message": "Cherry-picking to the opaline branch for libaom v3.13.3.\n\nJames, Jerome: Although this test fails to reproduce the crash when ported to the opaline branch, I suggest we still cherry-pick it for completeness.\n\nAs a replacement, I reviewed the [bug fix](https://aomedia-review.git.corp.google.com/c/aom/+/209741) again to make sure it is correct and safe.",
+      "revId": "04bb8c79515cace30a5dbce337864655a74716ee",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
