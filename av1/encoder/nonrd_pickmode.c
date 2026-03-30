@@ -2490,6 +2490,23 @@ static AOM_FORCE_INLINE bool skip_inter_mode_nonrd(
       (*this_mode != GLOBALMV || *ref_frame != LAST_FRAME))
     return true;
 
+  *force_mv_inter_layer = 0;
+  if (cpi->ppi->use_svc && svc->spatial_layer_id > 0 &&
+      ((*ref_frame == LAST_FRAME && svc->skip_mvsearch_last) ||
+       (*ref_frame == GOLDEN_FRAME && svc->skip_mvsearch_gf) ||
+       (*ref_frame == ALTREF_FRAME && svc->skip_mvsearch_altref))) {
+    // Only test mode if NEARESTMV/NEARMV is (svc_mv.mv.col, svc_mv.mv.row),
+    // otherwise set NEWMV to (svc_mv.mv.col, svc_mv.mv.row).
+    // Skip newmv and filter search.
+    *force_mv_inter_layer = 1;
+    if (*this_mode == NEWMV) {
+      search_state->frame_mv[*this_mode][*ref_frame] = svc_mv;
+    } else if (search_state->frame_mv[*this_mode][*ref_frame].as_int !=
+               svc_mv.as_int) {
+      return true;
+    }
+  }
+
   // If the segment reference frame feature is enabled then do nothing if the
   // current ref frame is not allowed.
   if (segfeature_active(seg, segment_id, SEG_LVL_REF_FRAME)) {
@@ -2563,23 +2580,6 @@ static AOM_FORCE_INLINE bool skip_inter_mode_nonrd(
           search_state->mode_checked, search_state->vars,
           search_state->uv_dist)) {
     return true;
-  }
-
-  *force_mv_inter_layer = 0;
-  if (cpi->ppi->use_svc && svc->spatial_layer_id > 0 &&
-      ((*ref_frame == LAST_FRAME && svc->skip_mvsearch_last) ||
-       (*ref_frame == GOLDEN_FRAME && svc->skip_mvsearch_gf) ||
-       (*ref_frame == ALTREF_FRAME && svc->skip_mvsearch_altref))) {
-    // Only test mode if NEARESTMV/NEARMV is (svc_mv.mv.col, svc_mv.mv.row),
-    // otherwise set NEWMV to (svc_mv.mv.col, svc_mv.mv.row).
-    // Skip newmv and filter search.
-    *force_mv_inter_layer = 1;
-    if (*this_mode == NEWMV) {
-      search_state->frame_mv[*this_mode][*ref_frame] = svc_mv;
-    } else if (search_state->frame_mv[*this_mode][*ref_frame].as_int !=
-               svc_mv.as_int) {
-      return true;
-    }
   }
 
   // For screen content: skip mode testing based on source_sad.
