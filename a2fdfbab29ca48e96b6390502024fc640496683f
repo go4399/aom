@@ -16,6 +16,23 @@
       "message": "When this patch is applied on 76fe151b233dbc889dfd882a7d765de0d5dcc543, \u0027AV1/AVxEncoderThreadTestLarge.EncoderResultTest/44\u0027 test passes.\n\nThe encoder performance results with the fix are given below for few test-sets (on commit# 27c9ea02e712c5f813bcbb3c279e5f2db82ade90):\n  \n```\n     \t\t Instruction Count                BD-Rate Loss(%)\ncpu   Resolution   Reduction(%)    avg.psnr   ovr.psnr   ssim     vmaf    vmaf_neg \n----------------------------------------------------------------------------------- \n1       LOWRES2        0.098       -0.0046    -0.0042  -0.0199   0.0036    0.0052 \n2       LOWRES2\t       0.074       -0.0070    -0.0074  -0.0060  -0.0170   -0.0206 \n2       MIDRES2\t       0.084        0.0066     0.0110  -0.0517  -0.0651   -0.0530 \n3       LOWRES2\t       0.060       -0.0056    -0.0065  -0.0028  -0.0052   -0.0077 \n3       MIDRES2\t       0.017       -0.0322    -0.0007  -0.0223  -0.0363   -0.0343 \n```         \n\n The instruction count reduction specified has been measured using command:\n \n``` \n $ perf stat -e instructions:u ./aomenc\n``` \n\n Please review.",
       "revId": "a2fdfbab29ca48e96b6390502024fc640496683f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "855458c0_a7506a4b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-03-30T18:41:17Z",
+      "side": 1,
+      "message": "Thanks for fixing the bug.",
+      "revId": "a2fdfbab29ca48e96b6390502024fc640496683f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
