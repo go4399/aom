@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae60532e_6abfa08d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-31T15:18:02Z",
+      "side": 1,
+      "message": "LGTM. Thanks for adding the info!",
+      "revId": "751cb9b00c61e1c9be98d77b10ed4b63c4c69a65",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8742c93_0a998661",
+        "filename": "av1/encoder/rdopt.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 811,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-03-31T15:18:02Z",
+      "side": 1,
+      "message": "Nit: an \u003d\u003e a",
+      "revId": "751cb9b00c61e1c9be98d77b10ed4b63c4c69a65",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
