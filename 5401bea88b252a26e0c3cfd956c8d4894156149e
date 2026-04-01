@@ -103,6 +103,24 @@
       "parentUuid": "e4ab8b4e_8e621d22",
       "revId": "5401bea88b252a26e0c3cfd956c8d4894156149e",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "80654685_1a04d263",
+        "filename": "av1/encoder/reconinter_enc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-04-01T18:01:56Z",
+      "side": 1,
+      "message": "I forgot to update this comment. I later checked Chi Yo\u0027s \"AV1 Nightly Run\n\" results. The first nightly run that included Julio\u0027s [\"Frame scaling comp mask pred crash fix\"](https://aomedia-review.git.corp.google.com/c/aom/+/208801) had a slight speedup. Since there were several other commits in that nightly run, the slight speedup must have come from some other commit. But at least it means there is no evidence that we need to re-introduce this performance optimization.",
+      "parentUuid": "fe7a989f_6bfa34e3",
+      "revId": "5401bea88b252a26e0c3cfd956c8d4894156149e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
