@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ddb22440_fbbef97f",
+        "filename": "CHANGELOG",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-04-01T22:13:44Z",
+      "side": 1,
+      "message": "See also https://aomedia-review.googlesource.com/210041.",
+      "revId": "ffef1a81f5882ac45881eeaf8202c1af78e0d7fb",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
