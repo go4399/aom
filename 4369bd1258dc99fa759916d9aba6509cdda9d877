@@ -16,6 +16,24 @@
       "message": "Does this `set_color_sensitivity()` call also need to be guarded by `(cpi-\u003eref_frame_flags \u0026 AOM_LAST_FLAG)`?",
       "revId": "4369bd1258dc99fa759916d9aba6509cdda9d877",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a3135690_77c63139",
+        "filename": "av1/encoder/nonrd_pickmode.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 3498,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-02T01:47:19Z",
+      "side": 1,
+      "message": "\u003e Does this `set_color_sensitivity()` call also need to be guarded by `(cpi-\u003eref_frame_flags \u0026 AOM_LAST_FLAG)`?\n\nLine 3488 has `search_state.use_ref_frame_mask[LAST_FRAME]`. It\u0027s not clear why we have two ways to check this. Maybe some areas don\u0027t have `cpi` and others aren\u0027t using a `search_state` to check references.",
+      "parentUuid": "013e9699_15713831",
+      "revId": "4369bd1258dc99fa759916d9aba6509cdda9d877",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ],
   "submitRequirementResults": [
