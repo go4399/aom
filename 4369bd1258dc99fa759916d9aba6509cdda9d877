@@ -52,6 +52,24 @@
       "parentUuid": "a3135690_77c63139",
       "revId": "4369bd1258dc99fa759916d9aba6509cdda9d877",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f3ad8642_ed8d1fdc",
+        "filename": "av1/encoder/nonrd_pickmode.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 3498,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-02T01:59:05Z",
+      "side": 1,
+      "message": "\u003e I see. Then we can replace `(cpi-\u003eref_frame_flags \u0026 AOM_LAST_FLAG)` with `search_state.use_ref_frame_mask[LAST_FRAME]` at line 3443, right?\n\nI assume so. I took `(cpi-\u003eref_frame_flags \u0026 AOM_LAST_FLAG)` from another part of the code and didn\u0027t see `search_state.use_ref_frame_mask[]` at the time.",
+      "parentUuid": "957acb4a_ceedec6a",
+      "revId": "4369bd1258dc99fa759916d9aba6509cdda9d877",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ],
   "submitRequirementResults": [
