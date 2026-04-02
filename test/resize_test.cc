@@ -365,6 +365,7 @@ class ResizeCrashTest : public ::libaom_test::CodecTestWithParam<int>,
                           libaom_test::Encoder *encoder) override {
     if (video->frame() == 0) {
       encoder->Control(AOME_SET_CPUUSED, cpu_used_);
+<<<<<<< HEAD   (395efd18d8ef31d8452a0336e848c02072feffe7 av1_nonrd_pick_inter_mode_sb: normalize ref frame check)
       encoder->Control(AOME_SET_TUNING, AOM_TUNE_IQ);
       encoder->Control(AOME_SET_CQ_LEVEL, first_frame_cq_level_);
       encoder->Control(AV1E_SET_ROW_MT, 1);
@@ -421,6 +422,63 @@ TEST_P(ResizeCrashTest, TestCompoundMaskPredictionCrash) {
   cfg_.g_threads = 4;
   cfg_.rc_end_usage = AOM_Q;
   cfg_.use_fixed_qp_offsets = 2;
+||||||| BASE   (ad44980d7f3c7a2605c25d51ea96946949000841 Update CHANGELOG for v3.13.2)
+=======
+      encoder->Control(AOME_SET_TUNING, AOM_TUNE_SSIM);
+      encoder->Control(AOME_SET_CQ_LEVEL, first_frame_cq_level_);
+      encoder->Control(AV1E_SET_ROW_MT, 1);
+      encoder->Control(AV1E_SET_TILE_COLUMNS, first_tile_rows_cols_);
+      encoder->Control(AV1E_SET_TILE_ROWS, first_tile_rows_cols_);
+      encoder->Control(AV1E_SET_COLOR_RANGE, AOM_CR_FULL_RANGE);
+
+      struct aom_scaling_mode mode = { AOME_ONETWO, AOME_ONETWO };
+      encoder->Control(AOME_SET_SCALEMODE, &mode);
+    } else {
+      encoder->Control(AOME_SET_CQ_LEVEL, second_frame_cq_level_);
+      encoder->Control(AV1E_SET_TILE_COLUMNS, second_tile_rows_cols_);
+      encoder->Control(AV1E_SET_TILE_ROWS, second_tile_rows_cols_);
+      struct aom_scaling_mode mode = { AOME_NORMAL, AOME_NORMAL };
+      encoder->Control(AOME_SET_SCALEMODE, &mode);
+    }
+  }
+
+  int cpu_used_;
+  int first_frame_cq_level_;
+  int second_frame_cq_level_;
+  int first_tile_rows_cols_;
+  int second_tile_rows_cols_;
+};
+
+// Recreate the restoration filter crash that was
+// fixed by https://aomedia-review.googlesource.com/c/aom/+/208901
+TEST_P(ResizeCrashTest, TestRestorationFilterCrash) {
+  ::libaom_test::Y4mVideoSource video("rush_hour_444.y4m", 0, 2);
+  cfg_.g_lag_in_frames = 0;
+  cfg_.g_profile = 1;
+  cfg_.g_bit_depth = AOM_BITS_8;
+  cfg_.g_input_bit_depth = 8;
+  cfg_.g_threads = 14;
+  cfg_.rc_end_usage = AOM_Q;
+
+  first_frame_cq_level_ = 59;
+  second_frame_cq_level_ = 59;
+  first_tile_rows_cols_ = 1;
+  second_tile_rows_cols_ = 0;
+
+  ASSERT_NO_FATAL_FAILURE(RunLoop(&video));
+}
+
+// Recreate the compound mask prediction crash that was
+// fixed by https://aomedia-review.googlesource.com/c/aom/+/208801
+TEST_P(ResizeCrashTest, TestCompoundMaskPredictionCrash) {
+  ::libaom_test::Y4mVideoSource video("SDR_Dance_ldsn_1080p.y4m", 0, 2);
+  cfg_.g_lag_in_frames = 0;
+  cfg_.g_profile = 0;
+  cfg_.g_bit_depth = AOM_BITS_8;
+  cfg_.g_input_bit_depth = 8;
+  cfg_.g_threads = 4;
+  cfg_.rc_end_usage = AOM_Q;
+>>>>>>> BRANCH (92d4c37fbdd08944a0e721bbaeb13318f10aebb0 Update CHANGELOG and CMakeLists.txt for v3.13.3)
 
   first_frame_cq_level_ = 63;
   second_frame_cq_level_ = 50;

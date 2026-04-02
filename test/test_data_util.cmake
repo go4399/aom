@@ -45,8 +45,13 @@ list(APPEND AOM_TEST_DATA_FILE_NAMES
             "wikipedia_420_360p_60f.y4m"
             "SDR_Animal_oqo7.y4m"
             "SDR_Health_rtd0_720p.y4m"
+<<<<<<< HEAD   (395efd18d8ef31d8452a0336e848c02072feffe7 av1_nonrd_pick_inter_mode_sb: normalize ref frame check)
             "SDR_Dance_ldsn_1080p.y4m"
             "SDR_Sports_6mug_608p_30fps_90f.yuv")
+||||||| BASE   (ad44980d7f3c7a2605c25d51ea96946949000841 Update CHANGELOG for v3.13.2)
+=======
+            "SDR_Dance_ldsn_1080p.y4m")
+>>>>>>> BRANCH (92d4c37fbdd08944a0e721bbaeb13318f10aebb0 Update CHANGELOG and CMakeLists.txt for v3.13.3)
 
 if(ENABLE_DECODE_PERF_TESTS AND CONFIG_AV1_ENCODER)
   list(APPEND AOM_TEST_DATA_FILE_NAMES "niklas_1280_720_30.yuv")
