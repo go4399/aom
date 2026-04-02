@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e79e0fe_fe927ff4",
+        "filename": "av1/encoder/tpl_model.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1413,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2026-04-02T17:41:37Z",
+      "side": 1,
+      "message": "This CL lgtm. But I think it might be worth it if we also set the q_val array as is done for ducky encode. Just something to consider in the future.",
+      "range": {
+        "startLine": 1413,
+        "startChar": 40,
+        "endLine": 1413,
+        "endChar": 45
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "3539fc75_d2911884",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/tpl_model.c",
+              "range": {
+                "startLine": 1412,
+                "startChar": 0,
+                "endLine": 1414,
+                "endChar": 0
+              },
+              "replacement": "  int base_qindex \u003d gf_group-\u003eq_val[frame_idx];\n"
+            },
+            {
+              "path": "av1/encoder/tpl_model.c",
+              "range": {
+                "startLine": 1,
+                "startChar": 0,
+                "endLine": 1,
+                "endChar": 0
+              },
+              "replacement": "  if (cpi-\u003euse_ducky_encode) {\n    for (int gf_index \u003d cpi-\u003egf_frame_index; gf_index \u003c gf_group-\u003esize;\n         ++gf_index) {\n      gf_group-\u003eq_val[gf_index] \u003d pframe_qindex;\n    }\n  }\n"
+            }
+          ]
+        }
+      ],
+      "revId": "931ecb00da0f9b0c1ecd3fceac8b16526eb4bd9b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
