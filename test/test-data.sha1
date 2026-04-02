@@ -578,4 +578,8 @@ ad9942a073e245585c93f764ea299382a65939a7 *crowd_run_360p_10_150f.y4m
 5605058cf45cc959c34c8407fad9b9ff2ec7ca28 *SDR_Animal_oqo7.y4m
 234e498cc29b8f4bb4f0fbaeda867fbefbddcaa8 *SDR_Health_rtd0_720p.y4m
 514c8334a883f1b156433c3e56f42a0330231ace *SDR_Dance_ldsn_1080p.y4m
+<<<<<<< HEAD   (c61e9586156f0023ad31e8a6abb0dfdcfd820927 Change cm back to const in combined_motion_search)
 e4c7ad520f69dc09227eb999540ff518964d30f6 *SDR_Sports_6mug_608p_30fps_90f.yuv
+||||||| BASE   (ad44980d7f3c7a2605c25d51ea96946949000841 Update CHANGELOG for v3.13.2)
+=======
+>>>>>>> BRANCH (92d4c37fbdd08944a0e721bbaeb13318f10aebb0 Update CHANGELOG and CMakeLists.txt for v3.13.3)

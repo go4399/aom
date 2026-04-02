@@ -1,3 +1,4 @@
+<<<<<<< HEAD   (c61e9586156f0023ad31e8a6abb0dfdcfd820927 Change cm back to const in combined_motion_search)
 yyyy-mm-dd next version
   This release is ABI compatible with the last release.
 
@@ -34,6 +35,14 @@ yyyy-mm-dd next version
   - Speedups
     * Make Adaptive CDEF more decoder friendly by limiting CDEF application to
       only regions where high filter strengths are needed.
+||||||| BASE   (ad44980d7f3c7a2605c25d51ea96946949000841 Update CHANGELOG for v3.13.2)
+=======
+2026-04-02 v3.13.3
+  This release includes several bug fixes. This release is ABI
+  compatible with the last release. See
+  https://aomedia.googlesource.com/aom/+log/v3.13.2..v3.13.3 for all the
+  commits in this release.
+>>>>>>> BRANCH (92d4c37fbdd08944a0e721bbaeb13318f10aebb0 Update CHANGELOG and CMakeLists.txt for v3.13.3)
 
   - Bug Fixes
     * Commit 4cc0867f: fix multithreading crashes when loop restoration
