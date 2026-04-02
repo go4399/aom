@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb746cbd_33651122",
+        "filename": "av1/encoder/mcomp.c",
+        "patchSetId": 20
+      },
+      "lineNbr": 1495,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-04-02T18:36:49Z",
+      "side": 1,
+      "message": "maybe rewrite these as a for loop?",
+      "range": {
+        "startLine": 1494,
+        "startChar": 0,
+        "endLine": 1495,
+        "endChar": 49
+      },
+      "revId": "d4021ec29311ee3f050224248142724ef13f7b23",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
