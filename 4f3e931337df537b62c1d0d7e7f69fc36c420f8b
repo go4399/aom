@@ -41,6 +41,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "06a889cf_ba7236ed",
+        "filename": "av1/encoder/mcomp.c",
+        "patchSetId": 18
+      },
+      "lineNbr": 2153,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2026-04-02T18:07:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f36f839a_2a8d8a41",
+      "range": {
+        "startLine": 2153,
+        "startChar": -1,
+        "endLine": 2153,
+        "endChar": 0
+      },
+      "revId": "4f3e931337df537b62c1d0d7e7f69fc36c420f8b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "48f76237_2374fbad",
@@ -54,6 +78,30 @@
       "writtenOn": "2026-03-31T22:45:01Z",
       "side": 1,
       "message": "Same here for the vertical boundary. It needs to account for the block height (`bh`).\n\n```c\n    if (((mi_row \u003c\u003c 2) + search_size_height_bottom + bh) \u003e cm-\u003eheight + border) {\n      search_size_height_bottom \u003d\n          AOMMAX(0, cm-\u003eheight + border - (mi_row \u003c\u003c 2) - bh);\n    }\n```",
+      "range": {
+        "startLine": 2166,
+        "startChar": -1,
+        "endLine": 2166,
+        "endChar": 0
+      },
+      "revId": "4f3e931337df537b62c1d0d7e7f69fc36c420f8b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa7f2b97_0a274404",
+        "filename": "av1/encoder/mcomp.c",
+        "patchSetId": 18
+      },
+      "lineNbr": 2166,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2026-04-02T18:07:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48f76237_2374fbad",
       "range": {
         "startLine": 2166,
         "startChar": -1,
