@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c3a982e_4fb3919c",
+        "filename": "av1/encoder/reconinter_enc.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 455,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-04-02T21:19:20Z",
+      "side": 1,
+      "message": "`aom_upsampled_pred_scaled()` returns true if it calls `av1_enc_build_one_inter_predictor()`, with `comp_pred` as the output parameter. My comment only describes this fact.",
+      "revId": "3703013fbb3d7b8ba0b8ab735cb0939d8d147056",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2867cfb_01f4827d",
+        "filename": "av1/encoder/reconinter_enc.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-04-02T21:19:20Z",
+      "side": 1,
+      "message": "Please see my comments at line 64 below and at reconinter_enc.c:455.",
+      "revId": "3703013fbb3d7b8ba0b8ab735cb0939d8d147056",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42e2a0c8_310e0467",
+        "filename": "av1/encoder/reconinter_enc.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-04-02T21:19:20Z",
+      "side": 1,
+      "message": "\"Build one inter predictor.\" is the comment for `av1_enc_build_one_inter_predictor()`. I copied this comment to my new comment.",
+      "revId": "3703013fbb3d7b8ba0b8ab735cb0939d8d147056",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
