@@ -761,6 +761,10 @@ static void open_input_file(struct AvxInputContext *input,
 
   if (!input->file) fatal("Failed to open input file");
 
+  if (setvbuf(input->file, NULL, _IOFBF, 4 * 1024 * 1024)) {
+    aom_tools_warn("Failed to set a larger input buffer; performance may be degraded.");
+  }
+
   if (!fseeko(input->file, 0, SEEK_END)) {
     /* Input file is seekable. Figure out how long it is, so we can get
      * progress info.
