@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "3b2fbee8_3ec51302",
+        "filename": "av1/encoder/ethread.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1099,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-06T19:23:57Z",
+      "side": 1,
+      "message": "\u003e James: I analyzed the code, and I believe that if this memory allocation fails, we can still free `p_mt_info-\u003eworkers` (allocated at line 1095) correctly. Please double check.\n\nYes, this looks fine in [`av1_remove_primary_compressor`](https://source.chromium.org/chromium/chromium/src/+/main:third_party/libaom/source/libaom/av1/encoder/encoder.c;l\u003d1776;drc\u003de19bda0d9fb8343ff2403e984cdf3c59d9b26269) and [`encoder_encode`](https://source.chromium.org/chromium/chromium/src/+/main:third_party/libaom/source/libaom/av1/av1_cx_iface.c;l\u003d3527;drc\u003dd108e33053018529cec5ac6084109660b10f39d8) where some of the clean up code is duplicated.",
+      "parentUuid": "675e029a_b1ef431b",
+      "revId": "15d8d1822b7a7c0ddfee2d7530e1818b4b018eed",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "d666855e_f3efbf90",
         "filename": "av1/encoder/ethread.c",
         "patchSetId": 1
