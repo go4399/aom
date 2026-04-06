@@ -827,20 +827,6 @@ void av1_init_cdef_worker(AV1_COMP *cpi) {
   cpi->mt_info.cdef_worker = p_mt_info->cdef_worker;
 }
 
-#if !CONFIG_REALTIME_ONLY
-void av1_init_lr_mt_buffers(AV1_COMP *cpi) {
-  AV1_COMMON *const cm = &cpi->common;
-  AV1LrSync *lr_sync = &cpi->mt_info.lr_row_sync;
-  if (lr_sync->sync_range) {
-    if (cpi->ppi->gf_group.frame_parallel_level[cpi->gf_frame_index] > 0)
-      return;
-    int num_lr_workers = lr_sync->num_workers;
-    lr_sync->lrworkerdata[num_lr_workers - 1].rst_tmpbuf = cm->rst_tmpbuf;
-    lr_sync->lrworkerdata[num_lr_workers - 1].rlbs = cm->rlbs;
-  }
-}
-#endif
-
 #if CONFIG_MULTITHREAD
 void av1_init_mt_sync(AV1_COMP *cpi, int is_first_pass) {
   AV1_COMMON *const cm = &cpi->common;
@@ -920,12 +906,22 @@ void av1_init_mt_sync(AV1_COMP *cpi, int is_first_pass) {
       int rst_unit_size = cpi->sf.lpf_sf.min_lr_unit_size;
       int num_rows_lr = av1_lr_count_units(rst_unit_size, cm->height);
       int num_lr_workers = av1_get_num_mod_workers_for_alloc(p_mt_info, MOD_LR);
+      const int num_planes = av1_num_planes(cm);
       if (!lr_sync->sync_range || num_rows_lr > lr_sync->rows ||
           num_lr_workers > lr_sync->num_workers ||
-          MAX_MB_PLANE > lr_sync->num_planes) {
+          num_planes > lr_sync->num_planes) {
+        const bool is_sgr_enabled = !cpi->sf.lpf_sf.disable_sgr_filter;
+        if (cm->rst_tmpbuf == NULL && is_sgr_enabled) {
+          CHECK_MEM_ERROR(cm, cm->rst_tmpbuf,
+                          (int32_t *)aom_memalign(16, RESTORATION_TMPBUF_SIZE));
+        }
+        if (cm->rlbs == NULL) {
+          CHECK_MEM_ERROR(cm, cm->rlbs,
+                          aom_malloc(sizeof(RestorationLineBuffers)));
+        }
         av1_loop_restoration_dealloc(lr_sync);
         av1_loop_restoration_alloc(lr_sync, cm, num_lr_workers, num_rows_lr,
-                                   MAX_MB_PLANE, cm->width);
+                                   num_planes, cm->width);
       }
     }
 #endif
