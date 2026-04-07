@@ -1994,15 +1994,15 @@ static void init_tpl_stats_before_propagation(
                  sizeof(*extrc_tpl_gop_stats->frame_stats_list)));
   extrc_tpl_gop_stats->size = tpl_gop_frames;
   for (int frame_index = 0; frame_index < tpl_gop_frames; ++frame_index) {
-    const int mi_rows = tpl_stats->tpl_frame[frame_index].mi_rows;
-    const int mi_cols = tpl_stats->tpl_frame[frame_index].mi_cols;
+    const int block_rows = tpl_stats->tpl_frame[frame_index].height;
+    const int block_cols = tpl_stats->tpl_frame[frame_index].width;
     AomTplFrameStats *this_frame_stats =
         &extrc_tpl_gop_stats->frame_stats_list[frame_index];
     AOM_CHECK_MEM_ERROR(
         error_info, this_frame_stats->block_stats_list,
-        aom_calloc(mi_rows * mi_cols,
+        aom_calloc(block_rows * block_cols,
                    sizeof(*this_frame_stats->block_stats_list)));
-    this_frame_stats->num_blocks = mi_rows * mi_cols;
+    this_frame_stats->num_blocks = block_rows * block_cols;
     this_frame_stats->frame_width = frame_width;
     this_frame_stats->frame_height = frame_height;
   }
