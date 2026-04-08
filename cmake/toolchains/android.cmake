@@ -38,7 +38,7 @@ if("${AOM_ANDROID_NDK_PATH}" STREQUAL "")
   return()
 endif()
 
-include("${AOM_ANDROID_NDK_PATH}/build/cmake/android.toolchain.cmake")
+include("${AOM_ANDROID_NDK_PATH}/cmake/android.toolchain.cmake")
 
 if(ANDROID_ABI MATCHES "^armeabi")
   set(AOM_NEON_INTRIN_FLAG "-mfpu=neon")
