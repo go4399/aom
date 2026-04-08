@@ -35,8 +35,10 @@ static inline int av1_partitions_prune_inference(const float *features, int max_
   } else if (bsize == BLOCK_64X64) {
     av1_nn_predict_c(features, &partitions_prune_64x64_nn_config, 1, logits);
   } else {
-    // error out
+    fprintf(stderr, "Unsupported block size %d. It should be square 16/32/64 \n", bsize);
     assert(0);
+    // Return safe default: allow all partitions for unsupported block sizes
+    // return (1 << NUM_CLASSES) - 1;
   }
   // av1_nn_predict_c(features, &partitions_prune_nn_config, 1, logits);
   

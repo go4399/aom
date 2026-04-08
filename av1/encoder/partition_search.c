@@ -52,6 +52,29 @@ static void get_ml_part_features_keyframe(AV1_COMP *const cpi, ThreadData *td,
                                           TileDataEnc *tile_data, int mi_row,
                                           int mi_col, BLOCK_SIZE bsize,
                                           float *out_features);
+
+static int total_inferences = 0;
+static int pruned_splits = 0;
+static bool hard_top1_ml = true;
+
+__attribute__((destructor)) static void print_ml_pruning_stats() {
+  if (total_inferences > 0) {
+    FILE *f = fopen("ml_pruning_stats.txt", "a");
+    if (f) {
+      fprintf(f, "\n=== ML Pruning Stats ===\n");
+      fprintf(f, "Total inferences: %d\n", total_inferences);
+      fprintf(f, "Split pruned:     %d\n", pruned_splits);
+      fprintf(f, "Fraction pruned:  %f\n", (float)pruned_splits / total_inferences);
+      fprintf(f, "========================\n\n");
+      fclose(f);
+    } 
+    fprintf(stderr, "\n=== ML Pruning Stats (File open failed) ===\n");
+    fprintf(stderr, "Total inferences: %d\n", total_inferences);
+    fprintf(stderr, "Split pruned:     %d\n", pruned_splits);
+    fprintf(stderr, "Fraction pruned:  %f\n", (float)pruned_splits / total_inferences);
+    fprintf(stderr, "===========================================\n\n");
+  }
+}
 #endif
 
 #if CONFIG_PARTITION_SEARCH_ORDER
@@ -4850,7 +4873,7 @@ static RD_STATS rd_search_for_fixed_partition_combine(
   if (collect_data && do_additional_search > 0) {
     if (frame_is_intra_only(cm)) {
       get_ml_part_features_keyframe(cpi, td, tile_data, mi_row, mi_col, bsize, out_features);
-      ml_part_mask = av1_partitions_prune_inference(out_features, /*max_modes=*/2, bsize);
+      ml_part_mask = av1_partitions_prune_inference(out_features, /*max_modes=*/1, bsize);
     }
   }
 #endif
@@ -5699,6 +5722,36 @@ static RD_STATS rd_search_for_fixed_partition(
   // printf("mi_col: %3d, mi_row: %3d, bsize: %d, part %d, additional? %d oob? %d \n", mi_row, mi_col, bsize, partition, additional_split_allowed, block_goes_oob);
 
 
+  int ml_part_mask = 0xFF;  // Default: allow all NONE(0), HORZ(1), VERT(2), SPLIT(3)
+#if CONFIG_HW_ML_PART
+  bool collect_data = collect_ml_part_data(tile_info, mi_row, mi_col, bsize);
+#define ML_FEAT_MAX_FIXED \
+  ((int)FEATURE_INTER_MAX > (int)FEATURE_INTRA_MAX ? (int)FEATURE_INTER_MAX : (int)FEATURE_INTRA_MAX)
+  float out_features[ML_FEAT_MAX_FIXED] = { 0.0f };
+  if (collect_data) {
+    if (frame_is_intra_only(cm)) {
+      get_ml_part_features_keyframe(cpi, td, tile_data, mi_row, mi_col, bsize,
+                                    out_features);
+      ml_part_mask = av1_partitions_prune_inference(out_features, /*max_modes=*/2, bsize);
+      bool is_leaf_node = partition == PARTITION_NONE || partition == PARTITION_HORZ || partition == PARTITION_VERT;
+      bool is_bsize_correct = false;
+      switch (partition) {
+        case PARTITION_NONE: 
+        case PARTITION_HORZ: 
+        case PARTITION_VERT: is_bsize_correct = (bsize >= BLOCK_8X8); break;
+        default: is_bsize_correct = false; break;
+      }
+      if (do_additional_search > 0 && is_leaf_node && is_bsize_correct && additional_split_allowed && !block_goes_oob) {
+        total_inferences++;
+        if (!(ml_part_mask & (1 << PARTITION_SPLIT))) {
+          pruned_splits++;
+        }
+      }
+    }
+  }
+#undef ML_FEAT_MAX_FIXED
+#endif  // CONFIG_HW_ML_PART
+
   switch (partition) {
     case PARTITION_NONE:
       none_partition_search(cpi, td, tile_data, x, pc_tree, sms_tree, &x_ctx,
@@ -5706,7 +5759,7 @@ static RD_STATS rd_search_for_fixed_partition(
                             &none_rd, &part_none_rd);
 
         // Additional search for PARTITION_SPLIT
-      if (do_additional_search > 0 && bsize == BLOCK_64X64 && additional_split_allowed && !block_goes_oob) {
+      if (do_additional_search > 0 && bsize >= BLOCK_8X8 && additional_split_allowed && !block_goes_oob && (ml_part_mask & (1 << PARTITION_SPLIT))) {
         // printf("  additional split from none\n");
 
         // Do I need this?
@@ -5746,18 +5799,37 @@ static RD_STATS rd_search_for_fixed_partition(
             split_rdc.rate += subblock_rdc.rate;
             split_rdc.dist += subblock_rdc.dist;
             av1_rd_cost_update(x->rdmult, &split_rdc);
+#if CONFIG_HW_ML_PART
+            if (!hard_top1_ml && split_rdc.rdcost >= best_rdc.rdcost) break;
+#else
             if (split_rdc.rdcost >= best_rdc.rdcost) break;
+#endif
           }
-
-          if (split_rdc.rdcost < best_rdc.rdcost) {
+#if CONFIG_HW_ML_PART
+          if (hard_top1_ml && split_rdc.rate != INT_MAX) {
+            if (split_rdc.rdcost > best_rdc.rdcost) {
+              // We are taking a split that is WORSE than the seed!
+              // Log this to see how often it happens.
+              fprintf(stderr, "Forcing worse split! Seed cost: %ld, Split cost: %ld\n", best_rdc.rdcost, split_rdc.rdcost);
+            }
+            else {
+              fprintf(stderr, "Not forcing worse split! Seed cost: %ld, Split cost: %ld\n", best_rdc.rdcost, split_rdc.rdcost);
+            }
             best_rdc = split_rdc;
             pc_tree->partitioning = PARTITION_SPLIT;
-            // printf("   split from none\n");
-
           } else {
-            // Restore to PARTITION_NONE if split is not better
-            pc_tree->partitioning = PARTITION_NONE;
+#endif
+            if (split_rdc.rdcost < best_rdc.rdcost) {
+              best_rdc = split_rdc;
+              pc_tree->partitioning = PARTITION_SPLIT;
+              // printf("   split from none\n");
+            } else {
+              // Restore to PARTITION_NONE if split is not better
+              pc_tree->partitioning = PARTITION_NONE;
+            }
+#if CONFIG_HW_ML_PART
           }
+#endif
         }
       } 
       break;
@@ -5767,7 +5839,7 @@ static RD_STATS rd_search_for_fixed_partition(
                                    HORZ);
 
       // Additional search for PARTITION_SPLIT
-      if (do_additional_search > 0 && bsize >= BLOCK_8X8 && additional_split_allowed && !block_goes_oob) {
+      if (do_additional_search > 0 && bsize >= BLOCK_8X8 && additional_split_allowed && !block_goes_oob && (ml_part_mask & (1 << PARTITION_SPLIT))) {
         // printf("  additional split from horz\n");
 
         // Do I need this?
@@ -5811,20 +5883,40 @@ static RD_STATS rd_search_for_fixed_partition(
             split_rdc.rate += subblock_rdc.rate;
             split_rdc.dist += subblock_rdc.dist;
             av1_rd_cost_update(x->rdmult, &split_rdc);
+#if CONFIG_HW_ML_PART
+            if (!hard_top1_ml && split_rdc.rdcost >= best_rdc.rdcost) break;
+#else
             if (split_rdc.rdcost >= best_rdc.rdcost) break;
+#endif
           }
-
-          if (split_rdc.rdcost < best_rdc.rdcost) {
+#if CONFIG_HW_ML_PART
+          if (hard_top1_ml && split_rdc.rate != INT_MAX) {
+            if (split_rdc.rdcost > best_rdc.rdcost) {
+              // We are taking a split that is WORSE than the seed!
+              // Log this to see how often it happens.
+              fprintf(stderr, "Forcing worse split! Seed cost: %ld, Split cost: %ld\n", best_rdc.rdcost, split_rdc.rdcost);
+            }
+            else {
+              fprintf(stderr, "Not forcing split! Seed cost: %ld, Split cost: %ld\n", best_rdc.rdcost, split_rdc.rdcost);
+            }
             best_rdc = split_rdc;
             pc_tree->partitioning = PARTITION_SPLIT;
-            // printf("   split from horz\n");
-
           } else {
-            // Restore to PARTITION_NONE if split is not better
-            pc_tree->partitioning = PARTITION_HORZ;
-            pc_tree->split[0]->block_size = get_partition_subsize(bsize, PARTITION_HORZ);
-            pc_tree->split[1]->block_size = get_partition_subsize(bsize, PARTITION_HORZ);
+#endif
+            if (split_rdc.rdcost < best_rdc.rdcost) {
+              best_rdc = split_rdc;
+              pc_tree->partitioning = PARTITION_SPLIT;
+              // printf("   split from horz\n");
+
+            } else {
+              // Restore to PARTITION_NONE if split is not better
+              pc_tree->partitioning = PARTITION_HORZ;
+              pc_tree->split[0]->block_size = get_partition_subsize(bsize, PARTITION_HORZ);
+              pc_tree->split[1]->block_size = get_partition_subsize(bsize, PARTITION_HORZ);
+            }
+#if CONFIG_HW_ML_PART
           }
+#endif
         }
       }
       break;
@@ -5833,7 +5925,7 @@ static RD_STATS rd_search_for_fixed_partition(
                                    &part_search_state, &best_rdc, NULL, VERT,
                                    VERT);
       // Additional search for PARTITION_SPLIT
-      if (do_additional_search > 0 && bsize >= BLOCK_8X8 && additional_split_allowed && !block_goes_oob) {
+      if (do_additional_search > 0 && bsize >= BLOCK_8X8 && additional_split_allowed && !block_goes_oob && (ml_part_mask & (1 << PARTITION_SPLIT))) {
         // printf("  additional split from vert\n");
 
         // Do I need this?
@@ -5877,19 +5969,39 @@ static RD_STATS rd_search_for_fixed_partition(
             split_rdc.rate += subblock_rdc.rate;
             split_rdc.dist += subblock_rdc.dist;
             av1_rd_cost_update(x->rdmult, &split_rdc);
+#if CONFIG_HW_ML_PART
+            if (!hard_top1_ml && split_rdc.rdcost >= best_rdc.rdcost) break;
+#else
             if (split_rdc.rdcost >= best_rdc.rdcost) break;
+#endif
           }
-
-          if (split_rdc.rdcost < best_rdc.rdcost) {
+#if CONFIG_HW_ML_PART
+          if (hard_top1_ml && split_rdc.rate != INT_MAX) {
+            if (split_rdc.rdcost > best_rdc.rdcost) {
+              // We are taking a split that is WORSE than the seed!
+              // Log this to see how often it happens.
+              fprintf(stderr, "Forcing worse split! Seed cost: %ld, Split cost: %ld\n", best_rdc.rdcost, split_rdc.rdcost);
+            }
+            else {
+              fprintf(stderr, "Not forcing split! Seed cost: %ld, Split cost: %ld\n", best_rdc.rdcost, split_rdc.rdcost);
+            }
             best_rdc = split_rdc;
             pc_tree->partitioning = PARTITION_SPLIT;
-            // printf("   split from vert\n");
           } else {
-            // Restore to PARTITION_NONE if split is not better
-            pc_tree->partitioning = PARTITION_VERT;
-            pc_tree->split[0]->block_size = get_partition_subsize(bsize, PARTITION_VERT);
-            pc_tree->split[1]->block_size = get_partition_subsize(bsize, PARTITION_VERT);
+#endif
+            if (split_rdc.rdcost < best_rdc.rdcost) {
+              best_rdc = split_rdc;
+              pc_tree->partitioning = PARTITION_SPLIT;
+              // printf("   split from vert\n");
+            } else {
+              // Restore to PARTITION_NONE if split is not better
+              pc_tree->partitioning = PARTITION_VERT;
+              pc_tree->split[0]->block_size = get_partition_subsize(bsize, PARTITION_VERT);
+              pc_tree->split[1]->block_size = get_partition_subsize(bsize, PARTITION_VERT);
+            }
+#if CONFIG_HW_ML_PART
           }
+#endif
         }
       }
       break;
@@ -6135,7 +6247,7 @@ static bool ml_partition_search_whole_tree(AV1_COMP *const cpi, ThreadData *td,
 
     // extra search, set the last parameter to true
     RD_STATS this_rdcost = rd_search_for_fixed_partition(
-        cpi, td, tile_data, tp, sms_root, mi_row, mi_col, bsize, td->pc_root, 2);
+        cpi, td, tile_data, tp, sms_root, mi_row, mi_col, bsize, td->pc_root, 0);
 
     // RD_STATS this_rdcost = rd_search_for_fixed_partition_add16_add8(
     //     cpi, td, tile_data, tp, sms_root, mi_row, mi_col, bsize, td->pc_root,
@@ -6609,7 +6721,7 @@ static void log_sub_block_var(const AV1_COMP *cpi, MACROBLOCK *x, BLOCK_SIZE bs,
   // sub blocks in the current block.
 
   const MACROBLOCKD *const xd = &x->e_mbd;
-  const int is_hbd = is_cur_buf_hbd(xd);
+  const int is_hbd = (cpi->source->flags & YV12_FLAG_HIGHBITDEPTH) != 0;
   const int right_overflow =
       (xd->mb_to_right_edge < 0) ? ((-xd->mb_to_right_edge) >> 3) : 0;
   const int bottom_overflow =
@@ -6760,6 +6872,9 @@ static void get_ml_part_features_interframe(AV1_COMP *const cpi, ThreadData *td,
                FEATURE_INTER_VER_1_LOG_SATD, blk_ver_1, blk_area);
 }
 
+#define MAX_BLK_SIZE (MAX_TX_SIZE << 1)
+#define MAX_BLK_SQUARE (MAX_BLK_SIZE * MAX_BLK_SIZE)
+
 static void ml_part_features_intra_split(AV1_COMP *const cpi, ThreadData *td,
                                           TileDataEnc *tile_data,
                                           int mi_row, int mi_col,
@@ -6817,9 +6932,14 @@ static void ml_part_features_intra_split(AV1_COMP *const cpi, ThreadData *td,
 
       for (PREDICTION_MODE intra_sub_mode = INTRA_MODE_START;
            intra_sub_mode < INTRA_MODE_END; ++intra_sub_mode) {
-        DECLARE_ALIGNED(16, uint16_t, intrapred_buf[MAX_TX_SQUARE]);
+        DECLARE_ALIGNED(32, uint16_t, intrapred_buf[MAX_BLK_SQUARE]);
         memset(intrapred_buf, 0, sizeof(intrapred_buf));
-        uint8_t* intrapred = CONVERT_TO_BYTEPTR(intrapred_buf);
+        uint8_t *intrapred;
+        if (is_cur_buf_hbd(xd)) {
+          intrapred = CONVERT_TO_BYTEPTR(intrapred_buf);
+        } else {
+          intrapred = (uint8_t *)intrapred_buf;
+        }
         av1_predict_intra_block(
             xd, sb_size, 0, w_sub_mi << MI_SIZE_LOG2, h_sub_mi << MI_SIZE_LOG2,
             tx_sub_size, intra_sub_mode, 0, 0, FILTER_INTRA_MODES, x->plane[0].src.buf + src_off,
@@ -6856,8 +6976,6 @@ static void ml_part_features_intra_split(AV1_COMP *const cpi, ThreadData *td,
   }
 }
 
-#define MAX_BLK_SIZE (MAX_TX_SIZE << 1)
-#define MAX_BLK_SQUARE (MAX_BLK_SIZE * MAX_BLK_SIZE)
 
 static void ml_part_features_intra_horz(AV1_COMP *const cpi, ThreadData *td,
                                          TileDataEnc *tile_data,
@@ -6903,9 +7021,14 @@ static void ml_part_features_intra_horz(AV1_COMP *const cpi, ThreadData *td,
 
     for (PREDICTION_MODE intra_sub_mode = INTRA_MODE_START;
          intra_sub_mode < INTRA_MODE_END; ++intra_sub_mode) {
-      DECLARE_ALIGNED(16, uint16_t, intrapred_buf[MAX_BLK_SQUARE]);
+      DECLARE_ALIGNED(32, uint16_t, intrapred_buf[MAX_BLK_SQUARE]);
       memset(intrapred_buf, 0, sizeof(intrapred_buf));
-      uint8_t* intrapred = CONVERT_TO_BYTEPTR(intrapred_buf);
+      uint8_t *intrapred;
+      if (is_cur_buf_hbd(xd)) {
+        intrapred = CONVERT_TO_BYTEPTR(intrapred_buf);
+      } else {
+        intrapred = (uint8_t *)intrapred_buf;
+      }
       av1_predict_intra_block(
           xd, sb_size, 0, w_sub_mi << MI_SIZE_LOG2, h_sub_mi << MI_SIZE_LOG2,
           tx_sub_size, intra_sub_mode, 0, 0, FILTER_INTRA_MODES, x->plane[0].src.buf + src_off,
@@ -6984,9 +7107,14 @@ static void ml_part_features_intra_vert(AV1_COMP *const cpi, ThreadData *td,
 
     for (PREDICTION_MODE intra_sub_mode = INTRA_MODE_START;
          intra_sub_mode < INTRA_MODE_END; ++intra_sub_mode) {
-      DECLARE_ALIGNED(16, uint16_t, intrapred_buf[MAX_BLK_SQUARE]);
+      DECLARE_ALIGNED(32, uint16_t, intrapred_buf[MAX_BLK_SQUARE]);
       memset(intrapred_buf, 0, sizeof(intrapred_buf));
-      uint8_t* intrapred = CONVERT_TO_BYTEPTR(intrapred_buf);
+      uint8_t *intrapred;
+      if (is_cur_buf_hbd(xd)) {
+        intrapred = CONVERT_TO_BYTEPTR(intrapred_buf);
+      } else {
+        intrapred = (uint8_t *)intrapred_buf;
+      }
       av1_predict_intra_block(
           xd, sb_size, 0, w_sub_mi << MI_SIZE_LOG2, h_sub_mi << MI_SIZE_LOG2,
           tx_sub_size, intra_sub_mode, 0, 0, FILTER_INTRA_MODES, x->plane[0].src.buf + src_off,
@@ -7053,9 +7181,14 @@ static void ml_part_features_intra_none(AV1_COMP *const cpi, ThreadData *td,
         int src_off = (row_off << 2) * x->plane[0].src.stride + (col_off << 2);
         xd->up_available = (mi_row + row_off) > tile_info->mi_row_start;
         xd->left_available = (mi_col + col_off) > tile_info->mi_col_start;
-        DECLARE_ALIGNED(16, uint16_t, intrapred_buf[MAX_BLK_SQUARE]);
+        DECLARE_ALIGNED(32, uint16_t, intrapred_buf[MAX_BLK_SQUARE]);
         memset(intrapred_buf, 0, sizeof(intrapred_buf));
-        uint8_t* intrapred = CONVERT_TO_BYTEPTR(intrapred_buf);
+        uint8_t *intrapred;
+        if (is_cur_buf_hbd(xd)) {
+          intrapred = CONVERT_TO_BYTEPTR(intrapred_buf);
+        } else {
+          intrapred = (uint8_t *)intrapred_buf;
+        }
         av1_predict_intra_block(
             xd, sb_size, 0, w_mi << MI_SIZE_LOG2, h_mi << MI_SIZE_LOG2, tx_size,
             intra_mode, 0, 0, FILTER_INTRA_MODES, x->plane[0].src.buf + src_off,
@@ -7276,7 +7409,7 @@ bool av1_rd_pick_partition(AV1_COMP *const cpi, ThreadData *td,
     if (frame_is_intra_only(cm)) {
       get_ml_part_features_keyframe(cpi, td, tile_data, mi_row, mi_col, bsize,
                                     out_features);
-      ml_part_mask = av1_partitions_prune_inference(out_features, /*max_modes=*/2, bsize);
+      // ml_part_mask = av1_partitions_prune_inference(out_features, /*max_modes=*/2, bsize);
     } else {
       get_ml_part_features_interframe(cpi, td, tile_data, mi_row, mi_col, bsize,
                                       out_features);
@@ -7638,7 +7771,7 @@ BEGIN_PARTITION_SEARCH:
   end_timing(cpi, encode_sb_time);
 #endif
 
-#if 0 // CONFIG_HW_ML_PART
+#if CONFIG_HW_ML_PART
   if (collect_data && part_search_state.found_best_partition) {
     const int is_keyframe = frame_is_intra_only(cm);
     char file_name[200];
@@ -7721,8 +7854,8 @@ BEGIN_PARTITION_SEARCH:
                   "INTRA_VER_NORM_BEST_SSE_1_0,INTRA_VER_NORM_BEST_VAR_1_0,"
                   "INTRA_VER_NORM_BEST_SSE_1_1,INTRA_VER_NORM_BEST_VAR_1_1,"
                   "INTRA_VER_NORM_BEST_SSE_2_0,INTRA_VER_NORM_BEST_VAR_2_0,"
-                  "INTRA_VER_NORM_BEST_SSE_2_1,INTRA_VER_NORM_BEST_VAR_2_1,PIXELS"
-                  "\n");
+                  "INTRA_VER_NORM_BEST_SSE_2_1,INTRA_VER_NORM_BEST_VAR_2_1,"
+                  "PIXELS\n");
         }
       }
       fprintf(fp, "%d,%d,%d,%d,%d,%d,%d,%d,", cm->cur_frame->display_order_hint,
@@ -7733,10 +7866,22 @@ BEGIN_PARTITION_SEARCH:
            ++i) {
         fprintf(fp, "%.2f,", out_features[i]);
       }
-      for (int r = 0; r < block_size_high[bsize]; ++r) {
-        for (int c = 0; c < block_size_wide[bsize]; ++c) {
+      for (int r = -1; r < block_size_high[bsize]; ++r) {
+        if (mi_row == 0 && r == -1) {
+          // Print 0 for top row pixels as they are not available.
+          for (int c = -1; c < block_size_wide[bsize]; ++c) {
+            fprintf(fp, "0,");
+          }
+          continue;
+        }
+        for (int c = -1; c < block_size_wide[bsize]; ++c) {
+          if (mi_col == 0 && c == -1) {
+            // Print 0 for left column pixels as they are not available.
+            fprintf(fp, "0,");
+            continue;
+          }
           // fprintf(fp, "%d,", x->plane[0].src.buf[r * x->plane[0].src.stride + c]);
-          if (is_cur_buf_hbd(xd)) {
+          if (cpi->source->flags & YV12_FLAG_HIGHBITDEPTH) {
             fprintf(fp, "%d,",
                     CONVERT_TO_SHORTPTR(
                         x->plane[0].src.buf)[r * x->plane[0].src.stride + c]);

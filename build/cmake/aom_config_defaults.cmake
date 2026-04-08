@@ -157,7 +157,7 @@ set_aom_config_var(CONFIG_NN_V2 0
                    "AV1 experiment: Fully-connected neural nets ver.2.")
 set_aom_config_var(CONFIG_OPTICAL_FLOW_API 0
                    "AV1 experiment: for optical flow API.")
-set_aom_config_var(CONFIG_PARTITION_SEARCH_ORDER 1
+set_aom_config_var(CONFIG_PARTITION_SEARCH_ORDER 0
                    "AV1 experiment: Use alternative partition search order.")
 set_aom_config_var(CONFIG_RATECTRL_LOG 0
                    "AV1 experiment: Log rate control decision.")
