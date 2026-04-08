@@ -33,6 +33,24 @@
       "message": "Nit: Get rid of the variable `max_tile_size` and use `MAX_TILE_AREA` directly.",
       "revId": "061c67dacf1de9ff6efb42c11b9f71ecdeef7d69",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ce4bc5ea_f556abd9",
+        "filename": "av1/encoder/level.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1042,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2026-04-08T19:59:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b00799b0_e7365ec0",
+      "revId": "061c67dacf1de9ff6efb42c11b9f71ecdeef7d69",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
