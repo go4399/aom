@@ -16,6 +16,24 @@
       "message": "The results for different resolutions are as follows(measured on GCC 11.4.0. Please note that similar gains are observed with GCC 14.2.0, whereas Clang shows negligible improvements):\n```\n                Encoder Instruction                     \ncpu  Resolution  Count Reduction(%) \n-----------------------------------\n1    LOWRES2         0.25           \n1    MIDRES2         0.19           \n1    SHORTS608p      0.18           \n1    SHORTS720p      0.15           \n1    SHORTS1080p     0.13           \n1    HDRES2          0.12          \n1    Average         0.17 \n\n\n2    LOWRES2         0.65           \n2    MIDRES2         0.46           \n2    SHORTS608p      0.44           \n2    SHORTS720p      0.36           \n2    SHORTS1080p     0.32           \n2    HDRES2          0.29          \n2    Average         0.41           \n\n\n3    LOWRES2         0.96           \n3    MIDRES2         0.83          \n3    SHORTS608p      0.84\n3    SHORTS720p      0.83          \n3    SHORTS1080p     0.75\n3    HDRES2          0.59\n3    Average         0.80\n\n\n4    LOWRES2         1.24          \n4    MIDRES2         1.01          \n4    SHORTS608p      1.09          \n4    SHORTS720p      1.07         \n4    SHORTS1080p     0.97           \n4    HDRES2          0.74         \n4    Average         1.02          \n\n\n5    LOWRES2         0.98           \n5    MIDRES2         0.90          \n5    SHORTS608p      0.95           \n5    SHORTS720p      0.92         \n5    SHORTS1080p     0.84          \n5    HDRES2          0.60         \n5    Average         0.87         \n\n\n6    LOWRES2         1.28          \n6    MIDRES2         1.10           \n6    SHORTS608p      1.08           \n6    SHORTS720p      1.00         \n6    SHORTS1080p     0.88          \n6    HDRES2          0.65        \n6    Average         1.00         \n```\n\n\nThe instruction count reduction specified has been measured using command:\n```\n`$ perf stat -e instructions:u ./aomenc`\n```",
       "revId": "9f779a269dec0db103794b3ced49c7b55b20352b",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5197b6d_45aeed7e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-04-08T18:56:30Z",
+      "side": 1,
+      "message": "It may not be a good idea to always force sizable functions inline. Let\u0027s check in this CL and stop here. Thanks.",
+      "parentUuid": "61e4b280_38e88087",
+      "revId": "9f779a269dec0db103794b3ced49c7b55b20352b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
