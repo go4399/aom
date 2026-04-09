@@ -5755,190 +5755,83 @@ static RD_STATS rd_search_for_fixed_partition(
 #endif  // CONFIG_HW_ML_PART
 
   switch (partition) {
-    case PARTITION_NONE:
-      none_partition_search(cpi, td, tile_data, x, pc_tree, sms_tree, &x_ctx,
-                            &part_search_state, &best_rdc, &pb_source_variance,
-                            &none_rd, &part_none_rd);
-
-        // Additional search for PARTITION_SPLIT
-      if (do_additional_search > 0 && bsize >= BLOCK_8X8 && additional_split_allowed && !block_goes_oob && (ml_part_mask & (1 << PARTITION_SPLIT))) {
-        // printf("  additional split from none\n");
-
-        // Do I need this?
-        av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
-
-        RD_STATS split_rdc;
-        av1_invalid_rd_stats(&split_rdc);
-        BLOCK_SIZE subsize = get_partition_subsize(bsize, PARTITION_SPLIT);
-        if (bsize >= BLOCK_8X8 && subsize < BLOCK_SIZES_ALL) {
-          av1_init_rd_stats(&split_rdc);
-          split_rdc.rate = part_search_state.partition_cost[PARTITION_SPLIT];
-          split_rdc.rdcost = RDCOST(x->rdmult, split_rdc.rate, 0);
-
-          for (int i = 0; i < SUB_PARTITIONS_SPLIT; ++i) {
-            const int x_idx = (i & 1) * mi_size_wide[subsize];
-            const int y_idx = (i >> 1) * mi_size_high[subsize];
-
-
-            if (pc_tree->split[i] == NULL)
-              pc_tree->split[i] = av1_alloc_pc_tree_node(subsize);
-            if (!pc_tree->split[i])
-              aom_internal_error(x->e_mbd.error_info, AOM_CODEC_MEM_ERROR,
-                                 "Failed to allocate PC_TREE");
-            pc_tree->split[i]->index = i;
-
-            if (mi_row + y_idx >= cm->mi_params.mi_rows ||
-                mi_col + x_idx >= cm->mi_params.mi_cols)
-              continue;
-
-            const RD_STATS subblock_rdc = rd_search_for_fixed_partition(
-                cpi, td, tile_data, tp, sms_tree->split[i], mi_row + y_idx,
-                mi_col + x_idx, subsize, pc_tree->split[i], do_additional_search - 1);
-            if (subblock_rdc.rate == INT_MAX) {
-              av1_invalid_rd_stats(&split_rdc);
-              break;
-            }
-            split_rdc.rate += subblock_rdc.rate;
-            split_rdc.dist += subblock_rdc.dist;
-            av1_rd_cost_update(x->rdmult, &split_rdc);
-#if CONFIG_HW_ML_PART
-            if (collect_data) {
-              if (!hard_top1_ml && split_rdc.rdcost >= best_rdc.rdcost) break;
-            } else {
-              if (split_rdc.rdcost >= best_rdc.rdcost) break;
-            }
-#else
-            if (split_rdc.rdcost >= best_rdc.rdcost) break;
-#endif
-          }
-#if CONFIG_HW_ML_PART
-          if (collect_data && hard_top1_ml && split_rdc.rate != INT_MAX) {
-            if (split_rdc.rdcost > best_rdc.rdcost) {
-              // We are taking a split that is WORSE than the seed!
-              // Log this to see how often it happens.
-              fprintf(stderr, "Forcing worse split! Seed cost: %ld, Split cost: %ld\n", best_rdc.rdcost, split_rdc.rdcost);
-            }
-            else {
-              fprintf(stderr, "Not forcing worse split! Seed cost: %ld, Split cost: %ld\n", best_rdc.rdcost, split_rdc.rdcost);
-            }
-            best_rdc = split_rdc;
-            pc_tree->partitioning = PARTITION_SPLIT;
-          } else {
-#endif
-            if (split_rdc.rdcost < best_rdc.rdcost) {
-              best_rdc = split_rdc;
-              pc_tree->partitioning = PARTITION_SPLIT;
-              // printf("   split from none\n");
-            } else {
-              // Restore to PARTITION_NONE if split is not better
-              pc_tree->partitioning = PARTITION_NONE;
-            }
-#if CONFIG_HW_ML_PART
-          }
-#endif
-        }
-      } 
+    case PARTITION_HORZ_A:
+      ab_partitions_search(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
+                           &part_search_state, &best_rdc, NULL,
+                           pb_source_variance, 1, HORZ_A, HORZ_A);
       break;
+    case PARTITION_HORZ_B:
+      ab_partitions_search(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
+                           &part_search_state, &best_rdc, NULL,
+                           pb_source_variance, 1, HORZ_B, HORZ_B);
+      break;
+    case PARTITION_VERT_A:
+      ab_partitions_search(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
+                           &part_search_state, &best_rdc, NULL,
+                           pb_source_variance, 1, VERT_A, VERT_A);
+      break;
+    case PARTITION_VERT_B:
+      ab_partitions_search(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
+                           &part_search_state, &best_rdc, NULL,
+                           pb_source_variance, 1, VERT_B, VERT_B);
+      break;
+    case PARTITION_HORZ_4:
+      rd_pick_4partition(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
+                         pc_tree->horizontal4, &part_search_state, &best_rdc,
+                         inc_step, PARTITION_HORZ_4);
+      break;
+    case PARTITION_VERT_4:
+      rd_pick_4partition(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
+                         pc_tree->vertical4, &part_search_state, &best_rdc,
+                         inc_step, PARTITION_VERT_4);
+      break;
+    case PARTITION_SPLIT:
+      for (int idx = 0; idx < SUB_PARTITIONS_SPLIT; ++idx) {
+        const BLOCK_SIZE subsize =
+            get_partition_subsize(bsize, PARTITION_SPLIT);
+        assert(subsize < BLOCK_SIZES_ALL);
+        const int next_mi_row =
+            idx < 2 ? mi_row : mi_row + mi_size_high[subsize];
+        const int next_mi_col =
+            idx % 2 == 0 ? mi_col : mi_col + mi_size_wide[subsize];
+        if (next_mi_row >= cm->mi_params.mi_rows ||
+            next_mi_col >= cm->mi_params.mi_cols) {
+          continue;
+        }
+        const RD_STATS subblock_rdc = rd_search_for_fixed_partition(
+            cpi, td, tile_data, tp, sms_tree->split[idx], next_mi_row,
+            next_mi_col, subsize, pc_tree->split[idx], do_additional_search);
+        sum_subblock_rate += subblock_rdc.rate;
+        sum_subblock_dist += subblock_rdc.dist;
+      }
+      best_rdc.rate = sum_subblock_rate;
+      best_rdc.rate += part_search_state.partition_cost[PARTITION_SPLIT];
+      best_rdc.dist = sum_subblock_dist;
+      best_rdc.rdcost = RDCOST(x->rdmult, best_rdc.rate, best_rdc.dist);
+      break;
+    case PARTITION_NONE:
     case PARTITION_HORZ:
-      rectangular_partition_search(cpi, td, tile_data, tp, x, pc_tree, &x_ctx,
+    case PARTITION_VERT:
+      if (partition == PARTITION_VERT) {
+        rectangular_partition_search(cpi, td, tile_data, tp, x, pc_tree, &x_ctx,
+                                     &part_search_state, &best_rdc, NULL, VERT,
+                                     VERT);
+      } else if (partition == PARTITION_HORZ) {
+        rectangular_partition_search(cpi, td, tile_data, tp, x, pc_tree, &x_ctx,
                                    &part_search_state, &best_rdc, NULL, HORZ,
                                    HORZ);
-
-      // Additional search for PARTITION_SPLIT
-      if (do_additional_search > 0 && bsize >= BLOCK_8X8 && additional_split_allowed && !block_goes_oob && (ml_part_mask & (1 << PARTITION_SPLIT))) {
-        // printf("  additional split from horz\n");
-
-        // Do I need this?
-        av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
-
-        RD_STATS split_rdc;
-        av1_invalid_rd_stats(&split_rdc);
-        BLOCK_SIZE subsize = get_partition_subsize(bsize, PARTITION_SPLIT);
-        if (bsize >= BLOCK_8X8 && subsize < BLOCK_SIZES_ALL) {
-          av1_init_rd_stats(&split_rdc);
-          split_rdc.rate = part_search_state.partition_cost[PARTITION_SPLIT];
-          split_rdc.rdcost = RDCOST(x->rdmult, split_rdc.rate, 0);
-
-          for (int i = 0; i < SUB_PARTITIONS_SPLIT; ++i) {
-            const int x_idx = (i & 1) * mi_size_wide[subsize];
-            const int y_idx = (i >> 1) * mi_size_high[subsize];
-
-
-            if (pc_tree->split[i] == NULL){
-              pc_tree->split[i] = av1_alloc_pc_tree_node(subsize);
-            } else {
-              pc_tree->split[i]->block_size = subsize;
-            }
-            if (!pc_tree->split[i])
-              aom_internal_error(x->e_mbd.error_info, AOM_CODEC_MEM_ERROR,
-                                 "Failed to allocate PC_TREE");
-            pc_tree->split[i]->index = i;
-
-            if (mi_row + y_idx >= cm->mi_params.mi_rows ||
-                mi_col + x_idx >= cm->mi_params.mi_cols) {
-              continue;
-            }
-
-            const RD_STATS subblock_rdc = rd_search_for_fixed_partition(
-                cpi, td, tile_data, tp, sms_tree->split[i], mi_row + y_idx,
-                mi_col + x_idx, subsize, pc_tree->split[i],do_additional_search - 1);
-            if (subblock_rdc.rate == INT_MAX) {
-              av1_invalid_rd_stats(&split_rdc);
-              break;
-            }
-            split_rdc.rate += subblock_rdc.rate;
-            split_rdc.dist += subblock_rdc.dist;
-            av1_rd_cost_update(x->rdmult, &split_rdc);
-#if CONFIG_HW_ML_PART
-            if (collect_data) {
-              if (!hard_top1_ml && split_rdc.rdcost >= best_rdc.rdcost) break;
-            } else {
-              if (split_rdc.rdcost >= best_rdc.rdcost) break;
-            }
-#else
-            if (split_rdc.rdcost >= best_rdc.rdcost) break;
-#endif
-          }
-#if CONFIG_HW_ML_PART
-          if (collect_data && hard_top1_ml && split_rdc.rate != INT_MAX) {
-            if (split_rdc.rdcost > best_rdc.rdcost) {
-              // We are taking a split that is WORSE than the seed!
-              // Log this to see how often it happens.
-              fprintf(stderr, "Forcing worse split! Seed cost: %ld, Split cost: %ld\n", best_rdc.rdcost, split_rdc.rdcost);
-            }
-            else {
-              fprintf(stderr, "Not forcing split! Seed cost: %ld, Split cost: %ld\n", best_rdc.rdcost, split_rdc.rdcost);
-            }
-            best_rdc = split_rdc;
-            pc_tree->partitioning = PARTITION_SPLIT;
-          } else {
-#endif
-            if (split_rdc.rdcost < best_rdc.rdcost) {
-              best_rdc = split_rdc;
-              pc_tree->partitioning = PARTITION_SPLIT;
-              // printf("   split from horz\n");
-
-            } else {
-              // Restore to PARTITION_NONE if split is not better
-              pc_tree->partitioning = PARTITION_HORZ;
-              pc_tree->split[0]->block_size = get_partition_subsize(bsize, PARTITION_HORZ);
-              pc_tree->split[1]->block_size = get_partition_subsize(bsize, PARTITION_HORZ);
-            }
-#if CONFIG_HW_ML_PART
-          }
-#endif
-        }
+      } else {
+        none_partition_search(cpi, td, tile_data, x, pc_tree, sms_tree, &x_ctx,
+                              &part_search_state, &best_rdc, &pb_source_variance,
+                              &none_rd, &part_none_rd);
       }
-      break;
-    case PARTITION_VERT:
-      rectangular_partition_search(cpi, td, tile_data, tp, x, pc_tree, &x_ctx,
-                                   &part_search_state, &best_rdc, NULL, VERT,
-                                   VERT);
+        
       // Additional search for PARTITION_SPLIT
-      if (do_additional_search > 0 && bsize >= BLOCK_8X8 && additional_split_allowed && !block_goes_oob && (ml_part_mask & (1 << PARTITION_SPLIT))) {
-        // printf("  additional split from vert\n");
-
-        // Do I need this?
+      if (do_additional_search > 0 && 
+        bsize >= BLOCK_8X8 && 
+        additional_split_allowed && 
+        !block_goes_oob && 
+        (ml_part_mask & (1 << PARTITION_SPLIT))) {
         av1_restore_context(x, &x_ctx, mi_row, mi_col, bsize, num_planes);
 
         RD_STATS split_rdc;
@@ -6009,69 +5902,13 @@ static RD_STATS rd_search_for_fixed_partition(
               // printf("   split from vert\n");
             } else {
               // Restore to PARTITION_NONE if split is not better
-              pc_tree->partitioning = PARTITION_VERT;
-              pc_tree->split[0]->block_size = get_partition_subsize(bsize, PARTITION_VERT);
-              pc_tree->split[1]->block_size = get_partition_subsize(bsize, PARTITION_VERT);
+              pc_tree->partitioning = partition;
             }
 #if CONFIG_HW_ML_PART
           }
 #endif
         }
       }
-      break;
-    case PARTITION_HORZ_A:
-      ab_partitions_search(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
-                           &part_search_state, &best_rdc, NULL,
-                           pb_source_variance, 1, HORZ_A, HORZ_A);
-      break;
-    case PARTITION_HORZ_B:
-      ab_partitions_search(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
-                           &part_search_state, &best_rdc, NULL,
-                           pb_source_variance, 1, HORZ_B, HORZ_B);
-      break;
-    case PARTITION_VERT_A:
-      ab_partitions_search(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
-                           &part_search_state, &best_rdc, NULL,
-                           pb_source_variance, 1, VERT_A, VERT_A);
-      break;
-    case PARTITION_VERT_B:
-      ab_partitions_search(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
-                           &part_search_state, &best_rdc, NULL,
-                           pb_source_variance, 1, VERT_B, VERT_B);
-      break;
-    case PARTITION_HORZ_4:
-      rd_pick_4partition(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
-                         pc_tree->horizontal4, &part_search_state, &best_rdc,
-                         inc_step, PARTITION_HORZ_4);
-      break;
-    case PARTITION_VERT_4:
-      rd_pick_4partition(cpi, td, tile_data, tp, x, &x_ctx, pc_tree,
-                         pc_tree->vertical4, &part_search_state, &best_rdc,
-                         inc_step, PARTITION_VERT_4);
-      break;
-    case PARTITION_SPLIT:
-      for (int idx = 0; idx < SUB_PARTITIONS_SPLIT; ++idx) {
-        const BLOCK_SIZE subsize =
-            get_partition_subsize(bsize, PARTITION_SPLIT);
-        assert(subsize < BLOCK_SIZES_ALL);
-        const int next_mi_row =
-            idx < 2 ? mi_row : mi_row + mi_size_high[subsize];
-        const int next_mi_col =
-            idx % 2 == 0 ? mi_col : mi_col + mi_size_wide[subsize];
-        if (next_mi_row >= cm->mi_params.mi_rows ||
-            next_mi_col >= cm->mi_params.mi_cols) {
-          continue;
-        }
-        const RD_STATS subblock_rdc = rd_search_for_fixed_partition(
-            cpi, td, tile_data, tp, sms_tree->split[idx], next_mi_row,
-            next_mi_col, subsize, pc_tree->split[idx], do_additional_search);
-        sum_subblock_rate += subblock_rdc.rate;
-        sum_subblock_dist += subblock_rdc.dist;
-      }
-      best_rdc.rate = sum_subblock_rate;
-      best_rdc.rate += part_search_state.partition_cost[PARTITION_SPLIT];
-      best_rdc.dist = sum_subblock_dist;
-      best_rdc.rdcost = RDCOST(x->rdmult, best_rdc.rate, best_rdc.dist);
       break;
     default:
       // printf("PARTITION_???, %d\n", partition);
