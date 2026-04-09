@@ -42,28 +42,41 @@ static inline int av1_partitions_prune_inference(const float *features, int max_
   }
   // av1_nn_predict_c(features, &partitions_prune_nn_config, 1, logits);
   
-
-  int indices[NUM_CLASSES];
-  for (int i = 0; i < NUM_CLASSES; i++) indices[i] = i;
-
-  // Simple insertion sort for NUM_CLASSES elements to get indices in descending order of
-  // probability
-  for (int i = 1; i < NUM_CLASSES; i++) {
-    int key_idx = indices[i];
-    float key_prob = logits[key_idx];
-    int j = i - 1;
-    while (j >= 0 && logits[indices[j]] < key_prob) {
-      indices[j + 1] = indices[j];
-      j = j - 1;
-    }
-    indices[j + 1] = key_idx;
-  }
-
   int bitmask = 0;
-  int count = (max_modes <= NUM_CLASSES) ? max_modes : NUM_CLASSES;
-  for (int i = 0; i < count; i++) {
-    bitmask |= (1 << indices[i]);
+/* ========== 4-way decision logic ============== */
+  // int indices[NUM_CLASSES];
+  // for (int i = 0; i < NUM_CLASSES; i++) indices[i] = i;
+
+  // // Simple insertion sort for NUM_CLASSES elements to get indices in descending order of
+  // // probability
+  // for (int i = 1; i < NUM_CLASSES; i++) {
+  //   int key_idx = indices[i];
+  //   float key_prob = logits[key_idx];
+  //   int j = i - 1;
+  //   while (j >= 0 && logits[indices[j]] < key_prob) {
+  //     indices[j + 1] = indices[j];
+  //     j = j - 1;
+  //   }
+  //   indices[j + 1] = key_idx;
+  // }
+
+  // int count = (max_modes <= NUM_CLASSES) ? max_modes : NUM_CLASSES;
+  // for (int i = 0; i < count; i++) {
+  //   bitmask |= (1 << indices[i]);
+  // }
+
+
+  /* Binary SPLIT decision logic */
+  float total_logits = 0;
+  for (int i = 0; i < NUM_CLASSES; i++) {
+    total_logits += logits[i];
   }
+  float split_prob = logits[3] / total_logits;
+  if (split_prob > 0.75) {
+    bitmask |= (1 << 3);
+  }
+
+  
 
   // fprintf(stderr, "features: ");
   // for (int i = 1; i < NUM_CLASSES; i++) {
