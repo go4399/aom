@@ -66,7 +66,8 @@ void av1_init_layer_context(AV1_COMP *const cpi) {
       // Initialize the cyclic refresh parameters. If spatial layers are used
       // (i.e., ss_number_layers > 1), these need to be updated per spatial
       // layer. Cyclic refresh is only applied on base temporal layer.
-      if (svc->number_spatial_layers > 1 && tl == 0) {
+      if (svc->number_spatial_layers > 1 && tl == 0 &&
+          cpi->oxcf.q_cfg.aq_mode == CYCLIC_REFRESH_AQ) {
         lc->sb_index = 0;
         lc->actual_num_seg1_blocks = 0;
         lc->actual_num_seg2_blocks = 0;
@@ -153,8 +154,10 @@ void av1_update_layer_context_change_config(AV1_COMP *const cpi,
       // or number of spatial layers has changed.
       // Cyclic refresh is only applied on base temporal layer.
       if (svc->number_spatial_layers > 1 && tl == 0 &&
+          cpi->oxcf.q_cfg.aq_mode == CYCLIC_REFRESH_AQ &&
           (lc->map == NULL ||
            svc->prev_number_spatial_layers != svc->number_spatial_layers)) {
+        printf("%d %d \n", svc->prev_number_spatial_layers, svc->number_spatial_layers);
         lc->sb_index = 0;
         lc->actual_num_seg1_blocks = 0;
         lc->actual_num_seg2_blocks = 0;

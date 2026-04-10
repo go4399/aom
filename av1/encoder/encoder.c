@@ -1043,10 +1043,16 @@ void av1_change_config(struct AV1_COMP *cpi, const AV1EncoderConfig *oxcf,
   }
   av1_update_frame_size(cpi);
 
+  int mi_rows = cpi->common.mi_params.mi_rows;
+  int mi_cols = cpi->common.mi_params.mi_cols;
+  if (mi_cols != cpi->svc.mi_cols_full_resoln ||
+      mi_rows != cpi->svc.mi_rows_full_resoln) {
+    cpi->svc.mi_cols_full_resoln = mi_cols;
+    cpi->svc.mi_rows_full_resoln = mi_rows;
+  }
+
   if (cm->width != last_width || cm->height != last_height) {
     if (cpi->oxcf.q_cfg.aq_mode == CYCLIC_REFRESH_AQ) {
-      int mi_rows = cpi->common.mi_params.mi_rows;
-      int mi_cols = cpi->common.mi_params.mi_cols;
       aom_free(cpi->cyclic_refresh->map);
       CHECK_MEM_ERROR(
           cm, cpi->cyclic_refresh->map,
