@@ -352,7 +352,8 @@ static inline void dealloc_compressor_data(AV1_COMP *cpi) {
   }
 #endif
 
-  if (cpi->ppi->use_svc) av1_free_svc_cyclic_refresh(cpi);
+  if (cpi->ppi->use_svc)
+    av1_free_svc_cyclic_refresh(cpi, cpi->svc.number_spatial_layers);
   aom_free(cpi->svc.layer_context);
   cpi->svc.layer_context = NULL;
 
