@@ -109,8 +109,6 @@ typedef struct SVC {
   int num_encoded_top_layer;
   int first_layer_denoise;
   YV12_BUFFER_CONFIG source_last_TL0;
-  int mi_cols_full_resoln;
-  int mi_rows_full_resoln;
   /*!\endcond */
 
   /*!
@@ -271,7 +269,8 @@ void av1_save_layer_context(struct AV1_COMP *const cpi);
  *
  * \param[in]       cpi  Top level encoder structure
  */
-void av1_free_svc_cyclic_refresh(struct AV1_COMP *const cpi);
+void av1_free_svc_cyclic_refresh(struct AV1_COMP *const cpi,
+                                 int number_spatial_layers);
 
 /*!\brief Reset on key frame: reset counters, references and buffer updates.
  *
