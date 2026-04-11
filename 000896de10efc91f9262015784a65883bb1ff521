@@ -1,0 +1,413 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20bc3ee1_cd1441b1",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 4072,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-11T05:05:36Z",
+      "side": 1,
+      "message": "Is it possible that aq-mode could be disabled before calling this function and the leak be made to happen? Or will a config change call this function too?",
+      "range": {
+        "startLine": 4072,
+        "startChar": 8,
+        "endLine": 4072,
+        "endChar": 31
+      },
+      "revId": "000896de10efc91f9262015784a65883bb1ff521",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1fae809f_f508778f",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-11T05:05:36Z",
+      "side": 1,
+      "message": "Make these `FillImage`, `SetSvc` and `EncodeOne` for consistency with other functions.",
+      "range": {
+        "startLine": 49,
+        "startChar": 12,
+        "endLine": 49,
+        "endChar": 22
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "6e3176ca_1eba7cf5",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 49,
+                "startChar": 0,
+                "endLine": 50,
+                "endChar": 0
+              },
+              "replacement": "static void FillImage(aom_image_t *img, uint8_t val) {\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 61,
+                "startChar": 0,
+                "endLine": 62,
+                "endChar": 0
+              },
+              "replacement": "static void SetSvc(aom_codec_ctx_t *codec, int num_sl, const int *num,\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 78,
+                "startChar": 0,
+                "endLine": 79,
+                "endChar": 0
+              },
+              "replacement": "static void EncodeOne(aom_codec_ctx_t *codec, aom_image_t *img, int pts) {\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2076,
+                "startChar": 0,
+                "endLine": 2077,
+                "endChar": 0
+              },
+              "replacement": "    SetSvc(\u0026codec, 2, num, den, br);\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2085,
+                "startChar": 0,
+                "endLine": 2087,
+                "endChar": 0
+              },
+              "replacement": "      FillImage(raw, (uint8_t)(128 + f));\n      EncodeOne(\u0026codec, raw, pts++);\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2099,
+                "startChar": 0,
+                "endLine": 2100,
+                "endChar": 0
+              },
+              "replacement": "    SetSvc(\u0026codec, 3, num, den, br);\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2107,
+                "startChar": 0,
+                "endLine": 2109,
+                "endChar": 0
+              },
+              "replacement": "      FillImage(raw, (uint8_t)(64 + f));\n      EncodeOne(\u0026codec, raw, pts++);\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2123,
+                "startChar": 0,
+                "endLine": 2124,
+                "endChar": 0
+              },
+              "replacement": "    SetSvc(\u0026codec, 2, num, den, br);\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2130,
+                "startChar": 0,
+                "endLine": 2132,
+                "endChar": 0
+              },
+              "replacement": "    FillImage(raw, (uint8_t)((f % 2 \u003d\u003d 0) ? 16 : 235));\n    EncodeOne(\u0026codec, raw, pts++);\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2174,
+                "startChar": 0,
+                "endLine": 2175,
+                "endChar": 0
+              },
+              "replacement": "    SetSvc(\u0026codec, 2, num, den, br);\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2183,
+                "startChar": 0,
+                "endLine": 2185,
+                "endChar": 0
+              },
+              "replacement": "      FillImage(raw, (uint8_t)(128 + f));\n      EncodeOne(\u0026codec, raw, pts++);\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2197,
+                "startChar": 0,
+                "endLine": 2198,
+                "endChar": 0
+              },
+              "replacement": "    SetSvc(\u0026codec, 3, num, den, br);\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2205,
+                "startChar": 0,
+                "endLine": 2207,
+                "endChar": 0
+              },
+              "replacement": "      FillImage(raw, (uint8_t)(64 + f));\n      EncodeOne(\u0026codec, raw, pts++);\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2221,
+                "startChar": 0,
+                "endLine": 2222,
+                "endChar": 0
+              },
+              "replacement": "    SetSvc(\u0026codec, 2, num, den, br);\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2228,
+                "startChar": 0,
+                "endLine": 2230,
+                "endChar": 0
+              },
+              "replacement": "    FillImage(raw, (uint8_t)((f % 2 \u003d\u003d 0) ? 16 : 235));\n    EncodeOne(\u0026codec, raw, pts++);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "000896de10efc91f9262015784a65883bb1ff521",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c90f37ba_6fdc7b5f",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-11T05:05:36Z",
+      "side": 1,
+      "message": "You should be able to just do this:",
+      "fixSuggestions": [
+        {
+          "fixId": "e62a3b2e_984b0621",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 63,
+                "startChar": 0,
+                "endLine": 65,
+                "endChar": 0
+              },
+              "replacement": "  aom_svc_params_t sp \u003d {};\n"
+            }
+          ]
+        }
+      ],
+      "revId": "000896de10efc91f9262015784a65883bb1ff521",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1c82bbf_d74bdaa2",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 2173,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-11T05:05:36Z",
+      "side": 1,
+      "message": "These can be `const` or `static constexpr`",
+      "fixSuggestions": [
+        {
+          "fixId": "58591f4f_f6c27ed7",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2075,
+                "startChar": 0,
+                "endLine": 2076,
+                "endChar": 0
+              },
+              "replacement": "    const int num[] \u003d { 1, 1 }, den[] \u003d { 1, 1 }, br[] \u003d { 200, 300 };\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2098,
+                "startChar": 0,
+                "endLine": 2099,
+                "endChar": 0
+              },
+              "replacement": "    const int num[] \u003d { 1, 2, 1 }, den[] \u003d { 3, 3, 1 }, br[] \u003d { 200, 500, 1300 };\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2122,
+                "startChar": 0,
+                "endLine": 2123,
+                "endChar": 0
+              },
+              "replacement": "    const int num[] \u003d { 1, 1 }, den[] \u003d { 1, 1 }, br[] \u003d { 1, 499 };\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2173,
+                "startChar": 0,
+                "endLine": 2174,
+                "endChar": 0
+              },
+              "replacement": "    const int num[] \u003d { 1, 1 }, den[] \u003d { 1, 1 }, br[] \u003d { 200, 300 };\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2196,
+                "startChar": 0,
+                "endLine": 2197,
+                "endChar": 0
+              },
+              "replacement": "    const int num[] \u003d { 1, 2, 1 }, den[] \u003d { 3, 3, 1 }, br[] \u003d { 200, 500, 1300 };\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2220,
+                "startChar": 0,
+                "endLine": 2221,
+                "endChar": 0
+              },
+              "replacement": "    const int num[] \u003d { 1, 1 }, den[] \u003d { 1, 1 }, br[] \u003d { 1, 499 };\n"
+            }
+          ]
+        }
+      ],
+      "revId": "000896de10efc91f9262015784a65883bb1ff521",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09e48242_90a8e0b3",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 2177,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-11T05:05:36Z",
+      "side": 1,
+      "message": "`ASSERT_NE(raw, nullptr);` Also use `nullptr` instead of `NULL`.",
+      "fixSuggestions": [
+        {
+          "fixId": "95f151aa_cb6110cf",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2079,
+                "startChar": 0,
+                "endLine": 2080,
+                "endChar": 0
+              },
+              "replacement": "  aom_image_t *raw \u003d aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 640, 360, 1);\n  ASSERT_NE(raw, nullptr);\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2101,
+                "startChar": 0,
+                "endLine": 2102,
+                "endChar": 0
+              },
+              "replacement": "  raw \u003d aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 1920, 1080, 1);\n  ASSERT_NE(raw, nullptr);\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2125,
+                "startChar": 0,
+                "endLine": 2126,
+                "endChar": 0
+              },
+              "replacement": "  raw \u003d aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 640, 360, 1);\n  ASSERT_NE(raw, nullptr);\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2177,
+                "startChar": 0,
+                "endLine": 2178,
+                "endChar": 0
+              },
+              "replacement": "  aom_image_t *raw \u003d aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 640, 360, 1);\n  ASSERT_NE(raw, nullptr);\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2199,
+                "startChar": 0,
+                "endLine": 2200,
+                "endChar": 0
+              },
+              "replacement": "  raw \u003d aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 1920, 1080, 1);\n  ASSERT_NE(raw, nullptr);\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2223,
+                "startChar": 0,
+                "endLine": 2224,
+                "endChar": 0
+              },
+              "replacement": "  raw \u003d aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 640, 360, 1);\n  ASSERT_NE(raw, nullptr);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "000896de10efc91f9262015784a65883bb1ff521",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
