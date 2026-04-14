@@ -301,7 +301,6 @@ static inline void setup_delta_q(AV1_COMP *const cpi, ThreadData *td,
   AV1_COMMON *const cm = &cpi->common;
   const CommonModeInfoParams *const mi_params = &cm->mi_params;
   const DeltaQInfo *const delta_q_info = &cm->delta_q_info;
-  assert(delta_q_info->delta_q_present_flag);
 
   const BLOCK_SIZE sb_size = cm->seq_params->sb_size;
   av1_setup_src_planes(x, cpi->source, mi_row, mi_col, num_planes, sb_size);
@@ -364,17 +363,20 @@ static inline void setup_delta_q(AV1_COMP *const cpi, ThreadData *td,
   }
   current_qindex = adjusted_qindex;
 
-  x->delta_qindex = current_qindex - cm->quant_params.base_qindex;
-  x->rdmult_delta_qindex = x->delta_qindex;
+  x->delta_qindex =
+      enable_delta_q(cpi) ? current_qindex - cm->quant_params.base_qindex : 0;
+  x->rdmult_delta_qindex = current_qindex - cm->quant_params.base_qindex;
 
   av1_set_offsets(cpi, tile_info, x, mi_row, mi_col, sb_size);
-  xd->mi[0]->current_qindex = current_qindex;
+  xd->mi[0]->current_qindex =
+      enable_delta_q(cpi) ? current_qindex : cm->quant_params.base_qindex;
   av1_init_plane_quantizers(cpi, x, xd->mi[0]->segment_id, 0);
 
   // keep track of any non-zero delta-q used
   td->deltaq_used |= (x->delta_qindex != 0);
 
-  if (cpi->oxcf.tool_cfg.enable_deltalf_mode) {
+  if (cpi->oxcf.tool_cfg.enable_deltalf_mode &&
+      cm->delta_q_info.delta_q_present_flag) {
     const int delta_lf_res = delta_q_info->delta_lf_res;
     const int lfmask = ~(delta_lf_res - 1);
     const int delta_lf_from_base =
@@ -691,7 +693,7 @@ static inline void init_encode_rd_sb(AV1_COMP *cpi, ThreadData *td,
     x->sb_energy_level = 0;
     x->part_search_info.cnn_output_valid = 0;
     if (gather_tpl_data) {
-      if (cm->delta_q_info.delta_q_present_flag) {
+      if (enable_delta_rdmult(cpi)) {
         const int num_planes = av1_num_planes(cm);
         const BLOCK_SIZE sb_size = cm->seq_params->sb_size;
         setup_delta_q(cpi, td, x, tile_info, mi_row, mi_col, num_planes);
@@ -1231,7 +1233,7 @@ static inline void encode_sb_row(AV1_COMP *cpi, ThreadData *td,
 
   // Reset delta for quantizer and loof filters at the beginning of every tile
   if (mi_row == tile_info->mi_row_start || row_mt_enabled) {
-    if (cm->delta_q_info.delta_q_present_flag)
+    if (enable_delta_rdmult(cpi))
       xd->current_base_qindex = cm->quant_params.base_qindex;
     if (cm->delta_q_info.delta_lf_present_flag) {
       av1_reset_loop_filter_delta(xd, av1_num_planes(cm));
@@ -2303,10 +2305,8 @@ static inline void encode_frame_internal(AV1_COMP *cpi) {
     // is used for ineligible frames. That effectively will turn off row_mt
     // usage. Note objective delta_q and tpl eligible frames are only altref
     // frames currently.
-    const GF_GROUP *gf_group = &cpi->ppi->gf_group;
     if (cm->delta_q_info.delta_q_present_flag) {
-      if (deltaq_mode == DELTA_Q_OBJECTIVE &&
-          gf_group->update_type[cpi->gf_frame_index] == LF_UPDATE)
+      if (deltaq_mode == DELTA_Q_OBJECTIVE && !enable_delta_q(cpi))
         cm->delta_q_info.delta_q_present_flag = 0;
 
       if (deltaq_mode == DELTA_Q_OBJECTIVE &&

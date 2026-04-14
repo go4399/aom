@@ -4514,6 +4514,34 @@ static inline bool is_switchable_motion_mode_allowed(bool allow_warped_motion,
   return (allow_warped_motion || enable_obmc);
 }
 
+static inline int disable_deltaq_for_intl_arfs(const AV1_COMP *cpi) {
+  if (cpi->oxcf.mode != GOOD || !is_stat_consumption_stage_twopass(cpi) ||
+      cpi->oxcf.q_cfg.deltaq_mode != DELTA_Q_OBJECTIVE ||
+      !cpi->oxcf.algo_cfg.enable_tpl_model ||
+      cpi->oxcf.q_cfg.aq_mode != NO_AQ || cpi->common.seg.enabled ||
+      cpi->roi.enabled || cpi->oxcf.sb_qp_sweep || cpi->use_ducky_encode)
+    return 1;
+  return 0;
+}
+
+static inline int enable_delta_rdmult(const AV1_COMP *cpi) {
+  if (disable_deltaq_for_intl_arfs(cpi))
+    return (cpi->common.delta_q_info.delta_q_present_flag);
+
+  const GF_GROUP *gf_group = &cpi->ppi->gf_group;
+  return (gf_group->update_type[cpi->gf_frame_index] != LF_UPDATE);
+}
+
+static inline int enable_delta_q(const AV1_COMP *cpi) {
+  const GF_GROUP *gf_group = &cpi->ppi->gf_group;
+  if (disable_deltaq_for_intl_arfs(cpi))
+    return (cpi->common.delta_q_info.delta_q_present_flag &&
+            gf_group->update_type[cpi->gf_frame_index] != LF_UPDATE);
+
+  const int pyramid_level = cpi->common.current_frame.pyramid_level;
+  return (cpi->common.delta_q_info.delta_q_present_flag && pyramid_level <= 1);
+}
+
 #if CONFIG_AV1_TEMPORAL_DENOISING
 static inline int denoise_svc(const struct AV1_COMP *const cpi) {
   return (!cpi->ppi->use_svc ||
