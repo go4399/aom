@@ -3345,6 +3345,11 @@ void av1_rc_scene_detection_onepass_rt(AV1_COMP *cpi,
                                 : cm->seq_params->mib_size;
   const int sb_cols = (num_mi_cols + sb_size_by_mb - 1) / sb_size_by_mb;
   const int sb_rows = (num_mi_rows + sb_size_by_mb - 1) / sb_size_by_mb;
+  if (cpi->src_sad_blk_64x64 != NULL &&
+      cpi->src_sad_blk_alloc_size != sb_cols * sb_rows) {
+    aom_free(cpi->src_sad_blk_64x64);
+    cpi->src_sad_blk_64x64 = NULL;
+  }
   uint64_t sum_sq_thresh = 10000;  // sum = sqrt(thresh / 64*64)) ~1.5
   int num_low_var_high_sumdiff = 0;
   int light_change = 0;
@@ -3364,6 +3369,7 @@ void av1_rc_scene_detection_onepass_rt(AV1_COMP *cpi,
       CHECK_MEM_ERROR(cm, cpi->src_sad_blk_64x64,
                       (uint64_t *)aom_calloc(sb_cols * sb_rows,
                                              sizeof(*cpi->src_sad_blk_64x64)));
+      cpi->src_sad_blk_alloc_size = sb_cols * sb_rows;
     }
   }
   const CommonModeInfoParams *const mi_params = &cpi->common.mi_params;
