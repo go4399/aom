@@ -5009,42 +5009,6 @@ static RD_STATS rd_search_for_fixed_partition(
           allow_horz = allow_horz && (ml_part_mask & (1 << PARTITION_HORZ));
           allow_none = allow_none && (ml_part_mask & (1 << PARTITION_NONE));
           allow_split = allow_split && (ml_part_mask & (1 << PARTITION_SPLIT));
-
-          // fprintf(stderr, "###### Ran ML for block at level %d (row: %d, col: %d) with bsize %d\n", do_additional_search, mi_row, mi_col, bsize);
-          // fprintf(stderr, "###### ml_part_mask=%x, allow_vert=%d, allow_horz=%d, allow_none=%d, allow_split=%d\n", 
-          //   ml_part_mask, allow_vert, allow_horz, allow_none, allow_split);
-
-          // if (do_additional_search == 2) {
-          //   if (!allow_vert || !allow_horz || !allow_none || !allow_split) {
-          //     fprintf(stderr, "##### [AV1-PART_ML] Skipping search at level 2 for block at (%d, %d) with bsize %d\n", mi_row, mi_col, bsize);
-          //     fprintf(stderr, "##### ml_part_mask=%x, allow_vert=%d, allow_horz=%d, allow_none=%d, allow_split=%d\n", 
-          //       ml_part_mask, allow_vert, allow_horz, allow_none, allow_split);
-          //     assert(false);
-          //   }
-          // }
-          // if (do_additional_search == 1) {
-          //   if (!allow_vert || !allow_horz || !allow_none || !allow_split) {
-          //     fprintf(stderr, "##### [AV1-PART_ML] Skipping search at level 1 for block at (%d, %d) with bsize %d\n", mi_row, mi_col, bsize);
-          //     fprintf(stderr, "##### ml_part_mask=%x, allow_vert=%d, allow_horz=%d, allow_none=%d, allow_split=%d\n", 
-          //       ml_part_mask, allow_vert, allow_horz, allow_none, allow_split);
-          //     assert(false);
-          //   }
-          // }
-          // if (do_additional_search == 0) {
-          //   if (!allow_none) {
-          //     fprintf(stderr, "##### [AV1-PART_ML] Skipping search at level 0 for block at (%d, %d) with bsize %d\n", mi_row, mi_col, bsize);
-          //     fprintf(stderr, "##### ml_part_mask=%x, allow_vert=%d, allow_horz=%d, allow_none=%d, allow_split=%d\n", 
-          //       ml_part_mask, allow_vert, allow_horz, allow_none, allow_split);
-          //     assert(false);
-          //   }
-          //   if (allow_vert || allow_horz || allow_split) {
-          //     fprintf(stderr, "##### [AV1-PART_ML] Incorrectly allowed modes at level 0 for block at (%d, %d) with bsize %d\n", mi_row, mi_col, bsize);
-          //     fprintf(stderr, "##### ml_part_mask=%x, allow_vert=%d, allow_horz=%d, allow_none=%d, allow_split=%d\n", 
-          //       ml_part_mask, allow_vert, allow_horz, allow_none, allow_split);
-          //     assert(false);
-          //   }
-          // }
-
         }
 #endif
         if (allow_vert) {
