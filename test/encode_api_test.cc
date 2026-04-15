@@ -2002,4 +2002,499 @@ TEST(EncodeAPI, SizeAlignOverflow) {
   ASSERT_EQ(aom_codec_destroy(&enc), AOM_CODEC_OK);
 }
 
+<<<<<<< HEAD   (b63f30b6d30028a3d7d9c5223def8f3ad97dcc4c Move common code in aom_upsampled_pred_c/neon/sse2)
+||||||| BASE   (d962719ceea77453707862c8100c9f94220a3bf5 Arm: Enable Neon for av1_highbd_apply_temporal_filter)
+TEST(EncodeAPI, DynamicSvcAq0Issue499606109) {
+  aom_codec_iface_t *iface = aom_codec_av1_cx();
+  aom_codec_enc_cfg_t cfg;
+  ASSERT_EQ(aom_codec_enc_config_default(iface, &cfg, AOM_USAGE_REALTIME),
+            AOM_CODEC_OK);
+
+  // Init at 1920x1080.
+  cfg.g_w = 1920;
+  cfg.g_h = 1080;
+  cfg.g_timebase.num = 1;
+  cfg.g_timebase.den = 30;
+  cfg.rc_end_usage = AOM_CBR;
+  cfg.rc_target_bitrate = 2000;
+  cfg.g_lag_in_frames = 0;
+  cfg.g_error_resilient = 1;
+  cfg.g_threads = 1;
+  cfg.kf_max_dist = 3000;
+  cfg.kf_min_dist = 3000;
+  cfg.rc_dropframe_thresh = 30;
+
+  aom_codec_ctx_t codec;
+  ASSERT_EQ(aom_codec_enc_init(&codec, iface, &cfg, 0), AOM_CODEC_OK);
+  ASSERT_EQ(aom_codec_control(&codec, AOME_SET_CPUUSED, 10), AOM_CODEC_OK);
+  ASSERT_EQ(
+      aom_codec_control(&codec, AV1E_SET_MAX_CONSEC_FRAME_DROP_MS_CBR, 34),
+      AOM_CODEC_OK);
+
+  // Phase 0: shrink to 640x360, 2 SLs. Frame 0 allocates
+  // source_last_TL0 at 640x360 (small buffer).
+  cfg.g_w = 640;
+  cfg.g_h = 360;
+  cfg.rc_target_bitrate = 500;
+  ASSERT_EQ(aom_codec_enc_config_set(&codec, &cfg), AOM_CODEC_OK);
+  {
+    const int num[] = { 1, 1 }, den[] = { 1, 1 }, br[] = { 200, 300 };
+    SetSvc(&codec, 2, num, den, br);
+  }
+  aom_codec_pts_t pts = 0;
+  aom_image_t *raw = aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 640, 360, 1);
+  ASSERT_NE(raw, nullptr);
+  for (int f = 0; f < 3; ++f) {
+    for (int sl = 0; sl < 2; ++sl) {
+      aom_svc_layer_id_t lid = { sl, 0 };
+      ASSERT_EQ(aom_codec_control(&codec, AV1E_SET_SVC_LAYER_ID, &lid),
+                AOM_CODEC_OK);
+      FillImage(raw, static_cast<uint8_t>(128 + f));
+      EncodeOne(&codec, raw, pts++);
+    }
+  }
+  aom_img_free(raw);
+
+  // Phase 1: grow to 1920x1080, 3 SLs. SL2 encoding sets
+  // mi_cols_full_resoln = 480, mi_rows_full_resoln = 270.
+  cfg.g_w = 1920;
+  cfg.g_h = 1080;
+  cfg.rc_target_bitrate = 2000;
+  ASSERT_EQ(aom_codec_enc_config_set(&codec, &cfg), AOM_CODEC_OK);
+  {
+    const int num[] = { 1, 2, 1 }, den[] = { 3, 3, 1 },
+              br[] = { 200, 500, 1300 };
+    SetSvc(&codec, 3, num, den, br);
+  }
+  raw = aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 1920, 1080, 1);
+  ASSERT_NE(raw, nullptr);
+  for (int f = 0; f < 3; ++f) {
+    for (int sl = 0; sl < 3; ++sl) {
+      aom_svc_layer_id_t lid = { sl, 0 };
+      ASSERT_EQ(aom_codec_control(&codec, AV1E_SET_SVC_LAYER_ID, &lid),
+                AOM_CODEC_OK);
+      FillImage(raw, static_cast<uint8_t>(64 + f));
+      EncodeOne(&codec, raw, pts++);
+    }
+  }
+  aom_img_free(raw);
+
+  // Phase 2: back to 640x360, 2 SLs. Encode SL0 only with mi_cols
+  // stays stale. Very low SL0 bitrate forces a frame drop.
+  // After the drop, next SL0 gets last_source = source_last_TL0
+  // (640x360 small buffer). SAD loop overruns it with OOB. */
+  cfg.g_w = 640;
+  cfg.g_h = 360;
+  cfg.rc_target_bitrate = 500;
+  ASSERT_EQ(aom_codec_enc_config_set(&codec, &cfg), AOM_CODEC_OK);
+  {
+    const int num[] = { 1, 1 }, den[] = { 1, 1 }, br[] = { 1, 499 };
+    SetSvc(&codec, 2, num, den, br);
+  }
+  raw = aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 640, 360, 1);
+  ASSERT_NE(raw, nullptr);
+  for (int f = 0; f < 20; ++f) {
+    aom_svc_layer_id_t lid = { 0, 0 };
+    ASSERT_EQ(aom_codec_control(&codec, AV1E_SET_SVC_LAYER_ID, &lid),
+              AOM_CODEC_OK);
+    FillImage(raw, static_cast<uint8_t>((f % 2 == 0) ? 16 : 235));
+    EncodeOne(&codec, raw, pts++);
+  }
+
+  aom_img_free(raw);
+  ASSERT_EQ(aom_codec_destroy(&codec), AOM_CODEC_OK);
+}
+
+TEST(EncodeAPI, DynamicSvcAq3Issue499606109) {
+  aom_codec_iface_t *iface = aom_codec_av1_cx();
+  aom_codec_enc_cfg_t cfg;
+  ASSERT_EQ(aom_codec_enc_config_default(iface, &cfg, AOM_USAGE_REALTIME),
+            AOM_CODEC_OK);
+
+  // Init at 1920x1080.
+  cfg.g_w = 1920;
+  cfg.g_h = 1080;
+  cfg.g_timebase.num = 1;
+  cfg.g_timebase.den = 30;
+  cfg.rc_end_usage = AOM_CBR;
+  cfg.rc_target_bitrate = 2000;
+  cfg.g_lag_in_frames = 0;
+  cfg.g_error_resilient = 1;
+  cfg.g_threads = 1;
+  cfg.kf_max_dist = 3000;
+  cfg.kf_min_dist = 3000;
+  cfg.rc_dropframe_thresh = 30;
+
+  aom_codec_ctx_t codec;
+  ASSERT_EQ(aom_codec_enc_init(&codec, iface, &cfg, 0), AOM_CODEC_OK);
+  ASSERT_EQ(aom_codec_control(&codec, AOME_SET_CPUUSED, 10), AOM_CODEC_OK);
+  ASSERT_EQ(
+      aom_codec_control(&codec, AV1E_SET_MAX_CONSEC_FRAME_DROP_MS_CBR, 34),
+      AOM_CODEC_OK);
+  ASSERT_EQ(aom_codec_control(&codec, AV1E_SET_AQ_MODE, 3), AOM_CODEC_OK);
+
+  // Phase 0: shrink to 640x360, 2 SLs. Frame 0 allocates
+  // source_last_TL0 at 640x360 (small buffer).
+  cfg.g_w = 640;
+  cfg.g_h = 360;
+  cfg.rc_target_bitrate = 500;
+  ASSERT_EQ(aom_codec_enc_config_set(&codec, &cfg), AOM_CODEC_OK);
+  {
+    const int num[] = { 1, 1 }, den[] = { 1, 1 }, br[] = { 200, 300 };
+    SetSvc(&codec, 2, num, den, br);
+  }
+  aom_codec_pts_t pts = 0;
+  aom_image_t *raw = aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 640, 360, 1);
+  ASSERT_NE(raw, nullptr);
+  for (int f = 0; f < 3; ++f) {
+    for (int sl = 0; sl < 2; ++sl) {
+      aom_svc_layer_id_t lid = { sl, 0 };
+      ASSERT_EQ(aom_codec_control(&codec, AV1E_SET_SVC_LAYER_ID, &lid),
+                AOM_CODEC_OK);
+      FillImage(raw, static_cast<uint8_t>(128 + f));
+      EncodeOne(&codec, raw, pts++);
+    }
+  }
+  aom_img_free(raw);
+
+  // Phase 1: grow to 1920x1080, 3 SLs. SL2 encoding sets
+  // mi_cols_full_resoln = 480, mi_rows_full_resoln = 270.
+  cfg.g_w = 1920;
+  cfg.g_h = 1080;
+  cfg.rc_target_bitrate = 2000;
+  ASSERT_EQ(aom_codec_enc_config_set(&codec, &cfg), AOM_CODEC_OK);
+  {
+    const int num[] = { 1, 2, 1 }, den[] = { 3, 3, 1 },
+              br[] = { 200, 500, 1300 };
+    SetSvc(&codec, 3, num, den, br);
+  }
+  raw = aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 1920, 1080, 1);
+  ASSERT_NE(raw, nullptr);
+  for (int f = 0; f < 3; ++f) {
+    for (int sl = 0; sl < 3; ++sl) {
+      aom_svc_layer_id_t lid = { sl, 0 };
+      ASSERT_EQ(aom_codec_control(&codec, AV1E_SET_SVC_LAYER_ID, &lid),
+                AOM_CODEC_OK);
+      FillImage(raw, static_cast<uint8_t>(64 + f));
+      EncodeOne(&codec, raw, pts++);
+    }
+  }
+  aom_img_free(raw);
+
+  // Phase 2: back to 640x360, 2 SLs. Encode SL0 only with mi_cols
+  // stays stale. Very low SL0 bitrate forces a frame drop.
+  // After the drop, next SL0 gets last_source = source_last_TL0
+  // (640x360 small buffer). SAD loop overruns it with OOB. */
+  cfg.g_w = 640;
+  cfg.g_h = 360;
+  cfg.rc_target_bitrate = 500;
+  ASSERT_EQ(aom_codec_enc_config_set(&codec, &cfg), AOM_CODEC_OK);
+  {
+    const int num[] = { 1, 1 }, den[] = { 1, 1 }, br[] = { 1, 499 };
+    SetSvc(&codec, 2, num, den, br);
+  }
+  raw = aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 640, 360, 1);
+  ASSERT_NE(raw, nullptr);
+  for (int f = 0; f < 20; ++f) {
+    aom_svc_layer_id_t lid = { 0, 0 };
+    ASSERT_EQ(aom_codec_control(&codec, AV1E_SET_SVC_LAYER_ID, &lid),
+              AOM_CODEC_OK);
+    FillImage(raw, static_cast<uint8_t>((f % 2 == 0) ? 16 : 235));
+    EncodeOne(&codec, raw, pts++);
+  }
+
+  aom_img_free(raw);
+  ASSERT_EQ(aom_codec_destroy(&codec), AOM_CODEC_OK);
+}
+
+=======
+TEST(EncodeAPI, DynamicSvcAq0Issue499606109) {
+  aom_codec_iface_t *iface = aom_codec_av1_cx();
+  aom_codec_enc_cfg_t cfg;
+  ASSERT_EQ(aom_codec_enc_config_default(iface, &cfg, AOM_USAGE_REALTIME),
+            AOM_CODEC_OK);
+
+  // Init at 1920x1080.
+  cfg.g_w = 1920;
+  cfg.g_h = 1080;
+  cfg.g_timebase.num = 1;
+  cfg.g_timebase.den = 30;
+  cfg.rc_end_usage = AOM_CBR;
+  cfg.rc_target_bitrate = 2000;
+  cfg.g_lag_in_frames = 0;
+  cfg.g_error_resilient = 1;
+  cfg.g_threads = 1;
+  cfg.kf_max_dist = 3000;
+  cfg.kf_min_dist = 3000;
+  cfg.rc_dropframe_thresh = 30;
+
+  aom_codec_ctx_t codec;
+  ASSERT_EQ(aom_codec_enc_init(&codec, iface, &cfg, 0), AOM_CODEC_OK);
+  ASSERT_EQ(aom_codec_control(&codec, AOME_SET_CPUUSED, 10), AOM_CODEC_OK);
+  ASSERT_EQ(
+      aom_codec_control(&codec, AV1E_SET_MAX_CONSEC_FRAME_DROP_MS_CBR, 34),
+      AOM_CODEC_OK);
+
+  // Phase 0: shrink to 640x360, 2 SLs. Frame 0 allocates
+  // source_last_TL0 at 640x360 (small buffer).
+  cfg.g_w = 640;
+  cfg.g_h = 360;
+  cfg.rc_target_bitrate = 500;
+  ASSERT_EQ(aom_codec_enc_config_set(&codec, &cfg), AOM_CODEC_OK);
+  {
+    const int num[] = { 1, 1 }, den[] = { 1, 1 }, br[] = { 200, 300 };
+    SetSvc(&codec, 2, num, den, br);
+  }
+  aom_codec_pts_t pts = 0;
+  aom_image_t *raw = aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 640, 360, 1);
+  ASSERT_NE(raw, nullptr);
+  for (int f = 0; f < 3; ++f) {
+    for (int sl = 0; sl < 2; ++sl) {
+      aom_svc_layer_id_t lid = { sl, 0 };
+      ASSERT_EQ(aom_codec_control(&codec, AV1E_SET_SVC_LAYER_ID, &lid),
+                AOM_CODEC_OK);
+      FillImage(raw, static_cast<uint8_t>(128 + f));
+      EncodeOne(&codec, raw, pts++);
+    }
+  }
+  aom_img_free(raw);
+
+  // Phase 1: grow to 1920x1080, 3 SLs. SL2 encoding sets
+  // mi_cols_full_resoln = 480, mi_rows_full_resoln = 270.
+  cfg.g_w = 1920;
+  cfg.g_h = 1080;
+  cfg.rc_target_bitrate = 2000;
+  ASSERT_EQ(aom_codec_enc_config_set(&codec, &cfg), AOM_CODEC_OK);
+  {
+    const int num[] = { 1, 2, 1 }, den[] = { 3, 3, 1 },
+              br[] = { 200, 500, 1300 };
+    SetSvc(&codec, 3, num, den, br);
+  }
+  raw = aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 1920, 1080, 1);
+  ASSERT_NE(raw, nullptr);
+  for (int f = 0; f < 3; ++f) {
+    for (int sl = 0; sl < 3; ++sl) {
+      aom_svc_layer_id_t lid = { sl, 0 };
+      ASSERT_EQ(aom_codec_control(&codec, AV1E_SET_SVC_LAYER_ID, &lid),
+                AOM_CODEC_OK);
+      FillImage(raw, static_cast<uint8_t>(64 + f));
+      EncodeOne(&codec, raw, pts++);
+    }
+  }
+  aom_img_free(raw);
+
+  // Phase 2: back to 640x360, 2 SLs. Encode SL0 only with mi_cols
+  // stays stale. Very low SL0 bitrate forces a frame drop.
+  // After the drop, next SL0 gets last_source = source_last_TL0
+  // (640x360 small buffer). SAD loop overruns it with OOB. */
+  cfg.g_w = 640;
+  cfg.g_h = 360;
+  cfg.rc_target_bitrate = 500;
+  ASSERT_EQ(aom_codec_enc_config_set(&codec, &cfg), AOM_CODEC_OK);
+  {
+    const int num[] = { 1, 1 }, den[] = { 1, 1 }, br[] = { 1, 499 };
+    SetSvc(&codec, 2, num, den, br);
+  }
+  raw = aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 640, 360, 1);
+  ASSERT_NE(raw, nullptr);
+  for (int f = 0; f < 20; ++f) {
+    aom_svc_layer_id_t lid = { 0, 0 };
+    ASSERT_EQ(aom_codec_control(&codec, AV1E_SET_SVC_LAYER_ID, &lid),
+              AOM_CODEC_OK);
+    FillImage(raw, static_cast<uint8_t>((f % 2 == 0) ? 16 : 235));
+    EncodeOne(&codec, raw, pts++);
+  }
+
+  aom_img_free(raw);
+  ASSERT_EQ(aom_codec_destroy(&codec), AOM_CODEC_OK);
+}
+
+TEST(EncodeAPI, DynamicSvcAq3Issue499606109) {
+  aom_codec_iface_t *iface = aom_codec_av1_cx();
+  aom_codec_enc_cfg_t cfg;
+  ASSERT_EQ(aom_codec_enc_config_default(iface, &cfg, AOM_USAGE_REALTIME),
+            AOM_CODEC_OK);
+
+  // Init at 1920x1080.
+  cfg.g_w = 1920;
+  cfg.g_h = 1080;
+  cfg.g_timebase.num = 1;
+  cfg.g_timebase.den = 30;
+  cfg.rc_end_usage = AOM_CBR;
+  cfg.rc_target_bitrate = 2000;
+  cfg.g_lag_in_frames = 0;
+  cfg.g_error_resilient = 1;
+  cfg.g_threads = 1;
+  cfg.kf_max_dist = 3000;
+  cfg.kf_min_dist = 3000;
+  cfg.rc_dropframe_thresh = 30;
+
+  aom_codec_ctx_t codec;
+  ASSERT_EQ(aom_codec_enc_init(&codec, iface, &cfg, 0), AOM_CODEC_OK);
+  ASSERT_EQ(aom_codec_control(&codec, AOME_SET_CPUUSED, 10), AOM_CODEC_OK);
+  ASSERT_EQ(
+      aom_codec_control(&codec, AV1E_SET_MAX_CONSEC_FRAME_DROP_MS_CBR, 34),
+      AOM_CODEC_OK);
+  ASSERT_EQ(aom_codec_control(&codec, AV1E_SET_AQ_MODE, 3), AOM_CODEC_OK);
+
+  // Phase 0: shrink to 640x360, 2 SLs. Frame 0 allocates
+  // source_last_TL0 at 640x360 (small buffer).
+  cfg.g_w = 640;
+  cfg.g_h = 360;
+  cfg.rc_target_bitrate = 500;
+  ASSERT_EQ(aom_codec_enc_config_set(&codec, &cfg), AOM_CODEC_OK);
+  {
+    const int num[] = { 1, 1 }, den[] = { 1, 1 }, br[] = { 200, 300 };
+    SetSvc(&codec, 2, num, den, br);
+  }
+  aom_codec_pts_t pts = 0;
+  aom_image_t *raw = aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 640, 360, 1);
+  ASSERT_NE(raw, nullptr);
+  for (int f = 0; f < 3; ++f) {
+    for (int sl = 0; sl < 2; ++sl) {
+      aom_svc_layer_id_t lid = { sl, 0 };
+      ASSERT_EQ(aom_codec_control(&codec, AV1E_SET_SVC_LAYER_ID, &lid),
+                AOM_CODEC_OK);
+      FillImage(raw, static_cast<uint8_t>(128 + f));
+      EncodeOne(&codec, raw, pts++);
+    }
+  }
+  aom_img_free(raw);
+
+  // Phase 1: grow to 1920x1080, 3 SLs. SL2 encoding sets
+  // mi_cols_full_resoln = 480, mi_rows_full_resoln = 270.
+  cfg.g_w = 1920;
+  cfg.g_h = 1080;
+  cfg.rc_target_bitrate = 2000;
+  ASSERT_EQ(aom_codec_enc_config_set(&codec, &cfg), AOM_CODEC_OK);
+  {
+    const int num[] = { 1, 2, 1 }, den[] = { 3, 3, 1 },
+              br[] = { 200, 500, 1300 };
+    SetSvc(&codec, 3, num, den, br);
+  }
+  raw = aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 1920, 1080, 1);
+  ASSERT_NE(raw, nullptr);
+  for (int f = 0; f < 3; ++f) {
+    for (int sl = 0; sl < 3; ++sl) {
+      aom_svc_layer_id_t lid = { sl, 0 };
+      ASSERT_EQ(aom_codec_control(&codec, AV1E_SET_SVC_LAYER_ID, &lid),
+                AOM_CODEC_OK);
+      FillImage(raw, static_cast<uint8_t>(64 + f));
+      EncodeOne(&codec, raw, pts++);
+    }
+  }
+  aom_img_free(raw);
+
+  // Phase 2: back to 640x360, 2 SLs. Encode SL0 only with mi_cols
+  // stays stale. Very low SL0 bitrate forces a frame drop.
+  // After the drop, next SL0 gets last_source = source_last_TL0
+  // (640x360 small buffer). SAD loop overruns it with OOB. */
+  cfg.g_w = 640;
+  cfg.g_h = 360;
+  cfg.rc_target_bitrate = 500;
+  ASSERT_EQ(aom_codec_enc_config_set(&codec, &cfg), AOM_CODEC_OK);
+  {
+    const int num[] = { 1, 1 }, den[] = { 1, 1 }, br[] = { 1, 499 };
+    SetSvc(&codec, 2, num, den, br);
+  }
+  raw = aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 640, 360, 1);
+  ASSERT_NE(raw, nullptr);
+  for (int f = 0; f < 20; ++f) {
+    aom_svc_layer_id_t lid = { 0, 0 };
+    ASSERT_EQ(aom_codec_control(&codec, AV1E_SET_SVC_LAYER_ID, &lid),
+              AOM_CODEC_OK);
+    FillImage(raw, static_cast<uint8_t>((f % 2 == 0) ? 16 : 235));
+    EncodeOne(&codec, raw, pts++);
+  }
+
+  aom_img_free(raw);
+  ASSERT_EQ(aom_codec_destroy(&codec), AOM_CODEC_OK);
+}
+
+TEST(EncodeAPI, DynamicSvcTemporalIssue502735235) {
+  aom_codec_iface_t *iface = aom_codec_av1_cx();
+  aom_codec_enc_cfg_t cfg;
+  ASSERT_EQ(aom_codec_enc_config_default(iface, &cfg, AOM_USAGE_REALTIME),
+            AOM_CODEC_OK);
+
+  // Init at 256x512.
+  cfg.g_w = 256;
+  cfg.g_h = 512;
+  cfg.g_timebase.num = 1;
+  cfg.g_timebase.den = 30;
+  cfg.rc_end_usage = AOM_CBR;
+  cfg.rc_target_bitrate = 1000;
+  cfg.g_lag_in_frames = 0;
+
+  aom_codec_ctx_t codec;
+  ASSERT_EQ(aom_codec_enc_init(&codec, iface, &cfg, 0), AOM_CODEC_OK);
+  ASSERT_EQ(aom_codec_control(&codec, AOME_SET_CPUUSED, 10), AOM_CODEC_OK);
+
+  // AV1E_SET_SVC_PARAMS
+  aom_svc_params_t svc_params = {};
+  svc_params.number_spatial_layers = 1;
+  svc_params.number_temporal_layers = 2;
+  svc_params.scaling_factor_num[0] = 1;
+  svc_params.scaling_factor_den[0] = 1;
+  svc_params.framerate_factor[0] = 2;
+  svc_params.framerate_factor[1] = 1;
+  svc_params.max_quantizers[0] = 56;
+  svc_params.min_quantizers[0] = 10;
+  svc_params.max_quantizers[1] = 56;
+  svc_params.min_quantizers[1] = 10;
+  svc_params.layer_target_bitrate[0] = cfg.rc_target_bitrate * 60 / 100;
+  svc_params.layer_target_bitrate[1] = cfg.rc_target_bitrate;
+  EXPECT_EQ(aom_codec_control(&codec, AV1E_SET_SVC_PARAMS, &svc_params),
+            AOM_CODEC_OK);
+
+  // Encode at 256x512. TL0.
+  aom_svc_layer_id_t layer_id = {};
+  layer_id.spatial_layer_id = 0;
+  layer_id.spatial_layer_id = 0;
+  ASSERT_EQ(aom_codec_control(&codec, AV1E_SET_SVC_LAYER_ID, &layer_id),
+            AOM_CODEC_OK);
+  aom_image_t *raw = aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 256, 512, 1);
+  ASSERT_NE(raw, nullptr);
+  ASSERT_EQ(aom_codec_encode(&codec, raw, /*pts=*/0, /*duration=*/1,
+                             /*flags=*/0),
+            AOM_CODEC_OK);
+  aom_img_free(raw);
+
+  // Encode at 256x64 TL1, twice, set keyframe for both.
+  cfg.g_w = 256;
+  cfg.g_h = 64;
+  ASSERT_EQ(aom_codec_enc_config_set(&codec, &cfg), AOM_CODEC_OK);
+  layer_id.spatial_layer_id = 0;
+  layer_id.temporal_layer_id = 1;
+  ASSERT_EQ(aom_codec_control(&codec, AV1E_SET_SVC_LAYER_ID, &layer_id),
+            AOM_CODEC_OK);
+  raw = aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 256, 64, 1);
+  ASSERT_NE(raw, nullptr);
+  ASSERT_EQ(aom_codec_encode(&codec, raw, /*pts=*/1, /*duration=*/1,
+                             /*flags=*/AOM_EFLAG_FORCE_KF),
+            AOM_CODEC_OK);
+  ASSERT_EQ(aom_codec_encode(&codec, raw, /*pts=*/2, /*duration=*/1,
+                             /*flags=*/0),
+            AOM_CODEC_OK);
+  aom_img_free(raw);
+
+  // Encode TL0 back at original resolution 256x512.
+  cfg.g_w = 256;
+  cfg.g_h = 512;
+  ASSERT_EQ(aom_codec_enc_config_set(&codec, &cfg), AOM_CODEC_OK);
+  layer_id.spatial_layer_id = 0;
+  layer_id.temporal_layer_id = 0;
+  ASSERT_EQ(aom_codec_control(&codec, AV1E_SET_SVC_LAYER_ID, &layer_id),
+            AOM_CODEC_OK);
+  raw = aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 256, 512, 1);
+  ASSERT_NE(raw, nullptr);
+  ASSERT_EQ(aom_codec_encode(&codec, raw, /*pts=*/3, /*duration=*/1,
+                             /*flags=*/0),
+            AOM_CODEC_OK);
+  aom_img_free(raw);
+
+  ASSERT_EQ(aom_codec_destroy(&codec), AOM_CODEC_OK);
+}
+
+>>>>>>> CHANGE (79401f2946940984aaf3dc50e42d34be2e7bbac9 Add check to validate allocation size of src_sad_blk_64x64)
 }  // namespace
