@@ -1,0 +1,79 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4421e42a_98e33869",
+        "filename": "av1/encoder/ratectrl.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 3368,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-16T19:04:35Z",
+      "side": 1,
+      "message": "You can merge these two blocks, it\u0027s safe to call `aom_free` with `NULL`:\n\n```\n    if (cpi-\u003esrc_sad_blk_64x64 \u003d\u003d NULL ||\n        cpi-\u003esrc_sad_blk_alloc_size !\u003d sb_cols * sb_rows) {\n      aom_free(cpi-\u003esrc_sad_blk_64x64);\n\t  ...\n\n```\n\nExplicitly setting it to `NULL` won\u0027t be necessary in this case because the next call does the allocation. On failure the pointer will be set to `NULL`.",
+      "range": {
+        "startLine": 3363,
+        "startChar": 0,
+        "endLine": 3368,
+        "endChar": 41
+      },
+      "revId": "9198e5203b912ed089bf3d8ec2303ca70ef7c4cd",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "65cd726d_0fe899d9",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 2292,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-16T19:04:35Z",
+      "side": 1,
+      "message": "Is this comment correct? It looks like 256x64 is being encoded here.",
+      "fixSuggestions": [
+        {
+          "fixId": "9f765749_b1ea9337",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2292,
+                "startChar": 0,
+                "endLine": 2293,
+                "endChar": 0
+              },
+              "replacement": "  // Encode at 256x64 TL1, first frame as a keyframe.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9198e5203b912ed089bf3d8ec2303ca70ef7c4cd",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a40f9fc_e04f08d7",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 2310,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-16T19:04:35Z",
+      "side": 1,
+      "message": "The resolution is 256x512 here.",
+      "revId": "9198e5203b912ed089bf3d8ec2303ca70ef7c4cd",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
