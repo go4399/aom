@@ -354,11 +354,19 @@ void av1_count_colors_highbd(const uint8_t *src8, int stride, int rows,
        * between lbd and hbd encodes. This down-converted pixels
        * are only used for calculating the threshold (n).
        */
-      const int this_val = ((src[r * stride + c]) >> (bit_depth - 8));
+      const int pix_val = src[r * stride + c];
+      // If input data value is larger than (2^bitdepth - 1), the
+      // assertion would fail. For example, input is 16 bit data,
+      // but bitdepth is configured to be 10.
+      // Therefore to keep memory safe, we skip before the assert
+      // fails. The user should pass in valid pixel values
+      // that in the range [0, 2^bitdepth - 1] to get correct color
+      // counts.
+      if (pix_val >= max_pix_val) continue;
+      const int this_val = (pix_val >> (bit_depth - 8));
       assert(this_val < max_bin_val);
-      if (this_val >= max_bin_val) continue;
       ++bin_val_count[this_val];
-      if (val_count != NULL) ++val_count[(src[r * stride + c])];
+      if (val_count != NULL) ++val_count[pix_val];
     }
   }
   int n = 0;
