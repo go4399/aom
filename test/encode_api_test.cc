@@ -2240,4 +2240,52 @@ TEST(EncodeAPI, DynamicSvcAq3Issue499606109) {
   ASSERT_EQ(aom_codec_destroy(&codec), AOM_CODEC_OK);
 }
 
+TEST(EncodeAPI, Buganizer502933723) {
+  aom_codec_iface_t *codec_interface = aom_codec_av1_cx();
+  ASSERT_NE(codec_interface, nullptr);
+
+  aom_codec_enc_cfg_t cfg;
+  ASSERT_EQ(aom_codec_enc_config_default(codec_interface, &cfg,
+                                         AOM_USAGE_GOOD_QUALITY),
+            AOM_CODEC_OK);
+  cfg.g_w = 640;
+  cfg.g_h = 480;
+  cfg.g_bit_depth = AOM_BITS_10;
+  cfg.g_input_bit_depth = 10;
+
+  aom_img_fmt_t img_fmt = AOM_IMG_FMT_I42016;
+
+  aom_codec_ctx_t codec;
+  unsigned long init_flags = AOM_CODEC_USE_HIGHBITDEPTH;
+  ASSERT_EQ(aom_codec_enc_init(&codec, codec_interface, &cfg, init_flags),
+            AOM_CODEC_OK);
+
+  aom_image_t img;
+  unsigned int align = 1;
+  ASSERT_NE(aom_img_alloc(&img, img_fmt, cfg.g_w, cfg.g_h, align), nullptr);
+
+  for (unsigned int i = 0; i < img.d_h; ++i) {
+    uint16_t *line = (uint16_t *)(img.planes[0] + i * img.stride[0]);
+    for (unsigned int j = 0; j < img.d_w; ++j) {
+      line[j] = rand() % 65536;
+    }
+  }
+  unsigned int uv_h = (img.d_h + 1) / 2;
+  unsigned int uv_w = (img.d_w + 1) / 2;
+  for (unsigned int i = 0; i < uv_h; ++i) {
+    uint16_t *line_u = (uint16_t *)(img.planes[1] + i * img.stride[1]);
+    uint16_t *line_v = (uint16_t *)(img.planes[2] + i * img.stride[2]);
+    for (unsigned int j = 0; j < uv_w; ++j) {
+      line_u[j] = rand() % 65536;
+      line_v[j] = rand() % 65536;
+    }
+  }
+
+  EXPECT_EQ(aom_codec_encode(&codec, &img, 0, 1, 0), AOM_CODEC_OK);
+  EXPECT_EQ(aom_codec_encode(&codec, &img, 1, 1, 0), AOM_CODEC_OK);
+
+  aom_img_free(&img);
+  EXPECT_EQ(aom_codec_destroy(&codec), AOM_CODEC_OK);
+}
+
 }  // namespace

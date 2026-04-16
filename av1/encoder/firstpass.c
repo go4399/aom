@@ -828,13 +828,15 @@ static int firstpass_inter_prediction(
     // Keep a count of cases where the inter and intra were very close
     // and very low. This helps with scene cut detection for example in
     // cropped clips with black bars at the sides or top and bottom.
-    if (((this_intra_error - INTRA_MODE_PENALTY) * 9 <= motion_error * 10) &&
-        (this_intra_error < (2 * INTRA_MODE_PENALTY))) {
+    if ((this_intra_error < (2 * INTRA_MODE_PENALTY)) &&
+        ((int64_t)(this_intra_error - INTRA_MODE_PENALTY) * 9 <=
+         (int64_t)motion_error * 10)) {
       stats->neutral_count += 1.0;
       // Also track cases where the intra is not much worse than the inter
       // and use this in limiting the GF/arf group length.
     } else if ((this_intra_error > NCOUNT_INTRA_THRESH) &&
-               (this_intra_error < (NCOUNT_INTRA_FACTOR * motion_error))) {
+               ((int64_t)this_intra_error <
+                (int64_t)NCOUNT_INTRA_FACTOR * motion_error)) {
       stats->neutral_count +=
           (double)motion_error / DOUBLE_DIVIDE_CHECK((double)this_intra_error);
     }
