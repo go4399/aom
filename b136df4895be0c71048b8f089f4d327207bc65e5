@@ -1,0 +1,39 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ea03c6a_9a84521e",
+        "filename": "av1/encoder/ratectrl.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 3363,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-16T19:31:36Z",
+      "side": 1,
+      "message": "Assuming `src_sad_blk_alloc_size` is initialized to 0, this `NULL` check could be removed too.",
+      "fixSuggestions": [
+        {
+          "fixId": "f56746a7_8e8ef4a6",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/ratectrl.c",
+              "range": {
+                "startLine": 3363,
+                "startChar": 0,
+                "endLine": 3365,
+                "endChar": 0
+              },
+              "replacement": "    if (cpi-\u003esrc_sad_blk_alloc_size !\u003d sb_cols * sb_rows) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "b136df4895be0c71048b8f089f4d327207bc65e5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
