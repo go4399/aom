@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b641333_f5562646",
+        "filename": "test/invalid_file_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-16T21:49:49Z",
+      "side": 1,
+      "message": "You can remove `virtual` here since it\u0027s an override.",
+      "range": {
+        "startLine": 262,
+        "startChar": 4,
+        "endLine": 262,
+        "endChar": 11
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "818d01fc_5b4985fe",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/invalid_file_test.cc",
+              "range": {
+                "startLine": 262,
+                "startChar": 0,
+                "endLine": 263,
+                "endChar": 0
+              },
+              "replacement": "    ~InMemoryVideoSource() override \u003d default;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "3d5b4431c83bc1d3c3eb9c9fa00071eeb91a2ff5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
