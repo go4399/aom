@@ -72,6 +72,24 @@
       "parentUuid": "fd4345f8_af6e24ea",
       "revId": "6ebffb4b8fb40943eab1d32fc72c124a8eea7a2f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8355fc18_3d6b1109",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 2280,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-16T23:07:00Z",
+      "side": 1,
+      "message": "\u003e Yes. A more elegant solution might be check the input range to avoid other potential overflows.\n\u003e \n\u003e The overflow in intra_mode_search.c is range issues, which might be solved by the way you suggested.\n\u003e \n\u003e The overflow in firstpass.c might still overflow even if with the correct input range, as long as input is 16 bits.\n\u003e \n\u003e I recommend we keep the fix in firstpass.c and discard others?\n\nThat sounds good. If it will overflow with valid input, then we should keep the check.\n\nI\u0027m porting this change over now:\n\nhttps://chromium-review.googlesource.com/c/webm/libvpx/+/7695293\n\nAfter that lands we can check the status of this change and bug.",
+      "parentUuid": "e458ab83_bfe18450",
+      "revId": "6ebffb4b8fb40943eab1d32fc72c124a8eea7a2f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
