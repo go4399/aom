@@ -266,8 +266,8 @@ bool AV1RateControlRTC::UpdateRateControl(
             av1_quantizer_to_qindex(rc_cfg.max_quantizers[layer]);
         lrc->best_quality =
             av1_quantizer_to_qindex(rc_cfg.min_quantizers[layer]);
-        lc->scaling_factor_num = rc_cfg.scaling_factor_num[sl];
-        lc->scaling_factor_den = rc_cfg.scaling_factor_den[sl];
+        lc->scaling_factor_num = AOMMAX(1, rc_cfg.scaling_factor_num[sl]);
+        lc->scaling_factor_den = AOMMAX(1, rc_cfg.scaling_factor_den[sl]);
         lc->framerate_factor = rc_cfg.ts_rate_decimator[tl];
         if (tl == cpi_->svc.number_temporal_layers - 1)
           target_bandwidth_svc += lc->layer_target_bitrate;
@@ -289,6 +289,12 @@ bool AV1RateControlRTC::UpdateRateControl(
 
 FrameDropDecision AV1RateControlRTC::ComputeQP(
     const AV1FrameParamsRTC &frame_params) {
+  if (frame_params.spatial_layer_id < 0 ||
+      frame_params.spatial_layer_id >= cpi_->svc.number_spatial_layers ||
+      frame_params.temporal_layer_id < 0 ||
+      frame_params.temporal_layer_id >= cpi_->svc.number_temporal_layers) {
+    return kFrameDropDecisionDrop;
+  }
   AV1_COMMON *const cm = &cpi_->common;
   int width, height;
   GF_GROUP *const gf_group = &cpi_->ppi->gf_group;
