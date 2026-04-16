@@ -289,6 +289,12 @@ bool AV1RateControlRTC::UpdateRateControl(
 
 FrameDropDecision AV1RateControlRTC::ComputeQP(
     const AV1FrameParamsRTC &frame_params) {
+  if (frame_params.spatial_layer_id < 0 ||
+      frame_params.spatial_layer_id >= cpi_->svc.number_spatial_layers ||
+      frame_params.temporal_layer_id < 0 ||
+      frame_params.temporal_layer_id >= cpi_->svc.number_temporal_layers) {
+    return kFrameDropDecisionDrop;
+  }
   AV1_COMMON *const cm = &cpi_->common;
   int width, height;
   GF_GROUP *const gf_group = &cpi_->ppi->gf_group;
