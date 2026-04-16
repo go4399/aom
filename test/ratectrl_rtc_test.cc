@@ -312,6 +312,35 @@ class RcInterfaceTest : public ::libaom_test::EncoderTest,
     ASSERT_NO_FATAL_FAILURE(RunLoop(&video));
   }
 
+  void RunSvcInvalidInputs() {
+    key_interval_ = 10000;
+    // Initial resolution is set to 640x480.
+    SetConfigSvc(3, 3);
+    rc_api_ = aom::AV1RateControlRTC::Create(rc_cfg_);
+    // Verfiy return false on update if resolution above configured setting.
+    rc_cfg_.width = 1280;
+    rc_cfg_.height = 720;
+    ASSERT_FALSE(rc_api_->UpdateRateControl(rc_cfg_));
+    // Go back to original resolution.
+    rc_cfg_.width = 640;
+    rc_cfg_.height = 480;
+    ASSERT_TRUE(rc_api_->UpdateRateControl(rc_cfg_));
+    // Set layer_id beyond range in init (3, 3).
+    // Expect ComputeQP() to return kFrameDropDecisionDrop.
+    frame_params_.spatial_layer_id = 4;
+    frame_params_.temporal_layer_id = 0;
+    ASSERT_TRUE(rc_api_->ComputeQP(frame_params_) ==
+                aom::kFrameDropDecisionDrop);
+    frame_params_.spatial_layer_id = 0;
+    frame_params_.temporal_layer_id = 4;
+    ASSERT_TRUE(rc_api_->ComputeQP(frame_params_) ==
+                aom::kFrameDropDecisionDrop);
+    // Start with valide (0, 0) layer_id, expect return kFrameDropDecisionOk.
+    frame_params_.spatial_layer_id = 0;
+    frame_params_.temporal_layer_id = 0;
+    ASSERT_TRUE(rc_api_->ComputeQP(frame_params_) == aom::kFrameDropDecisionOk);
+  }
+
  private:
   void SetConfig() {
     rc_cfg_.width = 640;
@@ -691,6 +720,8 @@ TEST_P(RcInterfaceTest, SvcPeriodicKey) { RunSvcPeriodicKey(); }
 TEST_P(RcInterfaceTest, SvcDynamicTemporal) { RunSvcDynamicTemporal(); }
 
 TEST_P(RcInterfaceTest, SvcDynamicSpatial) { RunSvcDynamicSpatial(); }
+
+TEST_P(RcInterfaceTest, SvcInvalidInputs) { RunSvcInvalidInputs(); }
 
 TEST_P(RcExternMethodsInterfaceTest, CreateRateControlTest) {
   TestCreateRateControl();
