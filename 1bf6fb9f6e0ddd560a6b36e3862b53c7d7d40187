@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a348635f_a5a05a4c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-16T03:50:45Z",
+      "side": 1,
+      "message": "The repro looked relatively straightforward so can probably be converted into a unit test in this change or a follow up.",
+      "revId": "1bf6fb9f6e0ddd560a6b36e3862b53c7d7d40187",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80755a7e_cdafe770",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 3652,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-16T03:50:45Z",
+      "side": 1,
+      "message": "The size of the alloc is actually `sb_cols * sb_rows * sizeof(*src_sad_block_64x64`). So you could note that this is in units of `uint64_t` just to be clear.",
+      "fixSuggestions": [
+        {
+          "fixId": "8bf9e655_acbf21ac",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/encoder.h",
+              "range": {
+                "startLine": 3652,
+                "startChar": 0,
+                "endLine": 3653,
+                "endChar": 0
+              },
+              "replacement": "   * Size of allocated buffer to store 64x64 SAD, in units of uint64_t.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "1bf6fb9f6e0ddd560a6b36e3862b53c7d7d40187",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e03a4e3_7ebafc4d",
+        "filename": "av1/encoder/ratectrl.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 3348,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-16T03:50:45Z",
+      "side": 1,
+      "message": "I guess this clears the buffer in the case that spatial layers changes. Otherwise it could be moved into the block where the allocation is done. It looks like the pointer is checked before it\u0027s used in all cases:\n\nhttps://source.chromium.org/search?q\u003dsrc_sad_blk_64x64\u0026sq\u003d\u0026ss\u003dchromium%2Fchromium%2Fsrc:third_party%2Flibaom%2Fsource%2Flibaom%2F",
+      "revId": "1bf6fb9f6e0ddd560a6b36e3862b53c7d7d40187",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
