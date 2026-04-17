@@ -1276,6 +1276,10 @@ typedef struct INTERP_FILTER_SPEED_FEATURES {
   // Forces interpolation filter to EIGHTTAP_REGULAR and skips interpolation
   // filter search.
   int skip_interp_filter_search;
+
+  // Skip model RD evaluation of chroma planes during interpolation filter
+  // search.
+  int skip_model_rd_uv;
 } INTERP_FILTER_SPEED_FEATURES;
 
 typedef struct INTRA_MODE_SPEED_FEATURES {
