@@ -1845,8 +1845,10 @@ typedef struct aom_svc_params {
   int number_temporal_layers;
   int max_quantizers[AOM_MAX_LAYERS];        /**< Max Q for each layer */
   int min_quantizers[AOM_MAX_LAYERS];        /**< Min Q for each layer */
-  int scaling_factor_num[AOM_MAX_SS_LAYERS]; /**< Scaling factor-numerator */
-  int scaling_factor_den[AOM_MAX_SS_LAYERS]; /**< Scaling factor-denominator */
+  /**< Scaling factor-numerator */
+  int scaling_factor_num[AOM_MAX_SS_LAYERS];
+  /**< Scaling factor-denominator: must greater or equal to scaling_factor_num */
+  int scaling_factor_den[AOM_MAX_SS_LAYERS];
   /*! Target bitrate for each layer, in kilobits per second */
   int layer_target_bitrate[AOM_MAX_LAYERS];
   /*! Frame rate factor for each temporal layer */
