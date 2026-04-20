@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8df0b3c6_c797045c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31012
+      },
+      "writtenOn": "2026-04-20T10:03:39Z",
+      "side": 1,
+      "message": "The results for different resolutions are as follows:\n```\n                Encoder Instruction                     \ncpu  Resolution  Count Reduction(%) \n-----------------------------------\n1    LOWRES2         0.88           \n1    MIDRES2         0.58           \n1    SHORTS608p      0.48           \n1    SHORTS720p      0.39           \n1    SHORTS1080p     0.25           \n1    HDRES2          0.36          \n1    Average         0.48 \n\n\n2    LOWRES2         0.78           \n2    MIDRES2         0.60           \n2    SHORTS608p      0.51           \n2    SHORTS720p      0.50           \n2    SHORTS1080p     0.38           \n2    HDRES2          0.49          \n2    Average         0.54           \n\n\n3    LOWRES2         0.61           \n3    MIDRES2         0.40          \n3    SHORTS608p      0.43\n3    SHORTS720p      0.49          \n3    SHORTS1080p     0.48\n3    HDRES2          0.46\n3    Average         0.50\n\n\n4    LOWRES2         0.53          \n4    MIDRES2         0.31          \n4    SHORTS608p      0.23          \n4    SHORTS720p      0.21         \n4    SHORTS1080p     0.23           \n4    HDRES2          0.24         \n4    Average         0.30          \n\n\n5    LOWRES2         0.59           \n5    MIDRES2         0.34          \n5    SHORTS608p      0.29           \n5    SHORTS720p      0.27         \n5    SHORTS1080p     0.17          \n5    HDRES2          0.27         \n5    Average         0.31         \n\n\n6    LOWRES2         0.53          \n6    MIDRES2         0.34           \n6    SHORTS608p      0.29           \n6    SHORTS720p      0.28         \n6    SHORTS1080p     0.17          \n6    HDRES2          0.28        \n6    Average         0.31         \n```\nPlease note that this patch achieves ~1.1% encoder instruction count reduction with Clang (compared to 0.61% with GCC for speed\u003d3) when measured for LOWRES2, cpu3 configuration. \n\nThe instruction count reduction specified has been measured using command:\n```\n`$ perf stat -e instructions:u ./aomenc`\n```\n\nPlease review.",
+      "revId": "87f7a0e5c67f9070418f2957e10e45203f06b6dc",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
