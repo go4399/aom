@@ -1004,6 +1004,19 @@ static void update_firstpass_stats(AV1_COMP *cpi,
          twopass->stats_buf_ctx->stats_in_buf_end)) {
       twopass->stats_buf_ctx->stats_in_end =
           twopass->stats_buf_ctx->stats_in_start;
+    } else if (cpi->ppi->lap_enabled &&
+               (twopass->stats_buf_ctx->stats_in_end >=
+                twopass->stats_buf_ctx->stats_in_buf_end)) {
+      const int num_valid = (int)(twopass->stats_buf_ctx->stats_in_end -
+                                  cpi->twopass_frame.stats_in);
+      if (num_valid > 0) {
+        memmove(twopass->stats_buf_ctx->stats_in_start,
+                cpi->twopass_frame.stats_in,
+                num_valid * sizeof(FIRSTPASS_STATS));
+      }
+      cpi->twopass_frame.stats_in = twopass->stats_buf_ctx->stats_in_start;
+      twopass->stats_buf_ctx->stats_in_end =
+          twopass->stats_buf_ctx->stats_in_start + num_valid;
     }
   }
 }
@@ -1468,10 +1481,14 @@ void av1_first_pass(AV1_COMP *cpi, const int64_t ts_duration) {
   const int num_mbs = get_num_mbs(fp_block_size, num_mbs_16X16);
   stats.intra_factor = stats.intra_factor / (double)num_mbs;
   stats.brightness_factor = stats.brightness_factor / (double)num_mbs;
-  FIRSTPASS_STATS *this_frame_stats = twopass->stats_buf_ctx->stats_in_end;
   update_firstpass_stats(cpi, &stats, raw_err_stdev,
                          current_frame->frame_number, ts_duration,
                          fp_block_size);
+  FIRSTPASS_STATS *this_frame_stats =
+      (twopass->stats_buf_ctx->stats_in_end ==
+       twopass->stats_buf_ctx->stats_in_start)
+          ? (twopass->stats_buf_ctx->stats_in_buf_end - 1)
+          : (twopass->stats_buf_ctx->stats_in_end - 1);
 
   if (this_frame_stats->pcnt_inter < 0.2 && last2_frame != NULL) {
     assign_frame_buffer_p(
