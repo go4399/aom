@@ -37,7 +37,14 @@ class ScalabilityTest
                           ::libaom_test::Encoder *encoder) override {
     if (video->frame() == 0) {
       encoder->Control(AOME_SET_CPUUSED, kCpuUsed);
-      encoder->Control(AOME_SET_NUMBER_SPATIAL_LAYERS, num_spatial_layers_);
+      aom_svc_params_t svc_params = {};
+      svc_params.number_spatial_layers = num_spatial_layers_;
+      svc_params.number_temporal_layers = 1;
+      for (int i = 0; i < num_spatial_layers_; i++) {
+        svc_params.scaling_factor_num[i] = 1;
+        svc_params.scaling_factor_den[i] = 1;
+      }
+      encoder->Control(AV1E_SET_SVC_PARAMS, &svc_params);
     }
     if (video->frame() % num_spatial_layers_) {
       frame_flags_ = AOM_EFLAG_NO_REF_LAST2 | AOM_EFLAG_NO_REF_LAST3 |
