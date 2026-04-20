@@ -1289,7 +1289,9 @@ enum aome_enc_control_id {
   /* NOTE: enums 145-149 unused */
 
   /*!\brief Codec control function to set the layer id, aom_svc_layer_id_t*
-   * parameter
+   * parameter. Layer id for spatial or temporal layer must be within valid
+   * range of 0 to the allowed number of spatial or temporal layers, set via
+   * the control AV1E_SET_SVC_PARAMS, or via AOME_SET_SPATIAL_LAYER_ID.
    */
   AV1E_SET_SVC_LAYER_ID = 131,
 
