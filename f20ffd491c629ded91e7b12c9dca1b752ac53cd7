@@ -16,6 +16,24 @@
       "message": "Did this break? Was it because temporal layers was unset?",
       "revId": "f20ffd491c629ded91e7b12c9dca1b752ac53cd7",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d01cde3f_5475835e",
+        "filename": "test/scalability_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2026-04-20T21:40:17Z",
+      "side": 0,
+      "message": "yes this broke because this is running rtc video encoding, and this svc control does not setup/allocate the layer context, as is done in set_svc_params. will only change the control used for rtc svc for now.",
+      "parentUuid": "f1c8de14_e3ead771",
+      "revId": "f20ffd491c629ded91e7b12c9dca1b752ac53cd7",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
