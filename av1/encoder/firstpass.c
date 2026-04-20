@@ -914,6 +914,10 @@ static void update_firstpass_stats(AV1_COMP *cpi,
   AV1_COMMON *const cm = &cpi->common;
   const CommonModeInfoParams *const mi_params = &cm->mi_params;
   FIRSTPASS_STATS *this_frame_stats = twopass->stats_buf_ctx->stats_in_end;
+  if (cpi->ppi->lap_enabled &&
+      this_frame_stats >= twopass->stats_buf_ctx->stats_in_buf_end) {
+    this_frame_stats = twopass->stats_buf_ctx->stats_in_buf_end - 1;
+  }
   FIRSTPASS_STATS fps;
   // The minimum error here insures some bit allocation to frames even
   // in static regions. The allocation per MB declines for larger formats
@@ -1004,6 +1008,13 @@ static void update_firstpass_stats(AV1_COMP *cpi,
          twopass->stats_buf_ctx->stats_in_buf_end)) {
       twopass->stats_buf_ctx->stats_in_end =
           twopass->stats_buf_ctx->stats_in_start;
+    }
+    // Set stats_in_end to the end of buffer to avoid infinite grow and out
+    // of boundary.
+    if (cpi->ppi->lap_enabled && twopass->stats_buf_ctx->stats_in_end >
+                                     twopass->stats_buf_ctx->stats_in_buf_end) {
+      twopass->stats_buf_ctx->stats_in_end =
+          twopass->stats_buf_ctx->stats_in_buf_end;
     }
   }
 }
@@ -1468,10 +1479,14 @@ void av1_first_pass(AV1_COMP *cpi, const int64_t ts_duration) {
   const int num_mbs = get_num_mbs(fp_block_size, num_mbs_16X16);
   stats.intra_factor = stats.intra_factor / (double)num_mbs;
   stats.brightness_factor = stats.brightness_factor / (double)num_mbs;
-  FIRSTPASS_STATS *this_frame_stats = twopass->stats_buf_ctx->stats_in_end;
   update_firstpass_stats(cpi, &stats, raw_err_stdev,
                          current_frame->frame_number, ts_duration,
                          fp_block_size);
+  FIRSTPASS_STATS *this_frame_stats =
+      (twopass->stats_buf_ctx->stats_in_end ==
+       twopass->stats_buf_ctx->stats_in_start)
+          ? (twopass->stats_buf_ctx->stats_in_buf_end - 1)
+          : (twopass->stats_buf_ctx->stats_in_end - 1);
 
   if (this_frame_stats->pcnt_inter < 0.2 && last2_frame != NULL) {
     assign_frame_buffer_p(
