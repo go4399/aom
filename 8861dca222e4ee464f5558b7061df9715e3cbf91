@@ -1,0 +1,180 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "480a36a8_8838771b",
+        "filename": "av1/ratectrl_rtc.cc",
+        "patchSetId": 10
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-21T18:45:36Z",
+      "side": 1,
+      "message": "Looks like `UpdateRateControl` is handling this.",
+      "fixSuggestions": [
+        {
+          "fixId": "7f59302c_cfbc7fd6",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/ratectrl_rtc.cc",
+              "range": {
+                "startLine": 184,
+                "startChar": 0,
+                "endLine": 185,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "8861dca222e4ee464f5558b7061df9715e3cbf91",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "11169f26_e7617764",
+        "filename": "av1/ratectrl_rtc.cc",
+        "patchSetId": 10
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-21T18:45:36Z",
+      "side": 1,
+      "message": "No need for the else after a return. Positive checks are generally preferred, so you could invert the check.\n\n```\n  if (rc_is_valid_) return cpi_-\u003ecommon.quant_params.base_qindex;\n  return 0;\n```\n\nor just:\n\n```\nreturn rc_is_valid_ ? ... : 0;\n```",
+      "revId": "8861dca222e4ee464f5558b7061df9715e3cbf91",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a6714547_c5692372",
+        "filename": "av1/ratectrl_rtc.cc",
+        "patchSetId": 10
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-21T18:45:36Z",
+      "side": 1,
+      "message": "Swap the blocks and make this `if (rc_is_valid_)`",
+      "revId": "8861dca222e4ee464f5558b7061df9715e3cbf91",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05c40bb1_2d2c6bdf",
+        "filename": "av1/ratectrl_rtc.cc",
+        "patchSetId": 10
+      },
+      "lineNbr": 444,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-21T18:45:36Z",
+      "side": 1,
+      "message": "Same here.",
+      "revId": "8861dca222e4ee464f5558b7061df9715e3cbf91",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5105dd7a_4cacb061",
+        "filename": "av1/ratectrl_rtc.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-21T18:45:36Z",
+      "side": 1,
+      "message": "It would be best to default this to `false` here or in `Create`.",
+      "fixSuggestions": [
+        {
+          "fixId": "ecde6124_91ad6255",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/ratectrl_rtc.h",
+              "range": {
+                "startLine": 151,
+                "startChar": 0,
+                "endLine": 152,
+                "endChar": 0
+              },
+              "replacement": "  bool rc_is_valid_ \u003d false;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "8861dca222e4ee464f5558b7061df9715e3cbf91",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "59befb7b_5d17e7d5",
+        "filename": "test/ratectrl_rtc_test.cc",
+        "patchSetId": 10
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-21T18:45:36Z",
+      "side": 1,
+      "message": "Use `ASSERT_EQ`.",
+      "fixSuggestions": [
+        {
+          "fixId": "1c3fc5b2_f3e77b09",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/ratectrl_rtc_test.cc",
+              "range": {
+                "startLine": 279,
+                "startChar": 0,
+                "endLine": 281,
+                "endChar": 0
+              },
+              "replacement": "    ASSERT_EQ(rc_api_-\u003eComputeQP(frame_params_), aom::kFrameDropDecisionDrop);\n"
+            },
+            {
+              "path": "test/ratectrl_rtc_test.cc",
+              "range": {
+                "startLine": 283,
+                "startChar": 0,
+                "endLine": 285,
+                "endChar": 0
+              },
+              "replacement": "    ASSERT_EQ(rc_api_-\u003eComputeQP(frame_params_), aom::kFrameDropDecisionDrop);\n"
+            },
+            {
+              "path": "test/ratectrl_rtc_test.cc",
+              "range": {
+                "startLine": 288,
+                "startChar": 0,
+                "endLine": 289,
+                "endChar": 0
+              },
+              "replacement": "    ASSERT_EQ(rc_api_-\u003eComputeQP(frame_params_), aom::kFrameDropDecisionOk);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "8861dca222e4ee464f5558b7061df9715e3cbf91",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
