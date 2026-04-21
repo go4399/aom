@@ -1,0 +1,49 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e5cfc73_0e2e43b2",
+        "filename": "av1/ratectrl_rtc.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-21T19:53:59Z",
+      "side": 1,
+      "message": "The branch here and at line 291 could be removed since the other branch returns.",
+      "fixSuggestions": [
+        {
+          "fixId": "0b556b71_a650272b",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/ratectrl_rtc.cc",
+              "range": {
+                "startLine": 278,
+                "startChar": 0,
+                "endLine": 281,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "av1/ratectrl_rtc.cc",
+              "range": {
+                "startLine": 1,
+                "startChar": 0,
+                "endLine": 1,
+                "endChar": 0
+              },
+              "replacement": "        lc-\u003emax_q \u003d rc_cfg.max_quantizers[layer];\n        lc-\u003emin_q \u003d rc_cfg.min_quantizers[layer];\n"
+            }
+          ]
+        }
+      ],
+      "revId": "fe3b01cf314698bd3af4d51e0539134726aca73e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
