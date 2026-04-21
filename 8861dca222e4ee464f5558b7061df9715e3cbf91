@@ -36,6 +36,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0cdb9ae8_98265281",
+        "filename": "av1/ratectrl_rtc.cc",
+        "patchSetId": 10
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2026-04-21T19:04:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "480a36a8_8838771b",
+      "revId": "8861dca222e4ee464f5558b7061df9715e3cbf91",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "11169f26_e7617764",
@@ -49,6 +67,24 @@
       "writtenOn": "2026-04-21T18:45:36Z",
       "side": 1,
       "message": "No need for the else after a return. Positive checks are generally preferred, so you could invert the check.\n\n```\n  if (rc_is_valid_) return cpi_-\u003ecommon.quant_params.base_qindex;\n  return 0;\n```\n\nor just:\n\n```\nreturn rc_is_valid_ ? ... : 0;\n```",
+      "revId": "8861dca222e4ee464f5558b7061df9715e3cbf91",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7293a212_99dfb988",
+        "filename": "av1/ratectrl_rtc.cc",
+        "patchSetId": 10
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2026-04-21T19:04:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "11169f26_e7617764",
       "revId": "8861dca222e4ee464f5558b7061df9715e3cbf91",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -70,6 +106,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e96bcd56_2fc4261a",
+        "filename": "av1/ratectrl_rtc.cc",
+        "patchSetId": 10
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2026-04-21T19:04:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a6714547_c5692372",
+      "revId": "8861dca222e4ee464f5558b7061df9715e3cbf91",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "05c40bb1_2d2c6bdf",
@@ -83,6 +137,24 @@
       "writtenOn": "2026-04-21T18:45:36Z",
       "side": 1,
       "message": "Same here.",
+      "revId": "8861dca222e4ee464f5558b7061df9715e3cbf91",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "857af703_fd6dc473",
+        "filename": "av1/ratectrl_rtc.cc",
+        "patchSetId": 10
+      },
+      "lineNbr": 444,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2026-04-21T19:04:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "05c40bb1_2d2c6bdf",
       "revId": "8861dca222e4ee464f5558b7061df9715e3cbf91",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -118,6 +190,24 @@
           ]
         }
       ],
+      "revId": "8861dca222e4ee464f5558b7061df9715e3cbf91",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "57407473_5d884a0a",
+        "filename": "av1/ratectrl_rtc.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2026-04-21T19:04:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5105dd7a_4cacb061",
       "revId": "8861dca222e4ee464f5558b7061df9715e3cbf91",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -173,6 +263,24 @@
           ]
         }
       ],
+      "revId": "8861dca222e4ee464f5558b7061df9715e3cbf91",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b0748d0_70998338",
+        "filename": "test/ratectrl_rtc_test.cc",
+        "patchSetId": 10
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2026-04-21T19:04:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59befb7b_5d17e7d5",
       "revId": "8861dca222e4ee464f5558b7061df9715e3cbf91",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
