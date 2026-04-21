@@ -16,6 +16,24 @@
       "message": "Performance results of the encoder are provided below for all resolutions wrt commit [f23c9437](https://aomedia.googlesource.com/aom/+/f23c9437a44f308c30d077f96076d8394c525789):\n```\n\t         Encoder Instruction                    BD-Rate Loss(%)\ncpu   Resolution  Count Reduction(%)  avg.psnr   ovr.psnr   ssim     vmaf    vmaf_neg\n 3       LOWRES2        2.816          0.0361     0.0463   0.0826   0.0331    0.0768\n 3       MIDRES2        2.372          0.0096     0.0248   0.0259   0.0312    0.0184\n 3    SHORTS608P        2.279         -0.0105    -0.0155  -0.0277   0.1034    0.0630\n 3    SHORTS720P        2.161         -0.0298    -0.0273  -0.0456  -0.0194   -0.0305\n 3   SHORTS1080P        1.974         -0.0802    -0.0799  -0.0950  -0.1125   -0.1161\n 3        HDRES2        2.019          0.0156     0.0126   0.0367  -0.0260   -0.0406\n 3       Average        2.260         -0.0128    -0.0099  -0.0090   0.0010   -0.0064\n\t\t\t\t\t\t\t\t\t  \n 4       LOWRES2        1.415          0.0506     0.0518   0.0839  -0.0833   -0.0331\n 4       MIDRES2        0.981          0.0733     0.0779   0.0724   0.0112   -0.0169\n 4    SHORTS608P        0.909         -0.0401    -0.0516  -0.0867   0.0348   -0.0247\n 4    SHORTS720P        0.970         -0.0073    -0.0132  -0.0118  -0.0270   -0.0398\n 4   SHORTS1080P        0.786         -0.0483    -0.0308  -0.0261  -0.0326   -0.0401\n 4        HDRES2        0.708         -0.0009    -0.0201  -0.0028  -0.0389   -0.0421\n 4       Average        0.957          0.0010    -0.0010   0.0003  -0.0214   -0.0330\n\t\t\t\t\t\t\t\t\t  \n 5       LOWRES2        0.147         -0.0050    -0.0023   0.0159  -0.0773   -0.0477\n 5       MIDRES2        0.057          0.0374     0.0284   0.0044  -0.0140   -0.0181\n 5    SHORTS608P       -0.058          0.0113     0.0170   0.0362   0.0193   -0.0031\n 5    SHORTS720P       -0.144         -0.0264    -0.0182  -0.0540  -0.0521   -0.0360\n 5   SHORTS1080P       -0.174         -0.0487    -0.0365  -0.0536  -0.0086   -0.0161\n 5        HDRES2       -0.279          0.0495     0.0518   0.0146   0.0846    0.0464\n 5       Average       -0.076         -0.0000     0.0042  -0.0079  -0.0103   -0.0140\n\t\t\t\t\t\t\t\t\t  \n 6       LOWRES2        0.049          0.0090     0.0031   0.0128  -0.1131    0.0345\n 6       MIDRES2       -0.139         -0.0325    -0.0273  -0.0201   0.0033   -0.0664\n 6    SHORTS608P       -0.302          0.0057    -0.0164  -0.0028  -0.0347   -0.0108\n 6    SHORTS720P       -0.154         -0.0088    -0.0035   0.0105  -0.0661   -0.0423\n 6   SHORTS1080P       -0.276         -0.0286    -0.0513  -0.0115   0.0575    0.0219\n 6        HDRES2       -0.379          0.0026     0.0091   0.0118  -0.0093   -0.0297\n 6       Average       -0.203         -0.0089    -0.0153  -0.0000  -0.0261   -0.0147\n ```\n \n The instruction count reduction specified has been measured using command:\n$ `perf stat -e instructions:u ./aomenc …`\n\n Please review.",
       "revId": "d37d2e0f813871fdb271c84afae45d6d0710667a",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "264a1d7b_07390690",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-04-21T17:43:29Z",
+      "side": 1,
+      "message": "Looks good - thanks.",
+      "parentUuid": "15850e5f_c204ef36",
+      "revId": "d37d2e0f813871fdb271c84afae45d6d0710667a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
