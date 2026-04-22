@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e02f3018_25e2b6f3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31592
+      },
+      "writtenOn": "2026-04-22T16:20:55Z",
+      "side": 1,
+      "message": "In this CL, we have tuned the sf `ref_frame_mvs_lvl` by increasing the spatial neighbors used for computation of spatial mv prediction error to improve the accuracy and also tuned the thresholds which are used to disable the temporal motion vector prediction.\n\nThe visual quality tests showed no artifacts for both hdres and ugc-hdres contents.\n\nPerformance results of encoder and decoder for the streams generated with low complexity decode mode enabled wrt cdef enabled for lc-dec mode \u003c[CL](https://aomedia-review.googlesource.com/c/aom/+/210441)\u003e shows below.\n```\n                     Instruction Count      Decode Time      \n                        Reduction(%)        Reduction(%)                      BD-Rate Loss(%)\ncpu   Resolution      Encoder   Decoder                   avg.psnr   ovr.psnr   ssim     vmaf       vmaf_neg    uvq_1p5 \n 1        HDRES2      1.053     3.210         2.802       0.3422      0.3765    0.3230   0.3515\t     0.3746      0.4777 \n 1      UGCHDRES      0.202     1.438         1.138       0.1083      0.1208    0.1133   0.1776\t     0.1487      0.1157\n 1       Average      0.675     2.423         2.062       0.2382      0.2628    0.2298   0.2742      0.2742      0.3168\t\n \n 2        HDRES2      1.055     3.250         3.070       0.4292      0.4413    0.3910   0.5055      0.5081      0.3447\n 2      UGCHDRES      0.542     1.925         1.430       0.1450      0.1530    0.1346   0.0970      0.1410      0.0388\n 2       Average      0.827     2.661         2.341       0.3029      0.3132    0.2771   0.3240      0.3449      0.2087 \n\n 3        HDRES2      1.076     4.591         4.377       0.4881      0.5174    0.4650   0.6509      0.6207      0.4828\n 3      UGCHDRES      0.381     1.551         1.390       0.1287      0.1483    0.0726   0.2605      0.2308      0.4720\n 3       Average      0.767     3.240         3.049       0.3283      0.3534    0.2906   0.4774      0.4474      0.4780 \n```\nThe instruction count reduction specified has been measured using command:\n`$ perf stat -e instructions:u ./aomenc …`\n`$ perf stat -e instructions:u ./dav1d --cpumask avx2 …`\n\nThe decode time is measured using command\n`time taskset -c 0  ./dav1d  --cpumask avx2 …`",
+      "revId": "e6718e24f67c1fb9a0c1278a5c46fd348c9a66d2",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
