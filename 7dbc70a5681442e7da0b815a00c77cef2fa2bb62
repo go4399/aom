@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e71fb12_751aaddc",
+        "filename": "av1/encoder/firstpass.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 918,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-22T17:18:25Z",
+      "side": 1,
+      "message": "This is somewhat confusing. We\u0027ll replace the final entry in this case? Is there a deeper bug here with the buffer management or does this only show up when the lookahead is 1?",
+      "revId": "7dbc70a5681442e7da0b815a00c77cef2fa2bb62",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
