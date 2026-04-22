@@ -18,6 +18,23 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "aaf4e704_ed9e1468",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 31012
+      },
+      "writtenOn": "2026-04-22T06:12:28Z",
+      "side": 1,
+      "message": "Please review.",
+      "revId": "0a444ae9e968af0cbb0acc35ef81721f5c22c87a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "07ffcd50_6fce8705",
@@ -31,6 +48,24 @@
       "writtenOn": "2026-04-21T17:50:29Z",
       "side": 1,
       "message": "Could you explain why this constraint is necessary?",
+      "revId": "0a444ae9e968af0cbb0acc35ef81721f5c22c87a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "69d1c66e_358815fd",
+        "filename": "test/temporal_filter_test.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 31012
+      },
+      "writtenOn": "2026-04-22T06:12:28Z",
+      "side": 1,
+      "message": "The buffers `src1p` and `src2p` represent the source and predicted data in the temporal filtering process. In the unit test, these buffers are populated with random values, which can differ significantly from each other. This can result in a large squared difference (i.e., `(src1p - src2p)^2` is large), and consequently a high scaled_error. However, the scaled_error is clipped to a maximum value of `7` when computing weights. Clipping of scaled_error to `7` regardless of other factors (derived from `subblock_mses` and `subblock_mvs` inputs) can mask potential bugs in the code. To avoid this issue, a constraint is introduced to ensure that `src1p` and `src2p` do not differ significantly.",
+      "parentUuid": "07ffcd50_6fce8705",
       "revId": "0a444ae9e968af0cbb0acc35ef81721f5c22c87a",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
