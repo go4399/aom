@@ -117,6 +117,30 @@
       },
       "revId": "7dbc70a5681442e7da0b815a00c77cef2fa2bb62",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6a9d799d_458e168d",
+        "filename": "av1/encoder/firstpass.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1005,
+      "author": {
+        "id": 6585
+      },
+      "writtenOn": "2026-04-22T18:03:54Z",
+      "side": 1,
+      "message": "You are right. The stats is no longer correct.\nI am not familiar with the LAP mode. @yunqingwang@google.com Could you comment how and when do we use LAP mode? Is it used anywhere?",
+      "parentUuid": "1455960e_fc76f029",
+      "range": {
+        "startLine": 1004,
+        "startChar": 7,
+        "endLine": 1005,
+        "endChar": 56
+      },
+      "revId": "7dbc70a5681442e7da0b815a00c77cef2fa2bb62",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
