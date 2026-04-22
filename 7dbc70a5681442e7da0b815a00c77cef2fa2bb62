@@ -16,6 +16,65 @@
       "message": "This is somewhat confusing. We\u0027ll replace the final entry in this case? Is there a deeper bug here with the buffer management or does this only show up when the lookahead is 1?",
       "revId": "7dbc70a5681442e7da0b815a00c77cef2fa2bb62",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f96ce0e_9dec424a",
+        "filename": "av1/encoder/firstpass.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 918,
+      "author": {
+        "id": 6585
+      },
+      "writtenOn": "2026-04-22T17:46:04Z",
+      "side": 1,
+      "message": "In my understanding, in the LAP (lookahead processing) mode, when the number of lookahead buffers is smaller than the actual frame number, it could happen.\n\nSee the comments on line 1005.",
+      "parentUuid": "3e71fb12_751aaddc",
+      "revId": "7dbc70a5681442e7da0b815a00c77cef2fa2bb62",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d77b4713_4fb88c48",
+        "filename": "av1/encoder/firstpass.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1005,
+      "author": {
+        "id": 6585
+      },
+      "writtenOn": "2026-04-22T17:46:04Z",
+      "side": 1,
+      "message": "Here. When LAP is enabled, the lookahead buffer is a linear buffer. When LAP is not enable, it is a circular buffer, so there is no OOB issue.\nSee line 1000, the stats of a new buffer will always be written to the end of the lookahead buffer, and the buffer pointer increases every frame.\nSo when we set a small lookahead buffer size, it will quickly go the the end.\nIf we don\u0027t clamp it, it will go out of bounds.",
+      "range": {
+        "startLine": 1004,
+        "startChar": 7,
+        "endLine": 1005,
+        "endChar": 56
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "c5db928c_a4e8f57f",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/firstpass.c",
+              "range": {
+                "startLine": 1003,
+                "startChar": 0,
+                "endLine": 1018,
+                "endChar": 0
+              },
+              "replacement": "    if (cpi-\u003eppi-\u003elap_enabled) {\n      // When LAP is enabled, the stats buffer is used as a linear buffer.\n      // Set stats_in_end to the end of buffer to avoid infinite grow and out\n      // of boundary.\n      if (twopass-\u003estats_buf_ctx-\u003estats_in_end \u003e\n          twopass-\u003estats_buf_ctx-\u003estats_in_buf_end) {\n        twopass-\u003estats_buf_ctx-\u003estats_in_end \u003d\n            twopass-\u003estats_buf_ctx-\u003estats_in_buf_end;\n      }\n    } else {\n      // In the case of two pass without LAP, first pass uses a circular buffer.\n      if (twopass-\u003estats_buf_ctx-\u003estats_in_end \u003e\u003d\n          twopass-\u003estats_buf_ctx-\u003estats_in_buf_end) {\n        twopass-\u003estats_buf_ctx-\u003estats_in_end \u003d\n            twopass-\u003estats_buf_ctx-\u003estats_in_start;\n      }\n"
+            }
+          ]
+        }
+      ],
+      "revId": "7dbc70a5681442e7da0b815a00c77cef2fa2bb62",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
