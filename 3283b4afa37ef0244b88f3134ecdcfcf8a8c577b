@@ -97,6 +97,53 @@
       },
       "revId": "3283b4afa37ef0244b88f3134ecdcfcf8a8c577b",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d043abf_2f920f90",
+        "filename": "av1/encoder/x86/model_rd_sse4.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 6585
+      },
+      "writtenOn": "2026-04-22T15:58:14Z",
+      "side": 1,
+      "message": "You are right. Then please change the BSD 3 to BSD 2 in the test.",
+      "parentUuid": "8d052aa1_dee03762",
+      "range": {
+        "startLine": 4,
+        "startChar": 51,
+        "endLine": 5,
+        "endChar": 70
+      },
+      "revId": "3283b4afa37ef0244b88f3134ecdcfcf8a8c577b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6c38651f_fe482341",
+        "filename": "test/model_rd_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 6585
+      },
+      "writtenOn": "2026-04-22T15:58:14Z",
+      "side": 1,
+      "message": "Here.",
+      "range": {
+        "startLine": 4,
+        "startChar": 51,
+        "endLine": 4,
+        "endChar": 63
+      },
+      "revId": "3283b4afa37ef0244b88f3134ecdcfcf8a8c577b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
