@@ -108,6 +108,13 @@ void av1_collect_motion_search_features_sb(AV1_COMP *const cpi, ThreadData *td,
                                            const int mi_row, const int mi_col,
                                            const BLOCK_SIZE bsize,
                                            aom_partition_features_t *features);
+
+void av1_prune_part4_using_sms(AV1_COMP *const cpi, MACROBLOCK *x,
+                               const PartitionSearchState *part_search_state,
+                               SIMPLE_MOTION_DATA_TREE *sms_tree, int mi_row,
+                               int mi_col, BLOCK_SIZE bsize,
+                               int *part4_search_allowed);
+
 #if CONFIG_PARTITION_SEARCH_ORDER
 void av1_prepare_motion_search_features_block(
     AV1_COMP *const cpi, ThreadData *td, TileDataEnc *tile_data,
