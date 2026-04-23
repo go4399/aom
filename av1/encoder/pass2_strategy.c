@@ -275,7 +275,7 @@ static void twopass_update_bpm_factor(AV1_COMP *cpi, int rate_err_tol) {
   // an adjustment if things are getting worse.
   if ((rate_err_factor < 1.0 && err_estimate >= 0) ||
       (rate_err_factor > 1.0 && err_estimate <= 0)) {
-    twopass->bpm_factor *= rate_err_factor;
+    twopass->bpm_factor = rate_err_factor;
     if (rate_err_tol >= 100) {
       twopass->bpm_factor =
           AOMMAX(min_fac, AOMMIN(max_fac, twopass->bpm_factor));
