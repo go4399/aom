@@ -2680,3 +2680,70 @@ void av1_init_simple_motion_search_mvs_for_sb(const AV1_COMP *cpi,
 
   init_simple_motion_search_mvs(sms_root, ref_mvs);
 }
+
+void av1_prune_part4_using_sms(AV1_COMP *const cpi, MACROBLOCK *x,
+                               const PartitionSearchState *part_search_state,
+                               SIMPLE_MOTION_DATA_TREE *sms_tree, int mi_row,
+                               int mi_col, BLOCK_SIZE bsize,
+                               int *part4_search_allowed) {
+  if (!part4_search_allowed[HORZ4] || !part4_search_allowed[VERT4]) return;
+
+  unsigned int sms_h_part4_sse[4];
+  unsigned int sms_v_part4_sse[4];
+
+  const BLOCK_SIZE subsize_h4 = get_partition_subsize(bsize, PARTITION_HORZ_4);
+  const BLOCK_SIZE subsize_v4 = get_partition_subsize(bsize, PARTITION_VERT_4);
+
+  const int h_mi = mi_size_high[bsize];
+  const int w_mi = mi_size_wide[bsize];
+
+  const int ref_list[] = { cpi->rc.is_src_frame_alt_ref ? ALTREF_FRAME
+                                                        : LAST_FRAME };
+  const int num_refs = 1;
+  const int use_subpixel = 1;
+
+  int64_t part4_h_sse_sum = 0;
+  int64_t part4_v_sse_sum = 0;
+
+  // ---- HORZ_4 ----
+  for (int r_idx = 0; r_idx < SUB_PARTITIONS_PART4; r_idx++) {
+    unsigned int part_var;
+    const int sub_mi_row = mi_row + r_idx * h_mi / 4;
+    const int sub_mi_col = mi_col;
+
+    simple_motion_search_get_best_ref(
+        cpi, x, sms_tree, sub_mi_row, sub_mi_col, subsize_h4, ref_list,
+        num_refs, use_subpixel, 0, &sms_h_part4_sse[r_idx], &part_var);
+    (void)part_var;
+
+    part4_h_sse_sum += sms_h_part4_sse[r_idx];
+  }
+
+  // ---- VERT_4 ----
+  for (int r_idx = 0; r_idx < SUB_PARTITIONS_PART4; r_idx++) {
+    unsigned int part_var;
+    const int sub_mi_row = mi_row;
+    const int sub_mi_col = mi_col + r_idx * w_mi / 4;
+
+    simple_motion_search_get_best_ref(
+        cpi, x, sms_tree, sub_mi_row, sub_mi_col, subsize_v4, ref_list,
+        num_refs, use_subpixel, 0, &sms_v_part4_sse[r_idx], &part_var);
+    (void)part_var;
+
+    part4_v_sse_sum += sms_v_part4_sse[r_idx];
+  }
+
+  // ---- Skip RD calculation ----
+  const int64_t part4_h_rd =
+      RDCOST(x->rdmult, part_search_state->partition_cost[PARTITION_HORZ_4],
+             part4_h_sse_sum);
+
+  const int64_t part4_v_rd =
+      RDCOST(x->rdmult, part_search_state->partition_cost[PARTITION_VERT_4],
+             part4_v_sse_sum);
+
+  // ---- pruning ----
+  if (part4_h_rd > part4_v_rd) part4_search_allowed[HORZ4] = 0;
+
+  if (part4_v_rd > part4_h_rd) part4_search_allowed[VERT4] = 0;
+}
