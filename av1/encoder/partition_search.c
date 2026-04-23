@@ -4051,9 +4051,9 @@ static void prune_4_partition_using_split_info(
 // Prune 4-way partition search.
 static void prune_4_way_partition_search(
     AV1_COMP *const cpi, MACROBLOCK *x, PC_TREE *pc_tree,
-    PartitionSearchState *part_search_state, RD_STATS *best_rdc,
-    int pb_source_variance, int prune_ext_part_state,
-    int part4_search_allowed[NUM_PART4_TYPES]) {
+    PartitionSearchState *part_search_state, SIMPLE_MOTION_DATA_TREE *sms_tree,
+    RD_STATS *best_rdc, int pb_source_variance, int prune_ext_part_state,
+    int mi_row, int mi_col, int part4_search_allowed[NUM_PART4_TYPES]) {
   const PartitionBlkParams blk_params = part_search_state->part_blk_params;
   const BLOCK_SIZE bsize = blk_params.bsize;
 
@@ -4132,6 +4132,15 @@ static void prune_4_way_partition_search(
   // in the current block and sub-blocks in PARTITION_SPLIT.
   prune_4_partition_using_split_info(cpi, x, part_search_state,
                                      part4_search_allowed);
+
+  if (cpi->sf.part_sf.prune_h_or_v_4part_using_sms_info && partition4_allowed &&
+      best_rdc->rdcost != INT64_MAX &&
+      av1_is_whole_blk_in_frame(&part_search_state->part_blk_params,
+                                &cpi->common.mi_params) &&
+      !frame_is_intra_only(&cpi->common)) {
+    av1_prune_part4_using_sms(cpi, x, part_search_state, sms_tree, mi_row,
+                              mi_col, bsize, part4_search_allowed);
+  }
 }
 
 // Set params needed for PARTITION_NONE search.
@@ -5834,8 +5843,9 @@ BEGIN_PARTITION_SEARCH:
   // 4-way partitions search stage.
   int part4_search_allowed[NUM_PART4_TYPES] = { 1, 1 };
   // Prune 4-way partition search.
-  prune_4_way_partition_search(cpi, x, pc_tree, &part_search_state, &best_rdc,
-                               pb_source_variance, prune_ext_part_state,
+  prune_4_way_partition_search(cpi, x, pc_tree, &part_search_state, sms_tree,
+                               &best_rdc, pb_source_variance,
+                               prune_ext_part_state, mi_row, mi_col,
                                part4_search_allowed);
 
 #if CONFIG_COLLECT_COMPONENT_TIMING
