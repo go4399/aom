@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8468eb70_29c1ff98",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6245
+      },
+      "writtenOn": "2026-04-24T20:47:38Z",
+      "side": 1,
+      "message": "The encoder performance results are given below:\n\n``` \n                 Instruction Count            BD-Rate Loss(%)\ncpu   Resolution     Reduction(%)  avg.psnr   ovr.psnr    ssim    vmaf    vmaf_neg \n 3       LOWRES2       1.328  \t    0.0059     0.0002  -0.0082   0.0937    0.0356  \n 3       MIDRES2       2.238  \t    0.0546     0.0719   0.0481   0.2877    0.0337  \n 3    SHORTS608P       1.898  \t    0.0703     0.0835   0.0866  -0.0772   -0.0144  \n 3    SHORTS720P       1.611  \t    0.0680     0.0692   0.0618   0.1164    0.0948  \n 3   SHORTS1080P       1.762  \t    0.0804     0.0826   0.0946   0.0622    0.0785  \n 3        HDRES2       1.222  \t    0.0602     0.0489   0.0307   0.0841    0.0865  \n 3       Average       1.684  \t    0.0581     0.0611   0.0549   0.0890    0.0525  \n\n 4       LOWRES2       0.651  \t    0.0125     0.0161   0.0168   0.1248    0.0848  \n 4       MIDRES2       1.046  \t   -0.0969    -0.0648  -0.0876  -0.1144   -0.0943  \n 4    SHORTS608P       1.044  \t    0.1045     0.1047   0.1319   0.1151    0.1129  \n 4    SHORTS720P       1.085  \t    0.0650     0.0636   0.0928   0.1095    0.1176  \n 4   SHORTS1080P       1.182  \t    0.0655     0.0588   0.0608   0.0579    0.0550  \n 4        HDRES2       1.411  \t    0.0913     0.1147   0.0710   0.0683    0.0614  \n 4       Average       1.073  \t    0.0438     0.0513   0.0519   0.0633    0.0598  \n\n 5       LOWRES2       0.000  \t    0.0000     0.0000   0.0000   0.0000    0.0000  \n 5       MIDRES2       0.289  \t    0.0208     0.0207   0.0274   0.0190    0.0115  \n 5    SHORTS608P       0.484  \t    0.0352     0.0433   0.0452   0.1164    0.0905  \n 5    SHORTS720P       0.594  \t    0.0191     0.0154   0.0421   0.0150    0.0367  \n 5   SHORTS1080P       0.756  \t    0.0471     0.0504   0.0732   0.0577    0.0446  \n 5        HDRES2       0.571  \t    0.0109     0.0082  -0.0319   0.0597    0.0690  \n 5       Average       0.464  \t    0.0232     0.0242   0.0285   0.0463    0.0434  \n``` \n\n The instruction count reduction specified has been measured using command:\n \n``` \n $ perf stat -e instructions:u ./aomenc\n``` \n\n Please review.",
+      "revId": "b19e8fc87412e2eea0aa15d0bdb9db033b100955",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
