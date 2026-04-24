@@ -1763,8 +1763,14 @@ static void get_cx_data(struct stream_state *stream,
     switch (pkt->kind) {
       case AOM_CODEC_CX_FRAME_PKT:
         ++stream->frames_out;
-        if (!global->quiet)
-          fprintf(stderr, " %6luF", (unsigned long)pkt->data.frame.sz);
+        if (!global->quiet) {
+          int last_qindex;
+          AOM_CODEC_CONTROL_TYPECHECKED(&stream->encoder,
+                                        AOME_GET_LAST_QUANTIZER, &last_qindex);
+          fprintf(stderr, " %6luF q=%3d",
+                  (unsigned long)pkt->data.frame.sz, last_qindex);
+          if (global->show_psnr < 1) fprintf(stderr, "\n");
+        }
 
         update_rate_histogram(stream->rate_hist, cfg, pkt);
 #if CONFIG_WEBM_IO
@@ -1844,6 +1850,7 @@ static void get_cx_data(struct stream_state *stream,
             stream->psnr_count[1]++;
           }
 #endif
+          if (!global->quiet) fprintf(stderr, "\n");
         }
 
         break;

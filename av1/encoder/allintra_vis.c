@@ -609,7 +609,7 @@ void av1_set_mb_wiener_variance(AV1_COMP *cpi) {
   memset(&mbmi, 0, sizeof(mbmi));
   MB_MODE_INFO *mbmi_ptr = &mbmi;
   xd->mi = &mbmi_ptr;
-  cm->quant_params.base_qindex = cpi->oxcf.rc_cfg.cq_level;
+  cm->quant_params.base_qindex = AOMMIN(cpi->oxcf.rc_cfg.cq_level, MAXQ);
   av1_frame_init_quantizer(cpi);
 
   double sum_rec_distortion = 0.0;

@@ -1,0 +1,651 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [7 0 R 9 0 R 11 0 R 13 0 R 15 0 R 17 0 R] /Count 6 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Length 7191 >>
+stream
+BT /F2 18 Tf 50 784 Td (Plan: Extend cq-level Range from [0, 63] to [0, 80]) Tj ET
+0.7 0.7 0.7 RG 0.5 w 50 760.6 m 545 760.6 l S
+BT /F2 15 Tf 50 736.6 Td (Context) Tj ET
+0.7 0.7 0.7 RG 0.5 w 50 717.1 m 545 717.1 l S
+BT /F1 9 Tf 50 699.1 Td (In AOM_Q \(constant quality\) mode, the user-facing cq-level parameter \(0-63\) maps to internal qindex) Tj ET
+BT /F1 9 Tf 50 687.4 Td (values \(0-255\) via a lookup table. Due to quality boost multipliers applied per hierarchical layer) Tj ET
+BT /F1 9 Tf 50 675.6999999999999 Td (\(KF/ARF via qstep_ratio, intermediate ARF via midpoint interpolation\), cq-level=63 only produces qindex) Tj ET
+BT /F1 9 Tf 50 663.9999999999999 Td (~173 for key frames. The full qindex range [0, 255] is unreachable for boosted frame types.) Tj ET
+BT /F1 9 Tf 50 644.2999999999998 Td (Extending cq-level to 80 allows all frame types -- including key frames -- to reach qindex 255, giving) Tj ET
+BT /F1 9 Tf 50 632.5999999999998 Td (the encoder full quantizer coverage across all hierarchical layers.) Tj ET
+BT /F1 9 Tf 50 612.8999999999997 Td (This feature is only needed in constant quality mode \(end-usage=q\). Bitrate control modes \(CBR, VBR\) are) Tj ET
+BT /F1 9 Tf 50 601.1999999999997 Td (unaffected.) Tj ET
+BT /F2 15 Tf 50 575.4999999999997 Td (Scope) Tj ET
+0.7 0.7 0.7 RG 0.5 w 50 555.9999999999997 m 545 555.9999999999997 l S
+BT /F1 9 Tf 50 537.9999999999997 Td (The extended cq-level range \(64-80\) is supported only in constant quality mode \(AOM_Q\) with use-fixed-qp-) Tj ET
+BT /F1 9 Tf 50 526.2999999999996 Td (offsets=1 and TPL disabled \(enable-tpl-model=0\):) Tj ET
+BT /F1 9 Tf 65 514.5999999999996 Td (- AOM_Q + use-fixed-qp-offsets=1 + enable-tpl-model=0: Uses qstep_ratio approach in encoder_utils.c --) Tj ET
+BT /F1 9 Tf 65 502.8999999999996 Td (covered in Part 1) Tj ET
+BT /F1 9 Tf 65 491.1999999999996 Td (- All other modes/settings: cq-level > 63 is rejected with an assertion and error message -- covered in) Tj ET
+BT /F1 9 Tf 65 479.4999999999996 Td (Part 2) Tj ET
+0.7 0.7 0.7 RG 0.5 w 50 459.7999999999996 m 545 459.7999999999996 l S
+BT /F2 15 Tf 50 435.7999999999996 Td (Part 1: Fixed QP Offsets Path \(use-fixed-qp-offsets=1\)) Tj ET
+0.7 0.7 0.7 RG 0.5 w 50 416.2999999999996 m 545 416.2999999999996 l S
+BT /F2 12 Tf 50 392.2999999999996 Td (Approach: Virtual qindex > 255 with Linear qstep_ratio Ramp) Tj ET
+BT /F1 9 Tf 50 368.6999999999996 Td (Store unclamped "virtual" qindex values \(259-323\) in oxcf->cq_level for cq-levels 64-80.) Tj ET
+BT /F1 9 Tf 50 348.9999999999996 Td (For the use_fixed_qp_offsets=1 code path in encoder_utils.c, a unified qstep_ratio approach is used) Tj ET
+BT /F1 9 Tf 50 337.2999999999996 Td (across the entire cq-level range:) Tj ET
+BT /F1 9 Tf 65 317.5999999999996 Td (- cq 0-63 \(qindex 0-255\): qstep_ratio = 0.2 + \(1.0 - awq/255\)  qratio_grad -- ratio decreases from 0.5) Tj ET
+BT /F1 9 Tf 65 305.89999999999964 Td (to 0.2 as quality decreases \(existing formula, unchanged\)) Tj ET
+BT /F1 9 Tf 65 294.19999999999965 Td (- cq 64-80 \(virtual qindex 259-323\): qstep_ratio = 0.2 + \(cq_level - 255\) / \(323 - 255\)  0.8 -- ratio) Tj ET
+BT /F1 9 Tf 65 282.49999999999966 Td (increases from 0.2 toward 1.0, so KF/ARF qindex converges to MAXQ) Tj ET
+BT /F1 9 Tf 50 262.79999999999967 Td (At cq=63, the ratio reaches 0.2 \(minimum boost\). For cq 64-80, the ratio smoothly ramps back toward 1.0,) Tj ET
+BT /F1 9 Tf 50 251.09999999999968 Td (meaning KF/ARF qindex approaches the leaf qindex \(255\). At cq=80, all layers converge to qindex 255.) Tj ET
+BT /F1 9 Tf 50 231.3999999999997 Td (When qstep_ratio >= 1.0 \(which occurs at cq=80\), the av1_get_q_index_from_qstep_ratio\(\) search is) Tj ET
+BT /F1 9 Tf 50 219.6999999999997 Td (bypassed and min\(cq_level, MAXQ\) is returned directly, ensuring exact convergence to qindex 255 without) Tj ET
+BT /F1 9 Tf 50 207.99999999999972 Td (off-by-1 rounding from the DC quantizer lookup.) Tj ET
+BT /F2 12 Tf 50 182.29999999999973 Td (Verified qindex mapping \(8-bit, use-fixed-qp-offsets=1\)) Tj ET
+BT /F1 9 Tf 50 158.69999999999973 Td (Values verified against actual encoder output \(FourPeople 480x270, 130 frames, cpu-used=4, 8-bit\). KF and) Tj ET
+BT /F1 9 Tf 50 146.99999999999974 Td (ARF produce identical qindex in fixed QP mode. At cq <= 79, KF/ARF shows off-by-1 from predicted values) Tj ET
+BT /F1 9 Tf 50 135.29999999999976 Td (due to DC quantizer rounding in av1_get_q_index_from_qstep_ratio\(\); IARF and Leaf are exact. At cq=80,) Tj ET
+BT /F1 9 Tf 50 123.59999999999975 Td (the qstep_ratio >= 1.0 shortcut ensures all layers reach exactly 255.) Tj ET
+BT /F2 7.5 Tf 53.0 103.89999999999975 Td (cq) Tj ET
+BT /F2 7.5 Tf 123.71428571428571 103.89999999999975 Td (qindex) Tj ET
+BT /F2 7.5 Tf 194.42857142857142 103.89999999999975 Td (KF/ARF) Tj ET
+BT /F2 7.5 Tf 265.1428571428571 103.89999999999975 Td (IARF_d2) Tj ET
+BT /F2 7.5 Tf 335.85714285714283 103.89999999999975 Td (IARF_d3) Tj ET
+BT /F2 7.5 Tf 406.57142857142856 103.89999999999975 Td (IARF_d4) Tj ET
+BT /F2 7.5 Tf 477.2857142857142 103.89999999999975 Td (Leaf) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 100.89999999999975 m 545 100.89999999999975 l S
+BT /F1 7.5 Tf 53.0 91.89999999999975 Td (0) Tj ET
+BT /F1 7.5 Tf 123.71428571428571 91.89999999999975 Td (0) Tj ET
+BT /F1 7.5 Tf 194.42857142857142 91.89999999999975 Td (0) Tj ET
+BT /F1 7.5 Tf 265.1428571428571 91.89999999999975 Td (0) Tj ET
+BT /F1 7.5 Tf 335.85714285714283 91.89999999999975 Td (0) Tj ET
+BT /F1 7.5 Tf 406.57142857142856 91.89999999999975 Td (0) Tj ET
+BT /F1 7.5 Tf 477.2857142857142 91.89999999999975 Td (0) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 88.89999999999975 m 545 88.89999999999975 l S
+BT /F1 7.5 Tf 53.0 79.89999999999975 Td (10) Tj ET
+BT /F1 7.5 Tf 123.71428571428571 79.89999999999975 Td (40) Tj ET
+BT /F1 7.5 Tf 194.42857142857142 79.89999999999975 Td (13) Tj ET
+BT /F1 7.5 Tf 265.1428571428571 79.89999999999975 Td (27) Tj ET
+BT /F1 7.5 Tf 335.85714285714283 79.89999999999975 Td (34) Tj ET
+BT /F1 7.5 Tf 406.57142857142856 79.89999999999975 Td (37) Tj ET
+BT /F1 7.5 Tf 477.2857142857142 79.89999999999975 Td (40) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 76.89999999999975 m 545 76.89999999999975 l S
+BT /F1 7.5 Tf 53.0 67.89999999999975 Td (20) Tj ET
+BT /F1 7.5 Tf 123.71428571428571 67.89999999999975 Td (80) Tj ET
+BT /F1 7.5 Tf 194.42857142857142 67.89999999999975 Td (27) Tj ET
+BT /F1 7.5 Tf 265.1428571428571 67.89999999999975 Td (54) Tj ET
+BT /F1 7.5 Tf 335.85714285714283 67.89999999999975 Td (67) Tj ET
+BT /F1 7.5 Tf 406.57142857142856 67.89999999999975 Td (74) Tj ET
+BT /F1 7.5 Tf 477.2857142857142 67.89999999999975 Td (80) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 64.89999999999975 m 545 64.89999999999975 l S
+BT /F1 7.5 Tf 53.0 55.89999999999975 Td (30) Tj ET
+BT /F1 7.5 Tf 123.71428571428571 55.89999999999975 Td (120) Tj ET
+BT /F1 7.5 Tf 194.42857142857142 55.89999999999975 Td (44) Tj ET
+BT /F1 7.5 Tf 265.1428571428571 55.89999999999975 Td (82) Tj ET
+BT /F1 7.5 Tf 335.85714285714283 55.89999999999975 Td (101) Tj ET
+BT /F1 7.5 Tf 406.57142857142856 55.89999999999975 Td (111) Tj ET
+BT /F1 7.5 Tf 477.2857142857142 55.89999999999975 Td (120) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 52.89999999999975 m 545 52.89999999999975 l S
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 6 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> >>
+endobj
+8 0 obj
+<< /Length 9890 >>
+stream
+BT /F1 7.5 Tf 53.0 790 Td (40) Tj ET
+BT /F1 7.5 Tf 123.71428571428571 790 Td (160) Tj ET
+BT /F1 7.5 Tf 194.42857142857142 790 Td (74) Tj ET
+BT /F1 7.5 Tf 265.1428571428571 790 Td (117) Tj ET
+BT /F1 7.5 Tf 335.85714285714283 790 Td (139) Tj ET
+BT /F1 7.5 Tf 406.57142857142856 790 Td (150) Tj ET
+BT /F1 7.5 Tf 477.2857142857142 790 Td (160) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 787 m 545 787 l S
+BT /F1 7.5 Tf 53.0 778.0 Td (50) Tj ET
+BT /F1 7.5 Tf 123.71428571428571 778.0 Td (200) Tj ET
+BT /F1 7.5 Tf 194.42857142857142 778.0 Td (106) Tj ET
+BT /F1 7.5 Tf 265.1428571428571 778.0 Td (153) Tj ET
+BT /F1 7.5 Tf 335.85714285714283 778.0 Td (177) Tj ET
+BT /F1 7.5 Tf 406.57142857142856 778.0 Td (189) Tj ET
+BT /F1 7.5 Tf 477.2857142857142 778.0 Td (200) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 775.0 m 545 775.0 l S
+BT /F1 7.5 Tf 53.0 766.0 Td (55) Tj ET
+BT /F1 7.5 Tf 123.71428571428571 766.0 Td (220) Tj ET
+BT /F1 7.5 Tf 194.42857142857142 766.0 Td (121) Tj ET
+BT /F1 7.5 Tf 265.1428571428571 766.0 Td (171) Tj ET
+BT /F1 7.5 Tf 335.85714285714283 766.0 Td (196) Tj ET
+BT /F1 7.5 Tf 406.57142857142856 766.0 Td (208) Tj ET
+BT /F1 7.5 Tf 477.2857142857142 766.0 Td (220) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 763.0 m 545 763.0 l S
+BT /F1 7.5 Tf 53.0 754.0 Td (60) Tj ET
+BT /F1 7.5 Tf 123.71428571428571 754.0 Td (240) Tj ET
+BT /F1 7.5 Tf 194.42857142857142 754.0 Td (142) Tj ET
+BT /F1 7.5 Tf 265.1428571428571 754.0 Td (191) Tj ET
+BT /F1 7.5 Tf 335.85714285714283 754.0 Td (216) Tj ET
+BT /F1 7.5 Tf 406.57142857142856 754.0 Td (228) Tj ET
+BT /F1 7.5 Tf 477.2857142857142 754.0 Td (240) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 751.0 m 545 751.0 l S
+BT /F1 7.5 Tf 53.0 742.0 Td (63) Tj ET
+BT /F1 7.5 Tf 123.71428571428571 742.0 Td (255) Tj ET
+BT /F1 7.5 Tf 194.42857142857142 742.0 Td (172) Tj ET
+BT /F1 7.5 Tf 265.1428571428571 742.0 Td (214) Tj ET
+BT /F1 7.5 Tf 335.85714285714283 742.0 Td (235) Tj ET
+BT /F1 7.5 Tf 406.57142857142856 742.0 Td (245) Tj ET
+BT /F1 7.5 Tf 477.2857142857142 742.0 Td (255) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 739.0 m 545 739.0 l S
+BT /F1 7.5 Tf 53.0 730.0 Td (64) Tj ET
+BT /F1 7.5 Tf 123.71428571428571 730.0 Td (259) Tj ET
+BT /F1 7.5 Tf 194.42857142857142 730.0 Td (188) Tj ET
+BT /F1 7.5 Tf 265.1428571428571 730.0 Td (222) Tj ET
+BT /F1 7.5 Tf 335.85714285714283 730.0 Td (239) Tj ET
+BT /F1 7.5 Tf 406.57142857142856 730.0 Td (247) Tj ET
+BT /F1 7.5 Tf 477.2857142857142 730.0 Td (255) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 727.0 m 545 727.0 l S
+BT /F1 7.5 Tf 53.0 718.0 Td (66) Tj ET
+BT /F1 7.5 Tf 123.71428571428571 718.0 Td (267) Tj ET
+BT /F1 7.5 Tf 194.42857142857142 718.0 Td (211) Tj ET
+BT /F1 7.5 Tf 265.1428571428571 718.0 Td (233) Tj ET
+BT /F1 7.5 Tf 335.85714285714283 718.0 Td (244) Tj ET
+BT /F1 7.5 Tf 406.57142857142856 718.0 Td (250) Tj ET
+BT /F1 7.5 Tf 477.2857142857142 718.0 Td (255) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 715.0 m 545 715.0 l S
+BT /F1 7.5 Tf 53.0 706.0 Td (68) Tj ET
+BT /F1 7.5 Tf 123.71428571428571 706.0 Td (275) Tj ET
+BT /F1 7.5 Tf 194.42857142857142 706.0 Td (226) Tj ET
+BT /F1 7.5 Tf 265.1428571428571 706.0 Td (241) Tj ET
+BT /F1 7.5 Tf 335.85714285714283 706.0 Td (248) Tj ET
+BT /F1 7.5 Tf 406.57142857142856 706.0 Td (252) Tj ET
+BT /F1 7.5 Tf 477.2857142857142 706.0 Td (255) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 703.0 m 545 703.0 l S
+BT /F1 7.5 Tf 53.0 694.0 Td (70) Tj ET
+BT /F1 7.5 Tf 123.71428571428571 694.0 Td (283) Tj ET
+BT /F1 7.5 Tf 194.42857142857142 694.0 Td (235) Tj ET
+BT /F1 7.5 Tf 265.1428571428571 694.0 Td (245) Tj ET
+BT /F1 7.5 Tf 335.85714285714283 694.0 Td (250) Tj ET
+BT /F1 7.5 Tf 406.57142857142856 694.0 Td (253) Tj ET
+BT /F1 7.5 Tf 477.2857142857142 694.0 Td (255) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 691.0 m 545 691.0 l S
+BT /F1 7.5 Tf 53.0 682.0 Td (72) Tj ET
+BT /F1 7.5 Tf 123.71428571428571 682.0 Td (291) Tj ET
+BT /F1 7.5 Tf 194.42857142857142 682.0 Td (241) Tj ET
+BT /F1 7.5 Tf 265.1428571428571 682.0 Td (248) Tj ET
+BT /F1 7.5 Tf 335.85714285714283 682.0 Td (252) Tj ET
+BT /F1 7.5 Tf 406.57142857142856 682.0 Td (254) Tj ET
+BT /F1 7.5 Tf 477.2857142857142 682.0 Td (255) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 679.0 m 545 679.0 l S
+BT /F1 7.5 Tf 53.0 670.0 Td (74) Tj ET
+BT /F1 7.5 Tf 123.71428571428571 670.0 Td (299) Tj ET
+BT /F1 7.5 Tf 194.42857142857142 670.0 Td (246) Tj ET
+BT /F1 7.5 Tf 265.1428571428571 670.0 Td (251) Tj ET
+BT /F1 7.5 Tf 335.85714285714283 670.0 Td (253) Tj ET
+BT /F1 7.5 Tf 406.57142857142856 670.0 Td (254) Tj ET
+BT /F1 7.5 Tf 477.2857142857142 670.0 Td (255) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 667.0 m 545 667.0 l S
+BT /F1 7.5 Tf 53.0 658.0 Td (76) Tj ET
+BT /F1 7.5 Tf 123.71428571428571 658.0 Td (307) Tj ET
+BT /F1 7.5 Tf 194.42857142857142 658.0 Td (249) Tj ET
+BT /F1 7.5 Tf 265.1428571428571 658.0 Td (252) Tj ET
+BT /F1 7.5 Tf 335.85714285714283 658.0 Td (254) Tj ET
+BT /F1 7.5 Tf 406.57142857142856 658.0 Td (255) Tj ET
+BT /F1 7.5 Tf 477.2857142857142 658.0 Td (255) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 655.0 m 545 655.0 l S
+BT /F1 7.5 Tf 53.0 646.0 Td (78) Tj ET
+BT /F1 7.5 Tf 123.71428571428571 646.0 Td (315) Tj ET
+BT /F1 7.5 Tf 194.42857142857142 646.0 Td (252) Tj ET
+BT /F1 7.5 Tf 265.1428571428571 646.0 Td (254) Tj ET
+BT /F1 7.5 Tf 335.85714285714283 646.0 Td (255) Tj ET
+BT /F1 7.5 Tf 406.57142857142856 646.0 Td (255) Tj ET
+BT /F1 7.5 Tf 477.2857142857142 646.0 Td (255) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 643.0 m 545 643.0 l S
+BT /F1 7.5 Tf 53.0 634.0 Td (79) Tj ET
+BT /F1 7.5 Tf 123.71428571428571 634.0 Td (319) Tj ET
+BT /F1 7.5 Tf 194.42857142857142 634.0 Td (253) Tj ET
+BT /F1 7.5 Tf 265.1428571428571 634.0 Td (254) Tj ET
+BT /F1 7.5 Tf 335.85714285714283 634.0 Td (255) Tj ET
+BT /F1 7.5 Tf 406.57142857142856 634.0 Td (255) Tj ET
+BT /F1 7.5 Tf 477.2857142857142 634.0 Td (255) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 631.0 m 545 631.0 l S
+BT /F1 7.5 Tf 53.0 622.0 Td (80) Tj ET
+BT /F1 7.5 Tf 123.71428571428571 622.0 Td (323) Tj ET
+BT /F1 7.5 Tf 194.42857142857142 622.0 Td (255) Tj ET
+BT /F1 7.5 Tf 265.1428571428571 622.0 Td (255) Tj ET
+BT /F1 7.5 Tf 335.85714285714283 622.0 Td (255) Tj ET
+BT /F1 7.5 Tf 406.57142857142856 622.0 Td (255) Tj ET
+BT /F1 7.5 Tf 477.2857142857142 622.0 Td (255) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 619.0 m 545 619.0 l S
+BT /F2 12 Tf 50 596.0 Td (cq-level to qindex plot \(fixed QP\)) Tj ET
+BT /F1 9 Tf 50 572.4 Td ([Image: cq-level to qindex mapping -- use-fixed-qp-offsets=1]) Tj ET
+BT /F2 12 Tf 50 546.6999999999999 Td (Changes for Fixed QP Path) Tj ET
+BT /F2 11 Tf 50 517.0999999999999 Td (1. Extend quantizer_to_qindex table and reverse function) Tj ET
+BT /F1 9 Tf 50 502.7999999999999 Td (File: av1/encoder/av1_quantize.c) Tj ET
+BT /F1 9 Tf 65 483.0999999999999 Td (- Update comment: "0-63" to "0-80") Tj ET
+BT /F1 9 Tf 65 471.3999999999999 Td (- Add 17 entries continuing from 255 with step +4 \(unclamped virtual values\):) Tj ET
+BT /F3 7.5 Tf 70 455.69999999999993 Td (  259, 263, 267, 271, 275, 279, 283, 287, 291,) Tj ET
+BT /F3 7.5 Tf 70 445.94999999999993 Td (  295, 299, 303, 307, 311, 315, 319, 323,) Tj ET
+BT /F1 9 Tf 65 432.19999999999993 Td (- av1_qindex_to_quantizer\(\): change loop bound < 64 to < 81, fallback return 63 to return 80) Tj ET
+BT /F1 9 Tf 65 420.49999999999994 Td (- Total table size: 81 entries \(cq 0-80\)) Tj ET
+BT /F2 11 Tf 50 394.79999999999995 Td (2. Clamp best_allowed_q and worst_allowed_q) Tj ET
+BT /F1 9 Tf 50 380.49999999999994 Td (File: av1/av1_cx_iface.c) Tj ET
+BT /F1 9 Tf 50 360.79999999999995 Td (best_allowed_q and worst_allowed_q feed directly into quantization and must stay in [0, 255]. cq_level is) Tj ET
+BT /F1 9 Tf 50 349.09999999999997 Td (only used in rate control delta math and can exceed 255:) Tj ET
+BT /F3 7.5 Tf 70 333.4 Td (oxcf->best_allowed_q =) Tj ET
+BT /F3 7.5 Tf 70 323.65 Td (    extra_cfg->lossless ? 0 : AOMMIN\(av1_quantizer_to_qindex\(cfg->rc_min_quantizer\), MAXQ\);) Tj ET
+BT /F3 7.5 Tf 70 313.9 Td (oxcf->worst_allowed_q =) Tj ET
+BT /F3 7.5 Tf 70 304.15 Td (    extra_cfg->lossless ? 0 : AOMMIN\(av1_quantizer_to_qindex\(cfg->rc_max_quantizer\), MAXQ\);) Tj ET
+BT /F3 7.5 Tf 70 294.4 Td (oxcf->cq_level = av1_quantizer_to_qindex\(extra_cfg->cq_level\);  // can be > 255) Tj ET
+BT /F2 11 Tf 50 266.65 Td (3. Guard av1_convert_qindex_to_q\(\) against qindex > 255) Tj ET
+BT /F1 9 Tf 50 252.34999999999997 Td (File: av1/encoder/ratectrl.c) Tj ET
+BT /F1 9 Tf 50 232.64999999999998 Td (Add clamp at the top of the function so ac_qlookup[] is not accessed out of bounds:) Tj ET
+BT /F3 7.5 Tf 70 216.95 Td (double av1_convert_qindex_to_q\(int qindex, aom_bit_depth_t bit_depth\) {) Tj ET
+BT /F3 7.5 Tf 70 207.2 Td (  qindex = AOMMIN\(qindex, MAXQ\);  // clamp to valid ac_qlookup range) Tj ET
+BT /F3 7.5 Tf 70 197.45 Td (  // ... rest unchanged) Tj ET
+BT /F3 7.5 Tf 70 187.7 Td (}) Tj ET
+BT /F2 11 Tf 50 159.95 Td (4. Update range checks) Tj ET
+BT /F1 9 Tf 50 145.64999999999998 Td (File: av1/av1_cx_iface.c) Tj ET
+BT /F2 7.5 Tf 53.0 125.94999999999999 Td (Location) Tj ET
+BT /F2 7.5 Tf 176.75 125.94999999999999 Td (Current) Tj ET
+BT /F2 7.5 Tf 300.5 125.94999999999999 Td (New) Tj ET
+BT /F2 7.5 Tf 424.25 125.94999999999999 Td (Notes) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 122.94999999999999 m 545 122.94999999999999 l S
+BT /F1 7.5 Tf 53.0 113.94999999999999 Td (RANGE_CHECK_HI\(extra_cfg, cq_level, 63\)) Tj ET
+BT /F1 7.5 Tf 176.75 113.94999999999999 Td (63) Tj ET
+BT /F1 7.5 Tf 300.5 113.94999999999999 Td (80) Tj ET
+BT /F1 7.5 Tf 424.25 113.94999999999999 Td (Allow extended cq-level) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 110.94999999999999 m 545 110.94999999999999 l S
+BT /F1 9 Tf 50 93.94999999999999 Td (Add conditional assertion after the range check -- reject cq > 63 unless AOM_Q + fixed QP + TPL disabled:) Tj ET
+BT /F3 7.5 Tf 70 78.24999999999999 Td (if \(extra_cfg->cq_level > 63\) {) Tj ET
+BT /F3 7.5 Tf 70 68.49999999999999 Td (  if \(cfg->rc_end_usage != AOM_Q\) {) Tj ET
+BT /F3 7.5 Tf 70 58.749999999999986 Td (    ERROR\("cq-level > 63 is only supported in AOM_Q \(constant quality\) mode"\);) Tj ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 8 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> >>
+endobj
+10 0 obj
+<< /Length 5134 >>
+stream
+BT /F3 7.5 Tf 70 790 Td (  }) Tj ET
+BT /F3 7.5 Tf 70 780.25 Td (  if \(!extra_cfg->use_fixed_qp_offsets\) {) Tj ET
+BT /F3 7.5 Tf 70 770.5 Td (    ERROR\("cq-level > 63 requires use-fixed-qp-offsets=1"\);) Tj ET
+BT /F3 7.5 Tf 70 760.75 Td (  }) Tj ET
+BT /F3 7.5 Tf 70 751.0 Td (  if \(extra_cfg->enable_tpl_model\) {) Tj ET
+BT /F3 7.5 Tf 70 741.25 Td (    ERROR\("cq-level > 63 requires enable-tpl-model=0"\);) Tj ET
+BT /F3 7.5 Tf 70 731.5 Td (  }) Tj ET
+BT /F3 7.5 Tf 70 721.75 Td (}) Tj ET
+BT /F1 9 Tf 50 700.0 Td (Not changed:) Tj ET
+BT /F1 9 Tf 65 688.3 Td (- RANGE_CHECK_HI\(cfg, rc_max_quantizer, 63\) -- stays at 63 \(used by CBR/VBR\)) Tj ET
+BT /F1 9 Tf 65 676.5999999999999 Td (- 63, // rc_max_quantizer default -- stays at 63) Tj ET
+BT /F2 11 Tf 50 650.8999999999999 Td (5. Update fixed QP offsets formula for extended range) Tj ET
+BT /F1 9 Tf 50 636.5999999999999 Td (File: av1/encoder/encoder_utils.c) Tj ET
+BT /F1 9 Tf 50 616.8999999999999 Td (The existing code already has the extended range branch. Update max_virtual_qindex from 327 to 323, and) Tj ET
+BT /F1 9 Tf 50 605.1999999999998 Td (add a qstep_ratio >= 1.0 shortcut to bypass av1_get_q_index_from_qstep_ratio\(\) when the ratio means no) Tj ET
+BT /F1 9 Tf 50 593.4999999999998 Td (boost:) Tj ET
+BT /F3 7.5 Tf 70 577.7999999999997 Td (if \(cq_level <= MAXQ\) {) Tj ET
+BT /F3 7.5 Tf 70 568.0499999999997 Td (    qstep_ratio = 0.2 + \(1.0 - \(double\)cpi->rc.active_worst_quality / MAXQ\) * qratio_grad;) Tj ET
+BT /F3 7.5 Tf 70 558.2999999999997 Td (} else {) Tj ET
+BT /F3 7.5 Tf 70 548.5499999999997 Td (    const int max_virtual_qindex = 323;  // quantizer_to_qindex[80]) Tj ET
+BT /F3 7.5 Tf 70 538.7999999999997 Td (    qstep_ratio = 0.2 + \(double\)\(cq_level - MAXQ\) / \(max_virtual_qindex - MAXQ\) * 0.8;) Tj ET
+BT /F3 7.5 Tf 70 529.0499999999997 Td (}) Tj ET
+BT /F3 7.5 Tf 70 519.2999999999997 Td (if \(qstep_ratio >= 1.0\)) Tj ET
+BT /F3 7.5 Tf 70 509.5499999999997 Td (    *q = AOMMIN\(cq_level, MAXQ\);) Tj ET
+BT /F3 7.5 Tf 70 499.7999999999997 Td (else) Tj ET
+BT /F3 7.5 Tf 70 490.0499999999997 Td (    *q = av1_get_q_index_from_qstep_ratio\() Tj ET
+BT /F3 7.5 Tf 70 480.2999999999997 Td (        cpi->rc.active_worst_quality, qstep_ratio,) Tj ET
+BT /F3 7.5 Tf 70 470.5499999999997 Td (        cm->seq_params->bit_depth\);) Tj ET
+BT /F1 9 Tf 50 448.7999999999997 Td (Why the shortcut is needed: av1_get_q_index_from_qstep_ratio\(\) searches downward from leaf_qindex for a) Tj ET
+BT /F1 9 Tf 50 437.09999999999974 Td (qindex whose DC qstep satisfies qstep + 0.1 <= target_qstep. When qstep_ratio = 1.0, target_qstep =) Tj ET
+BT /F1 9 Tf 50 425.39999999999975 Td (leaf_qstep, so leaf_qstep + 0.1 <= leaf_qstep is false and the search drops to leaf_qindex - 1 \(254) Tj ET
+BT /F1 9 Tf 50 413.69999999999976 Td (instead of 255\). The shortcut avoids this off-by-1 at the boundary, ensuring all layers converge to) Tj ET
+BT /F1 9 Tf 50 401.9999999999998 Td (exactly 255 at cq=80.) Tj ET
+BT /F1 9 Tf 50 382.2999999999998 Td (The shortcut only activates at cq=80 where the ratio reaches exactly 1.0. For all other cq levels \(0-79\),) Tj ET
+BT /F1 9 Tf 50 370.5999999999998 Td (the ratio is < 1.0 and the normal search path is used.) Tj ET
+BT /F2 11 Tf 50 344.8999999999998 Td (6. No changes needed) Tj ET
+BT /F1 9 Tf 65 330.5999999999998 Td (- aomenc.c: CLI option definitions have no hardcoded range -- validation is in av1_cx_iface.c) Tj ET
+BT /F1 9 Tf 65 318.8999999999998 Td (- warnings.c: check_quantizer\(\) only warns about narrow Q range) Tj ET
+BT /F1 9 Tf 65 307.1999999999998 Td (- QINDEX_RANGE, MAXQ, ac_qlookup[]: Internal qindex space [0, 255] is unchanged) Tj ET
+BT /F1 9 Tf 65 295.49999999999983 Td (- Rate control minq tables: Indexed by qindex [0, 255], unchanged) Tj ET
+BT /F1 9 Tf 65 283.79999999999984 Td (- Existing clamp\(\) calls in rc_pick_q_and_bounds_: Already clamp final q to [rc->best_quality,) Tj ET
+BT /F1 9 Tf 65 272.09999999999985 Td (rc->worst_quality] = [0, 255]) Tj ET
+0.7 0.7 0.7 RG 0.5 w 50 252.39999999999986 m 545 252.39999999999986 l S
+BT /F2 15 Tf 50 228.39999999999986 Td (Part 2: Guard for Unsupported Modes) Tj ET
+0.7 0.7 0.7 RG 0.5 w 50 208.89999999999986 m 545 208.89999999999986 l S
+BT /F2 12 Tf 50 184.89999999999986 Td (Approach: Assert and Reject) Tj ET
+BT /F1 9 Tf 50 161.29999999999987 Td (For any configuration other than AOM_Q + use-fixed-qp-offsets=1 + enable-tpl-model=0, cq-level values) Tj ET
+BT /F1 9 Tf 50 149.59999999999988 Td (above 63 are not supported. The encoder validates this at configuration time and rejects invalid) Tj ET
+BT /F1 9 Tf 50 137.8999999999999 Td (combinations with a clear error message.) Tj ET
+BT /F1 9 Tf 50 118.19999999999989 Td (The validation logic is added in av1_cx_iface.c \(see Part 1, item 4 above\).) Tj ET
+BT /F2 12 Tf 50 92.49999999999989 Td (Rationale) Tj ET
+BT /F1 9 Tf 50 68.89999999999989 Td (The non-fixed QP path \(use-fixed-qp-offsets=0\) uses polynomial minq table lookups and av1_compute_qdelta) Tj ET
+BT /F1 9 Tf 50 57.19999999999989 Td (with content-adaptive state \(avg_frame_qindex\). Extending virtual qindex values into this path introduces) Tj ET
+endstream
+endobj
+11 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 10 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> >>
+endobj
+12 0 obj
+<< /Length 7833 >>
+stream
+BT /F1 9 Tf 50 790 Td (inconsistencies -- for example, the first ARF frame gets qindex=0 due to boost-table lookups) Tj ET
+BT /F1 9 Tf 50 778.3 Td (\(get_gf_active_quality\(\)\) that ignore cq_level and rely on avg_frame_qindex, which is near-zero early in) Tj ET
+BT /F1 9 Tf 50 766.5999999999999 Td (the sequence. Rather than patching multiple rate control code paths with workarounds, the extended range) Tj ET
+BT /F1 9 Tf 50 754.8999999999999 Td (is restricted to the deterministic fixed-QP path where qindex assignment is fully controlled by the) Tj ET
+BT /F1 9 Tf 50 743.1999999999998 Td (qstep_ratio formula.) Tj ET
+BT /F1 9 Tf 50 723.4999999999998 Td (When TPL is enabled \(enable-tpl-model=1\), the temporal propagation model can override the fixed QP) Tj ET
+BT /F1 9 Tf 50 711.7999999999997 Td (offsets, making the qstep_ratio-based qindex assignment non-deterministic. The extended cq-level range) Tj ET
+BT /F1 9 Tf 50 700.0999999999997 Td (relies on the deterministic fixed-QP path, so TPL must be disabled.) Tj ET
+BT /F1 9 Tf 50 680.3999999999996 Td (Similarly, CQ/CBR/VBR modes either don't use cq_level or use it only for comparisons that assume qindex <=) Tj ET
+BT /F1 9 Tf 50 668.6999999999996 Td (255. Extending into those modes offers no benefit and risks subtle breakage.) Tj ET
+0.7 0.7 0.7 RG 0.5 w 50 648.9999999999995 m 545 648.9999999999995 l S
+BT /F2 15 Tf 50 624.9999999999995 Td (Safety Analysis: Impact on Other Rate Control Modes) Tj ET
+0.7 0.7 0.7 RG 0.5 w 50 605.4999999999995 m 545 605.4999999999995 l S
+BT /F2 7.5 Tf 53.0 587.4999999999995 Td (Mode) Tj ET
+BT /F2 7.5 Tf 176.75 587.4999999999995 Td (Uses cq_level?) Tj ET
+BT /F2 7.5 Tf 300.5 587.4999999999995 Td (Impact) Tj ET
+BT /F2 7.5 Tf 424.25 587.4999999999995 Td (Status) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 584.4999999999995 m 545 584.4999999999995 l S
+BT /F1 7.5 Tf 53.0 575.4999999999995 Td (AOM_CBR) Tj ET
+BT /F1 7.5 Tf 176.75 575.4999999999995 Td (No) Tj ET
+BT /F1 7.5 Tf 300.5 575.4999999999995 Td (Completely unaffected) Tj ET
+BT /F1 7.5 Tf 424.25 575.4999999999995 Td (SAFE) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 572.4999999999995 m 545 572.4999999999995 l S
+BT /F1 7.5 Tf 53.0 563.4999999999995 Td (AOM_VBR) Tj ET
+BT /F1 7.5 Tf 176.75 563.4999999999995 Td (No) Tj ET
+BT /F1 7.5 Tf 300.5 563.4999999999995 Td (Completely unaffected) Tj ET
+BT /F1 7.5 Tf 424.25 563.4999999999995 Td (SAFE) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 560.4999999999995 m 545 560.4999999999995 l S
+BT /F1 7.5 Tf 53.0 551.4999999999995 Td (AOM_CQ) Tj ET
+BT /F1 7.5 Tf 176.75 551.4999999999995 Td (Yes \(comparisons\)) Tj ET
+BT /F1 7.5 Tf 300.5 551.4999999999995 Td (cq_level > 63 rejected at config validation) Tj ET
+BT /F1 7.5 Tf 424.25 551.4999999999995 Td (GUARDED) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 548.4999999999995 m 545 548.4999999999995 l S
+BT /F1 7.5 Tf 53.0 539.4999999999995 Td (AOM_Q \(fixed QP\)) Tj ET
+BT /F1 7.5 Tf 176.75 539.4999999999995 Td (Yes \(direct\)) Tj ET
+BT /F1 7.5 Tf 300.5 539.4999999999995 Td (Extended range handled by qstep_ratio ramp + shortcut) Tj ET
+BT /F1 7.5 Tf 424.25 539.4999999999995 Td (SAFE with fixes) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 536.4999999999995 m 545 536.4999999999995 l S
+BT /F1 7.5 Tf 53.0 527.4999999999995 Td (AOM_Q \(non-fixed\)) Tj ET
+BT /F1 7.5 Tf 176.75 527.4999999999995 Td (Yes \(direct\)) Tj ET
+BT /F1 7.5 Tf 300.5 527.4999999999995 Td (cq_level > 63 rejected at config validation) Tj ET
+BT /F1 7.5 Tf 424.25 527.4999999999995 Td (GUARDED) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 524.4999999999995 m 545 524.4999999999995 l S
+BT /F1 9 Tf 50 507.49999999999955 Td (Key safety guarantees:) Tj ET
+BT /F1 9 Tf 65 495.79999999999956 Td (- av1_ac_quant\(\) in quant_common.c already has internal clamp\(qindex + delta, 0, MAXQ\) -- defense-in-) Tj ET
+BT /F1 9 Tf 65 484.09999999999957 Td (depth) Tj ET
+BT /F1 9 Tf 65 472.3999999999996 Td (- All rc_pick_q_and_bounds_ functions clamp final q to [rc->best_quality, rc->worst_quality] = [0,) Tj ET
+BT /F1 9 Tf 65 460.6999999999996 Td (255]) Tj ET
+BT /F1 9 Tf 65 448.9999999999996 Td (- best_allowed_q/worst_allowed_q flow into rc->worst_quality which is used as array index for) Tj ET
+BT /F1 9 Tf 65 437.2999999999996 Td (inter_minq[]/rtc_minq[] \(256 elements\) -- must stay <= 255 \(Fix #2\)) Tj ET
+BT /F1 9 Tf 65 425.5999999999996 Td (- cq_level is never used as a direct array index -- only in arithmetic and as input to) Tj ET
+BT /F1 9 Tf 65 413.89999999999964 Td (av1_convert_qindex_to_q\(\) \(Fix #3\)) Tj ET
+BT /F1 9 Tf 65 402.19999999999965 Td (- The qstep_ratio >= 1.0 shortcut in encoder_utils.c only activates at cq=80 and returns) Tj ET
+BT /F1 9 Tf 65 390.49999999999966 Td (AOMMIN\(cq_level, MAXQ\) = 255) Tj ET
+BT /F1 9 Tf 65 378.79999999999967 Td (- Config validation rejects cq > 63 for any mode other than AOM_Q + use-fixed-qp-offsets=1 + enable-) Tj ET
+BT /F1 9 Tf 65 367.0999999999997 Td (tpl-model=0) Tj ET
+BT /F2 15 Tf 50 341.3999999999997 Td (Files Modified) Tj ET
+0.7 0.7 0.7 RG 0.5 w 50 321.8999999999997 m 545 321.8999999999997 l S
+BT /F2 7.5 Tf 53.0 303.8999999999997 Td (File) Tj ET
+BT /F2 7.5 Tf 218.0 303.8999999999997 Td (Changes) Tj ET
+BT /F2 7.5 Tf 383.0 303.8999999999997 Td (Status) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 300.8999999999997 m 545 300.8999999999997 l S
+BT /F1 7.5 Tf 53.0 291.8999999999997 Td (av1/encoder/av1_quantize.c) Tj ET
+BT /F1 7.5 Tf 218.0 291.8999999999997 Td (Extend table to 81 entries; update reverse lookup) Tj ET
+BT /F1 7.5 Tf 383.0 291.8999999999997 Td (Done) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 288.8999999999997 m 545 288.8999999999997 l S
+BT /F1 7.5 Tf 53.0 279.8999999999997 Td (av1/av1_cx_iface.c) Tj ET
+BT /F1 7.5 Tf 218.0 279.8999999999997 Td (cq_level range 63->80; clamp best/worst_allowed_q; assert cq>63 requires AOM_Q + fixed-qp-offsets) Tj ET
+BT /F1 7.5 Tf 383.0 279.8999999999997 Td (Done) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 276.8999999999997 m 545 276.8999999999997 l S
+BT /F1 7.5 Tf 53.0 267.8999999999997 Td (av1/encoder/ratectrl.c) Tj ET
+BT /F1 7.5 Tf 218.0 267.8999999999997 Td (Clamp qindex in av1_convert_qindex_to_q\(\)) Tj ET
+BT /F1 7.5 Tf 383.0 267.8999999999997 Td (Done) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 264.8999999999997 m 545 264.8999999999997 l S
+BT /F1 7.5 Tf 53.0 255.8999999999997 Td (av1/encoder/encoder_utils.c) Tj ET
+BT /F1 7.5 Tf 218.0 255.8999999999997 Td (Update max_virtual_qindex 327->323; add qstep_ratio>=1.0 shortcut) Tj ET
+BT /F1 7.5 Tf 383.0 255.8999999999997 Td (Done) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 252.8999999999997 m 545 252.8999999999997 l S
+BT /F2 15 Tf 50 229.8999999999997 Td (Test Configuration) Tj ET
+0.7 0.7 0.7 RG 0.5 w 50 210.3999999999997 m 545 210.3999999999997 l S
+BT /F1 9 Tf 50 192.3999999999997 Td (The primary test configuration uses use_fixed_qp_offsets=1 with deltaq-mode=0 to achieve) Tj ET
+BT /F1 9 Tf 50 180.6999999999997 Td (deterministic, content-independent qindex assignment per hierarchical layer.) Tj ET
+BT /F2 12 Tf 50 154.99999999999972 Td (Encoding Command) Tj ET
+BT /F3 7.5 Tf 70 127.39999999999972 Td (aomenc --verbose --codec=av1 -v --psnr --obu \\) Tj ET
+BT /F3 7.5 Tf 70 117.64999999999972 Td (  --frame-parallel=0 --cpu-used=0 --limit=600 --passes=1 --end-usage=q \\) Tj ET
+BT /F3 7.5 Tf 70 107.89999999999972 Td (  --i420 --use-fixed-qp-offsets=1 --deltaq-mode=0 --enable-tpl-model=0 \\) Tj ET
+BT /F3 7.5 Tf 70 98.14999999999972 Td (  --fps=60/1 --input-bit-depth=10 --bit-depth=10 --cq-level=$CQ \\) Tj ET
+BT /F3 7.5 Tf 70 88.39999999999972 Td (  --tile-columns=0 --threads=1 --enable-keyframe-filtering=1 \\) Tj ET
+BT /F3 7.5 Tf 70 78.64999999999972 Td (  --kf-min-dist=65 --kf-max-dist=65 --min-gf-interval=16 --max-gf-interval=16 \\) Tj ET
+BT /F3 7.5 Tf 70 68.89999999999972 Td (  --gf-min-pyr-height=4 --gf-max-pyr-height=4 --lag-in-frames=19 --auto-alt-ref=1 \\) Tj ET
+BT /F3 7.5 Tf 70 59.14999999999972 Td (  -w 1920 -h 1080 \\) Tj ET
+endstream
+endobj
+13 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 12 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> >>
+endobj
+14 0 obj
+<< /Length 9215 >>
+stream
+BT /F3 7.5 Tf 70 790 Td (  -o output.obu input.y4m) Tj ET
+BT /F2 12 Tf 50 762.25 Td (Key flags explained) Tj ET
+BT /F2 7.5 Tf 53.0 738.65 Td (Flag) Tj ET
+BT /F2 7.5 Tf 218.0 738.65 Td (Value) Tj ET
+BT /F2 7.5 Tf 383.0 738.65 Td (Purpose) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 735.65 m 545 735.65 l S
+BT /F1 7.5 Tf 53.0 726.65 Td (--use-fixed-qp-offsets=1) Tj ET
+BT /F1 7.5 Tf 218.0 726.65 Td (1) Tj ET
+BT /F1 7.5 Tf 383.0 726.65 Td (Bypass polynomial minq lookup tables; use unified qstep_ratio approach for ARF/KF qindex across entire cq range) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 723.65 m 545 723.65 l S
+BT /F1 7.5 Tf 53.0 714.65 Td (--deltaq-mode=0) Tj ET
+BT /F1 7.5 Tf 218.0 714.65 Td (0) Tj ET
+BT /F1 7.5 Tf 383.0 714.65 Td (Disable per-SB delta-q adaptation; uniform qindex within each frame) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 711.65 m 545 711.65 l S
+BT /F1 7.5 Tf 53.0 702.65 Td (--enable-tpl-model=0) Tj ET
+BT /F1 7.5 Tf 218.0 702.65 Td (0) Tj ET
+BT /F1 7.5 Tf 383.0 702.65 Td (Disable temporal propagation model; prevent TPL from overriding the fixed qp offsets) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 699.65 m 545 699.65 l S
+BT /F1 7.5 Tf 53.0 690.65 Td (--passes=1) Tj ET
+BT /F1 7.5 Tf 218.0 690.65 Td (1) Tj ET
+BT /F1 7.5 Tf 383.0 690.65 Td (Single-pass encode; uses rc_pick_q_and_bounds_no_stats for ARF frames) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 687.65 m 545 687.65 l S
+BT /F1 7.5 Tf 53.0 678.65 Td (--kf-min-dist=65 --kf-max-dist=65) Tj ET
+BT /F1 7.5 Tf 218.0 678.65 Td (65) Tj ET
+BT /F1 7.5 Tf 383.0 678.65 Td (Fixed keyframe interval at every 65 frames) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 675.65 m 545 675.65 l S
+BT /F1 7.5 Tf 53.0 666.65 Td (--min-gf-interval=16 --max-gf-interval=16) Tj ET
+BT /F1 7.5 Tf 218.0 666.65 Td (16) Tj ET
+BT /F1 7.5 Tf 383.0 666.65 Td (Fixed golden frame interval at 16 frames) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 663.65 m 545 663.65 l S
+BT /F1 7.5 Tf 53.0 654.65 Td (--gf-min-pyr-height=4 --gf-max-pyr-height=4) Tj ET
+BT /F1 7.5 Tf 218.0 654.65 Td (4) Tj ET
+BT /F1 7.5 Tf 383.0 654.65 Td (4-level hierarchical pyramid \(ARF -> IARF_d2 -> IARF_d3 -> IARF_d4 -> Leaf\)) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 651.65 m 545 651.65 l S
+BT /F1 7.5 Tf 53.0 642.65 Td (--bit-depth=10) Tj ET
+BT /F1 7.5 Tf 218.0 642.65 Td (10) Tj ET
+BT /F1 7.5 Tf 383.0 642.65 Td (10-bit encoding; uses dc_qlookup_10_QTX[] for quantizer lookup) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 639.65 m 545 639.65 l S
+BT /F2 12 Tf 50 616.65 Td (Q selection code path with this configuration) Tj ET
+BT /F1 9 Tf 50 593.05 Td (With use_fixed_qp_offsets=1, the final qindex override happens in) Tj ET
+BT /F1 9 Tf 50 581.3499999999999 Td (av1_set_size_dependent_vars\(\) \(encoder_utils.c\), which runs after) Tj ET
+BT /F1 9 Tf 50 569.6499999999999 Td (the initial av1_rc_pick_q_and_bounds\(\) selection:) Tj ET
+BT /F1 9 Tf 65 549.9499999999998 Td (1. KF/ARF/GF frames \(is_frame_tpl_eligible\(\) returns true\):) Tj ET
+BT /F1 9 Tf 80 538.2499999999998 Td (- cq_level <= 255: qstep_ratio = 0.2 + \(1.0 - awq/255\)  qratio_grad, search downward for matching) Tj ET
+BT /F1 9 Tf 80 526.5499999999997 Td (qindex via av1_get_q_index_from_qstep_ratio\(\)) Tj ET
+BT /F1 9 Tf 80 514.8499999999997 Td (- cq_level > 255 \(cq 64-80\): qstep_ratio = 0.2 + \(cq_level - 255\) / \(323 - 255\)  0.8, same search) Tj ET
+BT /F1 9 Tf 80 503.1499999999997 Td (with leaf_qindex = min\(cq_level, 255\) = 255) Tj ET
+BT /F1 9 Tf 80 491.4499999999997 Td (- When qstep_ratio >= 1.0 \(cq=80\): shortcut returns min\(cq_level, 255\) = 255 directly) Tj ET
+BT /F1 9 Tf 80 479.7499999999997 Td (- KF and ARF use the same qstep_ratio \(unified, no separate boost factors\)) Tj ET
+BT /F1 9 Tf 65 468.0499999999997 Td (2. INTNL_ARF frames \(intermediate pyramid levels\): midpoint interpolation q = \(arf_q + min\(cq_level,) Tj ET
+BT /F1 9 Tf 65 456.34999999999974 Td (255\) + 1\) / 2 per depth level) Tj ET
+BT /F1 9 Tf 65 444.64999999999975 Td (3. Leaf/Overlay frames: q = min\(cq_level, 255\)) Tj ET
+BT /F1 9 Tf 50 424.94999999999976 Td (This produces a deterministic qindex-per-layer mapping that depends only on cq_level.) Tj ET
+BT /F2 15 Tf 50 399.2499999999998 Td (Verification) Tj ET
+0.7 0.7 0.7 RG 0.5 w 50 379.7499999999998 m 545 379.7499999999998 l S
+BT /F2 12 Tf 50 355.7499999999998 Td (Build) Tj ET
+BT /F3 7.5 Tf 70 336.14999999999975 Td (cmake path/to/aom && make -j$\(nproc\)) Tj ET
+BT /F2 12 Tf 50 308.39999999999975 Td (Fixed QP path \(use-fixed-qp-offsets=1\)) Tj ET
+BT /F2 7.5 Tf 53.0 284.7999999999997 Td (Test) Tj ET
+BT /F2 7.5 Tf 176.75 284.7999999999997 Td (Command) Tj ET
+BT /F2 7.5 Tf 300.5 284.7999999999997 Td (Expected Result) Tj ET
+BT /F2 7.5 Tf 424.25 284.7999999999997 Td (Status) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 281.7999999999997 m 545 281.7999999999997 l S
+BT /F1 7.5 Tf 53.0 272.7999999999997 Td (Original range) Tj ET
+BT /F1 7.5 Tf 176.75 272.7999999999997 Td (--cq-level=32) Tj ET
+BT /F1 7.5 Tf 300.5 272.7999999999997 Td (No regression) Tj ET
+BT /F1 7.5 Tf 424.25 272.7999999999997 Td (Pass) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 269.7999999999997 m 545 269.7999999999997 l S
+BT /F1 7.5 Tf 53.0 260.7999999999997 Td (Extended range) Tj ET
+BT /F1 7.5 Tf 176.75 260.7999999999997 Td (--cq-level=70) Tj ET
+BT /F1 7.5 Tf 300.5 260.7999999999997 Td (Valid output, per-layer qindex differentiation) Tj ET
+BT /F1 7.5 Tf 424.25 260.7999999999997 Td (Pass) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 257.7999999999997 m 545 257.7999999999997 l S
+BT /F1 7.5 Tf 53.0 248.79999999999973 Td (Max cq) Tj ET
+BT /F1 7.5 Tf 176.75 248.79999999999973 Td (--cq-level=80) Tj ET
+BT /F1 7.5 Tf 300.5 248.79999999999973 Td (All layers reach qindex 255) Tj ET
+BT /F1 7.5 Tf 424.25 248.79999999999973 Td (Pass) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 245.79999999999973 m 545 245.79999999999973 l S
+BT /F1 7.5 Tf 53.0 236.79999999999973 Td (Out of range) Tj ET
+BT /F1 7.5 Tf 176.75 236.79999999999973 Td (--cq-level=81) Tj ET
+BT /F1 7.5 Tf 300.5 236.79999999999973 Td (Rejected with error) Tj ET
+BT /F1 7.5 Tf 424.25 236.79999999999973 Td (Pass) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 233.79999999999973 m 545 233.79999999999973 l S
+BT /F1 9 Tf 50 216.79999999999973 Td (Bitrate \(480x270, 130 frames, cpu-used=4\):) Tj ET
+BT /F2 7.5 Tf 53.0 197.09999999999974 Td (cq) Tj ET
+BT /F2 7.5 Tf 218.0 197.09999999999974 Td (Bitrate \(bps\)) Tj ET
+BT /F2 7.5 Tf 383.0 197.09999999999974 Td (PSNR-Y \(dB\)) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 194.09999999999974 m 545 194.09999999999974 l S
+BT /F1 7.5 Tf 53.0 185.09999999999974 Td (60) Tj ET
+BT /F1 7.5 Tf 218.0 185.09999999999974 Td (154,870) Tj ET
+BT /F1 7.5 Tf 383.0 185.09999999999974 Td (34.38) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 182.09999999999974 m 545 182.09999999999974 l S
+BT /F1 7.5 Tf 53.0 173.09999999999974 Td (63) Tj ET
+BT /F1 7.5 Tf 218.0 173.09999999999974 Td (100,685) Tj ET
+BT /F1 7.5 Tf 383.0 173.09999999999974 Td (31.58) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 170.09999999999974 m 545 170.09999999999974 l S
+BT /F1 7.5 Tf 53.0 161.09999999999974 Td (64) Tj ET
+BT /F1 7.5 Tf 218.0 161.09999999999974 Td (82,633) Tj ET
+BT /F1 7.5 Tf 383.0 161.09999999999974 Td (30.28) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 158.09999999999974 m 545 158.09999999999974 l S
+BT /F1 7.5 Tf 53.0 149.09999999999974 Td (70) Tj ET
+BT /F1 7.5 Tf 218.0 149.09999999999974 Td (39,651) Tj ET
+BT /F1 7.5 Tf 383.0 149.09999999999974 Td (25.98) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 146.09999999999974 m 545 146.09999999999974 l S
+BT /F1 7.5 Tf 53.0 137.09999999999974 Td (80) Tj ET
+BT /F1 7.5 Tf 218.0 137.09999999999974 Td (27,969) Tj ET
+BT /F1 7.5 Tf 383.0 137.09999999999974 Td (23.63) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 134.09999999999974 m 545 134.09999999999974 l S
+BT /F2 12 Tf 50 111.09999999999974 Td (Unsupported mode rejection) Tj ET
+BT /F2 7.5 Tf 53.0 87.49999999999974 Td (Test) Tj ET
+BT /F2 7.5 Tf 176.75 87.49999999999974 Td (Command) Tj ET
+BT /F2 7.5 Tf 300.5 87.49999999999974 Td (Expected Result) Tj ET
+BT /F2 7.5 Tf 424.25 87.49999999999974 Td (Status) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 84.49999999999974 m 545 84.49999999999974 l S
+BT /F1 7.5 Tf 53.0 75.49999999999974 Td (Non-fixed QP + extended cq) Tj ET
+BT /F1 7.5 Tf 176.75 75.49999999999974 Td (--end-usage=q --use-fixed-qp-offsets=0 --cq-level=70) Tj ET
+BT /F1 7.5 Tf 300.5 75.49999999999974 Td (Rejected: "cq-level > 63 requires use-fixed-qp-offsets=1") Tj ET
+BT /F1 7.5 Tf 424.25 75.49999999999974 Td (--) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 72.49999999999974 m 545 72.49999999999974 l S
+BT /F1 7.5 Tf 53.0 63.499999999999744 Td (TPL enabled + extended cq) Tj ET
+BT /F1 7.5 Tf 176.75 63.499999999999744 Td (--end-usage=q --use-fixed-qp-offsets=1 --enable-tpl-model=1 --cq-level=70) Tj ET
+BT /F1 7.5 Tf 300.5 63.499999999999744 Td (Rejected: "cq-level > 63 requires enable-tpl-model=0") Tj ET
+BT /F1 7.5 Tf 424.25 63.499999999999744 Td (--) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 60.499999999999744 m 545 60.499999999999744 l S
+BT /F1 7.5 Tf 53.0 51.499999999999744 Td (CQ mode + extended cq) Tj ET
+BT /F1 7.5 Tf 176.75 51.499999999999744 Td (--end-usage=cq --cq-level=70) Tj ET
+BT /F1 7.5 Tf 300.5 51.499999999999744 Td (Rejected: "cq-level > 63 is only supported in AOM_Q mode") Tj ET
+BT /F1 7.5 Tf 424.25 51.499999999999744 Td (--) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 48.499999999999744 m 545 48.499999999999744 l S
+endstream
+endobj
+15 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 14 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> >>
+endobj
+16 0 obj
+<< /Length 2745 >>
+stream
+BT /F1 7.5 Tf 53.0 790 Td (CBR + extended cq) Tj ET
+BT /F1 7.5 Tf 176.75 790 Td (--end-usage=cbr --cq-level=70) Tj ET
+BT /F1 7.5 Tf 300.5 790 Td (Rejected: "cq-level > 63 is only supported in AOM_Q mode") Tj ET
+BT /F1 7.5 Tf 424.25 790 Td (--) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 787 m 545 787 l S
+BT /F1 7.5 Tf 53.0 778.0 Td (VBR + extended cq) Tj ET
+BT /F1 7.5 Tf 176.75 778.0 Td (--end-usage=vbr --cq-level=70) Tj ET
+BT /F1 7.5 Tf 300.5 778.0 Td (Rejected: "cq-level > 63 is only supported in AOM_Q mode") Tj ET
+BT /F1 7.5 Tf 424.25 778.0 Td (--) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 775.0 m 545 775.0 l S
+BT /F1 7.5 Tf 53.0 766.0 Td (Non-fixed QP + original range) Tj ET
+BT /F1 7.5 Tf 176.75 766.0 Td (--end-usage=q --use-fixed-qp-offsets=0 --cq-level=32) Tj ET
+BT /F1 7.5 Tf 300.5 766.0 Td (No regression) Tj ET
+BT /F1 7.5 Tf 424.25 766.0 Td (--) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 763.0 m 545 763.0 l S
+BT /F2 12 Tf 50 740.0 Td (Other modes) Tj ET
+BT /F2 7.5 Tf 53.0 716.4 Td (Test) Tj ET
+BT /F2 7.5 Tf 176.75 716.4 Td (Command) Tj ET
+BT /F2 7.5 Tf 300.5 716.4 Td (Expected Result) Tj ET
+BT /F2 7.5 Tf 424.25 716.4 Td (Status) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 713.4 m 545 713.4 l S
+BT /F1 7.5 Tf 53.0 704.4 Td (CBR mode) Tj ET
+BT /F1 7.5 Tf 176.75 704.4 Td (--end-usage=cbr --target-bitrate=1000) Tj ET
+BT /F1 7.5 Tf 300.5 704.4 Td (No regression \(cq_level not used\)) Tj ET
+BT /F1 7.5 Tf 424.25 704.4 Td (Pass) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 701.4 m 545 701.4 l S
+BT /F1 7.5 Tf 53.0 692.4 Td (CQ mode original range) Tj ET
+BT /F1 7.5 Tf 176.75 692.4 Td (--end-usage=cq --cq-level=50) Tj ET
+BT /F1 7.5 Tf 300.5 692.4 Td (Runs correctly) Tj ET
+BT /F1 7.5 Tf 424.25 692.4 Td (Pass) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 689.4 m 545 689.4 l S
+BT /F1 7.5 Tf 53.0 680.4 Td (Unit tests) Tj ET
+BT /F1 7.5 Tf 176.75 680.4 Td (make runtests) Tj ET
+BT /F1 7.5 Tf 300.5 680.4 Td (All pass) Tj ET
+BT /F1 7.5 Tf 424.25 680.4 Td (--) Tj ET
+0.85 0.85 0.85 RG 0.3 w 50 677.4 m 545 677.4 l S
+BT /F2 15 Tf 50 654.4 Td (Reference) Tj ET
+0.7 0.7 0.7 RG 0.5 w 50 634.9 m 545 634.9 l S
+BT /F1 9 Tf 65 616.9 Td (- Extended range plot \(fixed QP\): cq_extended_fixed_maxcq80.svg) Tj ET
+BT /F1 9 Tf 65 605.1999999999999 Td (- Unified plot: qindex_per_layer_chart_unified.svg) Tj ET
+BT /F1 9 Tf 65 593.4999999999999 Td (- Original range comparison: cq_to_qindex_fixed.svg \(fixed QP\) / cq_to_qindex_nonfixed.svg \(non-fixed) Tj ET
+BT /F1 9 Tf 65 581.7999999999998 Td (QP\)) Tj ET
+BT /F1 9 Tf 65 570.0999999999998 Td (- Alternative max_cq options: cq_extended_fixed_maxcq70.svg, cq_extended_fixed_maxcq75.svg) Tj ET
+BT /F1 9 Tf 65 558.3999999999997 Td (- Data: cq_to_qindex_data.csv) Tj ET
+BT /F1 9 Tf 65 546.6999999999997 Td (- Computation script: plot_cq_to_qindex.py) Tj ET
+endstream
+endobj
+17 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 16 0 R /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> >>
+endobj
+xref
+0 18
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000149 00000 n 
+0000000246 00000 n 
+0000000348 00000 n 
+0000000443 00000 n 
+0000007686 00000 n 
+0000007832 00000 n 
+0000017774 00000 n 
+0000017920 00000 n 
+0000023107 00000 n 
+0000023255 00000 n 
+0000031141 00000 n 
+0000031289 00000 n 
+0000040557 00000 n 
+0000040705 00000 n 
+0000043503 00000 n 
+trailer
+<< /Size 18 /Root 1 0 R >>
+startxref
+43651
+%%EOF
