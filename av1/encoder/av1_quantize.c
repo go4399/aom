@@ -1028,14 +1028,19 @@ void av1_set_quantizer(AV1_COMMON *const cm, int min_qmlevel, int max_qmlevel,
   }
 }
 
-// Table that converts 0-63 Q-range values passed in outside to the Qindex
-// range used internally.
+// Table that converts 0-80 Q-range values passed in outside to the Qindex
+// range used internally. Entries 64-80 are unclamped "virtual" qindex values
+// (> 255) that allow rate control delta math to differentiate hierarchical
+// layers even at maximum quantization. The final qindex is clamped to [0, 255]
+// at usage points.
 static const int quantizer_to_qindex[] = {
   0,   4,   8,   12,  16,  20,  24,  28,  32,  36,  40,  44,  48,
   52,  56,  60,  64,  68,  72,  76,  80,  84,  88,  92,  96,  100,
   104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 144, 148, 152,
   156, 160, 164, 168, 172, 176, 180, 184, 188, 192, 196, 200, 204,
   208, 212, 216, 220, 224, 228, 232, 236, 240, 244, 249, 255,
+  259, 263, 267, 271, 275, 279, 283, 287, 291,
+  295, 299, 303, 307, 311, 315, 319, 323,
 };
 
 int av1_quantizer_to_qindex(int quantizer) {
@@ -1045,8 +1050,8 @@ int av1_quantizer_to_qindex(int quantizer) {
 int av1_qindex_to_quantizer(int qindex) {
   int quantizer;
 
-  for (quantizer = 0; quantizer < 64; ++quantizer)
+  for (quantizer = 0; quantizer <= MAX_CQ_LEVEL; ++quantizer)
     if (quantizer_to_qindex[quantizer] >= qindex) return quantizer;
 
-  return 63;
+  return MAX_CQ_LEVEL;
 }
