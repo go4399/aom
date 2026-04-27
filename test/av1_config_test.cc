@@ -84,6 +84,18 @@ TEST(Av1Config, ObuInvalidInputs) {
                                        &av1_config));
 }
 
+TEST(Av1Config, Buganizer502133197) {
+  Av1Config av1_config;
+  memset(&av1_config, 0, sizeof(av1_config));
+
+  const uint8_t kBugReproObu[] = {
+    0x0a, 0x0b, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+  };
+
+  get_av1config_from_obu(kBugReproObu, sizeof(kBugReproObu), false,
+                         &av1_config);
+}
+
 TEST(Av1Config, ReadInvalidInputs) {
   Av1Config av1_config;
   memset(&av1_config, 0, sizeof(av1_config));
