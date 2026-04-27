@@ -2445,4 +2445,59 @@ TEST(EncodeAPI, Buganizer503197490) {
   ASSERT_EQ(aom_codec_destroy(&codec), AOM_CODEC_OK);
 }
 
+TEST(EncodeAPI, Buganizer503810640) {
+  aom_codec_iface_t *iface = aom_codec_av1_cx();
+  aom_codec_enc_cfg_t cfg;
+  ASSERT_EQ(aom_codec_enc_config_default(iface, &cfg, AOM_USAGE_GOOD_QUALITY),
+            AOM_CODEC_OK);
+
+  cfg.g_w = 176;
+  cfg.g_h = 144;
+
+  aom_codec_ctx_t codec;
+  ASSERT_EQ(aom_codec_enc_init(&codec, iface, &cfg, 0), AOM_CODEC_OK);
+  ASSERT_EQ(aom_codec_control(&codec, AV1E_SET_DENOISE_NOISE_LEVEL, 29),
+            AOM_CODEC_OK);
+
+  aom_image_t *raw = aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 176, 144, 1);
+  ASSERT_NE(raw, nullptr);
+
+  FillImage(raw, 128);
+  ::libaom_test::ACMRandom rnd;
+  rnd.Reset(::libaom_test::ACMRandom::DeterministicSeed());
+  for (int y = 0; y < 144; ++y) {
+    for (int x = 0; x < 176; ++x) {
+      raw->planes[AOM_PLANE_Y][y * raw->stride[AOM_PLANE_Y] + x] = rnd.Rand8();
+    }
+  }
+
+  ASSERT_EQ(aom_codec_encode(&codec, raw, 0, 1, 0), AOM_CODEC_OK);
+
+  aom_img_free(raw);
+  ASSERT_EQ(aom_codec_destroy(&codec), AOM_CODEC_OK);
+}
+
+TEST(EncodeAPI, Buganizer503810640V2) {
+  aom_codec_iface_t *iface = aom_codec_av1_cx();
+  aom_codec_enc_cfg_t cfg;
+  ASSERT_EQ(aom_codec_enc_config_default(iface, &cfg, AOM_USAGE_GOOD_QUALITY),
+            AOM_CODEC_OK);
+
+  cfg.g_w = 437;
+  cfg.g_h = 1121;
+
+  aom_codec_ctx_t codec;
+  ASSERT_EQ(aom_codec_enc_init(&codec, iface, &cfg, 0), AOM_CODEC_OK);
+  ASSERT_EQ(aom_codec_control(&codec, AV1E_SET_DENOISE_NOISE_LEVEL, 29),
+            AOM_CODEC_OK);
+
+  aom_image_t *raw = aom_img_alloc(nullptr, AOM_IMG_FMT_I420, 437, 1121, 1);
+  ASSERT_NE(raw, nullptr);
+
+  ASSERT_EQ(aom_codec_encode(&codec, raw, 0, 1, 0), AOM_CODEC_OK);
+
+  aom_img_free(raw);
+  ASSERT_EQ(aom_codec_destroy(&codec), AOM_CODEC_OK);
+}
+
 }  // namespace
