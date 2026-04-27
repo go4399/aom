@@ -16,6 +16,24 @@
       "message": "In this CL, we have enabled the speed feature \u0027skip_loop_filter_using_filt_error\u0027 for shorts and hdres for decoder speed up in low complexity decode mode.\n\nThe visual quality tests showed no artifacts for shorts and hdres contents.\n\nPerformance results of encoder and decoder for the streams generated with low complexity decode mode enabled wrt (commit : [86a16e](https://aomedia.googlesource.com/aom/+/86a16e95956685bb4960811c7ea840a0c6d48d78) and cdef enabled for lc-dec mode \u003c[CL](https://aomedia-review.googlesource.com/c/aom/+/210441)\u003e) shows below.\n```\n                         Instruction \n                      Count Reduction(%)     Decode time \n                                            reduction (%)                     BD-Rate Loss(%)\n  cpu     Resolution  Encoder    Decoder                  avg.psnr  ovr.psnr    ssim      vmaf    vmaf_neg  uvq_1p5            \n   1      SHORTS608P   -0.012    5.429        4.694        0.1662    0.1812    0.3754    0.0435    0.0243    3.6672\n   1      SHORTS720P   -0.025    6.109        5.445        0.1851    0.1958    0.4050    0.0247    0.0129    3.0717\n   1      SHORTS1080P  -0.064    8.964        8.121        0.2877    0.3174    0.6007   -0.0265   -0.0024    3.1615\n   1      HDRES2       -0.016    8.636        8.362        0.4236    0.4533    0.5493    0.2065    0.2105    2.7618\n   1      UGCHDRES     -0.360   10.568        9.480        0.3700    0.3634    0.6479    0.0858    0.0818    4.3374\n   1      Average      -0.079    7.721        7.011        0.2753    0.2921    0.5046    0.0602    0.0588    3.3541\n\n   2      SHORTS608P   -0.04     5.335        5.070        0.1930    0.2028    0.3974    0.0605    0.0517    3.0412\n   2      SHORTS720P   -0.074    5.962        5.344        0.2245    0.2266    0.4160    0.0632    0.0543    3.3813\n   2      SHORTS1080P  -0.116    8.723        7.908        0.3507    0.3663    0.6553    0.1426    0.1097    3.5526\n   2      HDRES2       -0.233    8.496        8.175        0.4783    0.5392    0.6087    0.3638    0.3523    3.1918\n   2      UGCHDRES     -0.043   10.717        9.472        0.4569    0.4626    0.7773    0.2568    0.2353    4.9870 \n   2      Average      -0.101    7.61         6.989        0.3270    0.3452    0.5543    0.1646    0.1480    3.5466\n\n   3      SHORTS608P   -0.007   5.466         5.023        0.1539    0.1613    0.2866    0.0325    0.0118    2.1512 \n   3      SHORTS720P    0.082   6.179         5.446        0.2046    0.2014    0.3817   -0.0033   -0.0115    2.4927 \n   3      SHORTS1080P   0.044   8.888         7.900        0.3053    0.3168    0.5614    0.0818    0.0629    2.9494 \n   3      HDRES2       -0.071   8.757         8.324        0.5015    0.5063    0.5830    0.2323    0.2211    2.5421 \n   3      UGCHDRES      0.046   11.736       10.431        0.3867    0.3819    0.6399    0.1258    0.1325    3.0359 \n   3      Average       0.02    7.923         7.169        0.2977    0.3013    0.4761    0.0863    0.0746    2.6079 \n```\n\n\nThe instruction count reduction specified has been measured using command:\n`$ perf stat -e instructions:u ./aomenc …`\n`$ perf stat -e instructions:u ./dav1d --cpumask avx2 …`\n\nThe decode time is measured using command\n`time taskset -c 0  ./dav1d  --cpumask avx2 …`",
       "revId": "267019beaae10e2ff251a6a1c7db774598f779f0",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9efe88e1_80cf53b3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-04-27T18:25:56Z",
+      "side": 1,
+      "message": "Thanks for all the efforts wrt this CL! Looks good.",
+      "parentUuid": "c4a186e1_96aa9fb0",
+      "revId": "267019beaae10e2ff251a6a1c7db774598f779f0",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
