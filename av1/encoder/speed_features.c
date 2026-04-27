@@ -911,7 +911,7 @@ static void set_good_speed_feature_framesize_dependent(
     }
 
     if (is_720p_or_larger) {
-      sf->inter_sf.disable_interinter_wedge_var_thresh = 100;
+      sf->inter_sf.disable_interinter_wedge_var_thresh = 1500;
       sf->inter_sf.limit_txfm_eval_per_mode = boosted ? 0 : 1;
     } else {
       sf->inter_sf.disable_interinter_wedge_var_thresh = UINT_MAX;
