@@ -82,8 +82,24 @@ static int parse_timing_info(struct aom_read_bit_buffer *reader) {
   int result = 0;
   AV1C_PUSH_ERROR_HANDLER_DATA(result);
 
-  AV1C_READ_BITS_OR_RETURN_ERROR(num_units_in_display_tick, 32);
-  AV1C_READ_BITS_OR_RETURN_ERROR(time_scale, 32);
+  uint32_t num_units_in_display_tick = 0;
+  uint32_t high = aom_rb_read_literal(reader, 16);
+  uint32_t low = aom_rb_read_literal(reader, 16);
+  num_units_in_display_tick = (high << 16) | low;
+  if (result == -1) {
+    fprintf(stderr,
+            "av1c: Could not read bits for num_units_in_display_tick\n");
+    return -1;
+  }
+
+  uint32_t time_scale = 0;
+  high = aom_rb_read_literal(reader, 16);
+  low = aom_rb_read_literal(reader, 16);
+  time_scale = (high << 16) | low;
+  if (result == -1) {
+    fprintf(stderr, "av1c: Could not read bits for time_scale\n");
+    return -1;
+  }
 
   AV1C_READ_BIT_OR_RETURN_ERROR(equal_picture_interval);
   if (equal_picture_interval) {
@@ -120,7 +136,15 @@ static int parse_decoder_model_info(struct aom_read_bit_buffer *reader) {
   AV1C_PUSH_ERROR_HANDLER_DATA(result);
 
   AV1C_READ_BITS_OR_RETURN_ERROR(buffer_delay_length_minus_1, 5);
-  AV1C_READ_BITS_OR_RETURN_ERROR(num_units_in_decoding_tick, 32);
+  uint32_t num_units_in_decoding_tick = 0;
+  const uint32_t high = aom_rb_read_literal(reader, 16);
+  const uint32_t low = aom_rb_read_literal(reader, 16);
+  num_units_in_decoding_tick = (high << 16) | low;
+  if (result == -1) {
+    fprintf(stderr,
+            "av1c: Could not read bits for num_units_in_decoding_tick\n");
+    return -1;
+  }
   AV1C_READ_BITS_OR_RETURN_ERROR(buffer_removal_time_length_minus_1, 5);
   AV1C_READ_BITS_OR_RETURN_ERROR(frame_presentation_time_length_minus_1, 5);
 
