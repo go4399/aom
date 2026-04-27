@@ -141,6 +141,30 @@
       },
       "revId": "7dbc70a5681442e7da0b815a00c77cef2fa2bb62",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a2da032e_ef7f93cb",
+        "filename": "av1/encoder/firstpass.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 1005,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-04-27T20:06:40Z",
+      "side": 1,
+      "message": "AFAIK, LAP mode is not used in production. Lap mode should ensure that the stats are stored and used correctly, but looks like this extreme case wasn\u0027t handled correctly. I guess there might be a minimum number of buffers requested for this mode, but wasn\u0027t explicitly defined. Did you see how many more buffers it tried to access (16 or more?)?",
+      "parentUuid": "6a9d799d_458e168d",
+      "range": {
+        "startLine": 1004,
+        "startChar": 7,
+        "endLine": 1005,
+        "endChar": 56
+      },
+      "revId": "7dbc70a5681442e7da0b815a00c77cef2fa2bb62",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
