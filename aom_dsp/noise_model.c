@@ -144,6 +144,11 @@ static int equation_system_solve(aom_equation_system_t *eqns) {
   if (ret == 0) {
     return 0;
   }
+  for (int i = 0; i < n; ++i) {
+    if (isnan(eqns->x[i]) || isinf(eqns->x[i])) {
+      return 0;
+    }
+  }
   return 1;
 }
 
@@ -482,7 +487,8 @@ int aom_flat_block_finder_init(aom_flat_block_finder_t *block_finder,
   for (i = 0; i < kLowPolyNumParams; ++i) {
     memset(eqns.b, 0, sizeof(*eqns.b) * kLowPolyNumParams);
     eqns.b[i] = 1;
-    equation_system_solve(&eqns);
+    const int ret = equation_system_solve(&eqns);
+    if (!ret) return ret;
 
     for (j = 0; j < kLowPolyNumParams; ++j) {
       AtA_inv[j * kLowPolyNumParams + i] = eqns.x[j];
@@ -1259,7 +1265,10 @@ int aom_noise_model_get_grain_parameters(aom_noise_model_t *const noise_model,
     if (c == 0) {
       avg_luma_strength = average_strength;
     } else {
-      y_corr[c - 1] = avg_luma_strength * eqns->x[n_coeff] / average_strength;
+      y_corr[c - 1] =
+          average_strength > 1e-6
+              ? avg_luma_strength * eqns->x[n_coeff] / average_strength
+              : 0;
       max_coeff = AOMMAX(max_coeff, y_corr[c - 1]);
       min_coeff = AOMMIN(min_coeff, y_corr[c - 1]);
     }
