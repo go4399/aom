@@ -245,6 +245,24 @@
       "parentUuid": "5387ba58_1ea455d5",
       "revId": "9a20f32d4394f14fec78f791eeced6787e409f82",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "204b58a9_2d1c5432",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 2501,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-29T19:40:59Z",
+      "side": 1,
+      "message": "\u003e I intentionally leave this uninitialized.\n\u003e During debugging, I found another float point exception error.\n\u003e If initialized, that FPE can\u0027t be triggered.\n\u003e \n\u003e Please see the comment in noise_model.c line 1352.\n\n\nThis will fail under `valgrind`. Uninitialized data should be somewhat equivalent to providing random data.\n\n```\n\n[ RUN      ] EncodeAPI.Buganizer503810640V2\n\u003d\u003d3467607\u003d\u003d Conditional jump or move depends on uninitialised value(s)\n\u003d\u003d3467607\u003d\u003d    at 0x4B8C057: aom_flat_block_finder_run (aom_dsp/noise_model.c:635)\n\u003d\u003d3467607\u003d\u003d    by 0x4B91D80: aom_denoise_and_model_run (aom_dsp/noise_model.c:1659)\n\u003d\u003d3467607\u003d\u003d    by 0x4D7294F: apply_denoise_2d (av1/encoder/encoder.c:4666)\n\u003d\u003d3467607\u003d\u003d    by 0x4D7294F: av1_receive_raw_frame (av1/encoder/encoder.c:4760)\n\u003d\u003d3467607\u003d\u003d    by 0x4D20026: encoder_encode (av1/av1_cx_iface.c:3522)\n\u003d\u003d3467607\u003d\u003d    by 0x4A43FB0: aom_codec_encode (aom/src/aom_encoder.c:191)\n\u003d\u003d3467607\u003d\u003d    by 0x45ECDC4: (anonymous namespace)::EncodeAPI_Buganizer503810640V2_Test::TestBody() (test/encode_api_test.cc:2497)\n\u003d\u003d3467607\u003d\u003d    by 0x4FBD008: HandleSehExceptionsInMethodIfSupported\u003ctesting::Test, void\u003e (third_party/googletest/src/googletest/src/gtest.cc:2664)\n\u003d\u003d3467607\u003d\u003d    by 0x4FBD008: void testing::internal::HandleExceptionsInMethodIfSupported\u003ctesting::Test, void\u003e(testing::Test*, void (testing::Test::*)(), char const*) (third_party/googletest/src/googletest/src/gtest.cc:2700)\n\u003d\u003d3467607\u003d\u003d    by 0x4FA0657: testing::Test::Run() (third_party/googletest/src/googletest/src/gtest.cc:2739)\n\u003d\u003d3467607\u003d\u003d    by 0x4FA15DA: testing::TestInfo::Run() (third_party/googletest/src/googletest/src/gtest.cc:2885)\n\u003d\u003d3467607\u003d\u003d    by 0x4FA2484: testing::TestSuite::Run() (third_party/googletest/src/googletest/src/gtest.cc:3063)\n\u003d\u003d3467607\u003d\u003d    by 0x4FB3D8F: testing::internal::UnitTestImpl::RunAllTests() (third_party/googletest/src/googletest/src/gtest.cc:6054)\n\u003d\u003d3467607\u003d\u003d    by 0x4FBDD38: HandleSehExceptionsInMethodIfSupported\u003ctesting::internal::UnitTestImpl, bool\u003e (third_party/googletest/src/googletest/src/gtest.cc:2664)\n\u003d\u003d3467607\u003d\u003d    by 0x4FBDD38: bool testing::internal::HandleExceptionsInMethodIfSupported\u003ctesting::internal::UnitTestImpl, bool\u003e(testing::internal::UnitTestImpl*, bool (testing::internal::UnitTestImpl::*)(), char const*) (third_party/googletest/src/googletest/src/gtest.cc:2700)\n```",
+      "parentUuid": "e58dddbf_f9fa153c",
+      "revId": "9a20f32d4394f14fec78f791eeced6787e409f82",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
