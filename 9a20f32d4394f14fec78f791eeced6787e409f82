@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5bb89b3c_43522f6e",
+        "filename": "aom_dsp/noise_model.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-29T03:51:22Z",
+      "side": 1,
+      "message": "Why not just check `isnan(eqns-\u003ex[i])`? `isinf` or `isfinite` might work if the value is expected to be non-zero.",
+      "revId": "9a20f32d4394f14fec78f791eeced6787e409f82",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d4f43ed_18bbd178",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 2468,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-29T03:51:22Z",
+      "side": 1,
+      "message": "Use `Rand8()` from `acm_random.h` or `RandomVideoSource`",
+      "revId": "9a20f32d4394f14fec78f791eeced6787e409f82",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "34d4bfec_46cd228f",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 2473,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-29T03:51:22Z",
+      "side": 1,
+      "message": "Use `aom_img_plane_height` and `aom_img_plane_width` instead.",
+      "fixSuggestions": [
+        {
+          "fixId": "85519a7b_b78d0558",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2473,
+                "startChar": 0,
+                "endLine": 2475,
+                "endChar": 0
+              },
+              "replacement": "    const int h \u003d aom_img_plane_height(raw, p);\n    const int w \u003d aom_img_plane_width(raw, p);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9a20f32d4394f14fec78f791eeced6787e409f82",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e310a7c_28cbbe72",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 2487,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-29T03:51:22Z",
+      "side": 1,
+      "message": "Underscores in test names are discouraged. Make this `...V2` or similar.",
+      "range": {
+        "startLine": 2487,
+        "startChar": 16,
+        "endLine": 2487,
+        "endChar": 36
+      },
+      "revId": "9a20f32d4394f14fec78f791eeced6787e409f82",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5387ba58_1ea455d5",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 2501,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-29T03:51:22Z",
+      "side": 1,
+      "message": "This image needs to be filled with data.",
+      "revId": "9a20f32d4394f14fec78f791eeced6787e409f82",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
