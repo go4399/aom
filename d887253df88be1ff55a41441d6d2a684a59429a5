@@ -1,0 +1,177 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81ff24a8_a3f78e95",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6585
+      },
+      "writtenOn": "2026-04-29T22:52:26Z",
+      "side": 1,
+      "message": "The patch suffers from at least two major problems.\nFirst, the most important, it creates new settings that require the encoder to operate under ultra low bitrates, which degrades video quality significantly. This area is not optimized nor well tested, subject to potential failures causing encoder execution exceptions, rate control problems, or edge reconstruction artifacts.\n\nSecond,the performance metrics, rate-distortion analysis curves, and regression summaries detailed in the documentation plan (extend_cq_level_plan.md) contradict the actual implementation state. IIUC, there are problems in the implementation as shown in other comments. The test output results were either computed against completely unintended fallback code segments or based on detached simulation environments.",
+      "revId": "d887253df88be1ff55a41441d6d2a684a59429a5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e170d1a_fc3a9a72",
+        "filename": "av1/encoder/encoder_utils.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 719,
+      "author": {
+        "id": 6585
+      },
+      "writtenOn": "2026-04-29T22:52:26Z",
+      "side": 1,
+      "message": "Why this change is when tpl is eligible?\nIn the const quality mode and the concerned testing condition, I think tpl is not supposed to be used.",
+      "range": {
+        "startLine": 719,
+        "startChar": 10,
+        "endLine": 719,
+        "endChar": 65
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "accf0301_14f521b1",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/encoder_utils.c",
+              "range": {
+                "startLine": 1,
+                "startChar": 0,
+                "endLine": 1,
+                "endChar": 0
+              },
+              "replacement": "      // When TPL is eligible for the current frame, adjust the quantizer\n      // based on a ratio derived from the cq_level and active_worst_quality.\n      // This allows for a more fine-tuned quantization based on the TPL\n      // analysis of the frame\u0027s impact on future frames.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "d887253df88be1ff55a41441d6d2a684a59429a5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a1b116b_a625e6dd",
+        "filename": "av1/encoder/encoder_utils.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 727,
+      "author": {
+        "id": 6585
+      },
+      "writtenOn": "2026-04-29T22:52:26Z",
+      "side": 1,
+      "message": "The check compares the parameter cq_level (80) with MAXQ (255).\nThe condition cq_level \u003c\u003d MAXQ evaluates to TRUE under all operational configurations. The code paths designed to implement smooth extended step ratios for hierarchical video layers are never traversed.",
+      "range": {
+        "startLine": 723,
+        "startChar": 8,
+        "endLine": 727,
+        "endChar": 16
+      },
+      "revId": "d887253df88be1ff55a41441d6d2a684a59429a5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bcaca688_8a6661a5",
+        "filename": "av1/encoder/ratectrl.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1871,
+      "author": {
+        "id": 6585
+      },
+      "writtenOn": "2026-04-29T22:52:26Z",
+      "side": 1,
+      "message": "Structural Failure: In the source code, MAXQ is an architectural constant defined as 255.\nBecause cq_level will only ever range from 0 up to 80 (per new constraints), the conditional branch cq_level \u003e MAXQ evaluates as 80 \u003e 255 (FALSE). It will never execute.",
+      "range": {
+        "startLine": 1871,
+        "startChar": 0,
+        "endLine": 1871,
+        "endChar": 61
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "4aa24fba_391b5ea7",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/ratectrl.c",
+              "range": {
+                "startLine": 1871,
+                "startChar": 0,
+                "endLine": 1891,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "d887253df88be1ff55a41441d6d2a684a59429a5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b99c0d8_c0e8d1ea",
+        "filename": "extend_cq_level_plan.md",
+        "patchSetId": 8
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 6585
+      },
+      "writtenOn": "2026-04-29T22:52:26Z",
+      "side": 1,
+      "message": "As far as I understand, the concerned test conditions uses use-fixed-qp-offset\u003d1.\nWhy do this patch modify the non-fixed QP path then?",
+      "range": {
+        "startLine": 140,
+        "startChar": 0,
+        "endLine": 140,
+        "endChar": 55
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "7be1a6af_d04e0fdb",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "extend_cq_level_plan.md",
+              "range": {
+                "startLine": 138,
+                "startChar": 0,
+                "endLine": 230,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "extend_cq_level_plan.md",
+              "range": {
+                "startLine": 360,
+                "startChar": 0,
+                "endLine": 369,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "d887253df88be1ff55a41441d6d2a684a59429a5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
