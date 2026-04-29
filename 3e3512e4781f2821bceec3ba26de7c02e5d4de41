@@ -34,6 +34,24 @@
       "parentUuid": "00beffc9_ce10b4dd",
       "revId": "3e3512e4781f2821bceec3ba26de7c02e5d4de41",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "42d5ce23_5238de85",
+        "filename": "common/av1_config.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-04-29T03:53:28Z",
+      "side": 0,
+      "message": "\u003e That sounds good to me. Do you prefer the current code or defining a new macro like AV1C_READ_BITS_OR_RETURN_ERROR?\n\nA macro to match the current structure would be fine since there will be two uses of it.",
+      "parentUuid": "c3212cfb_4822ab90",
+      "revId": "3e3512e4781f2821bceec3ba26de7c02e5d4de41",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
