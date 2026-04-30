@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee9846d8_77c6eda5",
+        "filename": "apps/aomenc.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-04-30T21:35:34Z",
+      "side": 1,
+      "message": "James: Insteading updating the `av1_arg_ctrl_map` and `av1_ctrl_args` arrays, please try just adding `\u0026g_av1_codec_arg_defs.validate_input_hbd` to the `av1_key_val_args` array here. It should also work and is the preferred method. See Bohan\u0027s TODO comment at lines 342-343.",
+      "revId": "2d3d0004c2f11dbd06faca22babb44b9ea133c15",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1cc3c112_0a7bc1d9",
+        "filename": "av1/arg_defs.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 725,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-04-30T21:35:34Z",
+      "side": 1,
+      "message": "Optional: Should we name this option \"validate-hbd-input\"?\n\nAn advantage of omitting \"hbd\" is that this leaves the option open for validating limited-range input samples (for all bit depths) in the future.",
+      "revId": "2d3d0004c2f11dbd06faca22babb44b9ea133c15",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f16ac20_5855d0df",
+        "filename": "av1/arg_defs.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 728,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-04-30T21:35:34Z",
+      "side": 1,
+      "message": "Optional: Should we describe 0 and 1 as \"disable\" and \"enable\"?",
+      "revId": "2d3d0004c2f11dbd06faca22babb44b9ea133c15",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
