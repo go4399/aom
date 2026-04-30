@@ -243,6 +243,7 @@ static const int av1_arg_ctrl_map[] = { AOME_SET_CPUUSED,
                                         AV1E_ENABLE_RATE_GUIDE_DELTAQ,
                                         AV1E_SET_RATE_DISTRIBUTION_INFO,
                                         AV1E_SET_ENABLE_LOW_COMPLEXITY_DECODE,
+                                        AOME_SET_VALIDATE_INPUT_HBD,
                                         0 };
 
 static const arg_def_t *const main_args[] = {
@@ -455,6 +456,7 @@ static const arg_def_t *const av1_ctrl_args[] = {
   &g_av1_codec_arg_defs.enable_rate_guide_deltaq,
   &g_av1_codec_arg_defs.rate_distribution_info,
   &g_av1_codec_arg_defs.enable_low_complexity_decode,
+  &g_av1_codec_arg_defs.validate_input_hbd,
   NULL,
 };
 
