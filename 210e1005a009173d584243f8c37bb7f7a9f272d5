@@ -34,6 +34,24 @@
       "parentUuid": "1bab77de_77d2a661",
       "revId": "210e1005a009173d584243f8c37bb7f7a9f272d5",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c5af0e1_a175a391",
+        "filename": "av1/encoder/svc_layercontext.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 656,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2026-05-01T18:53:40Z",
+      "side": 1,
+      "message": "Put the null check back in (removed the assert). It can happen to enter here with source_last_TL0\u003dnull on one frame for dynamic svc, where encoding goes from non-svc to svc and back (as shown in one of the svc unittests). This is because the setting of last_source is higher up than the source_last_TL0 allocation. Prefer to keep the null check here and not move the allocation code.",
+      "parentUuid": "c67d6253_75b645c3",
+      "revId": "210e1005a009173d584243f8c37bb7f7a9f272d5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
