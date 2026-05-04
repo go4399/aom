@@ -1023,7 +1023,7 @@ static aom_codec_err_t validate_img(aom_codec_alg_priv_t *ctx,
 #if CONFIG_AV1_HIGHBITDEPTH
   if (ctx->extra_cfg.validate_hbd_input &&
       (img->fmt & AOM_IMG_FMT_HIGHBITDEPTH)) {
-    const unsigned int bit_depth = ctx->oxcf.input_cfg.input_bit_depth;
+    const unsigned int bit_depth = ctx->cfg.g_bit_depth;
     const int max_val = 1 << bit_depth;
     // Note there is no high bitdepth version of NV12 defined. If one is
     // added, `num_planes` should be 2 in that case.
