@@ -33,6 +33,7 @@ class PostprocFiltersTest
   void SetUp() override {
     InitializeConfig(::libaom_test::kAllIntra);
     cfg_.g_input_bit_depth = bd_;
+    cfg_.g_bit_depth = (aom_bit_depth_t)bd_;
   }
 
   void PreEncodeFrameHook(::libaom_test::VideoSource *video,
