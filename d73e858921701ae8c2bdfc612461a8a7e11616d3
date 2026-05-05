@@ -1,0 +1,124 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "acb5e428_8fcaec7e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-05T19:34:01Z",
+      "side": 1,
+      "message": "This will need to be rebased.",
+      "revId": "d73e858921701ae8c2bdfc612461a8a7e11616d3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c97e7bc_20c9098a",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-05T19:34:01Z",
+      "side": 1,
+      "message": "Use `aom_img_plane_height`.",
+      "fixSuggestions": [
+        {
+          "fixId": "8020e6b7_2a46fc9e",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 68,
+                "startChar": 0,
+                "endLine": 69,
+                "endChar": 0
+              },
+              "replacement": "    const int h \u003d aom_img_plane_height(img, p);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "d73e858921701ae8c2bdfc612461a8a7e11616d3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3173ad07_65cdd687",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-05T19:34:01Z",
+      "side": 1,
+      "message": "Use `aom_img_plane_width`.",
+      "revId": "d73e858921701ae8c2bdfc612461a8a7e11616d3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b870be5_6f4d5f8e",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 2510,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-05T19:34:01Z",
+      "side": 1,
+      "message": "Would this reproduce in realtime mode? If not please wrap these in `#if !CONFIG_REALTIME_ONLY`.",
+      "range": {
+        "startLine": 2510,
+        "startChar": 54,
+        "endLine": 2510,
+        "endChar": 76
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "cefffc42_3411f6fd",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2510,
+                "startChar": 0,
+                "endLine": 2511,
+                "endChar": 0
+              },
+              "replacement": "  ASSERT_EQ(aom_codec_enc_config_default(iface, \u0026cfg, AOM_USAGE_REALTIME),\n"
+            },
+            {
+              "path": "test/encode_api_test.cc",
+              "range": {
+                "startLine": 2542,
+                "startChar": 0,
+                "endLine": 2543,
+                "endChar": 0
+              },
+              "replacement": "  ASSERT_EQ(aom_codec_enc_config_default(iface, \u0026cfg, AOM_USAGE_REALTIME),\n"
+            }
+          ]
+        }
+      ],
+      "revId": "d73e858921701ae8c2bdfc612461a8a7e11616d3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
