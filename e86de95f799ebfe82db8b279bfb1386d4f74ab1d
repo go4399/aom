@@ -34,6 +34,24 @@
       "parentUuid": "aca1d1e6_edb3f86f",
       "revId": "e86de95f799ebfe82db8b279bfb1386d4f74ab1d",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "488b76ed_0b41f9b5",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1026,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-05T18:18:49Z",
+      "side": 0,
+      "message": "\u003e James,\n\u003e \n\u003e As per our understanding, there is a discrepancy between the documentation and the library’s actual capabilities. While the documentation states that input frames must match `g_input_bit_depth`, the library assumes that input frames are as per `g_bit_depth`. This is because library has no implementation for converting input from `g_input_bit_depth` to `g_bit_depth`. It considers input provided is ready for encoding. Hence the current change is performing source validation based on `g_bit_depth`.\n\u003e \n\nIt would be good to know when/if these diverged and either update the documentation or restore the old behavior (if it ever existed).\n\n\u003e In current version of `aomenc.c` application, if `g_input_bit_depth` \u003e `g_bit_depth`, the application automatically modifies `g_bit_depth` to `g_input_bit_depth` to match the input. Conversely, if `g_input_bit_depth` \u003c `g_bit_depth`, `aomenc.c` manually upshifts the image by (`g_bit_depth - g_input_bit_depth`) bits before passing it to the encoder. This ensures the library receives data already aligned with its expectations (i.e., as per `g_bit_depth`). \n\u003e  \n\u003e Overall, we see the following potential approaches to address this:\n\u003e 1) Handle cases where g_input_bit_depth !\u003d g_bit_depth inside library. This would mean, `validate_img()` would perform range checks based on `ctx-\u003eoxcf.input_cfg.input_bit_depth`, then execute the necessary bit-depth conversion before encoding. This may require modifications to `aomenc.c` which is currently performing these processes (and any other applications/unit-tests).\n\u003e 2) Merge current patch + modify the API explanation of g_input_bit_depth and g_bit_depth.\n\u003e    g_bit_depth - corresponds to encoding bit-depth and input bit-depth\n\u003e    g_input_bit_depth - corresponds to the bit-depth for which quality metrics are computed (for example --psnr\u003d1 as in the current codebase)\n\u003e 3) Merge current patch + Deprecate/clean up g_input_bit_depth altogether. In this case --psnr\u003d1 should be cleaned-up as well and --psnr\u003d2 becomes default.\n\u003e    g_bit_depth - corresponds to encoding bit-depth and input bit-depth\n\u003e 4) Mandate g_input_bit_depth \u003d g_bit_depth to support legacy API parameters. In this case, current patch may not be required.\n\u003e  \n\u003e These observations are applicable for libvpx as well.",
+      "parentUuid": "a98acefb_5df79a25",
+      "revId": "e86de95f799ebfe82db8b279bfb1386d4f74ab1d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
