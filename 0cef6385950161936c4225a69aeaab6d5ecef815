@@ -16,6 +16,296 @@
       "message": "The encoder instruction count reduction is similar to as reported in [210921](https://aomedia-review.googlesource.com/c/aom/+/210921) when tested on commit [211421](https://aomedia-review.googlesource.com/c/aom/+/211421). \nPlease review.",
       "revId": "0cef6385950161936c4225a69aeaab6d5ecef815",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "76157560_0cfcd258",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-05T00:03:48Z",
+      "side": 1,
+      "message": "When uploading a change that\u0027s based on a revert, it\u0027s helpful to first upload the original, then follow with a patch that contains the fix to make it clear what the difference is.",
+      "revId": "0cef6385950161936c4225a69aeaab6d5ecef815",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ceafd86d_91b069e1",
+        "filename": "av1/encoder/x86/model_rd_sse4.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-05T00:03:48Z",
+      "side": 1,
+      "message": "I only see sse2 instructions in this file. Am I missing something?",
+      "revId": "0cef6385950161936c4225a69aeaab6d5ecef815",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09619558_cf7c8764",
+        "filename": "test/model_rd_test.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-05T00:03:48Z",
+      "side": 1,
+      "message": "The only use of this at line 46 is fully qualified. This line can be removed.",
+      "fixSuggestions": [
+        {
+          "fixId": "f42264ad_7ec2b7c4",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/model_rd_test.cc",
+              "range": {
+                "startLine": 21,
+                "startChar": 0,
+                "endLine": 23,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "0cef6385950161936c4225a69aeaab6d5ecef815",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa4f2f0f_43e9244d",
+        "filename": "test/model_rd_test.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-05T00:03:48Z",
+      "side": 1,
+      "message": "A `tuple` isn\u0027t needed for a single parameter. Just use `InterpCubicRateDistFunc` and `GetParam()` directly.",
+      "revId": "0cef6385950161936c4225a69aeaab6d5ecef815",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0d77b23_076388f9",
+        "filename": "test/model_rd_test.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-05T00:03:48Z",
+      "side": 1,
+      "message": "This should be named `GenerateRandomDouble` to better align with the C++ naming conventions.",
+      "range": {
+        "startLine": 33,
+        "startChar": 9,
+        "endLine": 33,
+        "endChar": 31
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "8e79addd_2276b2b5",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/model_rd_test.cc",
+              "range": {
+                "startLine": 33,
+                "startChar": 0,
+                "endLine": 34,
+                "endChar": 0
+              },
+              "replacement": "  double GenerateRandomDouble(double min, double max) {\n"
+            },
+            {
+              "path": "test/model_rd_test.cc",
+              "range": {
+                "startLine": 69,
+                "startChar": 0,
+                "endLine": 71,
+                "endChar": 0
+              },
+              "replacement": "      p1[i] \u003d GenerateRandomDouble(0.0000, 4096.000000);\n      p2[i] \u003d GenerateRandomDouble(0.0000, 16.0000);\n"
+            },
+            {
+              "path": "test/model_rd_test.cc",
+              "range": {
+                "startLine": 72,
+                "startChar": 0,
+                "endLine": 73,
+                "endChar": 0
+              },
+              "replacement": "    double x \u003d GenerateRandomDouble(0.0000, 1.0000);\n"
+            },
+            {
+              "path": "test/model_rd_test.cc",
+              "range": {
+                "startLine": 90,
+                "startChar": 0,
+                "endLine": 92,
+                "endChar": 0
+              },
+              "replacement": "    p1[i] \u003d GenerateRandomDouble(0.0000, 4096.0000);\n    p2[i] \u003d GenerateRandomDouble(0.0000, 16.0000);\n"
+            },
+            {
+              "path": "test/model_rd_test.cc",
+              "range": {
+                "startLine": 93,
+                "startChar": 0,
+                "endLine": 94,
+                "endChar": 0
+              },
+              "replacement": "  double x \u003d GenerateRandomDouble(0.0000, 1.0000);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "0cef6385950161936c4225a69aeaab6d5ecef815",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c051460_37748614",
+        "filename": "test/model_rd_test.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-05T00:03:48Z",
+      "side": 1,
+      "message": "Name this `kNumIter` and make it `constexpr`.",
+      "range": {
+        "startLine": 66,
+        "startChar": 12,
+        "endLine": 66,
+        "endChar": 21
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "7c5af9c3_ef659cef",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/model_rd_test.cc",
+              "range": {
+                "startLine": 66,
+                "startChar": 0,
+                "endLine": 68,
+                "endChar": 0
+              },
+              "replacement": "  constexpr int kNumIter \u003d 10000;\n  for (int iter \u003d 0; iter \u003c kNumIter; iter++) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "0cef6385950161936c4225a69aeaab6d5ecef815",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d2627f7_52e972af",
+        "filename": "test/model_rd_test.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-05T00:03:48Z",
+      "side": 1,
+      "message": "Match the style in the other function and use `kNumIter` or `kNumIterations`.",
+      "fixSuggestions": [
+        {
+          "fixId": "b8dd37b2_f444cde2",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/model_rd_test.cc",
+              "range": {
+                "startLine": 66,
+                "startChar": 0,
+                "endLine": 68,
+                "endChar": 0
+              },
+              "replacement": "  const int kNumIter \u003d 10000;\n  for (int iter \u003d 0; iter \u003c kNumIter; iter++) {\n"
+            },
+            {
+              "path": "test/model_rd_test.cc",
+              "range": {
+                "startLine": 95,
+                "startChar": 0,
+                "endLine": 96,
+                "endChar": 0
+              },
+              "replacement": "  const int kNumIter \u003d 100000000;\n"
+            },
+            {
+              "path": "test/model_rd_test.cc",
+              "range": {
+                "startLine": 100,
+                "startChar": 0,
+                "endLine": 101,
+                "endChar": 0
+              },
+              "replacement": "  for (int iter \u003d 0; iter \u003c kNumIter; iter++) {\n"
+            },
+            {
+              "path": "test/model_rd_test.cc",
+              "range": {
+                "startLine": 109,
+                "startChar": 0,
+                "endLine": 110,
+                "endChar": 0
+              },
+              "replacement": "  for (int iter \u003d 0; iter \u003c kNumIter; iter++) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "0cef6385950161936c4225a69aeaab6d5ecef815",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "173cae4a_8b5956d0",
+        "filename": "test/model_rd_test.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-05T00:03:48Z",
+      "side": 1,
+      "message": "Include `\u003ccstdio\u003e` for printf.",
+      "revId": "0cef6385950161936c4225a69aeaab6d5ecef815",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
