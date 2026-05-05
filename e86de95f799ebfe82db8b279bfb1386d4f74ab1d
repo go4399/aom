@@ -16,6 +16,24 @@
       "message": "The source of this is libvpx, though the storage is a bit different, so it might be a mistranslation here:\n\n\n```\n    const unsigned int bit_depth \u003d ctx-\u003eoxcf.input_bit_depth;\n```\n\nhttps://chromium.googlesource.com/webm/libvpx/+/03b2a50cc500b3365b0e21bbe325a658167dd9e5/vp9/vp9_cx_iface.c#461\n\nNote there\u0027s also [`g_input_bit_depth`](https://aomedia.googlesource.com/aom/+/888312c00dbf80aecd962545dbd1390788be0d34/aom/aom_encoder.h#480) which says:\n\n```\n   * This value identifies the bit_depth of the input frames in bits.\n   * Note that the frames passed as input to the encoder must have\n   * this bit-depth.\n```\n\nSo it seems like that value should be used.",
       "revId": "e86de95f799ebfe82db8b279bfb1386d4f74ab1d",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a98acefb_5df79a25",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1026,
+      "author": {
+        "id": 30632
+      },
+      "writtenOn": "2026-05-05T10:34:34Z",
+      "side": 0,
+      "message": "James,\n\nAs per our understanding, there is a discrepancy between the documentation and the library’s actual capabilities. While the documentation states that input frames must match `g_input_bit_depth`, the library assumes that input frames are as per `g_bit_depth`. This is because library has no implementation for converting input from `g_input_bit_depth` to `g_bit_depth`. It considers input provided is ready for encoding. Hence the current change is performing source validation based on `g_bit_depth`.\n\nIn current version of `aomenc.c` application, if `g_input_bit_depth` \u003e `g_bit_depth`, the application automatically modifies `g_bit_depth` to `g_input_bit_depth` to match the input. Conversely, if `g_input_bit_depth` \u003c `g_bit_depth`, `aomenc.c` manually upshifts the image by (`g_bit_depth - g_input_bit_depth`) bits before passing it to the encoder. This ensures the library receives data already aligned with its expectations (i.e., as per `g_bit_depth`). \n \nOverall, we see the following potential approaches to address this:\n1) Handle cases where g_input_bit_depth !\u003d g_bit_depth inside library. This would mean, `validate_img()` would perform range checks based on `ctx-\u003eoxcf.input_cfg.input_bit_depth`, then execute the necessary bit-depth conversion before encoding. This may require modifications to `aomenc.c` which is currently performing these processes (and any other applications/unit-tests).\n2) Merge current patch + modify the API explanation of g_input_bit_depth and g_bit_depth.\n   g_bit_depth - corresponds to encoding bit-depth and input bit-depth\n   g_input_bit_depth - corresponds to the bit-depth for which quality metrics are computed (for example --psnr\u003d1 as in the current codebase)\n3) Merge current patch + Deprecate/clean up g_input_bit_depth altogether. In this case --psnr\u003d1 should be cleaned-up as well and --psnr\u003d2 becomes default.\n   g_bit_depth - corresponds to encoding bit-depth and input bit-depth\n4) Mandate g_input_bit_depth \u003d g_bit_depth to support legacy API parameters. In this case, current patch may not be required.\n \nThese observations are applicable for libvpx as well.",
+      "parentUuid": "aca1d1e6_edb3f86f",
+      "revId": "e86de95f799ebfe82db8b279bfb1386d4f74ab1d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
