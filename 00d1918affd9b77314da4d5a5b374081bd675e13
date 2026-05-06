@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d757346d_4fba2c58",
+        "filename": ".mailmap",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-05-06T17:11:42Z",
+      "side": 1,
+      "message": "See https://chromium.googlesource.com/chromium/tools/depot_tools/+/554d1d98aee4d3700e3264daf88ccb9cfbfd70ec and the committer in https://aomedia.googlesource.com/aom/+/b6c94429a9ed368042454133a05e533b20ef2f1e.",
+      "revId": "00d1918affd9b77314da4d5a5b374081bd675e13",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
