@@ -33,6 +33,24 @@
       "message": "IMPORTANT: This change should be reviewed carefully because I am not sure if this test upshifts the input frames to 10 bit when `bd_` is equal to 10. I will run this test in the debugger and take a look.",
       "revId": "c116784e5cf9d4d38d67c9e283eca6b666dde46a",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ac5d86b_3a84dc19",
+        "filename": "test/postproc_filters_test.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-05-06T21:03:37Z",
+      "side": 1,
+      "message": "As I suspected, this change is incorrect. I think we should simply run this test with bit depth 8 only. Please apply the following patch and then run clang-format:\n\n```\ndiff --git a/test/postproc_filters_test.cc b/test/postproc_filters_test.cc\nindex 94f6ad8d7b..7af294db08 100644\n--- a/test/postproc_filters_test.cc\n+++ b/test/postproc_filters_test.cc\n@@ -23,17 +23,15 @@\n namespace {\n \n class PostprocFiltersTest\n-    : public ::libaom_test::CodecTestWith2Params\u003cint, unsigned int\u003e,\n+    : public ::libaom_test::CodecTestWithParam\u003cint\u003e,\n       public ::libaom_test::EncoderTest {\n  protected:\n   PostprocFiltersTest()\n       : EncoderTest(GET_PARAM(0)), set_skip_postproc_filtering_(false),\n-        frame_number_(0), cpu_used_(GET_PARAM(1)), bd_(GET_PARAM(2)) {}\n+        frame_number_(0), cpu_used_(GET_PARAM(1)) {}\n \n   void SetUp() override {\n     InitializeConfig(::libaom_test::kAllIntra);\n-    cfg_.g_input_bit_depth \u003d bd_;\n-    cfg_.g_bit_depth \u003d (aom_bit_depth_t)bd_;\n   }\n \n   void PreEncodeFrameHook(::libaom_test::VideoSource *video,\n@@ -122,7 +120,6 @@ class PostprocFiltersTest\n   static constexpr int kFrames \u003d 30;\n   static constexpr unsigned int kCqLevel \u003d 18;\n   int cpu_used_;\n-  unsigned int bd_;\n };\n \n class PostprocFiltersTestLarge : public PostprocFiltersTest {};\n@@ -131,11 +128,9 @@ TEST_P(PostprocFiltersTest, MD5Match) { DoTest(); }\n \n TEST_P(PostprocFiltersTestLarge, MD5Match) { DoTest(); }\n \n-AV1_INSTANTIATE_TEST_SUITE(PostprocFiltersTest, ::testing::Values(9),\n-                           ::testing::Values(8, 10));\n+AV1_INSTANTIATE_TEST_SUITE(PostprocFiltersTest, ::testing::Values(9));\n \n // Test cpu_used 3 and 6.\n-AV1_INSTANTIATE_TEST_SUITE(PostprocFiltersTestLarge, ::testing::Values(3, 6),\n-                           ::testing::Values(8, 10));\n+AV1_INSTANTIATE_TEST_SUITE(PostprocFiltersTestLarge, ::testing::Values(3, 6));\n \n }  // namespace\n```",
+      "parentUuid": "bfc1d4ee_531583b9",
+      "revId": "c116784e5cf9d4d38d67c9e283eca6b666dde46a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
