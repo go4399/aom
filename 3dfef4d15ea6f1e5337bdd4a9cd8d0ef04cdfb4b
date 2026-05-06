@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "74c8d738_64a8cb68",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-05-06T19:13:26Z",
+      "side": 1,
+      "message": "In av1/arg_defs.c, the corresponding command-line option is documented as follows:\n\n```\n  .inbitdeptharg \u003d ARG_DEF(NULL, \"input-bit-depth\", 1, \"Bit depth of input\"),\n```\n\nShould we change the description to \"Bit depth of input source\"?\n\nPlease also see if the following related comment needs clarifying:\n\nav1/encoder/encoder.h:\n\n```\n  // Indicates the bit-depth of the input video.\n  unsigned int input_bit_depth;\n```",
+      "revId": "3dfef4d15ea6f1e5337bdd4a9cd8d0ef04cdfb4b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97f7b434_af11e6d5",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-05-06T19:13:26Z",
+      "side": 1,
+      "message": "Nit: change \"precision\" to \"codec bit depth\"\n\nAlternatively we can change \"match the precision\" to \"upshift the frame to the codec bit depth\".",
+      "range": {
+        "startLine": 479,
+        "startChar": 43,
+        "endLine": 479,
+        "endChar": 56
+      },
+      "revId": "3dfef4d15ea6f1e5337bdd4a9cd8d0ef04cdfb4b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff5a388c_b460cd43",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-05-06T19:13:26Z",
+      "side": 1,
+      "message": "Nit: Standardize on a spelling of bit depth. A total of four are used right now in the vicinity of this change:\n* bit-depth\n* bit_depth\n* bit depth\n* bitdepth\n\nPlease pick one and use it consistently in this comment and the comment for `g_bit_depth`.",
+      "revId": "3dfef4d15ea6f1e5337bdd4a9cd8d0ef04cdfb4b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "505a274d_061dce23",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 806,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-05-06T19:13:26Z",
+      "side": 1,
+      "message": "Nit: \"bitdepth\" and \"bit depth\" are used within the same sentence. Please standardize on one.",
+      "revId": "3dfef4d15ea6f1e5337bdd4a9cd8d0ef04cdfb4b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f0d73b6_6794abb6",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 806,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-05-06T19:13:26Z",
+      "side": 1,
+      "message": "\"at least match\" is a little ambiguous. I suggest changing it to \"be greater than or equal to\".\n\nAlternatively, we can use your comment in aom_encoder.h, \"input bit depth must not exceed codec bit depth\".",
+      "revId": "3dfef4d15ea6f1e5337bdd4a9cd8d0ef04cdfb4b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
