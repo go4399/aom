@@ -1,0 +1,59 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "87182dcb_4fee083b",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 4145,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-06T02:39:09Z",
+      "side": 1,
+      "message": "Maybe a `disable_svc()` or similar function to avoid the duplication in the two blocks. I suppose other things may be added to the function over time.",
+      "fixSuggestions": [
+        {
+          "fixId": "c58984a1_d4e0dd30",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/av1_cx_iface.c",
+              "range": {
+                "startLine": 1,
+                "startChar": 0,
+                "endLine": 1,
+                "endChar": 0
+              },
+              "replacement": "static void disable_svc(AV1_PRIMARY *ppi, AV1_COMP *cpi) {\n  cpi-\u003esvc.number_spatial_layers \u003d 1;\n  cpi-\u003esvc.number_temporal_layers \u003d 1;\n  ppi-\u003enumber_spatial_layers \u003d 1;\n  ppi-\u003enumber_temporal_layers \u003d 1;\n}\n\n"
+            },
+            {
+              "path": "av1/av1_cx_iface.c",
+              "range": {
+                "startLine": 4142,
+                "startChar": 0,
+                "endLine": 4146,
+                "endChar": 0
+              },
+              "replacement": "        disable_svc(ppi, cpi);\n"
+            },
+            {
+              "path": "av1/av1_cx_iface.c",
+              "range": {
+                "startLine": 4153,
+                "startChar": 0,
+                "endLine": 4157,
+                "endChar": 0
+              },
+              "replacement": "        disable_svc(ppi, cpi);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "7ef489c9bc2265c3f56d3d4ed517c678278a9aca",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
