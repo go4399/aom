@@ -18,6 +18,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "388d3572_865dcd05",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 30632
+      },
+      "writtenOn": "2026-05-06T19:58:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "74c8d738_64a8cb68",
+      "revId": "3dfef4d15ea6f1e5337bdd4a9cd8d0ef04cdfb4b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "97f7b434_af11e6d5",
@@ -41,6 +59,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "563b5ff6_b0daef74",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 30632
+      },
+      "writtenOn": "2026-05-06T19:58:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97f7b434_af11e6d5",
+      "range": {
+        "startLine": 479,
+        "startChar": 43,
+        "endLine": 479,
+        "endChar": 56
+      },
+      "revId": "3dfef4d15ea6f1e5337bdd4a9cd8d0ef04cdfb4b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ff5a388c_b460cd43",
@@ -54,6 +96,24 @@
       "writtenOn": "2026-05-06T19:13:26Z",
       "side": 1,
       "message": "Nit: Standardize on a spelling of bit depth. A total of four are used right now in the vicinity of this change:\n* bit-depth\n* bit_depth\n* bit depth\n* bitdepth\n\nPlease pick one and use it consistently in this comment and the comment for `g_bit_depth`.",
+      "revId": "3dfef4d15ea6f1e5337bdd4a9cd8d0ef04cdfb4b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dca68cb7_ea6e378a",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 30632
+      },
+      "writtenOn": "2026-05-06T19:58:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff5a388c_b460cd43",
       "revId": "3dfef4d15ea6f1e5337bdd4a9cd8d0ef04cdfb4b",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -88,6 +148,42 @@
       "writtenOn": "2026-05-06T19:13:26Z",
       "side": 1,
       "message": "\"at least match\" is a little ambiguous. I suggest changing it to \"be greater than or equal to\".\n\nAlternatively, we can use your comment in aom_encoder.h, \"input bit depth must not exceed codec bit depth\".",
+      "revId": "3dfef4d15ea6f1e5337bdd4a9cd8d0ef04cdfb4b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c2c66f3_0ba9bf45",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 806,
+      "author": {
+        "id": 30632
+      },
+      "writtenOn": "2026-05-06T19:58:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2f0d73b6_6794abb6",
+      "revId": "3dfef4d15ea6f1e5337bdd4a9cd8d0ef04cdfb4b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d94df185_ba6ce858",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 806,
+      "author": {
+        "id": 30632
+      },
+      "writtenOn": "2026-05-06T19:58:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "505a274d_061dce23",
       "revId": "3dfef4d15ea6f1e5337bdd4a9cd8d0ef04cdfb4b",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
