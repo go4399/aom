@@ -53,6 +53,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "23ae0fa6_6f1ac6e8",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 6585
+      },
+      "writtenOn": "2026-05-06T18:12:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c97e7bc_20c9098a",
+      "revId": "d73e858921701ae8c2bdfc612461a8a7e11616d3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3173ad07_65cdd687",
@@ -66,6 +84,24 @@
       "writtenOn": "2026-05-05T19:34:01Z",
       "side": 1,
       "message": "Use `aom_img_plane_width`.",
+      "revId": "d73e858921701ae8c2bdfc612461a8a7e11616d3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e5c6d0d_b823333f",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 6585
+      },
+      "writtenOn": "2026-05-06T18:12:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3173ad07_65cdd687",
       "revId": "d73e858921701ae8c2bdfc612461a8a7e11616d3",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -117,6 +153,30 @@
           ]
         }
       ],
+      "revId": "d73e858921701ae8c2bdfc612461a8a7e11616d3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d4f396d_1169299f",
+        "filename": "test/encode_api_test.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 2510,
+      "author": {
+        "id": 6585
+      },
+      "writtenOn": "2026-05-06T18:12:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b870be5_6f4d5f8e",
+      "range": {
+        "startLine": 2510,
+        "startChar": 54,
+        "endLine": 2510,
+        "endChar": 76
+      },
       "revId": "d73e858921701ae8c2bdfc612461a8a7e11616d3",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
