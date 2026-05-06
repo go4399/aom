@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5a0b27b_9c0df143",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-06T18:01:12Z",
+      "side": 1,
+      "message": "achieves",
+      "range": {
+        "startLine": 18,
+        "startChar": 24,
+        "endLine": 18,
+        "endChar": 31
+      },
+      "revId": "1ab52859ad6333ce2ffda72517948788846572a0",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "f897c011_9059584a",
@@ -14,6 +37,23 @@
       "writtenOn": "2026-05-06T15:28:30Z",
       "side": 1,
       "message": "Please review.",
+      "revId": "1ab52859ad6333ce2ffda72517948788846572a0",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8bffd2ce_b7b99b09",
+        "filename": "test/model_rd_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-06T18:01:12Z",
+      "side": 1,
+      "message": "Though it\u0027s mostly ornamental with intrinsics the sse2 function call should be wrapped in `API_REGISTER_STATE_CHECK`. Otherwise this header is unused.",
       "revId": "1ab52859ad6333ce2ffda72517948788846572a0",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
