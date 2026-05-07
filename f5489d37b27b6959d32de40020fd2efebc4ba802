@@ -1,0 +1,62 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a31521b_20827f9f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-07T19:40:14Z",
+      "side": 1,
+      "message": "Thank you for working through this. After this change is submitted, it should be ported to libvpx.",
+      "revId": "f5489d37b27b6959d32de40020fd2efebc4ba802",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c4bbbd2c_d4c4ef9b",
+        "filename": "aom/aom_encoder.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-07T19:40:14Z",
+      "side": 1,
+      "message": "\"...then the application...\"",
+      "range": {
+        "startLine": 479,
+        "startChar": 16,
+        "endLine": 479,
+        "endChar": 32
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "b43e7e0c_150cf56a",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "aom/aom_encoder.h",
+              "range": {
+                "startLine": 479,
+                "startChar": 0,
+                "endLine": 483,
+                "endChar": 0
+              },
+              "replacement": "   * bit-depth, then the application is required to upshift the frame to the\n   * codec bit-depth before passing it for encoding. Additionally, this\n   * variable is used by the library to compute quality metrics at source\n   * bit-depth. So, source bit-depth must not exceed codec bit-depth.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "f5489d37b27b6959d32de40020fd2efebc4ba802",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}

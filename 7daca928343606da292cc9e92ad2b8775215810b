@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "538a1b19_77634b1e",
+        "filename": "test/postproc_filters_test.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-07T19:40:14Z",
+      "side": 0,
+      "message": "With this change we\u0027ve lost coverage. Shouldn\u0027t this use `g_bit_depth` now?",
+      "revId": "7daca928343606da292cc9e92ad2b8775215810b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
