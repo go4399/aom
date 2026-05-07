@@ -16,6 +16,24 @@
       "message": "James: This error message could be improved. Also, this probably violates the principle of encapsulation...\n\nI noticed this issue while debugging a failure caused by passing an `img` parameter of format `AOM_IMG_FMT_I420` to an encoder initialized with `AOM_CODEC_USE_HIGHBITDEPTH` and `g_bit_depth\u003dAOM_BITS_10`.\n\nBefore:\n\n```\n/usr/local/google/home/wtc/aom.6/aom/test/encode_test_driver.cc:76: Failure\nExpected equality of these values:\n  AOM_CODEC_OK\n    Which is: 0\n  res\n    Which is: 8\nInvalid parameter\n```\n\nAfter:\n\n```\n/usr/local/google/home/wtc/aom.6/aom/test/encode_test_driver.cc:76: Failure\nExpected equality of these values:\n  AOM_CODEC_OK\n    Which is: 0\n  res\n    Which is: 8\nCodec is high bit-depth but img is not, or vice versa.\n```",
       "revId": "0434c381243919b8feb480b3906e43d34389ebff",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bbfce10b_0882e2ba",
+        "filename": "aom/src/aom_encoder.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-07T02:38:44Z",
+      "side": 1,
+      "message": "\u003e James: This error message could be improved. Also, this probably violates the principle of encapsulation...\n\u003e \n\nI guess you could say: \"Codec was initialized with AOM_CODEC_USE_HIGHBITDEPTH and img is non-high bit-depth, or vice versa\". This is verbose, but aligns it with the code a little better.\n\n\u003e I noticed this issue while debugging a failure caused by passing an `img` parameter of format `AOM_IMG_FMT_I420` to an encoder initialized with `AOM_CODEC_USE_HIGHBITDEPTH` and `g_bit_depth\u003dAOM_BITS_10`.\n\u003e \n\u003e Before:\n\u003e \n\u003e ```\n\u003e /usr/local/google/home/wtc/aom.6/aom/test/encode_test_driver.cc:76: Failure\n\u003e Expected equality of these values:\n\u003e   AOM_CODEC_OK\n\u003e     Which is: 0\n\u003e   res\n\u003e     Which is: 8\n\u003e Invalid parameter\n\u003e ```\n\u003e \n\u003e After:\n\u003e \n\u003e ```\n\u003e /usr/local/google/home/wtc/aom.6/aom/test/encode_test_driver.cc:76: Failure\n\u003e Expected equality of these values:\n\u003e   AOM_CODEC_OK\n\u003e     Which is: 0\n\u003e   res\n\u003e     Which is: 8\n\u003e Codec is high bit-depth but img is not, or vice versa.\n\u003e ```",
+      "parentUuid": "c4f62f92_11459b3c",
+      "revId": "0434c381243919b8feb480b3906e43d34389ebff",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
