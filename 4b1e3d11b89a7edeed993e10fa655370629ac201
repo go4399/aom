@@ -63,6 +63,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c1bdd235_ba8fda81",
+        "filename": "test/model_rd_test.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 31012
+      },
+      "writtenOn": "2026-05-08T15:05:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b66f45ce_afd66b59",
+      "revId": "4b1e3d11b89a7edeed993e10fa655370629ac201",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9daf0101_fbf7c99a",
@@ -76,6 +94,24 @@
       "writtenOn": "2026-05-07T19:35:48Z",
       "side": 1,
       "message": "I think this is unused now that `GetParam()` is used. Add an include for \"aom_ports/aom_timer.h\" instead.",
+      "revId": "4b1e3d11b89a7edeed993e10fa655370629ac201",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "45e4ea63_8c11aa42",
+        "filename": "test/model_rd_test.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 31012
+      },
+      "writtenOn": "2026-05-08T15:05:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9daf0101_fbf7c99a",
       "revId": "4b1e3d11b89a7edeed993e10fa655370629ac201",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
