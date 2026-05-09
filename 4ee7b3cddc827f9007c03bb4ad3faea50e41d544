@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "19c2aacd_2f28fb2b",
+        "filename": "aom_dsp/convolve_hwy.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-05-09T01:27:31Z",
+      "side": 1,
+      "message": "Can you clarify more? do you want me to use `LoadInterleaved` and `StoreInterleaved ` or to use the similar implementation of those? This function already load to a temporary buffer.",
+      "parentUuid": "dcfed481_d2e974e6",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 79
+      },
+      "revId": "4ee7b3cddc827f9007c03bb4ad3faea50e41d544",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1ac5a0cb_45049457",
         "filename": "aom_dsp/convolve_hwy.h",
         "patchSetId": 4
@@ -75,6 +99,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5dc0792d_38163bbf",
+        "filename": "aom_dsp/convolve_hwy.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-05-09T01:27:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ac5a0cb_45049457",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 27
+      },
+      "revId": "4ee7b3cddc827f9007c03bb4ad3faea50e41d544",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "868f6541_b1b5de77",
@@ -88,6 +136,30 @@
       "writtenOn": "2026-05-08T22:53:19Z",
       "side": 1,
       "message": "nit: I\u0027d just use `buf + stride` here instead of `buf +\u003d stride` the line before.",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 47
+      },
+      "revId": "4ee7b3cddc827f9007c03bb4ad3faea50e41d544",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "99694f1a_4b829c18",
+        "filename": "aom_dsp/convolve_hwy.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-05-09T01:27:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "868f6541_b1b5de77",
       "range": {
         "startLine": 67,
         "startChar": 0,
@@ -121,6 +193,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a7da09f_62ce72db",
+        "filename": "aom_dsp/convolve_hwy.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-05-09T01:27:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c0f6e5ea_adf13161",
+      "range": {
+        "startLine": 141,
+        "startChar": 0,
+        "endLine": 144,
+        "endChar": 48
+      },
+      "revId": "4ee7b3cddc827f9007c03bb4ad3faea50e41d544",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a747219e_f2497c5c",
@@ -134,6 +230,30 @@
       "writtenOn": "2026-05-08T22:53:19Z",
       "side": 1,
       "message": "I mildly prefer hn::Mul over operator*.",
+      "range": {
+        "startLine": 159,
+        "startChar": 0,
+        "endLine": 162,
+        "endChar": 62
+      },
+      "revId": "4ee7b3cddc827f9007c03bb4ad3faea50e41d544",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d69e29cd_9a1b6d6a",
+        "filename": "aom_dsp/convolve_hwy.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-05-09T01:27:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a747219e_f2497c5c",
       "range": {
         "startLine": 159,
         "startChar": 0,
