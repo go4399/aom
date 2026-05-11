@@ -1,0 +1,85 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "edee1a20_5b0dab41",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-11T23:22:37Z",
+      "side": 1,
+      "message": "Is there a deprecation notice or bug you can add to the commit message body?",
+      "revId": "f94948a6e9ec0ef6ade1532d16bb5ce9cbb6ea4c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cbe039cd_54a9b5d4",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-11T23:22:37Z",
+      "side": 1,
+      "message": "Please update the link and break the line after the link to keep the line length down.",
+      "range": {
+        "startLine": 474,
+        "startChar": 19,
+        "endLine": 474,
+        "endChar": 71
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "876a2095_70483036",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "README.md",
+              "range": {
+                "startLine": 474,
+                "startChar": 0,
+                "endLine": 475,
+                "endChar": 0
+              },
+              "replacement": "[`gcloud storage`](https://cloud.google.com/storage/docs/gsutil_install)\ncommand:\n"
+            }
+          ]
+        }
+      ],
+      "revId": "f94948a6e9ec0ef6ade1532d16bb5ce9cbb6ea4c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc3209d7_5f639918",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-11T23:22:37Z",
+      "side": 1,
+      "message": "Please break this long line:\n\n```\n    $ gcloud storage objects add-iam-policy-binding \\\n      gs://aom-test-data/test-data-file-name \\\n      --member\u003d\"allUsers\" --role\u003d\"roles/storage.objectViewer\"\n```",
+      "range": {
+        "startLine": 476,
+        "startChar": 0,
+        "endLine": 476,
+        "endChar": 146
+      },
+      "revId": "f94948a6e9ec0ef6ade1532d16bb5ce9cbb6ea4c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
