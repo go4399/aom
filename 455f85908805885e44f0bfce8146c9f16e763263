@@ -16,6 +16,24 @@
       "message": "aom_img_plane_width is the display width.\nFor the unit test, it needs to initialize padding as well.",
       "revId": "455f85908805885e44f0bfce8146c9f16e763263",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad65e87f_7a162b91",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-11T23:24:55Z",
+      "side": 1,
+      "message": "\u003e aom_img_plane_width is the display width.\n\u003e For the unit test, it needs to initialize padding as well.\n\nOn the surface it sounds like there might be a bug if the code is reading into the padding and using it meaningfully.",
+      "parentUuid": "c051b6f8_a86a848a",
+      "revId": "455f85908805885e44f0bfce8146c9f16e763263",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
