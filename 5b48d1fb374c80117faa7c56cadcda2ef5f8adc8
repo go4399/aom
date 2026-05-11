@@ -1,0 +1,128 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b98aaef8_c2809f6d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-05-11T18:33:50Z",
+      "side": 1,
+      "message": "Nice speedup!",
+      "revId": "5b48d1fb374c80117faa7c56cadcda2ef5f8adc8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ed64f3f_a35abbea",
+        "filename": "aom_dsp/convolve_hwy.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-05-11T18:33:50Z",
+      "side": 1,
+      "message": "2026",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "5b48d1fb374c80117faa7c56cadcda2ef5f8adc8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "54733f57_8b5a75b2",
+        "filename": "aom_dsp/convolve_hwy.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-05-11T18:33:50Z",
+      "side": 1,
+      "message": "Will this force inline? This function isn\u0027t small. Have you seen if forcing inline always helps? Same could apply to other functions here.",
+      "range": {
+        "startLine": 284,
+        "startChar": 9,
+        "endLine": 284,
+        "endChar": 19
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "e35d8014_700f2b41",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "aom_dsp/convolve_hwy.h",
+              "range": {
+                "startLine": 123,
+                "startChar": 0,
+                "endLine": 128,
+                "endChar": 0
+              },
+              "replacement": "HWY_ATTR void ConvolveHoriz2Tap(const uint8_t *src, ptrdiff_t src_stride,\n                                uint8_t *dst, ptrdiff_t dst_stride,\n                                const int16_t *filter_x, int w, int h) {\n"
+            },
+            {
+              "path": "aom_dsp/convolve_hwy.h",
+              "range": {
+                "startLine": 166,
+                "startChar": 0,
+                "endLine": 171,
+                "endChar": 0
+              },
+              "replacement": "HWY_ATTR void ConvolveHoriz4Tap(const uint8_t *src, ptrdiff_t src_stride,\n                                uint8_t *dst, ptrdiff_t dst_stride,\n                                const int16_t *filter_x, int w, int h) {\n"
+            },
+            {
+              "path": "aom_dsp/convolve_hwy.h",
+              "range": {
+                "startLine": 284,
+                "startChar": 0,
+                "endLine": 289,
+                "endChar": 0
+              },
+              "replacement": "HWY_ATTR void ConvolveHoriz8Tap(const uint8_t *src, ptrdiff_t src_stride,\n                                uint8_t *dst, ptrdiff_t dst_stride,\n                                const int16_t *filter_x, int w, int h) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "5b48d1fb374c80117faa7c56cadcda2ef5f8adc8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9ec383b_39d6aded",
+        "filename": "aom_dsp/x86/convolve_hwy_avx512.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-05-11T18:33:50Z",
+      "side": 1,
+      "message": "2026",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "5b48d1fb374c80117faa7c56cadcda2ef5f8adc8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
