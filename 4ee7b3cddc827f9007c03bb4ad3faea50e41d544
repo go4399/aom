@@ -120,6 +120,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "19a84ca6_5686589f",
+        "filename": "aom_dsp/convolve_hwy.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-05-11T15:19:31Z",
+      "side": 1,
+      "message": "Acknowledged\n\nThanks for your careful review!",
+      "parentUuid": "d68cf802_74923872",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 79
+      },
+      "revId": "4ee7b3cddc827f9007c03bb4ad3faea50e41d544",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1ac5a0cb_45049457",
