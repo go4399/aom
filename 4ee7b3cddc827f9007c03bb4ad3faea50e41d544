@@ -74,6 +74,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ad8fd9bb_bc36aab2",
+        "filename": "aom_dsp/convolve_hwy.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-05-11T15:09:16Z",
+      "side": 1,
+      "message": "Hmm, `StoreUnaligned4x4` takes the output of Convolve which is a single 16 lane vector, so to use `StoreInterleaved4` I still need to split that into 4 vectors with `LowerHalf` and `UpperHalf` (assuming I don\u0027t want to change too much of the convolve function)?",
+      "parentUuid": "7e9acdfc_67f517af",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 79
+      },
+      "revId": "4ee7b3cddc827f9007c03bb4ad3faea50e41d544",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1ac5a0cb_45049457",
         "filename": "aom_dsp/convolve_hwy.h",
         "patchSetId": 4
