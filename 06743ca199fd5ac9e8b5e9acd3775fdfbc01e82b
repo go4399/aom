@@ -102,6 +102,24 @@
       "message": "James: Is this change of behavior worth mentioning?",
       "revId": "06743ca199fd5ac9e8b5e9acd3775fdfbc01e82b",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40b2040a_40bfccfe",
+        "filename": "CHANGELOG",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-11T23:37:09Z",
+      "side": 1,
+      "message": "\u003e James: Is this change of behavior worth mentioning?\n\nMaybe not since it\u0027s unlikely the encoder would function correctly if users were using this.",
+      "parentUuid": "18bd4ca6_4faf3cf8",
+      "revId": "06743ca199fd5ac9e8b5e9acd3775fdfbc01e82b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
