@@ -41,6 +41,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "da05a278_36b6ae02",
+        "filename": "aom_dsp/convolve_hwy.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-05-11T18:55:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ed64f3f_a35abbea",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "5b48d1fb374c80117faa7c56cadcda2ef5f8adc8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "54733f57_8b5a75b2",
@@ -102,6 +126,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b310642_06a00a1e",
+        "filename": "aom_dsp/convolve_hwy.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-05-11T18:55:19Z",
+      "side": 1,
+      "message": "Yes it forces inline. I changed it to `inline` so the compiler can decide...\n\nI ran benchmark and it has no change.",
+      "parentUuid": "54733f57_8b5a75b2",
+      "range": {
+        "startLine": 284,
+        "startChar": 9,
+        "endLine": 284,
+        "endChar": 19
+      },
+      "revId": "5b48d1fb374c80117faa7c56cadcda2ef5f8adc8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b9ec383b_39d6aded",
@@ -115,6 +163,30 @@
       "writtenOn": "2026-05-11T18:33:50Z",
       "side": 1,
       "message": "2026",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "5b48d1fb374c80117faa7c56cadcda2ef5f8adc8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d88a9bee_77a114dc",
+        "filename": "aom_dsp/x86/convolve_hwy_avx512.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-05-11T18:55:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b9ec383b_39d6aded",
       "range": {
         "startLine": 2,
         "startChar": 17,
