@@ -34,6 +34,24 @@
       "parentUuid": "6b8f088b_0cb15e0a",
       "revId": "9da12fe705a8d2c5afbd3ed46fa820718ed82db4",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "80f1279f_4a3ec2ef",
+        "filename": "aom/aomcx.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 1871,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-05-11T22:07:55Z",
+      "side": 1,
+      "message": "Thanks for the quick reply. Then I won\u0027t worry about exposing this struct in the upcoming libaom v3.14.0 release.\n\nShould we remove the comment \"More fields can be added if needed.\"?",
+      "parentUuid": "18bff349_857dd32a",
+      "revId": "9da12fe705a8d2c5afbd3ed46fa820718ed82db4",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
