@@ -98,6 +98,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d68cf802_74923872",
+        "filename": "aom_dsp/convolve_hwy.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2026-05-11T15:17:56Z",
+      "side": 1,
+      "message": "My mistake. I was just pattern matching as this looks a lot like interleaving/deinterleaving.",
+      "parentUuid": "ad8fd9bb_bc36aab2",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 79
+      },
+      "revId": "4ee7b3cddc827f9007c03bb4ad3faea50e41d544",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1ac5a0cb_45049457",
         "filename": "aom_dsp/convolve_hwy.h",
         "patchSetId": 4
