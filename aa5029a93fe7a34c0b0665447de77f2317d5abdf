@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c957646_7393a017",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-12T19:56:24Z",
+      "side": 1,
+      "message": "Lagged encoding for realtime was added, but that may still be under `CONFIG_REALTIME_ONLY`.",
+      "revId": "aa5029a93fe7a34c0b0665447de77f2317d5abdf",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e4626d91_5e4b158b",
+        "filename": "CHANGELOG",
+        "patchSetId": 2
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-12T19:56:24Z",
+      "side": 1,
+      "message": "This isn\u0027t in the release branch.",
+      "revId": "aa5029a93fe7a34c0b0665447de77f2317d5abdf",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
