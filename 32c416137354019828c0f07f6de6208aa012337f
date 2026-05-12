@@ -34,6 +34,24 @@
       "parentUuid": "a708bf0f_88928dd9",
       "revId": "32c416137354019828c0f07f6de6208aa012337f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b871eb1_9136da90",
+        "filename": "av1/encoder/encoder_utils.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1138,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-12T02:24:38Z",
+      "side": 0,
+      "message": "\u003e I assume by \"the value\" you mean the value of the `projected_size_pass` array.\n\u003e \n\u003e The unit test cannot possibly use the value of the `projected_size_pass` array because `projected_size_pass` is a local variable in the `av1_determine_sc_tools_with_encoding()` function and is not available to the unit test.\n\nThank you for confirming. I didn\u0027t look at the call sites, so I just wanted to make sure the tests weren\u0027t including some private functions.",
+      "parentUuid": "e0b7fc77_8dddfb8a",
+      "revId": "32c416137354019828c0f07f6de6208aa012337f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
