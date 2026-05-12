@@ -453,7 +453,7 @@ void av1_single_motion_search(const AV1_COMP *const cpi, MACROBLOCK *x,
                   xd, cm, &ms_params, subpel_start_mv, NULL, &this_best_mv,
                   &dis, &sse, fractional_ms_list);
 
-              if (!mv_sf->disable_second_mv) {
+              if (!mv_sf->disable_second_mv && this_var != INT32_MAX) {
                 // If cpi->sf.mv_sf.disable_second_mv is 0, use actual rd cost
                 // to choose the better MV.
                 mbmi->mv[0].as_mv = this_best_mv;
