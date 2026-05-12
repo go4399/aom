@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b599650_2a60dcd5",
+        "filename": "README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-12T20:11:46Z",
+      "side": 1,
+      "message": "This link is still incorrect.",
+      "range": {
+        "startLine": 474,
+        "startChar": 19,
+        "endLine": 474,
+        "endChar": 71
+      },
+      "revId": "8745a72e8aa9b38343186ba1ff9894e70cb53b52",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d9dcc9db_191b8678",
+        "filename": "README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-12T20:11:46Z",
+      "side": 1,
+      "message": "Indent these three lines 4 more spaces to make the continuation a little clearer. Continued lines are generally indented 2 spaces beyond the initial line in scripts.",
+      "range": {
+        "startLine": 478,
+        "startChar": 0,
+        "endLine": 480,
+        "endChar": 39
+      },
+      "revId": "8745a72e8aa9b38343186ba1ff9894e70cb53b52",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
