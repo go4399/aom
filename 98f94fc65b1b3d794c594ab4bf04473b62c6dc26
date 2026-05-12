@@ -63,6 +63,30 @@
       },
       "revId": "98f94fc65b1b3d794c594ab4bf04473b62c6dc26",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8baf987_d30bf097",
+        "filename": "av1/encoder/encoder_utils.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1148,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-12T02:25:42Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "aefa0763_4184c8de",
+      "range": {
+        "startLine": 1148,
+        "startChar": 1,
+        "endLine": 1148,
+        "endChar": 4
+      },
+      "revId": "98f94fc65b1b3d794c594ab4bf04473b62c6dc26",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
