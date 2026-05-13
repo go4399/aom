@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a3df606_7cd9f1a4",
+        "filename": "CHANGELOG",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-05-13T17:36:59Z",
+      "side": 1,
+      "message": "Note: I assume that \"extended to VOD encoding\" means \"extended to horizontal videos\". See also my comment at line 181.\n\nI took the new text from [Yungqing\u0027s CL](https://aomedia-review.googlesource.com/211361) and [Jingning\u0027s description of low complexity decode mode](https://aomedia-review.googlesource.com/211901/3/CHANGELOG#34).",
+      "revId": "84dd014cfb53c43bd022e1f7b4f089fb8b22c980",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f604bdb0_ade37501",
+        "filename": "CHANGELOG",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-05-13T17:36:59Z",
+      "side": 1,
+      "message": "Yunqing: Do you have any numbers handy, such as BD-rate gains? See lines 397-398 for an example.",
+      "revId": "84dd014cfb53c43bd022e1f7b4f089fb8b22c980",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1afbd74e_a90cad8f",
+        "filename": "CHANGELOG",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-05-13T17:36:59Z",
+      "side": 1,
+      "message": "In libaom v3.13.0, low complexity decode mode only supports 720p vertical videos.",
+      "revId": "84dd014cfb53c43bd022e1f7b4f089fb8b22c980",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aab5c42f_f3b2ea86",
+        "filename": "CHANGELOG",
+        "patchSetId": 1
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-05-13T17:36:59Z",
+      "side": 1,
+      "message": "Yunqing: Here is an example of a BD-rate gain.",
+      "revId": "84dd014cfb53c43bd022e1f7b4f089fb8b22c980",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
