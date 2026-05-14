@@ -796,7 +796,19 @@ static aom_codec_err_t validate_config(aom_codec_alg_priv_t *ctx,
   RANGE_CHECK_HI(extra_cfg, enable_adaptive_sharpness, 1);
   RANGE_CHECK_HI(extra_cfg, arnr_max_frames, 15);
   RANGE_CHECK_HI(extra_cfg, arnr_strength, 6);
-  RANGE_CHECK_HI(extra_cfg, cq_level, 63);
+  RANGE_CHECK_HI(extra_cfg, cq_level, MAX_CQ_LEVEL);
+  if (extra_cfg->cq_level > 63) {
+    if (cfg->rc_end_usage != AOM_Q) {
+      ERROR("cq-level > 63 is only supported in AOM_Q (constant quality) mode");
+    }
+    if (!extra_cfg->use_fixed_qp_offsets) {
+      ERROR("cq-level > 63 requires use-fixed-qp-offsets=1");
+    }
+    if (extra_cfg->enable_tpl_model) {
+      ERROR("cq-level > 63 requires enable-tpl-model=0");
+    }
+  }
+
   RANGE_CHECK(cfg, g_bit_depth, AOM_BITS_8, AOM_BITS_12);
   RANGE_CHECK(cfg, g_input_bit_depth, 8, 12);
   RANGE_CHECK(extra_cfg, content, AOM_CONTENT_DEFAULT, AOM_CONTENT_INVALID - 1);
@@ -1223,10 +1235,10 @@ static void set_encoder_config(AV1EncoderConfig *oxcf,
   rc_cfg->mode = cfg->rc_end_usage;
   rc_cfg->min_cr = extra_cfg->min_cr;
   rc_cfg->best_allowed_q =
-      extra_cfg->lossless ? 0 : av1_quantizer_to_qindex(cfg->rc_min_quantizer);
+      extra_cfg->lossless ? 0 : AOMMIN(av1_quantizer_to_qindex(cfg->rc_min_quantizer), MAXQ);
   rc_cfg->worst_allowed_q =
-      extra_cfg->lossless ? 0 : av1_quantizer_to_qindex(cfg->rc_max_quantizer);
-  rc_cfg->cq_level = av1_quantizer_to_qindex(extra_cfg->cq_level);
+      extra_cfg->lossless ? 0 : AOMMIN(av1_quantizer_to_qindex(cfg->rc_max_quantizer), MAXQ);
+  rc_cfg->cq_level = av1_quantizer_to_qindex(extra_cfg->cq_level);  // can be > 255
   rc_cfg->under_shoot_pct = cfg->rc_undershoot_pct;
   rc_cfg->over_shoot_pct = cfg->rc_overshoot_pct;
   rc_cfg->maximum_buffer_size_ms = cfg->rc_buf_sz;
