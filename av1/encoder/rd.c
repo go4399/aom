@@ -950,10 +950,9 @@ static double interp_cubic(const double *p, double x) {
 }
 
 void av1_interp_cubic_rate_dist_c(const double *p1, const double *p2, double x,
-                                  double *const rate_f,
-                                  double *const distbysse_f) {
-  *rate_f = interp_cubic(p1, x);
-  *distbysse_f = interp_cubic(p2, x);
+                                  double *const out) {
+  out[0] = interp_cubic(p1, x);
+  out[1] = interp_cubic(p2, x);
 }
 
 /*
@@ -1088,7 +1087,10 @@ void av1_model_rd_curvfit(BLOCK_SIZE bsize, double sse_norm, double xqr,
 
   const double *prate = &interp_rgrid_curv[rcat][(xi - 1)];
   const double *pdist = &interp_dgrid_curv[dcat][(xi - 1)];
-  av1_interp_cubic_rate_dist(prate, pdist, xo, rate_f, distbysse_f);
+  double out[2];
+  av1_interp_cubic_rate_dist(prate, pdist, xo, out);
+  *rate_f = out[0];
+  *distbysse_f = out[1];
 }
 
 static void get_entropy_contexts_plane(BLOCK_SIZE plane_bsize,
