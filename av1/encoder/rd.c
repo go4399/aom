@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -157,13 +159,13 @@ void av1_fill_mode_rates(AV1_COMMON *const cm, ModeCosts *mode_costs,
     int *cost_u = mode_costs->cfl_cost[joint_sign][CFL_PRED_U];
     int *cost_v = mode_costs->cfl_cost[joint_sign][CFL_PRED_V];
     if (CFL_SIGN_U(joint_sign) == CFL_SIGN_ZERO) {
-      memset(cost_u, 0, CFL_ALPHABET_SIZE * sizeof(*cost_u));
+      AOM_UNSAFE_MEMSET(cost_u, 0, CFL_ALPHABET_SIZE * sizeof(*cost_u));
     } else {
       const aom_cdf_prob *cdf_u = fc->cfl_alpha_cdf[CFL_CONTEXT_U(joint_sign)];
       av1_cost_tokens_from_cdf(cost_u, cdf_u, NULL);
     }
     if (CFL_SIGN_V(joint_sign) == CFL_SIGN_ZERO) {
-      memset(cost_v, 0, CFL_ALPHABET_SIZE * sizeof(*cost_v));
+      AOM_UNSAFE_MEMSET(cost_v, 0, CFL_ALPHABET_SIZE * sizeof(*cost_v));
     } else {
       const aom_cdf_prob *cdf_v = fc->cfl_alpha_cdf[CFL_CONTEXT_V(joint_sign)];
       av1_cost_tokens_from_cdf(cost_v, cdf_v, NULL);
@@ -695,13 +697,19 @@ void av1_fill_mv_costs(const nmv_context *nmvc, int integer_mv, int usehp,
   mv_costs->nmv_cost_hp[1] = &mv_costs->nmv_cost_hp_alloc[1][MV_MAX];
   if (integer_mv) {
     mv_costs->mv_cost_stack = (int **)&mv_costs->nmv_cost;
-    av1_build_nmv_cost_table(mv_costs->nmv_joint_cost, mv_costs->mv_cost_stack,
-                             nmvc, MV_SUBPEL_NONE);
+    av1_build_nmv_cost_table(
+        mv_costs->nmv_joint_cost,
+        AOM_UNSAFE_FORGE_BIDI_INDEXABLE(int **, mv_costs->mv_cost_stack,
+                                        sizeof(mv_costs->mv_cost_stack[0]) * 2),
+        nmvc, MV_SUBPEL_NONE);
   } else {
     mv_costs->mv_cost_stack =
         usehp ? mv_costs->nmv_cost_hp : mv_costs->nmv_cost;
-    av1_build_nmv_cost_table(mv_costs->nmv_joint_cost, mv_costs->mv_cost_stack,
-                             nmvc, usehp);
+    av1_build_nmv_cost_table(
+        mv_costs->nmv_joint_cost,
+        AOM_UNSAFE_FORGE_BIDI_INDEXABLE(int **, mv_costs->mv_cost_stack,
+                                        sizeof(mv_costs->mv_cost_stack[0]) * 2),
+        nmvc, usehp);
   }
 }
 
@@ -1099,8 +1107,8 @@ static void get_entropy_contexts_plane(BLOCK_SIZE plane_bsize,
   const ENTROPY_CONTEXT *const above = pd->above_entropy_context;
   const ENTROPY_CONTEXT *const left = pd->left_entropy_context;
 
-  memcpy(t_above, above, sizeof(ENTROPY_CONTEXT) * num_4x4_w);
-  memcpy(t_left, left, sizeof(ENTROPY_CONTEXT) * num_4x4_h);
+  AOM_UNSAFE_MEMCPY(t_above, above, sizeof(ENTROPY_CONTEXT) * num_4x4_w);
+  AOM_UNSAFE_MEMCPY(t_left, left, sizeof(ENTROPY_CONTEXT) * num_4x4_h);
 }
 
 void av1_get_entropy_contexts(BLOCK_SIZE plane_bsize,

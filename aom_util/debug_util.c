@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -63,7 +65,7 @@ void bitstream_queue_pop(int *result, aom_cdf_prob *cdf, int *nsymbs) {
     }
     *result = result_queue[queue_r];
     *nsymbs = nsymbs_queue[queue_r];
-    memcpy(cdf, cdf_queue[queue_r], *nsymbs * sizeof(*cdf));
+    AOM_UNSAFE_MEMCPY(cdf, cdf_queue[queue_r], *nsymbs * sizeof(*cdf));
     queue_r = (queue_r + 1) % QUEUE_MAX_SIZE;
   }
 }
@@ -85,7 +87,7 @@ void bitstream_queue_push(int result, const aom_cdf_prob *cdf, int nsymbs) {
   if (!skip_w) {
     result_queue[queue_w] = result;
     nsymbs_queue[queue_w] = nsymbs;
-    memcpy(cdf_queue[queue_w], cdf, nsymbs * sizeof(*cdf));
+    AOM_UNSAFE_MEMCPY(cdf_queue[queue_w], cdf, nsymbs * sizeof(*cdf));
     queue_w = (queue_w + 1) % QUEUE_MAX_SIZE;
     if (queue_w == queue_r) {
       printf("buffer overflow queue_w %d queue_r %d\n", queue_w, queue_r);
@@ -118,10 +120,11 @@ void mismatch_move_frame_idx_w(void) {
 
 void mismatch_reset_frame(int num_planes) {
   for (int plane = 0; plane < num_planes; ++plane) {
-    memset(frame_pre[frame_buf_idx_w][plane], 0,
-           sizeof(frame_pre[frame_buf_idx_w][plane][0]) * frame_size);
-    memset(frame_tx[frame_buf_idx_w][plane], 0,
-           sizeof(frame_tx[frame_buf_idx_w][plane][0]) * frame_size);
+    AOM_UNSAFE_MEMSET(
+        frame_pre[frame_buf_idx_w][plane], 0,
+        sizeof(frame_pre[frame_buf_idx_w][plane][0]) * frame_size);
+    AOM_UNSAFE_MEMSET(frame_tx[frame_buf_idx_w][plane], 0,
+                      sizeof(frame_tx[frame_buf_idx_w][plane][0]) * frame_size);
   }
 }
 

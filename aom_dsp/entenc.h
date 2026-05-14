@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2001-2016, Alliance for Open Media. All rights reserved.
  *
@@ -89,7 +91,7 @@ static inline void write_enc_data_to_out_buf(unsigned char *out, uint32_t offs,
                                              uint32_t *enc_offs,
                                              uint8_t num_bytes_ready) {
   const uint64_t reg = HToBE64(output << ((8 - num_bytes_ready) << 3));
-  memcpy(&out[offs], &reg, 8);
+  AOM_UNSAFE_MEMCPY(&out[offs], &reg, 8);
   // Propagate carry backwards if exists
   if (carry) {
     assert(offs > 0);

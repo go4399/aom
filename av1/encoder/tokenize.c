@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -247,7 +249,7 @@ static void get_color_map_params(const MACROBLOCK *const x, int plane,
                                  COLOR_MAP_TYPE type,
                                  Av1ColorMapParam *params) {
   (void)tx_size;
-  memset(params, 0, sizeof(*params));
+  AOM_UNSAFE_MEMSET(params, 0, sizeof(*params));
   switch (type) {
     case PALETTE_MAP: get_palette_params(x, plane, bsize, params); break;
     default: assert(0 && "Invalid color map type"); return;

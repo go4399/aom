@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2020, Alliance for Open Media. All rights reserved.
  *
@@ -384,7 +386,7 @@ static int64_t pick_interinter_seg(const AV1_COMP *const cpi,
   }
   mbmi->interinter_comp.mask_type = best_mask_type;
   if (best_mask_type == DIFFWTD_38_INV) {
-    memcpy(xd->seg_mask, seg_mask, N * 2);
+    AOM_UNSAFE_MEMCPY(xd->seg_mask, seg_mask, N * 2);
   }
   return best_rd;
 }
@@ -1002,13 +1004,16 @@ static inline void save_comp_rd_search_stat(
   const int offset = x->comp_rd_stats_idx;
   if (offset < MAX_COMP_RD_STATS) {
     COMP_RD_STATS *const rd_stats = x->comp_rd_stats + offset;
-    memcpy(rd_stats->rate, comp_rate, sizeof(rd_stats->rate));
-    memcpy(rd_stats->dist, comp_dist, sizeof(rd_stats->dist));
-    memcpy(rd_stats->model_rate, comp_model_rate, sizeof(rd_stats->model_rate));
-    memcpy(rd_stats->model_dist, comp_model_dist, sizeof(rd_stats->model_dist));
-    memcpy(rd_stats->comp_rs2, comp_rs2, sizeof(rd_stats->comp_rs2));
-    memcpy(rd_stats->mv, cur_mv, sizeof(rd_stats->mv));
-    memcpy(rd_stats->ref_frames, mbmi->ref_frame, sizeof(rd_stats->ref_frames));
+    AOM_UNSAFE_MEMCPY(rd_stats->rate, comp_rate, sizeof(rd_stats->rate));
+    AOM_UNSAFE_MEMCPY(rd_stats->dist, comp_dist, sizeof(rd_stats->dist));
+    AOM_UNSAFE_MEMCPY(rd_stats->model_rate, comp_model_rate,
+                      sizeof(rd_stats->model_rate));
+    AOM_UNSAFE_MEMCPY(rd_stats->model_dist, comp_model_dist,
+                      sizeof(rd_stats->model_dist));
+    AOM_UNSAFE_MEMCPY(rd_stats->comp_rs2, comp_rs2, sizeof(rd_stats->comp_rs2));
+    AOM_UNSAFE_MEMCPY(rd_stats->mv, cur_mv, sizeof(rd_stats->mv));
+    AOM_UNSAFE_MEMCPY(rd_stats->ref_frames, mbmi->ref_frame,
+                      sizeof(rd_stats->ref_frames));
     rd_stats->mode = mbmi->mode;
     rd_stats->filter = mbmi->interp_filters;
     rd_stats->ref_mv_idx = mbmi->ref_mv_idx;
@@ -1396,8 +1401,8 @@ int av1_compound_type_rd(const AV1_COMP *const cpi, MACROBLOCK *x,
               &inter_pred_params.conv_params.bck_offset,
               &inter_pred_params.conv_params.use_dist_wtd_comp_avg, 1);
           int mask_value = inter_pred_params.conv_params.fwd_offset * 4;
-          memset(xd->seg_mask, mask_value,
-                 sizeof(xd->seg_mask[0]) * 2 * MAX_SB_SQUARE);
+          AOM_UNSAFE_MEMSET(xd->seg_mask, mask_value,
+                            sizeof(xd->seg_mask[0]) * 2 * MAX_SB_SQUARE);
           tmp_rate_mv = av1_interinter_compound_motion_search(cpi, x, cur_mv,
                                                               bsize, this_mode);
         }
@@ -1601,8 +1606,8 @@ int av1_compound_type_rd(const AV1_COMP *const cpi, MACROBLOCK *x,
         if (have_newmv_in_inter_mode(this_mode)) {
           // hard coded number for diff wtd
           int mask_value = mask_index == 0 ? 38 : 26;
-          memset(xd->seg_mask, mask_value,
-                 sizeof(xd->seg_mask[0]) * 2 * MAX_SB_SQUARE);
+          AOM_UNSAFE_MEMSET(xd->seg_mask, mask_value,
+                            sizeof(xd->seg_mask[0]) * 2 * MAX_SB_SQUARE);
           tmp_rate_mv = av1_interinter_compound_motion_search(cpi, x, cur_mv,
                                                               bsize, this_mode);
         }
@@ -1638,8 +1643,8 @@ int av1_compound_type_rd(const AV1_COMP *const cpi, MACROBLOCK *x,
         rs2 += get_interinter_compound_mask_rate(&x->mode_costs, mbmi);
 
         int mask_value = mbmi->interinter_comp.mask_type == 0 ? 38 : 26;
-        memset(xd->seg_mask, mask_value,
-               sizeof(xd->seg_mask[0]) * 2 * MAX_SB_SQUARE);
+        AOM_UNSAFE_MEMSET(xd->seg_mask, mask_value,
+                          sizeof(xd->seg_mask[0]) * 2 * MAX_SB_SQUARE);
 
         if (have_newmv_in_inter_mode(this_mode)) {
           tmp_rate_mv = av1_interinter_compound_motion_search(cpi, x, cur_mv,

@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2019, Alliance for Open Media. All rights reserved.
  *
@@ -42,7 +44,9 @@ typedef struct {
   float *buf[CNN_MAX_CHANNELS];
 } TENSOR;
 
-static void init_tensor(TENSOR *tensor) { memset(tensor, 0, sizeof(*tensor)); }
+static void init_tensor(TENSOR *tensor) {
+  AOM_UNSAFE_MEMSET(tensor, 0, sizeof(*tensor));
+}
 
 static void free_tensor(TENSOR *tensor) {
   if (tensor->allocsize) {
@@ -78,15 +82,15 @@ static void copy_tensor(const TENSOR *src, int copy_channels, int dst_offset,
   assert(copy_channels <= src->channels);
   if (src->stride == dst->width && dst->stride == dst->width) {
     for (int c = 0; c < copy_channels; ++c) {
-      memcpy(dst->buf[dst_offset + c], src->buf[c],
-             sizeof(*dst->buf[0]) * src->width * src->height);
+      AOM_UNSAFE_MEMCPY(dst->buf[dst_offset + c], src->buf[c],
+                        sizeof(*dst->buf[0]) * src->width * src->height);
     }
   } else {
     for (int c = 0; c < copy_channels; ++c) {
       for (int r = 0; r < dst->height; ++r) {
-        memcpy(&dst->buf[dst_offset + c][r * dst->stride],
-               &src->buf[c][r * src->stride],
-               dst->width * sizeof(*dst->buf[c]));
+        AOM_UNSAFE_MEMCPY(&dst->buf[dst_offset + c][r * dst->stride],
+                          &src->buf[c][r * src->stride],
+                          dst->width * sizeof(*dst->buf[c]));
       }
     }
   }
@@ -929,7 +933,9 @@ bool av1_cnn_predict_c(const float **input, int in_width, int in_height,
     // Allocate input tensor
     if (layer == 0) {       // First layer
       assert(branch == 0);  // First layer must be primary branch
-      assign_tensor(&tensor1[branch], (float **)input,
+      assign_tensor(&tensor1[branch],
+                    (float **)AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+                        float **, input, sizeof(input[0]) * CNN_MAX_CHANNELS),
                     layer_config->in_channels, in_width, in_height, in_stride);
     } else {  // Non-first layer
       // Swap tensor1 and tensor2
@@ -950,7 +956,10 @@ bool av1_cnn_predict_c(const float **input, int in_width, int in_height,
       }
     } else {  // Output layer
       free_tensor(&tensor2[branch]);
-      assign_tensor(&tensor2[branch], output[output_num],
+      assign_tensor(&tensor2[branch],
+                    AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+                        float **, output[output_num],
+                        sizeof(output[0][0]) * CNN_MAX_CHANNELS),
                     layer_config->out_channels, o_width, o_height,
                     out_stride[output_num]);
     }
@@ -1042,8 +1051,11 @@ bool av1_cnn_predict_c(const float **input, int in_width, int in_height,
             num_chs += tensor2[b].channels;
           }
         }
-        assign_tensor(&tensor2[branch], output[output_num], num_chs, o_width,
-                      o_height, out_stride[output_num]);
+        assign_tensor(&tensor2[branch],
+                      AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+                          float **, output[output_num],
+                          sizeof(output[0][0]) * CNN_MAX_CHANNELS),
+                      num_chs, o_width, o_height, out_stride[output_num]);
 
         num_chs = existing_channels;
         for (int b = 0; b < CNN_MAX_BRANCHES; ++b) {
@@ -1110,12 +1122,14 @@ bool av1_cnn_predict_img_multi_out(uint8_t **dgd, int width, int height,
       }
       // extend top and bottom
       for (int i = -cnn_config->ext_height; i < 0; ++i)
-        memcpy(&input[i * in_stride - cnn_config->ext_width],
-               &input[-cnn_config->ext_width], in_width * sizeof(*input));
+        AOM_UNSAFE_MEMCPY(&input[i * in_stride - cnn_config->ext_width],
+                          &input[-cnn_config->ext_width],
+                          in_width * sizeof(*input));
       for (int i = height; i < height + cnn_config->ext_height; ++i)
-        memcpy(&input[i * in_stride - cnn_config->ext_width],
-               &input[(height - 1) * in_stride - cnn_config->ext_width],
-               in_width * sizeof(*input));
+        AOM_UNSAFE_MEMCPY(
+            &input[i * in_stride - cnn_config->ext_width],
+            &input[(height - 1) * in_stride - cnn_config->ext_width],
+            in_width * sizeof(*input));
     } else {
       for (int i = -cnn_config->ext_height; i < height + cnn_config->ext_height;
            ++i)
@@ -1168,12 +1182,14 @@ bool av1_cnn_predict_img_multi_out_highbd(uint16_t **dgd, int width, int height,
       }
       // extend top and bottom
       for (int i = -cnn_config->ext_height; i < 0; ++i)
-        memcpy(&input[i * in_stride - cnn_config->ext_width],
-               &input[-cnn_config->ext_width], in_width * sizeof(*input));
+        AOM_UNSAFE_MEMCPY(&input[i * in_stride - cnn_config->ext_width],
+                          &input[-cnn_config->ext_width],
+                          in_width * sizeof(*input));
       for (int i = height; i < height + cnn_config->ext_height; ++i)
-        memcpy(&input[i * in_stride - cnn_config->ext_width],
-               &input[(height - 1) * in_stride - cnn_config->ext_width],
-               in_width * sizeof(*input));
+        AOM_UNSAFE_MEMCPY(
+            &input[i * in_stride - cnn_config->ext_width],
+            &input[(height - 1) * in_stride - cnn_config->ext_width],
+            in_width * sizeof(*input));
     } else {
       for (int i = -cnn_config->ext_height; i < height + cnn_config->ext_height;
            ++i)

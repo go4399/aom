@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2017, Alliance for Open Media. All rights reserved.
  *
@@ -39,7 +41,7 @@ struct aom_noise_tx_t *aom_noise_tx_malloc(int block_size) {
   struct aom_noise_tx_t *noise_tx =
       (struct aom_noise_tx_t *)aom_malloc(sizeof(struct aom_noise_tx_t));
   if (!noise_tx) return NULL;
-  memset(noise_tx, 0, sizeof(*noise_tx));
+  AOM_UNSAFE_MEMSET(noise_tx, 0, sizeof(*noise_tx));
   switch (block_size) {
     case 2:
       noise_tx->fft = aom_fft2x2_float;
@@ -77,10 +79,10 @@ struct aom_noise_tx_t *aom_noise_tx_malloc(int block_size) {
   }
   // Clear the buffers up front. Some outputs of the forward transform are
   // real only (the imaginary component will never be touched)
-  memset(noise_tx->tx_block, 0,
-         2 * sizeof(*noise_tx->tx_block) * block_size * block_size);
-  memset(noise_tx->temp, 0,
-         2 * sizeof(*noise_tx->temp) * block_size * block_size);
+  AOM_UNSAFE_MEMSET(noise_tx->tx_block, 0,
+                    2 * sizeof(*noise_tx->tx_block) * block_size * block_size);
+  AOM_UNSAFE_MEMSET(noise_tx->temp, 0,
+                    2 * sizeof(*noise_tx->temp) * block_size * block_size);
   return noise_tx;
 }
 

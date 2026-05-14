@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -94,10 +96,13 @@ static void subblock_motion_search(
   const int boffset = subblock_ofst_i * y_stride + subblock_ofst_j;
   mb->plane[0].src.buf = frame_to_filter->y_buffer + y_offset + boffset;
   mbd->plane[0].pre[0].buf = ref_frame->y_buffer + y_offset + boffset;
-  av1_make_default_fullpel_ms_params(full_ms_params, cpi, mb, subblock_size,
-                                     ref_mv, start_mv, search_site_cfg,
-                                     search_method,
-                                     /*fine_search_interval=*/0);
+  av1_make_default_fullpel_ms_params(
+      full_ms_params, cpi, mb, subblock_size, ref_mv, start_mv,
+      AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+          const search_site_config *, search_site_cfg,
+          sizeof(search_site_cfg[0]) * NUM_DISTINCT_SEARCH_METHODS),
+      search_method,
+      /*fine_search_interval=*/0);
   full_ms_params->run_mesh_search = 1;
   full_ms_params->mv_cost_params.mv_cost_type = mv_cost_type;
 
@@ -300,9 +305,9 @@ static void tf_motion_search(AV1_COMP *cpi, MACROBLOCK *mb,
   } dclevel;
 
   if (is_high_bitdepth)
-    memset(dclevel.buf16, 0, sizeof(dclevel.buf16));
+    AOM_UNSAFE_MEMSET(dclevel.buf16, 0, sizeof(dclevel.buf16));
   else
-    memset(dclevel.buf8, 0, sizeof(dclevel.buf8));
+    AOM_UNSAFE_MEMSET(dclevel.buf8, 0, sizeof(dclevel.buf8));
 
   int dclevel_stride = block_size_wide[block_size];
   int64_t src_var = INT32_MAX;
@@ -324,10 +329,13 @@ static void tf_motion_search(AV1_COMP *cpi, MACROBLOCK *mb,
 
   const int q = get_q(cpi);
 
-  av1_make_default_fullpel_ms_params(&full_ms_params, cpi, mb, block_size,
-                                     &baseline_mv, start_mv, search_site_cfg,
-                                     search_method,
-                                     /*fine_search_interval=*/0);
+  av1_make_default_fullpel_ms_params(
+      &full_ms_params, cpi, mb, block_size, &baseline_mv, start_mv,
+      AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+          const search_site_config *, search_site_cfg,
+          sizeof(search_site_cfg[0]) * NUM_DISTINCT_SEARCH_METHODS),
+      search_method,
+      /*fine_search_interval=*/0);
   full_ms_params.run_mesh_search = 1;
   full_ms_params.mv_cost_params.mv_cost_type = mv_cost_type;
 
@@ -854,7 +862,7 @@ void av1_apply_temporal_filter_c(
     aom_internal_error(mbd->error_info, AOM_CODEC_MEM_ERROR,
                        "Error allocating temporal filter data");
   }
-  memset(square_diff, 0, mb_pels * sizeof(square_diff[0]));
+  AOM_UNSAFE_MEMSET(square_diff, 0, mb_pels * sizeof(square_diff[0]));
 
   // Allocate memory for accumulated luma squared error. This value will be
   // consumed while filtering the chroma planes.
@@ -864,7 +872,7 @@ void av1_apply_temporal_filter_c(
     aom_internal_error(mbd->error_info, AOM_CODEC_MEM_ERROR,
                        "Error allocating temporal filter data");
   }
-  memset(luma_sse_sum, 0, mb_pels * sizeof(luma_sse_sum[0]));
+  AOM_UNSAFE_MEMSET(luma_sse_sum, 0, mb_pels * sizeof(luma_sse_sum[0]));
 
   // Get window size for pixel-wise filtering.
   assert(TF_WINDOW_LENGTH % 2 == 1);
@@ -1083,8 +1091,8 @@ void av1_tf_do_filtering_row(AV1_COMP *cpi, ThreadData *td, int mb_row) {
     av1_set_mv_col_limits(&cpi->common.mi_params, &mb->mv_limits,
                           (mb_col << mi_w), (mb_width >> MI_SIZE_LOG2),
                           cpi->oxcf.border_in_pixels);
-    memset(accum, 0, num_pels * sizeof(accum[0]));
-    memset(count, 0, num_pels * sizeof(count[0]));
+    AOM_UNSAFE_MEMSET(accum, 0, num_pels * sizeof(accum[0]));
+    AOM_UNSAFE_MEMSET(count, 0, num_pels * sizeof(count[0]));
     MV ref_mv = kZeroMv;  // Reference motion vector passed down along frames.
                           // Perform temporal filtering frame by frame.
 

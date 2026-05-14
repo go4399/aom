@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -28,7 +30,7 @@ int aom_stop_encode(aom_writer *w) {
     return -1;
   }
   nb_bits = od_ec_enc_tell(&w->ec);
-  memcpy(w->buffer, data, bytes);
+  AOM_UNSAFE_MEMCPY(w->buffer, data, bytes);
   w->pos = bytes;
   od_ec_enc_clear(&w->ec);
   return nb_bits;

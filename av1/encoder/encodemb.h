@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -142,8 +144,8 @@ static inline void av1_set_txb_context(MACROBLOCK *x, int plane, int block,
                                        TX_SIZE tx_size, ENTROPY_CONTEXT *a,
                                        ENTROPY_CONTEXT *l) {
   const uint8_t ctx = x->plane[plane].txb_entropy_ctx[block];
-  memset(a, ctx, tx_size_wide_unit[tx_size] * sizeof(*a));
-  memset(l, ctx, tx_size_high_unit[tx_size] * sizeof(*l));
+  AOM_UNSAFE_MEMSET(a, ctx, tx_size_wide_unit[tx_size] * sizeof(*a));
+  AOM_UNSAFE_MEMSET(l, ctx, tx_size_high_unit[tx_size] * sizeof(*l));
 }
 
 void av1_encode_intra_block_plane(const struct AV1_COMP *cpi, MACROBLOCK *x,

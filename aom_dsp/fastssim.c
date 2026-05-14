@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -334,7 +336,7 @@ static void fs_calc_structure(fs_ctx *_ctx, int _l, int bit_depth) {
   gx_buf = _ctx->col_buf;
   stride = w + 8;
   gy_buf = gx_buf + 8 * stride;
-  memset(gx_buf, 0, 2 * 8 * stride * sizeof(*gx_buf));
+  AOM_UNSAFE_MEMSET(gx_buf, 0, 2 * 8 * stride * sizeof(*gx_buf));
   c2 = ssim_c2 * (1 << 4 * _l) * 16 * 104;
   for (j = 0; j < h + 4; j++) {
     if (j < h - 1) {
@@ -353,8 +355,8 @@ static void fs_calc_structure(fs_ctx *_ctx, int _l, int bit_depth) {
         gy_buf[(j & 7) * stride + i + 4] = gy;
       }
     } else {
-      memset(gx_buf + (j & 7) * stride, 0, stride * sizeof(*gx_buf));
-      memset(gy_buf + (j & 7) * stride, 0, stride * sizeof(*gy_buf));
+      AOM_UNSAFE_MEMSET(gx_buf + (j & 7) * stride, 0, stride * sizeof(*gx_buf));
+      AOM_UNSAFE_MEMSET(gy_buf + (j & 7) * stride, 0, stride * sizeof(*gy_buf));
     }
     if (j >= 4) {
       int k;

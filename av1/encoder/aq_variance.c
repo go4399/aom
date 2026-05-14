@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -57,7 +59,8 @@ void av1_vaq_frame_setup(AV1_COMP *cpi) {
   avg_ratio = rate_ratio[avg_energy];
 
   if (resolution_change) {
-    memset(cpi->enc_seg.map, 0, cm->mi_params.mi_rows * cm->mi_params.mi_cols);
+    AOM_UNSAFE_MEMSET(cpi->enc_seg.map, 0,
+                      cm->mi_params.mi_rows * cm->mi_params.mi_cols);
     av1_clearall_segfeatures(seg);
     av1_disable_segmentation(seg);
     return;

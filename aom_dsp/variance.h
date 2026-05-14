@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -34,8 +36,8 @@ typedef void (*aom_copy32xn_fn_t)(const uint8_t *a, int a_stride, uint8_t *b,
                                   int b_stride, int n);
 
 typedef void (*aom_sad_multi_d_fn_t)(const uint8_t *a, int a_stride,
-                                     const uint8_t *const b_array[],
-                                     int b_stride, unsigned int *sad_array);
+                                     const uint8_t *const b_array[4],
+                                     int b_stride, unsigned int sad_array[4]);
 
 typedef unsigned int (*aom_variance_fn_t)(const uint8_t *a, int a_stride,
                                           const uint8_t *b, int b_stride,

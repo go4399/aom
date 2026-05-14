@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /* Embedded file: model.tflite */
 const int av1_deltaq4_model_fsize = 101032;
 const unsigned char av1_deltaq4_model_file[101032] = {

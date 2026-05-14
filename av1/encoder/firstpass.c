@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -309,9 +311,12 @@ static inline void first_pass_motion_search(AV1_COMP *cpi, MACROBLOCK *x,
   const int fine_search_interval =
       cpi->is_screen_content_type && cm->features.allow_intrabc;
   FULLPEL_MOTION_SEARCH_PARAMS ms_params;
-  av1_make_default_fullpel_ms_params(&ms_params, cpi, x, bsize, ref_mv,
-                                     start_mv, first_pass_search_sites, NSTEP,
-                                     fine_search_interval);
+  av1_make_default_fullpel_ms_params(
+      &ms_params, cpi, x, bsize, ref_mv, start_mv,
+      AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+          const search_site_config *, first_pass_search_sites,
+          sizeof(first_pass_search_sites[0]) * NUM_DISTINCT_SEARCH_METHODS),
+      NSTEP, fine_search_interval);
 
   FULLPEL_MV this_best_mv;
   FULLPEL_MV_STATS best_mv_stats;
@@ -1010,9 +1015,9 @@ static void update_firstpass_stats(AV1_COMP *cpi,
       const int num_valid = (int)(twopass->stats_buf_ctx->stats_in_end -
                                   cpi->twopass_frame.stats_in);
       if (num_valid > 0) {
-        memmove(twopass->stats_buf_ctx->stats_in_start,
-                cpi->twopass_frame.stats_in,
-                num_valid * sizeof(FIRSTPASS_STATS));
+        AOM_UNSAFE_MEMMOVE(twopass->stats_buf_ctx->stats_in_start,
+                           cpi->twopass_frame.stats_in,
+                           num_valid * sizeof(FIRSTPASS_STATS));
       }
       cpi->twopass_frame.stats_in = twopass->stats_buf_ctx->stats_in_start;
       twopass->stats_buf_ctx->stats_in_end =

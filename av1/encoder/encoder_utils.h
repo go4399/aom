@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2020, Alliance for Open Media. All rights reserved.
  *
@@ -38,7 +40,8 @@ extern const int default_switchable_interp_probs[FRAME_UPDATE_TYPES]
                                                 [SWITCHABLE_FILTERS];
 
 // Mark all inactive blocks as active. Other segmentation features may be set
-// so memset cannot be used, instead only inactive blocks should be reset.
+// so AOM_UNSAFE_MEMSET cannot be used, instead only inactive blocks should be
+// reset.
 static inline void suppress_active_map(AV1_COMP *cpi) {
   unsigned char *const seg_map = cpi->enc_seg.map;
   int i;
@@ -110,12 +113,12 @@ static inline void stat_stage_set_mb_mi(CommonModeInfoParams *mi_params,
 static inline void enc_setup_mi(CommonModeInfoParams *mi_params) {
   const int mi_grid_size =
       mi_params->mi_stride * calc_mi_size(mi_params->mi_rows);
-  memset(mi_params->mi_alloc, 0,
-         mi_params->mi_alloc_size * sizeof(*mi_params->mi_alloc));
-  memset(mi_params->mi_grid_base, 0,
-         mi_grid_size * sizeof(*mi_params->mi_grid_base));
-  memset(mi_params->tx_type_map, 0,
-         mi_grid_size * sizeof(*mi_params->tx_type_map));
+  AOM_UNSAFE_MEMSET(mi_params->mi_alloc, 0,
+                    mi_params->mi_alloc_size * sizeof(*mi_params->mi_alloc));
+  AOM_UNSAFE_MEMSET(mi_params->mi_grid_base, 0,
+                    mi_grid_size * sizeof(*mi_params->mi_grid_base));
+  AOM_UNSAFE_MEMSET(mi_params->tx_type_map, 0,
+                    mi_grid_size * sizeof(*mi_params->tx_type_map));
 }
 
 static inline void init_buffer_indices(
@@ -191,25 +194,25 @@ static inline void init_buffer_indices(
            4;                                                                  \
   }
 
-#define MAKE_BFP_SAD4D_WRAPPER(fnname)                                        \
-  static void fnname##_bits8(const uint8_t *src_ptr, int source_stride,       \
-                             const uint8_t *const ref_ptr[], int ref_stride,  \
-                             unsigned int *sad_array) {                       \
-    fnname(src_ptr, source_stride, ref_ptr, ref_stride, sad_array);           \
-  }                                                                           \
-  static void fnname##_bits10(const uint8_t *src_ptr, int source_stride,      \
-                              const uint8_t *const ref_ptr[], int ref_stride, \
-                              unsigned int *sad_array) {                      \
-    int i;                                                                    \
-    fnname(src_ptr, source_stride, ref_ptr, ref_stride, sad_array);           \
-    for (i = 0; i < 4; i++) sad_array[i] >>= 2;                               \
-  }                                                                           \
-  static void fnname##_bits12(const uint8_t *src_ptr, int source_stride,      \
-                              const uint8_t *const ref_ptr[], int ref_stride, \
-                              unsigned int *sad_array) {                      \
-    int i;                                                                    \
-    fnname(src_ptr, source_stride, ref_ptr, ref_stride, sad_array);           \
-    for (i = 0; i < 4; i++) sad_array[i] >>= 4;                               \
+#define MAKE_BFP_SAD4D_WRAPPER(fnname)                                         \
+  static void fnname##_bits8(const uint8_t *src_ptr, int source_stride,        \
+                             const uint8_t *const ref_ptr[4], int ref_stride,  \
+                             unsigned int sad_array[4]) {                      \
+    fnname(src_ptr, source_stride, ref_ptr, ref_stride, sad_array);            \
+  }                                                                            \
+  static void fnname##_bits10(const uint8_t *src_ptr, int source_stride,       \
+                              const uint8_t *const ref_ptr[4], int ref_stride, \
+                              unsigned int sad_array[4]) {                     \
+    int i;                                                                     \
+    fnname(src_ptr, source_stride, ref_ptr, ref_stride, sad_array);            \
+    for (i = 0; i < 4; i++) sad_array[i] >>= 2;                                \
+  }                                                                            \
+  static void fnname##_bits12(const uint8_t *src_ptr, int source_stride,       \
+                              const uint8_t *const ref_ptr[4], int ref_stride, \
+                              unsigned int sad_array[4]) {                     \
+    int i;                                                                     \
+    fnname(src_ptr, source_stride, ref_ptr, ref_stride, sad_array);            \
+    for (i = 0; i < 4; i++) sad_array[i] >>= 4;                                \
   }
 
 #if CONFIG_AV1_HIGHBITDEPTH
@@ -385,25 +388,25 @@ MAKE_MBFP_COMPOUND_SAD_WRAPPER(aom_highbd_masked_sad64x16)
     return fnname(src, src_stride, ref, ref_stride) >> 4;                   \
   }
 
-#define MAKE_SDSF_SKIP_SAD_4D_WRAPPER(fnname)                                 \
-  static void fnname##_bits8(const uint8_t *src_ptr, int source_stride,       \
-                             const uint8_t *const ref_ptr[], int ref_stride,  \
-                             unsigned int *sad_array) {                       \
-    fnname(src_ptr, source_stride, ref_ptr, ref_stride, sad_array);           \
-  }                                                                           \
-  static void fnname##_bits10(const uint8_t *src_ptr, int source_stride,      \
-                              const uint8_t *const ref_ptr[], int ref_stride, \
-                              unsigned int *sad_array) {                      \
-    int i;                                                                    \
-    fnname(src_ptr, source_stride, ref_ptr, ref_stride, sad_array);           \
-    for (i = 0; i < 4; i++) sad_array[i] >>= 2;                               \
-  }                                                                           \
-  static void fnname##_bits12(const uint8_t *src_ptr, int source_stride,      \
-                              const uint8_t *const ref_ptr[], int ref_stride, \
-                              unsigned int *sad_array) {                      \
-    int i;                                                                    \
-    fnname(src_ptr, source_stride, ref_ptr, ref_stride, sad_array);           \
-    for (i = 0; i < 4; i++) sad_array[i] >>= 4;                               \
+#define MAKE_SDSF_SKIP_SAD_4D_WRAPPER(fnname)                                  \
+  static void fnname##_bits8(const uint8_t *src_ptr, int source_stride,        \
+                             const uint8_t *const ref_ptr[4], int ref_stride,  \
+                             unsigned int sad_array[4]) {                      \
+    fnname(src_ptr, source_stride, ref_ptr, ref_stride, sad_array);            \
+  }                                                                            \
+  static void fnname##_bits10(const uint8_t *src_ptr, int source_stride,       \
+                              const uint8_t *const ref_ptr[4], int ref_stride, \
+                              unsigned int sad_array[4]) {                     \
+    int i;                                                                     \
+    fnname(src_ptr, source_stride, ref_ptr, ref_stride, sad_array);            \
+    for (i = 0; i < 4; i++) sad_array[i] >>= 2;                                \
+  }                                                                            \
+  static void fnname##_bits12(const uint8_t *src_ptr, int source_stride,       \
+                              const uint8_t *const ref_ptr[4], int ref_stride, \
+                              unsigned int sad_array[4]) {                     \
+    int i;                                                                     \
+    fnname(src_ptr, source_stride, ref_ptr, ref_stride, sad_array);            \
+    for (i = 0; i < 4; i++) sad_array[i] >>= 4;                                \
   }
 
 #if CONFIG_AV1_HIGHBITDEPTH

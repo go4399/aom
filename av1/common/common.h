@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -30,18 +32,18 @@ extern "C" {
 #define av1_copy(dest, src)                         \
   do {                                              \
     static_assert(sizeof(dest) == sizeof(src), ""); \
-    memcpy(dest, src, sizeof(src));                 \
+    AOM_UNSAFE_MEMCPY(dest, src, sizeof(src));      \
   } while (0)
 
 // Use this for variably-sized arrays.
 #define av1_copy_array(dest, src, n)                      \
   do {                                                    \
     static_assert(sizeof(*(dest)) == sizeof(*(src)), ""); \
-    memcpy(dest, src, n * sizeof(*(src)));                \
+    AOM_UNSAFE_MEMCPY(dest, src, n * sizeof(*(src)));     \
   } while (0)
 
-#define av1_zero(dest) memset(&(dest), 0, sizeof(dest))
-#define av1_zero_array(dest, n) memset(dest, 0, n * sizeof(*(dest)))
+#define av1_zero(dest) AOM_UNSAFE_MEMSET(&(dest), 0, sizeof(dest))
+#define av1_zero_array(dest, n) AOM_UNSAFE_MEMSET(dest, 0, n * sizeof(*(dest)))
 
 static inline int get_unsigned_bits(unsigned int num_values) {
   return num_values > 0 ? get_msb(num_values) + 1 : 0;

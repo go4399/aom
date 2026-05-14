@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -91,7 +93,7 @@ static uint64_t search_one(int *lev, int nb_strengths,
   int i, j;
   uint64_t best_tot_mse = (uint64_t)1 << 63;
   int best_id = 0;
-  memset(tot_mse, 0, sizeof(tot_mse));
+  AOM_UNSAFE_MEMSET(tot_mse, 0, sizeof(tot_mse));
   for (i = 0; i < sb_count; i++) {
     int gi;
     uint64_t best_mse = (uint64_t)1 << 63;
@@ -129,7 +131,7 @@ static uint64_t search_one_dual(int *lev0, int *lev1, int nb_strengths,
   int best_id0 = 0;
   int best_id1 = 0;
   const int total_strengths = nb_cdef_strengths[pick_method];
-  memset(tot_mse, 0, sizeof(tot_mse));
+  AOM_UNSAFE_MEMSET(tot_mse, 0, sizeof(tot_mse));
   for (i = 0; i < sb_count; i++) {
     int gi;
     uint64_t best_mse = (uint64_t)1 << 63;
@@ -961,11 +963,11 @@ void av1_cdef_search(AV1_COMP *cpi) {
     if (rd < best_rd) {
       best_rd = rd;
       nb_strength_bits = i;
-      memcpy(cdef_info->cdef_strengths, best_lev0,
-             nb_strengths * sizeof(best_lev0[0]));
+      AOM_UNSAFE_MEMCPY(cdef_info->cdef_strengths, best_lev0,
+                        nb_strengths * sizeof(best_lev0[0]));
       if (num_planes > 1) {
-        memcpy(cdef_info->cdef_uv_strengths, best_lev1,
-               nb_strengths * sizeof(best_lev1[0]));
+        AOM_UNSAFE_MEMCPY(cdef_info->cdef_uv_strengths, best_lev1,
+                          nb_strengths * sizeof(best_lev1[0]));
       }
     }
   }

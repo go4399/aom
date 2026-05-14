@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2019, Alliance for Open Media. All rights reserved.
  *
@@ -53,7 +55,7 @@ static void copy_picture(const int bit_depth, const YV12_BUFFER_CONFIG *src,
     uint16_t *dst_ptr = dst->data[0];
 
     for (int row = 0; row < height; ++row) {
-      memcpy(dst_ptr, src_ptr, width * sizeof(dst_ptr[0]));
+      AOM_UNSAFE_MEMCPY(dst_ptr, src_ptr, width * sizeof(dst_ptr[0]));
       src_ptr += src->y_stride;
       dst_ptr += dst->stride[0] / 2;
     }
@@ -62,7 +64,7 @@ static void copy_picture(const int bit_depth, const YV12_BUFFER_CONFIG *src,
     uint8_t *dst_ptr = (uint8_t *)dst->data[0];
 
     for (int row = 0; row < height; ++row) {
-      memcpy(dst_ptr, src_ptr, width * sizeof(dst_ptr[0]));
+      AOM_UNSAFE_MEMCPY(dst_ptr, src_ptr, width * sizeof(dst_ptr[0]));
       src_ptr += src->y_stride;
       dst_ptr += dst->stride[0];
     }

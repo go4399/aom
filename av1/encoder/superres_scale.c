@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2020, Alliance for Open Media. All rights reserved.
  *
@@ -24,7 +26,7 @@ static void analyze_hor_freq(const AV1_COMP *cpi, double *energy) {
   const int height = buf->y_crop_height;
   DECLARE_ALIGNED(16, int32_t, coeff[16 * 4]);
   int n = 0;
-  memset(freq_energy, 0, sizeof(freq_energy));
+  AOM_UNSAFE_MEMSET(freq_energy, 0, sizeof(freq_energy));
   if (buf->flags & YV12_FLAG_HIGHBITDEPTH) {
     const int16_t *src16 = (const int16_t *)CONVERT_TO_SHORTPTR(buf->y_buffer);
     for (int i = 0; i < height - 4; i += 4) {

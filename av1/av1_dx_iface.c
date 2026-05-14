@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -270,7 +272,7 @@ static aom_codec_err_t decoder_peek_si_internal(const uint8_t *data,
   si->is_kf = 0;  // is_kf indicates whether the current packet contains a RAP
 
   ObuHeader obu_header;
-  memset(&obu_header, 0, sizeof(obu_header));
+  AOM_UNSAFE_MEMSET(&obu_header, 0, sizeof(obu_header));
   size_t payload_size = 0;
   size_t bytes_read = 0;
   uint8_t reduced_still_picture_hdr = 0;

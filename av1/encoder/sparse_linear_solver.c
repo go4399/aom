@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2021, Alliance for Open Media. All rights reserved.
  *
@@ -51,9 +53,9 @@ int av1_init_sparse_mtx(const int *rows, const int *cols, const double *values,
     return -1;
   }
 
-  memcpy(sm->row_pos, rows, num_elem * sizeof(*sm->row_pos));
-  memcpy(sm->col_pos, cols, num_elem * sizeof(*sm->col_pos));
-  memcpy(sm->value, values, num_elem * sizeof(*sm->value));
+  AOM_UNSAFE_MEMCPY(sm->row_pos, rows, num_elem * sizeof(*sm->row_pos));
+  AOM_UNSAFE_MEMCPY(sm->col_pos, cols, num_elem * sizeof(*sm->col_pos));
+  AOM_UNSAFE_MEMCPY(sm->value, values, num_elem * sizeof(*sm->value));
 
   return 0;
 }
@@ -102,13 +104,14 @@ int av1_init_combine_sparse_mtx(const SPARSE_MTX *sm1, const SPARSE_MTX *sm2,
     sm->row_pos[i] = sm1->row_pos[i] + row_offset1;
     sm->col_pos[i] = sm1->col_pos[i] + col_offset1;
   }
-  memcpy(sm->value, sm1->value, sm1->n_elem * sizeof(*sm1->value));
+  AOM_UNSAFE_MEMCPY(sm->value, sm1->value, sm1->n_elem * sizeof(*sm1->value));
   int n_elem1 = sm1->n_elem;
   for (int i = 0; i < sm2->n_elem; i++) {
     sm->row_pos[n_elem1 + i] = sm2->row_pos[i] + row_offset2;
     sm->col_pos[n_elem1 + i] = sm2->col_pos[i] + col_offset2;
   }
-  memcpy(sm->value + n_elem1, sm2->value, sm2->n_elem * sizeof(*sm2->value));
+  AOM_UNSAFE_MEMCPY(sm->value + n_elem1, sm2->value,
+                    sm2->n_elem * sizeof(*sm2->value));
   return 0;
 }
 
@@ -136,7 +139,7 @@ void av1_free_sparse_mtx_elems(SPARSE_MTX *sm) {
  */
 void av1_mtx_vect_multi_right(const SPARSE_MTX *sm, const double *srcv,
                               double *dstv, int dstl) {
-  memset(dstv, 0, sizeof(*dstv) * dstl);
+  AOM_UNSAFE_MEMSET(dstv, 0, sizeof(*dstv) * dstl);
   for (int i = 0; i < sm->n_elem; i++) {
     dstv[sm->row_pos[i]] += srcv[sm->col_pos[i]] * sm->value[i];
   }
@@ -154,7 +157,7 @@ void av1_mtx_vect_multi_right(const SPARSE_MTX *sm, const double *srcv,
  */
 void av1_mtx_vect_multi_left(const SPARSE_MTX *sm, const double *srcv,
                              double *dstv, int dstl) {
-  memset(dstv, 0, sizeof(*dstv) * dstl);
+  AOM_UNSAFE_MEMSET(dstv, 0, sizeof(*dstv) * dstl);
   for (int i = 0; i < sm->n_elem; i++) {
     dstv[sm->col_pos[i]] += srcv[sm->row_pos[i]] * sm->value[i];
   }
@@ -371,9 +374,9 @@ int av1_jacobi_sparse(const SPARSE_MTX *A, const double *b, int bl, double *x) {
   }
 
   int i;
-  memset(x_last, 0, sizeof(*x_last) * bl);
+  AOM_UNSAFE_MEMSET(x_last, 0, sizeof(*x_last) * bl);
   // get the diagonals of A
-  memset(diags, 0, sizeof(*diags) * bl);
+  AOM_UNSAFE_MEMSET(diags, 0, sizeof(*diags) * bl);
   for (int c = 0; c < A->n_elem; c++) {
     if (A->row_pos[c] != A->col_pos[c]) continue;
     diags[A->row_pos[c]] = A->value[c];
@@ -382,7 +385,7 @@ int av1_jacobi_sparse(const SPARSE_MTX *A, const double *b, int bl, double *x) {
   for (k = 0; k < MAX_CG_SP_ITER; k++) {
     // R = A - diag(diags)
     // get R*x_last
-    memset(Rx, 0, sizeof(*Rx) * bl);
+    AOM_UNSAFE_MEMSET(Rx, 0, sizeof(*Rx) * bl);
     for (int c = 0; c < A->n_elem; c++) {
       if (A->row_pos[c] == A->col_pos[c]) continue;
       Rx[A->row_pos[c]] += x_last[A->col_pos[c]] * A->value[c];

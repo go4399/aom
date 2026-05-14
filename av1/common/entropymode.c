@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -1077,8 +1079,8 @@ void av1_setup_past_independence(AV1_COMMON *cm) {
   av1_clearall_segfeatures(&cm->seg);
 
   if (cm->cur_frame->seg_map) {
-    memset(cm->cur_frame->seg_map, 0,
-           (cm->cur_frame->mi_rows * cm->cur_frame->mi_cols));
+    AOM_UNSAFE_MEMSET(cm->cur_frame->seg_map, 0,
+                      (cm->cur_frame->mi_rows * cm->cur_frame->mi_cols));
   }
 
   // reset mode ref deltas

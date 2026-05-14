@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -59,9 +61,9 @@ static void update_sharpness(loop_filter_info_n *lfi, int sharpness_lvl) {
 
     if (block_inside_limit < 1) block_inside_limit = 1;
 
-    memset(lfi->lfthr[lvl].lim, block_inside_limit, SIMD_WIDTH);
-    memset(lfi->lfthr[lvl].mblim, (2 * (lvl + 2) + block_inside_limit),
-           SIMD_WIDTH);
+    AOM_UNSAFE_MEMSET(lfi->lfthr[lvl].lim, block_inside_limit, SIMD_WIDTH);
+    AOM_UNSAFE_MEMSET(lfi->lfthr[lvl].mblim,
+                      (2 * (lvl + 2) + block_inside_limit), SIMD_WIDTH);
   }
 }
 
@@ -118,7 +120,7 @@ void av1_loop_filter_init(AV1_COMMON *cm) {
 
   // init hev threshold const vectors
   for (lvl = 0; lvl <= MAX_LOOP_FILTER; lvl++)
-    memset(lfi->lfthr[lvl].hev_thr, (lvl >> 4), SIMD_WIDTH);
+    AOM_UNSAFE_MEMSET(lfi->lfthr[lvl].hev_thr, (lvl >> 4), SIMD_WIDTH);
 }
 
 // Update the loop filter for the current frame.
@@ -170,8 +172,8 @@ void av1_loop_filter_frame_init(AV1_COMMON *cm, int plane_start,
         if (!lf->mode_ref_delta_enabled) {
           // we could get rid of this if we assume that deltas are set to
           // zero when not in use; encoder always uses deltas
-          memset(lfi->lvl[plane][seg_id][dir], lvl_seg,
-                 sizeof(lfi->lvl[plane][seg_id][dir]));
+          AOM_UNSAFE_MEMSET(lfi->lvl[plane][seg_id][dir], lvl_seg,
+                            sizeof(lfi->lvl[plane][seg_id][dir]));
         } else {
           int ref, mode;
           const int scale = 1 << (lvl_seg >> 5);
@@ -1331,7 +1333,7 @@ void av1_filter_block_plane_vert(const AV1_COMMON *const cm,
       uint32_t advance_units;
       TX_SIZE tx_size;
       AV1_DEBLOCKING_PARAMETERS params;
-      memset(&params, 0, sizeof(params));
+      AOM_UNSAFE_MEMSET(&params, 0, sizeof(params));
 
       tx_size =
           set_lpf_parameters(&params, ((ptrdiff_t)1 << scale_horz), cm, xd,
@@ -1932,7 +1934,7 @@ void av1_filter_block_plane_horz(const AV1_COMMON *const cm,
       uint32_t advance_units;
       TX_SIZE tx_size;
       AV1_DEBLOCKING_PARAMETERS params;
-      memset(&params, 0, sizeof(params));
+      AOM_UNSAFE_MEMSET(&params, 0, sizeof(params));
 
       tx_size = set_lpf_parameters(
           &params, (cm->mi_params.mi_stride << scale_vert), cm, xd, HORZ_EDGE,

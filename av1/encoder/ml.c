@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -135,7 +137,8 @@ void av1_nn_predict_v2(const float *feature, NN_CONFIG_V2 *nn_config,
   input_nodes = nn_fc_forward(input_nodes, nn_config->layer + num_layers);
   assert(nn_config->layer[num_layers].num_outputs == nn_config->num_logits);
   // Copy the final layer output
-  memcpy(output, input_nodes, sizeof(*input_nodes) * nn_config->num_logits);
+  AOM_UNSAFE_MEMCPY(output, input_nodes,
+                    sizeof(*input_nodes) * nn_config->num_logits);
   if (reduce_prec) av1_nn_output_prec_reduce(output, nn_config->num_logits);
 }
 #endif  // CONFIG_NN_V2

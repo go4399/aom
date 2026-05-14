@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -279,8 +281,8 @@ static inline void loop_filter_frame_mt_init(
 
   // Initialize cur_sb_col to -1 for all SB rows.
   for (int i = 0; i < MAX_MB_PLANE; i++) {
-    memset(lf_sync->cur_sb_col[i], -1,
-           sizeof(*(lf_sync->cur_sb_col[i])) * sb_rows);
+    AOM_UNSAFE_MEMSET(lf_sync->cur_sb_col[i], -1,
+                      sizeof(*(lf_sync->cur_sb_col[i])) * sb_rows);
   }
 
   enqueue_lf_jobs(lf_sync, start_mi_row, end_mi_row, planes_to_lf,

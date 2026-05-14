@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -35,8 +37,8 @@ static void extend_plane(uint8_t *const src, int src_stride, int width,
   uint8_t *dst_ptr2 = src_ptr2 + 1;
 
   for (i = v_start; i < v_end; ++i) {
-    memset(dst_ptr1, src_ptr1[0], extend_left);
-    memset(dst_ptr2, src_ptr2[0], extend_right);
+    AOM_UNSAFE_MEMSET(dst_ptr1, src_ptr1[0], extend_left);
+    AOM_UNSAFE_MEMSET(dst_ptr2, src_ptr2[0], extend_right);
     src_ptr1 += src_stride;
     src_ptr2 += src_stride;
     dst_ptr1 += src_stride;
@@ -50,7 +52,7 @@ static void extend_plane(uint8_t *const src, int src_stride, int width,
   dst_ptr1 = src_ptr1 + src_stride * -extend_top;
 
   for (i = 0; i < extend_top; ++i) {
-    memcpy(dst_ptr1, src_ptr1, linesize);
+    AOM_UNSAFE_MEMCPY(dst_ptr1, src_ptr1, linesize);
     dst_ptr1 += src_stride;
   }
 
@@ -59,7 +61,7 @@ static void extend_plane(uint8_t *const src, int src_stride, int width,
 
   for (i = 0; i < extend_bottom; ++i) {
     dst_ptr2 += src_stride;
-    memcpy(dst_ptr2, src_ptr2, linesize);
+    AOM_UNSAFE_MEMCPY(dst_ptr2, src_ptr2, linesize);
   }
 }
 
@@ -95,7 +97,7 @@ static void extend_plane_high(uint8_t *const src8, int src_stride, int width,
   dst_ptr1 = src_ptr1 + src_stride * -extend_top;
 
   for (i = 0; i < extend_top; ++i) {
-    memcpy(dst_ptr1, src_ptr1, linesize * sizeof(uint16_t));
+    AOM_UNSAFE_MEMCPY(dst_ptr1, src_ptr1, linesize * sizeof(uint16_t));
     dst_ptr1 += src_stride;
   }
 
@@ -104,7 +106,7 @@ static void extend_plane_high(uint8_t *const src8, int src_stride, int width,
 
   for (i = 0; i < extend_bottom; ++i) {
     dst_ptr2 += src_stride;
-    memcpy(dst_ptr2, src_ptr2, linesize * sizeof(uint16_t));
+    AOM_UNSAFE_MEMCPY(dst_ptr2, src_ptr2, linesize * sizeof(uint16_t));
   }
 }
 #endif  // CONFIG_AV1_HIGHBITDEPTH
@@ -187,10 +189,11 @@ void aom_extend_frame_borders_c(YV12_BUFFER_CONFIG *ybf, const int num_planes) {
 }
 
 #if CONFIG_AV1_HIGHBITDEPTH
-static void memcpy_short_addr(uint8_t *dst8, const uint8_t *src8, int num) {
+static void AOM_UNSAFE_MEMCPY_short_addr(uint8_t *dst8, const uint8_t *src8,
+                                         int num) {
   uint16_t *dst = CONVERT_TO_SHORTPTR(dst8);
   uint16_t *src = CONVERT_TO_SHORTPTR(src8);
-  memcpy(dst, src, num * sizeof(uint16_t));
+  AOM_UNSAFE_MEMCPY(dst, src, num * sizeof(uint16_t));
 }
 #endif
 
@@ -213,7 +216,8 @@ void aom_yv12_copy_frame_c(const YV12_BUFFER_CONFIG *src_bc,
       const int is_uv = plane > 0;
 
       for (int row = 0; row < src_bc->heights[is_uv]; ++row) {
-        memcpy_short_addr(plane_dst, plane_src, src_bc->widths[is_uv]);
+        AOM_UNSAFE_MEMCPY_short_addr(plane_dst, plane_src,
+                                     src_bc->widths[is_uv]);
         plane_src += src_bc->strides[is_uv];
         plane_dst += dst_bc->strides[is_uv];
       }
@@ -228,7 +232,7 @@ void aom_yv12_copy_frame_c(const YV12_BUFFER_CONFIG *src_bc,
     const int is_uv = plane > 0;
 
     for (int row = 0; row < src_bc->heights[is_uv]; ++row) {
-      memcpy(plane_dst, plane_src, src_bc->widths[is_uv]);
+      AOM_UNSAFE_MEMCPY(plane_dst, plane_src, src_bc->widths[is_uv]);
       plane_src += src_bc->strides[is_uv];
       plane_dst += dst_bc->strides[is_uv];
     }
@@ -249,7 +253,7 @@ void aom_yv12_copy_y_c(const YV12_BUFFER_CONFIG *src_ybc,
     const uint16_t *src16 = CONVERT_TO_SHORTPTR(src);
     uint16_t *dst16 = CONVERT_TO_SHORTPTR(dst);
     for (row = 0; row < height; ++row) {
-      memcpy(dst16, src16, width * sizeof(uint16_t));
+      AOM_UNSAFE_MEMCPY(dst16, src16, width * sizeof(uint16_t));
       src16 += src_ybc->y_stride;
       dst16 += dst_ybc->y_stride;
     }
@@ -258,7 +262,7 @@ void aom_yv12_copy_y_c(const YV12_BUFFER_CONFIG *src_ybc,
 #endif
 
   for (row = 0; row < height; ++row) {
-    memcpy(dst, src, width);
+    AOM_UNSAFE_MEMCPY(dst, src, width);
     src += src_ybc->y_stride;
     dst += dst_ybc->y_stride;
   }
@@ -276,7 +280,7 @@ void aom_yv12_copy_u_c(const YV12_BUFFER_CONFIG *src_bc,
     const uint16_t *src16 = CONVERT_TO_SHORTPTR(src);
     uint16_t *dst16 = CONVERT_TO_SHORTPTR(dst);
     for (row = 0; row < height; ++row) {
-      memcpy(dst16, src16, width * sizeof(uint16_t));
+      AOM_UNSAFE_MEMCPY(dst16, src16, width * sizeof(uint16_t));
       src16 += src_bc->uv_stride;
       dst16 += dst_bc->uv_stride;
     }
@@ -284,7 +288,7 @@ void aom_yv12_copy_u_c(const YV12_BUFFER_CONFIG *src_bc,
   }
 #endif
   for (row = 0; row < height; ++row) {
-    memcpy(dst, src, width);
+    AOM_UNSAFE_MEMCPY(dst, src, width);
     src += src_bc->uv_stride;
     dst += dst_bc->uv_stride;
   }
@@ -302,7 +306,7 @@ void aom_yv12_copy_v_c(const YV12_BUFFER_CONFIG *src_bc,
     const uint16_t *src16 = CONVERT_TO_SHORTPTR(src);
     uint16_t *dst16 = CONVERT_TO_SHORTPTR(dst);
     for (row = 0; row < height; ++row) {
-      memcpy(dst16, src16, width * sizeof(uint16_t));
+      AOM_UNSAFE_MEMCPY(dst16, src16, width * sizeof(uint16_t));
       src16 += src_bc->uv_stride;
       dst16 += dst_bc->uv_stride;
     }
@@ -310,7 +314,7 @@ void aom_yv12_copy_v_c(const YV12_BUFFER_CONFIG *src_bc,
   }
 #endif
   for (row = 0; row < height; ++row) {
-    memcpy(dst, src, width);
+    AOM_UNSAFE_MEMCPY(dst, src, width);
     src += src_bc->uv_stride;
     dst += dst_bc->uv_stride;
   }
@@ -331,7 +335,7 @@ void aom_yv12_partial_copy_y_c(const YV12_BUFFER_CONFIG *src_ybc, int hstart1,
         CONVERT_TO_SHORTPTR(dst + vstart2 * dst_ybc->y_stride + hstart2);
 
     for (row = vstart1; row < vend1; ++row) {
-      memcpy(dst16, src16, (hend1 - hstart1) * sizeof(uint16_t));
+      AOM_UNSAFE_MEMCPY(dst16, src16, (hend1 - hstart1) * sizeof(uint16_t));
       src16 += src_ybc->y_stride;
       dst16 += dst_ybc->y_stride;
     }
@@ -342,7 +346,7 @@ void aom_yv12_partial_copy_y_c(const YV12_BUFFER_CONFIG *src_ybc, int hstart1,
   dst = (dst + vstart2 * dst_ybc->y_stride + hstart2);
 
   for (row = vstart1; row < vend1; ++row) {
-    memcpy(dst, src, (hend1 - hstart1));
+    AOM_UNSAFE_MEMCPY(dst, src, (hend1 - hstart1));
     src += src_ybc->y_stride;
     dst += dst_ybc->y_stride;
   }
@@ -369,7 +373,7 @@ void aom_yv12_partial_copy_u_c(const YV12_BUFFER_CONFIG *src_bc, int hstart1,
     uint16_t *dst16 =
         CONVERT_TO_SHORTPTR(dst + vstart2 * dst_bc->uv_stride + hstart2);
     for (row = vstart1; row < vend1; ++row) {
-      memcpy(dst16, src16, (hend1 - hstart1) * sizeof(uint16_t));
+      AOM_UNSAFE_MEMCPY(dst16, src16, (hend1 - hstart1) * sizeof(uint16_t));
       src16 += src_bc->uv_stride;
       dst16 += dst_bc->uv_stride;
     }
@@ -380,7 +384,7 @@ void aom_yv12_partial_copy_u_c(const YV12_BUFFER_CONFIG *src_bc, int hstart1,
   dst = (dst + vstart2 * dst_bc->uv_stride + hstart2);
 
   for (row = vstart1; row < vend1; ++row) {
-    memcpy(dst, src, (hend1 - hstart1));
+    AOM_UNSAFE_MEMCPY(dst, src, (hend1 - hstart1));
     src += src_bc->uv_stride;
     dst += dst_bc->uv_stride;
   }
@@ -407,7 +411,7 @@ void aom_yv12_partial_copy_v_c(const YV12_BUFFER_CONFIG *src_bc, int hstart1,
     uint16_t *dst16 =
         CONVERT_TO_SHORTPTR(dst + vstart2 * dst_bc->uv_stride + hstart2);
     for (row = vstart1; row < vend1; ++row) {
-      memcpy(dst16, src16, (hend1 - hstart1) * sizeof(uint16_t));
+      AOM_UNSAFE_MEMCPY(dst16, src16, (hend1 - hstart1) * sizeof(uint16_t));
       src16 += src_bc->uv_stride;
       dst16 += dst_bc->uv_stride;
     }
@@ -418,7 +422,7 @@ void aom_yv12_partial_copy_v_c(const YV12_BUFFER_CONFIG *src_bc, int hstart1,
   dst = (dst + vstart2 * dst_bc->uv_stride + hstart2);
 
   for (row = vstart1; row < vend1; ++row) {
-    memcpy(dst, src, (hend1 - hstart1));
+    AOM_UNSAFE_MEMCPY(dst, src, (hend1 - hstart1));
     src += src_bc->uv_stride;
     dst += dst_bc->uv_stride;
   }
@@ -437,7 +441,7 @@ int aom_yv12_realloc_with_new_border_c(YV12_BUFFER_CONFIG *ybf, int new_border,
   if (ybf) {
     if (new_border == ybf->border) return 0;
     YV12_BUFFER_CONFIG new_buf;
-    memset(&new_buf, 0, sizeof(new_buf));
+    AOM_UNSAFE_MEMSET(&new_buf, 0, sizeof(new_buf));
     const int error = aom_alloc_frame_buffer(
         &new_buf, ybf->y_crop_width, ybf->y_crop_height, ybf->subsampling_x,
         ybf->subsampling_y, ybf->flags & YV12_FLAG_HIGHBITDEPTH, new_border,

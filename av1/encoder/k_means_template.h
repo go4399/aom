@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -77,7 +79,8 @@ static void RENAME(calc_centroids)(const int16_t *data, int16_t *centroids,
   int centroids_sum[AV1_K_MEANS_DIM * PALETTE_MAX_SIZE];
   unsigned int rand_state = (unsigned int)data[0];
   assert(n <= 32768);
-  memset(centroids_sum, 0, sizeof(centroids_sum[0]) * k * AV1_K_MEANS_DIM);
+  AOM_UNSAFE_MEMSET(centroids_sum, 0,
+                    sizeof(centroids_sum[0]) * k * AV1_K_MEANS_DIM);
 
   for (i = 0; i < n; ++i) {
     const int index = indices[i];
@@ -91,9 +94,9 @@ static void RENAME(calc_centroids)(const int16_t *data, int16_t *centroids,
 
   for (i = 0; i < k; ++i) {
     if (count[i] == 0) {
-      memcpy(centroids + i * AV1_K_MEANS_DIM,
-             data + (lcg_rand16(&rand_state) % n) * AV1_K_MEANS_DIM,
-             sizeof(centroids[0]) * AV1_K_MEANS_DIM);
+      AOM_UNSAFE_MEMCPY(centroids + i * AV1_K_MEANS_DIM,
+                        data + (lcg_rand16(&rand_state) % n) * AV1_K_MEANS_DIM,
+                        sizeof(centroids[0]) * AV1_K_MEANS_DIM);
     } else {
       for (j = 0; j < AV1_K_MEANS_DIM; ++j) {
         centroids[i * AV1_K_MEANS_DIM + j] =
@@ -145,9 +148,9 @@ void RENAME(av1_k_means)(const int16_t *data, int16_t *centroids,
   }
   if (i == max_itr) best_l = l;
   if (best_l != 0) {
-    memcpy(centroids, meta_centroids[1],
-           sizeof(centroids[0]) * k * AV1_K_MEANS_DIM);
-    memcpy(indices, meta_indices[1], sizeof(indices[0]) * n);
+    AOM_UNSAFE_MEMCPY(centroids, meta_centroids[1],
+                      sizeof(centroids[0]) * k * AV1_K_MEANS_DIM);
+    AOM_UNSAFE_MEMCPY(indices, meta_indices[1], sizeof(indices[0]) * n);
   }
 }
 #undef RENAME_

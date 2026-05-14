@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2019, Alliance for Open Media. All rights reserved.
  *
@@ -1063,7 +1065,7 @@ void av1_get_ref_frames(RefFrameMapPair ref_frame_map_pairs[REF_FRAMES],
 
   RefBufMapData buffer_map[REF_FRAMES];
   int n_bufs = 0;
-  memset(buffer_map, 0, REF_FRAMES * sizeof(buffer_map[0]));
+  AOM_UNSAFE_MEMSET(buffer_map, 0, REF_FRAMES * sizeof(buffer_map[0]));
   int min_level = MAX_ARF_LAYERS;
   int max_level = 0;
   GF_GROUP *gf_group = &cpi->ppi->gf_group;
@@ -1262,8 +1264,8 @@ int av1_encode_strategy(AV1_COMP *const cpi, size_t *const size,
   EncodeFrameInput frame_input;
   EncodeFrameParams frame_params;
   size_t frame_size;
-  memset(&frame_input, 0, sizeof(frame_input));
-  memset(&frame_params, 0, sizeof(frame_params));
+  AOM_UNSAFE_MEMSET(&frame_input, 0, sizeof(frame_input));
+  AOM_UNSAFE_MEMSET(&frame_params, 0, sizeof(frame_params));
   frame_size = 0;
 
 #if CONFIG_BITRATE_ACCURACY && CONFIG_THREE_PASS
@@ -1704,8 +1706,8 @@ int av1_encode_strategy(AV1_COMP *const cpi, size_t *const size,
   // frame_params->remapped_ref_idx here and they will be used when encoding
   // this frame.  If frame_params->remapped_ref_idx is setup independently of
   // cm->remapped_ref_idx then update_ref_frame_map() will have no effect.
-  memcpy(frame_params.remapped_ref_idx, cm->remapped_ref_idx,
-         REF_FRAMES * sizeof(*cm->remapped_ref_idx));
+  AOM_UNSAFE_MEMCPY(frame_params.remapped_ref_idx, cm->remapped_ref_idx,
+                    REF_FRAMES * sizeof(*cm->remapped_ref_idx));
 
   cpi->td.mb.rdmult_delta_qindex = cpi->td.mb.delta_qindex = 0;
 

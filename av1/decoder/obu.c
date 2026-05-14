@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2017, Alliance for Open Media. All rights reserved.
  *
@@ -888,7 +890,7 @@ int aom_decode_frame_from_obus(struct AV1Decoder *pbi, const uint8_t *data,
 
   assert(pbi->error.setjmp);
 
-  memset(&obu_header, 0, sizeof(obu_header));
+  AOM_UNSAFE_MEMSET(&obu_header, 0, sizeof(obu_header));
   pbi->seen_frame_header = 0;
   pbi->next_start_tile = 0;
   pbi->num_tile_groups = 0;

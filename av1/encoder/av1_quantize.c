@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -30,8 +32,8 @@
 
 void av1_quantize_skip(intptr_t n_coeffs, tran_low_t *qcoeff_ptr,
                        tran_low_t *dqcoeff_ptr, uint16_t *eob_ptr) {
-  memset(qcoeff_ptr, 0, n_coeffs * sizeof(*qcoeff_ptr));
-  memset(dqcoeff_ptr, 0, n_coeffs * sizeof(*dqcoeff_ptr));
+  AOM_UNSAFE_MEMSET(qcoeff_ptr, 0, n_coeffs * sizeof(*qcoeff_ptr));
+  AOM_UNSAFE_MEMSET(dqcoeff_ptr, 0, n_coeffs * sizeof(*dqcoeff_ptr));
   *eob_ptr = 0;
 }
 
@@ -42,8 +44,8 @@ int av1_quantize_fp_no_qmatrix(const int16_t quant_ptr[2],
                                const tran_low_t *coeff_ptr,
                                tran_low_t *qcoeff_ptr,
                                tran_low_t *dqcoeff_ptr) {
-  memset(qcoeff_ptr, 0, coeff_count * sizeof(*qcoeff_ptr));
-  memset(dqcoeff_ptr, 0, coeff_count * sizeof(*dqcoeff_ptr));
+  AOM_UNSAFE_MEMSET(qcoeff_ptr, 0, coeff_count * sizeof(*qcoeff_ptr));
+  AOM_UNSAFE_MEMSET(dqcoeff_ptr, 0, coeff_count * sizeof(*dqcoeff_ptr));
   const int rounding[2] = { ROUND_POWER_OF_TWO(round_ptr[0], log_scale),
                             ROUND_POWER_OF_TWO(round_ptr[1], log_scale) };
   int eob = 0;
@@ -85,13 +87,18 @@ static void quantize_fp_helper_c(
   (void)quant_shift_ptr;
   (void)iscan;
 
-  memset(qcoeff_ptr, 0, n_coeffs * sizeof(*qcoeff_ptr));
-  memset(dqcoeff_ptr, 0, n_coeffs * sizeof(*dqcoeff_ptr));
+  AOM_UNSAFE_MEMSET(qcoeff_ptr, 0, n_coeffs * sizeof(*qcoeff_ptr));
+  AOM_UNSAFE_MEMSET(dqcoeff_ptr, 0, n_coeffs * sizeof(*dqcoeff_ptr));
 
   if (qm_ptr == NULL && iqm_ptr == NULL) {
-    *eob_ptr = av1_quantize_fp_no_qmatrix(quant_ptr, dequant_ptr, round_ptr,
-                                          log_scale, scan, (int)n_coeffs,
-                                          coeff_ptr, qcoeff_ptr, dqcoeff_ptr);
+    *eob_ptr = av1_quantize_fp_no_qmatrix(
+        AOM_UNSAFE_FORGE_BIDI_INDEXABLE(const int16_t *, quant_ptr,
+                                        sizeof(quant_ptr[0]) * 2),
+        AOM_UNSAFE_FORGE_BIDI_INDEXABLE(const int16_t *, dequant_ptr,
+                                        sizeof(dequant_ptr[0]) * 2),
+        AOM_UNSAFE_FORGE_BIDI_INDEXABLE(const int16_t *, round_ptr,
+                                        sizeof(round_ptr[0]) * 2),
+        log_scale, scan, (int)n_coeffs, coeff_ptr, qcoeff_ptr, dqcoeff_ptr);
   } else {
     // Quantization pass: All coefficients with index >= zero_flag are
     // skippable. Note: zero_flag can be zero.
@@ -219,8 +226,8 @@ void av1_quantize_lp_c(const int16_t *coeff_ptr, intptr_t n_coeffs,
   (void)iscan;
   int eob = -1;
 
-  memset(qcoeff_ptr, 0, n_coeffs * sizeof(*qcoeff_ptr));
-  memset(dqcoeff_ptr, 0, n_coeffs * sizeof(*dqcoeff_ptr));
+  AOM_UNSAFE_MEMSET(qcoeff_ptr, 0, n_coeffs * sizeof(*qcoeff_ptr));
+  AOM_UNSAFE_MEMSET(dqcoeff_ptr, 0, n_coeffs * sizeof(*dqcoeff_ptr));
 
   // Quantization pass: All coefficients with index >= zero_flag are
   // skippable. Note: zero_flag can be zero.
@@ -388,8 +395,8 @@ static void quantize_dc(const tran_low_t *coeff_ptr, int n_coeffs,
   int32_t tmp32;
   int dequant;
 
-  memset(qcoeff_ptr, 0, n_coeffs * sizeof(*qcoeff_ptr));
-  memset(dqcoeff_ptr, 0, n_coeffs * sizeof(*dqcoeff_ptr));
+  AOM_UNSAFE_MEMSET(qcoeff_ptr, 0, n_coeffs * sizeof(*qcoeff_ptr));
+  AOM_UNSAFE_MEMSET(dqcoeff_ptr, 0, n_coeffs * sizeof(*dqcoeff_ptr));
 
   if (!skip_block) {
     const int wt = qm_ptr != NULL ? qm_ptr[rc] : (1 << AOM_QM_BITS);
@@ -522,8 +529,8 @@ static inline void highbd_quantize_dc(
     const qm_val_t *qm_ptr, const qm_val_t *iqm_ptr, const int log_scale) {
   int eob = -1;
 
-  memset(qcoeff_ptr, 0, n_coeffs * sizeof(*qcoeff_ptr));
-  memset(dqcoeff_ptr, 0, n_coeffs * sizeof(*dqcoeff_ptr));
+  AOM_UNSAFE_MEMSET(qcoeff_ptr, 0, n_coeffs * sizeof(*qcoeff_ptr));
+  AOM_UNSAFE_MEMSET(dqcoeff_ptr, 0, n_coeffs * sizeof(*dqcoeff_ptr));
 
   if (!skip_block) {
     const qm_val_t wt = qm_ptr != NULL ? qm_ptr[0] : (1 << AOM_QM_BITS);
@@ -784,12 +791,12 @@ static void set_qmatrix(const CommonQuantParams *quant_params, int segment_id,
   const int qmlevel_ls[MAX_MB_PLANE] = { qmlevel_y, qmlevel_u, qmlevel_v };
   for (int i = 0; i < MAX_MB_PLANE; ++i) {
     const int qmlevel = qmlevel_ls[i];
-    memcpy(&xd->plane[i].seg_qmatrix[segment_id],
-           quant_params->gqmatrix[qmlevel][i],
-           sizeof(quant_params->gqmatrix[qmlevel][i]));
-    memcpy(&xd->plane[i].seg_iqmatrix[segment_id],
-           quant_params->giqmatrix[qmlevel][i],
-           sizeof(quant_params->giqmatrix[qmlevel][i]));
+    AOM_UNSAFE_MEMCPY(&xd->plane[i].seg_qmatrix[segment_id],
+                      quant_params->gqmatrix[qmlevel][i],
+                      sizeof(quant_params->gqmatrix[qmlevel][i]));
+    AOM_UNSAFE_MEMCPY(&xd->plane[i].seg_iqmatrix[segment_id],
+                      quant_params->giqmatrix[qmlevel][i],
+                      sizeof(quant_params->giqmatrix[qmlevel][i]));
   }
 }
 

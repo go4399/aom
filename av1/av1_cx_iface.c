@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -652,7 +654,7 @@ static aom_codec_err_t allocate_and_set_string(const char *src,
                "Failed to allocate memory for copying parameters.");
       return AOM_CODEC_MEM_ERROR;
     }
-    memcpy(tmp, src, len);
+    AOM_UNSAFE_MEMCPY(tmp, src, len);
     *dst = tmp;
   }
   return 0;
@@ -1629,8 +1631,8 @@ static void set_encoder_config(AV1EncoderConfig *oxcf,
   oxcf->border_in_pixels =
       av1_get_enc_border_size(av1_is_resize_needed(oxcf),
                               (oxcf->kf_cfg.key_freq_max == 0), BLOCK_128X128);
-  memcpy(oxcf->target_seq_level_idx, extra_cfg->target_seq_level_idx,
-         sizeof(oxcf->target_seq_level_idx));
+  AOM_UNSAFE_MEMCPY(oxcf->target_seq_level_idx, extra_cfg->target_seq_level_idx,
+                    sizeof(oxcf->target_seq_level_idx));
   oxcf->tier_mask = extra_cfg->tier_mask;
 
   oxcf->partition_info_path = extra_cfg->partition_info_path;
@@ -3743,7 +3745,8 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
           aom_internal_error(&ppi->error, AOM_CODEC_ERROR,
                              "ctx->cx_data buffer full");
         }
-        memmove(ctx->cx_data + move_offset, ctx->cx_data, cpi_data.frame_size);
+        AOM_UNSAFE_MEMMOVE(ctx->cx_data + move_offset, ctx->cx_data,
+                           cpi_data.frame_size);
         obu_header_size = av1_write_obu_header(
             &ppi->level_params, &cpi->frame_header_count,
             OBU_TEMPORAL_DELIMITER,
@@ -3777,8 +3780,8 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
           aom_internal_error(&ppi->error, AOM_CODEC_ERROR,
                              "cpi_data.cx_data buffer full");
         }
-        memmove(cpi_data.cx_data + length_field_size, cpi_data.cx_data,
-                cpi_data.frame_size);
+        AOM_UNSAFE_MEMMOVE(cpi_data.cx_data + length_field_size,
+                           cpi_data.cx_data, cpi_data.frame_size);
         if (av1_write_uleb_obu_size(cpi_data.frame_size, cpi_data.cx_data,
                                     length_field_size) != AOM_CODEC_OK) {
           aom_internal_error(&ppi->error, AOM_CODEC_ERROR, NULL);
@@ -3815,7 +3818,8 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
           aom_internal_error(&ppi->error, AOM_CODEC_ERROR,
                              "ctx->cx_data buffer full");
         }
-        memmove(ctx->cx_data + length_field_size, ctx->cx_data, tu_size);
+        AOM_UNSAFE_MEMMOVE(ctx->cx_data + length_field_size, ctx->cx_data,
+                           tu_size);
         if (av1_write_uleb_obu_size(tu_size, ctx->cx_data, length_field_size) !=
             AOM_CODEC_OK) {
           aom_internal_error(&ppi->error, AOM_CODEC_ERROR, NULL);
@@ -4352,7 +4356,7 @@ static aom_codec_err_t ctrl_set_external_rate_control(aom_codec_alg_priv_t *ctx,
     const FRAME_INFO *frame_info = &cpi->frame_info;
     aom_rc_config_t ratectrl_config;
     aom_codec_err_t codec_status;
-    memset(&ratectrl_config, 0, sizeof(ratectrl_config));
+    AOM_UNSAFE_MEMSET(&ratectrl_config, 0, sizeof(ratectrl_config));
 
     ratectrl_config.frame_width = frame_info->frame_width;
     ratectrl_config.frame_height = frame_info->frame_height;
@@ -4919,7 +4923,8 @@ static aom_codec_err_t ctrl_get_luma_cdef_strength(aom_codec_alg_priv_t *ctx,
   int *arg = va_arg(args, int *);
   AV1_COMMON const *cm = &ctx->ppi->cpi->common;
   if (arg == NULL) return AOM_CODEC_INVALID_PARAM;
-  memcpy(arg, cm->cdef_info.cdef_strengths, CDEF_MAX_STRENGTHS * sizeof(*arg));
+  AOM_UNSAFE_MEMCPY(arg, cm->cdef_info.cdef_strengths,
+                    CDEF_MAX_STRENGTHS * sizeof(*arg));
 
   return AOM_CODEC_OK;
 }

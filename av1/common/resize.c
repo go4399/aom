@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -470,7 +472,7 @@ static int get_down2_steps(int in_length, int out_length) {
 static void resize_multistep(const uint8_t *const input, int length,
                              uint8_t *output, int olength, uint8_t *otmp) {
   if (length == olength) {
-    memcpy(output, input, sizeof(output[0]) * length);
+    AOM_UNSAFE_MEMCPY(output, input, sizeof(output[0]) * length);
     return;
   }
   const int steps = get_down2_steps(length, olength);
@@ -637,8 +639,10 @@ static bool upscale_normative_rect(const uint8_t *const input, int height,
     tmp_left = (uint8_t *)aom_malloc(sizeof(*tmp_left) * border_cols * height);
     if (!tmp_left) return false;
     for (int i = 0; i < height; i++) {
-      memcpy(tmp_left + i * border_cols, in_tl + i * in_stride, border_cols);
-      memset(in_tl + i * in_stride, input[i * in_stride], border_cols);
+      AOM_UNSAFE_MEMCPY(tmp_left + i * border_cols, in_tl + i * in_stride,
+                        border_cols);
+      AOM_UNSAFE_MEMSET(in_tl + i * in_stride, input[i * in_stride],
+                        border_cols);
     }
   }
   if (pad_right) {
@@ -649,9 +653,10 @@ static bool upscale_normative_rect(const uint8_t *const input, int height,
       return false;
     }
     for (int i = 0; i < height; i++) {
-      memcpy(tmp_right + i * border_cols, in_tr + i * in_stride, border_cols);
-      memset(in_tr + i * in_stride, input[i * in_stride + width - 1],
-             border_cols);
+      AOM_UNSAFE_MEMCPY(tmp_right + i * border_cols, in_tr + i * in_stride,
+                        border_cols);
+      AOM_UNSAFE_MEMSET(in_tr + i * in_stride, input[i * in_stride + width - 1],
+                        border_cols);
     }
   }
 
@@ -662,13 +667,15 @@ static bool upscale_normative_rect(const uint8_t *const input, int height,
   // Restore the left/right border pixels
   if (pad_left) {
     for (int i = 0; i < height; i++) {
-      memcpy(in_tl + i * in_stride, tmp_left + i * border_cols, border_cols);
+      AOM_UNSAFE_MEMCPY(in_tl + i * in_stride, tmp_left + i * border_cols,
+                        border_cols);
     }
     aom_free(tmp_left);
   }
   if (pad_right) {
     for (int i = 0; i < height; i++) {
-      memcpy(in_tr + i * in_stride, tmp_right + i * border_cols, border_cols);
+      AOM_UNSAFE_MEMCPY(in_tr + i * in_stride, tmp_right + i * border_cols,
+                        border_cols);
     }
     aom_free(tmp_right);
   }
@@ -880,7 +887,7 @@ static void highbd_resize_multistep(const uint16_t *const input, int length,
                                     uint16_t *output, int olength,
                                     uint16_t *otmp, int bd) {
   if (length == olength) {
-    memcpy(output, input, sizeof(output[0]) * length);
+    AOM_UNSAFE_MEMCPY(output, input, sizeof(output[0]) * length);
     return;
   }
   const int steps = get_down2_steps(length, olength);
@@ -991,7 +998,8 @@ static bool highbd_upscale_normative_rect(const uint8_t *const input,
     tmp_left = (uint16_t *)aom_malloc(sizeof(*tmp_left) * border_cols * height);
     if (!tmp_left) return false;
     for (int i = 0; i < height; i++) {
-      memcpy(tmp_left + i * border_cols, in_tl + i * in_stride, border_size);
+      AOM_UNSAFE_MEMCPY(tmp_left + i * border_cols, in_tl + i * in_stride,
+                        border_size);
       aom_memset16(in_tl + i * in_stride, input16[i * in_stride], border_cols);
     }
   }
@@ -1003,7 +1011,8 @@ static bool highbd_upscale_normative_rect(const uint8_t *const input,
       return false;
     }
     for (int i = 0; i < height; i++) {
-      memcpy(tmp_right + i * border_cols, in_tr + i * in_stride, border_size);
+      AOM_UNSAFE_MEMCPY(tmp_right + i * border_cols, in_tr + i * in_stride,
+                        border_size);
       aom_memset16(in_tr + i * in_stride, input16[i * in_stride + width - 1],
                    border_cols);
     }
@@ -1017,13 +1026,15 @@ static bool highbd_upscale_normative_rect(const uint8_t *const input,
   // Restore the left/right border pixels
   if (pad_left) {
     for (int i = 0; i < height; i++) {
-      memcpy(in_tl + i * in_stride, tmp_left + i * border_cols, border_size);
+      AOM_UNSAFE_MEMCPY(in_tl + i * in_stride, tmp_left + i * border_cols,
+                        border_size);
     }
     aom_free(tmp_left);
   }
   if (pad_right) {
     for (int i = 0; i < height; i++) {
-      memcpy(in_tr + i * in_stride, tmp_right + i * border_cols, border_size);
+      AOM_UNSAFE_MEMCPY(in_tr + i * in_stride, tmp_right + i * border_cols,
+                        border_size);
     }
     aom_free(tmp_right);
   }
@@ -1322,7 +1333,7 @@ void av1_superres_upscale(AV1_COMMON *cm, BufferPool *const pool,
   const int byte_alignment = cm->features.byte_alignment;
 
   YV12_BUFFER_CONFIG copy_buffer;
-  memset(&copy_buffer, 0, sizeof(copy_buffer));
+  AOM_UNSAFE_MEMSET(&copy_buffer, 0, sizeof(copy_buffer));
 
   YV12_BUFFER_CONFIG *const frame_to_show = &cm->cur_frame->buf;
 

@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -549,7 +551,7 @@ void av1_dr_prediction_z1_c(uint8_t *dst, ptrdiff_t stride, int bw, int bh,
 
     if (base >= max_base_x) {
       for (int i = r; i < bh; ++i) {
-        memset(dst, above[max_base_x], bw * sizeof(dst[0]));
+        AOM_UNSAFE_MEMSET(dst, above[max_base_x], bw * sizeof(dst[0]));
         dst += stride;
       }
       return;
@@ -868,7 +870,7 @@ void av1_filter_intra_predictor_c(uint8_t *dst, ptrdiff_t stride,
   assert(bw <= 32 && bh <= 32);
 
   for (r = 0; r < bh; ++r) buffer[r + 1][0] = left[r];
-  memcpy(buffer[0], &above[-1], (bw + 1) * sizeof(uint8_t));
+  AOM_UNSAFE_MEMCPY(buffer[0], &above[-1], (bw + 1) * sizeof(uint8_t));
 
   for (r = 1; r < bh + 1; r += 2)
     for (c = 1; c < bw + 1; c += 4) {
@@ -899,7 +901,7 @@ void av1_filter_intra_predictor_c(uint8_t *dst, ptrdiff_t stride,
     }
 
   for (r = 0; r < bh; ++r) {
-    memcpy(dst, &buffer[r + 1][1], bw * sizeof(uint8_t));
+    AOM_UNSAFE_MEMCPY(dst, &buffer[r + 1][1], bw * sizeof(uint8_t));
     dst += stride;
   }
 }
@@ -918,7 +920,7 @@ static void highbd_filter_intra_predictor(uint16_t *dst, ptrdiff_t stride,
   assert(bw <= 32 && bh <= 32);
 
   for (r = 0; r < bh; ++r) buffer[r + 1][0] = left[r];
-  memcpy(buffer[0], &above[-1], (bw + 1) * sizeof(buffer[0][0]));
+  AOM_UNSAFE_MEMCPY(buffer[0], &above[-1], (bw + 1) * sizeof(buffer[0][0]));
 
   for (r = 1; r < bh + 1; r += 2)
     for (c = 1; c < bw + 1; c += 4) {
@@ -949,7 +951,7 @@ static void highbd_filter_intra_predictor(uint16_t *dst, ptrdiff_t stride,
     }
 
   for (r = 0; r < bh; ++r) {
-    memcpy(dst, &buffer[r + 1][1], bw * sizeof(dst[0]));
+    AOM_UNSAFE_MEMCPY(dst, &buffer[r + 1][1], bw * sizeof(dst[0]));
     dst += stride;
   }
 }
@@ -1034,7 +1036,7 @@ void av1_filter_intra_edge_c(uint8_t *p, int sz, int strength) {
   const int filt = strength - 1;
   uint8_t edge[129];
 
-  memcpy(edge, p, sz * sizeof(*p));
+  AOM_UNSAFE_MEMCPY(edge, p, sz * sizeof(*p));
   for (int i = 1; i < sz; i++) {
     int s = 0;
     for (int j = 0; j < INTRA_EDGE_TAPS; j++) {
@@ -1105,8 +1107,8 @@ static void build_directional_and_filter_intra_predictors(
   // valgrind errors. Uninitialized reads in intra pred modules (e.g. width = 4
   // path in av1_dr_prediction_z1_avx2()) from left_data, above_data are seen to
   // be the potential reason for this issue.
-  memset(left_data, 129, NUM_INTRA_NEIGHBOUR_PIXELS);
-  memset(above_data, 127, NUM_INTRA_NEIGHBOUR_PIXELS);
+  AOM_UNSAFE_MEMSET(left_data, 129, NUM_INTRA_NEIGHBOUR_PIXELS);
+  AOM_UNSAFE_MEMSET(above_data, 127, NUM_INTRA_NEIGHBOUR_PIXELS);
 
   // The default values if ref pixels are not available:
   // 128 127 127 .. 127 127 127 127 127 127
@@ -1139,7 +1141,7 @@ static void build_directional_and_filter_intra_predictors(
       val = (n_left_px > 0) ? left_ref[0] : 127;
     }
     for (i = 0; i < txhpx; ++i) {
-      memset(dst, val, txwpx);
+      AOM_UNSAFE_MEMSET(dst, val, txwpx);
       dst += dst_stride;
     }
     return;
@@ -1158,9 +1160,10 @@ static void build_directional_and_filter_intra_predictors(
           left_col[i] = left_ref[i * ref_stride];
       }
       if (i < num_left_pixels_needed)
-        memset(&left_col[i], left_col[i - 1], num_left_pixels_needed - i);
+        AOM_UNSAFE_MEMSET(&left_col[i], left_col[i - 1],
+                          num_left_pixels_needed - i);
     } else if (n_top_px > 0) {
-      memset(left_col, above_ref[0], num_left_pixels_needed);
+      AOM_UNSAFE_MEMSET(left_col, above_ref[0], num_left_pixels_needed);
     }
   }
 
@@ -1168,17 +1171,18 @@ static void build_directional_and_filter_intra_predictors(
   if (need_above) {
     const int num_top_pixels_needed = txwpx + (n_topright_px >= 0 ? txhpx : 0);
     if (n_top_px > 0) {
-      memcpy(above_row, above_ref, n_top_px);
+      AOM_UNSAFE_MEMCPY(above_row, above_ref, n_top_px);
       i = n_top_px;
       if (n_topright_px > 0) {
         assert(n_top_px == txwpx);
-        memcpy(above_row + txwpx, above_ref + txwpx, n_topright_px);
+        AOM_UNSAFE_MEMCPY(above_row + txwpx, above_ref + txwpx, n_topright_px);
         i += n_topright_px;
       }
       if (i < num_top_pixels_needed)
-        memset(&above_row[i], above_row[i - 1], num_top_pixels_needed - i);
+        AOM_UNSAFE_MEMSET(&above_row[i], above_row[i - 1],
+                          num_top_pixels_needed - i);
     } else if (n_left_px > 0) {
-      memset(above_row, left_ref[0], num_top_pixels_needed);
+      AOM_UNSAFE_MEMSET(above_row, left_ref[0], num_top_pixels_needed);
     }
   }
 
@@ -1269,7 +1273,7 @@ static void build_non_directional_intra_predictors(
       val = (n_left_px > 0) ? left_ref[0] : 127;
     }
     for (i = 0; i < txhpx; ++i) {
-      memset(dst, val, txwpx);
+      AOM_UNSAFE_MEMSET(dst, val, txwpx);
       dst += dst_stride;
     }
     return;
@@ -1281,23 +1285,25 @@ static void build_non_directional_intra_predictors(
   uint8_t *const left_col = left_data + 16;
 
   if (need_left) {
-    memset(left_data, 129, NUM_INTRA_NEIGHBOUR_PIXELS);
+    AOM_UNSAFE_MEMSET(left_data, 129, NUM_INTRA_NEIGHBOUR_PIXELS);
     if (n_left_px > 0) {
       for (i = 0; i < n_left_px; i++) left_col[i] = left_ref[i * ref_stride];
-      if (i < txhpx) memset(&left_col[i], left_col[i - 1], txhpx - i);
+      if (i < txhpx)
+        AOM_UNSAFE_MEMSET(&left_col[i], left_col[i - 1], txhpx - i);
     } else if (n_top_px > 0) {
-      memset(left_col, above_ref[0], txhpx);
+      AOM_UNSAFE_MEMSET(left_col, above_ref[0], txhpx);
     }
   }
 
   if (need_above) {
-    memset(above_data, 127, NUM_INTRA_NEIGHBOUR_PIXELS);
+    AOM_UNSAFE_MEMSET(above_data, 127, NUM_INTRA_NEIGHBOUR_PIXELS);
     if (n_top_px > 0) {
-      memcpy(above_row, above_ref, n_top_px);
+      AOM_UNSAFE_MEMCPY(above_row, above_ref, n_top_px);
       i = n_top_px;
-      if (i < txwpx) memset(&above_row[i], above_row[i - 1], txwpx - i);
+      if (i < txwpx)
+        AOM_UNSAFE_MEMSET(&above_row[i], above_row[i - 1], txwpx - i);
     } else if (n_left_px > 0) {
-      memset(above_row, left_ref[0], txwpx);
+      AOM_UNSAFE_MEMSET(above_row, left_ref[0], txwpx);
     }
   }
 
@@ -1332,7 +1338,7 @@ void av1_highbd_filter_intra_edge_c(uint16_t *p, int sz, int strength) {
   const int filt = strength - 1;
   uint16_t edge[129];
 
-  memcpy(edge, p, sz * sizeof(*p));
+  AOM_UNSAFE_MEMCPY(edge, p, sz * sizeof(*p));
   for (int i = 1; i < sz; i++) {
     int s = 0;
     for (int j = 0; j < INTRA_EDGE_TAPS; j++) {
@@ -1471,12 +1477,12 @@ static void highbd_build_directional_and_filter_intra_predictors(
   if (need_above) {
     const int num_top_pixels_needed = txwpx + (n_topright_px >= 0 ? txhpx : 0);
     if (n_top_px > 0) {
-      memcpy(above_row, above_ref, n_top_px * sizeof(above_ref[0]));
+      AOM_UNSAFE_MEMCPY(above_row, above_ref, n_top_px * sizeof(above_ref[0]));
       i = n_top_px;
       if (n_topright_px > 0) {
         assert(n_top_px == txwpx);
-        memcpy(above_row + txwpx, above_ref + txwpx,
-               n_topright_px * sizeof(above_ref[0]));
+        AOM_UNSAFE_MEMCPY(above_row + txwpx, above_ref + txwpx,
+                          n_topright_px * sizeof(above_ref[0]));
         i += n_topright_px;
       }
       if (i < num_top_pixels_needed)
@@ -1604,7 +1610,7 @@ static void highbd_build_non_directional_intra_predictors(
   if (need_above) {
     aom_memset16(above_data, base - 1, NUM_INTRA_NEIGHBOUR_PIXELS);
     if (n_top_px > 0) {
-      memcpy(above_row, above_ref, n_top_px * sizeof(above_ref[0]));
+      AOM_UNSAFE_MEMCPY(above_row, above_ref, n_top_px * sizeof(above_ref[0]));
       i = n_top_px;
       if (i < txwpx) aom_memset16(&above_row[i], above_row[i - 1], (txwpx - i));
     } else if (n_left_px > 0) {

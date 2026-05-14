@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -381,7 +383,7 @@ static inline bool tf_alloc_and_reset_data(TemporalFilterData *tf_data,
   // be freed by the tf_dealloc_data() call in encoder_destroy().
   if (!(tf_data->tmp_mbmi && tf_data->accum && tf_data->count && tf_data->pred))
     return false;
-  memset(&tf_data->diff, 0, sizeof(tf_data->diff));
+  AOM_UNSAFE_MEMSET(&tf_data->diff, 0, sizeof(tf_data->diff));
   return true;
 }
 

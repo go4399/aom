@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * This code implements the MD5 message-digest algorithm.
  * The algorithm is due to Ron Rivest.  This code was
@@ -20,7 +22,7 @@
  * Still in the public domain.
  */
 
-#include <string.h> /* for memcpy() */
+#include <string.h> /* for AOM_UNSAFE_MEMCPY() */
 
 #include "common/md5_utils.h"
 
@@ -72,12 +74,12 @@ void MD5Update(struct MD5Context *ctx, md5byte const *buf, unsigned len) {
   t = 64 - (t & 0x3f); /* Space available in ctx->in (at least 1) */
 
   if (t > len) {
-    memcpy((md5byte *)ctx->in + 64 - t, buf, len);
+    AOM_UNSAFE_MEMCPY((md5byte *)ctx->in + 64 - t, buf, len);
     return;
   }
 
   /* First chunk is an odd size */
-  memcpy((md5byte *)ctx->in + 64 - t, buf, t);
+  AOM_UNSAFE_MEMCPY((md5byte *)ctx->in + 64 - t, buf, t);
   byteSwap(ctx->in, 16);
   MD5Transform(ctx->buf, ctx->in);
   buf += t;
@@ -85,7 +87,7 @@ void MD5Update(struct MD5Context *ctx, md5byte const *buf, unsigned len) {
 
   /* Process data in 64-byte chunks */
   while (len >= 64) {
-    memcpy(ctx->in, buf, 64);
+    AOM_UNSAFE_MEMCPY(ctx->in, buf, 64);
     byteSwap(ctx->in, 16);
     MD5Transform(ctx->buf, ctx->in);
     buf += 64;
@@ -93,7 +95,7 @@ void MD5Update(struct MD5Context *ctx, md5byte const *buf, unsigned len) {
   }
 
   /* Handle any remaining bytes of data. */
-  memcpy(ctx->in, buf, len);
+  AOM_UNSAFE_MEMCPY(ctx->in, buf, len);
 }
 
 /*
@@ -111,14 +113,14 @@ void MD5Final(md5byte digest[16], struct MD5Context *ctx) {
   count = 56 - 1 - count;
 
   if (count < 0) { /* Padding forces an extra block */
-    memset(p, 0, count + 8);
+    AOM_UNSAFE_MEMSET(p, 0, count + 8);
     byteSwap(ctx->in, 16);
     MD5Transform(ctx->buf, ctx->in);
     p = (md5byte *)ctx->in;
     count = 56;
   }
 
-  memset(p, 0, count);
+  AOM_UNSAFE_MEMSET(p, 0, count);
   byteSwap(ctx->in, 14);
 
   /* Append length in bits and transform */
@@ -127,8 +129,8 @@ void MD5Final(md5byte digest[16], struct MD5Context *ctx) {
   MD5Transform(ctx->buf, ctx->in);
 
   byteSwap(ctx->buf, 4);
-  memcpy(digest, ctx->buf, 16);
-  memset(ctx, 0, sizeof(*ctx)); /* In case it's sensitive */
+  AOM_UNSAFE_MEMCPY(digest, ctx->buf, 16);
+  AOM_UNSAFE_MEMSET(ctx, 0, sizeof(*ctx)); /* In case it's sensitive */
 }
 
 #ifndef ASM_MD5

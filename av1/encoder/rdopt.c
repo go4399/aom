@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -999,11 +1001,12 @@ static inline void estimate_ref_frame_costs(
   int seg_ref_active =
       segfeature_active(&cm->seg, segment_id, SEG_LVL_REF_FRAME);
   if (seg_ref_active) {
-    memset(ref_costs_single, 0, REF_FRAMES * sizeof(*ref_costs_single));
+    AOM_UNSAFE_MEMSET(ref_costs_single, 0,
+                      REF_FRAMES * sizeof(*ref_costs_single));
     int ref_frame;
     for (ref_frame = 0; ref_frame < REF_FRAMES; ++ref_frame)
-      memset(ref_costs_comp[ref_frame], 0,
-             REF_FRAMES * sizeof((*ref_costs_comp)[0]));
+      AOM_UNSAFE_MEMSET(ref_costs_comp[ref_frame], 0,
+                        REF_FRAMES * sizeof((*ref_costs_comp)[0]));
   } else {
     int intra_inter_ctx = av1_get_intra_inter_context(xd);
     ref_costs_single[INTRA_FRAME] =
@@ -1341,9 +1344,12 @@ static int64_t handle_newmv(const AV1_COMP *const cpi, MACROBLOCK *const x,
       *rate_mv = 0;
       for (int i = 0; i < 2; ++i) {
         const int_mv ref_mv = av1_get_ref_mv(x, i);
-        *rate_mv += av1_mv_bit_cost(&cur_mv[i].as_mv, &ref_mv.as_mv,
-                                    x->mv_costs->nmv_joint_cost,
-                                    x->mv_costs->mv_cost_stack, MV_COST_WEIGHT);
+        *rate_mv += av1_mv_bit_cost(
+            &cur_mv[i].as_mv, &ref_mv.as_mv, x->mv_costs->nmv_joint_cost,
+            AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+                int **, x->mv_costs->mv_cost_stack,
+                sizeof(x->mv_costs->mv_cost_stack[0]) * 2),
+            MV_COST_WEIGHT);
       }
     } else if (this_mode == NEAREST_NEWMV || this_mode == NEAR_NEWMV) {
       if (valid_mv1) {
@@ -1353,7 +1359,10 @@ static int64_t handle_newmv(const AV1_COMP *const cpi, MACROBLOCK *const x,
       const int_mv ref_mv = av1_get_ref_mv(x, 1);
       *rate_mv = av1_mv_bit_cost(&cur_mv[1].as_mv, &ref_mv.as_mv,
                                  x->mv_costs->nmv_joint_cost,
-                                 x->mv_costs->mv_cost_stack, MV_COST_WEIGHT);
+                                 AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+                                     int **, x->mv_costs->mv_cost_stack,
+                                     sizeof(x->mv_costs->mv_cost_stack[0]) * 2),
+                                 MV_COST_WEIGHT);
     } else {
       assert(this_mode == NEW_NEARESTMV || this_mode == NEW_NEARMV);
       if (valid_mv0) {
@@ -1363,7 +1372,10 @@ static int64_t handle_newmv(const AV1_COMP *const cpi, MACROBLOCK *const x,
       const int_mv ref_mv = av1_get_ref_mv(x, 0);
       *rate_mv = av1_mv_bit_cost(&cur_mv[0].as_mv, &ref_mv.as_mv,
                                  x->mv_costs->nmv_joint_cost,
-                                 x->mv_costs->mv_cost_stack, MV_COST_WEIGHT);
+                                 AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+                                     int **, x->mv_costs->mv_cost_stack,
+                                     sizeof(x->mv_costs->mv_cost_stack[0]) * 2),
+                                 MV_COST_WEIGHT);
     }
   } else {
     // Single ref case.
@@ -1696,8 +1708,9 @@ static int64_t motion_mode_rd(
       mbmi->interp_filters =
           av1_broadcast_interp_filter(av1_unswitchable_filter(interp_filter));
 
-      memcpy(pts, pts0, total_samples * 2 * sizeof(*pts0));
-      memcpy(pts_inref, pts_inref0, total_samples * 2 * sizeof(*pts_inref0));
+      AOM_UNSAFE_MEMCPY(pts, pts0, total_samples * 2 * sizeof(*pts0));
+      AOM_UNSAFE_MEMCPY(pts_inref, pts_inref0,
+                        total_samples * 2 * sizeof(*pts_inref0));
       // Select the samples according to motion vector difference
       if (mbmi->num_proj_ref > 1) {
         mbmi->num_proj_ref = av1_selectSamples(
@@ -1730,7 +1743,10 @@ static int64_t motion_mode_rd(
             // Keep the refined MV and WM parameters.
             tmp_rate_mv = av1_mv_bit_cost(
                 &mbmi->mv[0].as_mv, &ref_mv.as_mv, x->mv_costs->nmv_joint_cost,
-                x->mv_costs->mv_cost_stack, MV_COST_WEIGHT);
+                AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+                    int **, x->mv_costs->mv_cost_stack,
+                    sizeof(x->mv_costs->mv_cost_stack[0]) * 2),
+                MV_COST_WEIGHT);
             tmp_rate2 = rate2_nocoeff - rate_mv0 + tmp_rate_mv;
           } else {
             // Restore the old MV and WM parameters.
@@ -3500,10 +3516,13 @@ static int64_t rd_pick_intrabc_mode_sb(const AV1_COMP *cpi, MACROBLOCK *x,
   const search_site_config *lookahead_search_sites =
       cpi->mv_search_params.search_site_cfg[SS_CFG_LOOKAHEAD];
   const FULLPEL_MV start_mv = get_fullmv_from_mv(&dv_ref.as_mv);
-  av1_make_default_fullpel_ms_params(&fullms_params, cpi, x, bsize,
-                                     &dv_ref.as_mv, start_mv,
-                                     lookahead_search_sites, search_method,
-                                     /*fine_search_interval=*/0);
+  av1_make_default_fullpel_ms_params(
+      &fullms_params, cpi, x, bsize, &dv_ref.as_mv, start_mv,
+      AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+          const search_site_config *, lookahead_search_sites,
+          sizeof(lookahead_search_sites[0]) * NUM_DISTINCT_SEARCH_METHODS),
+      search_method,
+      /*fine_search_interval=*/0);
   const IntraBCMVCosts *const dv_costs = x->dv_costs;
   av1_set_ms_to_intra_mode(&fullms_params, dv_costs);
 
@@ -3589,7 +3608,8 @@ static int64_t rd_pick_intrabc_mode_sb(const AV1_COMP *cpi, MACROBLOCK *x,
     // DV should not have sub-pel.
     assert((dv.col & 7) == 0);
     assert((dv.row & 7) == 0);
-    memset(&mbmi->palette_mode_info, 0, sizeof(mbmi->palette_mode_info));
+    AOM_UNSAFE_MEMSET(&mbmi->palette_mode_info, 0,
+                      sizeof(mbmi->palette_mode_info));
     mbmi->filter_intra_mode_info.use_filter_intra = 0;
     mbmi->use_intrabc = 1;
     mbmi->mode = DC_PRED;
@@ -3810,9 +3830,9 @@ static inline void rd_pick_skip_mode(
     assert(mode_index != THR_INVALID);
     search_state->best_mbmode.skip_mode = 1;
     search_state->best_mbmode = *mbmi;
-    memset(search_state->best_mbmode.inter_tx_size,
-           search_state->best_mbmode.tx_size,
-           sizeof(search_state->best_mbmode.inter_tx_size));
+    AOM_UNSAFE_MEMSET(search_state->best_mbmode.inter_tx_size,
+                      search_state->best_mbmode.tx_size,
+                      sizeof(search_state->best_mbmode.inter_tx_size));
     set_txfm_ctxs(search_state->best_mbmode.tx_size, xd->width, xd->height,
                   search_state->best_mbmode.skip_txfm && is_inter_block(mbmi),
                   xd);
@@ -3949,8 +3969,8 @@ static inline void refine_winner_mode_tx(
         } else {
           av1_pick_uniform_tx_size_type_yrd(cpi, x, &rd_stats_y, bsize,
                                             INT64_MAX);
-          memset(mbmi->inter_tx_size, mbmi->tx_size,
-                 sizeof(mbmi->inter_tx_size));
+          AOM_UNSAFE_MEMSET(mbmi->inter_tx_size, mbmi->tx_size,
+                            sizeof(mbmi->inter_tx_size));
         }
       } else {
         av1_pick_uniform_tx_size_type_yrd(cpi, x, &rd_stats_y, bsize,
@@ -4050,10 +4070,10 @@ typedef enum { REF_SET_FULL, REF_SET_REDUCED, REF_SET_REALTIME } REF_SET;
 static inline void default_skip_mask(mode_skip_mask_t *mask, REF_SET ref_set) {
   if (ref_set == REF_SET_FULL) {
     // Everything available by default.
-    memset(mask, 0, sizeof(*mask));
+    AOM_UNSAFE_MEMSET(mask, 0, sizeof(*mask));
   } else {
     // All modes available by default.
-    memset(mask->pred_modes, 0, sizeof(mask->pred_modes));
+    AOM_UNSAFE_MEMSET(mask->pred_modes, 0, sizeof(mask->pred_modes));
     // All references disabled first.
     for (MV_REFERENCE_FRAME ref1 = INTRA_FRAME; ref1 < REF_FRAMES; ++ref1) {
       for (MV_REFERENCE_FRAME ref2 = NONE_FRAME; ref2 < REF_FRAMES; ++ref2) {
@@ -4332,7 +4352,7 @@ static inline void set_params_rd_pick_inter_mode(
     const AV1_COMP *cpi, MACROBLOCK *x, HandleInterModeArgs *args,
     BLOCK_SIZE bsize, mode_skip_mask_t *mode_skip_mask, int skip_ref_frame_mask,
     unsigned int *ref_costs_single, unsigned int (*ref_costs_comp)[REF_FRAMES],
-    struct buf_2d (*yv12_mb)[MAX_MB_PLANE]) {
+    struct buf_2d yv12_mb[REF_FRAMES][MAX_MB_PLANE]) {
   const AV1_COMMON *const cm = &cpi->common;
   MACROBLOCKD *const xd = &x->e_mbd;
   MB_MODE_INFO *const mbmi = xd->mi[0];
@@ -4517,9 +4537,10 @@ static inline void init_inter_mode_search_state(
   const unsigned char segment_id = mbmi->segment_id;
 
   search_state->num_available_refs = 0;
-  memset(search_state->dist_refs, -1, sizeof(search_state->dist_refs));
-  memset(search_state->dist_order_refs, -1,
-         sizeof(search_state->dist_order_refs));
+  AOM_UNSAFE_MEMSET(search_state->dist_refs, -1,
+                    sizeof(search_state->dist_refs));
+  AOM_UNSAFE_MEMSET(search_state->dist_order_refs, -1,
+                    sizeof(search_state->dist_order_refs));
 
   for (int i = 0; i <= LAST_NEW_MV_INDEX; ++i)
     search_state->mode_threshold[i] = 0;
@@ -4658,7 +4679,11 @@ static AOM_FORCE_INLINE int inter_mode_search_order_independent_skip(
     return 1;
 
   const AV1_COMMON *const cm = &cpi->common;
-  if (skip_repeated_mv(cm, x, mode, ref_frame, search_state)) {
+  if (skip_repeated_mv(
+          cm, x, mode,
+          AOM_UNSAFE_FORGE_BIDI_INDEXABLE(MV_REFERENCE_FRAME *, ref_frame,
+                                          sizeof(ref_frame[0]) * 2),
+          search_state)) {
     return 1;
   }
 
@@ -5180,8 +5205,8 @@ static inline void update_search_state(
 static inline void find_top_ref(int64_t ref_frame_rd[REF_FRAMES]) {
   assert(ref_frame_rd[0] == INT64_MAX);
   int64_t ref_copy[REF_FRAMES - 1];
-  memcpy(ref_copy, ref_frame_rd + 1,
-         sizeof(ref_frame_rd[0]) * (REF_FRAMES - 1));
+  AOM_UNSAFE_MEMCPY(ref_copy, ref_frame_rd + 1,
+                    sizeof(ref_frame_rd[0]) * (REF_FRAMES - 1));
   qsort(ref_copy, REF_FRAMES - 1, sizeof(int64_t), compare_int64);
 
   int64_t cutoff = ref_copy[0];
@@ -5305,8 +5330,8 @@ typedef struct {
 
 static AOM_FORCE_INLINE int skip_inter_mode(AV1_COMP *cpi, MACROBLOCK *x,
                                             const BLOCK_SIZE bsize,
-                                            int64_t *ref_frame_rd, int midx,
-                                            InterModeSFArgs *args,
+                                            int64_t ref_frame_rd[REF_FRAMES],
+                                            int midx, InterModeSFArgs *args,
                                             int is_low_temp_var) {
   const SPEED_FEATURES *const sf = &cpi->sf;
   MACROBLOCKD *const xd = &x->e_mbd;
@@ -5688,7 +5713,7 @@ static void handle_winner_cand(
   if (valid_motion_mode_cand_loc < max_winner_motion_mode_cand) {
     if (num_motion_mode_cand > 0 &&
         valid_motion_mode_cand_loc < max_winner_motion_mode_cand - 1)
-      memmove(
+      AOM_UNSAFE_MEMMOVE(
           &best_motion_mode_cands
                ->motion_mode_cand[valid_motion_mode_cand_loc + 1],
           &best_motion_mode_cands->motion_mode_cand[valid_motion_mode_cand_loc],

@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2020, Alliance for Open Media. All rights reserved.
  *
@@ -248,8 +250,8 @@ static inline void set_skip_txfm(MACROBLOCK *x, RD_STATS *rd_stats,
   MB_MODE_INFO *const mbmi = xd->mi[0];
   const int n4 = bsize_to_num_blk(bsize);
   const TX_SIZE tx_size = max_txsize_rect_lookup[bsize];
-  memset(xd->tx_type_map, DCT_DCT, sizeof(xd->tx_type_map[0]) * n4);
-  memset(mbmi->inter_tx_size, tx_size, sizeof(mbmi->inter_tx_size));
+  AOM_UNSAFE_MEMSET(xd->tx_type_map, DCT_DCT, sizeof(xd->tx_type_map[0]) * n4);
+  AOM_UNSAFE_MEMSET(mbmi->inter_tx_size, tx_size, sizeof(mbmi->inter_tx_size));
   mbmi->tx_size = tx_size;
   rd_stats->skip_txfm = 1;
   if (is_cur_buf_hbd(xd)) dist = ROUND_POWER_OF_TWO(dist, (xd->bd - 8) * 2);
@@ -1475,7 +1477,7 @@ static inline void get_energy_distribution_finer(const int16_t *diff,
   const int esq_h = bh >> h_shift;
   const int esq_sz = esq_w * esq_h;
   int i, j;
-  memset(esq, 0, esq_sz * sizeof(esq[0]));
+  AOM_UNSAFE_MEMSET(esq, 0, esq_sz * sizeof(esq[0]));
   if (w_shift) {
     for (i = 0; i < bh; i++) {
       unsigned int *cur_esq_row = esq + (i >> h_shift) * esq_w;
@@ -1508,8 +1510,8 @@ static inline void get_energy_distribution_finer(const int16_t *diff,
   }
 
   const float e_recip = 1.0f / (float)total;
-  memset(hordist, 0, (esq_w - 1) * sizeof(hordist[0]));
-  memset(verdist, 0, (esq_h - 1) * sizeof(verdist[0]));
+  AOM_UNSAFE_MEMSET(hordist, 0, (esq_w - 1) * sizeof(hordist[0]));
+  AOM_UNSAFE_MEMSET(verdist, 0, (esq_h - 1) * sizeof(verdist[0]));
   const unsigned int *cur_esq_row;
   for (i = 0; i < esq_h - 1; i++) {
     cur_esq_row = esq + i * esq_w;
@@ -1652,7 +1654,7 @@ static void prune_tx_2D(MACROBLOCK *x, BLOCK_SIZE bsize, TX_SIZE tx_size,
     // tx_type is feasible. When this happens, we force enable max_score_i and
     // end the search.
     set_bit_mask(&allow_bitmask, tx_type_table_2D[max_score_i]);
-    memcpy(txk_map, tx_type_table_2D, sizeof(tx_type_table_2D));
+    AOM_UNSAFE_MEMCPY(txk_map, tx_type_table_2D, sizeof(tx_type_table_2D));
     *allowed_tx_mask = allow_bitmask;
     return;
   }
@@ -1690,7 +1692,7 @@ static void prune_tx_2D(MACROBLOCK *x, BLOCK_SIZE bsize, TX_SIZE tx_size,
       unset_bit_mask(&allow_bitmask, tx_type_allowed[tx_idx]);
   }
 
-  memcpy(txk_map, tx_type_allowed, sizeof(tx_type_table_2D));
+  AOM_UNSAFE_MEMCPY(txk_map, tx_type_allowed, sizeof(tx_type_table_2D));
   *allowed_tx_mask = allow_bitmask;
 }
 
@@ -3382,8 +3384,10 @@ static int inter_block_yrd(const AV1_COMP *cpi, MACROBLOCK *x,
   TXFM_CONTEXT tx_above[MAX_MIB_SIZE];
   TXFM_CONTEXT tx_left[MAX_MIB_SIZE];
   av1_get_entropy_contexts(bsize, pd, ctxa, ctxl);
-  memcpy(tx_above, xd->above_txfm_context, sizeof(TXFM_CONTEXT) * mi_width);
-  memcpy(tx_left, xd->left_txfm_context, sizeof(TXFM_CONTEXT) * mi_height);
+  AOM_UNSAFE_MEMCPY(tx_above, xd->above_txfm_context,
+                    sizeof(TXFM_CONTEXT) * mi_width);
+  AOM_UNSAFE_MEMCPY(tx_left, xd->left_txfm_context,
+                    sizeof(TXFM_CONTEXT) * mi_height);
 
   int64_t this_rd = 0;
   for (int idy = 0, block = 0; idy < mi_height; idy += bh) {
@@ -3458,8 +3462,10 @@ static int64_t select_tx_size_and_type(const AV1_COMP *cpi, MACROBLOCK *x,
   TXFM_CONTEXT tx_above[MAX_MIB_SIZE];
   TXFM_CONTEXT tx_left[MAX_MIB_SIZE];
   av1_get_entropy_contexts(bsize, pd, ctxa, ctxl);
-  memcpy(tx_above, xd->above_txfm_context, sizeof(TXFM_CONTEXT) * mi_width);
-  memcpy(tx_left, xd->left_txfm_context, sizeof(TXFM_CONTEXT) * mi_height);
+  AOM_UNSAFE_MEMCPY(tx_above, xd->above_txfm_context,
+                    sizeof(TXFM_CONTEXT) * mi_width);
+  AOM_UNSAFE_MEMCPY(tx_left, xd->left_txfm_context,
+                    sizeof(TXFM_CONTEXT) * mi_height);
   const int init_depth = get_search_init_depth(
       mi_width, mi_height, 1, &cpi->sf, txfm_params->tx_size_search_method);
   const TX_SIZE max_tx_size = max_txsize_rect_lookup[bsize];
@@ -3829,7 +3835,8 @@ int av1_txfm_search(const AV1_COMP *cpi, MACROBLOCK *x, BLOCK_SIZE bsize,
 #endif  // CONFIG_COLLECT_RD_STATS == 2
   } else {
     av1_pick_uniform_tx_size_type_yrd(cpi, x, rd_stats_y, bsize, rd_thresh);
-    memset(mbmi->inter_tx_size, mbmi->tx_size, sizeof(mbmi->inter_tx_size));
+    AOM_UNSAFE_MEMSET(mbmi->inter_tx_size, mbmi->tx_size,
+                      sizeof(mbmi->inter_tx_size));
   }
 
   if (rd_stats_y->rate == INT_MAX) return 0;

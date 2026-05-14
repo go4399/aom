@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2026, Alliance for Open Media. All rights reserved.
  *
@@ -29,10 +31,10 @@ HWY_ATTR HWY_INLINE hn::VFromD<D> LoadUnaligned4x4(D tag16, const uint8_t *buf,
                                                    ptrdiff_t stride) {
   hn::CappedTag<uint32_t, 4> tag32;
   uint32_t r0, r1, r2, r3;
-  memcpy(&r0, buf, 4);
-  memcpy(&r1, buf + stride, 4);
-  memcpy(&r2, buf + 2 * stride, 4);
-  memcpy(&r3, buf + 3 * stride, 4);
+  AOM_UNSAFE_MEMCPY(&r0, buf, 4);
+  AOM_UNSAFE_MEMCPY(&r1, buf + stride, 4);
+  AOM_UNSAFE_MEMCPY(&r2, buf + 2 * stride, 4);
+  AOM_UNSAFE_MEMCPY(&r3, buf + 3 * stride, 4);
   auto v32 = hn::Zero(tag32);
   v32 = hn::InsertLane(v32, 0, r0);
   v32 = hn::InsertLane(v32, 1, r1);

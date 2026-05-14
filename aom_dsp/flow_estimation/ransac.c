@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -308,8 +310,8 @@ static bool ransac_internal(const Correspondence *matched_points, int npoints,
 
   // Initialize output models, as a fallback in case we can't find a model
   for (i = 0; i < num_desired_motions; i++) {
-    memcpy(motion_models[i].params, kIdentityParams,
-           MAX_PARAMDIM * sizeof(*(motion_models[i].params)));
+    AOM_UNSAFE_MEMCPY(motion_models[i].params, kIdentityParams,
+                      MAX_PARAMDIM * sizeof(*(motion_models[i].params)));
     motion_models[i].num_inliers = 0;
   }
 
@@ -343,7 +345,7 @@ static bool ransac_internal(const Correspondence *matched_points, int npoints,
   for (i = 0; i < num_desired_motions; ++i) {
     motions[i].inlier_indices = inlier_buffer + i * npoints;
   }
-  memset(&current_motion, 0, sizeof(current_motion));
+  AOM_UNSAFE_MEMSET(&current_motion, 0, sizeof(current_motion));
   current_motion.inlier_indices = inlier_buffer + num_desired_motions * npoints;
 
   for (int trial_count = 0; trial_count < NUM_TRIALS; trial_count++) {
@@ -454,8 +456,8 @@ static bool ransac_internal(const Correspondence *matched_points, int npoints,
     if (bad_model) continue;
 
     // Fill in output struct
-    memcpy(motion_models[i].params, params_this_motion,
-           MAX_PARAMDIM * sizeof(*motion_models[i].params));
+    AOM_UNSAFE_MEMCPY(motion_models[i].params, params_this_motion,
+                      MAX_PARAMDIM * sizeof(*motion_models[i].params));
     for (int j = 0; j < motions[i].num_inliers; j++) {
       int index = motions[i].inlier_indices[j];
       const Correspondence *corr = &matched_points[index];

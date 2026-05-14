@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -19,8 +21,8 @@ void cfl_init(CFL_CTX *cfl, const SequenceHeader *seq_params) {
   assert(block_size_wide[CFL_MAX_BLOCK_SIZE] == CFL_BUF_LINE);
   assert(block_size_high[CFL_MAX_BLOCK_SIZE] == CFL_BUF_LINE);
 
-  memset(&cfl->recon_buf_q3, 0, sizeof(cfl->recon_buf_q3));
-  memset(&cfl->ac_buf_q3, 0, sizeof(cfl->ac_buf_q3));
+  AOM_UNSAFE_MEMSET(&cfl->recon_buf_q3, 0, sizeof(cfl->recon_buf_q3));
+  AOM_UNSAFE_MEMSET(&cfl->ac_buf_q3, 0, sizeof(cfl->ac_buf_q3));
   cfl->subsampling_x = seq_params->subsampling_x;
   cfl->subsampling_y = seq_params->subsampling_y;
   cfl->are_parameters_computed = 0;
@@ -37,17 +39,17 @@ void cfl_store_dc_pred(MACROBLOCKD *const xd, const uint8_t *input,
 
   if (is_cur_buf_hbd(xd)) {
     uint16_t *const input_16 = CONVERT_TO_SHORTPTR(input);
-    memcpy(xd->cfl.dc_pred_cache[pred_plane], input_16, width << 1);
+    AOM_UNSAFE_MEMCPY(xd->cfl.dc_pred_cache[pred_plane], input_16, width << 1);
     return;
   }
 
-  memcpy(xd->cfl.dc_pred_cache[pred_plane], input, width);
+  AOM_UNSAFE_MEMCPY(xd->cfl.dc_pred_cache[pred_plane], input, width);
 }
 
 static void cfl_load_dc_pred_lbd(const int16_t *dc_pred_cache, uint8_t *dst,
                                  int dst_stride, int width, int height) {
   for (int j = 0; j < height; j++) {
-    memcpy(dst, dc_pred_cache, width);
+    AOM_UNSAFE_MEMCPY(dst, dc_pred_cache, width);
     dst += dst_stride;
   }
 }
@@ -56,7 +58,7 @@ static void cfl_load_dc_pred_hbd(const int16_t *dc_pred_cache, uint16_t *dst,
                                  int dst_stride, int width, int height) {
   const size_t num_bytes = width << 1;
   for (int j = 0; j < height; j++) {
-    memcpy(dst, dc_pred_cache, num_bytes);
+    AOM_UNSAFE_MEMCPY(dst, dc_pred_cache, num_bytes);
     dst += dst_stride;
   }
 }

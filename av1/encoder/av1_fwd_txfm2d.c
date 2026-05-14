@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -251,13 +253,14 @@ void av1_fwd_txfm2d_64x64_c(const int16_t *input, int32_t *output, int stride,
 
   // Zero out top-right 32x32 area.
   for (int col = 0; col < 32; ++col) {
-    memset(output + col * 64 + 32, 0, 32 * sizeof(*output));
+    AOM_UNSAFE_MEMSET(output + col * 64 + 32, 0, 32 * sizeof(*output));
   }
   // Zero out the bottom 64x32 area.
-  memset(output + 32 * 64, 0, 32 * 64 * sizeof(*output));
+  AOM_UNSAFE_MEMSET(output + 32 * 64, 0, 32 * 64 * sizeof(*output));
   // Re-pack non-zero coeffs in the first 32x32 indices.
   for (int col = 1; col < 32; ++col) {
-    memcpy(output + col * 32, output + col * 64, 32 * sizeof(*output));
+    AOM_UNSAFE_MEMCPY(output + col * 32, output + col * 64,
+                      32 * sizeof(*output));
   }
 }
 
@@ -269,11 +272,12 @@ void av1_fwd_txfm2d_32x64_c(const int16_t *input, int32_t *output, int stride,
   fwd_txfm2d_c(input, output, stride, &cfg, txfm_buf, bd);
   // Zero out right 32x32 area.
   for (int col = 0; col < 32; ++col) {
-    memset(output + col * 64 + 32, 0, 32 * sizeof(*output));
+    AOM_UNSAFE_MEMSET(output + col * 64 + 32, 0, 32 * sizeof(*output));
   }
   // Re-pack non-zero coeffs in the first 32x32 indices.
   for (int col = 1; col < 32; ++col) {
-    memcpy(output + col * 32, output + col * 64, 32 * sizeof(*output));
+    AOM_UNSAFE_MEMCPY(output + col * 32, output + col * 64,
+                      32 * sizeof(*output));
   }
 }
 
@@ -284,7 +288,7 @@ void av1_fwd_txfm2d_64x32_c(const int16_t *input, int32_t *output, int stride,
   av1_get_fwd_txfm_cfg(tx_type, TX_64X32, &cfg);
   fwd_txfm2d_c(input, output, stride, &cfg, txfm_buf, bd);
   // Zero out the bottom 32x32 area.
-  memset(output + 32 * 32, 0, 32 * 32 * sizeof(*output));
+  AOM_UNSAFE_MEMSET(output + 32 * 32, 0, 32 * 32 * sizeof(*output));
   // Note: no repacking needed here.
 }
 
@@ -297,11 +301,12 @@ void av1_fwd_txfm2d_16x64_c(const int16_t *input, int32_t *output, int stride,
   fwd_txfm2d_c(input, output, stride, &cfg, txfm_buf, bd);
   // Zero out right 32x16 area.
   for (int row = 0; row < 16; ++row) {
-    memset(output + row * 64 + 32, 0, 32 * sizeof(*output));
+    AOM_UNSAFE_MEMSET(output + row * 64 + 32, 0, 32 * sizeof(*output));
   }
   // Re-pack non-zero coeffs in the first 32x16 indices.
   for (int row = 1; row < 16; ++row) {
-    memcpy(output + row * 32, output + row * 64, 32 * sizeof(*output));
+    AOM_UNSAFE_MEMCPY(output + row * 32, output + row * 64,
+                      32 * sizeof(*output));
   }
 }
 
@@ -312,7 +317,7 @@ void av1_fwd_txfm2d_64x16_c(const int16_t *input, int32_t *output, int stride,
   av1_get_fwd_txfm_cfg(tx_type, TX_64X16, &cfg);
   fwd_txfm2d_c(input, output, stride, &cfg, txfm_buf, bd);
   // Zero out the bottom 16x32 area.
-  memset(output + 16 * 32, 0, 16 * 32 * sizeof(*output));
+  AOM_UNSAFE_MEMSET(output + 16 * 32, 0, 16 * 32 * sizeof(*output));
   // Note: no repacking needed here.
 }
 #endif  // !CONFIG_REALTIME_ONLY

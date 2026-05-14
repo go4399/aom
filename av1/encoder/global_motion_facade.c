@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2020, Alliance for Open Media. All rights reserved.
  *
@@ -173,8 +175,8 @@ static inline void compute_global_motion_for_ref_frame(
         // Save the wm_params modified by
         // av1_refine_integerized_param() rather than motion index to
         // avoid rerunning refine() below.
-        memcpy(&(cm->global_motion[frame]), &tmp_wm_params,
-               sizeof(WarpedMotionParams));
+        AOM_UNSAFE_MEMCPY(&(cm->global_motion[frame]), &tmp_wm_params,
+                          sizeof(WarpedMotionParams));
       }
     }
   }
@@ -353,9 +355,9 @@ static inline void setup_global_motion_info_params(AV1_COMP *cpi) {
   gm_info->segment_map_h =
       (source->y_crop_height + WARP_ERROR_BLOCK - 1) >> WARP_ERROR_BLOCK_LOG;
 
-  memset(gm_info->reference_frames, -1,
-         sizeof(gm_info->reference_frames[0][0]) * MAX_DIRECTIONS *
-             (REF_FRAMES - 1));
+  AOM_UNSAFE_MEMSET(gm_info->reference_frames, -1,
+                    sizeof(gm_info->reference_frames[0][0]) * MAX_DIRECTIONS *
+                        (REF_FRAMES - 1));
   av1_zero(gm_info->num_ref_frames);
 
   // Populate ref_buf for valid ref frames in global motion
@@ -434,6 +436,6 @@ void av1_compute_global_motion_facade(AV1_COMP *cpi) {
       gm_info->search_done = 1;
     }
   }
-  memcpy(cm->cur_frame->global_motion, cm->global_motion,
-         sizeof(cm->cur_frame->global_motion));
+  AOM_UNSAFE_MEMCPY(cm->cur_frame->global_motion, cm->global_motion,
+                    sizeof(cm->cur_frame->global_motion));
 }

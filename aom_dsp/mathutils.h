@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2017, Alliance for Open Media. All rights reserved.
  *
@@ -82,8 +84,8 @@ static inline int linsolve(int n, double *A, int stride, double *b, double *x) {
 // * x is the result vector
 // * and n is the problem size
 static inline void least_squares_init(double *mat, double *y, int n) {
-  memset(mat, 0, n * n * sizeof(double));
-  memset(y, 0, n * sizeof(double));
+  AOM_UNSAFE_MEMSET(mat, 0, n * n * sizeof(double));
+  AOM_UNSAFE_MEMSET(y, 0, n * sizeof(double));
 }
 
 // Round the given positive value to nearest integer

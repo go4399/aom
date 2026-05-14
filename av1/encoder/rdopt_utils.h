@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2019, Alliance for Open Media. All rights reserved.
  *
@@ -706,7 +708,7 @@ static inline void store_winner_mode_stats(
       return;
     } else if (mode_idx < max_winner_mode_count - 1) {
       // Create a slot for current mode and move others to the next slot
-      memmove(
+      AOM_UNSAFE_MEMMOVE(
           &winner_mode_stats[mode_idx + 1], &winner_mode_stats[mode_idx],
           (max_winner_mode_count - mode_idx - 1) * sizeof(*winner_mode_stats));
     }
@@ -739,8 +741,8 @@ static inline void store_winner_mode_stats(
     int block_width, block_height;
     av1_get_block_dimensions(bsize, AOM_PLANE_Y, xd, &block_width,
                              &block_height, NULL, NULL);
-    memcpy(winner_mode_stats[mode_idx].color_index_map, color_map,
-           block_width * block_height * sizeof(color_map[0]));
+    AOM_UNSAFE_MEMCPY(winner_mode_stats[mode_idx].color_index_map, color_map,
+                      block_width * block_height * sizeof(color_map[0]));
   }
 
   x->winner_mode_count =
@@ -768,10 +770,11 @@ static inline int is_mode_intra(PREDICTION_MODE mode) {
 static inline void av1_copy_usable_ref_mv_stack_and_weight(
     const MACROBLOCKD *xd, MB_MODE_INFO_EXT *const mbmi_ext,
     MV_REFERENCE_FRAME ref_frame) {
-  memcpy(mbmi_ext->weight[ref_frame], xd->weight[ref_frame],
-         USABLE_REF_MV_STACK_SIZE * sizeof(xd->weight[0][0]));
-  memcpy(mbmi_ext->ref_mv_stack[ref_frame], xd->ref_mv_stack[ref_frame],
-         USABLE_REF_MV_STACK_SIZE * sizeof(xd->ref_mv_stack[0][0]));
+  AOM_UNSAFE_MEMCPY(mbmi_ext->weight[ref_frame], xd->weight[ref_frame],
+                    USABLE_REF_MV_STACK_SIZE * sizeof(xd->weight[0][0]));
+  AOM_UNSAFE_MEMCPY(mbmi_ext->ref_mv_stack[ref_frame],
+                    xd->ref_mv_stack[ref_frame],
+                    USABLE_REF_MV_STACK_SIZE * sizeof(xd->ref_mv_stack[0][0]));
 }
 
 // Get transform rd gate level for the given transform search case.

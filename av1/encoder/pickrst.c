@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -168,8 +170,8 @@ static inline void rsc_on_tile(void *priv) {
 }
 
 static inline void reset_rsc(RestSearchCtxt *rsc) {
-  memset(rsc->total_sse, 0, sizeof(rsc->total_sse));
-  memset(rsc->total_bits, 0, sizeof(rsc->total_bits));
+  AOM_UNSAFE_MEMSET(rsc->total_sse, 0, sizeof(rsc->total_sse));
+  AOM_UNSAFE_MEMSET(rsc->total_bits, 0, sizeof(rsc->total_bits));
 }
 
 static inline void init_rsc(const YV12_BUFFER_CONFIG *src, const AV1_COMMON *cm,
@@ -1017,8 +1019,8 @@ void av1_compute_stats_c(int wiener_win, const uint8_t *dgd, const uint8_t *src,
   int downsample_factor =
       use_downsampled_wiener_stats ? WIENER_STATS_DOWNSAMPLE_FACTOR : 1;
 
-  memset(M, 0, sizeof(*M) * wiener_win2);
-  memset(H, 0, sizeof(*H) * wiener_win2 * wiener_win2);
+  AOM_UNSAFE_MEMSET(M, 0, sizeof(*M) * wiener_win2);
+  AOM_UNSAFE_MEMSET(H, 0, sizeof(*H) * wiener_win2 * wiener_win2);
 
   for (i = v_start; i < v_end; i = i + downsample_factor) {
     if (use_downsampled_wiener_stats &&
@@ -1026,8 +1028,8 @@ void av1_compute_stats_c(int wiener_win, const uint8_t *dgd, const uint8_t *src,
       downsample_factor = v_end - i;
     }
 
-    memset(M_row, 0, sizeof(int32_t) * WIENER_WIN2);
-    memset(H_row, 0, sizeof(int32_t) * WIENER_WIN2 * WIENER_WIN2);
+    AOM_UNSAFE_MEMSET(M_row, 0, sizeof(int32_t) * WIENER_WIN2);
+    AOM_UNSAFE_MEMSET(H_row, 0, sizeof(int32_t) * WIENER_WIN2 * WIENER_WIN2);
     acc_stat_one_line(dgd, src + i * src_stride, dgd_stride, h_start, h_end,
                       avg, wiener_halfwin, wiener_win2, M_row, H_row, i);
 
@@ -1076,8 +1078,8 @@ void av1_compute_stats_highbd_c(int wiener_win, const uint8_t *dgd8,
   else if (bit_depth == AOM_BITS_10)
     bit_depth_divider = 4;
 
-  memset(M, 0, sizeof(*M) * wiener_win2);
-  memset(H, 0, sizeof(*H) * wiener_win2 * wiener_win2);
+  AOM_UNSAFE_MEMSET(M, 0, sizeof(*M) * wiener_win2);
+  AOM_UNSAFE_MEMSET(H, 0, sizeof(*H) * wiener_win2 * wiener_win2);
   for (i = v_start; i < v_end; i++) {
     for (j = h_start; j < h_end; j++) {
       const int32_t X = (int32_t)src[i * src_stride + j] - (int32_t)avg;
@@ -1219,8 +1221,8 @@ static inline void update_a_sep_sym(int wiener_win, int64_t **Mc, int64_t **Hc,
   int32_t b1[WIENER_WIN], b2[WIENER_WIN];
   const int wiener_win2 = wiener_win * wiener_win;
   const int wiener_halfwin1 = (wiener_win >> 1) + 1;
-  memset(A, 0, sizeof(A));
-  memset(B, 0, sizeof(B));
+  AOM_UNSAFE_MEMSET(A, 0, sizeof(A));
+  AOM_UNSAFE_MEMSET(B, 0, sizeof(B));
   for (i = 0; i < wiener_win; i++) {
     for (j = 0; j < wiener_win; ++j) {
       const int jj = wrap_index(j, wiener_win);
@@ -1289,8 +1291,8 @@ static inline void update_b_sep_sym(int wiener_win, int64_t **Mc, int64_t **Hc,
   int32_t a1[WIENER_WIN], a2[WIENER_WIN];
   const int wiener_win2 = wiener_win * wiener_win;
   const int wiener_halfwin1 = (wiener_win >> 1) + 1;
-  memset(A, 0, sizeof(A));
-  memset(B, 0, sizeof(B));
+  AOM_UNSAFE_MEMSET(A, 0, sizeof(A));
+  AOM_UNSAFE_MEMSET(B, 0, sizeof(B));
   for (i = 0; i < wiener_win; i++) {
     const int ii = wrap_index(i, wiener_win);
     for (j = 0; j < wiener_win; j++) {
@@ -1403,7 +1405,7 @@ static int64_t compute_score(int wiener_win, int64_t *M, int64_t *H,
     a[WIENER_HALFWIN] -= 2 * a[i];
     b[WIENER_HALFWIN] -= 2 * b[i];
   }
-  memset(ab, 0, sizeof(ab));
+  AOM_UNSAFE_MEMSET(ab, 0, sizeof(ab));
   for (k = 0; k < wiener_win; ++k) {
     for (l = 0; l < wiener_win; ++l)
       ab[k * wiener_win + l] = a[l + plane_off] * b[k + plane_off];
@@ -1681,7 +1683,7 @@ static inline void search_wiener(const RestorationTileLimits *limits,
   wiener_decompose_sep_sym(reduced_wiener_win, M, H, vfilter, hfilter);
 
   RestorationUnitInfo rui;
-  memset(&rui, 0, sizeof(rui));
+  AOM_UNSAFE_MEMSET(&rui, 0, sizeof(rui));
   rui.restoration_type = RESTORE_WIENER;
   finalize_sym_filter(reduced_wiener_win, vfilter, rui.wiener_info.vfilter);
   finalize_sym_filter(reduced_wiener_win, hfilter, rui.wiener_info.hfilter);
@@ -2009,7 +2011,7 @@ static RestUnitSearchInfo *allocate_search_structs(AV1_COMMON *cm,
   // left uninitialised when we reach copy_unit_info(...). This is not a
   // problem, as these elements are ignored later, but in order to quiet
   // Valgrind's warnings we initialise the array below.
-  memset(rusi, 0, sizeof(*rusi) * max_num_units);
+  AOM_UNSAFE_MEMSET(rusi, 0, sizeof(*rusi) * max_num_units);
 
   return rusi;
 }
@@ -2109,7 +2111,7 @@ void av1_pick_filter_restoration(const YV12_BUFFER_CONFIG *src, AV1_COMP *cpi) {
     // in AVX2 intrinsic can read data beyond valid LRU. Hence, in order to
     // silence Valgrind warning this buffer is initialized with zero. Overhead
     // due to this initialization is negligible since it is done at frame level.
-    memset(rsc.dgd_avg, 0, buf_size);
+    AOM_UNSAFE_MEMSET(rsc.dgd_avg, 0, buf_size);
     rsc.src_avg =
         rsc.dgd_avg + 3 * RESTORATION_UNITSIZE_MAX * RESTORATION_UNITSIZE_MAX;
     // Asserts the starting address of src_avg is always 32-bytes aligned.

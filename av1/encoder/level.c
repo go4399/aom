@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2019, Alliance for Open Media. All rights reserved.
  *
@@ -899,7 +901,7 @@ void av1_init_level_info(AV1_COMP *cpi) {
     AV1LevelInfo *const this_level_info =
         cpi->ppi->level_params.level_info[op_index];
     if (!this_level_info) continue;
-    memset(this_level_info, 0, sizeof(*this_level_info));
+    AOM_UNSAFE_MEMSET(this_level_info, 0, sizeof(*this_level_info));
     AV1LevelSpec *const level_spec = &this_level_info->level_spec;
     level_spec->level = SEQ_LEVEL_MAX;
     AV1LevelStats *const level_stats = &this_level_info->level_stats;

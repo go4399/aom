@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2021, Alliance for Open Media. All rights reserved.
  *
@@ -167,7 +169,7 @@ void av1_set_butteraugli_rdmult(const AV1_COMP *cpi, MACROBLOCK *x,
 static void copy_plane(const uint8_t *src, int src_stride, uint8_t *dst,
                        int dst_stride, int w, int h) {
   for (int row = 0; row < h; row++) {
-    memcpy(dst, src, w);
+    AOM_UNSAFE_MEMCPY(dst, src, w);
     src += src_stride;
     dst += dst_stride;
   }
@@ -187,7 +189,7 @@ static void copy_img(const YV12_BUFFER_CONFIG *src, YV12_BUFFER_CONFIG *dst,
 
 static void zero_plane(uint8_t *dst, int dst_stride, int h) {
   for (int row = 0; row < h; row++) {
-    memset(dst, 0, dst_stride);
+    AOM_UNSAFE_MEMSET(dst, 0, dst_stride);
     dst += dst_stride;
   }
 }
@@ -240,7 +242,7 @@ void av1_setup_butteraugli_rdmult_and_restore_source(AV1_COMP *cpi, double K) {
   const int ss_y = cpi->source->subsampling_y;
 
   YV12_BUFFER_CONFIG resized_recon;
-  memset(&resized_recon, 0, sizeof(resized_recon));
+  AOM_UNSAFE_MEMSET(&resized_recon, 0, sizeof(resized_recon));
   aom_alloc_frame_buffer(
       &resized_recon, width / resize_factor, height / resize_factor, ss_x, ss_y,
       cm->seq_params->use_highbitdepth, cpi->oxcf.border_in_pixels,
@@ -286,7 +288,7 @@ void av1_setup_butteraugli_rdmult(AV1_COMP *cpi) {
       av1_calculate_segdata(&cm->seg);
     }
   } else {
-    memset(&cm->seg, 0, sizeof(cm->seg));
+    AOM_UNSAFE_MEMSET(&cm->seg, 0, sizeof(cm->seg));
   }
   segfeatures_copy(&cm->cur_frame->seg, &cm->seg);
   cm->cur_frame->seg.enabled = cm->seg.enabled;

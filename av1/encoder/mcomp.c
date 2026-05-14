@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -891,7 +893,9 @@ static inline void calc_sad4_update_bestmv(
     block_offset[j] = site[cand_start + j].offset + center_address;
 
   // 4-point sad calculation.
-  ms_params->sdx4df(src_buf, src_stride, block_offset, ref->stride, sads);
+  ms_params->sdx4df(
+      src_buf, src_stride, block_offset, ref->stride,
+      AOM_UNSAFE_FORGE_BIDI_INDEXABLE(uint32_t *, sads, sizeof(sads[0]) * 4));
 
   for (int j = 0; j < 4; j++) {
     const FULLPEL_MV this_mv = { center_mv.row + site[cand_start + j].mv.row,
@@ -3574,8 +3578,9 @@ unsigned int av1_refine_warped_mv(MACROBLOCKD *xd, const AV1_COMMON *const cm,
       MV this_mv = { best_mv->row + neighbors[idx].row * (1 << mv_shift),
                      best_mv->col + neighbors[idx].col * (1 << mv_shift) };
       if (av1_is_subpelmv_in_range(mv_limits, this_mv)) {
-        memcpy(pts, pts0, total_samples * 2 * sizeof(*pts0));
-        memcpy(pts_inref, pts_inref0, total_samples * 2 * sizeof(*pts_inref0));
+        AOM_UNSAFE_MEMCPY(pts, pts0, total_samples * 2 * sizeof(*pts0));
+        AOM_UNSAFE_MEMCPY(pts_inref, pts_inref0,
+                          total_samples * 2 * sizeof(*pts_inref0));
         if (total_samples > 1) {
           mbmi->num_proj_ref =
               av1_selectSamples(&this_mv, pts, pts_inref, total_samples, bsize);
@@ -3723,11 +3728,14 @@ static inline int estimate_obmc_mvcost(const MV *this_mv,
 
   switch (mv_cost_type) {
     case MV_COST_ENTROPY:
-      return (unsigned)((mv_cost(&diff_mv, mvjcost,
-                                 CONVERT_TO_CONST_MVCOST(mvcost)) *
-                             error_per_bit +
-                         4096) >>
-                        13);
+      return (
+          unsigned)((mv_cost(&diff_mv, mvjcost,
+                             AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+                                 const int **, CONVERT_TO_CONST_MVCOST(mvcost),
+                                 sizeof(mvcost[0]) * 2)) *
+                         error_per_bit +
+                     4096) >>
+                    13);
     case MV_COST_NONE: return 0;
     default:
       assert(0 && "L1 norm is not tuned for estimated obmc mvcost");

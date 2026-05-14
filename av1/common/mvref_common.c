@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -481,7 +483,7 @@ static inline void setup_ref_mv_list(
     uint8_t *const refmv_count,
     CANDIDATE_MV ref_mv_stack[MAX_REF_MV_STACK_SIZE],
     uint16_t ref_mv_weight[MAX_REF_MV_STACK_SIZE],
-    int_mv mv_ref_list[MAX_MV_REF_CANDIDATES], int_mv *gm_mv_candidates,
+    int_mv *mv_ref_list /*[MAX_MV_REF_CANDIDATES]*/, int_mv *gm_mv_candidates,
     int mi_row, int mi_col, int16_t *mode_context) {
   const int bs = AOMMAX(xd->width, xd->height);
   const int has_tr = has_top_right(cm, xd, mi_row, mi_col, bs);
@@ -994,7 +996,7 @@ static int motion_field_projection(AV1_COMMON *cm,
 void av1_calculate_ref_frame_side(AV1_COMMON *cm) {
   const OrderHintInfo *const order_hint_info = &cm->seq_params->order_hint_info;
 
-  memset(cm->ref_frame_side, 0, sizeof(cm->ref_frame_side));
+  AOM_UNSAFE_MEMSET(cm->ref_frame_side, 0, sizeof(cm->ref_frame_side));
   if (!order_hint_info->enable_order_hint) return;
 
   const int cur_order_hint = cm->cur_frame->order_hint;
@@ -1103,8 +1105,9 @@ uint8_t av1_selectSamples(MV *mv, int *pts, int *pts_inref, int len,
                      abs(pts_inref[2 * i + 1] - pts[2 * i + 1] - mv->row);
     if (diff > thresh) continue;
     if (ret != i) {
-      memcpy(pts + 2 * ret, pts + 2 * i, 2 * sizeof(pts[0]));
-      memcpy(pts_inref + 2 * ret, pts_inref + 2 * i, 2 * sizeof(pts_inref[0]));
+      AOM_UNSAFE_MEMCPY(pts + 2 * ret, pts + 2 * i, 2 * sizeof(pts[0]));
+      AOM_UNSAFE_MEMCPY(pts_inref + 2 * ret, pts_inref + 2 * i,
+                        2 * sizeof(pts_inref[0]));
     }
     ++ret;
   }

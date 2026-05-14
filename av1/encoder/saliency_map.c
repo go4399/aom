@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2023, Alliance for Open Media. All rights reserved.
  *
@@ -245,7 +247,7 @@ static inline int upscale_map(const double *input, int in_level, int out_level,
         upscale[j + i * s_upscale] = (double)original[jj + ii * cur_stride];
       }
     }
-    memcpy(output, upscale, h_upscale * w_upscale * sizeof(double));
+    AOM_UNSAFE_MEMCPY(output, upscale, h_upscale * w_upscale * sizeof(double));
     aom_free(upscale);
   }
 
@@ -348,7 +350,8 @@ static int gaussian_pyramid(const double *src, int width[9], int height[9],
     return 0;
   }
 
-  memcpy(gaussian_map[0], src, width[0] * height[0] * sizeof(double));
+  AOM_UNSAFE_MEMCPY(gaussian_map[0], src,
+                    width[0] * height[0] * sizeof(double));
 
   for (int i = 1; i < 9; ++i) {
     int stride = width[i - 1];
@@ -365,7 +368,8 @@ static int gaussian_pyramid(const double *src, int width[9], int height[9],
       return 0;
     }
 
-    memset(gaussian_map[i], 0, new_width * new_height * sizeof(double));
+    AOM_UNSAFE_MEMSET(gaussian_map[i], 0,
+                      new_width * new_height * sizeof(double));
 
     decimate_map(gaussian_map[i - 1], height[i - 1], width[i - 1], stride,
                  gaussian_map[i]);
@@ -402,7 +406,8 @@ static int gaussian_pyramid_rgb(double *src_1, double *src_2, int width[9],
       }
       return 0;
     }
-    memcpy(gaussian_map[k][0], src[k], width[0] * height[0] * sizeof(double));
+    AOM_UNSAFE_MEMCPY(gaussian_map[k][0], src[k],
+                      width[0] * height[0] * sizeof(double));
 
     for (int i = 1; i < 9; ++i) {
       int stride = width[i - 1];
@@ -417,7 +422,8 @@ static int gaussian_pyramid_rgb(double *src_1, double *src_2, int width[9],
         }
         return 0;
       }
-      memset(gaussian_map[k][i], 0, new_width * new_height * sizeof(double));
+      AOM_UNSAFE_MEMSET(gaussian_map[k][i], 0,
+                        new_width * new_height * sizeof(double));
       decimate_map(gaussian_map[k][i - 1], height[i - 1], width[i - 1], stride,
                    gaussian_map[k][i]);
     }
@@ -539,7 +545,8 @@ static int get_feature_map_orientation(const double *intensity, int width[9],
   if (!gaussian_map[0]) {
     return 0;
   }
-  memcpy(gaussian_map[0], intensity, width[0] * height[0] * sizeof(double));
+  AOM_UNSAFE_MEMCPY(gaussian_map[0], intensity,
+                    width[0] * height[0] * sizeof(double));
 
   for (int i = 1; i < 9; ++i) {
     int stride = width[i - 1];
@@ -554,7 +561,8 @@ static int get_feature_map_orientation(const double *intensity, int width[9],
       }
       return 0;
     }
-    memset(gaussian_map[i], 0, new_width * new_height * sizeof(double));
+    AOM_UNSAFE_MEMSET(gaussian_map[i], 0,
+                      new_width * new_height * sizeof(double));
     decimate_map(gaussian_map[i - 1], height[i - 1], width[i - 1], stride,
                  gaussian_map[i]);
   }
@@ -796,8 +804,8 @@ static int normalized_map_rgb(saliency_feature_map *rg_map[6],
 
     color_cm[i]->width = width[0];
     color_cm[i]->height = height[0];
-    memset(color_cm[i]->buf, 0,
-           width[0] * height[0] * sizeof(*color_cm[i]->buf));
+    AOM_UNSAFE_MEMSET(color_cm[i]->buf, 0,
+                      width[0] * height[0] * sizeof(*color_cm[i]->buf));
   }
 
   if (normalized_map(rg_map, width, height, color_cm[0]) == 0 ||
@@ -851,7 +859,7 @@ static int normalized_map_orientation(saliency_feature_map *orientation_map[24],
   nofm->width = width[0];
 
   for (int i = 0; i < 4; ++i) {
-    memset(nofm->buf, 0, width[0] * height[0] * sizeof(*nofm->buf));
+    AOM_UNSAFE_MEMSET(nofm->buf, 0, width[0] * height[0] * sizeof(*nofm->buf));
     if (normalized_map(ofm[i], width, height, nofm) == 0) {
       aom_free(nofm->buf);
       aom_free(nofm);
@@ -1148,8 +1156,9 @@ int av1_set_saliency_map(AV1_COMP *cpi) {
     }
     normalized_maps[i]->width = frm_width;
     normalized_maps[i]->height = frm_height;
-    memset(normalized_maps[i]->buf, 0,
-           frm_width * frm_height * sizeof(*normalized_maps[i]->buf));
+    AOM_UNSAFE_MEMSET(
+        normalized_maps[i]->buf, 0,
+        frm_width * frm_height * sizeof(*normalized_maps[i]->buf));
   }
 
   // Conspicuity map generation

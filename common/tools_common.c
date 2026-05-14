@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -124,7 +126,7 @@ int read_yuv_frame(struct AvxInputContext *input_ctx, aom_image_t *yuv_frame) {
       const size_t left = detect->buf_read - detect->position;
       if (left > 0) {
         const size_t more = (left < needed) ? left : needed;
-        memcpy(ptr, detect->buf + detect->position, more);
+        AOM_UNSAFE_MEMCPY(ptr, detect->buf + detect->position, more);
         buf_position = more;
         needed -= more;
         detect->position += more;
@@ -582,12 +584,13 @@ size_t read_from_input(struct AvxInputContext *input_ctx, size_t n,
   if (buffered_bytes == 0) {
     read_n = fread(buf, 1, n, input_ctx->file);
   } else if (n <= buffered_bytes) {
-    memcpy(buf, input_ctx->detect.buf + input_ctx->detect.position, n);
+    AOM_UNSAFE_MEMCPY(buf, input_ctx->detect.buf + input_ctx->detect.position,
+                      n);
     input_ctx->detect.position += n;
     read_n = n;
   } else {
-    memcpy(buf, input_ctx->detect.buf + input_ctx->detect.position,
-           buffered_bytes);
+    AOM_UNSAFE_MEMCPY(buf, input_ctx->detect.buf + input_ctx->detect.position,
+                      buffered_bytes);
     input_ctx->detect.position += buffered_bytes;
     read_n = buffered_bytes;
     read_n +=

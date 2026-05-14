@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2019, Alliance for Open Media. All rights reserved.
  *
@@ -56,10 +58,12 @@ void av1_init_tpl_txfm_stats(TplTxfmStats *tpl_txfm_stats) {
   tpl_txfm_stats->ready = 0;
   tpl_txfm_stats->coeff_num = 256;
   tpl_txfm_stats->txfm_block_count = 0;
-  memset(tpl_txfm_stats->abs_coeff_sum, 0,
-         sizeof(tpl_txfm_stats->abs_coeff_sum[0]) * tpl_txfm_stats->coeff_num);
-  memset(tpl_txfm_stats->abs_coeff_mean, 0,
-         sizeof(tpl_txfm_stats->abs_coeff_mean[0]) * tpl_txfm_stats->coeff_num);
+  AOM_UNSAFE_MEMSET(
+      tpl_txfm_stats->abs_coeff_sum, 0,
+      sizeof(tpl_txfm_stats->abs_coeff_sum[0]) * tpl_txfm_stats->coeff_num);
+  AOM_UNSAFE_MEMSET(
+      tpl_txfm_stats->abs_coeff_mean, 0,
+      sizeof(tpl_txfm_stats->abs_coeff_mean[0]) * tpl_txfm_stats->coeff_num);
 }
 
 #if CONFIG_BITRATE_ACCURACY
@@ -296,10 +300,13 @@ static uint32_t motion_estimation(AV1_COMP *cpi, MACROBLOCK *x,
   assert(search_site_cfg->stride == ref_stride);
 
   FULLPEL_MOTION_SEARCH_PARAMS full_ms_params;
-  av1_make_default_fullpel_ms_params(&full_ms_params, cpi, x, bsize, &center_mv,
-                                     start_mv, search_site_cfg,
-                                     tpl_sf->search_method,
-                                     /*fine_search_interval=*/0);
+  av1_make_default_fullpel_ms_params(
+      &full_ms_params, cpi, x, bsize, &center_mv, start_mv,
+      AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+          const search_site_config *, search_site_cfg,
+          sizeof(search_site_cfg[0]) * NUM_DISTINCT_SEARCH_METHODS),
+      tpl_sf->search_method,
+      /*fine_search_interval=*/0);
 
   bestsme = av1_full_pixel_search(start_mv, &full_ms_params, step_param,
                                   cond_cost_list(cpi, cost_list),
@@ -595,7 +602,7 @@ static inline void mode_estimation(AV1_COMP *cpi, TplTxfmStats *tpl_txfm_stats,
   int64_t recon_error = 1;
   int64_t pred_error = 1;
 
-  memset(tpl_stats, 0, sizeof(*tpl_stats));
+  AOM_UNSAFE_MEMSET(tpl_stats, 0, sizeof(*tpl_stats));
   tpl_stats->ref_frame_index[0] = -1;
   tpl_stats->ref_frame_index[1] = -1;
 
@@ -670,6 +677,7 @@ static inline void mode_estimation(AV1_COMP *cpi, TplTxfmStats *tpl_txfm_stats,
 
   int rate_cost = 1;
 
+#if 0
   if (cpi->use_ducky_encode) {
     get_rate_distortion(&rate_cost, &recon_error, &pred_error, src_diff, coeff,
                         qcoeff, dqcoeff, cm, x, NULL, rec_buffer_pool,
@@ -680,6 +688,7 @@ static inline void mode_estimation(AV1_COMP *cpi, TplTxfmStats *tpl_txfm_stats,
     tpl_stats->intra_sse = pred_error << TPL_DEP_COST_SCALE_LOG2;
     tpl_stats->intra_rate = rate_cost;
   }
+#endif
 
 #if CONFIG_THREE_PASS
   const int frame_offset = tpl_data->frame_idx - cpi->gf_frame_index;
@@ -1402,7 +1411,7 @@ static inline void init_mc_flow_dispenser(AV1_COMP *cpi, int frame_idx,
 
   // Make a temporary mbmi for tpl model
   MB_MODE_INFO mbmi;
-  memset(&mbmi, 0, sizeof(mbmi));
+  AOM_UNSAFE_MEMSET(&mbmi, 0, sizeof(mbmi));
   MB_MODE_INFO *mbmi_ptr = &mbmi;
   xd->mi = &mbmi_ptr;
 
@@ -1847,9 +1856,9 @@ void av1_init_tpl_stats(TplParams *const tpl_data) {
   for (int frame_idx = 0; frame_idx < MAX_LAG_BUFFERS; ++frame_idx) {
     TplDepFrame *tpl_frame = &tpl_data->tpl_stats_buffer[frame_idx];
     if (tpl_data->tpl_stats_pool[frame_idx] == NULL) continue;
-    memset(tpl_data->tpl_stats_pool[frame_idx], 0,
-           tpl_frame->height * tpl_frame->width *
-               sizeof(*tpl_frame->tpl_stats_ptr));
+    AOM_UNSAFE_MEMSET(tpl_data->tpl_stats_pool[frame_idx], 0,
+                      tpl_frame->height * tpl_frame->width *
+                          sizeof(*tpl_frame->tpl_stats_ptr));
   }
 }
 
@@ -2032,8 +2041,9 @@ static void trim_tpl_stats(struct aom_internal_error_info *error_info,
     AOM_CHECK_MEM_ERROR(
         error_info, new_frame_stats[i].block_stats_list,
         aom_calloc(num_blocks, sizeof(*new_frame_stats[i].block_stats_list)));
-    memcpy(new_frame_stats[i].block_stats_list, frame_stats->block_stats_list,
-           num_blocks * sizeof(*new_frame_stats[i].block_stats_list));
+    AOM_UNSAFE_MEMCPY(
+        new_frame_stats[i].block_stats_list, frame_stats->block_stats_list,
+        num_blocks * sizeof(*new_frame_stats[i].block_stats_list));
   }
   av1_free_tpl_gop_stats(extrc_tpl_gop_stats);
   extrc_tpl_gop_stats->size = new_size;
@@ -2068,8 +2078,8 @@ int av1_tpl_setup_stats(AV1_COMP *cpi, int gop_eval,
                                  gf_group->update_type[gf_index],
                                  gf_group->refbuf_state[gf_index], 0);
 
-    memcpy(&cpi->refresh_frame, &this_frame_params.refresh_frame,
-           sizeof(cpi->refresh_frame));
+    AOM_UNSAFE_MEMCPY(&cpi->refresh_frame, &this_frame_params.refresh_frame,
+                      sizeof(cpi->refresh_frame));
   }
 
   int pframe_qindex;
@@ -2468,10 +2478,10 @@ void av1_vbr_rc_init(VBR_RATECTRL_INFO *vbr_rc_info, double total_bit_budget,
   //                                                    0.16393 };
 
   const double mv_scale_factors[FRAME_UPDATE_TYPES] = { 3, 3, 3, 3, 3, 3, 3 };
-  memcpy(vbr_rc_info->scale_factors, scale_factors,
-         sizeof(scale_factors[0]) * FRAME_UPDATE_TYPES);
-  memcpy(vbr_rc_info->mv_scale_factors, mv_scale_factors,
-         sizeof(mv_scale_factors[0]) * FRAME_UPDATE_TYPES);
+  AOM_UNSAFE_MEMCPY(vbr_rc_info->scale_factors, scale_factors,
+                    sizeof(scale_factors[0]) * FRAME_UPDATE_TYPES);
+  AOM_UNSAFE_MEMCPY(vbr_rc_info->mv_scale_factors, mv_scale_factors,
+                    sizeof(mv_scale_factors[0]) * FRAME_UPDATE_TYPES);
 
   vbr_rc_reset_gop_data(vbr_rc_info);
 #if CONFIG_THREE_PASS

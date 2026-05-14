@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2021, Alliance for Open Media. All rights reserved.
  *
@@ -269,7 +271,7 @@ void av1_calc_mb_wiener_var_row(AV1_COMP *const cpi, MACROBLOCK *x,
   uint8_t *buffer = cpi->source->y_buffer;
   int buf_stride = cpi->source->y_stride;
   MB_MODE_INFO mbmi;
-  memset(&mbmi, 0, sizeof(mbmi));
+  AOM_UNSAFE_MEMSET(&mbmi, 0, sizeof(mbmi));
   MB_MODE_INFO *mbmi_ptr = &mbmi;
   xd->mi = &mbmi_ptr;
   const BLOCK_SIZE bsize = cpi->weber_bsize;
@@ -606,7 +608,7 @@ void av1_set_mb_wiener_variance(AV1_COMP *cpi) {
   MACROBLOCKD *xd = &x->e_mbd;
   // xd->mi needs to be setup since it is used in av1_frame_init_quantizer.
   MB_MODE_INFO mbmi;
-  memset(&mbmi, 0, sizeof(mbmi));
+  AOM_UNSAFE_MEMSET(&mbmi, 0, sizeof(mbmi));
   MB_MODE_INFO *mbmi_ptr = &mbmi;
   xd->mi = &mbmi_ptr;
   cm->quant_params.base_qindex = cpi->oxcf.rc_cfg.cq_level;

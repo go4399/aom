@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -147,12 +149,12 @@ static const uint8_t wedge_master_vertical[MASK_MASTER_SIZE] = {
 static inline void shift_copy(const uint8_t *src, uint8_t *dst, int shift,
                               int width) {
   if (shift >= 0) {
-    memcpy(dst + shift, src, width - shift);
-    memset(dst, src[0], shift);
+    AOM_UNSAFE_MEMCPY(dst + shift, src, width - shift);
+    AOM_UNSAFE_MEMSET(dst, src[0], shift);
   } else {
     shift = -shift;
-    memcpy(dst, src + shift, width - shift);
-    memset(dst + width - shift, src[width - 1], shift);
+    AOM_UNSAFE_MEMCPY(dst, src + shift, width - shift);
+    AOM_UNSAFE_MEMSET(dst + width - shift, src[width - 1], shift);
   }
 }
 
@@ -462,12 +464,12 @@ static inline void init_wedge_master_masks(void) {
     shift_copy(wedge_master_oblique_odd,
                &wedge_mask_obl[0][WEDGE_OBLIQUE63][(i + 1) * stride], shift,
                MASK_MASTER_SIZE);
-    memcpy(&wedge_mask_obl[0][WEDGE_VERTICAL][i * stride],
-           wedge_master_vertical,
-           MASK_MASTER_SIZE * sizeof(wedge_master_vertical[0]));
-    memcpy(&wedge_mask_obl[0][WEDGE_VERTICAL][(i + 1) * stride],
-           wedge_master_vertical,
-           MASK_MASTER_SIZE * sizeof(wedge_master_vertical[0]));
+    AOM_UNSAFE_MEMCPY(&wedge_mask_obl[0][WEDGE_VERTICAL][i * stride],
+                      wedge_master_vertical,
+                      MASK_MASTER_SIZE * sizeof(wedge_master_vertical[0]));
+    AOM_UNSAFE_MEMCPY(&wedge_mask_obl[0][WEDGE_VERTICAL][(i + 1) * stride],
+                      wedge_master_vertical,
+                      MASK_MASTER_SIZE * sizeof(wedge_master_vertical[0]));
   }
 
   for (i = 0; i < h; ++i) {
@@ -494,7 +496,7 @@ static inline void init_wedge_master_masks(void) {
 static inline void init_wedge_masks(void) {
   uint8_t *dst = wedge_mask_buf;
   BLOCK_SIZE bsize;
-  memset(wedge_masks, 0, sizeof(wedge_masks));
+  AOM_UNSAFE_MEMSET(wedge_masks, 0, sizeof(wedge_masks));
   for (bsize = BLOCK_4X4; bsize < BLOCK_SIZES_ALL; ++bsize) {
     const wedge_params_type *wedge_params = &av1_wedge_params_lookup[bsize];
     const int wtypes = wedge_params->wedge_types;
@@ -548,7 +550,8 @@ static inline void build_smooth_interintra_mask(uint8_t *mask, int stride,
   switch (mode) {
     case II_V_PRED:
       for (i = 0; i < bh; ++i) {
-        memset(mask, ii_weights1d[i * size_scale], bw * sizeof(mask[0]));
+        AOM_UNSAFE_MEMSET(mask, ii_weights1d[i * size_scale],
+                          bw * sizeof(mask[0]));
         mask += stride;
       }
       break;
@@ -571,7 +574,7 @@ static inline void build_smooth_interintra_mask(uint8_t *mask, int stride,
     case II_DC_PRED:
     default:
       for (i = 0; i < bh; ++i) {
-        memset(mask, 32, bw * sizeof(mask[0]));
+        AOM_UNSAFE_MEMSET(mask, 32, bw * sizeof(mask[0]));
         mask += stride;
       }
       break;

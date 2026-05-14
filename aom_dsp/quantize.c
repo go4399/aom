@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -27,8 +29,8 @@ void aom_quantize_b_adaptive_helper_c(
   int i, non_zero_count = (int)n_coeffs, eob = -1;
   (void)iscan;
 
-  memset(qcoeff_ptr, 0, n_coeffs * sizeof(*qcoeff_ptr));
-  memset(dqcoeff_ptr, 0, n_coeffs * sizeof(*dqcoeff_ptr));
+  AOM_UNSAFE_MEMSET(qcoeff_ptr, 0, n_coeffs * sizeof(*qcoeff_ptr));
+  AOM_UNSAFE_MEMSET(dqcoeff_ptr, 0, n_coeffs * sizeof(*dqcoeff_ptr));
 
   int prescan_add[2];
   for (i = 0; i < 2; ++i)
@@ -121,8 +123,8 @@ void aom_quantize_b_helper_c(const tran_low_t *coeff_ptr, intptr_t n_coeffs,
   int i, non_zero_count = (int)n_coeffs, eob = -1;
   (void)iscan;
 
-  memset(qcoeff_ptr, 0, n_coeffs * sizeof(*qcoeff_ptr));
-  memset(dqcoeff_ptr, 0, n_coeffs * sizeof(*dqcoeff_ptr));
+  AOM_UNSAFE_MEMSET(qcoeff_ptr, 0, n_coeffs * sizeof(*qcoeff_ptr));
+  AOM_UNSAFE_MEMSET(dqcoeff_ptr, 0, n_coeffs * sizeof(*dqcoeff_ptr));
 
   // Pre-scan pass
   for (i = (int)n_coeffs - 1; i >= 0; i--) {
@@ -184,8 +186,8 @@ void aom_highbd_quantize_b_adaptive_helper_c(
   (void)iscan;
   int i, non_zero_count = (int)n_coeffs, eob = -1;
 
-  memset(qcoeff_ptr, 0, n_coeffs * sizeof(*qcoeff_ptr));
-  memset(dqcoeff_ptr, 0, n_coeffs * sizeof(*dqcoeff_ptr));
+  AOM_UNSAFE_MEMSET(qcoeff_ptr, 0, n_coeffs * sizeof(*qcoeff_ptr));
+  AOM_UNSAFE_MEMSET(dqcoeff_ptr, 0, n_coeffs * sizeof(*dqcoeff_ptr));
 
   int prescan_add[2];
   for (i = 0; i < 2; ++i)
@@ -275,8 +277,8 @@ void aom_highbd_quantize_b_helper_c(
   (void)iscan;
   int idx = 0;
 
-  memset(qcoeff_ptr, 0, n_coeffs * sizeof(*qcoeff_ptr));
-  memset(dqcoeff_ptr, 0, n_coeffs * sizeof(*dqcoeff_ptr));
+  AOM_UNSAFE_MEMSET(qcoeff_ptr, 0, n_coeffs * sizeof(*qcoeff_ptr));
+  AOM_UNSAFE_MEMSET(dqcoeff_ptr, 0, n_coeffs * sizeof(*dqcoeff_ptr));
 
   // Pre-scan pass
   for (i = 0; i < n_coeffs; i++) {

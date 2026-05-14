@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2019, Alliance for Open Media. All rights reserved.
  *
@@ -123,7 +125,7 @@ static inline void sum_2_variances(const VPartVar *a, const VPartVar *b,
 
 static inline void fill_variance_tree(void *data, BLOCK_SIZE bsize) {
   variance_node node;
-  memset(&node, 0, sizeof(node));
+  AOM_UNSAFE_MEMSET(&node, 0, sizeof(node));
   tree_to_node(data, bsize, &node);
   sum_2_variances(node.split[0], node.split[1], &node.part_variances->horz[0]);
   sum_2_variances(node.split[2], node.split[3], &node.part_variances->horz[1]);
@@ -1699,8 +1701,8 @@ int av1_choose_var_based_partitioning(AV1_COMP *cpi, const TileInfo *const tile,
   // Index for force_split: 0 for 64x64, 1-4 for 32x32 blocks,
   // 5-20 for the 16x16 blocks.
   force_split[0] = PART_EVAL_ALL;
-  memset(x->part_search_info.variance_low, 0,
-         sizeof(x->part_search_info.variance_low));
+  AOM_UNSAFE_MEMSET(x->part_search_info.variance_low, 0,
+                    sizeof(x->part_search_info.variance_low));
 
   // Check if LAST frame is NULL, and if so, treat this frame
   // as a key frame, for the purpose of the superblock partitioning.

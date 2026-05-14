@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2019, Alliance for Open Media. All rights reserved.
  *
@@ -129,9 +131,9 @@ static int input_stats_lap(TWO_PASS *p, TWO_PASS_FRAME *p_frame,
 
   *fps = *p_frame->stats_in;
   /* Move old stats[0] out to accommodate for next frame stats  */
-  memmove(p->frame_stats_arr[0], p->frame_stats_arr[1],
-          (p->stats_buf_ctx->stats_in_end - p_frame->stats_in - 1) *
-              sizeof(FIRSTPASS_STATS));
+  AOM_UNSAFE_MEMMOVE(p->frame_stats_arr[0], p->frame_stats_arr[1],
+                     (p->stats_buf_ctx->stats_in_end - p_frame->stats_in - 1) *
+                         sizeof(FIRSTPASS_STATS));
   p->stats_buf_ctx->stats_in_end--;
   return 1;
 }
@@ -3909,7 +3911,7 @@ static void get_one_pass_rt_lag_params(AV1_COMP *cpi, unsigned int frame_flags,
     rc->avg_source_sad = 0;
     for (int i = 1; i < max_gop_length; i++) {
       EncodeFrameInput frame_input;
-      memset(&frame_input, 0, sizeof(frame_input));
+      AOM_UNSAFE_MEMSET(&frame_input, 0, sizeof(frame_input));
       struct lookahead_entry *e =
           av1_lookahead_peek(cpi->ppi->lookahead, i, cpi->compressor_stage);
       struct lookahead_entry *e_prev =

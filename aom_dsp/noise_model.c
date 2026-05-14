@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2017, Alliance for Open Media. All rights reserved.
  *
@@ -94,17 +96,17 @@ static inline double get_noise_var(const uint8_t *data, const uint8_t *denoised,
 
 static void equation_system_clear(aom_equation_system_t *eqns) {
   const int n = eqns->n;
-  memset(eqns->A, 0, sizeof(*eqns->A) * n * n);
-  memset(eqns->x, 0, sizeof(*eqns->x) * n);
-  memset(eqns->b, 0, sizeof(*eqns->b) * n);
+  AOM_UNSAFE_MEMSET(eqns->A, 0, sizeof(*eqns->A) * n * n);
+  AOM_UNSAFE_MEMSET(eqns->x, 0, sizeof(*eqns->x) * n);
+  AOM_UNSAFE_MEMSET(eqns->b, 0, sizeof(*eqns->b) * n);
 }
 
 static void equation_system_copy(aom_equation_system_t *dst,
                                  const aom_equation_system_t *src) {
   const int n = dst->n;
-  memcpy(dst->A, src->A, sizeof(*dst->A) * n * n);
-  memcpy(dst->x, src->x, sizeof(*dst->x) * n);
-  memcpy(dst->b, src->b, sizeof(*dst->b) * n);
+  AOM_UNSAFE_MEMCPY(dst->A, src->A, sizeof(*dst->A) * n * n);
+  AOM_UNSAFE_MEMCPY(dst->x, src->x, sizeof(*dst->x) * n);
+  AOM_UNSAFE_MEMCPY(dst->b, src->b, sizeof(*dst->b) * n);
 }
 
 static int equation_system_init(aom_equation_system_t *eqns, int n) {
@@ -117,7 +119,7 @@ static int equation_system_init(aom_equation_system_t *eqns, int n) {
     aom_free(eqns->A);
     aom_free(eqns->b);
     aom_free(eqns->x);
-    memset(eqns, 0, sizeof(*eqns));
+    AOM_UNSAFE_MEMSET(eqns, 0, sizeof(*eqns));
     return 0;
   }
   equation_system_clear(eqns);
@@ -135,8 +137,8 @@ static int equation_system_solve(aom_equation_system_t *eqns) {
     aom_free(A);
     return 0;
   }
-  memcpy(A, eqns->A, sizeof(*eqns->A) * n * n);
-  memcpy(b, eqns->b, sizeof(*eqns->b) * n);
+  AOM_UNSAFE_MEMCPY(A, eqns->A, sizeof(*eqns->A) * n * n);
+  AOM_UNSAFE_MEMCPY(b, eqns->b, sizeof(*eqns->b) * n);
   ret = linsolve(n, A, eqns->n, b, eqns->x);
   aom_free(b);
   aom_free(A);
@@ -169,7 +171,7 @@ static void equation_system_free(aom_equation_system_t *eqns) {
   aom_free(eqns->A);
   aom_free(eqns->b);
   aom_free(eqns->x);
-  memset(eqns, 0, sizeof(*eqns));
+  AOM_UNSAFE_MEMSET(eqns, 0, sizeof(*eqns));
 }
 
 static void noise_strength_solver_clear(aom_noise_strength_solver_t *solver) {
@@ -212,7 +214,7 @@ static void set_chroma_coefficient_fallback_soln(aom_equation_system_t *eqns) {
   const int last = eqns->n - 1;
   // Set all of the AR coefficients to zero, but try to solve for correlation
   // with the luma channel
-  memset(eqns->x, 0, sizeof(*eqns->x) * eqns->n);
+  AOM_UNSAFE_MEMSET(eqns->x, 0, sizeof(*eqns->x) * eqns->n);
   if (fabs(eqns->A[last * eqns->n + last]) > kTolerance) {
     eqns->x[last] = eqns->b[last] / eqns->A[last * eqns->n + last];
   }
@@ -225,14 +227,14 @@ int aom_noise_strength_lut_init(aom_noise_strength_lut_t *lut, int num_points) {
   lut->points = (double(*)[2])aom_malloc(num_points * sizeof(*lut->points));
   if (!lut->points) return 0;
   lut->num_points = num_points;
-  memset(lut->points, 0, sizeof(*lut->points) * num_points);
+  AOM_UNSAFE_MEMSET(lut->points, 0, sizeof(*lut->points) * num_points);
   return 1;
 }
 
 void aom_noise_strength_lut_free(aom_noise_strength_lut_t *lut) {
   if (!lut) return;
   aom_free(lut->points);
-  memset(lut, 0, sizeof(*lut));
+  AOM_UNSAFE_MEMSET(lut, 0, sizeof(*lut));
 }
 
 double aom_noise_strength_lut_eval(const aom_noise_strength_lut_t *lut,
@@ -299,7 +301,7 @@ int aom_noise_strength_solver_solve(aom_noise_strength_solver_t *solver) {
     fprintf(stderr, "Unable to allocate copy of A\n");
     return 0;
   }
-  memcpy(A, old_A, sizeof(*A) * n * n);
+  AOM_UNSAFE_MEMCPY(A, old_A, sizeof(*A) * n * n);
 
   for (int i = 0; i < n; ++i) {
     const int i_lo = AOMMAX(0, i - 1);
@@ -326,7 +328,7 @@ int aom_noise_strength_solver_solve(aom_noise_strength_solver_t *solver) {
 int aom_noise_strength_solver_init(aom_noise_strength_solver_t *solver,
                                    int num_bins, int bit_depth) {
   if (!solver) return 0;
-  memset(solver, 0, sizeof(*solver));
+  AOM_UNSAFE_MEMSET(solver, 0, sizeof(*solver));
   solver->num_bins = num_bins;
   solver->min_intensity = 0;
   solver->max_intensity = (1 << bit_depth) - 1;
@@ -399,7 +401,7 @@ int aom_noise_strength_solver_fit_piecewise(
     aom_noise_strength_lut_free(lut);
     return 0;
   }
-  memset(residual, 0, sizeof(*residual) * solver->num_bins);
+  AOM_UNSAFE_MEMSET(residual, 0, sizeof(*residual) * solver->num_bins);
 
   update_piecewise_linear_residual(solver, lut, residual, 0, solver->num_bins);
 
@@ -420,8 +422,8 @@ int aom_noise_strength_solver_fit_piecewise(
     }
 
     const int num_remaining = lut->num_points - min_index - 1;
-    memmove(lut->points + min_index, lut->points + min_index + 1,
-            sizeof(lut->points[0]) * num_remaining);
+    AOM_UNSAFE_MEMMOVE(lut->points + min_index, lut->points + min_index + 1,
+                       sizeof(lut->points[0]) * num_remaining);
     lut->num_points--;
 
     update_piecewise_linear_residual(solver, lut, residual, min_index - 1,
@@ -485,7 +487,7 @@ int aom_flat_block_finder_init(aom_flat_block_finder_t *block_finder,
 
   // Lazy inverse using existing equation solver.
   for (i = 0; i < kLowPolyNumParams; ++i) {
-    memset(eqns.b, 0, sizeof(*eqns.b) * kLowPolyNumParams);
+    AOM_UNSAFE_MEMSET(eqns.b, 0, sizeof(*eqns.b) * kLowPolyNumParams);
     eqns.b[i] = 1;
     const int ret = equation_system_solve(&eqns);
     if (!ret) return ret;
@@ -502,7 +504,7 @@ void aom_flat_block_finder_free(aom_flat_block_finder_t *block_finder) {
   if (!block_finder) return;
   aom_free(block_finder->A);
   aom_free(block_finder->AtA_inv);
-  memset(block_finder, 0, sizeof(*block_finder));
+  AOM_UNSAFE_MEMSET(block_finder, 0, sizeof(*block_finder));
 }
 
 void aom_flat_block_finder_extract_block(
@@ -695,7 +697,7 @@ int aom_noise_model_init(aom_noise_model_t *model,
   const int bit_depth = params.bit_depth;
   int x = 0, y = 0, i = 0, c = 0;
 
-  memset(model, 0, sizeof(*model));
+  AOM_UNSAFE_MEMSET(model, 0, sizeof(*model));
   if (params.lag < 1) {
     fprintf(stderr, "Invalid noise param: lag = %d must be >= 1\n", params.lag);
     return 0;
@@ -769,7 +771,7 @@ void aom_noise_model_free(aom_noise_model_t *model) {
     equation_system_free(&model->latest_state[c].strength_solver.eqns);
     equation_system_free(&model->combined_state[c].strength_solver.eqns);
   }
-  memset(model, 0, sizeof(*model));
+  AOM_UNSAFE_MEMSET(model, 0, sizeof(*model));
 }
 
 // Extracts the neighborhood defined by coords around point (x, y) from
@@ -1063,7 +1065,8 @@ aom_noise_status_t aom_noise_model_update(
     int no_subsampling[2] = { 0, 0 };
     const uint8_t *alt_data = channel > 0 ? data[0] : 0;
     const uint8_t *alt_denoised = channel > 0 ? denoised[0] : 0;
-    int *sub = channel > 0 ? chroma_sub_log2 : no_subsampling;
+    int *AOM_BIDI_INDEXABLE sub =
+        channel > 0 ? chroma_sub_log2 : no_subsampling;
     const int is_chroma = channel != 0;
     if (!data[channel] || !denoised[channel]) break;
     if (!add_block_observations(noise_model, channel, data[channel],
@@ -1161,7 +1164,7 @@ int aom_noise_model_get_grain_parameters(aom_noise_model_t *const noise_model,
     return 0;
   }
   uint16_t random_seed = film_grain->random_seed;
-  memset(film_grain, 0, sizeof(*film_grain));
+  AOM_UNSAFE_MEMSET(film_grain, 0, sizeof(*film_grain));
   film_grain->random_seed = random_seed;
 
   film_grain->apply_grain = 1;
@@ -1432,7 +1435,8 @@ int aom_wiener_denoise_2d(const uint8_t *const data[3], uint8_t *denoised[3],
     if (c > 0 && chroma_sub[0] != 0) {
       block_finder = &block_finder_chroma;
     }
-    memset(result, 0, sizeof(*result) * result_stride * result_height);
+    AOM_UNSAFE_MEMSET(result, 0,
+                      sizeof(*result) * result_stride * result_height);
     // Do overlapped block processing (half overlapped). The block rows can
     // easily be done in parallel
     for (int offsy = 0; offsy < (block_size >> chroma_sub_h);
@@ -1537,7 +1541,7 @@ struct aom_denoise_and_model_t *aom_denoise_and_model_alloc(int bit_depth,
     fprintf(stderr, "Unable to allocate denoise_and_model struct\n");
     return NULL;
   }
-  memset(ctx, 0, sizeof(*ctx));
+  AOM_UNSAFE_MEMSET(ctx, 0, sizeof(*ctx));
 
   ctx->block_size = block_size;
   ctx->noise_level = noise_level;
@@ -1692,13 +1696,13 @@ int aom_denoise_and_model_run(struct aom_denoise_and_model_t *ctx,
       film_grain->random_seed = 7391;
     }
     if (apply_denoise) {
-      memcpy(raw_data[0], ctx->denoised[0],
-             (strides[0] * sd->y_height) << use_highbd);
+      AOM_UNSAFE_MEMCPY(raw_data[0], ctx->denoised[0],
+                        (strides[0] * sd->y_height) << use_highbd);
       if (!sd->monochrome) {
-        memcpy(raw_data[1], ctx->denoised[1],
-               (strides[1] * sd->uv_height) << use_highbd);
-        memcpy(raw_data[2], ctx->denoised[2],
-               (strides[2] * sd->uv_height) << use_highbd);
+        AOM_UNSAFE_MEMCPY(raw_data[1], ctx->denoised[1],
+                          (strides[1] * sd->uv_height) << use_highbd);
+        AOM_UNSAFE_MEMCPY(raw_data[2], ctx->denoised[2],
+                          (strides[2] * sd->uv_height) << use_highbd);
       }
     }
   }

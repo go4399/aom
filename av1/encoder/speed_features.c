@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -2792,40 +2794,43 @@ void av1_set_speed_features_framesize_independent(AV1_COMP *cpi, int speed) {
   // assert ensures that tx_domain_dist_level is accessed correctly
   assert(cpi->sf.rd_sf.tx_domain_dist_thres_level >= 0 &&
          cpi->sf.rd_sf.tx_domain_dist_thres_level < 4);
-  memcpy(winner_mode_params->tx_domain_dist_threshold,
-         tx_domain_dist_thresholds[cpi->sf.rd_sf.tx_domain_dist_thres_level],
-         sizeof(winner_mode_params->tx_domain_dist_threshold));
+  AOM_UNSAFE_MEMCPY(
+      winner_mode_params->tx_domain_dist_threshold,
+      tx_domain_dist_thresholds[cpi->sf.rd_sf.tx_domain_dist_thres_level],
+      sizeof(winner_mode_params->tx_domain_dist_threshold));
 
   assert(cpi->sf.rd_sf.tx_domain_dist_level >= 0 &&
          cpi->sf.rd_sf.tx_domain_dist_level < TX_DOMAIN_DIST_LEVELS);
-  memcpy(winner_mode_params->use_transform_domain_distortion,
-         tx_domain_dist_types[cpi->sf.rd_sf.tx_domain_dist_level],
-         sizeof(winner_mode_params->use_transform_domain_distortion));
+  AOM_UNSAFE_MEMCPY(
+      winner_mode_params->use_transform_domain_distortion,
+      tx_domain_dist_types[cpi->sf.rd_sf.tx_domain_dist_level],
+      sizeof(winner_mode_params->use_transform_domain_distortion));
 
   // assert ensures that coeff_opt_thresholds is accessed correctly
   assert(cpi->sf.rd_sf.perform_coeff_opt >= 0 &&
          cpi->sf.rd_sf.perform_coeff_opt < 9);
-  memcpy(winner_mode_params->coeff_opt_thresholds,
-         &coeff_opt_thresholds[cpi->sf.rd_sf.perform_coeff_opt],
-         sizeof(winner_mode_params->coeff_opt_thresholds));
+  AOM_UNSAFE_MEMCPY(winner_mode_params->coeff_opt_thresholds,
+                    &coeff_opt_thresholds[cpi->sf.rd_sf.perform_coeff_opt],
+                    sizeof(winner_mode_params->coeff_opt_thresholds));
 
   // assert ensures that predict_skip_levels is accessed correctly
   assert(cpi->sf.tx_sf.tx_type_search.use_skip_flag_prediction >= 0 &&
          cpi->sf.tx_sf.tx_type_search.use_skip_flag_prediction < 3);
-  memcpy(winner_mode_params->skip_txfm_level,
-         predict_skip_levels[cpi->sf.tx_sf.tx_type_search
-                                 .use_skip_flag_prediction],
-         sizeof(winner_mode_params->skip_txfm_level));
+  AOM_UNSAFE_MEMCPY(winner_mode_params->skip_txfm_level,
+                    predict_skip_levels[cpi->sf.tx_sf.tx_type_search
+                                            .use_skip_flag_prediction],
+                    sizeof(winner_mode_params->skip_txfm_level));
 
   // assert ensures that tx_size_search_level is accessed correctly
   assert(cpi->sf.winner_mode_sf.tx_size_search_level >= 0 &&
          cpi->sf.winner_mode_sf.tx_size_search_level <= 3);
-  memcpy(winner_mode_params->tx_size_search_methods,
-         tx_size_search_methods[cpi->sf.winner_mode_sf.tx_size_search_level],
-         sizeof(winner_mode_params->tx_size_search_methods));
-  memcpy(winner_mode_params->predict_dc_level,
-         predict_dc_levels[cpi->sf.winner_mode_sf.dc_blk_pred_level],
-         sizeof(winner_mode_params->predict_dc_level));
+  AOM_UNSAFE_MEMCPY(
+      winner_mode_params->tx_size_search_methods,
+      tx_size_search_methods[cpi->sf.winner_mode_sf.tx_size_search_level],
+      sizeof(winner_mode_params->tx_size_search_methods));
+  AOM_UNSAFE_MEMCPY(winner_mode_params->predict_dc_level,
+                    predict_dc_levels[cpi->sf.winner_mode_sf.dc_blk_pred_level],
+                    sizeof(winner_mode_params->predict_dc_level));
 
   if (cpi->oxcf.row_mt == 1 && (cpi->mt_info.num_workers > 1)) {
     if (sf->inter_sf.inter_mode_rd_model_estimation == 1) {
@@ -2914,9 +2919,9 @@ void av1_set_speed_features_qindex_dependent(AV1_COMP *cpi, int speed) {
 
     if (is_720p_or_larger && cm->quant_params.base_qindex <= 128) {
       sf->rd_sf.perform_coeff_opt = 2 + is_1080p_or_larger;
-      memcpy(winner_mode_params->coeff_opt_thresholds,
-             &coeff_opt_thresholds[sf->rd_sf.perform_coeff_opt],
-             sizeof(winner_mode_params->coeff_opt_thresholds));
+      AOM_UNSAFE_MEMCPY(winner_mode_params->coeff_opt_thresholds,
+                        &coeff_opt_thresholds[sf->rd_sf.perform_coeff_opt],
+                        sizeof(winner_mode_params->coeff_opt_thresholds));
       sf->part_sf.simple_motion_search_split =
           cm->features.allow_screen_content_tools ? 1 : 2;
       sf->tx_sf.inter_tx_size_search_init_depth_rect = 1;

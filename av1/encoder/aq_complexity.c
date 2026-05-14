@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -70,7 +72,8 @@ void av1_setup_in_frame_q_adj(AV1_COMP *cpi) {
   // Make SURE use of floating point in this function is safe.
 
   if (resolution_change) {
-    memset(cpi->enc_seg.map, 0, cm->mi_params.mi_rows * cm->mi_params.mi_cols);
+    AOM_UNSAFE_MEMSET(cpi->enc_seg.map, 0,
+                      cm->mi_params.mi_rows * cm->mi_params.mi_cols);
     av1_clearall_segfeatures(seg);
     av1_disable_segmentation(seg);
     return;
@@ -82,8 +85,8 @@ void av1_setup_in_frame_q_adj(AV1_COMP *cpi) {
         get_aq_c_strength(base_qindex, cm->seq_params->bit_depth);
 
     // Clear down the segment map.
-    memset(cpi->enc_seg.map, DEFAULT_AQ2_SEG,
-           cm->mi_params.mi_rows * cm->mi_params.mi_cols);
+    AOM_UNSAFE_MEMSET(cpi->enc_seg.map, DEFAULT_AQ2_SEG,
+                      cm->mi_params.mi_rows * cm->mi_params.mi_cols);
 
     av1_clearall_segfeatures(seg);
 

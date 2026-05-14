@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -148,7 +150,7 @@ void aom_scaled_2d_c(const uint8_t *src, ptrdiff_t src_stride, uint8_t *dst,
 void aom_convolve_copy_c(const uint8_t *src, ptrdiff_t src_stride, uint8_t *dst,
                          ptrdiff_t dst_stride, int w, int h) {
   for (int r = h; r > 0; --r) {
-    memmove(dst, src, w);
+    AOM_UNSAFE_MEMMOVE(dst, src, w);
     src += src_stride;
     dst += dst_stride;
   }
@@ -245,7 +247,7 @@ void aom_highbd_convolve_copy_c(const uint16_t *src, ptrdiff_t src_stride,
                                 uint16_t *dst, ptrdiff_t dst_stride, int w,
                                 int h) {
   for (int y = 0; y < h; ++y) {
-    memmove(dst, src, w * sizeof(src[0]));
+    AOM_UNSAFE_MEMMOVE(dst, src, w * sizeof(src[0]));
     src += src_stride;
     dst += dst_stride;
   }

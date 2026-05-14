@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -56,7 +58,7 @@ static aom_image_t *img_alloc_helper(
    */
   unsigned int xcs, ycs, bps, bit_depth;
 
-  if (img != NULL) memset(img, 0, sizeof(aom_image_t));
+  if (img != NULL) AOM_UNSAFE_MEMSET(img, 0, sizeof(aom_image_t));
 
   if (!is_valid_img_fmt(fmt)) goto fail;
 
@@ -346,7 +348,7 @@ aom_metadata_t *aom_img_metadata_alloc(
     free(metadata);
     return NULL;
   }
-  memcpy(metadata->payload, data, sz);
+  AOM_UNSAFE_MEMCPY(metadata->payload, data, sz);
   metadata->sz = sz;
   metadata->insert_flag = insert_flag;
   return metadata;

@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2020, Alliance for Open Media. All rights reserved.
  *
@@ -163,14 +165,15 @@ static inline void update_filter_type_count(FRAME_COUNTS *counts,
 static inline void copy_mbmi_ext_frame_to_mbmi_ext(
     MB_MODE_INFO_EXT *mbmi_ext,
     const MB_MODE_INFO_EXT_FRAME *const mbmi_ext_best, uint8_t ref_frame_type) {
-  memcpy(mbmi_ext->ref_mv_stack[ref_frame_type], mbmi_ext_best->ref_mv_stack,
-         sizeof(mbmi_ext->ref_mv_stack[USABLE_REF_MV_STACK_SIZE]));
-  memcpy(mbmi_ext->weight[ref_frame_type], mbmi_ext_best->weight,
-         sizeof(mbmi_ext->weight[USABLE_REF_MV_STACK_SIZE]));
+  AOM_UNSAFE_MEMCPY(mbmi_ext->ref_mv_stack[ref_frame_type],
+                    mbmi_ext_best->ref_mv_stack,
+                    sizeof(mbmi_ext->ref_mv_stack[USABLE_REF_MV_STACK_SIZE]));
+  AOM_UNSAFE_MEMCPY(mbmi_ext->weight[ref_frame_type], mbmi_ext_best->weight,
+                    sizeof(mbmi_ext->weight[USABLE_REF_MV_STACK_SIZE]));
   mbmi_ext->mode_context[ref_frame_type] = mbmi_ext_best->mode_context;
   mbmi_ext->ref_mv_count[ref_frame_type] = mbmi_ext_best->ref_mv_count;
-  memcpy(mbmi_ext->global_mvs, mbmi_ext_best->global_mvs,
-         sizeof(mbmi_ext->global_mvs));
+  AOM_UNSAFE_MEMCPY(mbmi_ext->global_mvs, mbmi_ext_best->global_mvs,
+                    sizeof(mbmi_ext->global_mvs));
 }
 
 void av1_update_state(const AV1_COMP *const cpi, ThreadData *td,
@@ -554,26 +557,27 @@ void av1_restore_context(MACROBLOCK *x, const RD_SEARCH_MACROBLOCK_CONTEXT *ctx,
   for (p = 0; p < num_planes; p++) {
     int tx_col = mi_col;
     int tx_row = mi_row & MAX_MIB_MASK;
-    memcpy(
+    AOM_UNSAFE_MEMCPY(
         xd->above_entropy_context[p] + (tx_col >> xd->plane[p].subsampling_x),
         ctx->a + num_4x4_blocks_wide * p,
         (sizeof(ENTROPY_CONTEXT) * num_4x4_blocks_wide) >>
             xd->plane[p].subsampling_x);
-    memcpy(xd->left_entropy_context[p] + (tx_row >> xd->plane[p].subsampling_y),
-           ctx->l + num_4x4_blocks_high * p,
-           (sizeof(ENTROPY_CONTEXT) * num_4x4_blocks_high) >>
-               xd->plane[p].subsampling_y);
+    AOM_UNSAFE_MEMCPY(
+        xd->left_entropy_context[p] + (tx_row >> xd->plane[p].subsampling_y),
+        ctx->l + num_4x4_blocks_high * p,
+        (sizeof(ENTROPY_CONTEXT) * num_4x4_blocks_high) >>
+            xd->plane[p].subsampling_y);
   }
-  memcpy(xd->above_partition_context + mi_col, ctx->sa,
-         sizeof(*xd->above_partition_context) * mi_width);
-  memcpy(xd->left_partition_context + (mi_row & MAX_MIB_MASK), ctx->sl,
-         sizeof(xd->left_partition_context[0]) * mi_height);
+  AOM_UNSAFE_MEMCPY(xd->above_partition_context + mi_col, ctx->sa,
+                    sizeof(*xd->above_partition_context) * mi_width);
+  AOM_UNSAFE_MEMCPY(xd->left_partition_context + (mi_row & MAX_MIB_MASK),
+                    ctx->sl, sizeof(xd->left_partition_context[0]) * mi_height);
   xd->above_txfm_context = ctx->p_ta;
   xd->left_txfm_context = ctx->p_tl;
-  memcpy(xd->above_txfm_context, ctx->ta,
-         sizeof(*xd->above_txfm_context) * mi_width);
-  memcpy(xd->left_txfm_context, ctx->tl,
-         sizeof(*xd->left_txfm_context) * mi_height);
+  AOM_UNSAFE_MEMCPY(xd->above_txfm_context, ctx->ta,
+                    sizeof(*xd->above_txfm_context) * mi_width);
+  AOM_UNSAFE_MEMCPY(xd->left_txfm_context, ctx->tl,
+                    sizeof(*xd->left_txfm_context) * mi_height);
 }
 
 void av1_save_context(const MACROBLOCK *x, RD_SEARCH_MACROBLOCK_CONTEXT *ctx,
@@ -588,22 +592,24 @@ void av1_save_context(const MACROBLOCK *x, RD_SEARCH_MACROBLOCK_CONTEXT *ctx,
   for (p = 0; p < num_planes; ++p) {
     int tx_col = mi_col;
     int tx_row = mi_row & MAX_MIB_MASK;
-    memcpy(
+    AOM_UNSAFE_MEMCPY(
         ctx->a + mi_width * p,
         xd->above_entropy_context[p] + (tx_col >> xd->plane[p].subsampling_x),
         (sizeof(ENTROPY_CONTEXT) * mi_width) >> xd->plane[p].subsampling_x);
-    memcpy(ctx->l + mi_height * p,
-           xd->left_entropy_context[p] + (tx_row >> xd->plane[p].subsampling_y),
-           (sizeof(ENTROPY_CONTEXT) * mi_height) >> xd->plane[p].subsampling_y);
+    AOM_UNSAFE_MEMCPY(
+        ctx->l + mi_height * p,
+        xd->left_entropy_context[p] + (tx_row >> xd->plane[p].subsampling_y),
+        (sizeof(ENTROPY_CONTEXT) * mi_height) >> xd->plane[p].subsampling_y);
   }
-  memcpy(ctx->sa, xd->above_partition_context + mi_col,
-         sizeof(*xd->above_partition_context) * mi_width);
-  memcpy(ctx->sl, xd->left_partition_context + (mi_row & MAX_MIB_MASK),
-         sizeof(xd->left_partition_context[0]) * mi_height);
-  memcpy(ctx->ta, xd->above_txfm_context,
-         sizeof(*xd->above_txfm_context) * mi_width);
-  memcpy(ctx->tl, xd->left_txfm_context,
-         sizeof(*xd->left_txfm_context) * mi_height);
+  AOM_UNSAFE_MEMCPY(ctx->sa, xd->above_partition_context + mi_col,
+                    sizeof(*xd->above_partition_context) * mi_width);
+  AOM_UNSAFE_MEMCPY(ctx->sl,
+                    xd->left_partition_context + (mi_row & MAX_MIB_MASK),
+                    sizeof(xd->left_partition_context[0]) * mi_height);
+  AOM_UNSAFE_MEMCPY(ctx->ta, xd->above_txfm_context,
+                    sizeof(*xd->above_txfm_context) * mi_width);
+  AOM_UNSAFE_MEMCPY(ctx->tl, xd->left_txfm_context,
+                    sizeof(*xd->left_txfm_context) * mi_height);
   ctx->p_ta = xd->above_txfm_context;
   ctx->p_tl = xd->left_txfm_context;
 }
@@ -887,7 +893,8 @@ void av1_get_tpl_stats_sb(AV1_COMP *cpi, BLOCK_SIZE bsize, int mi_row,
                                       << TPL_DEP_COST_SCALE_LOG2;
       sb_enc->tpl_intra_cost[count] = this_stats->intra_cost
                                       << TPL_DEP_COST_SCALE_LOG2;
-      memcpy(sb_enc->tpl_mv[count], this_stats->mv, sizeof(this_stats->mv));
+      AOM_UNSAFE_MEMCPY(sb_enc->tpl_mv[count], this_stats->mv,
+                        sizeof(this_stats->mv));
       mi_count++;
       count++;
     }
@@ -1460,13 +1467,13 @@ void av1_reset_mbmi(CommonModeInfoParams *const mi_params, BLOCK_SIZE sb_size,
         get_mi_grid_idx(mi_params, mi_row + cur_mi_row, mi_col);
     const int alloc_mi_idx =
         get_alloc_mi_idx(mi_params, mi_row + cur_mi_row, mi_col);
-    memset(&mi_params->mi_grid_base[mi_grid_idx], 0,
-           sb_size_mi * sizeof(*mi_params->mi_grid_base));
-    memset(&mi_params->tx_type_map[mi_grid_idx], 0,
-           sb_size_mi * sizeof(*mi_params->tx_type_map));
+    AOM_UNSAFE_MEMSET(&mi_params->mi_grid_base[mi_grid_idx], 0,
+                      sb_size_mi * sizeof(*mi_params->mi_grid_base));
+    AOM_UNSAFE_MEMSET(&mi_params->tx_type_map[mi_grid_idx], 0,
+                      sb_size_mi * sizeof(*mi_params->tx_type_map));
     if (cur_mi_row % mi_alloc_size_1d == 0) {
-      memset(&mi_params->mi_alloc[alloc_mi_idx], 0,
-             sb_size_alloc_mi * sizeof(*mi_params->mi_alloc));
+      AOM_UNSAFE_MEMSET(&mi_params->mi_alloc[alloc_mi_idx], 0,
+                        sb_size_alloc_mi * sizeof(*mi_params->mi_alloc));
     }
   }
 }
@@ -1496,20 +1503,21 @@ void av1_backup_sb_state(SB_FIRST_PASS_STATS *sb_fp_stats, const AV1_COMP *cpi,
   // Don't copy in row_mt case, otherwise run into data race. No behavior change
   // in row_mt case.
   if (cpi->sf.inter_sf.inter_mode_rd_model_estimation == 1) {
-    memcpy(sb_fp_stats->inter_mode_rd_models, tile_data->inter_mode_rd_models,
-           sizeof(sb_fp_stats->inter_mode_rd_models));
+    AOM_UNSAFE_MEMCPY(sb_fp_stats->inter_mode_rd_models,
+                      tile_data->inter_mode_rd_models,
+                      sizeof(sb_fp_stats->inter_mode_rd_models));
   }
 
-  memcpy(sb_fp_stats->thresh_freq_fact, x->thresh_freq_fact,
-         sizeof(sb_fp_stats->thresh_freq_fact));
+  AOM_UNSAFE_MEMCPY(sb_fp_stats->thresh_freq_fact, x->thresh_freq_fact,
+                    sizeof(sb_fp_stats->thresh_freq_fact));
 
   const int alloc_mi_idx = get_alloc_mi_idx(&cm->mi_params, mi_row, mi_col);
   sb_fp_stats->current_qindex =
       cm->mi_params.mi_alloc[alloc_mi_idx].current_qindex;
 
 #if CONFIG_INTERNAL_STATS
-  memcpy(sb_fp_stats->mode_chosen_counts, cpi->mode_chosen_counts,
-         sizeof(sb_fp_stats->mode_chosen_counts));
+  AOM_UNSAFE_MEMCPY(sb_fp_stats->mode_chosen_counts, cpi->mode_chosen_counts,
+                    sizeof(sb_fp_stats->mode_chosen_counts));
 #endif  // CONFIG_INTERNAL_STATS
 }
 
@@ -1531,20 +1539,21 @@ void av1_restore_sb_state(const SB_FIRST_PASS_STATS *sb_fp_stats, AV1_COMP *cpi,
   *td->counts = sb_fp_stats->fc;
 
   if (cpi->sf.inter_sf.inter_mode_rd_model_estimation == 1) {
-    memcpy(tile_data->inter_mode_rd_models, sb_fp_stats->inter_mode_rd_models,
-           sizeof(sb_fp_stats->inter_mode_rd_models));
+    AOM_UNSAFE_MEMCPY(tile_data->inter_mode_rd_models,
+                      sb_fp_stats->inter_mode_rd_models,
+                      sizeof(sb_fp_stats->inter_mode_rd_models));
   }
 
-  memcpy(x->thresh_freq_fact, sb_fp_stats->thresh_freq_fact,
-         sizeof(sb_fp_stats->thresh_freq_fact));
+  AOM_UNSAFE_MEMCPY(x->thresh_freq_fact, sb_fp_stats->thresh_freq_fact,
+                    sizeof(sb_fp_stats->thresh_freq_fact));
 
   const int alloc_mi_idx = get_alloc_mi_idx(&cm->mi_params, mi_row, mi_col);
   cm->mi_params.mi_alloc[alloc_mi_idx].current_qindex =
       sb_fp_stats->current_qindex;
 
 #if CONFIG_INTERNAL_STATS
-  memcpy(cpi->mode_chosen_counts, sb_fp_stats->mode_chosen_counts,
-         sizeof(sb_fp_stats->mode_chosen_counts));
+  AOM_UNSAFE_MEMCPY(cpi->mode_chosen_counts, sb_fp_stats->mode_chosen_counts,
+                    sizeof(sb_fp_stats->mode_chosen_counts));
 #endif  // CONFIG_INTERNAL_STATS
 }
 

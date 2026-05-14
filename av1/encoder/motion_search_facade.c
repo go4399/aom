@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2020, Alliance for Open Media. All rights reserved.
  *
@@ -304,7 +306,10 @@ void av1_single_motion_search(const AV1_COMP *const cpi, MACROBLOCK *x,
 
         av1_make_default_fullpel_ms_params(
             &full_ms_params, cpi, x, bsize, &ref_mv, smv.as_fullmv,
-            src_search_site_cfg, search_method, fine_search_interval);
+            AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+                const search_site_config *, src_search_site_cfg,
+                sizeof(src_search_site_cfg[0]) * NUM_DISTINCT_SEARCH_METHODS),
+            search_method, fine_search_interval);
 
         const int thissme =
             av1_full_pixel_search(smv.as_fullmv, &full_ms_params, step_param,
@@ -323,9 +328,12 @@ void av1_single_motion_search(const AV1_COMP *const cpi, MACROBLOCK *x,
       }
     } break;
     case OBMC_CAUSAL:
-      av1_make_default_fullpel_ms_params(&full_ms_params, cpi, x, bsize,
-                                         &ref_mv, start_mv, src_search_site_cfg,
-                                         search_method, fine_search_interval);
+      av1_make_default_fullpel_ms_params(
+          &full_ms_params, cpi, x, bsize, &ref_mv, start_mv,
+          AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+              const search_site_config *, src_search_site_cfg,
+              sizeof(src_search_site_cfg[0]) * NUM_DISTINCT_SEARCH_METHODS),
+          search_method, fine_search_interval);
 
       bestsme = av1_obmc_full_pixel_search(start_mv, &full_ms_params,
                                            step_param, &best_mv->as_fullmv);
@@ -349,9 +357,11 @@ void av1_single_motion_search(const AV1_COMP *const cpi, MACROBLOCK *x,
     int_mv this_mv;
     this_mv.as_mv = get_mv_from_fullmv(&best_mv->as_fullmv);
     const int ref_mv_idx = mbmi->ref_mv_idx;
-    const int this_mv_rate =
-        av1_mv_bit_cost(&this_mv.as_mv, &ref_mv, mv_costs->nmv_joint_cost,
-                        mv_costs->mv_cost_stack, MV_COST_WEIGHT);
+    const int this_mv_rate = av1_mv_bit_cost(
+        &this_mv.as_mv, &ref_mv, mv_costs->nmv_joint_cost,
+        AOM_UNSAFE_FORGE_BIDI_INDEXABLE(int **, mv_costs->mv_cost_stack,
+                                        sizeof(mv_costs->mv_cost_stack[0]) * 2),
+        MV_COST_WEIGHT);
     mode_info[ref_mv_idx].full_search_mv.as_int = this_mv.as_int;
     mode_info[ref_mv_idx].full_mv_rate = this_mv_rate;
     mode_info[ref_mv_idx].full_mv_bestsme = bestsme;
@@ -439,7 +449,10 @@ void av1_single_motion_search(const AV1_COMP *const cpi, MACROBLOCK *x,
                                     max_txsize_rect_lookup[bsize]);
               int this_mv_rate = av1_mv_bit_cost(
                   &best_mv->as_mv, &ref_mv, mv_costs->nmv_joint_cost,
-                  mv_costs->mv_cost_stack, MV_COST_WEIGHT);
+                  AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+                      int **, mv_costs->mv_cost_stack,
+                      sizeof(mv_costs->mv_cost_stack[0]) * 2),
+                  MV_COST_WEIGHT);
               rd = RDCOST(x->rdmult, this_mv_rate + this_rd_stats.rate,
                           this_rd_stats.dist);
             }
@@ -466,7 +479,10 @@ void av1_single_motion_search(const AV1_COMP *const cpi, MACROBLOCK *x,
                                       max_txsize_rect_lookup[bsize]);
                 int tmp_mv_rate = av1_mv_bit_cost(
                     &this_best_mv, &ref_mv, mv_costs->nmv_joint_cost,
-                    mv_costs->mv_cost_stack, MV_COST_WEIGHT);
+                    AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+                        int **, mv_costs->mv_cost_stack,
+                        sizeof(mv_costs->mv_cost_stack[0]) * 2),
+                    MV_COST_WEIGHT);
                 int64_t tmp_rd =
                     RDCOST(x->rdmult, tmp_rd_stats.rate + tmp_mv_rate,
                            tmp_rd_stats.dist);
@@ -506,7 +522,10 @@ void av1_single_motion_search(const AV1_COMP *const cpi, MACROBLOCK *x,
       const int ref_mv_idx = mbmi->ref_mv_idx;
       best_mv_rate =
           av1_mv_bit_cost(&best_mv->as_mv, &ref_mv, mv_costs->nmv_joint_cost,
-                          mv_costs->mv_cost_stack, MV_COST_WEIGHT);
+                          AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+                              int **, mv_costs->mv_cost_stack,
+                              sizeof(mv_costs->mv_cost_stack[0]) * 2),
+                          MV_COST_WEIGHT);
       mv_rate_calculated = 1;
 
       for (int prev_ref_idx = 0; prev_ref_idx < ref_mv_idx; ++prev_ref_idx) {
@@ -539,9 +558,11 @@ void av1_single_motion_search(const AV1_COMP *const cpi, MACROBLOCK *x,
   if (mv_rate_calculated) {
     *rate_mv = best_mv_rate;
   } else {
-    *rate_mv =
-        av1_mv_bit_cost(&best_mv->as_mv, &ref_mv, mv_costs->nmv_joint_cost,
-                        mv_costs->mv_cost_stack, MV_COST_WEIGHT);
+    *rate_mv = av1_mv_bit_cost(
+        &best_mv->as_mv, &ref_mv, mv_costs->nmv_joint_cost,
+        AOM_UNSAFE_FORGE_BIDI_INDEXABLE(int **, mv_costs->mv_cost_stack,
+                                        sizeof(mv_costs->mv_cost_stack[0]) * 2),
+        MV_COST_WEIGHT);
   }
 }
 
@@ -656,10 +677,13 @@ int av1_joint_motion_search(const AV1_COMP *cpi, MACROBLOCK *x,
         av1_get_search_site_config(cpi, x, search_method);
     // Use the mv result from the single mode as mv predictor.
     const FULLPEL_MV start_fullmv = get_fullmv_from_mv(&cur_mv[id].as_mv);
-    av1_make_default_fullpel_ms_params(&full_ms_params, cpi, x, bsize,
-                                       &ref_mv[id].as_mv, start_fullmv,
-                                       src_search_sites, search_method,
-                                       /*fine_search_interval=*/0);
+    av1_make_default_fullpel_ms_params(
+        &full_ms_params, cpi, x, bsize, &ref_mv[id].as_mv, start_fullmv,
+        AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+            const search_site_config *, src_search_sites,
+            sizeof(src_search_sites[0]) * NUM_DISTINCT_SEARCH_METHODS),
+        search_method,
+        /*fine_search_interval=*/0);
 
     av1_set_ms_compound_refs(&full_ms_params.ms_buffers, second_pred, mask,
                              mask_stride, id);
@@ -744,9 +768,11 @@ int av1_joint_motion_search(const AV1_COMP *cpi, MACROBLOCK *x,
 
   for (ref = 0; ref < 2; ++ref) {
     const int_mv curr_ref_mv = av1_get_ref_mv(x, ref);
-    *rate_mv += av1_mv_bit_cost(&cur_mv[ref].as_mv, &curr_ref_mv.as_mv,
-                                mv_costs->nmv_joint_cost,
-                                mv_costs->mv_cost_stack, MV_COST_WEIGHT);
+    *rate_mv += av1_mv_bit_cost(
+        &cur_mv[ref].as_mv, &curr_ref_mv.as_mv, mv_costs->nmv_joint_cost,
+        AOM_UNSAFE_FORGE_BIDI_INDEXABLE(int **, mv_costs->mv_cost_stack,
+                                        sizeof(mv_costs->mv_cost_stack[0]) * 2),
+        MV_COST_WEIGHT);
   }
 
   return AOMMIN(last_besterr[0], last_besterr[1]);
@@ -812,10 +838,13 @@ int av1_compound_single_motion_search(const AV1_COMP *cpi, MACROBLOCK *x,
       av1_get_search_site_config(cpi, x, search_method);
   // Use the mv result from the single mode as mv predictor.
   const FULLPEL_MV start_fullmv = get_fullmv_from_mv(this_mv);
-  av1_make_default_fullpel_ms_params(&full_ms_params, cpi, x, bsize,
-                                     &ref_mv.as_mv, start_fullmv,
-                                     src_search_sites, search_method,
-                                     /*fine_search_interval=*/0);
+  av1_make_default_fullpel_ms_params(
+      &full_ms_params, cpi, x, bsize, &ref_mv.as_mv, start_fullmv,
+      AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+          const search_site_config *, src_search_sites,
+          sizeof(src_search_sites[0]) * NUM_DISTINCT_SEARCH_METHODS),
+      search_method,
+      /*fine_search_interval=*/0);
 
   av1_set_ms_compound_refs(&full_ms_params.ms_buffers, second_pred, mask,
                            mask_stride, ref_idx);
@@ -859,8 +888,11 @@ int av1_compound_single_motion_search(const AV1_COMP *cpi, MACROBLOCK *x,
 
   *rate_mv = 0;
 
-  *rate_mv += av1_mv_bit_cost(this_mv, &ref_mv.as_mv, mv_costs->nmv_joint_cost,
-                              mv_costs->mv_cost_stack, MV_COST_WEIGHT);
+  *rate_mv += av1_mv_bit_cost(
+      this_mv, &ref_mv.as_mv, mv_costs->nmv_joint_cost,
+      AOM_UNSAFE_FORGE_BIDI_INDEXABLE(int **, mv_costs->mv_cost_stack,
+                                      sizeof(mv_costs->mv_cost_stack[0]) * 2),
+      MV_COST_WEIGHT);
   return bestsme;
 }
 
@@ -1041,9 +1073,12 @@ int_mv av1_simple_motion_search_sse_var(AV1_COMP *const cpi, MACROBLOCK *x,
       av1_get_default_mv_search_method(x, mv_sf, bsize);
   const search_site_config *src_search_sites =
       av1_get_search_site_config(cpi, x, search_method);
-  av1_make_default_fullpel_ms_params(&full_ms_params, cpi, x, bsize, &ref_mv,
-                                     start_mv, src_search_sites, search_method,
-                                     fine_search_interval);
+  av1_make_default_fullpel_ms_params(
+      &full_ms_params, cpi, x, bsize, &ref_mv, start_mv,
+      AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+          const search_site_config *, src_search_sites,
+          sizeof(src_search_sites[0]) * NUM_DISTINCT_SEARCH_METHODS),
+      search_method, fine_search_interval);
 
   bestsme = av1_full_pixel_search(start_mv, &full_ms_params, step_param,
                                   cond_cost_list(cpi, cost_list),

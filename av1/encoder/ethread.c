@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -1194,11 +1196,13 @@ int av1_check_fpmt_config(AV1_PRIMARY *const ppi,
                    reset_size);
     av1_zero_array(&ppi->gf_group.is_frame_non_ref[cur_gf_index], reset_size);
     av1_zero_array(&ppi->gf_group.src_offset[cur_gf_index], reset_size);
-    memset(&ppi->gf_group.skip_frame_refresh[cur_gf_index][0], INVALID_IDX,
-           sizeof(ppi->gf_group.skip_frame_refresh[cur_gf_index][0]) *
-               reset_size * REF_FRAMES);
-    memset(&ppi->gf_group.skip_frame_as_ref[cur_gf_index], INVALID_IDX,
-           sizeof(ppi->gf_group.skip_frame_as_ref[cur_gf_index]) * reset_size);
+    AOM_UNSAFE_MEMSET(
+        &ppi->gf_group.skip_frame_refresh[cur_gf_index][0], INVALID_IDX,
+        sizeof(ppi->gf_group.skip_frame_refresh[cur_gf_index][0]) * reset_size *
+            REF_FRAMES);
+    AOM_UNSAFE_MEMSET(
+        &ppi->gf_group.skip_frame_as_ref[cur_gf_index], INVALID_IDX,
+        sizeof(ppi->gf_group.skip_frame_as_ref[cur_gf_index]) * reset_size);
     ppi->num_fp_contexts = 1;
   }
   return 0;
@@ -1955,10 +1959,10 @@ void av1_encode_tiles_row_mt(AV1_COMP *cpi) {
 
   av1_init_tile_data(cpi);
 
-  memset(thread_id_to_tile_id, -1,
-         sizeof(*thread_id_to_tile_id) * MAX_NUM_THREADS);
-  memset(enc_row_mt->num_tile_cols_done, 0,
-         sizeof(*enc_row_mt->num_tile_cols_done) * sb_rows_in_frame);
+  AOM_UNSAFE_MEMSET(thread_id_to_tile_id, -1,
+                    sizeof(*thread_id_to_tile_id) * MAX_NUM_THREADS);
+  AOM_UNSAFE_MEMSET(enc_row_mt->num_tile_cols_done, 0,
+                    sizeof(*enc_row_mt->num_tile_cols_done) * sb_rows_in_frame);
   enc_row_mt->row_mt_exit = false;
 
   for (int tile_row = 0; tile_row < tile_rows; tile_row++) {
@@ -1968,8 +1972,9 @@ void av1_encode_tiles_row_mt(AV1_COMP *cpi) {
       AV1EncRowMultiThreadSync *const row_mt_sync = &this_tile->row_mt_sync;
 
       // Initialize num_finished_cols to -1 for all rows.
-      memset(row_mt_sync->num_finished_cols, -1,
-             sizeof(*row_mt_sync->num_finished_cols) * max_sb_rows_in_tile);
+      AOM_UNSAFE_MEMSET(
+          row_mt_sync->num_finished_cols, -1,
+          sizeof(*row_mt_sync->num_finished_cols) * max_sb_rows_in_tile);
       row_mt_sync->next_mi_row = this_tile->tile_info.mi_row_start;
       row_mt_sync->num_threads_working = 0;
       row_mt_sync->intrabc_extra_top_right_sb_delay =
@@ -2037,8 +2042,8 @@ void av1_fp_encode_tiles_row_mt(AV1_COMP *cpi) {
   else
     num_workers = mt_info->num_mod_workers[MOD_FP];
 
-  memset(thread_id_to_tile_id, -1,
-         sizeof(*thread_id_to_tile_id) * MAX_NUM_THREADS);
+  AOM_UNSAFE_MEMSET(thread_id_to_tile_id, -1,
+                    sizeof(*thread_id_to_tile_id) * MAX_NUM_THREADS);
   enc_row_mt->firstpass_mt_exit = false;
 
   for (int tile_row = 0; tile_row < tile_rows; tile_row++) {
@@ -2048,8 +2053,8 @@ void av1_fp_encode_tiles_row_mt(AV1_COMP *cpi) {
       AV1EncRowMultiThreadSync *const row_mt_sync = &this_tile->row_mt_sync;
 
       // Initialize num_finished_cols to -1 for all rows.
-      memset(row_mt_sync->num_finished_cols, -1,
-             sizeof(*row_mt_sync->num_finished_cols) * max_mb_rows);
+      AOM_UNSAFE_MEMSET(row_mt_sync->num_finished_cols, -1,
+                        sizeof(*row_mt_sync->num_finished_cols) * max_mb_rows);
       row_mt_sync->next_mi_row = this_tile->tile_info.mi_row_start;
       row_mt_sync->num_threads_working = 0;
 
@@ -2350,8 +2355,8 @@ void av1_mc_flow_dispenser_mt(AV1_COMP *cpi) {
   mt_info->tpl_row_mt.tpl_mt_exit = false;
 
   // Initialize cur_mb_col to -1 for all MB rows.
-  memset(tpl_sync->num_finished_cols, -1,
-         sizeof(*tpl_sync->num_finished_cols) * mb_rows);
+  AOM_UNSAFE_MEMSET(tpl_sync->num_finished_cols, -1,
+                    sizeof(*tpl_sync->num_finished_cols) * mb_rows);
 
   prepare_tpl_workers(cpi, tpl_worker_hook, num_workers);
   launch_workers(&cpi->mt_info, num_workers);
@@ -2890,8 +2895,8 @@ void av1_calc_mb_wiener_var_mt(AV1_COMP *cpi, int num_workers,
   intra_row_mt_sync->intrabc_extra_top_right_sb_delay = 0;
   intra_row_mt_sync->num_threads_working = num_workers;
   intra_row_mt_sync->next_mi_row = 0;
-  memset(intra_row_mt_sync->num_finished_cols, -1,
-         sizeof(*intra_row_mt_sync->num_finished_cols) * mi_rows);
+  AOM_UNSAFE_MEMSET(intra_row_mt_sync->num_finished_cols, -1,
+                    sizeof(*intra_row_mt_sync->num_finished_cols) * mi_rows);
   mt_info->enc_row_mt.mb_wiener_mt_exit = false;
 
   prepare_wiener_var_workers(cpi, cal_mb_wiener_var_hook, num_workers);
@@ -3204,7 +3209,8 @@ static void accumulate_pack_bs_data(
         (uint32_t)pack_bs_params->buf.size + *pack_bs_params->total_size;
 
     // Pack all the chunks of tile bitstreams together
-    if (tile_idx != 0) memmove(dst + dst_offset, dst + src_offset, tile_size);
+    if (tile_idx != 0)
+      AOM_UNSAFE_MEMMOVE(dst + dst_offset, dst + src_offset, tile_size);
 
     if (pack_bs_params->is_last_tile_in_tg)
       av1_write_last_tile_info(

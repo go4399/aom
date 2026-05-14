@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -147,7 +149,7 @@ char **argv_dup(int argc, const char **argv) {
   char **new_argv = malloc((argc + 1) * sizeof(*argv));
   if (!new_argv) return NULL;
 
-  memcpy(new_argv, argv, argc * sizeof(*argv));
+  AOM_UNSAFE_MEMCPY(new_argv, argv, argc * sizeof(*argv));
   new_argv[argc] = NULL;
   return new_argv;
 }

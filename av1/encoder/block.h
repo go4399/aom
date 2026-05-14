@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -1455,15 +1457,16 @@ static inline void zero_winner_mode_stats(BLOCK_SIZE bsize, int n_stats,
   const int block_width = block_size_wide[bsize];
   for (int i = 0; i < n_stats; ++i) {
     WinnerModeStats *const stat = &stats[i];
-    memset(&stat->mbmi, 0, sizeof(stat->mbmi));
-    memset(&stat->rd_cost, 0, sizeof(stat->rd_cost));
-    memset(&stat->rd, 0, sizeof(stat->rd));
-    memset(&stat->rate_y, 0, sizeof(stat->rate_y));
-    memset(&stat->rate_uv, 0, sizeof(stat->rate_uv));
+    AOM_UNSAFE_MEMSET(&stat->mbmi, 0, sizeof(stat->mbmi));
+    AOM_UNSAFE_MEMSET(&stat->rd_cost, 0, sizeof(stat->rd_cost));
+    AOM_UNSAFE_MEMSET(&stat->rd, 0, sizeof(stat->rd));
+    AOM_UNSAFE_MEMSET(&stat->rate_y, 0, sizeof(stat->rate_y));
+    AOM_UNSAFE_MEMSET(&stat->rate_uv, 0, sizeof(stat->rate_uv));
     // Do not reset the whole array as it is CPU intensive.
-    memset(&stat->color_index_map, 0,
-           block_width * block_height * sizeof(stat->color_index_map[0]));
-    memset(&stat->mode_index, 0, sizeof(stat->mode_index));
+    AOM_UNSAFE_MEMSET(
+        &stat->color_index_map, 0,
+        block_width * block_height * sizeof(stat->color_index_map[0]));
+    AOM_UNSAFE_MEMSET(&stat->mode_index, 0, sizeof(stat->mode_index));
   }
 }
 

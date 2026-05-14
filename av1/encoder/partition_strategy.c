@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2019, Alliance for Open Media. All rights reserved.
  *
@@ -1334,17 +1336,17 @@ void av1_ml_prune_4_partition(AV1_COMP *const cpi, MACROBLOCK *const x,
   const int mi_col = blk_params.mi_col;
   const BLOCK_SIZE bsize = blk_params.bsize;
 
-  int64_t(*rect_part_rd)[SUB_PARTITIONS_RECT] = part_state->rect_part_rd;
+  // int64_t(*rect_part_rd)[SUB_PARTITIONS_RECT] = part_state->rect_part_rd;
   int64_t *split_rd = part_state->split_rd;
   if (ext_ml_model_decision_after_part_ab(
-          cpi, x, bsize, part_ctx, best_rd, rect_part_rd, split_rd,
-          &part4_allowed[HORZ4], &part4_allowed[VERT4], pb_source_variance,
-          mi_row, mi_col))
+          cpi, x, bsize, part_ctx, best_rd, part_state->rect_part_rd,
+          part_state->split_rd, &part4_allowed[HORZ4], &part4_allowed[VERT4],
+          pb_source_variance, mi_row, mi_col))
     return;
 
   if (best_rd >= 1000000000) return;
-  int64_t *horz_rd = rect_part_rd[HORZ4];
-  int64_t *vert_rd = rect_part_rd[VERT4];
+  int64_t *horz_rd = part_state->rect_part_rd[HORZ4];
+  int64_t *vert_rd = part_state->rect_part_rd[VERT4];
 
   const int is_720p_or_larger = AOMMIN(cm->width, cm->height) >= 720;
   const int is_480p_or_larger = AOMMIN(cm->width, cm->height) >= 480;
@@ -2633,7 +2635,8 @@ void av1_prepare_motion_search_features_block(
 
 static inline void init_simple_motion_search_mvs(
     SIMPLE_MOTION_DATA_TREE *sms_tree, const FULLPEL_MV *start_mvs) {
-  memcpy(sms_tree->start_mvs, start_mvs, sizeof(sms_tree->start_mvs));
+  AOM_UNSAFE_MEMCPY(sms_tree->start_mvs, start_mvs,
+                    sizeof(sms_tree->start_mvs));
   av1_zero(sms_tree->sms_none_feat);
   av1_zero(sms_tree->sms_rect_feat);
   av1_zero(sms_tree->sms_none_valid);

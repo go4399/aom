@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -142,7 +144,7 @@ static int search_filter_level(const YV12_BUFFER_CONFIG *sd, AV1_COMP *cpi,
   const int min_filter_step_thesh = min_filter_step_lookup[use_coarse_search];
 
   // Set each entry to -1
-  memset(ss_err, 0xFF, sizeof(ss_err));
+  AOM_UNSAFE_MEMSET(ss_err, 0xFF, sizeof(ss_err));
   yv12_copy_plane(&cm->cur_frame->buf, &cpi->last_frame_uf, plane);
   best_err = try_filter_frame(sd, cpi, filt_mid, partial_frame, plane, dir);
   filt_best = filt_mid;

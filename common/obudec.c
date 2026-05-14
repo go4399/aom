@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2017, Alliance for Open Media. All rights reserved.
  *
@@ -289,7 +291,7 @@ int file_is_obu(struct ObuDecInputContext *obu_ctx) {
   const int is_annexb = obu_ctx->is_annexb;
   size_t payload_length = 0;
   ObuHeader obu_header;
-  memset(&obu_header, 0, sizeof(obu_header));
+  AOM_UNSAFE_MEMSET(&obu_header, 0, sizeof(obu_header));
   size_t length_of_unit_size = 0;
   size_t annexb_header_length = 0;
   uint64_t unit_size = 0;
@@ -357,7 +359,7 @@ int file_is_obu(struct ObuDecInputContext *obu_ctx) {
   }
   obu_ctx->buffer_capacity = OBU_BUFFER_SIZE;
 
-  memcpy(obu_ctx->buffer, &detect_buf[0], bytes_read);
+  AOM_UNSAFE_MEMCPY(obu_ctx->buffer, &detect_buf[0], bytes_read);
   obu_ctx->bytes_buffered = bytes_read;
   // If the first OBU is a SEQUENCE_HEADER, then it will have a payload.
   // We need to read this in so that our buffer only contains complete OBUs.
@@ -433,7 +435,7 @@ int obudec_read_temporal_unit(struct ObuDecInputContext *obu_ctx,
   } else {
     while (1) {
       ObuHeader obu_header;
-      memset(&obu_header, 0, sizeof(obu_header));
+      AOM_UNSAFE_MEMSET(&obu_header, 0, sizeof(obu_header));
 
       if (obudec_read_one_obu(obu_ctx->avx_ctx, &obu_ctx->buffer,
                               obu_ctx->bytes_buffered,
@@ -471,12 +473,12 @@ int obudec_read_temporal_unit(struct ObuDecInputContext *obu_ctx,
   *buffer_size = tu_size;
 
   if (!obu_ctx->is_annexb) {
-    memcpy(*buffer, obu_ctx->buffer, tu_size);
+    AOM_UNSAFE_MEMCPY(*buffer, obu_ctx->buffer, tu_size);
 
     // At this point, (obu_ctx->buffer + obu_ctx->bytes_buffered + obu_size)
     // points to the end of the buffer.
-    memmove(obu_ctx->buffer, obu_ctx->buffer + obu_ctx->bytes_buffered,
-            obu_size);
+    AOM_UNSAFE_MEMMOVE(obu_ctx->buffer,
+                       obu_ctx->buffer + obu_ctx->bytes_buffered, obu_size);
     obu_ctx->bytes_buffered = obu_size;
   } else {
     if (!input_eof(obu_ctx->avx_ctx)) {
@@ -484,11 +486,11 @@ int obudec_read_temporal_unit(struct ObuDecInputContext *obu_ctx,
       size_t offset;
       if (!obu_ctx->bytes_buffered) {
         data_size = tu_size - length_of_temporal_unit_size;
-        memcpy(*buffer, &tuheader[0], length_of_temporal_unit_size);
+        AOM_UNSAFE_MEMCPY(*buffer, &tuheader[0], length_of_temporal_unit_size);
         offset = length_of_temporal_unit_size;
       } else {
         const size_t copy_size = AOMMIN(obu_ctx->bytes_buffered, tu_size);
-        memcpy(*buffer, obu_ctx->buffer, copy_size);
+        AOM_UNSAFE_MEMCPY(*buffer, obu_ctx->buffer, copy_size);
         offset = copy_size;
         data_size = tu_size - copy_size;
         obu_ctx->bytes_buffered -= copy_size;

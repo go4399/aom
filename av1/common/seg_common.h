@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -103,8 +105,8 @@ static inline void set_segment_id(uint8_t *segment_ids, int mi_offset,
                                   uint8_t segment_id) {
   segment_ids += mi_offset;
   for (int y = 0; y < y_mis; ++y) {
-    memset(&segment_ids[y * mi_stride], segment_id,
-           x_mis * sizeof(segment_ids[0]));
+    AOM_UNSAFE_MEMSET(&segment_ids[y * mi_stride], segment_id,
+                      x_mis * sizeof(segment_ids[0]));
   }
 }
 

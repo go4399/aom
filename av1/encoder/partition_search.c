@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2020, Alliance for Open Media. All rights reserved.
  *
@@ -2907,8 +2909,8 @@ static void direct_partition_merging(AV1_COMP *cpi, ThreadData *td,
         tx_size_from_tx_mode(bsize, x->txfm_search_params.tx_mode_search_type);
     if (xd->lossless[this_mi[0]->segment_id]) tx_size = TX_4X4;
     this_mi[0]->tx_size = tx_size;
-    memset(this_mi[0]->inter_tx_size, this_mi[0]->tx_size,
-           sizeof(this_mi[0]->inter_tx_size));
+    AOM_UNSAFE_MEMSET(this_mi[0]->inter_tx_size, this_mi[0]->tx_size,
+                      sizeof(this_mi[0]->inter_tx_size));
 
     // Update txfm contexts.
     xd->above_txfm_context =
@@ -3877,9 +3879,11 @@ static void ab_partitions_search(
 
     // Evaluation of AB partition type.
     rd_pick_ab_part(cpi, td, tile_data, tp, x, x_ctx, pc_tree,
-                    cur_part_ctxs[ab_part_type], part_search_state, best_rdc,
-                    ab_subsize[ab_part_type], ab_mi_pos[ab_part_type],
-                    part_type, mode_cache);
+                    AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+                        PICK_MODE_CONTEXT **, cur_part_ctxs[ab_part_type],
+                        sizeof(cur_part_ctxs[0][0]) * SUB_PARTITIONS_AB),
+                    part_search_state, best_rdc, ab_subsize[ab_part_type],
+                    ab_mi_pos[ab_part_type], part_type, mode_cache);
   }
 }
 
@@ -6242,14 +6246,15 @@ static void duplicate_mode_info_in_sb(AV1_COMMON *cm, MACROBLOCKD *xd,
 static inline void copy_mbmi_ext_frame_to_mbmi_ext(
     MB_MODE_INFO_EXT *const mbmi_ext,
     const MB_MODE_INFO_EXT_FRAME *mbmi_ext_best, uint8_t ref_frame_type) {
-  memcpy(mbmi_ext->ref_mv_stack[ref_frame_type], mbmi_ext_best->ref_mv_stack,
-         sizeof(mbmi_ext->ref_mv_stack[USABLE_REF_MV_STACK_SIZE]));
-  memcpy(mbmi_ext->weight[ref_frame_type], mbmi_ext_best->weight,
-         sizeof(mbmi_ext->weight[USABLE_REF_MV_STACK_SIZE]));
+  AOM_UNSAFE_MEMCPY(mbmi_ext->ref_mv_stack[ref_frame_type],
+                    mbmi_ext_best->ref_mv_stack,
+                    sizeof(mbmi_ext->ref_mv_stack[USABLE_REF_MV_STACK_SIZE]));
+  AOM_UNSAFE_MEMCPY(mbmi_ext->weight[ref_frame_type], mbmi_ext_best->weight,
+                    sizeof(mbmi_ext->weight[USABLE_REF_MV_STACK_SIZE]));
   mbmi_ext->mode_context[ref_frame_type] = mbmi_ext_best->mode_context;
   mbmi_ext->ref_mv_count[ref_frame_type] = mbmi_ext_best->ref_mv_count;
-  memcpy(mbmi_ext->global_mvs, mbmi_ext_best->global_mvs,
-         sizeof(mbmi_ext->global_mvs));
+  AOM_UNSAFE_MEMCPY(mbmi_ext->global_mvs, mbmi_ext_best->global_mvs,
+                    sizeof(mbmi_ext->global_mvs));
 }
 
 static void fill_mode_info_sb(AV1_COMP *cpi, MACROBLOCK *x, int mi_row,

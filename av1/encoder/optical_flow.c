@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -500,8 +502,8 @@ static void lucas_kanade(const YV12_BUFFER_CONFIG *from_frame,
     LOCALMV mv_old = mvs[mv_idx];
     mv_old.row = mv_old.row / expand_multiplier;
     mv_old.col = mv_old.col / expand_multiplier;
-    // using this instead of memset, since it's not completely
-    // clear if zero memset works on double arrays
+    // using this instead of AOM_UNSAFE_MEMSET, since it's not completely
+    // clear if zero AOM_UNSAFE_MEMSET works on double arrays
     for (int j = 0; j < n * n; j++) {
       i_x[j] = 0;
       i_y[j] = 0;

@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -174,9 +176,10 @@ void av1_cyclic_reset_segment_skip(const AV1_COMP *cpi, MACROBLOCK *const x,
       const uint8_t segment_id = mbmi->segment_id;
       for (int mi_y = 0; mi_y < ymis; mi_y++) {
         const int map_offset = block_index + mi_y * mi_stride;
-        memset(&cr->map[map_offset], 0, xmis);
-        memset(&cpi->enc_seg.map[map_offset], segment_id, xmis);
-        memset(&cm->cur_frame->seg_map[map_offset], segment_id, xmis);
+        AOM_UNSAFE_MEMSET(&cr->map[map_offset], 0, xmis);
+        AOM_UNSAFE_MEMSET(&cpi->enc_seg.map[map_offset], segment_id, xmis);
+        AOM_UNSAFE_MEMSET(&cm->cur_frame->seg_map[map_offset], segment_id,
+                          xmis);
       }
     }
   }
@@ -239,9 +242,9 @@ void av1_cyclic_refresh_update_segment(const AV1_COMP *cpi, MACROBLOCK *const x,
   const int mi_stride = cm->mi_params.mi_cols;
   for (int mi_y = 0; mi_y < ymis; mi_y += sh) {
     const int map_offset = block_index + mi_y * mi_stride;
-    memset(&cr->map[map_offset], new_map_value, xmis);
-    memset(&cpi->enc_seg.map[map_offset], segment_id, xmis);
-    memset(&cm->cur_frame->seg_map[map_offset], segment_id, xmis);
+    AOM_UNSAFE_MEMSET(&cr->map[map_offset], new_map_value, xmis);
+    AOM_UNSAFE_MEMSET(&cpi->enc_seg.map[map_offset], segment_id, xmis);
+    AOM_UNSAFE_MEMSET(&cm->cur_frame->seg_map[map_offset], segment_id, xmis);
   }
 
   // Accumulate cyclic refresh update counters.
@@ -308,7 +311,7 @@ static void cyclic_refresh_update_map(AV1_COMP *const cpi) {
   // seg_map to either 7 or 0 (AM_SEGMENT_ID_INACTIVE/ACTIVE), and cyclic
   // refresh set below (segment 1 or 2) will only be set for ACTIVE blocks.
   if (!cpi->active_map.enabled) {
-    memset(seg_map, CR_SEGMENT_ID_BASE, mi_rows * mi_cols);
+    AOM_UNSAFE_MEMSET(seg_map, CR_SEGMENT_ID_BASE, mi_rows * mi_cols);
   }
   sb_cols = (mi_cols + cm->seq_params->mib_size - 1) / cm->seq_params->mib_size;
   sb_rows = (mi_rows + cm->seq_params->mib_size - 1) / cm->seq_params->mib_size;
@@ -545,7 +548,7 @@ void av1_cyclic_refresh_update_parameters(AV1_COMP *const cpi) {
 static void cyclic_refresh_reset_resize(AV1_COMP *const cpi) {
   const AV1_COMMON *const cm = &cpi->common;
   CYCLIC_REFRESH *const cr = cpi->cyclic_refresh;
-  memset(cr->map, 0, cm->mi_params.mi_rows * cm->mi_params.mi_cols);
+  AOM_UNSAFE_MEMSET(cr->map, 0, cm->mi_params.mi_rows * cm->mi_params.mi_cols);
   cr->sb_index = 0;
   cr->last_sb_index = 0;
   cpi->refresh_frame.golden_frame = true;
@@ -582,7 +585,8 @@ void av1_cyclic_refresh_setup(AV1_COMP *const cpi) {
     // active blocks).
     if (!cpi->active_map.enabled || cpi->rc.percent_blocks_inactive == 100) {
       unsigned char *const seg_map = cpi->enc_seg.map;
-      memset(seg_map, 0, cm->mi_params.mi_rows * cm->mi_params.mi_cols);
+      AOM_UNSAFE_MEMSET(seg_map, 0,
+                        cm->mi_params.mi_rows * cm->mi_params.mi_cols);
       av1_disable_segmentation(&cm->seg);
     }
     if (frame_is_intra_only(cm) || scene_change_detected ||

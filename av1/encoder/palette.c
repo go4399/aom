@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -95,10 +97,10 @@ int av1_index_color_cache(const uint16_t *color_cache, int n_cache,
     for (int i = 0; i < n_colors; ++i) out_cache_colors[i] = colors[i];
     return n_colors;
   }
-  memset(cache_color_found, 0, n_cache * sizeof(*cache_color_found));
+  AOM_UNSAFE_MEMSET(cache_color_found, 0, n_cache * sizeof(*cache_color_found));
   int n_in_cache = 0;
   int in_cache_flags[PALETTE_MAX_SIZE];
-  memset(in_cache_flags, 0, sizeof(in_cache_flags));
+  AOM_UNSAFE_MEMSET(in_cache_flags, 0, sizeof(in_cache_flags));
   for (int i = 0; i < n_cache && n_in_cache < n_colors; ++i) {
     for (int j = 0; j < n_colors; ++j) {
       if (colors[j] == color_cache[i]) {
@@ -186,15 +188,17 @@ static inline void extend_palette_color_map(uint8_t *const color_map,
   if (new_width == orig_width && new_height == orig_height) return;
 
   for (j = orig_height - 1; j >= 0; --j) {
-    memmove(color_map + j * new_width, color_map + j * orig_width, orig_width);
+    AOM_UNSAFE_MEMMOVE(color_map + j * new_width, color_map + j * orig_width,
+                       orig_width);
     // Copy last column to extra columns.
-    memset(color_map + j * new_width + orig_width,
-           color_map[j * new_width + orig_width - 1], new_width - orig_width);
+    AOM_UNSAFE_MEMSET(color_map + j * new_width + orig_width,
+                      color_map[j * new_width + orig_width - 1],
+                      new_width - orig_width);
   }
   // Copy last row to extra rows.
   for (j = orig_height; j < new_height; ++j) {
-    memcpy(color_map + j * new_width, color_map + (orig_height - 1) * new_width,
-           new_width);
+    AOM_UNSAFE_MEMCPY(color_map + j * new_width,
+                      color_map + (orig_height - 1) * new_width, new_width);
   }
 }
 
@@ -311,8 +315,8 @@ static inline void palette_rd_y(
     // Setting beat_best_rd flag because current mode rd is better than best_rd.
     // This flag need to be updated only for palette evaluation in key frames
     if (beat_best_rd) *beat_best_rd = 1;
-    memcpy(best_palette_color_map, color_map,
-           block_width * block_height * sizeof(color_map[0]));
+    AOM_UNSAFE_MEMCPY(best_palette_color_map, color_map,
+                      block_width * block_height * sizeof(color_map[0]));
     *best_mbmi = *mbmi;
     av1_copy_array(tx_type_map, xd->tx_type_map, ctx->num_4x4_blk);
     if (rate) *rate = this_rate;
@@ -351,7 +355,7 @@ static inline int perform_top_color_palette_search(
   while (!is_iter_over(n, end_n, step_size)) {
     int beat_best_palette_rd = 0;
     bool do_header_rd_based_breakout = false;
-    memcpy(centroids, top_colors, n * sizeof(top_colors[0]));
+    AOM_UNSAFE_MEMCPY(centroids, top_colors, n * sizeof(top_colors[0]));
     palette_rd_y(cpi, x, mbmi, bsize, dc_mode_cost, data, centroids, n,
                  color_cache, n_cache, do_header_rd_based_gating, best_mbmi,
                  best_palette_color_map, best_rd, rate, rate_tokenonly,
@@ -522,8 +526,8 @@ static void find_top_colors(const int *const count_buf, int bit_depth,
           int j = n_colors - 1;
           // Move up to the best one.
           while (j >= 1 && count_buf[i] > top_color_counts[j - 1].count) --j;
-          memmove(top_color_counts + j + 1, top_color_counts + j,
-                  (n_colors - j - 1) * sizeof(top_color_counts[0]));
+          AOM_UNSAFE_MEMMOVE(top_color_counts + j + 1, top_color_counts + j,
+                             (n_colors - j - 1) * sizeof(top_color_counts[0]));
           top_color_counts[j].index = i;
           top_color_counts[j].count = count_buf[i];
         }
@@ -754,8 +758,9 @@ void av1_rd_pick_palette_intra_sby(
   }
 
   if (best_mbmi->palette_mode_info.palette_size[0] > 0) {
-    memcpy(color_map, best_palette_color_map,
-           block_width * block_height * sizeof(best_palette_color_map[0]));
+    AOM_UNSAFE_MEMCPY(
+        color_map, best_palette_color_map,
+        block_width * block_height * sizeof(best_palette_color_map[0]));
   }
   *mbmi = *best_mbmi;
 }
@@ -918,9 +923,9 @@ void av1_rd_pick_palette_intra_sbuv(const AV1_COMP *cpi, MACROBLOCK *x,
       if (this_rd < *best_rd) {
         *best_rd = this_rd;
         *best_mbmi = *mbmi;
-        memcpy(best_palette_color_map, color_map,
-               plane_block_width * plane_block_height *
-                   sizeof(best_palette_color_map[0]));
+        AOM_UNSAFE_MEMCPY(best_palette_color_map, color_map,
+                          plane_block_width * plane_block_height *
+                              sizeof(best_palette_color_map[0]));
         *rate = this_rate;
         *distortion = tokenonly_rd_stats.dist;
         *rate_tokenonly = tokenonly_rd_stats.rate;
@@ -929,9 +934,9 @@ void av1_rd_pick_palette_intra_sbuv(const AV1_COMP *cpi, MACROBLOCK *x,
     }
   }
   if (best_mbmi->palette_mode_info.palette_size[1] > 0) {
-    memcpy(color_map, best_palette_color_map,
-           plane_block_width * plane_block_height *
-               sizeof(best_palette_color_map[0]));
+    AOM_UNSAFE_MEMCPY(color_map, best_palette_color_map,
+                      plane_block_width * plane_block_height *
+                          sizeof(best_palette_color_map[0]));
   }
 }
 

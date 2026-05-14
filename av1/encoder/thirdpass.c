@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2021, Alliance for Open Media. All rights reserved.
  *
@@ -36,7 +38,7 @@ static void setup_two_pass_stream_input(
     aom_internal_error(err_info, AOM_CODEC_MEM_ERROR,
                        "Failed to allocate memory for third-pass context.");
   }
-  memset(aom_input_ctx, 0, sizeof(*aom_input_ctx));
+  AOM_UNSAFE_MEMSET(aom_input_ctx, 0, sizeof(*aom_input_ctx));
   aom_input_ctx->filename = input_file_name;
   aom_input_ctx->file = infile;
 

@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2021, Alliance for Open Media. All rights reserved.
  *
@@ -42,7 +44,7 @@ static aom_codec_err_t ext_part_init(ExtPartController *ext_part_controller) {
   if (ext_part_controller == NULL) {
     return AOM_CODEC_INVALID_PARAM;
   }
-  memset(ext_part_controller, 0, sizeof(*ext_part_controller));
+  AOM_UNSAFE_MEMSET(ext_part_controller, 0, sizeof(*ext_part_controller));
   return AOM_CODEC_OK;
 }
 

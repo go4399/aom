@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -50,15 +52,16 @@ static void decode_color_map_tokens(Av1ColorMapParam *param, aom_reader *r) {
   // Copy last column to extra columns.
   if (cols < plane_block_width) {
     for (int i = 0; i < rows; ++i) {
-      memset(color_map + i * plane_block_width + cols,
-             color_map[i * plane_block_width + cols - 1],
-             (plane_block_width - cols));
+      AOM_UNSAFE_MEMSET(color_map + i * plane_block_width + cols,
+                        color_map[i * plane_block_width + cols - 1],
+                        (plane_block_width - cols));
     }
   }
   // Copy last row to extra rows.
   for (int i = rows; i < plane_block_height; ++i) {
-    memcpy(color_map + i * plane_block_width,
-           color_map + (rows - 1) * plane_block_width, plane_block_width);
+    AOM_UNSAFE_MEMCPY(color_map + i * plane_block_width,
+                      color_map + (rows - 1) * plane_block_width,
+                      plane_block_width);
   }
 }
 

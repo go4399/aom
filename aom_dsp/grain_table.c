@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -186,7 +188,7 @@ void aom_film_grain_table_append(aom_film_grain_table_t *t, int64_t time_stamp,
   if (!t->tail || memcmp(grain, &t->tail->params, sizeof(*grain))) {
     aom_film_grain_table_entry_t *new_tail = aom_malloc(sizeof(*new_tail));
     if (!new_tail) return;
-    memset(new_tail, 0, sizeof(*new_tail));
+    AOM_UNSAFE_MEMSET(new_tail, 0, sizeof(*new_tail));
     if (t->tail) t->tail->next = new_tail;
     if (!t->head) t->head = new_tail;
     t->tail = new_tail;
@@ -206,7 +208,7 @@ int aom_film_grain_table_lookup(aom_film_grain_table_t *t, int64_t time_stamp,
   aom_film_grain_table_entry_t *entry = t->head;
   aom_film_grain_table_entry_t *prev_entry = NULL;
   uint16_t random_seed = grain ? grain->random_seed : 0;
-  if (grain) memset(grain, 0, sizeof(*grain));
+  if (grain) AOM_UNSAFE_MEMSET(grain, 0, sizeof(*grain));
 
   while (entry) {
     aom_film_grain_table_entry_t *next = entry->next;
@@ -295,7 +297,7 @@ aom_codec_err_t aom_film_grain_table_read(
         aom_internal_error(error_info, AOM_CODEC_MEM_ERROR,
                            "Unable to allocate grain table entry");
       }
-      memset(entry, 0, sizeof(*entry));
+      AOM_UNSAFE_MEMSET(entry, 0, sizeof(*entry));
       grain_table_entry_read(file, error_info, entry);
       entry->next = NULL;
 
@@ -351,5 +353,5 @@ void aom_film_grain_table_free(aom_film_grain_table_t *t) {
     aom_free(entry);
     entry = next;
   }
-  memset(t, 0, sizeof(*t));
+  AOM_UNSAFE_MEMSET(t, 0, sizeof(*t));
 }

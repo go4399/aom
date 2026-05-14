@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -175,11 +177,11 @@ void av1_get_inv_txfm_cfg(TX_TYPE tx_type, TX_SIZE tx_size,
   cfg->cos_bit_row = INV_COS_BIT;
   cfg->txfm_type_col = av1_txfm_type_ls[txh_idx][tx_type_1d_col];
   if (cfg->txfm_type_col == TXFM_TYPE_ADST4) {
-    memcpy(cfg->stage_range_col, iadst4_range, sizeof(iadst4_range));
+    AOM_UNSAFE_MEMCPY(cfg->stage_range_col, iadst4_range, sizeof(iadst4_range));
   }
   cfg->txfm_type_row = av1_txfm_type_ls[txw_idx][tx_type_1d_row];
   if (cfg->txfm_type_row == TXFM_TYPE_ADST4) {
-    memcpy(cfg->stage_range_row, iadst4_range, sizeof(iadst4_range));
+    AOM_UNSAFE_MEMCPY(cfg->stage_range_row, iadst4_range, sizeof(iadst4_range));
   }
   cfg->stage_num_col = av1_txfm_stage_num_list[cfg->txfm_type_col];
   cfg->stage_num_row = av1_txfm_stage_num_list[cfg->txfm_type_row];
@@ -394,10 +396,11 @@ void av1_inv_txfm2d_add_64x64_c(const int32_t *input, uint16_t *output,
   // - Setting the rest of the locations to 0.
   int32_t mod_input[64 * 64];
   for (int col = 0; col < 32; ++col) {
-    memcpy(mod_input + col * 64, input + col * 32, 32 * sizeof(*mod_input));
-    memset(mod_input + col * 64 + 32, 0, 32 * sizeof(*mod_input));
+    AOM_UNSAFE_MEMCPY(mod_input + col * 64, input + col * 32,
+                      32 * sizeof(*mod_input));
+    AOM_UNSAFE_MEMSET(mod_input + col * 64 + 32, 0, 32 * sizeof(*mod_input));
   }
-  memset(mod_input + 32 * 64, 0, 32 * 64 * sizeof(*mod_input));
+  AOM_UNSAFE_MEMSET(mod_input + 32 * 64, 0, 32 * 64 * sizeof(*mod_input));
   DECLARE_ALIGNED(32, int, txfm_buf[64 * 64 + 64 + 64]);
   inv_txfm2d_add_facade(mod_input, output, stride, txfm_buf, tx_type, TX_64X64,
                         bd);
@@ -409,8 +412,8 @@ void av1_inv_txfm2d_add_64x32_c(const int32_t *input, uint16_t *output,
   // - Copying over these values in top-left 32x32 locations.
   // - Setting the rest of the locations to 0.
   int32_t mod_input[32 * 64];
-  memcpy(mod_input, input, 32 * 32 * sizeof(*mod_input));
-  memset(mod_input + 32 * 32, 0, 32 * 32 * sizeof(*mod_input));
+  AOM_UNSAFE_MEMCPY(mod_input, input, 32 * 32 * sizeof(*mod_input));
+  AOM_UNSAFE_MEMSET(mod_input + 32 * 32, 0, 32 * 32 * sizeof(*mod_input));
   DECLARE_ALIGNED(32, int, txfm_buf[64 * 32 + 64 + 64]);
   inv_txfm2d_add_facade(mod_input, output, stride, txfm_buf, tx_type, TX_64X32,
                         bd);
@@ -423,8 +426,9 @@ void av1_inv_txfm2d_add_32x64_c(const int32_t *input, uint16_t *output,
   // - Setting the rest of the locations to 0.
   int32_t mod_input[64 * 32];
   for (int col = 0; col < 32; ++col) {
-    memcpy(mod_input + col * 64, input + col * 32, 32 * sizeof(*mod_input));
-    memset(mod_input + col * 64 + 32, 0, 32 * sizeof(*mod_input));
+    AOM_UNSAFE_MEMCPY(mod_input + col * 64, input + col * 32,
+                      32 * sizeof(*mod_input));
+    AOM_UNSAFE_MEMSET(mod_input + col * 64 + 32, 0, 32 * sizeof(*mod_input));
   }
   DECLARE_ALIGNED(32, int, txfm_buf[64 * 32 + 64 + 64]);
   inv_txfm2d_add_facade(mod_input, output, stride, txfm_buf, tx_type, TX_32X64,
@@ -438,8 +442,9 @@ void av1_inv_txfm2d_add_16x64_c(const int32_t *input, uint16_t *output,
   // - Setting the rest of the locations to 0.
   int32_t mod_input[64 * 16];
   for (int col = 0; col < 16; ++col) {
-    memcpy(mod_input + col * 64, input + col * 32, 32 * sizeof(*mod_input));
-    memset(mod_input + col * 64 + 32, 0, 32 * sizeof(*mod_input));
+    AOM_UNSAFE_MEMCPY(mod_input + col * 64, input + col * 32,
+                      32 * sizeof(*mod_input));
+    AOM_UNSAFE_MEMSET(mod_input + col * 64 + 32, 0, 32 * sizeof(*mod_input));
   }
   DECLARE_ALIGNED(32, int, txfm_buf[16 * 64 + 64 + 64]);
   inv_txfm2d_add_facade(mod_input, output, stride, txfm_buf, tx_type, TX_16X64,
@@ -452,8 +457,8 @@ void av1_inv_txfm2d_add_64x16_c(const int32_t *input, uint16_t *output,
   // - Copying over these values in top-left 32x16 locations.
   // - Setting the rest of the locations to 0.
   int32_t mod_input[16 * 64];
-  memcpy(mod_input, input, 16 * 32 * sizeof(*mod_input));
-  memset(mod_input + 16 * 32, 0, 16 * 32 * sizeof(*mod_input));
+  AOM_UNSAFE_MEMCPY(mod_input, input, 16 * 32 * sizeof(*mod_input));
+  AOM_UNSAFE_MEMSET(mod_input + 16 * 32, 0, 16 * 32 * sizeof(*mod_input));
   DECLARE_ALIGNED(32, int, txfm_buf[16 * 64 + 64 + 64]);
   inv_txfm2d_add_facade(mod_input, output, stride, txfm_buf, tx_type, TX_64X16,
                         bd);

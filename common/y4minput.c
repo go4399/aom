@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -109,7 +111,7 @@ static int y4m_parse_tags(y4m_input *_y4m, char *_tags) {
       } break;
       case 'C': {
         if (q - p > 16) return -1;
-        memcpy(_y4m->chroma_type, p + 1, q - p - 1);
+        AOM_UNSAFE_MEMCPY(_y4m->chroma_type, p + 1, q - p - 1);
         _y4m->chroma_type[q - p - 1] = '\0';
       } break;
       case 'X': {
@@ -834,7 +836,7 @@ static void y4m_convert_mono_420jpeg(y4m_input *_y4m, unsigned char *_dst,
   _dst += _y4m->pic_w * _y4m->pic_h;
   c_sz = ((_y4m->pic_w + _y4m->dst_c_dec_h - 1) / _y4m->dst_c_dec_h) *
          ((_y4m->pic_h + _y4m->dst_c_dec_v - 1) / _y4m->dst_c_dec_v);
-  memset(_dst, 128, c_sz * 2);
+  AOM_UNSAFE_MEMSET(_dst, 128, c_sz * 2);
 }
 
 /*No conversion function needed.*/
@@ -856,7 +858,7 @@ int y4m_input_open(y4m_input *y4m_ctx, FILE *file, char *skip_buffer,
   // that were previously read from the file to do input-type detection.
   assert(num_skip >= 0 && num_skip <= 8);
   if (num_skip > 0) {
-    memcpy(tag_buffer, skip_buffer, num_skip);
+    AOM_UNSAFE_MEMCPY(tag_buffer, skip_buffer, num_skip);
   }
   // Start reading from the file now that the |skip_buffer| is depleted.
   if (!file_read(tag_buffer + num_skip, 9 - num_skip, file)) {
@@ -1196,7 +1198,7 @@ int y4m_input_fetch_frame(y4m_input *_y4m, FILE *_fin, aom_image_t *_img) {
   /*Fill in the frame buffer pointers.
     We don't use aom_img_wrap() because it forces padding for odd picture
      sizes, which would require a separate fread call for every row.*/
-  memset(_img, 0, sizeof(*_img));
+  AOM_UNSAFE_MEMSET(_img, 0, sizeof(*_img));
   /*Y4M has the planes in Y'CbCr order, which libaom calls Y, U, and V.*/
   _img->fmt = _y4m->aom_fmt;
   _img->w = _img->d_w = _y4m->pic_w;

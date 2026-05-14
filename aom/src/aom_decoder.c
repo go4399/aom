@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -37,7 +39,7 @@ aom_codec_err_t aom_codec_dec_init_ver(aom_codec_ctx_t *ctx,
   else if (!(iface->caps & AOM_CODEC_CAP_DECODER))
     res = AOM_CODEC_INCAPABLE;
   else {
-    memset(ctx, 0, sizeof(*ctx));
+    AOM_UNSAFE_MEMSET(ctx, 0, sizeof(*ctx));
     ctx->iface = iface;
     ctx->name = iface->name;
     ctx->priv = NULL;

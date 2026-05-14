@@ -80,6 +80,86 @@ foreach(aom_var ${aom_build_vars})
          "\#define ${aom_var} \${${aom_var}}\n")
   endif()
 endforeach()
+file(APPEND "${aom_config_h_template}"
+     "
+#if defined(__has_feature)
+#define AOM_HAS_FEATURE(x) __has_feature(x)
+#else
+#define AOM_HAS_FEATURE(x) 0
+#endif
+
+#if AOM_HAS_FEATURE(bounds_safety)
+#include <stdint.h>
+#include <string.h>
+#include <ptrcheck.h>
+
+#define AOM_ASSUME_UNSAFE_INDEXABLE_ABI \\
+  __ptrcheck_abi_assume_unsafe_indexable()
+
+#define AOM_COUNTED_BY(x) __counted_by(x)
+#define AOM_COUNTED_BY_OR_NULL(x) __counted_by_or_null(x)
+#define AOM_SIZED_BY(x) __sized_by(x)
+#define AOM_SIZED_BY_OR_NULL(x) __sized_by_or_null(x)
+#define AOM_ENDED_BY(x) __ended_by(x)
+
+#define AOM_UNSAFE_INDEXABLE __unsafe_indexable
+#define AOM_SINGLE __single
+#define AOM_INDEXABLE __indexable
+#define AOM_BIDI_INDEXABLE __bidi_indexable
+
+#define AOM_UNSAFE_FORGE_SINGLE(typ, ptr) __unsafe_forge_single(typ, ptr)
+
+#define AOM_UNSAFE_FORGE_BIDI_INDEXABLE(typ, ptr, size) \\
+  __unsafe_forge_bidi_indexable(typ, ptr, size)
+
+// Provide memcpy/memset/memmove wrappers to make migration easier.
+#define AOM_UNSAFE_MEMCPY(dst, src, size)                               \\
+  do {                                                                   \\
+    memcpy(AOM_UNSAFE_FORGE_BIDI_INDEXABLE(uint8_t*, dst, size),        \\
+           AOM_UNSAFE_FORGE_BIDI_INDEXABLE(uint8_t*, src, size), size); \\
+  } while (0)
+
+#define AOM_UNSAFE_MEMSET(dst, c, size)                                    \\
+  do {                                                                      \\
+    memset(AOM_UNSAFE_FORGE_BIDI_INDEXABLE(uint8_t*, dst, size), c, size); \\
+  } while (0)
+
+#define AOM_UNSAFE_MEMMOVE(dst, src, size)                               \\
+  do {                                                                    \\
+    memmove(AOM_UNSAFE_FORGE_BIDI_INDEXABLE(uint8_t*, dst, size),        \\
+            AOM_UNSAFE_FORGE_BIDI_INDEXABLE(uint8_t*, src, size), size); \\
+  } while (0)
+
+#define AOM_UNSAFE_MEMCMP(s1, s2, size)                       \\
+  memcmp(AOM_UNSAFE_FORGE_BIDI_INDEXABLE(uint8_t*, s1, size), \\
+         AOM_UNSAFE_FORGE_BIDI_INDEXABLE(uint8_t*, s2, size), size)
+
+#else  // !AOM_HAS_FEATURE(bounds_safety)
+
+#define AOM_ASSUME_UNSAFE_INDEXABLE_ABI
+
+#define AOM_COUNTED_BY(x)
+#define AOM_COUNTED_BY_OR_NULL(x)
+#define AOM_SIZED_BY(x)
+#define AOM_SIZED_BY_OR_NULL(x)
+#define AOM_ENDED_BY(x)
+
+#define AOM_UNSAFE_INDEXABLE
+#define AOM_SINGLE
+#define AOM_INDEXABLE
+#define AOM_BIDI_INDEXABLE
+
+#define AOM_UNSAFE_MEMCPY(dst, src, size) memcpy(dst, src, size)
+#define AOM_UNSAFE_MEMSET(dst, c, size) memset(dst, c, size)
+#define AOM_UNSAFE_MEMMOVE(dst, src, size) memmove(dst, src, size)
+#define AOM_UNSAFE_MEMCMP(s1, s2, size) memcmp(s1, s2, size)
+
+#define AOM_UNSAFE_FORGE_SINGLE(typ, ptr) ((typ)(ptr))
+#define AOM_UNSAFE_FORGE_BIDI_INDEXABLE(typ, ptr, size) ((typ)(ptr))
+
+#endif  // AOM_HAS_FEATURE(bounds_safety)
+"
+)
 file(APPEND "${aom_config_h_template}" "\#endif  // AOM_CONFIG_H_")
 
 set(aom_asm_config_template "${AOM_CONFIG_DIR}/config/aom_config.asm.cmake")

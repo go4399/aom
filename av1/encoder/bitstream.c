@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -661,7 +663,7 @@ static inline void delta_encode_palette_colors(const int *colors, int num,
   if (num == 1) return;
   int max_delta = 0;
   int deltas[PALETTE_MAX_SIZE];
-  memset(deltas, 0, sizeof(deltas));
+  AOM_UNSAFE_MEMSET(deltas, 0, sizeof(deltas));
   for (int i = 1; i < num; ++i) {
     assert(colors[i] < (1 << bit_depth));
     const int delta = colors[i] - colors[i - 1];
@@ -2011,8 +2013,8 @@ static bool is_mode_ref_delta_meaningful(AV1_COMMON *cm) {
     av1_set_default_ref_deltas(last_ref_deltas);
     av1_set_default_mode_deltas(last_mode_deltas);
   } else {
-    memcpy(last_ref_deltas, buf->ref_deltas, REF_FRAMES);
-    memcpy(last_mode_deltas, buf->mode_deltas, MAX_MODE_LF_DELTAS);
+    AOM_UNSAFE_MEMCPY(last_ref_deltas, buf->ref_deltas, REF_FRAMES);
+    AOM_UNSAFE_MEMCPY(last_mode_deltas, buf->mode_deltas, MAX_MODE_LF_DELTAS);
   }
   for (int i = 0; i < REF_FRAMES; i++) {
     if (lf->ref_deltas[i] != last_ref_deltas[i]) {
@@ -2062,8 +2064,8 @@ static inline void encode_loopfilter(AV1_COMMON *cm,
     av1_set_default_ref_deltas(last_ref_deltas);
     av1_set_default_mode_deltas(last_mode_deltas);
   } else {
-    memcpy(last_ref_deltas, buf->ref_deltas, REF_FRAMES);
-    memcpy(last_mode_deltas, buf->mode_deltas, MAX_MODE_LF_DELTAS);
+    AOM_UNSAFE_MEMCPY(last_ref_deltas, buf->ref_deltas, REF_FRAMES);
+    AOM_UNSAFE_MEMCPY(last_mode_deltas, buf->mode_deltas, MAX_MODE_LF_DELTAS);
   }
   for (int i = 0; i < REF_FRAMES; i++) {
     const int delta = lf->ref_deltas[i];
@@ -3336,7 +3338,7 @@ static int remux_tiles(const CommonTileParams *const tiles, uint8_t *dst,
           wpos += tsb;
 
           tile_header += AV1_MIN_TILE_SIZE_BYTES;
-          memmove(dst + wpos, dst + rpos, tile_header);
+          AOM_UNSAFE_MEMMOVE(dst + wpos, dst + rpos, tile_header);
           rpos += tile_header;
           wpos += tile_header;
         }
@@ -3364,7 +3366,7 @@ static int remux_tiles(const CommonTileParams *const tiles, uint8_t *dst,
       wpos += tsb;
     }
 
-    memmove(dst + wpos, dst + rpos, tile_size);
+    AOM_UNSAFE_MEMMOVE(dst + wpos, dst + rpos, tile_size);
 
     rpos += tile_size;
     wpos += tile_size;
@@ -3448,32 +3450,34 @@ static int av1_write_uleb_obu_size_unsafe(size_t obu_payload_size,
 }
 
 // Returns 0 on failure.
-static size_t obu_memmove(size_t obu_header_size, size_t obu_payload_size,
-                          uint8_t *data, size_t data_size) {
+static size_t obu_AOM_UNSAFE_MEMMOVE(size_t obu_header_size,
+                                     size_t obu_payload_size, uint8_t *data,
+                                     size_t data_size) {
   const size_t length_field_size = aom_uleb_size_in_bytes(obu_payload_size);
   const size_t move_dst_offset = obu_header_size + length_field_size;
   const size_t move_src_offset = obu_header_size;
   const size_t move_size = obu_payload_size;
   if (move_size > data_size || move_src_offset > data_size - move_size) {
-    assert(0 && "obu_memmove: output buffer overflow");
+    assert(0 && "obu_AOM_UNSAFE_MEMMOVE: output buffer overflow");
     return 0;
   }
   if (move_dst_offset > data_size - move_size) {
     // Buffer full.
     return 0;
   }
-  memmove(data + move_dst_offset, data + move_src_offset, move_size);
+  AOM_UNSAFE_MEMMOVE(data + move_dst_offset, data + move_src_offset, move_size);
   return length_field_size;
 }
 
-// Deprecated. Use obu_memmove() instead.
-static size_t obu_memmove_unsafe(size_t obu_header_size,
-                                 size_t obu_payload_size, uint8_t *data) {
+// Deprecated. Use obu_AOM_UNSAFE_MEMMOVE() instead.
+static size_t obu_AOM_UNSAFE_MEMMOVE_unsafe(size_t obu_header_size,
+                                            size_t obu_payload_size,
+                                            uint8_t *data) {
   const size_t length_field_size = aom_uleb_size_in_bytes(obu_payload_size);
   const size_t move_dst_offset = obu_header_size + length_field_size;
   const size_t move_src_offset = obu_header_size;
   const size_t move_size = obu_payload_size;
-  memmove(data + move_dst_offset, data + move_src_offset, move_size);
+  AOM_UNSAFE_MEMMOVE(data + move_dst_offset, data + move_src_offset, move_size);
   return length_field_size;
 }
 
@@ -3657,8 +3661,8 @@ static void write_large_scale_tile_obu_size(
   // Tile group size doesn't include the bytes storing tg size.
   *total_size += lst_obu->tg_hdr_size;
   const uint32_t obu_payload_size = *total_size - lst_obu->tg_hdr_size;
-  const size_t length_field_size =
-      obu_memmove_unsafe(lst_obu->tg_hdr_size, obu_payload_size, dst);
+  const size_t length_field_size = obu_AOM_UNSAFE_MEMMOVE_unsafe(
+      lst_obu->tg_hdr_size, obu_payload_size, dst);
   if (av1_write_uleb_obu_size_unsafe(
           obu_payload_size, dst + lst_obu->tg_hdr_size) != AOM_CODEC_OK)
     assert(0);
@@ -3884,8 +3888,8 @@ void av1_write_last_tile_info(
     int *const is_first_tg, uint32_t obu_header_size, uint8_t obu_extn_header) {
   // write current tile group size
   const size_t obu_payload_size = *curr_tg_data_size - obu_header_size;
-  const size_t length_field_size =
-      obu_memmove_unsafe(obu_header_size, obu_payload_size, curr_tg_start);
+  const size_t length_field_size = obu_AOM_UNSAFE_MEMMOVE_unsafe(
+      obu_header_size, obu_payload_size, curr_tg_start);
   if (av1_write_uleb_obu_size_unsafe(
           obu_payload_size, curr_tg_start + obu_header_size) != AOM_CODEC_OK) {
     aom_internal_error(cpi->common.error, AOM_CODEC_ERROR,
@@ -3902,11 +3906,12 @@ void av1_write_last_tile_info(
 
   if (!(*is_first_tg) && cpi->common.features.error_resilient_mode) {
     // Make room for a duplicate Frame Header OBU.
-    memmove(curr_tg_start + fh_info->total_length, curr_tg_start,
-            *curr_tg_data_size);
+    AOM_UNSAFE_MEMMOVE(curr_tg_start + fh_info->total_length, curr_tg_start,
+                       *curr_tg_data_size);
 
     // Insert a copy of the Frame Header OBU.
-    memcpy(curr_tg_start, fh_info->frame_header, fh_info->total_length);
+    AOM_UNSAFE_MEMCPY(curr_tg_start, fh_info->frame_header,
+                      fh_info->total_length);
 
     // Force context update tile to be the first tile in error
     // resilient mode as the duplicate frame headers will have
@@ -4086,7 +4091,8 @@ static void write_tile_obu_size(AV1_COMP *const cpi, uint8_t *const dst,
     if (new_length_field_size < length_field_size) {
       const size_t src_offset = obu_header_size + length_field_size;
       const size_t dst_offset = obu_header_size + new_length_field_size;
-      memmove(dst + dst_offset, dst + src_offset, (size_t)payload_size);
+      AOM_UNSAFE_MEMMOVE(dst + dst_offset, dst + src_offset,
+                         (size_t)payload_size);
       *total_size -= (int)(length_field_size - new_length_field_size);
     }
   }
@@ -4203,7 +4209,7 @@ static size_t av1_write_metadata_obu(const aom_metadata_t *metadata,
   if (coded_metadata_size + metadata->sz + 1 > dst_size) {
     return 0;
   }
-  memcpy(dst + coded_metadata_size, metadata->payload, metadata->sz);
+  AOM_UNSAFE_MEMCPY(dst + coded_metadata_size, metadata->payload, metadata->sz);
   // Add trailing bits.
   dst[coded_metadata_size + metadata->sz] = 0x80;
   return coded_metadata_size + metadata->sz + 1;
@@ -4248,8 +4254,8 @@ static size_t av1_write_metadata_array(AV1_COMP *const cpi, uint8_t *dst,
           aom_internal_error(cm->error, AOM_CODEC_ERROR,
                              "av1_write_metadata_array: output buffer full");
         }
-        length_field_size =
-            obu_memmove(obu_header_size, obu_payload_size, dst, dst_size);
+        length_field_size = obu_AOM_UNSAFE_MEMMOVE(
+            obu_header_size, obu_payload_size, dst, dst_size);
         if (length_field_size == 0) {
           aom_internal_error(cm->error, AOM_CODEC_ERROR,
                              "av1_write_metadata_array: output buffer full");
@@ -4311,8 +4317,8 @@ int av1_pack_bitstream(AV1_COMP *const cpi, uint8_t *dst, size_t dst_size,
     assert(obu_header_size <= 2);
     obu_payload_size = av1_write_sequence_header_obu(
         cm->seq_params, data + obu_header_size, data_size - obu_header_size);
-    const size_t length_field_size =
-        obu_memmove(obu_header_size, obu_payload_size, data, data_size);
+    const size_t length_field_size = obu_AOM_UNSAFE_MEMMOVE(
+        obu_header_size, obu_payload_size, data, data_size);
     if (length_field_size == 0) {
       return AOM_CODEC_ERROR;
     }
@@ -4354,8 +4360,8 @@ int av1_pack_bitstream(AV1_COMP *const cpi, uint8_t *dst, size_t dst_size,
     obu_payload_size = write_frame_header_obu(cpi, &cpi->td.mb.e_mbd, &saved_wb,
                                               data + obu_header_size, 1);
 
-    length_field =
-        obu_memmove(obu_header_size, obu_payload_size, data, data_size);
+    length_field = obu_AOM_UNSAFE_MEMMOVE(obu_header_size, obu_payload_size,
+                                          data, data_size);
     if (length_field == 0) {
       return AOM_CODEC_ERROR;
     }

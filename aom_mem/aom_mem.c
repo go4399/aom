@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -70,7 +72,7 @@ void *aom_calloc(size_t num, size_t size) {
   if (!check_size_argument_overflow(num, size, DEFAULT_ALIGNMENT)) return NULL;
   const size_t total_size = num * size;
   void *const x = aom_malloc(total_size);
-  if (x) memset(x, 0, total_size);
+  if (x) AOM_UNSAFE_MEMSET(x, 0, total_size);
   return x;
 }
 

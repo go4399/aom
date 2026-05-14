@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -26,7 +28,7 @@ static inline void v_predictor(uint8_t *dst, ptrdiff_t stride, int bw, int bh,
   (void)left;
 
   for (r = 0; r < bh; r++) {
-    memcpy(dst, above, bw);
+    AOM_UNSAFE_MEMCPY(dst, above, bw);
     dst += stride;
   }
 }
@@ -37,7 +39,7 @@ static inline void h_predictor(uint8_t *dst, ptrdiff_t stride, int bw, int bh,
   (void)above;
 
   for (r = 0; r < bh; r++) {
-    memset(dst, left[r], bw);
+    AOM_UNSAFE_MEMSET(dst, left[r], bw);
     dst += stride;
   }
 }
@@ -178,7 +180,7 @@ static inline void dc_128_predictor(uint8_t *dst, ptrdiff_t stride, int bw,
   (void)left;
 
   for (r = 0; r < bh; r++) {
-    memset(dst, 128, bw);
+    AOM_UNSAFE_MEMSET(dst, 128, bw);
     dst += stride;
   }
 }
@@ -193,7 +195,7 @@ static inline void dc_left_predictor(uint8_t *dst, ptrdiff_t stride, int bw,
   expected_dc = (sum + (bh >> 1)) / bh;
 
   for (r = 0; r < bh; r++) {
-    memset(dst, expected_dc, bw);
+    AOM_UNSAFE_MEMSET(dst, expected_dc, bw);
     dst += stride;
   }
 }
@@ -208,7 +210,7 @@ static inline void dc_top_predictor(uint8_t *dst, ptrdiff_t stride, int bw,
   expected_dc = (sum + (bw >> 1)) / bw;
 
   for (r = 0; r < bh; r++) {
-    memset(dst, expected_dc, bw);
+    AOM_UNSAFE_MEMSET(dst, expected_dc, bw);
     dst += stride;
   }
 }
@@ -228,7 +230,7 @@ static inline void dc_predictor(uint8_t *dst, ptrdiff_t stride, int bw, int bh,
   expected_dc = (sum + (count >> 1)) / count;
 
   for (r = 0; r < bh; r++) {
-    memset(dst, expected_dc, bw);
+    AOM_UNSAFE_MEMSET(dst, expected_dc, bw);
     dst += stride;
   }
 }
@@ -280,7 +282,7 @@ static inline void dc_predictor_rect(uint8_t *dst, ptrdiff_t stride, int bw,
   assert(expected_dc < (1 << 8));
 
   for (int r = 0; r < bh; r++) {
-    memset(dst, expected_dc, bw);
+    AOM_UNSAFE_MEMSET(dst, expected_dc, bw);
     dst += stride;
   }
 }
@@ -375,7 +377,7 @@ static inline void highbd_v_predictor(uint16_t *dst, ptrdiff_t stride, int bw,
   (void)left;
   (void)bd;
   for (r = 0; r < bh; r++) {
-    memcpy(dst, above, bw * sizeof(uint16_t));
+    AOM_UNSAFE_MEMCPY(dst, above, bw * sizeof(uint16_t));
     dst += stride;
   }
 }

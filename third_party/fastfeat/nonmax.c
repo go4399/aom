@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 // Copyright (c) 2006, 2008 Edward Rosten
 // All rights reserved.
 //

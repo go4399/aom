@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -228,9 +230,13 @@ static int combined_motion_search(AV1_COMP *cpi, MACROBLOCK *x,
       av1_get_search_site_config(cpi, x, search_method);
   FULLPEL_MOTION_SEARCH_PARAMS full_ms_params;
   FULLPEL_MV_STATS best_mv_stats;
-  av1_make_default_fullpel_ms_params(&full_ms_params, cpi, x, bsize, &center_mv,
-                                     start_mv, src_search_sites, search_method,
-                                     /*fine_search_interval=*/0);
+  av1_make_default_fullpel_ms_params(
+      &full_ms_params, cpi, x, bsize, &center_mv, start_mv,
+      AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+          const search_site_config *, src_search_sites,
+          sizeof(src_search_sites[0]) * NUM_DISTINCT_SEARCH_METHODS),
+      search_method,
+      /*fine_search_interval=*/0);
 
   const unsigned int full_var_rd = av1_full_pixel_search(
       start_mv, &full_ms_params, step_param, cond_cost_list(cpi, cost_list),
@@ -240,7 +246,10 @@ static int combined_motion_search(AV1_COMP *cpi, MACROBLOCK *x,
   MV mvp_full = get_mv_from_fullmv(&tmp_mv->as_fullmv);
 
   *rate_mv = av1_mv_bit_cost(&mvp_full, &ref_mv, x->mv_costs->nmv_joint_cost,
-                             x->mv_costs->mv_cost_stack, MV_COST_WEIGHT);
+                             AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+                                 int **, x->mv_costs->mv_cost_stack,
+                                 sizeof(x->mv_costs->mv_cost_stack[0]) * 2),
+                             MV_COST_WEIGHT);
 
   // TODO(kyslov) Account for Rate Mode!
   rv = !(RDCOST(x->rdmult, (*rate_mv), 0) > best_rd_sofar);
@@ -272,7 +281,10 @@ static int combined_motion_search(AV1_COMP *cpi, MACROBLOCK *x,
           &dis, &x->pred_sse[ref], NULL);
     *rate_mv =
         av1_mv_bit_cost(&tmp_mv->as_mv, &ref_mv, x->mv_costs->nmv_joint_cost,
-                        x->mv_costs->mv_cost_stack, MV_COST_WEIGHT);
+                        AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+                            int **, x->mv_costs->mv_cost_stack,
+                            sizeof(x->mv_costs->mv_cost_stack[0]) * 2),
+                        MV_COST_WEIGHT);
   }
   // The final MV can not be equal to the reference MV as this will trigger an
   // assert later. This can happen if both NEAREST and NEAR modes were skipped.
@@ -367,7 +379,10 @@ static int search_new_mv(AV1_COMP *cpi, MACROBLOCK *x,
 
     *rate_mv = av1_mv_bit_cost(&this_ref_frm_newmv->as_mv, &ref_mv,
                                x->mv_costs->nmv_joint_cost,
-                               x->mv_costs->mv_cost_stack, MV_COST_WEIGHT);
+                               AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+                                   int **, x->mv_costs->mv_cost_stack,
+                                   sizeof(x->mv_costs->mv_cost_stack[0]) * 2),
+                               MV_COST_WEIGHT);
   } else if (!combined_motion_search(cpi, x, bsize, &frame_mv[NEWMV][ref_frame],
                                      rate_mv, best_rdc->rdcost, 0)) {
     return -1;
@@ -385,7 +400,8 @@ static void estimate_single_ref_frame_costs(const AV1_COMMON *cm,
   int seg_ref_active =
       segfeature_active(&cm->seg, segment_id, SEG_LVL_REF_FRAME);
   if (seg_ref_active) {
-    memset(ref_costs_single, 0, REF_FRAMES * sizeof(*ref_costs_single));
+    AOM_UNSAFE_MEMSET(ref_costs_single, 0,
+                      REF_FRAMES * sizeof(*ref_costs_single));
   } else {
     int intra_inter_ctx = av1_get_intra_inter_context(xd);
     ref_costs_single[INTRA_FRAME] =
@@ -1406,8 +1422,9 @@ static void search_motion_mode(AV1_COMP *cpi, MACROBLOCK *x, RD_STATS *this_rdc,
       mi->interp_filters =
           av1_broadcast_interp_filter(av1_unswitchable_filter(interp_filter));
 
-      memcpy(pts, pts0, total_samples * 2 * sizeof(*pts0));
-      memcpy(pts_inref, pts_inref0, total_samples * 2 * sizeof(*pts_inref0));
+      AOM_UNSAFE_MEMCPY(pts, pts0, total_samples * 2 * sizeof(*pts0));
+      AOM_UNSAFE_MEMCPY(pts_inref, pts_inref0,
+                        total_samples * 2 * sizeof(*pts_inref0));
       // Select the samples according to motion vector difference
       if (mi->num_proj_ref > 1) {
         mi->num_proj_ref = av1_selectSamples(&mi->mv[0].as_mv, pts, pts_inref,
@@ -1441,7 +1458,10 @@ static void search_motion_mode(AV1_COMP *cpi, MACROBLOCK *x, RD_STATS *this_rdc,
             // Keep the refined MV and WM parameters.
             int tmp_rate_mv = av1_mv_bit_cost(
                 &mi->mv[0].as_mv, &ref_mv.as_mv, x->mv_costs->nmv_joint_cost,
-                x->mv_costs->mv_cost_stack, MV_COST_WEIGHT);
+                AOM_UNSAFE_FORGE_BIDI_INDEXABLE(
+                    int **, x->mv_costs->mv_cost_stack,
+                    sizeof(x->mv_costs->mv_cost_stack[0]) * 2),
+                MV_COST_WEIGHT);
             *rate_mv = tmp_rate_mv;
           } else {
             // Restore the old MV and WM parameters.
@@ -3159,8 +3179,10 @@ static AOM_FORCE_INLINE void handle_screen_content_mode_nonrd(
       search_state->best_rdc.rdcost = idx_rdcost;
       best_pickmode->best_mode_skip_txfm = idtx_rdc.skip_txfm;
       xd->tx_type_map[0] = best_pickmode->tx_type;
-      memset(ctx->tx_type_map, best_pickmode->tx_type, ctx->num_4x4_blk);
-      memset(xd->tx_type_map, best_pickmode->tx_type, ctx->num_4x4_blk);
+      AOM_UNSAFE_MEMSET(ctx->tx_type_map, best_pickmode->tx_type,
+                        ctx->num_4x4_blk);
+      AOM_UNSAFE_MEMSET(xd->tx_type_map, best_pickmode->tx_type,
+                        ctx->num_4x4_blk);
     }
     pd->dst = *orig_dst;
   }
@@ -3561,7 +3583,7 @@ void av1_nonrd_pick_inter_mode_sb(AV1_COMP *cpi, TileDataEnc *tile_data,
   mi->num_proj_ref = best_pickmode->num_proj_ref;
   mi->interp_filters = best_pickmode->best_pred_filter;
   mi->tx_size = best_pickmode->best_tx_size;
-  memset(mi->inter_tx_size, mi->tx_size, sizeof(mi->inter_tx_size));
+  AOM_UNSAFE_MEMSET(mi->inter_tx_size, mi->tx_size, sizeof(mi->inter_tx_size));
   mi->ref_frame[0] = best_pickmode->best_ref_frame;
   mi->mv[0].as_int = search_state
                          .frame_mv_best[best_pickmode->best_mode]

@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -341,14 +343,14 @@ static void copy_segment_id(const CommonModeInfoParams *const mi_params,
   if (last_segment_ids) {
     assert(last_segment_ids != current_segment_ids);
     for (int y = 0; y < y_mis; y++) {
-      memcpy(&current_segment_ids[mi_offset + y * stride],
-             &last_segment_ids[mi_offset + y * stride],
-             sizeof(current_segment_ids[0]) * x_mis);
+      AOM_UNSAFE_MEMCPY(&current_segment_ids[mi_offset + y * stride],
+                        &last_segment_ids[mi_offset + y * stride],
+                        sizeof(current_segment_ids[0]) * x_mis);
     }
   } else {
     for (int y = 0; y < y_mis; y++) {
-      memset(&current_segment_ids[mi_offset + y * stride], 0,
-             sizeof(current_segment_ids[0]) * x_mis);
+      AOM_UNSAFE_MEMSET(&current_segment_ids[mi_offset + y * stride], 0,
+                        sizeof(current_segment_ids[0]) * x_mis);
     }
   }
 }
@@ -502,7 +504,8 @@ static void read_palette_colors_y(MACROBLOCKD *const xd, int bit_depth,
     }
     merge_colors(pmi->palette_colors, cached_colors, n, n_cached_colors);
   } else {
-    memcpy(pmi->palette_colors, cached_colors, n * sizeof(cached_colors[0]));
+    AOM_UNSAFE_MEMCPY(pmi->palette_colors, cached_colors,
+                      n * sizeof(cached_colors[0]));
   }
 }
 
@@ -537,8 +540,8 @@ static void read_palette_colors_uv(MACROBLOCKD *const xd, int bit_depth,
     merge_colors(pmi->palette_colors + PALETTE_MAX_SIZE, cached_colors, n,
                  n_cached_colors);
   } else {
-    memcpy(pmi->palette_colors + PALETTE_MAX_SIZE, cached_colors,
-           n * sizeof(cached_colors[0]));
+    AOM_UNSAFE_MEMCPY(pmi->palette_colors + PALETTE_MAX_SIZE, cached_colors,
+                      n * sizeof(cached_colors[0]));
   }
 
   // V channel colors.

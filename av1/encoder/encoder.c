@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -210,11 +212,13 @@ int av1_set_roi_map(AV1_COMP *cpi, unsigned char *map, unsigned int rows,
   if (!roi->roi_map) return AOM_CODEC_MEM_ERROR;
 
   // Copy to ROI structure in the compressor.
-  memcpy(roi->roi_map, map, rows * cols);
-  memcpy(&roi->delta_q, delta_q, MAX_SEGMENTS * sizeof(delta_q[0]));
-  memcpy(&roi->delta_lf, delta_lf, MAX_SEGMENTS * sizeof(delta_lf[0]));
-  memcpy(&roi->skip, skip, MAX_SEGMENTS * sizeof(skip[0]));
-  memcpy(&roi->ref_frame, ref_frame, MAX_SEGMENTS * sizeof(ref_frame[0]));
+  AOM_UNSAFE_MEMCPY(roi->roi_map, map, rows * cols);
+  AOM_UNSAFE_MEMCPY(&roi->delta_q, delta_q, MAX_SEGMENTS * sizeof(delta_q[0]));
+  AOM_UNSAFE_MEMCPY(&roi->delta_lf, delta_lf,
+                    MAX_SEGMENTS * sizeof(delta_lf[0]));
+  AOM_UNSAFE_MEMCPY(&roi->skip, skip, MAX_SEGMENTS * sizeof(skip[0]));
+  AOM_UNSAFE_MEMCPY(&roi->ref_frame, ref_frame,
+                    MAX_SEGMENTS * sizeof(ref_frame[0]));
   roi->enabled = 1;
   roi->rows = rows;
   roi->cols = cols;
@@ -277,7 +281,7 @@ int av1_get_active_map(AV1_COMP *cpi, unsigned char *new_map_16x16, int rows,
     assert(mi_rows % 2 == 0);
     assert(mi_cols % 2 == 0);
 
-    memset(new_map_16x16, !cpi->active_map.enabled, rows * cols);
+    AOM_UNSAFE_MEMSET(new_map_16x16, !cpi->active_map.enabled, rows * cols);
     if (cpi->active_map.enabled) {
       for (int r = 0; r < (mi_rows >> row_scale); ++r) {
         for (int c = 0; c < (mi_cols >> col_scale); ++c) {
@@ -907,8 +911,9 @@ void av1_change_config(struct AV1_COMP *cpi, const AV1EncoderConfig *oxcf,
   x->e_mbd.bd = (int)seq_params->bit_depth;
   x->e_mbd.global_motion = cm->global_motion;
 
-  memcpy(level_params->target_seq_level_idx, cpi->oxcf.target_seq_level_idx,
-         sizeof(level_params->target_seq_level_idx));
+  AOM_UNSAFE_MEMCPY(level_params->target_seq_level_idx,
+                    cpi->oxcf.target_seq_level_idx,
+                    sizeof(level_params->target_seq_level_idx));
   level_params->keep_level_stats = 0;
   for (int i = 0; i < MAX_NUM_OPERATING_POINTS; ++i) {
     if (level_params->target_seq_level_idx[i] < SEQ_LEVELS ||
@@ -1515,8 +1520,9 @@ AV1_COMP *av1_create_compressor(AV1_PRIMARY *ppi, const AV1EncoderConfig *oxcf,
   CHECK_MEM_ERROR(
       cm, cm->default_frame_context,
       (FRAME_CONTEXT *)aom_memalign(32, sizeof(*cm->default_frame_context)));
-  memset(cm->fc, 0, sizeof(*cm->fc));
-  memset(cm->default_frame_context, 0, sizeof(*cm->default_frame_context));
+  AOM_UNSAFE_MEMSET(cm->fc, 0, sizeof(*cm->fc));
+  AOM_UNSAFE_MEMSET(cm->default_frame_context, 0,
+                    sizeof(*cm->default_frame_context));
 
   cpi->common.buffer_pool = pool;
 
@@ -1664,10 +1670,10 @@ AV1_COMP *av1_create_compressor(AV1_PRIMARY *ppi, const AV1EncoderConfig *oxcf,
         cm, cpi->butteraugli_info.rdmult_scaling_factors,
         aom_malloc(num_rows * num_cols *
                    sizeof(*cpi->butteraugli_info.rdmult_scaling_factors)));
-    memset(&cpi->butteraugli_info.source, 0,
-           sizeof(cpi->butteraugli_info.source));
-    memset(&cpi->butteraugli_info.resized_source, 0,
-           sizeof(cpi->butteraugli_info.resized_source));
+    AOM_UNSAFE_MEMSET(&cpi->butteraugli_info.source, 0,
+                      sizeof(cpi->butteraugli_info.source));
+    AOM_UNSAFE_MEMSET(&cpi->butteraugli_info.resized_source, 0,
+                      sizeof(cpi->butteraugli_info.resized_source));
     cpi->butteraugli_info.recon_set = false;
   }
 #endif
@@ -1811,7 +1817,7 @@ void av1_remove_compressor(AV1_COMP *cpi) {
 
   if (cm->error) {
     // Help detect use after free of the error detail string.
-    memset(cm->error->detail, 'A', sizeof(cm->error->detail) - 1);
+    AOM_UNSAFE_MEMSET(cm->error->detail, 'A', sizeof(cm->error->detail) - 1);
     cm->error->detail[sizeof(cm->error->detail) - 1] = '\0';
     aom_free(cm->error);
   }
@@ -2517,9 +2523,9 @@ static void init_motion_estimation(AV1_COMP *cpi) {
   av1_init_motion_fpf(&mv_search_params->search_site_cfg[SS_CFG_FPF][DIAMOND],
                       fpf_y_stride);
   for (SEARCH_METHODS i = NSTEP; i < NUM_DISTINCT_SEARCH_METHODS; i++) {
-    memcpy(&mv_search_params->search_site_cfg[SS_CFG_FPF][i],
-           &mv_search_params->search_site_cfg[SS_CFG_FPF][DIAMOND],
-           sizeof(search_site_config));
+    AOM_UNSAFE_MEMCPY(&mv_search_params->search_site_cfg[SS_CFG_FPF][i],
+                      &mv_search_params->search_site_cfg[SS_CFG_FPF][DIAMOND],
+                      sizeof(search_site_config));
   }
 }
 
@@ -3050,7 +3056,8 @@ static int encode_without_recode(AV1_COMP *cpi) {
       cpi->consec_zero_mv_alloc_size = current_size;
     }
     assert(cpi->consec_zero_mv != NULL);
-    memset(cpi->consec_zero_mv, 0, current_size * sizeof(*cpi->consec_zero_mv));
+    AOM_UNSAFE_MEMSET(cpi->consec_zero_mv, 0,
+                      current_size * sizeof(*cpi->consec_zero_mv));
   }
 
   if (cpi->scaled_last_source_available) {
@@ -3155,7 +3162,7 @@ static int encode_without_recode(AV1_COMP *cpi) {
       av1_calculate_segdata(&cm->seg);
     }
   } else {
-    memset(&cm->seg, 0, sizeof(cm->seg));
+    AOM_UNSAFE_MEMSET(&cm->seg, 0, sizeof(cm->seg));
   }
   segfeatures_copy(&cm->cur_frame->seg, &cm->seg);
   cm->cur_frame->seg.enabled = cm->seg.enabled;
@@ -3509,7 +3516,7 @@ static int encode_with_recode_loop(AV1_COMP *cpi, size_t *size, uint8_t *dest,
         av1_calculate_segdata(&cm->seg);
       }
     } else {
-      memset(&cm->seg, 0, sizeof(cm->seg));
+      AOM_UNSAFE_MEMSET(&cm->seg, 0, sizeof(cm->seg));
     }
     segfeatures_copy(&cm->cur_frame->seg, &cm->seg);
     cm->cur_frame->seg.enabled = cm->seg.enabled;
@@ -4343,8 +4350,8 @@ static int encode_frame_to_data_rate(AV1_COMP *cpi, size_t *size, uint8_t *dest,
   }
 
 #if CONFIG_INTERNAL_STATS
-  memset(cpi->mode_chosen_counts, 0,
-         MAX_MODES * sizeof(*cpi->mode_chosen_counts));
+  AOM_UNSAFE_MEMSET(cpi->mode_chosen_counts, 0,
+                    MAX_MODES * sizeof(*cpi->mode_chosen_counts));
 #endif
 
   if (seq_params->frame_id_numbers_present_flag) {
@@ -4455,9 +4462,9 @@ static int encode_frame_to_data_rate(AV1_COMP *cpi, size_t *size, uint8_t *dest,
 
   if (cm->seg.enabled) {
     if (cm->seg.update_map == 0 && cm->last_frame_seg_map) {
-      memcpy(cm->cur_frame->seg_map, cm->last_frame_seg_map,
-             cm->cur_frame->mi_cols * cm->cur_frame->mi_rows *
-                 sizeof(*cm->cur_frame->seg_map));
+      AOM_UNSAFE_MEMCPY(cm->cur_frame->seg_map, cm->last_frame_seg_map,
+                        cm->cur_frame->mi_cols * cm->cur_frame->mi_rows *
+                            sizeof(*cm->cur_frame->seg_map));
     }
   }
 
@@ -4551,11 +4558,11 @@ int av1_encode(AV1_COMP *const cpi, uint8_t *const dest, size_t dest_size,
   cm->show_existing_frame = frame_params->show_existing_frame;
   cpi->existing_fb_idx_to_show = frame_params->existing_fb_idx_to_show;
 
-  memcpy(cm->remapped_ref_idx, frame_params->remapped_ref_idx,
-         REF_FRAMES * sizeof(*cm->remapped_ref_idx));
+  AOM_UNSAFE_MEMCPY(cm->remapped_ref_idx, frame_params->remapped_ref_idx,
+                    REF_FRAMES * sizeof(*cm->remapped_ref_idx));
 
-  memcpy(&cpi->refresh_frame, &frame_params->refresh_frame,
-         sizeof(cpi->refresh_frame));
+  AOM_UNSAFE_MEMCPY(&cpi->refresh_frame, &frame_params->refresh_frame,
+                    sizeof(cpi->refresh_frame));
 
   if (current_frame->frame_type == KEY_FRAME &&
       cpi->ppi->gf_group.refbuf_state[cpi->gf_frame_index] == REFBUF_RESET) {
@@ -4665,7 +4672,7 @@ static int apply_denoise_2d(AV1_COMP *cpi, const YV12_BUFFER_CONFIG *sd,
                     "Error allocating grain table");
       return -1;
     }
-    memset(cpi->film_grain_table, 0, sizeof(*cpi->film_grain_table));
+    AOM_UNSAFE_MEMSET(cpi->film_grain_table, 0, sizeof(*cpi->film_grain_table));
   }
   if (aom_denoise_and_model_run(cpi->denoise_and_model, sd,
                                 &cm->film_grain_params,
@@ -5227,16 +5234,16 @@ void av1_post_encode_updates(AV1_COMP *const cpi,
         ppi->gf_group.frame_parallel_level[cpi->gf_frame_index - 1] == 1 &&
         ppi->gf_group.update_type[cpi->gf_frame_index - 1] ==
             INTNL_ARF_UPDATE) {
-      memcpy(cm->ref_frame_map, ppi->ref_frame_map_copy,
-             sizeof(cm->ref_frame_map));
+      AOM_UNSAFE_MEMCPY(cm->ref_frame_map, ppi->ref_frame_map_copy,
+                        sizeof(cm->ref_frame_map));
     }
     refresh_reference_frames(cpi);
     // For frame_parallel_level 1 frame in a parallel encode set of lower layer
     // frames, store the updated cm->ref_frame_map in ppi->ref_frame_map_copy.
     if (ppi->gf_group.frame_parallel_level[cpi->gf_frame_index] == 1 &&
         ppi->gf_group.update_type[cpi->gf_frame_index] == INTNL_ARF_UPDATE) {
-      memcpy(ppi->ref_frame_map_copy, cm->ref_frame_map,
-             sizeof(cm->ref_frame_map));
+      AOM_UNSAFE_MEMCPY(ppi->ref_frame_map_copy, cm->ref_frame_map,
+                        sizeof(cm->ref_frame_map));
     }
     av1_rc_postencode_update(cpi, cpi_data->frame_size);
   }
@@ -5567,7 +5574,7 @@ AV1_COMP *av1_get_parallel_frame_enc_data(AV1_PRIMARY *const ppi,
     first_cpi_data->lib_flags = data->lib_flags;
     first_cpi_data->ts_frame_start = data->ts_frame_start;
     first_cpi_data->ts_frame_end = data->ts_frame_end;
-    memcpy(first_cpi_data->cx_data, data->cx_data, data->frame_size);
+    AOM_UNSAFE_MEMCPY(first_cpi_data->cx_data, data->cx_data, data->frame_size);
     first_cpi_data->frame_size = data->frame_size;
     if (ppi->cpi->common.show_frame) {
       first_cpi_data->pop_lookahead = 1;
@@ -5605,8 +5612,8 @@ int av1_init_parallel_frame_context(const AV1_COMP_DATA *const first_cpi_data,
   RefFrameMapPair ref_frame_map_pairs[REF_FRAMES];
   RefFrameMapPair first_ref_frame_map_pairs[REF_FRAMES];
   init_ref_map_pair(first_cpi, first_ref_frame_map_pairs);
-  memcpy(ref_frame_map_pairs, first_ref_frame_map_pairs,
-         sizeof(RefFrameMapPair) * REF_FRAMES);
+  AOM_UNSAFE_MEMCPY(ref_frame_map_pairs, first_ref_frame_map_pairs,
+                    sizeof(RefFrameMapPair) * REF_FRAMES);
 
   // Store the reference refresh index of frame_parallel_level 1 frame in a
   // parallel encode set of lower layer frames.
@@ -5693,8 +5700,9 @@ int av1_init_parallel_frame_context(const AV1_COMP_DATA *const first_cpi_data,
       cur_cpi->time_stamps.first_ts_start =
           first_cpi->time_stamps.first_ts_start;
 
-      memcpy(cur_cpi->common.ref_frame_map, first_cpi->common.ref_frame_map,
-             sizeof(first_cpi->common.ref_frame_map));
+      AOM_UNSAFE_MEMCPY(cur_cpi->common.ref_frame_map,
+                        first_cpi->common.ref_frame_map,
+                        sizeof(first_cpi->common.ref_frame_map));
       cur_cpi_data->lib_flags = 0;
       cur_cpi_data->timestamp_ratio = first_cpi_data->timestamp_ratio;
       cur_cpi_data->flush = first_cpi_data->flush;
@@ -5831,7 +5839,7 @@ int av1_convert_sect5obus_to_annexb(uint8_t *buffer, size_t buffer_size,
     size_t obu_bytes_read = obu_header_size;  // bytes read for current obu
 
     // save the obu header (1 or 2 bytes)
-    memcpy(saved_obu_header, buff_ptr, obu_header_size);
+    AOM_UNSAFE_MEMCPY(saved_obu_header, buff_ptr, obu_header_size);
     // clear the obu_has_size_field
     saved_obu_header[0] &= ~0x2;
 
@@ -5852,8 +5860,9 @@ int av1_convert_sect5obus_to_annexb(uint8_t *buffer, size_t buffer_size,
       return AOM_CODEC_ERROR;
     }
     // move the rest of data to new location
-    memmove(buff_ptr + length_of_obu_size + obu_header_size,
-            buff_ptr + obu_bytes_read, remaining_size - obu_bytes_read);
+    AOM_UNSAFE_MEMMOVE(buff_ptr + length_of_obu_size + obu_header_size,
+                       buff_ptr + obu_bytes_read,
+                       remaining_size - obu_bytes_read);
     obu_bytes_read += (size_t)obu_payload_size;
 
     // write the new obu size
@@ -5865,7 +5874,8 @@ int av1_convert_sect5obus_to_annexb(uint8_t *buffer, size_t buffer_size,
     }
 
     // write the saved (modified) obu_header following obu size
-    memcpy(buff_ptr + length_of_obu_size, saved_obu_header, obu_header_size);
+    AOM_UNSAFE_MEMCPY(buff_ptr + length_of_obu_size, saved_obu_header,
+                      obu_header_size);
 
     remaining_size -= obu_bytes_read;
     buff_ptr += length_of_obu_size + (size_t)obu_size;
@@ -6005,7 +6015,8 @@ aom_fixed_buf_t *av1_get_global_headers(AV1_PRIMARY *ppi) {
   const size_t payload_offset = obu_header_size + size_field_size;
 
   if (payload_offset + sequence_header_size > sizeof(header_buf)) return NULL;
-  memmove(&header_buf[payload_offset], &header_buf[0], sequence_header_size);
+  AOM_UNSAFE_MEMMOVE(&header_buf[payload_offset], &header_buf[0],
+                     sequence_header_size);
 
   if (av1_write_obu_header(&ppi->level_params, &ppi->cpi->frame_header_count,
                            OBU_SEQUENCE_HEADER,
@@ -6036,7 +6047,8 @@ aom_fixed_buf_t *av1_get_global_headers(AV1_PRIMARY *ppi) {
     return NULL;
   }
 
-  memcpy(global_headers->buf, &header_buf[0], global_header_buf_size);
+  AOM_UNSAFE_MEMCPY(global_headers->buf, &header_buf[0],
+                    global_header_buf_size);
   global_headers->sz = global_header_buf_size;
   return global_headers;
 }

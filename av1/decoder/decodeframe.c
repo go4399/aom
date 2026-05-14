@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -111,8 +113,8 @@ static inline void set_planes_to_neutral_grey(
       if (buf->crop_heights[is_uv] > 0) {
         aom_memset16(base, val, buf->crop_widths[is_uv]);
         for (int row_idx = 1; row_idx < buf->crop_heights[is_uv]; row_idx++) {
-          memcpy(&base[row_idx * buf->strides[is_uv]], base,
-                 sizeof(*base) * buf->crop_widths[is_uv]);
+          AOM_UNSAFE_MEMCPY(&base[row_idx * buf->strides[is_uv]], base,
+                            sizeof(*base) * buf->crop_widths[is_uv]);
         }
       }
     }
@@ -120,8 +122,8 @@ static inline void set_planes_to_neutral_grey(
     for (int plane = only_chroma; plane < MAX_MB_PLANE; plane++) {
       const int is_uv = plane > 0;
       for (int row_idx = 0; row_idx < buf->crop_heights[is_uv]; row_idx++) {
-        memset(&buf->buffers[plane][row_idx * buf->strides[is_uv]], 1 << 7,
-               buf->crop_widths[is_uv]);
+        AOM_UNSAFE_MEMSET(&buf->buffers[plane][row_idx * buf->strides[is_uv]],
+                          1 << 7, buf->crop_widths[is_uv]);
       }
     }
   }
@@ -161,7 +163,7 @@ static inline void inverse_transform_block(DecoderCodingBlock *dcb, int plane,
   uint16_t eob = eob_data->eob;
   av1_inverse_transform_block(&dcb->xd, dqcoeff, plane, tx_type, tx_size, dst,
                               stride, eob, reduced_tx_set);
-  memset(dqcoeff, 0, (scan_line + 1) * sizeof(dqcoeff[0]));
+  AOM_UNSAFE_MEMSET(dqcoeff, 0, (scan_line + 1) * sizeof(dqcoeff[0]));
 }
 
 static inline void read_coeffs_tx_intra_block(
@@ -352,7 +354,7 @@ static inline void set_offsets(AV1_COMMON *const cm, MACROBLOCKD *const xd,
   for (int x = 1; x < x_mis; ++x) xd->mi[x] = xd->mi[0];
   int idx = mi_params->mi_stride;
   for (int y = 1; y < y_mis; ++y) {
-    memcpy(&xd->mi[idx], &xd->mi[0], x_mis * sizeof(xd->mi[0]));
+    AOM_UNSAFE_MEMCPY(&xd->mi[idx], &xd->mi[0], x_mis * sizeof(xd->mi[0]));
     idx += mi_params->mi_stride;
   }
 
@@ -440,7 +442,9 @@ static inline void highbd_build_mc_border(const uint8_t *src8, int src_stride,
 
     if (left) aom_memset16(dst, ref_row[0], left);
 
-    if (copy) memcpy(dst + left, ref_row + x + left, copy * sizeof(uint16_t));
+    if (copy)
+      AOM_UNSAFE_MEMCPY(dst + left, ref_row + x + left,
+                        copy * sizeof(uint16_t));
 
     if (right) aom_memset16(dst + left + copy, ref_row[w - 1], right);
 
@@ -475,11 +479,11 @@ static inline void build_mc_border(const uint8_t *src, int src_stride,
 
     copy = b_w - left - right;
 
-    if (left) memset(dst, ref_row[0], left);
+    if (left) AOM_UNSAFE_MEMSET(dst, ref_row[0], left);
 
-    if (copy) memcpy(dst + left, ref_row + x + left, copy);
+    if (copy) AOM_UNSAFE_MEMCPY(dst + left, ref_row + x + left, copy);
 
-    if (right) memset(dst + left + copy, ref_row[w - 1], right);
+    if (right) AOM_UNSAFE_MEMSET(dst + left + copy, ref_row[w - 1], right);
 
     dst += dst_stride;
     ++y;
@@ -1192,7 +1196,8 @@ static inline void parse_decode_block(AV1Decoder *const pbi,
     mbmi->tx_size = read_tx_size(xd, cm->features.tx_mode, inter_block_tx,
                                  !mbmi->skip_txfm, r);
     if (inter_block_tx)
-      memset(mbmi->inter_tx_size, mbmi->tx_size, sizeof(mbmi->inter_tx_size));
+      AOM_UNSAFE_MEMSET(mbmi->inter_tx_size, mbmi->tx_size,
+                        sizeof(mbmi->inter_tx_size));
     set_txfm_ctxs(mbmi->tx_size, xd->width, xd->height,
                   mbmi->skip_txfm && is_inter_block(mbmi), xd);
   }
@@ -1481,11 +1486,11 @@ static inline void setup_segmentation(AV1_COMMON *const cm,
   seg->enabled = aom_rb_read_bit(rb);
   if (!seg->enabled) {
     if (cm->cur_frame->seg_map) {
-      memset(cm->cur_frame->seg_map, 0,
-             (cm->cur_frame->mi_rows * cm->cur_frame->mi_cols));
+      AOM_UNSAFE_MEMSET(cm->cur_frame->seg_map, 0,
+                        (cm->cur_frame->mi_rows * cm->cur_frame->mi_cols));
     }
 
-    memset(seg, 0, sizeof(*seg));
+    AOM_UNSAFE_MEMSET(seg, 0, sizeof(*seg));
     segfeatures_copy(&cm->cur_frame->seg, seg);
     return;
   }
@@ -1605,8 +1610,8 @@ static inline void decode_restoration_mode(AV1_COMMON *cm,
 static inline void read_wiener_filter(int wiener_win, WienerInfo *wiener_info,
                                       WienerInfo *ref_wiener_info,
                                       aom_reader *rb) {
-  memset(wiener_info->vfilter, 0, sizeof(wiener_info->vfilter));
-  memset(wiener_info->hfilter, 0, sizeof(wiener_info->hfilter));
+  AOM_UNSAFE_MEMSET(wiener_info->vfilter, 0, sizeof(wiener_info->vfilter));
+  AOM_UNSAFE_MEMSET(wiener_info->hfilter, 0, sizeof(wiener_info->hfilter));
 
   if (wiener_win == WIENER_WIN)
     wiener_info->vfilter[0] = wiener_info->vfilter[WIENER_WIN - 1] =
@@ -1757,8 +1762,9 @@ static inline void setup_loopfilter(AV1_COMMON *cm,
   assert(!cm->features.coded_lossless);
   if (cm->prev_frame) {
     // write deltas to frame buffer
-    memcpy(lf->ref_deltas, cm->prev_frame->ref_deltas, REF_FRAMES);
-    memcpy(lf->mode_deltas, cm->prev_frame->mode_deltas, MAX_MODE_LF_DELTAS);
+    AOM_UNSAFE_MEMCPY(lf->ref_deltas, cm->prev_frame->ref_deltas, REF_FRAMES);
+    AOM_UNSAFE_MEMCPY(lf->mode_deltas, cm->prev_frame->mode_deltas,
+                      MAX_MODE_LF_DELTAS);
   } else {
     av1_set_default_ref_deltas(lf->ref_deltas);
     av1_set_default_mode_deltas(lf->mode_deltas);
@@ -1792,8 +1798,9 @@ static inline void setup_loopfilter(AV1_COMMON *cm,
   }
 
   // write deltas to frame buffer
-  memcpy(cm->cur_frame->ref_deltas, lf->ref_deltas, REF_FRAMES);
-  memcpy(cm->cur_frame->mode_deltas, lf->mode_deltas, MAX_MODE_LF_DELTAS);
+  AOM_UNSAFE_MEMCPY(cm->cur_frame->ref_deltas, lf->ref_deltas, REF_FRAMES);
+  AOM_UNSAFE_MEMCPY(cm->cur_frame->mode_deltas, lf->mode_deltas,
+                    MAX_MODE_LF_DELTAS);
 }
 
 static inline void setup_cdef(AV1_COMMON *cm, struct aom_read_bit_buffer *rb) {
@@ -3138,7 +3145,7 @@ static int get_next_job_info(AV1Decoder *const pbi,
   int tile_row = -1;
   int tile_col = -1;
 
-  memset(next_job_info, 0, sizeof(*next_job_info));
+  AOM_UNSAFE_MEMSET(next_job_info, 0, sizeof(*next_job_info));
 
   // Frame decode is completed or error is encountered.
   *end_of_frame = (frame_row_mt_info->mi_rows_decode_started ==
@@ -3492,12 +3499,12 @@ static inline void allocate_mc_tmp_buf(AV1_COMMON *const cm,
     if (use_highbd) {
       uint16_t *hbd_mc_buf;
       CHECK_MEM_ERROR(cm, hbd_mc_buf, (uint16_t *)aom_memalign(16, buf_size));
-      memset(hbd_mc_buf, 0, buf_size);
+      AOM_UNSAFE_MEMSET(hbd_mc_buf, 0, buf_size);
       thread_data->mc_buf[ref] = CONVERT_TO_BYTEPTR(hbd_mc_buf);
     } else {
       CHECK_MEM_ERROR(cm, thread_data->mc_buf[ref],
                       (uint8_t *)aom_memalign(16, buf_size));
-      memset(thread_data->mc_buf[ref], 0, buf_size);
+      AOM_UNSAFE_MEMSET(thread_data->mc_buf[ref], 0, buf_size);
     }
   }
   thread_data->mc_buf_size = buf_size;
@@ -3755,7 +3762,8 @@ static inline void dec_alloc_cb_buf(AV1Decoder *pbi) {
     av1_dec_free_cb_buf(pbi);
     CHECK_MEM_ERROR(cm, pbi->cb_buffer_base,
                     aom_memalign(32, sizeof(*pbi->cb_buffer_base) * size));
-    memset(pbi->cb_buffer_base, 0, sizeof(*pbi->cb_buffer_base) * size);
+    AOM_UNSAFE_MEMSET(pbi->cb_buffer_base, 0,
+                      sizeof(*pbi->cb_buffer_base) * size);
     pbi->cb_buffer_alloc_size = size;
   }
 }
@@ -3804,8 +3812,9 @@ static inline void row_mt_frame_init(AV1Decoder *pbi, int tile_rows_start,
           tile_data->dec_row_mt_sync.mi_rows;
 
       // Initialize cur_sb_col to -1 for all SB rows.
-      memset(tile_data->dec_row_mt_sync.cur_sb_col, -1,
-             sizeof(*tile_data->dec_row_mt_sync.cur_sb_col) * max_sb_rows);
+      AOM_UNSAFE_MEMSET(
+          tile_data->dec_row_mt_sync.cur_sb_col, -1,
+          sizeof(*tile_data->dec_row_mt_sync.cur_sb_col) * max_sb_rows);
     }
   }
 
@@ -3994,7 +4003,7 @@ static void read_film_grain_params(AV1_COMMON *cm,
 
   pars->apply_grain = aom_rb_read_bit(rb);
   if (!pars->apply_grain) {
-    memset(pars, 0, sizeof(*pars));
+    AOM_UNSAFE_MEMSET(pars, 0, sizeof(*pars));
     return;
   }
 
@@ -4158,7 +4167,7 @@ static inline void read_film_grain(AV1_COMMON *cm,
       (cm->show_frame || cm->showable_frame)) {
     read_film_grain_params(cm, rb);
   } else {
-    memset(&cm->film_grain_params, 0, sizeof(cm->film_grain_params));
+    AOM_UNSAFE_MEMSET(&cm->film_grain_params, 0, sizeof(cm->film_grain_params));
   }
   cm->film_grain_params.bit_depth = cm->seq_params->bit_depth;
   cm->cur_frame->film_grain_params = cm->film_grain_params;
@@ -4489,8 +4498,8 @@ static inline void read_global_motion(AV1_COMMON *cm,
            cm->global_motion[frame].wmmat[3]);
            */
   }
-  memcpy(cm->cur_frame->global_motion, cm->global_motion,
-         REF_FRAMES * sizeof(WarpedMotionParams));
+  AOM_UNSAFE_MEMCPY(cm->cur_frame->global_motion, cm->global_motion,
+                    REF_FRAMES * sizeof(WarpedMotionParams));
 }
 
 // Release the references to the frame buffers in cm->ref_frame_map and reset

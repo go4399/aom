@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2019, Alliance for Open Media. All rights reserved.
  *
@@ -339,7 +341,7 @@ static double find_best_frame_unsharp_amount(
   const int width = source->y_width;
   const int height = source->y_height;
   YV12_BUFFER_CONFIG sharpened;
-  memset(&sharpened, 0, sizeof(sharpened));
+  AOM_UNSAFE_MEMSET(&sharpened, 0, sizeof(sharpened));
   aom_alloc_frame_buffer(
       &sharpened, width, height, source->subsampling_x, source->subsampling_y,
       cm->seq_params->use_highbitdepth, cpi->oxcf.border_in_pixels,
@@ -391,7 +393,7 @@ void av1_vmaf_neg_preprocessing(AV1_COMP *const cpi,
   if (best_frame_unsharp_amount <= 0.0) return;
 
   YV12_BUFFER_CONFIG blurred;
-  memset(&blurred, 0, sizeof(blurred));
+  AOM_UNSAFE_MEMSET(&blurred, 0, sizeof(blurred));
   aom_alloc_frame_buffer(
       &blurred, width, height, source->subsampling_x, source->subsampling_y,
       cm->seq_params->use_highbitdepth, cpi->oxcf.border_in_pixels,
@@ -410,8 +412,8 @@ void av1_vmaf_frame_preprocessing(AV1_COMP *const cpi,
   const int height = source->y_height;
 
   YV12_BUFFER_CONFIG source_extended, blurred;
-  memset(&source_extended, 0, sizeof(source_extended));
-  memset(&blurred, 0, sizeof(blurred));
+  AOM_UNSAFE_MEMSET(&source_extended, 0, sizeof(source_extended));
+  AOM_UNSAFE_MEMSET(&blurred, 0, sizeof(blurred));
   aom_alloc_frame_buffer(
       &source_extended, width, height, source->subsampling_x,
       source->subsampling_y, cm->seq_params->use_highbitdepth,
@@ -451,8 +453,8 @@ void av1_vmaf_blk_preprocessing(AV1_COMP *const cpi,
   const int ss_y = source->subsampling_y;
 
   YV12_BUFFER_CONFIG source_extended, blurred;
-  memset(&blurred, 0, sizeof(blurred));
-  memset(&source_extended, 0, sizeof(source_extended));
+  AOM_UNSAFE_MEMSET(&blurred, 0, sizeof(blurred));
+  AOM_UNSAFE_MEMSET(&source_extended, 0, sizeof(source_extended));
   aom_alloc_frame_buffer(
       &blurred, width, height, ss_x, ss_y, cm->seq_params->use_highbitdepth,
       cpi->oxcf.border_in_pixels, cm->features.byte_alignment, false, 0);
@@ -490,8 +492,8 @@ void av1_vmaf_blk_preprocessing(AV1_COMP *const cpi,
   }
 
   YV12_BUFFER_CONFIG source_block, blurred_block;
-  memset(&source_block, 0, sizeof(source_block));
-  memset(&blurred_block, 0, sizeof(blurred_block));
+  AOM_UNSAFE_MEMSET(&source_block, 0, sizeof(source_block));
+  AOM_UNSAFE_MEMSET(&blurred_block, 0, sizeof(blurred_block));
   aom_alloc_frame_buffer(&source_block, block_w, block_h, ss_x, ss_y,
                          cm->seq_params->use_highbitdepth,
                          cpi->oxcf.border_in_pixels,
@@ -618,7 +620,7 @@ void av1_set_mb_vmaf_rdmult_scaling(AV1_COMP *cpi) {
   const int ss_y = cpi->source->subsampling_y;
 
   YV12_BUFFER_CONFIG resized_source;
-  memset(&resized_source, 0, sizeof(resized_source));
+  AOM_UNSAFE_MEMSET(&resized_source, 0, sizeof(resized_source));
   aom_alloc_frame_buffer(
       &resized_source, y_width / resize_factor, y_height / resize_factor, ss_x,
       ss_y, cm->seq_params->use_highbitdepth, cpi->oxcf.border_in_pixels,
@@ -639,7 +641,7 @@ void av1_set_mb_vmaf_rdmult_scaling(AV1_COMP *cpi) {
       (resized_y_height + resized_block_h - 1) / resized_block_h;
 
   YV12_BUFFER_CONFIG blurred;
-  memset(&blurred, 0, sizeof(blurred));
+  AOM_UNSAFE_MEMSET(&blurred, 0, sizeof(blurred));
   aom_alloc_frame_buffer(&blurred, resized_y_width, resized_y_height, ss_x,
                          ss_y, cm->seq_params->use_highbitdepth,
                          cpi->oxcf.border_in_pixels,
@@ -647,7 +649,7 @@ void av1_set_mb_vmaf_rdmult_scaling(AV1_COMP *cpi) {
   gaussian_blur(bit_depth, &resized_source, &blurred);
 
   YV12_BUFFER_CONFIG recon;
-  memset(&recon, 0, sizeof(recon));
+  AOM_UNSAFE_MEMSET(&recon, 0, sizeof(recon));
   aom_alloc_frame_buffer(&recon, resized_y_width, resized_y_height, ss_x, ss_y,
                          cm->seq_params->use_highbitdepth,
                          cpi->oxcf.border_in_pixels,
@@ -823,9 +825,9 @@ static double calc_vmaf_motion_score(const AV1_COMP *const cpi,
   const int ss_x = cur->subsampling_x;
   const int ss_y = cur->subsampling_y;
 
-  memset(&blurred_cur, 0, sizeof(blurred_cur));
-  memset(&blurred_last, 0, sizeof(blurred_last));
-  memset(&blurred_next, 0, sizeof(blurred_next));
+  AOM_UNSAFE_MEMSET(&blurred_cur, 0, sizeof(blurred_cur));
+  AOM_UNSAFE_MEMSET(&blurred_last, 0, sizeof(blurred_last));
+  AOM_UNSAFE_MEMSET(&blurred_next, 0, sizeof(blurred_next));
 
   aom_alloc_frame_buffer(&blurred_cur, y_width, y_height, ss_x, ss_y,
                          cm->seq_params->use_highbitdepth,
@@ -1014,10 +1016,10 @@ static double find_best_frame_unsharp_amount_neg(
   const int ss_y = recon->subsampling_y;
 
   YV12_BUFFER_CONFIG src_blurred, recon_blurred, src_sharpened, recon_sharpened;
-  memset(&recon_sharpened, 0, sizeof(recon_sharpened));
-  memset(&src_sharpened, 0, sizeof(src_sharpened));
-  memset(&recon_blurred, 0, sizeof(recon_blurred));
-  memset(&src_blurred, 0, sizeof(src_blurred));
+  AOM_UNSAFE_MEMSET(&recon_sharpened, 0, sizeof(recon_sharpened));
+  AOM_UNSAFE_MEMSET(&src_sharpened, 0, sizeof(src_sharpened));
+  AOM_UNSAFE_MEMSET(&recon_blurred, 0, sizeof(recon_blurred));
+  AOM_UNSAFE_MEMSET(&src_blurred, 0, sizeof(src_blurred));
   aom_alloc_frame_buffer(&recon_sharpened, width, height, ss_x, ss_y,
                          cm->seq_params->use_highbitdepth,
                          cpi->oxcf.border_in_pixels,

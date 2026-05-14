@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -473,7 +475,7 @@ void aom_upsampled_pred_c(MACROBLOCKD *xd, const AV1_COMMON *const cm,
 
   if (!subpel_x_q3 && !subpel_y_q3) {
     for (int i = 0; i < height; i++) {
-      memcpy(comp_pred, ref, width * sizeof(*comp_pred));
+      AOM_UNSAFE_MEMCPY(comp_pred, ref, width * sizeof(*comp_pred));
       comp_pred += width;
       ref += ref_stride;
     }
@@ -559,7 +561,7 @@ void aom_highbd_upsampled_pred_c(MACROBLOCKD *xd,
     const uint16_t *ref = CONVERT_TO_SHORTPTR(ref8);
     uint16_t *comp_pred = CONVERT_TO_SHORTPTR(comp_pred8);
     for (int i = 0; i < height; i++) {
-      memcpy(comp_pred, ref, width * sizeof(*comp_pred));
+      AOM_UNSAFE_MEMCPY(comp_pred, ref, width * sizeof(*comp_pred));
       comp_pred += width;
       ref += ref_stride;
     }

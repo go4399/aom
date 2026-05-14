@@ -13,12 +13,13 @@
  * \brief Provides the high level interface to wrap encoder algorithms.
  *
  */
-#include "config/aom_config.h"
-
-#if HAVE_FEXCEPT
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
+
+#include "config/aom_config.h"
+
+#if HAVE_FEXCEPT
 #include <fenv.h>
 #endif
 
@@ -28,6 +29,8 @@
 
 #include "aom/aom_encoder.h"
 #include "aom/internal/aom_codec_internal.h"
+
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 
 #define SAVE_STATUS(ctx, var) (ctx ? (ctx->err = var) : var)
 
@@ -114,7 +117,7 @@ aom_codec_err_t aom_codec_enc_config_default(aom_codec_iface_t *iface,
         *cfg = iface->enc.cfgs[i];
         res = AOM_CODEC_OK;
         /* default values */
-        memset(&cfg->encoder_cfg, 0, sizeof(cfg->encoder_cfg));
+        AOM_UNSAFE_MEMSET(&cfg->encoder_cfg, 0, sizeof(cfg->encoder_cfg));
         cfg->encoder_cfg.super_block_size = 0;  // Dynamic
         cfg->encoder_cfg.max_partition_size = 128;
         cfg->encoder_cfg.min_partition_size = 4;
@@ -223,8 +226,8 @@ const aom_codec_cx_pkt_t *aom_codec_get_cx_data(aom_codec_ctx_t *ctx,
             priv->enc.cx_data_dst_buf.sz) {
       aom_codec_cx_pkt_t *modified_pkt = &priv->enc.cx_data_pkt;
 
-      memcpy(dst_buf + priv->enc.cx_data_pad_before, pkt->data.raw.buf,
-             pkt->data.raw.sz);
+      AOM_UNSAFE_MEMCPY(dst_buf + priv->enc.cx_data_pad_before,
+                        pkt->data.raw.buf, pkt->data.raw.sz);
       *modified_pkt = *pkt;
       modified_pkt->data.raw.buf = dst_buf;
       modified_pkt->data.raw.sz +=
@@ -312,7 +315,10 @@ aom_codec_err_t aom_codec_enc_config_set(aom_codec_ctx_t *ctx,
 int aom_codec_pkt_list_add(struct aom_codec_pkt_list *list,
                            const struct aom_codec_cx_pkt *pkt) {
   if (list->cnt < list->max) {
-    list->pkts[list->cnt++] = *pkt;
+    aom_codec_cx_pkt_t *AOM_BIDI_INDEXABLE list_pkts =
+        AOM_UNSAFE_FORGE_BIDI_INDEXABLE(struct aom_codec_cx_pkt *, list->pkts,
+                                        list->max * sizeof(list->pkts[0]));
+    list_pkts[list->cnt++] = *pkt;
     return 0;
   }
 

@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -1290,22 +1292,25 @@ static inline void av1_init_macroblockd(AV1_COMMON *cm, MACROBLOCKD *xd) {
 
   for (int i = 0; i < num_planes; ++i) {
     if (xd->plane[i].plane_type == PLANE_TYPE_Y) {
-      memcpy(xd->plane[i].seg_dequant_QTX, quant_params->y_dequant_QTX,
-             sizeof(quant_params->y_dequant_QTX));
-      memcpy(xd->plane[i].seg_iqmatrix, quant_params->y_iqmatrix,
-             sizeof(quant_params->y_iqmatrix));
+      AOM_UNSAFE_MEMCPY(xd->plane[i].seg_dequant_QTX,
+                        quant_params->y_dequant_QTX,
+                        sizeof(quant_params->y_dequant_QTX));
+      AOM_UNSAFE_MEMCPY(xd->plane[i].seg_iqmatrix, quant_params->y_iqmatrix,
+                        sizeof(quant_params->y_iqmatrix));
 
     } else {
       if (i == AOM_PLANE_U) {
-        memcpy(xd->plane[i].seg_dequant_QTX, quant_params->u_dequant_QTX,
-               sizeof(quant_params->u_dequant_QTX));
-        memcpy(xd->plane[i].seg_iqmatrix, quant_params->u_iqmatrix,
-               sizeof(quant_params->u_iqmatrix));
+        AOM_UNSAFE_MEMCPY(xd->plane[i].seg_dequant_QTX,
+                          quant_params->u_dequant_QTX,
+                          sizeof(quant_params->u_dequant_QTX));
+        AOM_UNSAFE_MEMCPY(xd->plane[i].seg_iqmatrix, quant_params->u_iqmatrix,
+                          sizeof(quant_params->u_iqmatrix));
       } else {
-        memcpy(xd->plane[i].seg_dequant_QTX, quant_params->v_dequant_QTX,
-               sizeof(quant_params->v_dequant_QTX));
-        memcpy(xd->plane[i].seg_iqmatrix, quant_params->v_iqmatrix,
-               sizeof(quant_params->v_iqmatrix));
+        AOM_UNSAFE_MEMCPY(xd->plane[i].seg_dequant_QTX,
+                          quant_params->v_dequant_QTX,
+                          sizeof(quant_params->v_dequant_QTX));
+        AOM_UNSAFE_MEMCPY(xd->plane[i].seg_iqmatrix, quant_params->v_iqmatrix,
+                          sizeof(quant_params->v_iqmatrix));
       }
     }
   }
@@ -1449,8 +1454,8 @@ static inline void update_partition_context(MACROBLOCKD *xd, int mi_row,
 
   const int bw = mi_size_wide[bsize];
   const int bh = mi_size_high[bsize];
-  memset(above_ctx, partition_context_lookup[subsize].above, bw);
-  memset(left_ctx, partition_context_lookup[subsize].left, bh);
+  AOM_UNSAFE_MEMSET(above_ctx, partition_context_lookup[subsize].above, bw);
+  AOM_UNSAFE_MEMSET(left_ctx, partition_context_lookup[subsize].left, bh);
 }
 
 static inline int is_chroma_reference(int mi_row, int mi_col, BLOCK_SIZE bsize,
@@ -1623,16 +1628,18 @@ static inline void av1_zero_above_context(AV1_COMMON *const cm,
   av1_zero_array(above_contexts->partition[tile_row] + mi_col_start,
                  aligned_width);
 
-  memset(above_contexts->txfm[tile_row] + mi_col_start,
-         tx_size_wide[TX_SIZES_LARGEST], aligned_width * sizeof(TXFM_CONTEXT));
+  AOM_UNSAFE_MEMSET(above_contexts->txfm[tile_row] + mi_col_start,
+                    tx_size_wide[TX_SIZES_LARGEST],
+                    aligned_width * sizeof(TXFM_CONTEXT));
 }
 
 static inline void av1_zero_left_context(MACROBLOCKD *const xd) {
   av1_zero(xd->left_entropy_context);
   av1_zero(xd->left_partition_context);
 
-  memset(xd->left_txfm_context_buffer, tx_size_high[TX_SIZES_LARGEST],
-         sizeof(xd->left_txfm_context_buffer));
+  AOM_UNSAFE_MEMSET(xd->left_txfm_context_buffer,
+                    tx_size_high[TX_SIZES_LARGEST],
+                    sizeof(xd->left_txfm_context_buffer));
 }
 
 static inline void set_txfm_ctx(TXFM_CONTEXT *txfm_ctx, uint8_t txs, int len) {

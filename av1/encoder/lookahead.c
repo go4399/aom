@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -129,7 +131,7 @@ int av1_lookahead_push(struct lookahead_ctx *ctx, const YV12_BUFFER_CONFIG *src,
 
   if (larger_dimensions) {
     YV12_BUFFER_CONFIG new_img;
-    memset(&new_img, 0, sizeof(new_img));
+    AOM_UNSAFE_MEMSET(&new_img, 0, sizeof(new_img));
     if (aom_alloc_frame_buffer(&new_img, width, height, subsampling_x,
                                subsampling_y, use_highbitdepth,
                                AOM_BORDER_IN_PIXELS, 0, alloc_pyramid, 0))

@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -50,7 +52,7 @@ void av1_zero_unused_internal_frame_buffers(InternalFrameBufferList *list) {
 
   for (i = 0; i < list->num_internal_frame_buffers; ++i) {
     if (list->int_fb[i].data && !list->int_fb[i].in_use)
-      memset(list->int_fb[i].data, 0, list->int_fb[i].size);
+      AOM_UNSAFE_MEMSET(list->int_fb[i].data, 0, list->int_fb[i].size);
   }
 }
 

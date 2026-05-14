@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -276,7 +278,7 @@ void av1_xform_dc_only(MACROBLOCK *x, int plane, int block,
   const int block_offset = BLOCK_OFFSET(block);
   tran_low_t *const coeff = p->coeff + block_offset;
   const int n_coeffs = av1_get_max_eob(txfm_param->tx_size);
-  memset(coeff, 0, sizeof(*coeff) * n_coeffs);
+  AOM_UNSAFE_MEMSET(coeff, 0, sizeof(*coeff) * n_coeffs);
   coeff[0] =
       (tran_low_t)((per_px_mean * dc_coeff_scale[txfm_param->tx_size]) >> 12);
 }

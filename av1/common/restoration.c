@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -126,16 +128,16 @@ static void extend_frame_lowbd(uint8_t *data, int width, int height,
   int i;
   for (i = 0; i < height; ++i) {
     data_p = data + i * stride;
-    memset(data_p - border_horz, data_p[0], border_horz);
-    memset(data_p + width, data_p[width - 1], border_horz);
+    AOM_UNSAFE_MEMSET(data_p - border_horz, data_p[0], border_horz);
+    AOM_UNSAFE_MEMSET(data_p + width, data_p[width - 1], border_horz);
   }
   data_p = data - border_horz;
   for (i = -border_vert; i < 0; ++i) {
-    memcpy(data_p + i * stride, data_p, width + 2 * border_horz);
+    AOM_UNSAFE_MEMCPY(data_p + i * stride, data_p, width + 2 * border_horz);
   }
   for (i = height; i < height + border_vert; ++i) {
-    memcpy(data_p + i * stride, data_p + (height - 1) * stride,
-           width + 2 * border_horz);
+    AOM_UNSAFE_MEMCPY(data_p + i * stride, data_p + (height - 1) * stride,
+                      width + 2 * border_horz);
   }
 }
 
@@ -152,12 +154,12 @@ static void extend_frame_highbd(uint16_t *data, int width, int height,
   }
   data_p = data - border_horz;
   for (i = -border_vert; i < 0; ++i) {
-    memcpy(data_p + i * stride, data_p,
-           (width + 2 * border_horz) * sizeof(uint16_t));
+    AOM_UNSAFE_MEMCPY(data_p + i * stride, data_p,
+                      (width + 2 * border_horz) * sizeof(uint16_t));
   }
   for (i = height; i < height + border_vert; ++i) {
-    memcpy(data_p + i * stride, data_p + (height - 1) * stride,
-           (width + 2 * border_horz) * sizeof(uint16_t));
+    AOM_UNSAFE_MEMCPY(data_p + i * stride, data_p + (height - 1) * stride,
+                      (width + 2 * border_horz) * sizeof(uint16_t));
   }
 }
 
@@ -165,7 +167,8 @@ static void copy_rest_unit_highbd(int width, int height, const uint16_t *src,
                                   int src_stride, uint16_t *dst,
                                   int dst_stride) {
   for (int i = 0; i < height; ++i)
-    memcpy(dst + i * dst_stride, src + i * src_stride, width * sizeof(*dst));
+    AOM_UNSAFE_MEMCPY(dst + i * dst_stride, src + i * src_stride,
+                      width * sizeof(*dst));
 }
 #endif
 
@@ -185,7 +188,7 @@ void av1_extend_frame(uint8_t *data, int width, int height, int stride,
 static void copy_rest_unit_lowbd(int width, int height, const uint8_t *src,
                                  int src_stride, uint8_t *dst, int dst_stride) {
   for (int i = 0; i < height; ++i)
-    memcpy(dst + i * dst_stride, src + i * src_stride, width);
+    AOM_UNSAFE_MEMCPY(dst + i * dst_stride, src + i * src_stride, width);
 }
 
 static void copy_rest_unit(int width, int height, const uint8_t *src,
@@ -277,9 +280,9 @@ static void setup_processing_stripe_boundary(
             rsb->stripe_boundary_above + (buf_off << use_highbd);
         uint8_t *dst8 = data8_tl + i * data_stride;
         // Save old pixels, then replace with data from stripe_boundary_above
-        memcpy(rlbs->tmp_save_above[i + RESTORATION_BORDER],
-               REAL_PTR(use_highbd, dst8), line_size);
-        memcpy(REAL_PTR(use_highbd, dst8), buf, line_size);
+        AOM_UNSAFE_MEMCPY(rlbs->tmp_save_above[i + RESTORATION_BORDER],
+                          REAL_PTR(use_highbd, dst8), line_size);
+        AOM_UNSAFE_MEMCPY(REAL_PTR(use_highbd, dst8), buf, line_size);
       }
     }
 
@@ -298,8 +301,9 @@ static void setup_processing_stripe_boundary(
 
         uint8_t *dst8 = data8_bl + i * data_stride;
         // Save old pixels, then replace with data from stripe_boundary_below
-        memcpy(rlbs->tmp_save_below[i], REAL_PTR(use_highbd, dst8), line_size);
-        memcpy(REAL_PTR(use_highbd, dst8), src, line_size);
+        AOM_UNSAFE_MEMCPY(rlbs->tmp_save_below[i], REAL_PTR(use_highbd, dst8),
+                          line_size);
+        AOM_UNSAFE_MEMCPY(REAL_PTR(use_highbd, dst8), src, line_size);
       }
     }
   } else {
@@ -309,11 +313,13 @@ static void setup_processing_stripe_boundary(
       // Only save and overwrite i=-RESTORATION_BORDER line.
       uint8_t *dst8 = data8_tl + (-RESTORATION_BORDER) * data_stride;
       // Save old pixels, then replace with data from stripe_boundary_above
-      memcpy(rlbs->tmp_save_above[0], REAL_PTR(use_highbd, dst8), line_size);
-      memcpy(REAL_PTR(use_highbd, dst8),
-             REAL_PTR(use_highbd,
-                      data8_tl + (-RESTORATION_BORDER + 1) * data_stride),
-             line_size);
+      AOM_UNSAFE_MEMCPY(rlbs->tmp_save_above[0], REAL_PTR(use_highbd, dst8),
+                        line_size);
+      AOM_UNSAFE_MEMCPY(
+          REAL_PTR(use_highbd, dst8),
+          REAL_PTR(use_highbd,
+                   data8_tl + (-RESTORATION_BORDER + 1) * data_stride),
+          line_size);
     }
 
     if (copy_below) {
@@ -323,9 +329,11 @@ static void setup_processing_stripe_boundary(
       // Only save and overwrite i=2 line.
       uint8_t *dst8 = data8_bl + 2 * data_stride;
       // Save old pixels, then replace with data from stripe_boundary_below
-      memcpy(rlbs->tmp_save_below[2], REAL_PTR(use_highbd, dst8), line_size);
-      memcpy(REAL_PTR(use_highbd, dst8),
-             REAL_PTR(use_highbd, data8_bl + (2 - 1) * data_stride), line_size);
+      AOM_UNSAFE_MEMCPY(rlbs->tmp_save_below[2], REAL_PTR(use_highbd, dst8),
+                        line_size);
+      AOM_UNSAFE_MEMCPY(REAL_PTR(use_highbd, dst8),
+                        REAL_PTR(use_highbd, data8_bl + (2 - 1) * data_stride),
+                        line_size);
     }
   }
 }
@@ -348,8 +356,9 @@ static void restore_processing_stripe_boundary(
       uint8_t *data8_tl = data8 + data_x0 + limits->v_start * data_stride;
       for (int i = -RESTORATION_BORDER; i < 0; ++i) {
         uint8_t *dst8 = data8_tl + i * data_stride;
-        memcpy(REAL_PTR(use_highbd, dst8),
-               rlbs->tmp_save_above[i + RESTORATION_BORDER], line_size);
+        AOM_UNSAFE_MEMCPY(REAL_PTR(use_highbd, dst8),
+                          rlbs->tmp_save_above[i + RESTORATION_BORDER],
+                          line_size);
       }
     }
 
@@ -361,7 +370,8 @@ static void restore_processing_stripe_boundary(
         if (stripe_bottom + i >= limits->v_end + RESTORATION_BORDER) break;
 
         uint8_t *dst8 = data8_bl + i * data_stride;
-        memcpy(REAL_PTR(use_highbd, dst8), rlbs->tmp_save_below[i], line_size);
+        AOM_UNSAFE_MEMCPY(REAL_PTR(use_highbd, dst8), rlbs->tmp_save_below[i],
+                          line_size);
       }
     }
   } else {
@@ -370,7 +380,8 @@ static void restore_processing_stripe_boundary(
 
       // Only restore i=-RESTORATION_BORDER line.
       uint8_t *dst8 = data8_tl + (-RESTORATION_BORDER) * data_stride;
-      memcpy(REAL_PTR(use_highbd, dst8), rlbs->tmp_save_above[0], line_size);
+      AOM_UNSAFE_MEMCPY(REAL_PTR(use_highbd, dst8), rlbs->tmp_save_above[0],
+                        line_size);
     }
 
     if (copy_below) {
@@ -380,7 +391,8 @@ static void restore_processing_stripe_boundary(
       // Only restore i=2 line.
       if (stripe_bottom + 2 < limits->v_end + RESTORATION_BORDER) {
         uint8_t *dst8 = data8_bl + 2 * data_stride;
-        memcpy(REAL_PTR(use_highbd, dst8), rlbs->tmp_save_below[2], line_size);
+        AOM_UNSAFE_MEMCPY(REAL_PTR(use_highbd, dst8), rlbs->tmp_save_below[2],
+                          line_size);
       }
     }
   }
@@ -1345,8 +1357,8 @@ static void extend_lines(uint8_t *buf, int width, int height, int stride,
       aom_memset16(buf16 - extend, buf16[0], extend);
       aom_memset16(buf16 + width, buf16[width - 1], extend);
     } else {
-      memset(buf - extend, buf[0], extend);
-      memset(buf + width, buf[width - 1], extend);
+      AOM_UNSAFE_MEMSET(buf - extend, buf[0], extend);
+      AOM_UNSAFE_MEMSET(buf + width, buf[width - 1], extend);
     }
     buf += stride;
   }
@@ -1395,13 +1407,13 @@ static void save_deblock_boundary_lines(
     upscaled_width = frame->crop_widths[is_uv];
     line_bytes = upscaled_width << use_highbd;
     for (int i = 0; i < lines_to_save; i++) {
-      memcpy(bdry_rows + i * bdry_stride, src_rows + i * src_stride,
-             line_bytes);
+      AOM_UNSAFE_MEMCPY(bdry_rows + i * bdry_stride, src_rows + i * src_stride,
+                        line_bytes);
     }
   }
   // If we only saved one line, then copy it into the second line buffer
   if (lines_to_save == 1)
-    memcpy(bdry_rows + bdry_stride, bdry_rows, line_bytes);
+    AOM_UNSAFE_MEMCPY(bdry_rows + bdry_stride, bdry_rows, line_bytes);
 
   extend_lines(bdry_rows, upscaled_width, RESTORATION_CTX_VERT, bdry_stride,
                RESTORATION_EXTRA_HORZ, use_highbd);
@@ -1433,7 +1445,7 @@ static void save_cdef_boundary_lines(const YV12_BUFFER_CONFIG *frame,
   const int line_bytes = upscaled_width << use_highbd;
   for (int i = 0; i < RESTORATION_CTX_VERT; i++) {
     // Copy the line at 'src_rows' into both context lines
-    memcpy(bdry_rows + i * bdry_stride, src_rows, line_bytes);
+    AOM_UNSAFE_MEMCPY(bdry_rows + i * bdry_stride, src_rows, line_bytes);
   }
   extend_lines(bdry_rows, upscaled_width, RESTORATION_CTX_VERT, bdry_stride,
                RESTORATION_EXTRA_HORZ, use_highbd);

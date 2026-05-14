@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -484,7 +486,7 @@ void av1_compute_feature_segmentation_map(uint8_t *segment_map, int width,
                                           int height, int *inliers,
                                           int num_inliers) {
   int seg_count = 0;
-  memset(segment_map, 0, sizeof(*segment_map) * width * height);
+  AOM_UNSAFE_MEMSET(segment_map, 0, sizeof(*segment_map) * width * height);
 
   for (int i = 0; i < num_inliers; i++) {
     int x = inliers[i * 2];
@@ -505,5 +507,5 @@ void av1_compute_feature_segmentation_map(uint8_t *segment_map, int width,
   // If this motion does not make up a large enough portion of the frame,
   // use the unsegmented version of the error metric
   if (seg_count < SEG_COUNT_TR)
-    memset(segment_map, 1, width * height * sizeof(*segment_map));
+    AOM_UNSAFE_MEMSET(segment_map, 1, width * height * sizeof(*segment_map));
 }

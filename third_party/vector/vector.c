@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
 The MIT License(MIT)
 Copyright(c) 2016 Peter Goldsborough
@@ -58,7 +60,7 @@ static const void *_vector_const_offset(const Vector *vector, size_t index) {
 static void _vector_assign(Vector *vector, size_t index, void *element) {
   /* Insert the element */
   void *offset = _vector_offset(vector, index);
-  memcpy(offset, element, vector->element_size);
+  AOM_UNSAFE_MEMCPY(offset, element, vector->element_size);
 }
 
 #if 0
@@ -76,7 +78,7 @@ static int _vector_move_right(Vector *vector, size_t index) {
       (vector->capacity - (index + 1)) * vector->element_size;
 
   /* clang-format off */
-    int return_code =  memmove_s(
+    int return_code =  AOM_UNSAFE_MEMMOVE_s(
         offset + vector->element_size,
         right_capacity_in_bytes,
         offset,
@@ -87,8 +89,8 @@ static int _vector_move_right(Vector *vector, size_t index) {
   return return_code == 0 ? VECTOR_SUCCESS : VECTOR_ERROR;
 
 #else
-  // memmove(offset + vector->element_size, offset, elements_in_bytes);
-  memmove((unsigned char *)offset + vector->element_size, offset,
+  // AOM_UNSAFE_MEMMOVE(offset + vector->element_size, offset, elements_in_bytes);
+  AOM_UNSAFE_MEMMOVE((unsigned char *)offset + vector->element_size, offset,
           elements_in_bytes);
   return VECTOR_SUCCESS;
 #endif
@@ -104,8 +106,8 @@ static void _vector_move_left(Vector *vector, size_t index) {
   /* How many to move to the left */
   right_elements_in_bytes = (vector->size - index - 1) * vector->element_size;
 
-  // memmove(offset, offset + vector->element_size, right_elements_in_bytes);
-  memmove(offset, (unsigned char *)offset + vector->element_size,
+  // AOM_UNSAFE_MEMMOVE(offset, offset + vector->element_size, right_elements_in_bytes);
+  AOM_UNSAFE_MEMMOVE(offset, (unsigned char *)offset + vector->element_size,
           right_elements_in_bytes);
 }
 #endif  // 0
@@ -133,7 +135,7 @@ static int _vector_reallocate(Vector *vector, size_t new_capacity) {
 
 #ifdef __STDC_LIB_EXT1__
   /* clang-format off */
-    if (memcpy_s(vector->data,
+    if (AOM_UNSAFE_MEMCPY_s(vector->data,
                              new_capacity_in_bytes,
                              old,
                              aom_vector_byte_size(vector)) != 0) {
@@ -141,7 +143,7 @@ static int _vector_reallocate(Vector *vector, size_t new_capacity) {
     }
 /* clang-format on */
 #else
-  memcpy(vector->data, old, aom_vector_byte_size(vector));
+  AOM_UNSAFE_MEMCPY(vector->data, old, aom_vector_byte_size(vector));
 #endif
 
   vector->capacity = new_capacity;
@@ -198,7 +200,7 @@ int aom_vector_copy(Vector *destination, Vector *source) {
   destination->data = malloc(destination->capacity * source->element_size);
   if (destination->data == NULL) return VECTOR_ERROR;
 
-  memcpy(destination->data, source->data, aom_vector_byte_size(source));
+  AOM_UNSAFE_MEMCPY(destination->data, source->data, aom_vector_byte_size(source));
 
   return VECTOR_SUCCESS;
 }
@@ -321,7 +323,7 @@ int aom_vector_insert(Vector *vector, size_t index, void *element) {
 
   /* Insert the element */
   offset = _vector_offset(vector, index);
-  memcpy(offset, element, vector->element_size);
+  AOM_UNSAFE_MEMCPY(offset, element, vector->element_size);
   ++vector->size;
 
   return VECTOR_SUCCESS;
@@ -466,7 +468,9 @@ int aom_vector_shrink_to_fit(Vector *vector) {
 #endif  // 0
 
 /* Iterators */
-Iterator aom_vector_begin(Vector *vector) { return aom_vector_iterator(vector, 0); }
+Iterator aom_vector_begin(Vector *vector) {
+  return aom_vector_iterator(vector, 0);
+}
 
 #if 0
 Iterator aom_vector_end(Vector *vector) {

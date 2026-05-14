@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -344,9 +346,10 @@ void av1_cdef_filter_fb(uint8_t *dst8, uint16_t *dst16, int dstride,
       bx = dlist[bi].bx;
       // TODO(stemidts/jmvalin): SIMD optimisations
       for (int iy = 0; iy < 1 << bh_log2; iy++) {
-        memcpy(&dst16[(bi << (bw_log2 + bh_log2)) + (iy << bw_log2)],
-               &in[((by << bh_log2) + iy) * CDEF_BSTRIDE + (bx << bw_log2)],
-               ((size_t)1 << bw_log2) * sizeof(*dst16));
+        AOM_UNSAFE_MEMCPY(
+            &dst16[(bi << (bw_log2 + bh_log2)) + (iy << bw_log2)],
+            &in[((by << bh_log2) + iy) * CDEF_BSTRIDE + (bx << bw_log2)],
+            ((size_t)1 << bw_log2) * sizeof(*dst16));
       }
     }
     return;

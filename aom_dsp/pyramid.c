@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2022, Alliance for Open Media. All rights reserved.
  *
@@ -223,24 +225,25 @@ static inline void fill_border(uint8_t *img_buf, const int width,
   for (int row = 0; row < height; row++) {
     uint8_t *row_start = &img_buf[row * stride];
     uint8_t left_pixel = row_start[0];
-    memset(row_start - PYRAMID_PADDING, left_pixel, PYRAMID_PADDING);
+    AOM_UNSAFE_MEMSET(row_start - PYRAMID_PADDING, left_pixel, PYRAMID_PADDING);
     uint8_t right_pixel = row_start[width - 1];
-    memset(row_start + width, right_pixel, PYRAMID_PADDING);
+    AOM_UNSAFE_MEMSET(row_start + width, right_pixel, PYRAMID_PADDING);
   }
 
   // Fill top area
   for (int row = -PYRAMID_PADDING; row < 0; row++) {
     uint8_t *row_start = &img_buf[row * stride];
-    memcpy(row_start - PYRAMID_PADDING, img_buf - PYRAMID_PADDING,
-           width + 2 * PYRAMID_PADDING);
+    AOM_UNSAFE_MEMCPY(row_start - PYRAMID_PADDING, img_buf - PYRAMID_PADDING,
+                      width + 2 * PYRAMID_PADDING);
   }
 
   // Fill bottom area
   uint8_t *last_row_start = &img_buf[(height - 1) * stride];
   for (int row = height; row < height + PYRAMID_PADDING; row++) {
     uint8_t *row_start = &img_buf[row * stride];
-    memcpy(row_start - PYRAMID_PADDING, last_row_start - PYRAMID_PADDING,
-           width + 2 * PYRAMID_PADDING);
+    AOM_UNSAFE_MEMCPY(row_start - PYRAMID_PADDING,
+                      last_row_start - PYRAMID_PADDING,
+                      width + 2 * PYRAMID_PADDING);
   }
 }
 

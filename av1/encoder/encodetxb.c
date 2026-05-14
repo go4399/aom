@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2017, Alliance for Open Media. All rights reserved.
  *
@@ -263,8 +265,8 @@ void av1_txb_init_levels_c(const tran_low_t *const coeff, const int width,
   const int stride = height + TX_PAD_HOR;
   uint8_t *ls = levels;
 
-  memset(levels + stride * width, 0,
-         sizeof(*levels) * (TX_PAD_BOTTOM * stride + TX_PAD_END));
+  AOM_UNSAFE_MEMSET(levels + stride * width, 0,
+                    sizeof(*levels) * (TX_PAD_BOTTOM * stride + TX_PAD_END));
 
   for (int i = 0; i < width; i++) {
     for (int j = 0; j < height; j++) {
@@ -629,7 +631,7 @@ void av1_update_and_record_txb_context(int plane, int block, int blk_row,
     tran_low_t *tcoeff_txb =
         cb_coef_buff->tcoeff[plane] + x->mbmi_ext_frame->cb_offset[plane_type];
     tcoeff = tcoeff_txb + block_offset;
-    memcpy(tcoeff, qcoeff, sizeof(*tcoeff) * seg_eob);
+    AOM_UNSAFE_MEMCPY(tcoeff, qcoeff, sizeof(*tcoeff) * seg_eob);
 
     uint8_t levels_buf[TX_PAD_2D];
     uint8_t *const levels = set_levels(levels_buf, height);
@@ -785,7 +787,7 @@ void av1_record_txb_context(int plane, int block, int blk_row, int blk_col,
     tran_low_t *tcoeff_txb =
         cb_coef_buff->tcoeff[plane] + x->mbmi_ext_frame->cb_offset[plane_type];
     tcoeff = tcoeff_txb + block_offset;
-    memcpy(tcoeff, qcoeff, sizeof(*tcoeff) * seg_eob);
+    AOM_UNSAFE_MEMCPY(tcoeff, qcoeff, sizeof(*tcoeff) * seg_eob);
 
 #if CONFIG_ENTROPY_STATS
     uint8_t levels_buf[TX_PAD_2D];

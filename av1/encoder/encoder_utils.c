@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2020, Alliance for Open Media. All rights reserved.
  *
@@ -334,7 +336,8 @@ static void configure_static_seg_features(AV1_COMP *cpi) {
   // Disable and clear down for KF
   if (cm->current_frame.frame_type == KEY_FRAME) {
     // Clear down the global segmentation map
-    memset(cpi->enc_seg.map, 0, cm->mi_params.mi_rows * cm->mi_params.mi_cols);
+    AOM_UNSAFE_MEMSET(cpi->enc_seg.map, 0,
+                      cm->mi_params.mi_rows * cm->mi_params.mi_cols);
     seg->update_map = 0;
     seg->update_data = 0;
 
@@ -346,7 +349,8 @@ static void configure_static_seg_features(AV1_COMP *cpi) {
   } else if (cpi->refresh_frame.alt_ref_frame) {
     // If this is an alt ref frame
     // Clear down the global segmentation map
-    memset(cpi->enc_seg.map, 0, cm->mi_params.mi_rows * cm->mi_params.mi_cols);
+    AOM_UNSAFE_MEMSET(cpi->enc_seg.map, 0,
+                      cm->mi_params.mi_rows * cm->mi_params.mi_cols);
     seg->update_map = 0;
     seg->update_data = 0;
 
@@ -386,8 +390,8 @@ static void configure_static_seg_features(AV1_COMP *cpi) {
 
       av1_disable_segmentation(seg);
 
-      memset(cpi->enc_seg.map, 0,
-             cm->mi_params.mi_rows * cm->mi_params.mi_cols);
+      AOM_UNSAFE_MEMSET(cpi->enc_seg.map, 0,
+                        cm->mi_params.mi_rows * cm->mi_params.mi_cols);
 
       seg->update_map = 0;
       seg->update_data = 0;
@@ -448,15 +452,15 @@ void av1_apply_roi_map(AV1_COMP *cpi) {
     return;
   }
 
-  memcpy(&ref_frame, roi->ref_frame, sizeof(ref_frame));
+  AOM_UNSAFE_MEMCPY(&ref_frame, roi->ref_frame, sizeof(ref_frame));
   roi->reference_enabled = 0;
   roi->delta_qp_enabled = 0;
 
   av1_enable_segmentation(seg);
   av1_clearall_segfeatures(seg);
 
-  memcpy(seg_map, roi->roi_map,
-         (cm->mi_params.mi_rows * cm->mi_params.mi_cols));
+  AOM_UNSAFE_MEMCPY(seg_map, roi->roi_map,
+                    (cm->mi_params.mi_rows * cm->mi_params.mi_cols));
 
   for (int i = 0; i < MAX_SEGMENTS; ++i) {
     // Default: disable all feautures.
@@ -554,7 +558,7 @@ void av1_apply_active_map(AV1_COMP *cpi) {
     if (cpi->active_map.enabled) {
       const int num_mis =
           cpi->common.mi_params.mi_rows * cpi->common.mi_params.mi_cols;
-      memcpy(seg_map, active_map, sizeof(active_map[0]) * num_mis);
+      AOM_UNSAFE_MEMCPY(seg_map, active_map, sizeof(active_map[0]) * num_mis);
       av1_enable_segmentation(seg);
       av1_enable_segfeature(seg, AM_SEGMENT_ID_INACTIVE, SEG_LVL_SKIP);
       av1_enable_segfeature(seg, AM_SEGMENT_ID_INACTIVE, SEG_LVL_ALT_LF_Y_H);
@@ -760,14 +764,16 @@ static void reset_film_grain_chroma_params(aom_film_grain_t *pars) {
   pars->num_cr_points = 0;
   pars->cr_mult = 0;
   pars->cr_luma_mult = 0;
-  memset(pars->scaling_points_cr, 0, sizeof(pars->scaling_points_cr));
-  memset(pars->ar_coeffs_cr, 0, sizeof(pars->ar_coeffs_cr));
+  AOM_UNSAFE_MEMSET(pars->scaling_points_cr, 0,
+                    sizeof(pars->scaling_points_cr));
+  AOM_UNSAFE_MEMSET(pars->ar_coeffs_cr, 0, sizeof(pars->ar_coeffs_cr));
   pars->num_cb_points = 0;
   pars->cb_mult = 0;
   pars->cb_luma_mult = 0;
   pars->chroma_scaling_from_luma = 0;
-  memset(pars->scaling_points_cb, 0, sizeof(pars->scaling_points_cb));
-  memset(pars->ar_coeffs_cb, 0, sizeof(pars->ar_coeffs_cb));
+  AOM_UNSAFE_MEMSET(pars->scaling_points_cb, 0,
+                    sizeof(pars->scaling_points_cb));
+  AOM_UNSAFE_MEMSET(pars->ar_coeffs_cb, 0, sizeof(pars->ar_coeffs_cb));
 }
 
 void av1_update_film_grain_parameters_seq(struct AV1_PRIMARY *ppi,
@@ -822,7 +828,7 @@ void av1_update_film_grain_parameters(struct AV1_COMP *cpi,
     if (cm->seq_params->color_range == AOM_CR_FULL_RANGE)
       cm->film_grain_params.clip_to_restricted_range = 0;
   } else {
-    memset(&cm->film_grain_params, 0, sizeof(cm->film_grain_params));
+    AOM_UNSAFE_MEMSET(&cm->film_grain_params, 0, sizeof(cm->film_grain_params));
   }
 }
 #endif  // !CONFIG_REALTIME_ONLY
@@ -1253,7 +1259,7 @@ void av1_determine_sc_tools_with_encoding(AV1_COMP *cpi, const int q_orig) {
       av1_calculate_segdata(&cm->seg);
     }
   } else {
-    memset(&cm->seg, 0, sizeof(cm->seg));
+    AOM_UNSAFE_MEMSET(&cm->seg, 0, sizeof(cm->seg));
   }
   segfeatures_copy(&cm->cur_frame->seg, &cm->seg);
   cm->cur_frame->seg.enabled = cm->seg.enabled;

@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2020, Alliance for Open Media. All rights reserved.
  *
@@ -304,7 +306,7 @@ bool av1_count_colors_with_threshold(const uint8_t *src, int stride, int rows,
  */
 static inline void init_intra_mode_search_state(
     IntraModeSearchState *intra_search_state) {
-  memset(intra_search_state, 0, sizeof(*intra_search_state));
+  AOM_UNSAFE_MEMSET(intra_search_state, 0, sizeof(*intra_search_state));
   intra_search_state->rate_uv_intra = INT_MAX;
 }
 

@@ -20,8 +20,11 @@
 #define _GNU_SOURCE
 #endif
 
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
+
 #include <assert.h>
-#include <string.h>  // for memset()
+#include <string.h>  // for AOM_UNSAFE_MEMSET()
 
 #include "config/aom_config.h"
 
@@ -123,7 +126,7 @@ static void change_state(AVxWorker *const worker, AVxWorkerStatus new_status) {
 //------------------------------------------------------------------------------
 
 static void init(AVxWorker *const worker) {
-  memset(worker, 0, sizeof(*worker));
+  AOM_UNSAFE_MEMSET(worker, 0, sizeof(*worker));
   worker->status_ = AVX_WORKER_STATUS_NOT_OK;
 }
 

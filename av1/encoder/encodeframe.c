@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -422,7 +424,7 @@ static void init_ref_frame_space(AV1_COMP *cpi, ThreadData *td, int mi_row,
   const int is_overlay =
       cpi->ppi->gf_group.update_type[frame_idx] == OVERLAY_UPDATE;
   if (is_overlay) {
-    memset(x->tpl_keep_ref_frame, 1, sizeof(x->tpl_keep_ref_frame));
+    AOM_UNSAFE_MEMSET(x->tpl_keep_ref_frame, 1, sizeof(x->tpl_keep_ref_frame));
     return;
   }
 
@@ -557,16 +559,20 @@ static void get_estimated_pred(AV1_COMP *cpi, const TileInfo *const tile,
   } else {
 #if CONFIG_AV1_HIGHBITDEPTH
     switch (xd->bd) {
-      case 8: memset(x->est_pred, 128, 64 * 64 * sizeof(x->est_pred[0])); break;
+      case 8:
+        AOM_UNSAFE_MEMSET(x->est_pred, 128, 64 * 64 * sizeof(x->est_pred[0]));
+        break;
       case 10:
-        memset(x->est_pred, 128 * 4, 64 * 64 * sizeof(x->est_pred[0]));
+        AOM_UNSAFE_MEMSET(x->est_pred, 128 * 4,
+                          64 * 64 * sizeof(x->est_pred[0]));
         break;
       case 12:
-        memset(x->est_pred, 128 * 16, 64 * 64 * sizeof(x->est_pred[0]));
+        AOM_UNSAFE_MEMSET(x->est_pred, 128 * 16,
+                          64 * 64 * sizeof(x->est_pred[0]));
         break;
     }
 #else
-    memset(x->est_pred, 128, 64 * 64 * sizeof(x->est_pred[0]));
+    AOM_UNSAFE_MEMSET(x->est_pred, 128, 64 * 64 * sizeof(x->est_pred[0]));
 #endif  // CONFIG_VP9_HIGHBITDEPTH
   }
 }
@@ -2377,11 +2383,14 @@ static inline void encode_frame_internal(AV1_COMP *cpi) {
     av1_set_default_ref_deltas(cm->lf.ref_deltas);
     av1_set_default_mode_deltas(cm->lf.mode_deltas);
   } else if (cm->prev_frame) {
-    memcpy(cm->lf.ref_deltas, cm->prev_frame->ref_deltas, REF_FRAMES);
-    memcpy(cm->lf.mode_deltas, cm->prev_frame->mode_deltas, MAX_MODE_LF_DELTAS);
+    AOM_UNSAFE_MEMCPY(cm->lf.ref_deltas, cm->prev_frame->ref_deltas,
+                      REF_FRAMES);
+    AOM_UNSAFE_MEMCPY(cm->lf.mode_deltas, cm->prev_frame->mode_deltas,
+                      MAX_MODE_LF_DELTAS);
   }
-  memcpy(cm->cur_frame->ref_deltas, cm->lf.ref_deltas, REF_FRAMES);
-  memcpy(cm->cur_frame->mode_deltas, cm->lf.mode_deltas, MAX_MODE_LF_DELTAS);
+  AOM_UNSAFE_MEMCPY(cm->cur_frame->ref_deltas, cm->lf.ref_deltas, REF_FRAMES);
+  AOM_UNSAFE_MEMCPY(cm->cur_frame->mode_deltas, cm->lf.mode_deltas,
+                    MAX_MODE_LF_DELTAS);
 
   cpi->all_one_sided_refs =
       frame_is_intra_only(cm) ? 0 : refs_are_one_sided(cm);

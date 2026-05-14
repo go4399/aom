@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -72,8 +74,8 @@ static void dec_set_mb_mi(CommonModeInfoParams *mi_params, int width,
 static void dec_setup_mi(CommonModeInfoParams *mi_params) {
   const int mi_grid_size =
       mi_params->mi_stride * calc_mi_size(mi_params->mi_rows);
-  memset(mi_params->mi_grid_base, 0,
-         mi_grid_size * sizeof(*mi_params->mi_grid_base));
+  AOM_UNSAFE_MEMSET(mi_params->mi_grid_base, 0,
+                    mi_grid_size * sizeof(*mi_params->mi_grid_base));
 }
 
 static void dec_free_mi(CommonModeInfoParams *mi_params) {
@@ -112,8 +114,9 @@ AV1Decoder *av1_decoder_create(BufferPool *const pool) {
   CHECK_MEM_ERROR(
       cm, cm->default_frame_context,
       (FRAME_CONTEXT *)aom_memalign(32, sizeof(*cm->default_frame_context)));
-  memset(cm->fc, 0, sizeof(*cm->fc));
-  memset(cm->default_frame_context, 0, sizeof(*cm->default_frame_context));
+  AOM_UNSAFE_MEMSET(cm->fc, 0, sizeof(*cm->fc));
+  AOM_UNSAFE_MEMSET(cm->default_frame_context, 0,
+                    sizeof(*cm->default_frame_context));
 
   pbi->need_resync = 1;
   initialize_dec();

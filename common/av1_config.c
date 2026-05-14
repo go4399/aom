@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2018, Alliance for Open Media. All rights reserved.
  *
@@ -408,7 +410,7 @@ int get_av1config_from_obu(const uint8_t *buffer, size_t length, int is_annexb,
   }
 
   ObuHeader obu_header;
-  memset(&obu_header, 0, sizeof(obu_header));
+  AOM_UNSAFE_MEMSET(&obu_header, 0, sizeof(obu_header));
 
   size_t sequence_header_length = 0;
   size_t obu_header_length = 0;
@@ -420,7 +422,7 @@ int get_av1config_from_obu(const uint8_t *buffer, size_t length, int is_annexb,
     return -1;
   }
 
-  memset(config, 0, sizeof(*config));
+  AOM_UNSAFE_MEMSET(config, 0, sizeof(*config));
   config->marker = 1;
   config->version = 1;
   return parse_sequence_header(buffer + obu_header_length,
@@ -439,7 +441,7 @@ int read_av1config(const uint8_t *buffer, size_t buffer_length,
                                                  bitreader_error_handler };
   struct aom_read_bit_buffer *reader = &reader_instance;
 
-  memset(config, 0, sizeof(*config));
+  AOM_UNSAFE_MEMSET(config, 0, sizeof(*config));
 
   AV1C_READ_BIT_OR_RETURN_ERROR(marker);
   config->marker = marker;

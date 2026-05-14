@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2020, Alliance for Open Media. All rights reserved.
  *
@@ -89,7 +91,7 @@ static void copy_frame(YV12_BUFFER_CONFIG *const dest,
   assert(dest->y_height == src->y_height);
 
   for (int r = 0; r < dest->y_height; ++r) {
-    memcpy(destbuf, srcbuf, dest->y_width);
+    AOM_UNSAFE_MEMCPY(destbuf, srcbuf, dest->y_width);
     destbuf += dest->y_stride;
     srcbuf += src->y_stride;
   }

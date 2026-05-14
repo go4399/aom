@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -952,8 +954,8 @@ static void foreach_rest_unit_in_planes_mt(AV1LrStruct *lr_ctxt,
 
   // Initialize cur_sb_col to -1 for all SB rows.
   for (i = 0; i < num_planes; i++) {
-    memset(lr_sync->cur_sb_col[i], -1,
-           sizeof(*(lr_sync->cur_sb_col[i])) * num_rows_lr);
+    AOM_UNSAFE_MEMSET(lr_sync->cur_sb_col[i], -1,
+                      sizeof(*(lr_sync->cur_sb_col[i])) * num_rows_lr);
   }
 
   enqueue_lr_jobs(lr_sync, lr_ctxt, cm);

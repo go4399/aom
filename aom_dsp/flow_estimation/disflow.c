@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -196,7 +198,7 @@ static inline void compute_flow_vector(const uint8_t *src, const uint8_t *ref,
                                        int y, double u, double v,
                                        const int16_t *dx, const int16_t *dy,
                                        int *b) {
-  memset(b, 0, 2 * sizeof(*b));
+  AOM_UNSAFE_MEMSET(b, 0, 2 * sizeof(*b));
 
   // Split offset into integer and fractional parts, and compute cubic
   // interpolation kernels
@@ -478,7 +480,7 @@ static void fill_flow_field_borders(double *flow, int width, int height,
   for (int i = -FLOW_BORDER_OUTER; i < top_index; i++) {
     double *row = flow + i * stride - FLOW_BORDER_OUTER;
     size_t length = width + 2 * FLOW_BORDER_OUTER;
-    memcpy(row, top_row, length * sizeof(*row));
+    AOM_UNSAFE_MEMCPY(row, top_row, length * sizeof(*row));
   }
 
   // Bottom area
@@ -486,7 +488,7 @@ static void fill_flow_field_borders(double *flow, int width, int height,
   for (int i = bottom_index + 1; i < height + FLOW_BORDER_OUTER; i++) {
     double *row = flow + i * stride - FLOW_BORDER_OUTER;
     size_t length = width + 2 * FLOW_BORDER_OUTER;
-    memcpy(row, bottom_row, length * sizeof(*row));
+    AOM_UNSAFE_MEMCPY(row, bottom_row, length * sizeof(*row));
   }
 }
 
@@ -571,13 +573,13 @@ static void upscale_flow_component(double *flow, int cur_width, int cur_height,
   const double *top_row = &tmpbuf[0];
   for (int i = -FLOW_BORDER_OUTER; i < 0; i++) {
     double *row = &tmpbuf[i * stride];
-    memcpy(row, top_row, 2 * cur_width * sizeof(*row));
+    AOM_UNSAFE_MEMCPY(row, top_row, 2 * cur_width * sizeof(*row));
   }
 
   const double *bottom_row = &tmpbuf[(cur_height - 1) * stride];
   for (int i = cur_height; i < cur_height + FLOW_BORDER_OUTER; i++) {
     double *row = &tmpbuf[i * stride];
-    memcpy(row, bottom_row, 2 * cur_width * sizeof(*row));
+    AOM_UNSAFE_MEMCPY(row, bottom_row, 2 * cur_width * sizeof(*row));
   }
 
   // Vertical upscale

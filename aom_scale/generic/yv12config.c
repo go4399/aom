@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -48,7 +50,7 @@ int aom_free_frame_buffer(YV12_BUFFER_CONFIG *ybf) {
     /* buffer_alloc isn't accessed by most functions.  Rather y_buffer,
       u_buffer and v_buffer point to buffer_alloc and are used.  Clear out
       all of this so that a freed pointer isn't inadvertently used */
-    memset(ybf, 0, sizeof(YV12_BUFFER_CONFIG));
+    AOM_UNSAFE_MEMSET(ybf, 0, sizeof(YV12_BUFFER_CONFIG));
     return 0;
   }
 
@@ -118,7 +120,7 @@ static int realloc_frame_buffer_aligned(
       // This memset is needed for fixing the issue of using uninitialized
       // value in msan test. It will cause a perf loss, so only do this for
       // msan test.
-      memset(ybf->buffer_alloc, 0, (size_t)frame_size);
+      AOM_UNSAFE_MEMSET(ybf->buffer_alloc, 0, (size_t)frame_size);
 #endif
 #endif
     } else if (frame_size > ybf->buffer_alloc_sz) {
@@ -137,7 +139,7 @@ static int realloc_frame_buffer_aligned(
       // This memset is needed for fixing valgrind error from C loop filter
       // due to access uninitialized memory in frame border. It could be
       // removed if border is totally removed.
-      memset(ybf->buffer_alloc, 0, ybf->buffer_alloc_sz);
+      AOM_UNSAFE_MEMSET(ybf->buffer_alloc, 0, ybf->buffer_alloc_sz);
     }
 
     ybf->y_crop_width = width;

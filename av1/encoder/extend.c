@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -31,15 +33,15 @@ static void copy_and_extend_plane(const uint8_t *src, int src_pitch,
   uint8_t *dst_ptr2 = dst + w;
 
   for (i = 0; i < h; i++) {
-    memset(dst_ptr1, src_ptr1[0], extend_left);
+    AOM_UNSAFE_MEMSET(dst_ptr1, src_ptr1[0], extend_left);
     if (chroma_step == 1) {
-      memcpy(dst_ptr1 + extend_left, src_ptr1, w);
+      AOM_UNSAFE_MEMCPY(dst_ptr1 + extend_left, src_ptr1, w);
     } else {
       for (int j = 0; j < w; j++) {
         dst_ptr1[extend_left + j] = src_ptr1[chroma_step * j];
       }
     }
-    memset(dst_ptr2, src_ptr2[0], extend_right);
+    AOM_UNSAFE_MEMSET(dst_ptr2, src_ptr2[0], extend_right);
     src_ptr1 += src_pitch;
     src_ptr2 += src_pitch;
     dst_ptr1 += dst_pitch;
@@ -56,12 +58,12 @@ static void copy_and_extend_plane(const uint8_t *src, int src_pitch,
   assert(linesize <= dst_pitch);
 
   for (i = 0; i < extend_top; i++) {
-    memcpy(dst_ptr1, src_ptr1, linesize);
+    AOM_UNSAFE_MEMCPY(dst_ptr1, src_ptr1, linesize);
     dst_ptr1 += dst_pitch;
   }
 
   for (i = 0; i < extend_bottom; i++) {
-    memcpy(dst_ptr2, src_ptr2, linesize);
+    AOM_UNSAFE_MEMCPY(dst_ptr2, src_ptr2, linesize);
     dst_ptr2 += dst_pitch;
   }
 }
@@ -82,7 +84,8 @@ static void highbd_copy_and_extend_plane(const uint8_t *src8, int src_pitch,
 
   for (i = 0; i < h; i++) {
     aom_memset16(dst_ptr1, src_ptr1[0], extend_left);
-    memcpy(dst_ptr1 + extend_left, src_ptr1, w * sizeof(src_ptr1[0]));
+    AOM_UNSAFE_MEMCPY(dst_ptr1 + extend_left, src_ptr1,
+                      w * sizeof(src_ptr1[0]));
     aom_memset16(dst_ptr2, src_ptr2[0], extend_right);
     src_ptr1 += src_pitch;
     src_ptr2 += src_pitch;
@@ -100,12 +103,12 @@ static void highbd_copy_and_extend_plane(const uint8_t *src8, int src_pitch,
   assert(linesize <= dst_pitch);
 
   for (i = 0; i < extend_top; i++) {
-    memcpy(dst_ptr1, src_ptr1, linesize * sizeof(src_ptr1[0]));
+    AOM_UNSAFE_MEMCPY(dst_ptr1, src_ptr1, linesize * sizeof(src_ptr1[0]));
     dst_ptr1 += dst_pitch;
   }
 
   for (i = 0; i < extend_bottom; i++) {
-    memcpy(dst_ptr2, src_ptr2, linesize * sizeof(src_ptr2[0]));
+    AOM_UNSAFE_MEMCPY(dst_ptr2, src_ptr2, linesize * sizeof(src_ptr2[0]));
     dst_ptr2 += dst_pitch;
   }
 }

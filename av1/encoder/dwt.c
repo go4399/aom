@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2018, Alliance for Open Media. All rights reserved.
  *
@@ -98,7 +100,7 @@ static void dyadic_analyze_53_uint8_input(int levels, int width, int height,
     hw = (hw + 1) >> 1;
     if ((nh < 2) || (nw < 2)) return;
     for (i = 0; i < nh; i++) {
-      memcpy(buffer, &c[i * pitch_c], nw * sizeof(tran_low_t));
+      AOM_UNSAFE_MEMCPY(buffer, &c[i * pitch_c], nw * sizeof(tran_low_t));
       analysis_53_row(nw, buffer, &c[i * pitch_c], &c[i * pitch_c] + hw);
     }
     for (j = 0; j < nw; j++) {

@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
  *
@@ -457,8 +459,9 @@ static void generate_luma_grain_block(
     int luma_grain_stride, int left_pad, int top_pad, int right_pad,
     int bottom_pad) {
   if (params->num_y_points == 0) {
-    memset(luma_grain_block, 0,
-           sizeof(*luma_grain_block) * luma_block_size_y * luma_grain_stride);
+    AOM_UNSAFE_MEMSET(
+        luma_grain_block, 0,
+        sizeof(*luma_grain_block) * luma_block_size_y * luma_grain_stride);
     return;
   }
 
@@ -521,8 +524,8 @@ static bool generate_chroma_grain_blocks(
              ((1 << gauss_sec_shift) >> 1)) >>
             gauss_sec_shift;
   } else {
-    memset(cb_grain_block, 0,
-           sizeof(*cb_grain_block) * chroma_grain_block_size);
+    AOM_UNSAFE_MEMSET(cb_grain_block, 0,
+                      sizeof(*cb_grain_block) * chroma_grain_block_size);
   }
 
   if (params->num_cr_points || params->chroma_scaling_from_luma) {
@@ -535,8 +538,8 @@ static bool generate_chroma_grain_blocks(
              ((1 << gauss_sec_shift) >> 1)) >>
             gauss_sec_shift;
   } else {
-    memset(cr_grain_block, 0,
-           sizeof(*cr_grain_block) * chroma_grain_block_size);
+    AOM_UNSAFE_MEMSET(cr_grain_block, 0,
+                      sizeof(*cr_grain_block) * chroma_grain_block_size);
   }
 
   for (int i = top_pad; i < chroma_block_size_y - bottom_pad; i++)
@@ -868,7 +871,7 @@ static void copy_rect(uint8_t *src, int src_stride, uint8_t *dst,
                       int use_high_bit_depth) {
   int hbd_coeff = use_high_bit_depth ? 2 : 1;
   while (height) {
-    memcpy(dst, src, width * sizeof(uint8_t) * hbd_coeff);
+    AOM_UNSAFE_MEMCPY(dst, src, width * sizeof(uint8_t) * hbd_coeff);
     src += src_stride;
     dst += dst_stride;
     --height;
@@ -879,7 +882,7 @@ static void copy_rect(uint8_t *src, int src_stride, uint8_t *dst,
 static void copy_area(int *src, int src_stride, int *dst, int dst_stride,
                       int width, int height) {
   while (height) {
-    memcpy(dst, src, width * sizeof(*src));
+    AOM_UNSAFE_MEMCPY(dst, src, width * sizeof(*src));
     src += src_stride;
     dst += dst_stride;
     --height;
@@ -899,8 +902,9 @@ static void extend_even(uint8_t *dst, int dst_stride, int width, int height,
     }
     width = (width + 1) & (~1);
     if (height & 1) {
-      memcpy(&dst16[height * dst16_stride], &dst16[(height - 1) * dst16_stride],
-             sizeof(*dst16) * width);
+      AOM_UNSAFE_MEMCPY(&dst16[height * dst16_stride],
+                        &dst16[(height - 1) * dst16_stride],
+                        sizeof(*dst16) * width);
     }
   } else {
     if (width & 1) {
@@ -909,8 +913,8 @@ static void extend_even(uint8_t *dst, int dst_stride, int width, int height,
     }
     width = (width + 1) & (~1);
     if (height & 1) {
-      memcpy(&dst[height * dst_stride], &dst[(height - 1) * dst_stride],
-             sizeof(*dst) * width);
+      AOM_UNSAFE_MEMCPY(&dst[height * dst_stride],
+                        &dst[(height - 1) * dst_stride], sizeof(*dst) * width);
     }
   }
 }
@@ -1010,7 +1014,7 @@ static int add_film_grain_run(const aom_film_grain_t *params, uint8_t *luma,
   int *cr_col_buf;
 
   aom_grain_scaling_lut_t scaling_lut;
-  memset(&scaling_lut, 0, sizeof(scaling_lut));
+  AOM_UNSAFE_MEMSET(&scaling_lut, 0, sizeof(scaling_lut));
 
   aom_grain_rng_t rng;
   rng.random_register = params->random_seed;
@@ -1077,8 +1081,8 @@ static int add_film_grain_run(const aom_film_grain_t *params, uint8_t *luma,
   if (params->chroma_scaling_from_luma) {
     static_assert(sizeof(scaling_lut.cb) == sizeof(scaling_lut.y), "");
     static_assert(sizeof(scaling_lut.cr) == sizeof(scaling_lut.y), "");
-    memcpy(scaling_lut.cb, scaling_lut.y, sizeof(scaling_lut.y));
-    memcpy(scaling_lut.cr, scaling_lut.y, sizeof(scaling_lut.y));
+    AOM_UNSAFE_MEMCPY(scaling_lut.cb, scaling_lut.y, sizeof(scaling_lut.y));
+    AOM_UNSAFE_MEMCPY(scaling_lut.cr, scaling_lut.y, sizeof(scaling_lut.y));
   } else {
     init_scaling_function(params->scaling_points_cb, params->num_cb_points,
                           scaling_lut.cb);

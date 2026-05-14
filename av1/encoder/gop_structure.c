@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2019, Alliance for Open Media. All rights reserved.
  *
@@ -554,17 +556,19 @@ static int construct_multi_layer_gf_structure(
 
   // Initialize gf_group->frame_parallel_level, gf_group->is_frame_non_ref,
   // gf_group->src_offset and gf_group->is_frame_dropped with 0.
-  memset(gf_group->frame_parallel_level, 0,
-         sizeof(gf_group->frame_parallel_level));
-  memset(gf_group->is_frame_non_ref, 0, sizeof(gf_group->is_frame_non_ref));
-  memset(gf_group->src_offset, 0, sizeof(gf_group->src_offset));
-  memset(gf_group->is_frame_dropped, 0, sizeof(gf_group->is_frame_dropped));
+  AOM_UNSAFE_MEMSET(gf_group->frame_parallel_level, 0,
+                    sizeof(gf_group->frame_parallel_level));
+  AOM_UNSAFE_MEMSET(gf_group->is_frame_non_ref, 0,
+                    sizeof(gf_group->is_frame_non_ref));
+  AOM_UNSAFE_MEMSET(gf_group->src_offset, 0, sizeof(gf_group->src_offset));
+  AOM_UNSAFE_MEMSET(gf_group->is_frame_dropped, 0,
+                    sizeof(gf_group->is_frame_dropped));
   // Initialize gf_group->skip_frame_refresh and gf_group->skip_frame_as_ref
   // with INVALID_IDX.
-  memset(gf_group->skip_frame_refresh, INVALID_IDX,
-         sizeof(gf_group->skip_frame_refresh));
-  memset(gf_group->skip_frame_as_ref, INVALID_IDX,
-         sizeof(gf_group->skip_frame_as_ref));
+  AOM_UNSAFE_MEMSET(gf_group->skip_frame_refresh, INVALID_IDX,
+                    sizeof(gf_group->skip_frame_refresh));
+  AOM_UNSAFE_MEMSET(gf_group->skip_frame_as_ref, INVALID_IDX,
+                    sizeof(gf_group->skip_frame_as_ref));
 
   int kf_decomp = cpi->oxcf.kf_cfg.enable_keyframe_filtering > 1;
   // This is a patch that fixes https://crbug.com/aomedia/3163
@@ -697,8 +701,8 @@ static int construct_multi_layer_gf_structure(
       // configuring the LF_UPDATE frames and INTNL_OVERLAY_UPDATE frames.
       int doh_gf_index_map[FIXED_GF_INTERVAL];
       // Initialize doh_gf_index_map with INVALID_IDX.
-      memset(&doh_gf_index_map[0], INVALID_IDX,
-             (sizeof(doh_gf_index_map[0]) * FIXED_GF_INTERVAL));
+      AOM_UNSAFE_MEMSET(&doh_gf_index_map[0], INVALID_IDX,
+                        (sizeof(doh_gf_index_map[0]) * FIXED_GF_INTERVAL));
 
       FRAME_REORDER_INFO arf_frame_stats[REF_FRAMES - 1];
       // Store the stats corresponding to layer 1 frame.

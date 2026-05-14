@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2017, Alliance for Open Media. All rights reserved.
  *
@@ -235,9 +237,10 @@ static uint8_t read_coeffs_txb(const AV1_COMMON *const cm,
   *eob = rec_eob_pos(eob_pt, eob_extra);
 
   if (*eob > 1) {
-    memset(levels_buf, 0,
-           sizeof(*levels_buf) *
-               ((height + TX_PAD_HOR) * (width + TX_PAD_VER) + TX_PAD_END));
+    AOM_UNSAFE_MEMSET(
+        levels_buf, 0,
+        sizeof(*levels_buf) *
+            ((height + TX_PAD_HOR) * (width + TX_PAD_VER) + TX_PAD_END));
   }
 
   {

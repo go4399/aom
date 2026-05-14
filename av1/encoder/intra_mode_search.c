@@ -1,3 +1,5 @@
+#include "config/aom_config.h"
+AOM_ASSUME_UNSAFE_INDEXABLE_ABI
 /*
  * Copyright (c) 2020, Alliance for Open Media. All rights reserved.
  *
@@ -320,7 +322,7 @@ static int rd_pick_filter_intra_sby(const AV1_COMP *const cpi, MACROBLOCK *x,
 void av1_count_colors(const uint8_t *src, int stride, int rows, int cols,
                       int *val_count, int *num_colors) {
   const int max_pix_val = 1 << 8;
-  memset(val_count, 0, max_pix_val * sizeof(val_count[0]));
+  AOM_UNSAFE_MEMSET(val_count, 0, max_pix_val * sizeof(val_count[0]));
   for (int r = 0; r < rows; ++r) {
     for (int c = 0; c < cols; ++c) {
       const int this_val = src[r * stride + c];
@@ -343,9 +345,9 @@ void av1_count_colors_highbd(const uint8_t *src8, int stride, int rows,
   const int max_bin_val = 1 << 8;
   const int max_pix_val = 1 << bit_depth;
   const uint16_t *src = CONVERT_TO_SHORTPTR(src8);
-  memset(bin_val_count, 0, max_bin_val * sizeof(val_count[0]));
+  AOM_UNSAFE_MEMSET(bin_val_count, 0, max_bin_val * sizeof(val_count[0]));
   if (val_count != NULL)
-    memset(val_count, 0, max_pix_val * sizeof(val_count[0]));
+    AOM_UNSAFE_MEMSET(val_count, 0, max_pix_val * sizeof(val_count[0]));
   for (int r = 0; r < rows; ++r) {
     for (int c = 0; c < cols; ++c) {
       /*
@@ -1071,8 +1073,8 @@ int av1_search_palette_mode(IntraModeSearchState *intra_search_state,
   }
 
   av1_copy_array(xd->tx_type_map, best_tx_type_map, ctx->num_4x4_blk);
-  memcpy(color_map, best_palette_color_map,
-         rows * cols * sizeof(best_palette_color_map[0]));
+  AOM_UNSAFE_MEMCPY(color_map, best_palette_color_map,
+                    rows * cols * sizeof(best_palette_color_map[0]));
 
   skippable = rd_stats_y.skip_txfm;
   distortion2 = rd_stats_y.dist;
@@ -1095,9 +1097,10 @@ int av1_search_palette_mode(IntraModeSearchState *intra_search_state,
     mbmi->uv_mode = intra_search_state->mode_uv;
     pmi->palette_size[1] = intra_search_state->pmi_uv.palette_size[1];
     if (pmi->palette_size[1] > 0) {
-      memcpy(pmi->palette_colors + PALETTE_MAX_SIZE,
-             intra_search_state->pmi_uv.palette_colors + PALETTE_MAX_SIZE,
-             2 * PALETTE_MAX_SIZE * sizeof(pmi->palette_colors[0]));
+      AOM_UNSAFE_MEMCPY(
+          pmi->palette_colors + PALETTE_MAX_SIZE,
+          intra_search_state->pmi_uv.palette_colors + PALETTE_MAX_SIZE,
+          2 * PALETTE_MAX_SIZE * sizeof(pmi->palette_colors[0]));
     }
     mbmi->angle_delta[PLANE_TYPE_UV] = intra_search_state->uv_angle_delta;
     skippable = skippable && intra_search_state->skip_uvs;
@@ -1156,8 +1159,8 @@ void av1_search_palette_mode_luma(const AV1_COMP *cpi, MACROBLOCK *x,
   }
 
   av1_copy_array(xd->tx_type_map, best_tx_type_map, ctx->num_4x4_blk);
-  memcpy(color_map, best_palette_color_map,
-         rows * cols * sizeof(best_palette_color_map[0]));
+  AOM_UNSAFE_MEMCPY(color_map, best_palette_color_map,
+                    rows * cols * sizeof(best_palette_color_map[0]));
 
   rd_stats_y.rate += ref_frame_cost;
 
@@ -1429,9 +1432,10 @@ int av1_search_intra_uv_modes_in_interframe(
   mbmi->uv_mode = intra_search_state->mode_uv;
   if (try_palette) {
     pmi->palette_size[1] = intra_search_state->pmi_uv.palette_size[1];
-    memcpy(pmi->palette_colors + PALETTE_MAX_SIZE,
-           intra_search_state->pmi_uv.palette_colors + PALETTE_MAX_SIZE,
-           2 * PALETTE_MAX_SIZE * sizeof(pmi->palette_colors[0]));
+    AOM_UNSAFE_MEMCPY(
+        pmi->palette_colors + PALETTE_MAX_SIZE,
+        intra_search_state->pmi_uv.palette_colors + PALETTE_MAX_SIZE,
+        2 * PALETTE_MAX_SIZE * sizeof(pmi->palette_colors[0]));
   }
   mbmi->angle_delta[PLANE_TYPE_UV] = intra_search_state->uv_angle_delta;
 
@@ -1700,8 +1704,9 @@ int64_t av1_rd_pick_intra_sby_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
         if (mbmi->palette_mode_info.palette_size[0] > 0) {
           uint8_t *color_map_src =
               x->winner_mode_stats[mode_idx].color_index_map;
-          memcpy(color_map_dst, color_map_src,
-                 block_width * block_height * sizeof(*color_map_src));
+          AOM_UNSAFE_MEMCPY(
+              color_map_dst, color_map_src,
+              block_width * block_height * sizeof(*color_map_src));
         }
         // Set params for winner mode evaluation
         set_mode_eval_params(cpi, x, WINNER_MODE_EVAL);
@@ -1720,8 +1725,8 @@ int64_t av1_rd_pick_intra_sby_mode(const AV1_COMP *const cpi, MACROBLOCK *x,
     if (best_mbmi.palette_mode_info.palette_size[0] > 0) {
       uint8_t *color_map_src =
           x->winner_mode_stats[best_mode_idx].color_index_map;
-      memcpy(color_map_dst, color_map_src,
-             block_width * block_height * sizeof(*color_map_src));
+      AOM_UNSAFE_MEMCPY(color_map_dst, color_map_src,
+                        block_width * block_height * sizeof(*color_map_src));
     }
   } else {
     // If previous searches use only the default tx type/no R-D optimization of
