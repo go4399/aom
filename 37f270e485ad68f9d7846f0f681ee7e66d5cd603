@@ -59,6 +59,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dae4180d_8ae11505",
+        "filename": "av1/common/av1_rtcd_defs.pl",
+        "patchSetId": 2
+      },
+      "lineNbr": 463,
+      "author": {
+        "id": 31012
+      },
+      "writtenOn": "2026-05-15T15:06:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ad7029d_585f8ed8",
+      "range": {
+        "startLine": 463,
+        "startChar": 96,
+        "endLine": 463,
+        "endChar": 113
+      },
+      "revId": "37f270e485ad68f9d7846f0f681ee7e66d5cd603",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "67b0cc8d_b739e95b",
@@ -72,6 +96,24 @@
       "writtenOn": "2026-05-14T20:01:09Z",
       "side": 1,
       "message": "This could be bubbled up one more level and the function documented in the header with what the output values are.",
+      "revId": "37f270e485ad68f9d7846f0f681ee7e66d5cd603",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3fedf50b_69c5f910",
+        "filename": "av1/encoder/rd.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1093,
+      "author": {
+        "id": 31012
+      },
+      "writtenOn": "2026-05-15T15:06:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "67b0cc8d_b739e95b",
       "revId": "37f270e485ad68f9d7846f0f681ee7e66d5cd603",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
