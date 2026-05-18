@@ -3,6 +3,23 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "ea0756fb_35d45942",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1013,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-05-18T22:18:51Z",
+      "side": 1,
+      "message": "Optional: The use of `img-\u003emc` here is also incorrect for the same reason. We should use `ctx-\u003eoxcf.color_cfg.matrix_coefficients` instead. See line 1002 for an example.",
+      "revId": "1c426782c842b84eda76e90f3fae48d9d2b250d6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "89e91254_0d01f2a8",
         "filename": "av1/av1_cx_iface.c",
         "patchSetId": 1
@@ -32,6 +49,24 @@
           ]
         }
       ],
+      "revId": "1c426782c842b84eda76e90f3fae48d9d2b250d6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "968a2347_c26a2f25",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1038,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-05-18T22:18:51Z",
+      "side": 1,
+      "message": "We can use the `ERROR` macro:\n\n```\n#define ERROR(str)                  \\\n  do {                              \\\n    ctx-\u003ebase.err_detail \u003d str;     \\\n    return AOM_CODEC_INVALID_PARAM; \\\n  } while (0)\n```",
+      "parentUuid": "89e91254_0d01f2a8",
       "revId": "1c426782c842b84eda76e90f3fae48d9d2b250d6",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
