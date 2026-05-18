@@ -1101,6 +1101,7 @@ int av1_search_palette_mode(IntraModeSearchState *intra_search_state,
     }
     mbmi->angle_delta[PLANE_TYPE_UV] = intra_search_state->uv_angle_delta;
     skippable = skippable && intra_search_state->skip_uvs;
+    // TODO: try weighted distortion approach?
     distortion2 += intra_search_state->dist_uvs;
     rate2 += intra_search_state->rate_uv_intra;
   }

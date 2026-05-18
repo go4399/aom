@@ -732,6 +732,7 @@ int64_t av1_interpolation_filter_search(
                          ? INTERP_SKIP_LUMA_EVAL_CHROMA
                          : INTERP_SKIP_LUMA_SKIP_CHROMA;
 
+  // TODO: try weighted distortion?
   av1_merge_rd_stats(&rd_stats, &rd_stats_luma);
 
   assert(rd_stats.rate >= 0);
