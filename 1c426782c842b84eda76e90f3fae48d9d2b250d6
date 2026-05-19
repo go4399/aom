@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "5d9956c9_b59ea223",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-19T17:30:37Z",
+      "side": 1,
+      "message": "\u003e I\u0027ll also update the documentation in aom_image.h.\n\n-\u003e https://aomedia-review.googlesource.com/c/aom/+/212201",
+      "parentUuid": "dde284cf_06a175a5",
+      "revId": "1c426782c842b84eda76e90f3fae48d9d2b250d6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "ea0756fb_35d45942",
         "filename": "av1/av1_cx_iface.c",
         "patchSetId": 1
