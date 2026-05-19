@@ -1,6 +1,46 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e20c979_07eced36",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-05-19T19:56:59Z",
+      "side": 1,
+      "message": "LGTM. Thanks for documenting this.\n\nI analyzed this code several times before to extract this information. It\u0027s good to finally document it.",
+      "revId": "16f1c458c4ca646e9b81713a4ed1aec5bcad8b59",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cdc4c8de_98dd8601",
+        "filename": "aom/aom_image.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-05-19T19:56:59Z",
+      "side": 1,
+      "message": "Optional: Should we use `aom_codec_enc_cfg_t` instead of `aom_codec_enc_cfg`?",
+      "range": {
+        "startLine": 241,
+        "startChar": 5,
+        "endLine": 241,
+        "endChar": 22
+      },
+      "revId": "16f1c458c4ca646e9b81713a4ed1aec5bcad8b59",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5c5557a2_12431ab0",
@@ -14,6 +54,24 @@
       "writtenOn": "2026-05-19T18:20:32Z",
       "side": 1,
       "message": "Please double check my analysis: we can determine the list of `aom_image_t` struct members the encoder ignores by first analyzing the following code in the `encoder_encode()` function in av1/av1_cx_iface.c:\n\n```\n      YV12_BUFFER_CONFIG sd;\n      res \u003d image2yuvconfig(img, \u0026sd);\n      // When generating a monochrome stream, make |sd| a monochrome image.\n      if (ctx-\u003ecfg.monochrome) {\n        sd.u_buffer \u003d sd.v_buffer \u003d NULL;\n        sd.uv_stride \u003d 0;\n        sd.monochrome \u003d 1;\n      }\n```\n\n`encoder_encode()` won\u0027t use `img` (except to test whether `img` is a null pointer) after that point.\n\nThen, we analyze how the local variable `sd` is used. You will see that the following fields of `sd` are not used:\n* color_primaries\n* transfer_characteristics\n* matrix_coefficients\n* chroma_sample_position\n* color_range\n\nHowever, the `monochrome` field of `sd` is used. But because we set `sd.monochrome` to 1 if `ctx-\u003ecfg.monochrome` is 1, I think we should say that `img-\u003emonochrome` can be 0 or 1 if `ctx-\u003ecfg.monochrome` is 1, but `img-\u003emonochrome` must be 0 if `ctx-\u003ecfg.monochrome` is 0. Sigh.",
+      "revId": "16f1c458c4ca646e9b81713a4ed1aec5bcad8b59",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "575e0c16_c958736a",
+        "filename": "aom/aom_image.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-05-19T19:56:59Z",
+      "side": 1,
+      "message": "Done. James and I analyzed the code together.",
+      "parentUuid": "5c5557a2_12431ab0",
       "revId": "16f1c458c4ca646e9b81713a4ed1aec5bcad8b59",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
