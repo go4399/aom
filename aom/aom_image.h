@@ -209,13 +209,43 @@ typedef struct aom_metadata {
 
 /**\brief Image Descriptor */
 typedef struct aom_image {
-  aom_img_fmt_t fmt;                 /**< Image Format */
-  aom_color_primaries_t cp;          /**< CICP Color Primaries */
-  aom_transfer_characteristics_t tc; /**< CICP Transfer Characteristics */
-  aom_matrix_coefficients_t mc;      /**< CICP Matrix Coefficients */
-  int monochrome;                    /**< Whether image is monochrome */
-  aom_chroma_sample_position_t csp;  /**< chroma sample position */
-  aom_color_range_t range;           /**< Color Range */
+  aom_img_fmt_t fmt; /**< Image Format */
+  /*!\brief CICP Color Primaries
+   *
+   * \attention Only set by the decoder. To control the value used by the
+   * encoder, use the \ref AV1E_SET_COLOR_PRIMARIES codec control.
+   */
+  aom_color_primaries_t cp;
+  /*!\brief CICP Transfer Characteristics
+   *
+   * \attention Only set by the decoder. To control the value used by the
+   * encoder, use the \ref AV1E_SET_TRANSFER_CHARACTERISTICS codec control.
+   */
+  aom_transfer_characteristics_t tc;
+  /*!\brief CICP Matrix Coefficients
+   *
+   * \attention Only set by the decoder. To control the value used by the
+   * encoder, use the \ref AV1E_SET_MATRIX_COEFFICIENTS codec control.
+   */
+  aom_matrix_coefficients_t mc;
+  /*!\brief  Whether image is monochrome
+   *
+   * \attention Only set by the decoder. To control the encoder behavior, set
+   * aom_codec_enc_cfg::monochrome.
+   */
+  int monochrome;
+  /*!\brief Chroma sample position
+   *
+   * \attention Only set by the decoder. To control the value used by the
+   * encoder, use the \ref AV1E_SET_CHROMA_SAMPLE_POSITION codec control.
+   */
+  aom_chroma_sample_position_t csp;
+  /*!\brief Color Range
+   *
+   * \attention Only set by the decoder. To control the value used by the
+   * encoder, use the \ref AV1E_SET_COLOR_RANGE codec control.
+   */
+  aom_color_range_t range;
 
   /* Image storage dimensions */
   unsigned int w;         /**< Stored image width */
