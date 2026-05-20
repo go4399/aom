@@ -187,37 +187,6 @@ static void twopass_update_bpm_factor(AV1_COMP *cpi, int rate_err_tol) {
   // Based on recent history adjust expectations of bits per macroblock.
   double damp_fac = AOMMAX(5.0, rate_err_tol / 10.0);
   double rate_err_factor = 1.0;
-  const double adj_limit = AOMMAX(0.2, (double)(100 - rate_err_tol) / 200.0);
-  const double min_fac = 1.0 - adj_limit;
-  const double max_fac = 1.0 + adj_limit;
-
-#if CONFIG_THREE_PASS
-  if (cpi->third_pass_ctx && cpi->third_pass_ctx->frame_info_count > 0) {
-    int64_t actual_bits = 0;
-    int64_t target_bits = 0;
-    double factor = 0.0;
-    int count = 0;
-    for (int i = 0; i < cpi->third_pass_ctx->frame_info_count; i++) {
-      actual_bits += cpi->third_pass_ctx->frame_info[i].actual_bits;
-      target_bits += cpi->third_pass_ctx->frame_info[i].bits_allocated;
-      factor += cpi->third_pass_ctx->frame_info[i].bpm_factor;
-      count++;
-    }
-
-    if (count == 0) {
-      factor = 1.0;
-    } else {
-      factor /= (double)count;
-    }
-
-    factor *= (double)actual_bits / DOUBLE_DIVIDE_CHECK((double)target_bits);
-
-    if ((twopass->bpm_factor <= 1 && factor < twopass->bpm_factor) ||
-        (twopass->bpm_factor >= 1 && factor > twopass->bpm_factor)) {
-      twopass->bpm_factor = fclamp(factor, min_fac, max_fac);
-    }
-  }
-#endif  // CONFIG_THREE_PASS
 
   int err_estimate = p_rc->rate_error_estimate;
   int64_t bits_left = twopass->bits_left;
@@ -252,6 +221,53 @@ static void twopass_update_bpm_factor(AV1_COMP *cpi, int rate_err_tol) {
   err_estimate = simulate_parallel_frame ? p_rc->temp_rate_error_estimate
                                          : p_rc->rate_error_estimate;
 #endif
+  const double initial_adj_limit = 0.0626;
+  const double abs_err_tol = 60.0;
+  const double step_size = (0.2 - initial_adj_limit) / (100 - abs_err_tol);
+  const double abs_err_till_now =
+      100 *
+      fabs((double)(bits_off_target) / AOMMAX(total_actual_bits, bits_left));
+  double adj_limit_cap = initial_adj_limit;
+
+  // Increase the adj_limit_cap (i.e., allow a swifter adjustment rate) as the
+  // abs_err_till_now increases.
+  if (abs_err_till_now >= abs_err_tol) {
+    adj_limit_cap = AOMMIN(
+        0.2, initial_adj_limit + (abs_err_till_now - abs_err_tol) * step_size);
+  }
+
+  const double adj_limit =
+      AOMMAX(adj_limit_cap, (double)(100 - rate_err_tol) / 200.0);
+  const double min_fac = 1.0 - adj_limit;
+  const double max_fac = 1.0 + adj_limit;
+
+#if CONFIG_THREE_PASS
+  if (cpi->third_pass_ctx && cpi->third_pass_ctx->frame_info_count > 0) {
+    int64_t actual_bits = 0;
+    int64_t target_bits = 0;
+    double factor = 0.0;
+    int count = 0;
+    for (int i = 0; i < cpi->third_pass_ctx->frame_info_count; i++) {
+      actual_bits += cpi->third_pass_ctx->frame_info[i].actual_bits;
+      target_bits += cpi->third_pass_ctx->frame_info[i].bits_allocated;
+      factor += cpi->third_pass_ctx->frame_info[i].bpm_factor;
+      count++;
+    }
+
+    if (count == 0) {
+      factor = 1.0;
+    } else {
+      factor /= (double)count;
+    }
+
+    factor *= (double)actual_bits / DOUBLE_DIVIDE_CHECK((double)target_bits);
+
+    if ((twopass->bpm_factor <= 1 && factor < twopass->bpm_factor) ||
+        (twopass->bpm_factor >= 1 && factor > twopass->bpm_factor)) {
+      twopass->bpm_factor = fclamp(factor, min_fac, max_fac);
+    }
+  }
+#endif  // CONFIG_THREE_PASS
 
   if (p_rc->bits_off_target && total_actual_bits > 0) {
     if (cpi->ppi->lap_enabled) {
@@ -285,8 +301,10 @@ static void twopass_update_bpm_factor(AV1_COMP *cpi, int rate_err_tol) {
   }
 }
 
-static int qbpm_enumerator(int rate_err_tol) {
-  return 1200000 + ((300000 * AOMMIN(75, AOMMAX(rate_err_tol - 25, 0))) / 75);
+static int qbpm_enumerator(int rate_err_tol, double group_weight_factor) {
+  // Use a smaller qbpm_enumerator for the first GOP in normal two pass.
+  return ((group_weight_factor == 1) ? 1050000 : 1125750) +
+         ((300000 * AOMMIN(75, AOMMAX(rate_err_tol - 25, 0))) / 75);
 }
 
 // Similar to find_qindex_by_rate() function in ratectrl.c, but includes
@@ -303,7 +321,7 @@ static int find_qindex_by_rate_with_correction(
     const int mid = (low + high) >> 1;
     const double mid_factor = calc_correction_factor(error_per_mb, mid);
     const double q = av1_convert_qindex_to_q(mid, bit_depth);
-    const int enumerator = qbpm_enumerator(rate_err_tol);
+    const int enumerator = qbpm_enumerator(rate_err_tol, group_weight_factor);
     const uint64_t mid_bits_per_mb =
         (uint64_t)((enumerator * mid_factor * group_weight_factor) / q);
 
