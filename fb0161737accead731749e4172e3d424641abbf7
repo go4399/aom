@@ -16,6 +16,24 @@
       "message": "For the functions with fixed sized arrays in their parameter list the forges were expected. In this case it\u0027s not clear why it was needed, but without it a bounds safety crash would occur with `list-\u003ecnt \u003d\u003d 2`.",
       "revId": "fb0161737accead731749e4172e3d424641abbf7",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6758a7ba_e090fda4",
+        "filename": "aom/src/aom_encoder.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-05-20T20:44:20Z",
+      "side": 1,
+      "message": "\u003e For the functions with fixed sized arrays in their parameter list the forges were expected. In this case it\u0027s not clear why it was needed, but without it a bounds safety crash would occur with `list-\u003ecnt \u003d\u003d 2`.\n\nActually the value used would have been `1`. I only looked at `list-\u003ecnt` in the debugger, which would have been incremented.",
+      "parentUuid": "9ede9696_f4c061db",
+      "revId": "fb0161737accead731749e4172e3d424641abbf7",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
