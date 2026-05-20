@@ -16,6 +16,23 @@
       "message": "Performance results of the encoder are provided below for all resolutions wrt commit [e67178f5](https://aomedia.googlesource.com/aom/+/e67178f5ef15f7568be9f1e162a32b643c6bbd72):\n```\n \t          Instruction Count                   BD-Rate Loss(%)\ncpu   Resolution     Reduction(%)     avg.psnr   ovr.psnr   ssim     vmaf    vmaf_neg\n------------------------------------------------------------------------------------\n 0       LOWRES2       6.134           0.0205     0.0186   0.0412  -0.0860   -0.0666\n 0       MIDRES2       9.235           0.0263     0.0354   0.0197  -0.1821   -0.0829\n 0    SHORTS608P       9.724           0.0248     0.0313   0.0228  -0.0762   -0.0418\n 0    SHORTS720P      12.003           0.0551     0.0601   0.0303  -0.0143    0.0023\n 0   SHORTS1080P      14.316           0.0579     0.0558   0.0194  -0.0803   -0.0265\n 0        HDRES2      10.549          -0.0303    -0.0150   0.0234   0.0854   -0.0054\n 0       Average      10.481           0.0276     0.0327   0.0260  -0.0587   -0.0355\n```\nThe instruction count reduction specified has been measured using command:\n$ `perf stat -e instructions:u ./aomenc …`\n\n Please review.",
       "revId": "b7305bd65c45b387dc785cff2012dfe353d54613",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c142530_18c89fe6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-05-20T18:26:35Z",
+      "side": 1,
+      "message": "Very good tradeoff!",
+      "revId": "b7305bd65c45b387dc785cff2012dfe353d54613",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
