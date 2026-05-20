@@ -16,6 +16,24 @@
       "message": "What was the reason for this change? This easily breaks test scripts.",
       "revId": "b839f927f5d8a448fbcd67b4d434672b9698a3a8",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7e57ea9_ee5dd350",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-05-20T23:59:12Z",
+      "side": 1,
+      "message": "I am sorry this broke your test scripts. It is common to name the CMake build directory as \"build\". When the libaom source tree had a directory named \"build\", the CMake build directory needed to use a different name (such as \"build.aom\") or be created outside the libaom source tree.\n\nHere is the description of this change in the libaom v3.14.0 release notes:\n\n```\nThe `build` directory in the source tree was removed and the original\nbuild/cmake directory was moved up one level. If you use the CMake\ntoolchain files in the original build/cmake/toolchains directory,\nthey are now in the cmake/toolchains directory.\n```",
+      "parentUuid": "4e68a95a_45fe81aa",
+      "revId": "b839f927f5d8a448fbcd67b4d434672b9698a3a8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
