@@ -16,6 +16,24 @@
       "message": "Quality, not performance?",
       "revId": "cc1d36e6f4867f2c2cdc2f3b58bd507bff1a047e",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "88c2eefc_ca0c9507",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 5190
+      },
+      "writtenOn": "2026-05-20T00:11:50Z",
+      "side": 1,
+      "message": "It can cause quality/psnr loss as in the issue. The source_last_TL0 was being reset here on every frame based on the source, instead of using the LAST encoded frame, as intended.",
+      "parentUuid": "40b1a55d_501a6d5b",
+      "revId": "cc1d36e6f4867f2c2cdc2f3b58bd507bff1a047e",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
