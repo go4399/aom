@@ -3773,9 +3773,11 @@ static void write_large_scale_tile_obu(
 
 // Packs information in the obu header for large scale tiles.
 static inline uint32_t pack_large_scale_tiles_in_tg_obus(
-    AV1_COMP *const cpi, uint8_t *const dst,
+    AV1_COMP *const cpi, uint8_t *const dst, size_t dst_size,
     struct aom_write_bit_buffer *saved_wb, uint8_t obu_extension_header,
     int *const largest_tile_id) {
+  // TODO: bug 42302568 - Use dst_size.
+  (void)dst_size;
   AV1_COMMON *const cm = &cpi->common;
   const CommonTileParams *const tiles = &cm->tiles;
   uint32_t total_size = 0;
@@ -3858,7 +3860,16 @@ void av1_pack_tile_info(AV1_COMP *const cpi, ThreadData *const td,
   if (!pack_bs_params->is_last_tile_in_tg) *total_size += 4;
 
   // Pack tile data
-  aom_start_encode(&mode_bc, pack_bs_params->dst + *total_size);
+  if (*total_size >= pack_bs_params->tile_buf_size) {
+    fprintf(stderr,
+            "WTC WTC WTC: av1_pack_tile_info: *total_size=%u, "
+            "pack_bs_params->tile_buf_size=%zu\n",
+            *total_size, pack_bs_params->tile_buf_size);
+    aom_internal_error(td->mb.e_mbd.error_info, AOM_CODEC_ERROR,
+                       "Error writing modes");
+  }
+  aom_start_encode_with_size(&mode_bc, pack_bs_params->dst + *total_size,
+                             pack_bs_params->tile_buf_size - *total_size);
   write_modes(cpi, td, &tile_info, &mode_bc, tile_row, tile_col);
   if (aom_stop_encode(&mode_bc) < 0) {
     aom_internal_error(td->mb.e_mbd.error_info, AOM_CODEC_ERROR,
@@ -3953,11 +3964,11 @@ void av1_accumulate_pack_bs_thread_data(AV1_COMP *const cpi,
 
 // Store information related to each default tile in the OBU header.
 static void write_tile_obu(
-    AV1_COMP *const cpi, uint8_t *const dst, uint32_t *total_size,
-    struct aom_write_bit_buffer *saved_wb, uint8_t obu_extn_header,
-    const FrameHeaderInfo *fh_info, int *const largest_tile_id,
-    unsigned int *max_tile_size, uint32_t *const obu_header_size,
-    uint8_t **tile_data_start) {
+    AV1_COMP *const cpi, uint8_t *const dst, size_t dst_size,
+    uint32_t *total_size, struct aom_write_bit_buffer *saved_wb,
+    uint8_t obu_extn_header, const FrameHeaderInfo *fh_info,
+    int *const largest_tile_id, unsigned int *max_tile_size,
+    uint32_t *const obu_header_size, uint8_t **tile_data_start) {
   AV1_COMMON *const cm = &cpi->common;
   MACROBLOCKD *const xd = &cpi->td.mb.e_mbd;
   const CommonTileParams *const tiles = &cm->tiles;
@@ -3994,6 +4005,7 @@ static void write_tile_obu(
       // info.
       PackBSParams pack_bs_params;
       pack_bs_params.dst = dst;
+      pack_bs_params.tile_buf_size = dst_size;
       pack_bs_params.curr_tg_hdr_size = 0;
       pack_bs_params.is_last_tile_in_tg = is_last_tile_in_tg;
       pack_bs_params.new_tg = new_tg;
@@ -4040,11 +4052,14 @@ static void write_tile_obu(
 // Write total buffer size and related information into the OBU header for
 // default tile case.
 static void write_tile_obu_size(AV1_COMP *const cpi, uint8_t *const dst,
+                                size_t dst_size,
                                 struct aom_write_bit_buffer *saved_wb,
                                 int largest_tile_id, uint32_t *const total_size,
                                 unsigned int max_tile_size,
                                 uint32_t obu_header_size,
                                 uint8_t *tile_data_start) {
+  // TODO(wtc): Use dst_size.
+  (void)dst_size;
   const CommonTileParams *const tiles = &cpi->common.tiles;
 
   // Fill in context_update_tile_id indicating the tile to use for the
@@ -4149,14 +4164,15 @@ static inline uint32_t pack_tiles_in_tg_obus(
                           &max_tile_size, &obu_header_size, &tile_data_start,
                           num_workers);
   } else {
-    write_tile_obu(cpi, dst, &total_size, saved_wb, obu_extension_header,
-                   fh_info, largest_tile_id, &max_tile_size, &obu_header_size,
-                   &tile_data_start);
+    write_tile_obu(cpi, dst, dst_size, &total_size, saved_wb,
+                   obu_extension_header, fh_info, largest_tile_id,
+                   &max_tile_size, &obu_header_size, &tile_data_start);
   }
 
   if (num_tiles > 1)
-    write_tile_obu_size(cpi, dst, saved_wb, *largest_tile_id, &total_size,
-                        max_tile_size, obu_header_size, tile_data_start);
+    write_tile_obu_size(cpi, dst, dst_size, saved_wb, *largest_tile_id,
+                        &total_size, max_tile_size, obu_header_size,
+                        tile_data_start);
   return total_size;
 }
 
@@ -4184,7 +4200,7 @@ static uint32_t write_tiles_in_tg_obus(AV1_COMP *const cpi, uint8_t *const dst,
 
   if (tiles->large_scale)
     return pack_large_scale_tiles_in_tg_obus(
-        cpi, dst, saved_wb, obu_extension_header, largest_tile_id);
+        cpi, dst, dst_size, saved_wb, obu_extension_header, largest_tile_id);
 
   return pack_tiles_in_tg_obus(cpi, dst, dst_size, saved_wb,
                                obu_extension_header, fh_info, largest_tile_id);

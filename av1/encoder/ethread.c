@@ -3007,6 +3007,8 @@ static void init_tile_pack_bs_params(AV1_COMP *const cpi, uint8_t *const dst,
 
   tile_idx = 0;
   // Prepare obu, tile group and frame header of each tile group.
+  fprintf(stderr, "WTC WTC WTC: cpi->num_tg=%d, dst=%p, dst_size=%zu\n",
+          (int)cpi->num_tg, dst, dst_size);
   for (tg_idx = 0; tg_idx < cpi->num_tg; tg_idx++) {
     PackBSParams *const pack_bs_params = &pack_bs_params_arr[tile_idx];
     int is_last_tg = tg_idx == cpi->num_tg - 1;
@@ -3015,6 +3017,14 @@ static void init_tile_pack_bs_params(AV1_COMP *const cpi, uint8_t *const dst,
     tg_buf_size[tg_idx] =
         get_bs_chunk_size(tg_size_mi[tg_idx], frame_size_mi, &remain_buf_size,
                           max_buf_size, is_last_tg);
+    fprintf(stderr,
+            "WTC WTC WTC: tg_idx=%d, tile_dst=%p, tg_buf_size[tg_idx]=%zu\n",
+            tg_idx, tile_dst, tg_buf_size[tg_idx]);
+    if (tg_buf_size[tg_idx] > dst_size ||
+        (size_t)(tile_dst - dst) > dst_size - tg_buf_size[tg_idx]) {
+      aom_internal_error(cm->error, AOM_CODEC_ERROR,
+                         "init_tile_pack_bs_params: output buffer overflow");
+    }
 
     pack_bs_params->dst = tile_dst;
     pack_bs_params->tile_data_curr = tile_dst;
@@ -3055,6 +3065,11 @@ static void init_tile_pack_bs_params(AV1_COMP *const cpi, uint8_t *const dst,
     } else {
       pack_bs_params->dst = tile_dst;
       pack_bs_params->tile_data_curr = tile_data_curr;
+    }
+    if (pack_bs_params->tile_buf_size > dst_size ||
+        (size_t)(tile_dst - dst) > dst_size - pack_bs_params->tile_buf_size) {
+      aom_internal_error(cm->error, AOM_CODEC_ERROR,
+                         "init_tile_pack_bs_params: output buffer overflow");
     }
 
     if (pack_bs_params->is_last_tile_in_tg) tg_idx++;
@@ -3168,10 +3183,12 @@ static void prepare_pack_bs_workers(AV1_COMP *const cpi,
 // Accumulates data after pack bitsteam processing.
 static void accumulate_pack_bs_data(
     AV1_COMP *const cpi, const PackBSParams *const pack_bs_params_arr,
-    uint8_t *const dst, uint32_t *total_size, const FrameHeaderInfo *fh_info,
-    int *const largest_tile_id, unsigned int *max_tile_size,
-    uint32_t *const obu_header_size, uint8_t **tile_data_start,
-    const int num_workers) {
+    uint8_t *const dst, size_t dst_size, uint32_t *total_size,
+    const FrameHeaderInfo *fh_info, int *const largest_tile_id,
+    unsigned int *max_tile_size, uint32_t *const obu_header_size,
+    uint8_t **tile_data_start, const int num_workers) {
+  // TODO(wtc): Use dst_size.
+  (void)dst_size;
   const AV1_COMMON *const cm = &cpi->common;
   const CommonTileParams *const tiles = &cm->tiles;
   const int tile_count = tiles->cols * tiles->rows;
@@ -3186,7 +3203,6 @@ static void accumulate_pack_bs_data(
     // PackBSParams stores all parameters required to pack tile and header
     // info.
     const PackBSParams *const pack_bs_params = &pack_bs_params_arr[tile_idx];
-    uint32_t tile_size = 0;
 
     if (pack_bs_params->new_tg) {
       curr_tg_start = dst + *total_size;
@@ -3201,7 +3217,7 @@ static void accumulate_pack_bs_data(
       *largest_tile_id = tile_idx;
       *max_tile_size = (unsigned int)pack_bs_params->buf.size;
     }
-    tile_size +=
+    uint32_t tile_size =
         (uint32_t)pack_bs_params->buf.size + *pack_bs_params->total_size;
 
     // Pack all the chunks of tile bitstreams together
@@ -3248,9 +3264,9 @@ void av1_write_tile_obu_mt(AV1_COMP *const cpi, uint8_t *const dst,
                           num_workers);
   launch_workers(mt_info, num_workers);
   sync_enc_workers(mt_info, &cpi->common, num_workers);
-  accumulate_pack_bs_data(cpi, pack_bs_params, dst, total_size, fh_info,
-                          largest_tile_id, max_tile_size, obu_header_size,
-                          tile_data_start, num_workers);
+  accumulate_pack_bs_data(cpi, pack_bs_params, dst, dst_size, total_size,
+                          fh_info, largest_tile_id, max_tile_size,
+                          obu_header_size, tile_data_start, num_workers);
 }
 
 // Deallocate memory for CDEF search multi-thread synchronization.

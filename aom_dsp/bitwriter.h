@@ -37,6 +37,7 @@ struct aom_writer {
   uint8_t *buffer;
   od_ec_enc ec;
   uint8_t allow_update_cdf;
+  size_t size;
 };
 
 typedef struct aom_writer aom_writer;
@@ -61,6 +62,7 @@ static inline void init_token_stats(TOKEN_STATS *token_stats) {
 }
 
 void aom_start_encode(aom_writer *w, uint8_t *buffer);
+void aom_start_encode_with_size(aom_writer *w, uint8_t *buffer, size_t size);
 
 // Returns a negative number on error. Caller must check the return value and
 // handle error.

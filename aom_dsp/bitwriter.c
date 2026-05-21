@@ -9,12 +9,21 @@
  * PATENTS file, you can obtain it at www.aomedia.org/license/patent.
  */
 
+#include <stdio.h>
 #include <string.h>
 #include "aom_dsp/bitwriter.h"
 
 void aom_start_encode(aom_writer *w, uint8_t *source) {
   w->buffer = source;
   w->pos = 0;
+  w->size = 0;
+  od_ec_enc_init(&w->ec, 62025);
+}
+
+void aom_start_encode_with_size(aom_writer *w, uint8_t *source, size_t size) {
+  w->buffer = source;
+  w->pos = 0;
+  w->size = size;
   od_ec_enc_init(&w->ec, 62025);
 }
 
@@ -23,7 +32,9 @@ int aom_stop_encode(aom_writer *w) {
   uint32_t bytes;
   unsigned char *data;
   data = od_ec_enc_done(&w->ec, &bytes);
-  if (!data) {
+  if (!data || (w->size != 0 && bytes > w->size)) {
+    fprintf(stderr, "WTC WTC WTC: aom_stop_encode: bytes=%u w->size=%zu\n",
+            bytes, w->size);
     od_ec_enc_clear(&w->ec);
     return -1;
   }
