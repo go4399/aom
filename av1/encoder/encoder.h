@@ -3737,6 +3737,11 @@ typedef struct AV1_COMP {
    * Store TPL stats before propagation
    */
   AomTplGopStats extrc_tpl_gop_stats;
+
+  /*!
+   * If true fills residual pixels outside the actual frame border
+   */
+  bool do_border_pad;
 } AV1_COMP;
 
 /*!
@@ -4280,6 +4285,17 @@ static inline int get_mi_ext_idx(const int mi_row, const int mi_col,
   const int mi_ext_row = mi_row / mi_ext_size_1d;
   const int mi_ext_col = mi_col / mi_ext_size_1d;
   return mi_ext_row * mbmi_ext_stride + mi_ext_col;
+}
+
+static inline void set_pixels_to_frame_edge(MACROBLOCK *x, int width,
+                                            int height, int mi_row, int bh,
+                                            int mi_col, int bw, int mi_rows,
+                                            int mi_cols, bool do_border_pad) {
+  int frame_width = do_border_pad ? width : (mi_cols * 4);
+  int frame_height = do_border_pad ? height : (mi_rows * 4);
+
+  x->pix_to_bottom_edge = frame_height - ((mi_row + bh) << MI_SIZE_LOG2);
+  x->pix_to_right_edge = frame_width - ((mi_col + bw) << MI_SIZE_LOG2);
 }
 
 // Lighter version of set_offsets that only sets the mode info
