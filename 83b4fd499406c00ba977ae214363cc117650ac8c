@@ -1,0 +1,118 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d23c55b_e4d2fc1f",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2026-05-21T00:29:59Z",
+      "side": 1,
+      "message": "Should this number change with rate_err_tol?",
+      "range": {
+        "startLine": 225,
+        "startChar": 15,
+        "endLine": 225,
+        "endChar": 34
+      },
+      "revId": "83b4fd499406c00ba977ae214363cc117650ac8c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ef0c19f_c531c41a",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2026-05-21T00:29:59Z",
+      "side": 1,
+      "message": "It might not be a good idea to use group_weight_factor \u003d\u003d 1 to decide whether this is the first coded GOP. Please consider passing in a parameter like \"use smaller enumerator\".",
+      "range": {
+        "startLine": 306,
+        "startChar": 10,
+        "endLine": 306,
+        "endChar": 36
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "6823122f_08b46e36",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/pass2_strategy.c",
+              "range": {
+                "startLine": 304,
+                "startChar": 0,
+                "endLine": 305,
+                "endChar": 0
+              },
+              "replacement": "static int qbpm_enumerator(int rate_err_tol, int is_first_gop) {\n"
+            },
+            {
+              "path": "av1/encoder/pass2_strategy.c",
+              "range": {
+                "startLine": 306,
+                "startChar": 0,
+                "endLine": 307,
+                "endChar": 0
+              },
+              "replacement": "  return (is_first_gop ? 1050000 : 1125750) +\n"
+            },
+            {
+              "path": "av1/encoder/pass2_strategy.c",
+              "range": {
+                "startLine": 315,
+                "startChar": 0,
+                "endLine": 316,
+                "endChar": 0
+              },
+              "replacement": "    int best_qindex, int worst_qindex, int is_first_gop) {\n"
+            },
+            {
+              "path": "av1/encoder/pass2_strategy.c",
+              "range": {
+                "startLine": 324,
+                "startChar": 0,
+                "endLine": 325,
+                "endChar": 0
+              },
+              "replacement": "    const int enumerator \u003d qbpm_enumerator(rate_err_tol, is_first_gop);\n"
+            },
+            {
+              "path": "av1/encoder/pass2_strategy.c",
+              "range": {
+                "startLine": 1,
+                "startChar": 0,
+                "endLine": 1,
+                "endChar": 0
+              },
+              "replacement": "    const int is_first_gop \u003d (cpi-\u003ecommon.current_frame.frame_number \u003d\u003d 0);\n"
+            },
+            {
+              "path": "av1/encoder/pass2_strategy.c",
+              "range": {
+                "startLine": 387,
+                "startChar": 0,
+                "endLine": 388,
+                "endChar": 0
+              },
+              "replacement": "        rc-\u003ebest_quality, rc-\u003eworst_quality, is_first_gop);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "83b4fd499406c00ba977ae214363cc117650ac8c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
