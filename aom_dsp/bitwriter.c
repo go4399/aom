@@ -9,6 +9,7 @@
  * PATENTS file, you can obtain it at www.aomedia.org/license/patent.
  */
 
+#include <stdio.h>
 #include <string.h>
 #include "aom_dsp/bitwriter.h"
 
@@ -33,6 +34,8 @@ int aom_stop_encode(aom_writer *w) {
   // TODO: bug 42302568 - Remove "w->size != 0 &&" after all aom_start_encode()
   // calls have been converted to aom_start_encode_with_size().
   if (!data || (w->size != 0 && bytes > w->size)) {
+    fprintf(stderr, "WTC WTC WTC: aom_stop_encode: bytes=%u w->size=%zu\n",
+            bytes, w->size);
     od_ec_enc_clear(&w->ec);
     return -1;
   }
