@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "168ba777_87b775ab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 33002
+      },
+      "writtenOn": "2026-05-21T14:43:10Z",
+      "side": 1,
+      "message": "We caught this assert failure while extending the sf `skip_model_rd_uv` to lower speed levels. This issue was not caught by the unit test since the monochrome unit test validates only for speed \u003d 0, while this sf is enabled \u003e\u003d 3.\n\nPlease review.",
+      "revId": "c59e9b71754ec8f09684a73f16a154e41ee5fadf",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
