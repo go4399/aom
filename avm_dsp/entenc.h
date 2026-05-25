@@ -1,0 +1,105 @@
+/*
+ * Copyright (c) 2021, Alliance for Open Media. All rights reserved
+ *
+ * This source code is subject to the terms of the BSD 3-Clause Clear License
+ * and the Alliance for Open Media Patent License 1.0. If the BSD 3-Clause Clear
+ * License was not distributed with this source code in the LICENSE file, you
+ * can obtain it at aomedia.org/license/software-license/bsd-3-c-c/.  If the
+ * Alliance for Open Media Patent License 1.0 was not distributed with this
+ * source code in the PATENTS file, you can obtain it at
+ * aomedia.org/license/patent-license/.
+ */
+
+#ifndef AVM_AVM_DSP_ENTENC_H_
+#define AVM_AVM_DSP_ENTENC_H_
+#include "aom_dsp/entenc.h"
+#include <stddef.h>
+#include "avm_dsp/entcode.h"
+
+#define od_ec_window avm_od_ec_window
+#define od_ec_enc avm_od_ec_enc
+#define od_ec_dec avm_od_ec_dec
+#define od_ec_enc_bits avm_od_ec_enc_bits
+#define od_ec_enc_normalize avm_od_ec_enc_normalize
+#define od_ec_encode_q15 avm_od_ec_encode_q15
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+typedef struct od_ec_enc od_ec_enc;
+
+#define OD_MEASURE_EC_OVERHEAD (0)
+
+/*The entropy encoder context.*/
+struct od_ec_enc {
+  /*Buffered output.
+    This contains only the raw bits until the final call to
+    avm_od_ec_enc_done(), where all the arithmetic-coded data gets prepended to
+    it.*/
+  unsigned char *buf;
+  /*The size of the buffer.*/
+  uint32_t storage;
+  /*A buffer for output bytes with their associated carry flags.*/
+  uint16_t *precarry_buf;
+  /*The size of the pre-carry buffer.*/
+  uint32_t precarry_storage;
+  /*The offset at which the next entropy-coded byte will be written.*/
+  uint32_t offs;
+  /*The low end of the current range.*/
+  od_ec_window low;
+  /*The number of values in the current range.*/
+  uint16_t rng;
+  /*The number of bits of data in the current value.*/
+  int16_t cnt;
+  /*Nonzero if an error occurred.*/
+  int error;
+#if OD_MEASURE_EC_OVERHEAD
+  double entropy;
+  int nb_symbols;
+#endif
+};
+
+/*See entenc.c for further documentation.*/
+
+void avm_od_ec_enc_init(od_ec_enc *enc, uint32_t size) OD_ARG_NONNULL(1);
+void avm_od_ec_enc_reset(od_ec_enc *enc) OD_ARG_NONNULL(1);
+void avm_od_ec_enc_clear(od_ec_enc *enc) OD_ARG_NONNULL(1);
+
+void od_ec_encode_bool_bypass(od_ec_enc *enc, int val) OD_ARG_NONNULL(1);
+void od_ec_encode_literal_bypass(od_ec_enc *enc, int val, int n_bits)
+    OD_ARG_NONNULL(1);
+void avm_od_ec_encode_bool_q15(od_ec_enc *enc, int val, unsigned f_q15)
+    OD_ARG_NONNULL(1);
+void avm_od_ec_encode_cdf_q15(od_ec_enc *enc, int s, const uint16_t *cdf,
+                              int nsyms) OD_ARG_NONNULL(1) OD_ARG_NONNULL(3);
+
+void od_ec_enc_bits(od_ec_enc *enc, uint32_t fl, unsigned ftb)
+    OD_ARG_NONNULL(1);
+
+void od_ec_enc_patch_initial_bits(od_ec_enc *enc, unsigned val, int nbits)
+    OD_ARG_NONNULL(1);
+OD_WARN_UNUSED_RESULT unsigned char *avm_od_ec_enc_done(od_ec_enc *enc,
+                                                        uint32_t *nbytes)
+    OD_ARG_NONNULL(1) OD_ARG_NONNULL(2);
+
+OD_WARN_UNUSED_RESULT int avm_od_ec_enc_tell(const od_ec_enc *enc)
+    OD_ARG_NONNULL(1);
+OD_WARN_UNUSED_RESULT uint64_t avm_od_ec_enc_tell_frac(const od_ec_enc *enc)
+    OD_ARG_NONNULL(1);
+
+void od_ec_enc_checkpoint(od_ec_enc *dst, const od_ec_enc *src);
+void od_ec_enc_rollback(od_ec_enc *dst, const od_ec_enc *src);
+
+#ifdef __cplusplus
+}  // extern "C"
+#endif
+
+#undef od_ec_window
+#undef od_ec_enc
+#undef od_ec_dec
+#undef od_ec_enc_bits
+#undef od_ec_enc_normalize
+#undef od_ec_encode_q15
+
+#endif  // AVM_AVM_DSP_ENTENC_H_

@@ -119,3 +119,5 @@ int16_t aom_rb_read_signed_primitive_refsubexpfin(
   return aom_rb_read_primitive_refsubexpfin(rb, scaled_n, k, ref) - n + 1;
 }
 #endif  // CONFIG_AV1_DECODER
+
+#include "avm_dsp/bitreader_buffer.c"

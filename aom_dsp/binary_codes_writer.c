@@ -104,3 +104,5 @@ int aom_count_signed_primitive_refsubexpfin(uint16_t n, uint16_t k, int16_t ref,
   const uint16_t scaled_n = (n << 1) - 1;
   return aom_count_primitive_refsubexpfin(scaled_n, k, ref, v);
 }
+
+#include "avm_dsp/binary_codes_writer.c"

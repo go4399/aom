@@ -1,0 +1,215 @@
+#ifndef AVM_AVM_AVMDX_H_
+#define AVM_AVM_AVMDX_H_
+
+#include "avm/avm_integer.h"
+#include "aom/aomdx.h"
+#include "avm/avm.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern const avm_codec_iface_t avm_codec_av2_dx_algo;
+extern const avm_codec_iface_t *avm_codec_av2_dx(void);
+
+typedef struct Accounting Accounting;
+typedef void (*avm_inspect_cb)(void *decoder, void *ctx);
+
+typedef struct avm_inspect_init {
+  avm_inspect_cb inspect_cb;
+  avm_inspect_cb inspect_sb_cb;
+  avm_inspect_cb inspect_tip_cb;
+  void *inspect_ctx;
+} avm_inspect_init;
+
+typedef struct {
+  const unsigned char *buf;
+  int idx;
+} Av2DecodeReturn;
+
+#define AVM_MAX_TILE_COLS 64
+#define AVM_MAX_TILE_ROWS 64
+
+typedef struct avm_tile_info {
+  int tile_columns;
+  int tile_rows;
+  int tile_widths[AVM_MAX_TILE_COLS];
+  int tile_heights[AVM_MAX_TILE_ROWS];
+  int num_tile_groups;
+} avm_tile_info;
+
+typedef struct avm_still_picture_info {
+  int is_still_picture;
+  int is_single_picture_header_flag;
+} avm_still_picture_info;
+
+#ifndef AVM_S_FRAME_INFO_DEFINED
+#define AVM_S_FRAME_INFO_DEFINED
+typedef struct avm_s_frame_info {
+  int is_s_frame;
+  int is_s_frame_at_altref;
+} avm_s_frame_info;
+#endif
+
+typedef struct avm_screen_content_tools_info {
+  int allow_screen_content_tools;
+  int allow_intrabc;
+  int force_integer_mv;
+} avm_screen_content_tools_info;
+
+typedef struct av2_ext_ref_frame {
+  avm_image_t *img;
+  int num;
+} av2_ext_ref_frame_t;
+
+#define AVM_DECODER_CTRL_ID_START 200
+
+enum avm_dec_control_id {
+  AVMD_GET_LAST_REF_UPDATES = AVM_DECODER_CTRL_ID_START,
+  AVMD_GET_FRAME_CORRUPTED,
+  AVMD_GET_LAST_REF_USED,
+  AV2D_GET_FRAME_SIZE,
+  AV2D_GET_DISPLAY_SIZE,
+  AV2D_GET_BIT_DEPTH,
+  AV2D_GET_IMG_FORMAT,
+  AV2D_GET_TILE_SIZE,
+  AV2D_GET_TILE_COUNT,
+  AV2_SET_BYTE_ALIGNMENT,
+  AV2_INVERT_TILE_DECODE_ORDER,
+  AV2_SET_SKIP_LOOP_FILTER,
+  AV2_GET_ACCOUNTING,
+  AVMD_GET_LAST_QUANTIZER,
+  AV2D_SET_ROW_MT,
+  AV2D_SET_SELECTED_OPS,
+  AV2D_SET_SUB_BITSTREAM_EXTRACTION,
+  AV2D_SET_SELECTED_LOCAL_OPS,
+  AV2D_SET_OUTPUT_ALL_LAYERS,
+  AV2_SET_INSPECTION_CALLBACK,
+  AV2D_SET_SKIP_FILM_GRAIN,
+  AV2D_SET_RANDOM_ACCESS,
+  AV2D_SET_BRU_OPT_MODE,
+  AVM_DECODER_CTRL_ID_MAX,
+  AVMD_GET_FWD_KF_PRESENT,
+  AVMD_GET_FRAME_FLAGS,
+  AVMD_GET_ALTREF_PRESENT,
+  AVMD_GET_TILE_INFO,
+  AVMD_GET_SCREEN_CONTENT_TOOLS_INFO,
+  AVMD_GET_STILL_PICTURE,
+  AVMD_GET_SB_SIZE,
+  AVMD_GET_SHOW_EXISTING_FRAME_FLAG,
+  AVMD_GET_S_FRAME_INFO,
+  AVMD_GET_FRAME_INFO,
+  AV2D_ENABLE_SUBGOP_STATS,
+  AVMD_INCR_OUTPUT_FRAMES_OFFSET,
+};
+
+#define AVM_CTRL_USE_TYPE AOM_CTRL_USE_TYPE
+
+AVM_CTRL_USE_TYPE(AVMD_GET_LAST_REF_UPDATES, int *)
+#define AVM_CTRL_AVMD_GET_LAST_REF_UPDATES
+
+AVM_CTRL_USE_TYPE(AVMD_GET_FRAME_CORRUPTED, int *)
+#define AVM_CTRL_AVMD_GET_FRAME_CORRUPTED
+
+AVM_CTRL_USE_TYPE(AVMD_GET_LAST_REF_USED, int *)
+#define AVM_CTRL_AVMD_GET_LAST_REF_USED
+
+AVM_CTRL_USE_TYPE(AVMD_GET_LAST_QUANTIZER, int *)
+#define AVM_CTRL_AVMD_GET_LAST_QUANTIZER
+
+AVM_CTRL_USE_TYPE(AVMD_GET_FWD_KF_PRESENT, int *)
+#define AVM_CTRL_AVMD_GET_FWD_KF_PRESENT
+
+AVM_CTRL_USE_TYPE(AVMD_GET_ALTREF_PRESENT, int *)
+#define AVM_CTRL_AVMD_GET_ALTREF_PRESENT
+
+AVM_CTRL_USE_TYPE(AVMD_GET_FRAME_FLAGS, int *)
+#define AVM_CTRL_AVMD_GET_FRAME_FLAGS
+
+AVM_CTRL_USE_TYPE(AVMD_GET_TILE_INFO, avm_tile_info *)
+#define AVM_CTRL_AVMD_GET_TILE_INFO
+
+AVM_CTRL_USE_TYPE(AVMD_GET_SCREEN_CONTENT_TOOLS_INFO,
+                  avm_screen_content_tools_info *)
+#define AVM_CTRL_AVMD_GET_SCREEN_CONTENT_TOOLS_INFO
+
+AVM_CTRL_USE_TYPE(AVMD_GET_STILL_PICTURE, avm_still_picture_info *)
+#define AVM_CTRL_AVMD_GET_STILL_PICTURE
+
+AVM_CTRL_USE_TYPE(AVMD_GET_SB_SIZE, avm_superblock_size_t *)
+#define AVMD_CTRL_AVMD_GET_SB_SIZE
+
+AVM_CTRL_USE_TYPE(AVMD_GET_SHOW_EXISTING_FRAME_FLAG, int *)
+#define AVMD_CTRL_AVMD_GET_SHOW_EXISTING_FRAME_FLAG
+
+AVM_CTRL_USE_TYPE(AVMD_GET_S_FRAME_INFO, avm_s_frame_info *)
+#define AVMD_CTRL_AVMD_GET_S_FRAME_INFO
+
+AVM_CTRL_USE_TYPE(AVMD_GET_FRAME_INFO, void *)
+#define AVMD_CTRL_AVMD_GET_FRAME_INFO
+
+AVM_CTRL_USE_TYPE(AVMD_INCR_OUTPUT_FRAMES_OFFSET, int)
+#define AVMD_CTRL_AVMD_INCR_OUTPUT_FRAMES_OFFSET
+
+AVM_CTRL_USE_TYPE(AV2D_ENABLE_SUBGOP_STATS, unsigned int)
+#define AVMD_CTRL_AV2D_ENABLE_SUBGOP_STATS
+
+AVM_CTRL_USE_TYPE(AV2D_GET_DISPLAY_SIZE, int *)
+#define AVM_CTRL_AV2D_GET_DISPLAY_SIZE
+
+AVM_CTRL_USE_TYPE(AV2D_GET_BIT_DEPTH, unsigned int *)
+#define AVM_CTRL_AV2D_GET_BIT_DEPTH
+
+AVM_CTRL_USE_TYPE(AV2D_GET_IMG_FORMAT, avm_img_fmt_t *)
+#define AVM_CTRL_AV2D_GET_IMG_FORMAT
+
+AVM_CTRL_USE_TYPE(AV2D_GET_TILE_SIZE, unsigned int *)
+#define AVM_CTRL_AV2D_GET_TILE_SIZE
+
+AVM_CTRL_USE_TYPE(AV2D_GET_TILE_COUNT, unsigned int *)
+#define AVM_CTRL_AV2D_GET_TILE_COUNT
+
+AVM_CTRL_USE_TYPE(AV2D_GET_FRAME_SIZE, int *)
+#define AVM_CTRL_AV2D_GET_FRAME_SIZE
+
+AVM_CTRL_USE_TYPE(AV2_INVERT_TILE_DECODE_ORDER, int)
+#define AVM_CTRL_AV2_INVERT_TILE_DECODE_ORDER
+
+AVM_CTRL_USE_TYPE(AV2_GET_ACCOUNTING, Accounting **)
+#define AVM_CTRL_AV2_GET_ACCOUNTING
+
+AVM_CTRL_USE_TYPE(AV2D_SET_ROW_MT, unsigned int)
+#define AVM_CTRL_AV2D_SET_ROW_MT
+
+AVM_CTRL_USE_TYPE(AV2D_SET_SKIP_FILM_GRAIN, int)
+#define AVM_CTRL_AV2D_SET_SKIP_FILM_GRAIN
+
+AVM_CTRL_USE_TYPE(AV2D_SET_RANDOM_ACCESS, int)
+#define AVM_CTRL_AV2D_SET_RANDOM_ACCESS
+
+AVM_CTRL_USE_TYPE(AV2D_SET_BRU_OPT_MODE, int)
+#define AVM_CTRL_AV2D_SET_BRU_OPT_MODE
+
+AVM_CTRL_USE_TYPE(AV2D_SET_SELECTED_OPS, int *)
+#define AVM_CTRL_AV2D_SET_SELECTED_OPS
+
+AVM_CTRL_USE_TYPE(AV2D_SET_SUB_BITSTREAM_EXTRACTION, int)
+#define AVM_CTRL_AV2D_SET_SUB_BITSTREAM_EXTRACTION
+
+AVM_CTRL_USE_TYPE(AV2D_SET_SELECTED_LOCAL_OPS, int *)
+#define AVM_CTRL_AV2D_SET_SELECTED_LOCAL_OPS
+
+AVM_CTRL_USE_TYPE(AV2D_SET_OUTPUT_ALL_LAYERS, int)
+#define AVM_CTRL_AV2D_SET_OUTPUT_ALL_LAYERS
+
+AVM_CTRL_USE_TYPE(AV2_SET_INSPECTION_CALLBACK, avm_inspect_init *)
+#define AVM_CTRL_AV2_SET_INSPECTION_CALLBACK
+
+#define AVM_CODEC_CAP_DECODER AOM_CODEC_CAP_DECODER
+#define AVM_CODEC_CAP_EXTERNAL_FRAME_BUFFER AOM_CODEC_CAP_EXTERNAL_FRAME_BUFFER
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif  // AVM_AVM_AVMDX_H_

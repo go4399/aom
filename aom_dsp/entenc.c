@@ -337,3 +337,5 @@ int od_ec_enc_tell(const od_ec_enc *enc) {
 uint32_t od_ec_enc_tell_frac(const od_ec_enc *enc) {
   return od_ec_tell_frac(od_ec_enc_tell(enc), enc->rng);
 }
+
+#include "avm_dsp/entenc.c"

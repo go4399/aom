@@ -58,3 +58,5 @@ uint16_t aom_read_primitive_refsubexpfin_(aom_reader *r, uint16_t n, uint16_t k,
   return inv_recenter_finite_nonneg(
       n, ref, read_primitive_subexpfin(r, n, k, ACCT_STR_NAME));
 }
+
+#include "avm_dsp/binary_codes_reader.c"

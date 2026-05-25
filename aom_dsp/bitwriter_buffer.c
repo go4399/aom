@@ -134,3 +134,5 @@ void aom_wb_write_signed_primitive_refsubexpfin(struct aom_write_bit_buffer *wb,
   const uint16_t scaled_n = (n << 1) - 1;
   wb_write_primitive_refsubexpfin(wb, scaled_n, k, ref, v);
 }
+
+#include "avm_dsp/bitwriter_buffer.c"

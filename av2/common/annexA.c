@@ -1,0 +1,308 @@
+/*
+ * Copyright (c) 2026, Alliance for Open Media. All rights reserved
+ *
+ * This source code is subject to the terms of the BSD 3-Clause Clear License
+ * and the Alliance for Open Media Patent License 1.0. If the BSD 3-Clause Clear
+ * License was not distributed with this source code in the LICENSE file, you
+ * can obtain it at aomedia.org/license/software-license/bsd-3-c-c/.  If the
+ * Alliance for Open Media Patent License 1.0 was not distributed with this
+ * source code in the PATENTS file, you can obtain it at
+ * aomedia.org/license/patent-license/.
+ */
+
+#include "av2/common/annexA.h"
+#include "avm/internal/avm_codec_internal.h"
+#include "config/avm_config.h"
+#include "av2/common/av2_common_int.h"
+#include "av2/common/blockd.h"
+#include "av2/common/enums.h"
+
+/* clang-format off */
+/*
+//===================================================================================
+// Table A.5: AV2 Multi-Sequence Configurations
+//===================================================================================
+ * ConfigurationID | Configuration Label | Toolset |  BitDepth   | Chroma Format
+ * ----------------|---------------------|---------|-------------|-------------------
+ *       0         | C_Main_420_10       | Main    | 8, 10       |  4:0:0, 4:2:0
+ *       1         | C_Main_422_10       | Main    | 8, 10       |  4:0:0, 4:2:0, 4:2:2
+ *       2         | C_Main_444_10       | Main    | 8, 10       |  4:0:0, 4:2:0, 4:4:4
+ *       3-63      | Reserved            | -       | -           |
+
+ *
+ * Notes:
+ * - ConfigurationID: Identifies the multi-sequence configuration (6-bit value)
+ * - BitDepth: Supported bit depths for this configuration
+ * - Chroma Format: Support chroma subsampling formats
+ */
+/* clang-format on */
+
+typedef enum {
+  C_MAIN_420_10 = 0,  // Main toolset, 8/10-bit, 4:0:0/4:2:0
+  C_MAIN_422_10 = 1,  // Main toolset, 8/10-bit, 4:0:0/4:2:0/4:2:2
+  C_MAIN_444_10 = 2,  // Main toolset, 8/10-bit, 4:0:0/4:2:0/4:4:4
+} AV2_CONFIGURATION_LABEL;
+
+/* clang-format off */
+/*
+//===========================================================================
+// Table A.6: Allowed syntax element values for multi-sequence configurations
+//===========================================================================
+ *  Configuration Label    |   seq_profile_idc    |    chroma_format_idc    |    bit_depth_idc
+ * ------------------------|----------------------|-------------------------|---------------
+ *   C_Main_420_10         | 0..2, 31             | 0 or 1                  | 0 or 1
+ *   C_Main_422_10         | 0..3, 31             | 0, 1, 3                 | 0 or 1
+ *   C_Main_444_10         | 0..2, 4, 31          | 0, 1, 2                 | 0 or 1
+ *
+ * Notes:
+ * - seq_profile_idc: Allowed profile values
+ * - bit_depth_idc: 0=8-bit, 1=10-bit
+ * - chroma_format_idc: chroma format ID
+ */
+
+/*
+//=======================================
+// Table A.3: AV2 interoperability points
+//=======================================
+// Number of interoperability points (0-15)
+
+- INTEROP_0: Max 4 extended, 1 embedded, no combinations
+- INTEROP_1: Max 4 extended, 2 embedded, no combinations
+- INTEROP_2: Max 4 extended, 3 embedded, combinations allowed
+- INTEROP_3-14: Reserved
+- INTEROP_15 (max): Max 31 extended, 8 embedded, combinations allowed
+*/
+/* clang-format on */
+
+typedef enum {
+  INTEROP_0,
+  INTEROP_1,
+  INTEROP_2,
+  INTEROP_3,
+  NUM_INTEROP_POINTS = 16,
+} INTEROP_POINTS;
+
+static const int seq_profile_max_mlayer_cnt[MAX_PROFILES] = {
+  1,
+  2,
+  3,
+  2,
+  2,
+#if CONFIG_TESTONLY_12BIT_SUPPORT
+  MAX_NUM_MLAYERS,
+#endif  // CONFIG_TESTONLY_12BIT_SUPPORT
+};
+
+/* clang-format off */
+/*
+// ===================================
+// Table A.1: AV2 profile definitions
+//===================================
+ *
+ *  Profile Label          |    seq_profile_idc    |    chroma_format_idc    |    bit_depth_idc    |    Interoperability point
+ * -------------------------------------------------------------------------------------------------------------------
+ *  Main_420_10_IP0                   0                  CHROMA_FORMAT_400          0 or 1                        0
+ *                                                       CHROMA_FORMAT_420
+ * -------------------------------------------------------------------------------------------------------------------
+ *  Main_420_10_IP1                   1                  CHROMA_FORMAT_400          0 or 1                        1
+ *                                                       CHROMA_FORMAT_420
+ * --------------------------------------------------------------------------------------------------------------------
+ *  Main_420_10_IP2                   2                  CHROMA_FORMAT_400          0 or 1                        2
+ *                                                       CHROMA_FORMAT_420
+ * --------------------------------------------------------------------------------------------------------------------
+ *  Main_422_10_IP1                   3                  CHROMA_FORMAT_400          0 or 1                        1
+ *                                                       CHROMA_FORMAT_420
+ *                                                       CHROMA_FORMAT_422
+ * ---------------------------------------------------------------------------------------------------------------------
+ *  Main_444_10_IP1                   4                  CHROMA_FORMAT_400          0 or 1                        1
+ *                                                       CHROMA_FORMAT_420
+ *                                                       CHROMA_FORMAT_444
+ * ---------------------------------------------------------------------------------------------------------------------
+ *  Reserved                         5-30
+ * ---------------------------------------------------------------------------------------------------------------------
+ *  Configurable                      31                 CHROMA_FORMAT_400          0 or 1                        -
+ *                                                       CHROMA_FORMAT_420
+ *                                                       CHROMA_FORMAT_422
+ *                                                       CHROMA_FORMAT_444
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+/* clang-format on */
+
+//=================================================================
+// Profile Conformance Functions
+//=================================================================
+// Helper functions
+// Get interoperability point from seq_profile_idc
+// Return -1 for reserved seq_profile_idc values
+
+static INLINE int av2_get_max_mlayer_cnt_from_profile(int seq_profile_idc) {
+  if (seq_profile_idc < 0 || seq_profile_idc >= MAX_PROFILES) return -1;
+  if (seq_profile_idc >= RESERVED_PROFILES_START &&
+      seq_profile_idc < CONFIGURABLE)
+    return -1;
+  if (seq_profile_idc == CONFIGURABLE) return MAX_NUM_MLAYERS;
+  return seq_profile_max_mlayer_cnt[seq_profile_idc];
+}
+
+static int check_bit_depth_8_10(int bit_depth) {
+  if (bit_depth != AVM_BITS_8 && bit_depth != AVM_BITS_10) {
+    return 0;
+  }
+  return 1;
+}
+
+static avm_codec_err_t check_chroma_format(int monochrome, int is_420,
+                                           int is_422, int is_444,
+                                           int allow_420, int allow_422,
+                                           int allow_444) {
+  // Monochrome (4:0:0) is always allowed
+  if (monochrome) {
+    return AVM_CODEC_OK;
+  }
+
+  // Check if the current chroma format is allowed
+  if ((is_420 && allow_420) || (is_422 && allow_422) || (is_444 && allow_444)) {
+    return AVM_CODEC_OK;
+  }
+  return AVM_CODEC_UNSUP_BITSTREAM;
+}
+
+static avm_codec_err_t check_mlayer_count(int profile_idc, int seq_max_mcount) {
+  const int max_allowed_mcount =
+      av2_get_max_mlayer_cnt_from_profile(profile_idc);
+  if (max_allowed_mcount < 0 || seq_max_mcount > max_allowed_mcount) {
+    return AVM_CODEC_UNSUP_BITSTREAM;
+  }
+  return AVM_CODEC_OK;
+}
+
+// Checks the profile conformance -- Top-level function
+int av2_check_profile_interop_conformance(
+    struct SequenceHeader *seq_params,
+    struct avm_internal_error_info *error_info, int is_decoder) {
+  const BITSTREAM_PROFILE profile = seq_params->seq_profile_idc;
+  const avm_bit_depth_t bit_depth = seq_params->bit_depth;
+  const uint8_t monochrome = seq_params->monochrome;
+  const int seq_max_mcount = seq_params->seq_max_mlayer_cnt;
+
+#if CONFIG_TESTONLY_12BIT_SUPPORT
+  if (profile == TEST_ONLY_12BIT_PROFILE && bit_depth == AVM_BITS_12) return 1;
+#endif  // CONFIG_TESTONLY_12BIT_SUPPORT
+
+  uint32_t chroma_format_idc = CHROMA_FORMAT_420;
+  avm_codec_err_t err = av2_get_chroma_format_idc(
+      seq_params->subsampling_x, seq_params->subsampling_y, monochrome,
+      &chroma_format_idc);
+  (void)err;
+
+  const int is_420 = (chroma_format_idc == CHROMA_FORMAT_420);
+  const int is_422 = (chroma_format_idc == CHROMA_FORMAT_422);
+  const int is_444 = (chroma_format_idc == CHROMA_FORMAT_444);
+
+  // All profiles support 8-bit and 10-bit only
+  int is_valid_bit_depth = check_bit_depth_8_10(bit_depth);
+  if (!is_valid_bit_depth) {
+    return 0;
+  }
+
+  switch (profile) {
+    case MAIN_420_10_IP0:
+    case MAIN_420_10_IP1:
+    case MAIN_420_10_IP2:
+      // All 420 profiles: allow only 4:2:0 and monochrome
+      err = check_chroma_format(monochrome, is_420, is_422, is_444,
+                                1 /* allow_420 */, 0 /* allow_422 */,
+                                0 /* allow_444 */);
+      if (err != AVM_CODEC_OK) {
+        avm_internal_error(
+            error_info,
+            is_decoder ? AVM_CODEC_UNSUP_BITSTREAM : AVM_CODEC_INVALID_PARAM,
+            "Profile %d only supports YUV 4:0:0 and YUV 4:2:0 color formats, "
+            "but color format YUV %s was provided.",
+            (BITSTREAM_PROFILE)profile, is_422 ? "4:2:2" : "4:4:4");
+      }
+      break;
+    case MAIN_422_10_IP1:
+      // 422 profile: allow 4:2:0 and 4:2:2 and monochrome
+      err = check_chroma_format(monochrome, is_420, is_422, is_444,
+                                1 /* allow_420 */, 1 /* allow_422 */,
+                                0 /* allow_444 */);
+      if (err != AVM_CODEC_OK) {
+        avm_internal_error(
+            error_info,
+            is_decoder ? AVM_CODEC_UNSUP_BITSTREAM : AVM_CODEC_INVALID_PARAM,
+            "Profile %d only supports YUV 4:0:0, YUV 4:2:0 and YUV 4:2:2 color "
+            "formats, but color format YUV 4:4:4 was provided.",
+            (BITSTREAM_PROFILE)profile);
+      }
+      break;
+    case MAIN_444_10_IP1:
+      // 444 profile: allow 4:2:0, 4:4:4 and monochrome
+      err = check_chroma_format(monochrome, is_420, is_422, is_444,
+                                1 /* allow_420 */, 0 /* allow_422 */,
+                                1 /* allow_444 */);
+      if (err != AVM_CODEC_OK) {
+        avm_internal_error(
+            error_info,
+            is_decoder ? AVM_CODEC_UNSUP_BITSTREAM : AVM_CODEC_INVALID_PARAM,
+            "Profile %d only supports YUV 4:0:0, YUV 4:2:0 and YUV 4:4:4 color "
+            "formats, but color format YUV 4:2:2 was provided.",
+            (BITSTREAM_PROFILE)profile);
+      }
+      break;
+    case CONFIGURABLE: {
+      // Supports all chroma formats
+    } break;
+    default:
+      // Profile 5+ - reserved/unsupported
+      return 0;
+  }
+  // Check if Max mlayer count is valid for IP profiles (seq_profile_idc <=2)
+  err = check_mlayer_count(profile, seq_max_mcount);
+  if (err != AVM_CODEC_OK) {
+    avm_internal_error(
+        error_info,
+        is_decoder ? AVM_CODEC_UNSUP_BITSTREAM : AVM_CODEC_INVALID_PARAM,
+        "Unsupported mlayer count present in the bitstream");
+  }
+  return 1;
+}
+
+/* clang-format off */
+/*
+//==============================================================================================
+// Table A.2: Definition of ProfileScalingFactor, PicSizeProfileFactor, and BitrateProfileFactor
+//==============================================================================================
+*
+* seq_profile_idc or multistream_profile_idc  | ProfileScalingFactor | PicSizeProfileFactor | BitrateProfileFactor |
+* ------------------------------------------------------------------------------------------------------------------
+* 0, 1, 2                                     | 0                    | 15                   | 1.0                  |
+* ------------------------------------------------------------------------------------------------------------------
+* 3                                           | 1                    | 20                   | 1.667                |
+* ------------------------------------------------------------------------------------------------------------------
+* 4                                           | 2                    | 30                   | 2.5                  |
+* ------------------------------------------------------------------------------------------------------------------
+* 31                                          | -                    | -                    | -                    |
+* ------------------------------------------------------------------------------------------------------------------
+
+/* clang-format on */
+
+int get_profile_scaling_factor(int seq_profile_idc) {
+
+  if (seq_profile_idc == MAIN_420_10_IP0 ||
+      seq_profile_idc == MAIN_420_10_IP1 ||
+      seq_profile_idc == MAIN_420_10_IP2) {
+    return 0;
+  }
+
+  if (seq_profile_idc == MAIN_422_10_IP1) {
+    return 1;
+  }
+
+  if (seq_profile_idc == MAIN_444_10_IP1) {
+    return 2;
+  }
+
+  // Default for invalid combinations and Configurable profile
+  return 0;
+}

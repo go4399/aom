@@ -47,3 +47,5 @@ uint32_t od_ec_tell_frac(uint32_t nbits_total, uint32_t rng) {
   }
   return nbits - l;
 }
+
+#include "avm_dsp/entcode.c"
