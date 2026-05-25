@@ -910,12 +910,28 @@ typedef struct aom_codec_enc_cfg {
    *
    * TODO(aomedia:3269): Remove fixed_qp_offsets in libaom v4.0.0.
    */
+#if CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
+  int fixed_qp_offsets[6];
+#else
   int fixed_qp_offsets[5];
+#endif
 
   /*!\brief Options defined per config file
    *
    */
   cfg_options_t encoder_cfg;
+
+#if CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
+  unsigned int enable_sframe;
+  unsigned int sframe_type;
+  unsigned int enable_lcr;
+  unsigned int enable_ops;
+  unsigned int num_ops;
+  unsigned int enable_atlas;
+  int frame_hash_metadata;
+  unsigned int frame_hash_per_plane;
+  unsigned int use_short_metadata;
+#endif
 } aom_codec_enc_cfg_t; /**< alias for struct aom_codec_enc_cfg */
 
 /*!\brief Initialize an encoder instance

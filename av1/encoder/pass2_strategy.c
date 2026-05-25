@@ -1321,11 +1321,11 @@ static void remove_region(int merge, REGIONS *regions, int *num_regions,
 // Insert a region in the cur_region_idx. The start and last should both be in
 // the current region. After insertion, the cur_region_idx will point to the
 // last region that was splitted from the original region.
-static void insert_region(int start, int last, REGION_TYPES type,
+static void insert_region(int start, int last, AV1_REGION_TYPES type,
                           REGIONS *regions, int *num_regions,
                           int *cur_region_idx) {
   int k = *cur_region_idx;
-  REGION_TYPES this_region_type = regions[k].type;
+  AV1_REGION_TYPES this_region_type = regions[k].type;
   int this_region_last = regions[k].last;
   int num_add = (start != regions[k].start) + (last != regions[k].last);
   // move the following regions further to the back
@@ -1416,7 +1416,7 @@ static int find_stable_regions(const FIRSTPASS_STATS *stats,
       count++;
     }
 
-    REGION_TYPES cur_type;
+    AV1_REGION_TYPES cur_type;
     if (count > 0) {
       mean_intra /= (double)count;
       var_intra /= (double)count;
@@ -1467,7 +1467,7 @@ static void cleanup_regions(REGIONS *regions, int *num_regions) {
 // Remove regions that are of type and shorter than length.
 // Merge it with its neighboring regions.
 static void remove_short_regions(REGIONS *regions, int *num_regions,
-                                 REGION_TYPES type, int length) {
+                                 AV1_REGION_TYPES type, int length) {
   int k = 0;
   while (k < *num_regions && (*num_regions) > 1) {
     if ((regions[k].last - regions[k].start + 1 < length &&

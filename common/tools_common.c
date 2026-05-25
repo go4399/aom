@@ -150,6 +150,9 @@ struct CodecInfo {
 #if CONFIG_AV1_ENCODER
 static const struct CodecInfo aom_encoders[] = {
   { &aom_codec_av1_cx, "av1", AV1_FOURCC },
+#if CONFIG_AV2_ENCODER
+  { &avm_codec_av2_cx, "av2", AV2_FOURCC },
+#endif
 };
 
 int get_aom_encoder_count(void) {
@@ -194,6 +197,9 @@ const char *get_short_name_by_aom_encoder(aom_codec_iface_t *iface) {
 #if CONFIG_AV1_DECODER
 static const struct CodecInfo aom_decoders[] = {
   { &aom_codec_av1_dx, "av1", AV1_FOURCC },
+#if CONFIG_AV2_DECODER
+  { &avm_codec_av2_dx, "av2", AV2_FOURCC },
+#endif
 };
 
 int get_aom_decoder_count(void) {
@@ -374,8 +380,8 @@ static void lowbd_img_upshift(aom_image_t *dst, const aom_image_t *src,
   }
 }
 
-void aom_img_upshift(aom_image_t *dst, const aom_image_t *src,
-                     int input_shift) {
+void aom_img_upshift_tool(aom_image_t *dst, const aom_image_t *src,
+                          int input_shift) {
   if (src->fmt & AOM_IMG_FMT_HIGHBITDEPTH) {
     highbd_img_upshift(dst, src, input_shift);
   } else {
@@ -527,7 +533,7 @@ bool aom_shift_img(unsigned int output_bit_depth, aom_image_t **img_ptr,
       img_shifted->csp = img->csp;
     }
     if (output_bit_depth > img->bit_depth) {
-      aom_img_upshift(img_shifted, img, output_bit_depth - img->bit_depth);
+      aom_img_upshift_tool(img_shifted, img, output_bit_depth - img->bit_depth);
     } else {
       aom_img_downshift(img_shifted, img, img->bit_depth - output_bit_depth);
     }

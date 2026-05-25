@@ -93,6 +93,8 @@
 #ifndef AOM_AOM_AOM_CODEC_H_
 #define AOM_AOM_AOM_CODEC_H_
 
+#include "config/aom_config.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -347,7 +349,10 @@ typedef enum aom_bit_depth {
 typedef enum aom_superblock_size {
   AOM_SUPERBLOCK_SIZE_64X64,   /**< Always use 64x64 superblocks. */
   AOM_SUPERBLOCK_SIZE_128X128, /**< Always use 128x128 superblocks. */
-  AOM_SUPERBLOCK_SIZE_DYNAMIC  /**< Select superblock size dynamically. */
+#if CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
+  AOM_SUPERBLOCK_SIZE_256X256, /**< Always use 256x256 superblocks. */
+#endif
+  AOM_SUPERBLOCK_SIZE_DYNAMIC /**< Select superblock size dynamically. */
 } aom_superblock_size_t;
 
 /*
@@ -558,6 +563,64 @@ aom_codec_err_t aom_codec_set_option(aom_codec_ctx_t *ctx, const char *name,
   typedef typ aom_codec_control_type_##id;
 /*!@} end Codec Control group */
 
+#if CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
+/*!\brief OBU types. */
+typedef enum ATTRIBUTE_PACKED {
+  OBU_SEQUENCE_HEADER = 1,
+  OBU_TEMPORAL_DELIMITER = 2,
+  OBU_FRAME_HEADER = 3,
+  OBU_TILE_GROUP = 4,
+  OBU_METADATA = 5,
+  OBU_FRAME = 6,
+  OBU_REDUNDANT_FRAME_HEADER = 7,
+  OBU_TILE_LIST = 8,
+  OBU_METADATA_GROUP = 9,
+  OBU_SWITCH = 10,
+  OBU_LEADING_SEF = 11,
+  OBU_REGULAR_SEF = 12,
+  OBU_LEADING_TIP = 13,
+  OBU_REGULAR_TIP = 14,
+  OBU_BUFFER_REMOVAL_TIMING = 15,
+  OBU_LAYER_CONFIGURATION_RECORD = 16,
+  OBU_ATLAS_SEGMENT = 17,
+  OBU_OPERATING_POINT_SET = 18,
+  OBU_BRIDGE_FRAME = 19,
+  // Multi-stream decoder operation OBU
+  OBU_MULTI_STREAM_DECODER_OPERATION = 20,
+  OBU_RAS_FRAME = 21,
+  OBU_QUANTIZATION_MATRIX = 22,
+  OBU_FILM_GRAIN_MODEL = 23,
+  OBU_CONTENT_INTERPRETATION = 24,
+  OBU_PADDING = 25,
+  NUM_OBU_TYPES = 32  // Also include reserved OBUs.
+} OBU_TYPE;
+
+#define OBU_MULTI_FRAME_HEADER OBU_FRAME_HEADER
+#define OBU_CLOSED_LOOP_KEY OBU_TILE_GROUP
+#define OBU_OPEN_LOOP_KEY OBU_METADATA
+#define OBU_LEADING_TILE_GROUP OBU_FRAME
+#define OBU_REGULAR_TILE_GROUP OBU_REDUNDANT_FRAME_HEADER
+#define OBU_METADATA_SHORT OBU_TILE_LIST
+
+/*!\brief OBU metadata types. */
+typedef enum {
+  OBU_METADATA_TYPE_AOM_RESERVED_0 = 0,
+  OBU_METADATA_TYPE_HDR_CLL = 1,
+  OBU_METADATA_TYPE_HDR_MDCV = 2,
+  OBU_METADATA_TYPE_SCALABILITY = 3,
+  OBU_METADATA_TYPE_ITUT_T35 = 4,
+  OBU_METADATA_TYPE_TIMECODE = 5,
+  OBU_METADATA_TYPE_DECODED_FRAME_HASH = 6,
+  OBU_METADATA_TYPE_BANDING_HINTS = 7,
+  OBU_METADATA_TYPE_ICC_PROFILE = 8,
+  OBU_METADATA_TYPE_SCAN_TYPE = 9,
+  OBU_METADATA_TYPE_TEMPORAL_POINT_INFO = 10,
+  OBU_METADATA_TYPE_USER_DATA_UNREGISTERED = 11,
+  NUM_OBU_METADATA_TYPES = 12,
+} OBU_METADATA_TYPE;
+
+#define OBU_METADATA_TYPE_AVM_RESERVED_0 OBU_METADATA_TYPE_AOM_RESERVED_0
+#else
 /*!\brief OBU types. */
 typedef enum ATTRIBUTE_PACKED {
   OBU_SEQUENCE_HEADER = 1,
@@ -580,6 +643,23 @@ typedef enum {
   OBU_METADATA_TYPE_ITUT_T35 = 4,
   OBU_METADATA_TYPE_TIMECODE = 5,
 } OBU_METADATA_TYPE;
+#endif
+
+/*!\brief AV1 normative OBU type for padding.
+ *
+ * The AV1 specification fixes obu_type 15 for OBU_PADDING. In a combined
+ * AV1+AV2 build the shared OBU_TYPE enum carries AV2's numbering, where
+ * OBU_PADDING == 25 and value 15 denotes an AV2-specific type. AV1's
+ * normative parsing must therefore use this dedicated constant so that AV1
+ * bitstream handling stays bit-exact with the AV1 specification regardless
+ * of whether AV2 is enabled. In an AV1-only build this aliases OBU_PADDING
+ * (== 15), so behavior is unchanged.
+ */
+#if CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
+#define OBU_PADDING_AV1 15
+#else
+#define OBU_PADDING_AV1 OBU_PADDING
+#endif
 
 /*!\brief Returns string representation of OBU_TYPE.
  *

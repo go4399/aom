@@ -114,7 +114,7 @@ typedef enum region_types {
   HIGH_VAR_REGION = 1,
   SCENECUT_REGION = 2,
   BLENDING_REGION = 3,
-} REGION_TYPES;
+} AV1_REGION_TYPES;
 
 typedef struct regions {
   int start;
@@ -124,7 +124,7 @@ typedef struct regions {
   double avg_sr_fr_ratio;
   double avg_intra_err;
   double avg_coded_err;
-  REGION_TYPES type;
+  AV1_REGION_TYPES type;
 } REGIONS;
 
 /*!\endcond */

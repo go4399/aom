@@ -150,6 +150,25 @@ if(CONFIG_AV1_HIGHBITDEPTH)
               "${AOM_ROOT}/aom_dsp/arm/highbd_convolve8_sve.c")
 endif()
 
+# AV2-specific x86 SIMD sources live under aom_dsp/ but must only be built
+# when the AV2 codec is enabled. These files include config/avm_*.h, which is
+# only generated for AV2 builds, so compiling them in an AV1-only build fails.
+if(CONFIG_AV2)
+  list(APPEND AOM_DSP_COMMON_INTRIN_SSE4_1
+              "${AOM_ROOT}/aom_dsp/x86/av2_loopfilter_sse4.c")
+  if(CONFIG_AV1_HIGHBITDEPTH)
+    list(APPEND AOM_DSP_COMMON_INTRIN_SSSE3
+                "${AOM_ROOT}/aom_dsp/x86/av2_highbd_convolve_ssse3.c")
+    list(APPEND AOM_DSP_COMMON_INTRIN_AVX2
+                "${AOM_ROOT}/aom_dsp/x86/av2_highbd_convolve_avx2.c"
+                "${AOM_ROOT}/aom_dsp/x86/av2_intrapred_avx2.c")
+    if(CONFIG_AV1_ENCODER OR CONFIG_AV2_ENCODER)
+      list(APPEND AOM_DSP_ENCODER_INTRIN_AVX2
+                  "${AOM_ROOT}/aom_dsp/x86/av2_sad_highbd_avx2.c")
+    endif()
+  endif()
+endif()
+
 if(CONFIG_AV1_DECODER)
   list(APPEND AOM_DSP_DECODER_SOURCES
               "${AOM_ROOT}/aom_dsp/binary_codes_reader.c"

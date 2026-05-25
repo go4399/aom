@@ -75,6 +75,12 @@ typedef struct aom_codec_stream_info {
   unsigned int number_spatial_layers;  /**< Number of spatial layers */
   unsigned int number_temporal_layers; /**< Number of temporal layers */
   unsigned int is_annexb;              /**< Is Bitstream in Annex-B format */
+#if CONFIG_AV2
+  unsigned int conf_win_left_offset;
+  unsigned int conf_win_right_offset;
+  unsigned int conf_win_top_offset;
+  unsigned int conf_win_bottom_offset;
+#endif
 } aom_codec_stream_info_t;
 
 /* REQUIRED FUNCTIONS

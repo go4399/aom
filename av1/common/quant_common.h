@@ -58,9 +58,12 @@ bool av1_use_qmatrix(const struct CommonQuantParams *quant_params,
 
 // Reduce the large number of quantizers to a smaller number of levels for which
 // different matrices may be defined. This is an increasing function in qindex.
+#ifndef aom_get_qmlevel_defined
+#define aom_get_qmlevel_defined
 static inline int aom_get_qmlevel(int qindex, int first, int last) {
   return first + (qindex * (last + 1 - first)) / QINDEX_RANGE;
 }
+#endif
 
 // QM levels tuned for all intra mode (including still images)
 // This formula was empirically derived by encoding the CID22 validation

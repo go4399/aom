@@ -1090,7 +1090,7 @@ int aom_decode_frame_from_obus(struct AV1Decoder *pbi, const uint8_t *data,
                                           p_data_end, &frame_decoding_finished);
         if (pbi->error.error_code != AOM_CODEC_OK) return -1;
         break;
-      case OBU_PADDING:
+      case OBU_PADDING_AV1:
         decoded_payload_size = read_padding(&pbi->error, data, payload_size);
         if (pbi->error.error_code != AOM_CODEC_OK) return -1;
         break;

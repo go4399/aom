@@ -43,12 +43,18 @@ extern "C" {
 #define av1_zero(dest) memset(&(dest), 0, sizeof(dest))
 #define av1_zero_array(dest, n) memset(dest, 0, n * sizeof(*(dest)))
 
+#ifndef get_unsigned_bits_defined
+#define get_unsigned_bits_defined
 static inline int get_unsigned_bits(unsigned int num_values) {
   return num_values > 0 ? get_msb(num_values) + 1 : 0;
 }
+#endif
 
+#ifndef CHECK_MEM_ERROR_defined
+#define CHECK_MEM_ERROR_defined
 #define CHECK_MEM_ERROR(cm, lval, expr) \
   AOM_CHECK_MEM_ERROR((cm)->error, lval, expr)
+#endif
 
 #define AOM_FRAME_MARKER 0x2
 

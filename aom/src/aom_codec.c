@@ -193,7 +193,14 @@ const char *aom_obu_type_to_string(OBU_TYPE type) {
     case OBU_TILE_GROUP: return "OBU_TILE_GROUP";
     case OBU_METADATA: return "OBU_METADATA";
     case OBU_TILE_LIST: return "OBU_TILE_LIST";
+#if CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
+    // In a combined AV1+AV2 build OBU_PADDING carries AV2's value (25); the
+    // AV1 padding value (15) is named OBU_PADDING_AV1. Handle both so each
+    // codec's padding OBU is labeled correctly. (In an AV1-only build
+    // OBU_PADDING_AV1 aliases OBU_PADDING, so only one case is emitted.)
     case OBU_PADDING: return "OBU_PADDING";
+#endif
+    case OBU_PADDING_AV1: return "OBU_PADDING";
     default: break;
   }
   return "<Invalid OBU Type>";

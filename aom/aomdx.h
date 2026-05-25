@@ -43,6 +43,15 @@ extern aom_codec_iface_t aom_codec_av1_dx_algo;
  */
 extern aom_codec_iface_t *aom_codec_av1_dx(void);
 
+#if CONFIG_AV2_DECODER
+/*!\brief The interface to the AV2 decoder.
+ */
+extern aom_codec_iface_t avm_codec_av2_dx_algo;
+extern aom_codec_iface_t *avm_codec_av2_dx(void);
+#define aom_codec_av2_dx_algo avm_codec_av2_dx_algo
+#define aom_codec_av2_dx avm_codec_av2_dx
+#endif
+
 /*!@} - end algorithm interface member group */
 
 /** Data structure that stores bit accounting for debug
@@ -475,6 +484,47 @@ enum aom_dec_control_id {
    *   maximum
    */
   AOMD_SET_FRAME_SIZE_LIMIT,
+
+#if CONFIG_AV2_DECODER
+  AV2D_GET_FRAME_SIZE,
+  AV2D_GET_DISPLAY_SIZE,
+  AV2D_GET_BIT_DEPTH,
+  AV2D_GET_IMG_FORMAT,
+  AV2D_GET_TILE_SIZE,
+  AV2D_GET_TILE_COUNT,
+  AV2_SET_BYTE_ALIGNMENT,
+  AV2_INVERT_TILE_DECODE_ORDER,
+  AV2_SET_SKIP_LOOP_FILTER,
+  AV2_GET_ACCOUNTING,
+  AVMD_GET_LAST_QUANTIZER,
+  AV2D_SET_ROW_MT,
+  AV2D_SET_SELECTED_OPS,
+  AV2D_SET_SUB_BITSTREAM_EXTRACTION,
+  AV2D_SET_SELECTED_LOCAL_OPS,
+  AV2D_SET_OUTPUT_ALL_LAYERS,
+  AV2_SET_INSPECTION_CALLBACK,
+  AV2D_SET_SKIP_FILM_GRAIN,
+  AV2D_SET_RANDOM_ACCESS,
+  AV2D_SET_BRU_OPT_MODE,
+  AVMD_GET_LAST_REF_UPDATES,
+  AVMD_GET_FRAME_CORRUPTED,
+  AVMD_GET_LAST_REF_USED,
+  AVMD_GET_FWD_KF_PRESENT,
+  AVMD_GET_FRAME_FLAGS,
+  AVMD_GET_ALTREF_PRESENT,
+  AVMD_GET_TILE_INFO,
+  AVMD_GET_SCREEN_CONTENT_TOOLS_INFO,
+  AVMD_GET_STILL_PICTURE,
+  AVMD_GET_SB_SIZE,
+  AVMD_GET_SHOW_EXISTING_FRAME_FLAG,
+  AVMD_GET_S_FRAME_INFO,
+  AVMD_GET_FRAME_INFO,
+  AV2D_ENABLE_SUBGOP_STATS,
+  AVMD_INCR_OUTPUT_FRAMES_OFFSET,
+  AV2_GET_NEW_FRAME_IMAGE,
+  AV2_COPY_NEW_FRAME_IMAGE,
+  AV2_GET_REFERENCE,
+#endif
 };
 
 /*!\cond */
