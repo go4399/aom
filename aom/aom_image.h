@@ -199,12 +199,107 @@ typedef enum aom_metadata_insert_flags {
 /*!\brief Array of aom_metadata structs for an image. */
 typedef struct aom_metadata_array aom_metadata_array_t;
 
+typedef enum avm_metadata_necessity {
+  AVM_NECESSITY_UNDEFINED = 0,
+  AVM_NECESSITY_NECESSARY = 1,
+  AVM_NECESSITY_ADVISORY = 2,
+  AVM_NECESSITY_MIXED = 3,
+} avm_metadata_necessity_t;
+
+typedef enum avm_metadata_application_id {
+  AVM_APPID_UNDEFINED = 0,
+  AVM_APPID_MOBILE_OR_TV = 1,
+  AVM_APPID_MOBILE = 2,
+  AVM_APPID_TV = 3,
+  AVM_APPID_HMD = 4,
+  AVM_APPID_WEARABLE = 5,
+} avm_metadata_application_id_t;
+
+typedef enum avm_metadata_persistence {
+  AVM_GLOBAL_PERSISTENCE = 0,
+  AVM_BASIC_PERSISTENCE = 1,
+  AVM_NO_PERSISTENCE = 2,
+  AVM_ENHANCED_PERSISTENCE = 3,
+} avm_metadata_persistence_t;
+
+typedef enum avm_metadata_layer {
+  AVM_LAYER_UNSPECIFIED = 0,
+  AVM_LAYER_GLOBAL = 1,
+  AVM_LAYER_CURRENT = 2,
+  AVM_LAYER_VALUES = 3,
+} avm_metadata_layer_t;
+
+typedef enum avm_pic_scan_type_t {
+  AVM_SCAN_TYPE_UNSPECIFIED = 0,
+  AVM_SCAN_TYPE_PROGRESSIVE = 1,
+  AVM_SCAN_TYPE_INTERLACE = 2,
+  AVM_SCAN_TYPE_INTERLACE_COMPLEMENTARY = 3,
+  AVM_NUM_SCAN_TYPES = 4,
+} avm_pic_scan_type_t;
+
+typedef enum avm_pic_struct_type_t {
+  AVM_PIC_FRAME = 0,
+  AVM_PIC_TOP_FIELD = 1,
+  AVM_PIC_BOTTOM_FIELD = 2,
+  AVM_PIC_TOP_BOTTOM_FIELD = 3,
+  AVM_PIC_BOTTOM_TOP_FIELD = 4,
+  AVM_PIC_TOP_BOTTOM_TOP_FIELD = 5,
+  AVM_PIC_BOTTOM_TOP_BOTTOM_FIELD = 6,
+  AVM_PIC_FRAME_DOUBLING = 7,
+  AVM_PIC_FRAME_TRIPLING = 8,
+  AVM_PIC_TOP_PREV_BOTTOM_FIELD = 9,
+  AVM_PIC_BOTTOM_PREV_TOP_FIELD = 10,
+  AVM_PIC_TOP_NEXT_TOP_FIELD = 11,
+  AVM_PIC_BOTTOM_NEXT_TOP_FIELD = 12,
+  AVM_NUM_PIC_STRUCT_TYPE = 13,
+} avm_pic_struct_type_t;
+
+typedef struct avm_metadata_pic_struct_t {
+  avm_pic_struct_type_t mps_pic_struct_type;
+  avm_pic_scan_type_t mps_source_scan_type_idc;
+  int mps_duplicate_flag;
+} avm_metadata_pic_struct_t;
+
+typedef struct avm_metadata_temporal_point_info_t {
+  uint32_t mtpi_frame_presentation_time;
+} avm_metadata_temporal_point_info_t;
+
+typedef enum avm_sample_aspect_ratio {
+  AVM_SAR_IDC_UNSPECIFIED = 0,
+  AVM_SAR_IDC_1_TO_1 = 1,
+  AVM_SAR_IDC_12_TO_11 = 2,
+  AVM_SAR_IDC_10_TO_11 = 3,
+  AVM_SAR_IDC_16_TO_11 = 4,
+  AVM_SAR_IDC_40_TO_33 = 5,
+  AVM_SAR_IDC_24_TO_11 = 6,
+  AVM_SAR_IDC_20_TO_11 = 7,
+  AVM_SAR_IDC_32_TO_11 = 8,
+  AVM_SAR_IDC_80_TO_33 = 9,
+  AVM_SAR_IDC_18_TO_11 = 10,
+  AVM_SAR_IDC_15_TO_11 = 11,
+  AVM_SAR_IDC_64_TO_33 = 12,
+  AVM_SAR_IDC_160_TO_99 = 13,
+  AVM_SAR_IDC_4_TO_3 = 14,
+  AVM_SAR_IDC_3_TO_2 = 15,
+  AVM_SAR_IDC_2_TO_1 = 16,
+  AVM_SAR_IDC_255 = 255
+} avm_sample_aspect_ratio_t;
+
 /*!\brief Metadata payload. */
 typedef struct aom_metadata {
   uint32_t type;                           /**< Metadata type */
   uint8_t *payload;                        /**< Metadata payload data */
   size_t sz;                               /**< Metadata payload size */
   aom_metadata_insert_flags_t insert_flag; /**< Metadata insertion flag */
+  uint8_t is_suffix;
+  avm_metadata_necessity_t necessity_idc;
+  avm_metadata_application_id_t application_id;
+  uint8_t cancel_flag;
+  uint8_t priority;
+  avm_metadata_persistence_t persistence_idc;
+  avm_metadata_layer_t layer_idc;
+  uint32_t xlayer_map;
+  uint8_t mlayer_map[31];
 } aom_metadata_t;
 
 /**\brief Image Descriptor */
@@ -311,6 +406,21 @@ typedef struct aom_image {
       *metadata; /**< Metadata payloads associated with the image. */
 
   void *fb_priv; /**< Frame buffer data associated with the image. */
+
+  int w_conf_win_enabled_flag;
+  int w_conf_win_left_offset;
+  int w_conf_win_right_offset;
+  int w_conf_win_top_offset;
+  int w_conf_win_bottom_offset;
+  int max_width;
+  int max_height;
+  int crop_width;
+  int crop_height;
+
+  int mlayer_id;
+  int xlayer_id;
+  int stream_id;
+  int tlayer_id;
 } aom_image_t;   /**< alias for struct aom_image */
 
 /*!\brief Open a descriptor, allocating storage for the underlying image

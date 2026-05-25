@@ -88,7 +88,8 @@ list(APPEND AOM_DSP_COMMON_INTRIN_SSE4_1
             "${AOM_ROOT}/aom_dsp/x86/blend_a64_mask_sse4.c"
             "${AOM_ROOT}/aom_dsp/x86/blend_a64_vmask_sse4.c"
             "${AOM_ROOT}/aom_dsp/x86/intrapred_sse4.c"
-            "${AOM_ROOT}/aom_dsp/x86/intrapred_utils.h")
+            "${AOM_ROOT}/aom_dsp/x86/intrapred_utils.h"
+            "${AOM_ROOT}/avm_dsp/x86/loopfilter_sse4.c")
 
 list(APPEND AOM_DSP_COMMON_INTRIN_AVX2
             "${AOM_ROOT}/aom_dsp/x86/aom_convolve_copy_avx2.c"
@@ -340,7 +341,8 @@ if(CONFIG_AV1_ENCODER)
                 "${AOM_ROOT}/aom_dsp/x86/highbd_adaptive_quantize_avx2.c"
                 "${AOM_ROOT}/aom_dsp/x86/highbd_quantize_intrin_avx2.c"
                 "${AOM_ROOT}/aom_dsp/x86/highbd_sad_avx2.c"
-                "${AOM_ROOT}/aom_dsp/x86/highbd_variance_avx2.c")
+                "${AOM_ROOT}/aom_dsp/x86/highbd_variance_avx2.c"
+                "${AOM_ROOT}/avm_dsp/x86/sad_highbd_avx2.c")
 
     list(APPEND AOM_DSP_ENCODER_INTRIN_SSE4_1
                 "${AOM_ROOT}/aom_dsp/x86/highbd_variance_sse4.c")

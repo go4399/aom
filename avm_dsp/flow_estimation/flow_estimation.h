@@ -1,0 +1,4 @@
+#ifndef AVM_DSP_FLOW_ESTIMATION_FLOW_ESTIMATION_H_
+#define AVM_DSP_FLOW_ESTIMATION_FLOW_ESTIMATION_H_
+#include "aom_dsp/flow_estimation/flow_estimation.h"
+#endif  // AVM_DSP_FLOW_ESTIMATION_FLOW_ESTIMATION_H_
