@@ -36,6 +36,36 @@ typedef uint16_t aom_cdf_prob;
   This function converts from one representation to the other (and is its own
   inverse).*/
 #define AOM_ICDF(x) (CDF_PROB_TOP - (x))
+#define AVM_ICDF AOM_ICDF
+
+#if CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
+#undef CDF_SIZE
+#define CDF_SIZE(x) ((x) + 4)
+
+#define AVM_PARA2(a, b, c) ((a) + 2), ((b) + 3), ((c) + 4)
+#define AVM_PARA3(a, b, c) ((a) + 2), ((b) + 3), ((c) + 4)
+#define AVM_PARA4(a, b, c) ((a) + 3), ((b) + 4), ((c) + 5)
+#define AVM_PARA5(a, b, c) ((a) + 3), ((b) + 4), ((c) + 5)
+#define AVM_PARA6(a, b, c) ((a) + 3), ((b) + 4), ((c) + 5)
+#define AVM_PARA7(a, b, c) ((a) + 3), ((b) + 4), ((c) + 5)
+#define AVM_PARA8(a, b, c) ((a) + 3), ((b) + 4), ((c) + 5)
+
+#define AVM_CDF2(a0) AVM_ICDF(a0), AVM_ICDF(CDF_PROB_TOP), 0
+#define AVM_CDF3(a0, a1) AVM_ICDF(a0), AVM_ICDF(a1), AVM_ICDF(CDF_PROB_TOP), 0
+#define AVM_CDF4(a0, a1, a2) \
+  AVM_ICDF(a0), AVM_ICDF(a1), AVM_ICDF(a2), AVM_ICDF(CDF_PROB_TOP), 0
+#define AVM_CDF5(a0, a1, a2, a3) \
+  AVM_ICDF(a0), AVM_ICDF(a1), AVM_ICDF(a2), AVM_ICDF(a3), AVM_ICDF(CDF_PROB_TOP), 0
+#define AVM_CDF6(a0, a1, a2, a3, a4)                        \
+  AVM_ICDF(a0), AVM_ICDF(a1), AVM_ICDF(a2), AVM_ICDF(a3), AVM_ICDF(a4), \
+  AVM_ICDF(CDF_PROB_TOP), 0
+#define AVM_CDF7(a0, a1, a2, a3, a4, a5)                                  \
+  AVM_ICDF(a0), AVM_ICDF(a1), AVM_ICDF(a2), AVM_ICDF(a3), AVM_ICDF(a4), AVM_ICDF(a5), \
+  AVM_ICDF(CDF_PROB_TOP), 0
+#define AVM_CDF8(a0, a1, a2, a3, a4, a5, a6)                              \
+  AVM_ICDF(a0), AVM_ICDF(a1), AVM_ICDF(a2), AVM_ICDF(a3), AVM_ICDF(a4), AVM_ICDF(a5), \
+  AVM_ICDF(a6), AVM_ICDF(CDF_PROB_TOP), 0
+#endif
 
 #define AOM_CDF2(a0) AOM_ICDF(a0), AOM_ICDF(CDF_PROB_TOP), 0
 #define AOM_CDF3(a0, a1) AOM_ICDF(a0), AOM_ICDF(a1), AOM_ICDF(CDF_PROB_TOP), 0

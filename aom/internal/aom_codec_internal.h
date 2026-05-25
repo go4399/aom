@@ -329,6 +329,10 @@ struct aom_codec_priv {
     unsigned int cx_data_pad_after;
     aom_codec_cx_pkt_t cx_data_pkt;
   } enc;
+
+#if CONFIG_AV2
+  uint16_t ibp_directional_weights[16][16][17];
+#endif
 };
 
 #define CAST(id, arg) va_arg((arg), aom_codec_control_type_##id)

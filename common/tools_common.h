@@ -77,6 +77,7 @@ typedef long FileOffset; /* NOLINT */
 #define DETECT_BUF_SZ 34  // Max of the above header sizes
 
 #define AV1_FOURCC 0x31305641
+#define AV2_FOURCC 0x32305641
 
 enum VideoFileType {
   FILE_TYPE_OBU,
@@ -186,7 +187,8 @@ void aom_img_write(const aom_image_t *img, FILE *file);
 bool aom_img_read(aom_image_t *img, FILE *file);
 
 double sse_to_psnr(double samples, double peak, double mse);
-void aom_img_upshift(aom_image_t *dst, const aom_image_t *src, int input_shift);
+void aom_img_upshift_tool(aom_image_t *dst, const aom_image_t *src, int input_shift);
+#define aom_img_upshift aom_img_upshift_tool
 void aom_img_downshift(aom_image_t *dst, const aom_image_t *src,
                        int down_shift);
 // Returns true on success, false on failure.

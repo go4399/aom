@@ -58,6 +58,15 @@ extern aom_codec_iface_t aom_codec_av1_cx_algo;
 /*!\brief The interface to the AV1 encoder.
  */
 extern aom_codec_iface_t *aom_codec_av1_cx(void);
+
+#if CONFIG_AV2_ENCODER
+/*!\brief The interface to the AV2 encoder.
+ */
+extern aom_codec_iface_t avm_codec_av2_cx_algo;
+extern aom_codec_iface_t *avm_codec_av2_cx(void);
+#define aom_codec_av2_cx_algo avm_codec_av2_cx_algo
+#define aom_codec_av2_cx avm_codec_av2_cx
+#endif
 /*!@} - end algorithm interface member group */
 
 /*
@@ -1646,6 +1655,40 @@ enum aome_enc_control_id {
    * set this parameter to 0/1. The default value is set to be 1.
    */
   AOME_SET_VALIDATE_HBD_INPUT = 175,
+
+#if CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
+  AV2E_GET_SUB_GOP_CONFIG = 180,
+  AV2E_GET_FRAME_TYPE = 181,
+  AV2E_GET_FRAME_INFO = 182,
+  AV2E_ENABLE_SUBGOP_STATS = 183,
+  AV2E_SET_ENABLE_BRU = 184,
+  AV2E_GET_ENABLE_BRU = 185,
+  AV2E_SET_ENABLE_EXPLICIT_REF_FRAME_MAP = 186,
+  AV2E_SET_ENABLE_BUFFER_REFRESH_TEST = 187,
+  AV2E_SET_ENABLE_FLAG_MULTI_LAYER_LAG_TEST = 188,
+  AV2E_SET_ADD_SEF_FOR_HIDDEN_FRAMES = 189,
+  AV2E_SET_MONOTONIC_OUTPUT_ORDER = 190,
+  AV2E_SET_FORCE_DEFERRED_FRAMES_FOR_RAS_TEST = 191,
+  AV2E_SET_SUBGOP_CONFIG_STR = 192,
+  AV2E_SET_SUBGOP_CONFIG_PATH = 193,
+  AVME_SET_MLAYER_ID = 194,
+  AVME_SET_NUMBER_MLAYERS = 195,
+  AVME_SET_NUMBER_TLAYERS = 196,
+  AVME_SET_TLAYER_ID = 197,
+  AV2E_SET_ENABLE_DEBLOCKING = 198,
+  AV2E_SET_ENABLE_GDF = 199,
+  AV2E_SET_GDF_UNIT_SIZE_MATCHES_SB = 200,
+  AV2E_SET_ENABLE_TRELLIS_QUANT = 201,
+  AV2E_SET_USER_DEFINED_QMATRIX = 202,
+  AV2E_SET_FRAME_MULTI_QMATRIX_UNIT_TEST = 203,
+  AV2E_SET_SEF_WITH_ORDER_HINT_TEST = 204,
+  AV2E_SET_MULTI_SEQ_HEADER_TEST = 205,
+  AV2E_SET_ENABLE_CDF_AVERAGING = 206,
+  AV2E_SET_ENABLE_SFRAME = 207,
+  AV2E_SET_ENABLE_INTRA_DIP = 208,
+  AV2E_SET_FILM_GRAIN_BLOCK_SIZE = 209,
+  AVME_SET_QP = 210,
+#endif
 
   // Any new encoder control IDs should be added above.
   // Maximum allowed encoder control ID is 229.

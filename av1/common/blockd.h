@@ -491,7 +491,9 @@ typedef struct macroblockd_plane {
 /*!\endcond */
 
 /*!\brief Parameters related to Wiener Filter */
-typedef struct {
+#ifndef WienerInfo_defined
+#define WienerInfo_defined
+typedef struct WienerInfo {
   /*!
    * Vertical filter kernel.
    */
@@ -502,9 +504,12 @@ typedef struct {
    */
   DECLARE_ALIGNED(16, InterpKernel, hfilter);
 } WienerInfo;
+#endif
 
 /*!\brief Parameters related to Sgrproj Filter */
-typedef struct {
+#ifndef SgrprojInfo_defined
+#define SgrprojInfo_defined
+typedef struct SgrprojInfo {
   /*!
    * Parameter index.
    */
@@ -515,6 +520,7 @@ typedef struct {
    */
   int xqd[2];
 } SgrprojInfo;
+#endif
 
 /*!\cond */
 

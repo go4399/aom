@@ -86,6 +86,14 @@ static inline __m128i xx_set2_epi16(int16_t a, int16_t b) {
   return _mm_setr_epi16(a, b, a, b, a, b, a, b);
 }
 
+static inline __m128i xx_set_64_from_32i(int32_t e1, int32_t e0) {
+  return _mm_set_epi64x((uint32_t)e1, (uint32_t)e0);
+}
+
+static inline __m128i xx_set1_64_from_32i(int32_t a) {
+  return _mm_set1_epi64x((uint32_t)a);
+}
+
 static inline __m128i xx_round_epu16(__m128i v_val_w) {
   return _mm_avg_epu16(v_val_w, _mm_setzero_si128());
 }
