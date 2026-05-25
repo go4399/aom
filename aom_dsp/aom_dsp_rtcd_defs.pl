@@ -1744,4 +1744,86 @@ if (aom_config("CONFIG_AV1_ENCODER") eq "yes") {
 
 }  # CONFIG_AV1_ENCODER
 
+if (aom_config("CONFIG_AV2") eq "yes") {
+  add_proto qw/void avm_highbd_lpf_horizontal_generic/, "uint16_t *s, int pitch, int filt_width_neg, int filt_width_pos, const uint16_t *q_thresh, const uint16_t *side_thresh, int bd, int is_lossless_neg, int is_lossless_pos";
+  specialize qw/avm_highbd_lpf_horizontal_generic sse4_1/;
+
+  add_proto qw/void avm_highbd_lpf_vertical_generic/, "uint16_t *s, int pitch, int filt_width_neg, int filt_width_pos, const uint16_t *q_thresh, const uint16_t *side_thresh, int bd, int is_lossless_neg, int is_lossless_pos";
+  specialize qw/avm_highbd_lpf_vertical_generic sse4_1/;
+
+  add_proto qw/void avm_highbd_convolve8/, "const uint16_t *src, ptrdiff_t src_stride, uint16_t *dst, ptrdiff_t dst_stride, const InterpKernel *filter, int x0_q4, int x_step_q4, int y0_q4, int y_step_q4, int w, int h, int bd";
+
+  add_proto qw/unsigned int avm_highbd_sad8x8_ds/, "const uint16_t *src_ptr, int src_stride, const uint16_t *ref_ptr, int ref_stride";
+  specialize qw/avm_highbd_sad8x8_ds avx2/;
+
+  add_proto qw/unsigned int avm_highbd_sad16x16_ds/, "const uint16_t *src_ptr, int src_stride, const uint16_t *ref_ptr, int ref_stride";
+  specialize qw/avm_highbd_sad16x16_ds avx2/;
+
+  add_proto qw/unsigned int avm_highbd_sad16x8_ds/, "const uint16_t *src_ptr, int src_stride, const uint16_t *ref_ptr, int ref_stride";
+  specialize qw/avm_highbd_sad16x8_ds avx2/;
+
+  add_proto qw/unsigned int avm_highbd_sad8x16_ds/, "const uint16_t *src_ptr, int src_stride, const uint16_t *ref_ptr, int ref_stride";
+  specialize qw/avm_highbd_sad8x16_ds avx2/;
+
+  add_proto qw/unsigned int avm_highbd_sad12x20_ds/, "const uint16_t *src_ptr, int src_stride, const uint16_t *ref_ptr, int ref_stride";
+  specialize qw/avm_highbd_sad12x20_ds avx2/;
+
+  add_proto qw/unsigned int avm_highbd_sad20x12_ds/, "const uint16_t *src_ptr, int src_stride, const uint16_t *ref_ptr, int ref_stride";
+  specialize qw/avm_highbd_sad20x12_ds avx2/;
+
+  add_proto qw/unsigned int avm_highbd_sad12x12_ds/, "const uint16_t *src_ptr, int src_stride, const uint16_t *ref_ptr, int ref_stride";
+  specialize qw/avm_highbd_sad12x12_ds avx2/;
+
+  add_proto qw/unsigned int avm_highbd_sad20x20_ds/, "const uint16_t *src_ptr, int src_stride, const uint16_t *ref_ptr, int ref_stride";
+  specialize qw/avm_highbd_sad20x20_ds avx2/;
+
+  # Dynamic AV2 Intra Predictors Generation
+  my @av2_tx_dims = (4, 8, 16, 32, 64);
+  my @av2_tx_sizes = ();
+  foreach my $w (@av2_tx_dims) {
+    push @av2_tx_sizes, [$w, $w];
+    foreach my $h (@av2_tx_dims) {
+      push @av2_tx_sizes, [$w, $h] if ($w >= 4 && $h >= 4 && ($w == 2 * $h || $h == 2 * $w));
+      push @av2_tx_sizes, [$w, $h] if ($w >= 4 && $h >= 4 && ($w == 4 * $h || $h == 4 * $w));
+      push @av2_tx_sizes, [$w, $h] if ($w >= 4 && $h >= 4 && ($w == 8 * $h || $h == 8 * $w));
+      push @av2_tx_sizes, [$w, $h] if ($w >= 4 && $h >= 4 && ($w == 16 * $h || $h == 16 * $w));
+    }
+  }
+
+  my @av2_pred_names = qw/ibp_dc ibp_dc_top ibp_dc_left/;
+  foreach (@av2_tx_sizes) {
+    my ($w, $h) = @$_;
+    foreach my $pred_name (@av2_pred_names) {
+      add_proto "void", "aom_highbd_${pred_name}_predictor_${w}x${h}",
+                "uint16_t *dst, ptrdiff_t y_stride, const uint16_t *above, const uint16_t *left, int bd";
+    }
+  }
+
+  # Register standard predictors for all additional AV2 sizes
+  my @extra_sizes = (
+    [4, 32], [32, 4], [8, 64], [64, 8], [4, 64], [64, 4]
+  );
+  my @standard_pred_names = qw/v h paeth smooth smooth_v smooth_h dc_128 dc_top dc_left dc/;
+  foreach (@extra_sizes) {
+    my ($w, $h) = @$_;
+    foreach my $pred_name (@standard_pred_names) {
+      add_proto "void", "aom_highbd_${pred_name}_predictor_${w}x${h}",
+                "uint16_t *dst, ptrdiff_t y_stride, const uint16_t *above, const uint16_t *left, int bd";
+    }
+  }
+  # Register standard highbd SAD for additional AV2 sizes
+  add_proto qw/unsigned int avm_highbd_sad12x12/, "const uint16_t *src_ptr, int src_stride, const uint16_t *ref_ptr, int ref_stride";
+  specialize qw/avm_highbd_sad12x12 avx2/;
+
+  add_proto qw/unsigned int avm_highbd_sad20x12/, "const uint16_t *src_ptr, int src_stride, const uint16_t *ref_ptr, int ref_stride";
+  specialize qw/avm_highbd_sad20x12 avx2/;
+
+  add_proto qw/unsigned int avm_highbd_sad12x20/, "const uint16_t *src_ptr, int src_stride, const uint16_t *ref_ptr, int ref_stride";
+  specialize qw/avm_highbd_sad12x20 avx2/;
+
+  add_proto qw/unsigned int avm_highbd_sad20x20/, "const uint16_t *src_ptr, int src_stride, const uint16_t *ref_ptr, int ref_stride";
+  specialize qw/avm_highbd_sad20x20 avx2/;
+}
+
 1;
+

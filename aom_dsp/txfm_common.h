@@ -23,30 +23,47 @@
 
 // block transform size
 enum {
-  TX_4X4,             // 4x4 transform
-  TX_8X8,             // 8x8 transform
-  TX_16X16,           // 16x16 transform
-  TX_32X32,           // 32x32 transform
-  TX_64X64,           // 64x64 transform
-  TX_4X8,             // 4x8 transform
-  TX_8X4,             // 8x4 transform
-  TX_8X16,            // 8x16 transform
-  TX_16X8,            // 16x8 transform
-  TX_16X32,           // 16x32 transform
-  TX_32X16,           // 32x16 transform
-  TX_32X64,           // 32x64 transform
-  TX_64X32,           // 64x32 transform
-  TX_4X16,            // 4x16 transform
-  TX_16X4,            // 16x4 transform
-  TX_8X32,            // 8x32 transform
-  TX_32X8,            // 32x8 transform
-  TX_16X64,           // 16x64 transform
-  TX_64X16,           // 64x16 transform
+  TX_4X4,    // 4x4 transform
+  TX_8X8,    // 8x8 transform
+  TX_16X16,  // 16x16 transform
+  TX_32X32,  // 32x32 transform
+  TX_64X64,  // 64x64 transform
+  TX_4X8,    // 4x8 transform
+  TX_8X4,    // 8x4 transform
+  TX_8X16,   // 8x16 transform
+  TX_16X8,   // 16x8 transform
+  TX_16X32,  // 16x32 transform
+  TX_32X16,  // 32x16 transform
+  TX_32X64,  // 32x64 transform
+  TX_64X32,  // 64x32 transform
+  TX_4X16,   // 4x16 transform
+  TX_16X4,   // 16x4 transform
+  TX_8X32,   // 8x32 transform
+  TX_32X8,   // 32x8 transform
+  TX_16X64,  // 16x64 transform
+  TX_64X16,  // 64x16 transform
+#if CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
+  TX_SIZES_ALL_AV1 = 19,
+  TX_4X32 = 19,  // 4x32 transform
+  TX_32X4,  // 32x4 transform
+  TX_8X64,  // 8x64 transform
+  TX_64X8,  // 64x8 transform
+  TX_4X64,  // 4x64 transform
+  TX_64X4,  // 64x4 transform
+  TX_SIZES_ALL_AV2,
+#else
   TX_SIZES_ALL,       // Includes rectangular transforms
+#endif
   TX_SIZES = TX_4X8,  // Does NOT include rectangular transforms
   TX_SIZES_LARGEST = TX_64X64,
   TX_INVALID = 255  // Invalid transform size
 } UENUM1BYTE(TX_SIZE);
+
+#if CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
+#ifndef TX_SIZES_ALL
+#define TX_SIZES_ALL TX_SIZES_ALL_AV1
+#endif
+#endif
 
 enum {
   DCT_DCT,            // DCT in both horizontal and vertical
@@ -83,6 +100,16 @@ enum {
   EXT_TX_SET_DTT9_IDTX_1DDCT,
   // Discrete Trig transforms w/ flip (9) + Identity (1) + 1D Hor/Ver (6)
   EXT_TX_SET_ALL16,
+#if CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
+  // DCT_DCT + ADST_DCT/DCT_ADST + FLIPADST_DCT/DCT_FLIPADST + H_DCT/V_DCT
+  EXT_TX_SET_LONG_SIDE_64,
+  // DCT_DCT + Identity + ADST_DCT/DCT_ADST + FLIPADST_DCT/DCT_FLIPADST +
+  // H_DCT/V_DCT
+  EXT_TX_SET_LONG_SIDE_32,
+  EXT_NEW_TX_SET,
+  // DCT + Identity (1) + 1D Hor/vert DCT (2)
+  EXT_TX_SET_DCT_IDTX_IDDCT,
+#endif
   EXT_TX_SET_TYPES
 } UENUM1BYTE(TxSetType);
 
@@ -98,6 +125,15 @@ typedef struct txfm_param {
   TxSetType tx_set_type;
   // for inverse transforms only
   int eob;
+#if CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
+  TX_TYPE sec_tx_set_idx;
+  TX_TYPE sec_tx_set;
+  TX_TYPE sec_tx_type;
+  int intra_mode;
+  int is_inter;
+  int use_ddt;
+  int cctx_type;
+#endif
 } TxfmParam;
 
 // Constants:

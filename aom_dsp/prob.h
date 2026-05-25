@@ -28,7 +28,9 @@ extern "C" {
 
 typedef uint16_t aom_cdf_prob;
 
+#ifndef CDF_SIZE
 #define CDF_SIZE(x) ((x) + 1)
+#endif
 #define CDF_PROB_BITS 15
 #define CDF_PROB_TOP (1 << CDF_PROB_BITS)
 /*The value stored in an iCDF is CDF_PROB_TOP minus the actual cumulative
@@ -36,6 +38,8 @@ typedef uint16_t aom_cdf_prob;
   This function converts from one representation to the other (and is its own
   inverse).*/
 #define AOM_ICDF(x) (CDF_PROB_TOP - (x))
+#define AVM_ICDF AOM_ICDF
+
 
 #define AOM_CDF2(a0) AOM_ICDF(a0), AOM_ICDF(CDF_PROB_TOP), 0
 #define AOM_CDF3(a0, a1) AOM_ICDF(a0), AOM_ICDF(a1), AOM_ICDF(CDF_PROB_TOP), 0

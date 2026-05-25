@@ -36,7 +36,10 @@ struct yv12_buffer_config;
 struct NN_CONFIG;
 typedef struct NN_CONFIG NN_CONFIG;
 
+#ifndef ACTIVATION_defined
+#define ACTIVATION_defined
 enum { NONE, RELU, SOFTSIGN, SIGMOID } UENUM1BYTE(ACTIVATION);
+#endif
 #if CONFIG_NN_V2
 enum { SOFTMAX_CROSS_ENTROPY } UENUM1BYTE(LOSS);
 struct NN_CONFIG_V2;

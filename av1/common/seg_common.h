@@ -26,6 +26,8 @@ extern "C" {
 #define SEG_TEMPORAL_PRED_CTXS 3
 #define SPATIAL_PREDICTION_PROBS 3
 
+#ifndef SEG_LVL_FEATURES_defined
+#define SEG_LVL_FEATURES_defined
 enum {
   SEG_LVL_ALT_Q,       // Use alternate Quantizer ....
   SEG_LVL_ALT_LF_Y_V,  // Use alternate loop filter value on y plane vertical
@@ -37,7 +39,10 @@ enum {
   SEG_LVL_GLOBALMV,
   SEG_LVL_MAX
 } UENUM1BYTE(SEG_LVL_FEATURES);
+#endif
 
+#ifndef struct_segmentation_defined
+#define struct_segmentation_defined
 struct segmentation {
   uint8_t enabled;
   uint8_t update_map;
@@ -53,19 +58,28 @@ struct segmentation {
                           // 1: the segment id will be read first.
                           // 0: the skip syntax element will be read first.
 };
+#endif
 
+#ifndef struct_segmentation_probs_defined
+#define struct_segmentation_probs_defined
 struct segmentation_probs {
   aom_cdf_prob pred_cdf[SEG_TEMPORAL_PRED_CTXS][CDF_SIZE(2)];
   aom_cdf_prob spatial_pred_seg_cdf[SPATIAL_PREDICTION_PROBS]
                                    [CDF_SIZE(MAX_SEGMENTS)];
 };
+#endif
 
+#ifndef segfeature_active_defined
+#define segfeature_active_defined
 static inline int segfeature_active(const struct segmentation *seg,
                                     uint8_t segment_id,
                                     SEG_LVL_FEATURES feature_id) {
   return seg->enabled && (seg->feature_mask[segment_id] & (1 << feature_id));
 }
+#endif
 
+#ifndef segfeatures_copy_defined
+#define segfeatures_copy_defined
 static inline void segfeatures_copy(struct segmentation *dst,
                                     const struct segmentation *src) {
   int i, j;
@@ -78,6 +92,7 @@ static inline void segfeatures_copy(struct segmentation *dst,
   dst->segid_preskip = src->segid_preskip;
   dst->last_active_segid = src->last_active_segid;
 }
+#endif
 
 void av1_clearall_segfeatures(struct segmentation *seg);
 
@@ -93,10 +108,13 @@ int av1_is_segfeature_signed(SEG_LVL_FEATURES feature_id);
 void av1_set_segdata(struct segmentation *seg, int segment_id,
                      SEG_LVL_FEATURES feature_id, int seg_data);
 
+#ifndef get_segdata_defined
+#define get_segdata_defined
 static inline int get_segdata(const struct segmentation *seg, int segment_id,
                               SEG_LVL_FEATURES feature_id) {
   return seg->feature_data[segment_id][feature_id];
 }
+#endif
 
 static inline void set_segment_id(uint8_t *segment_ids, int mi_offset,
                                   int x_mis, int y_mis, int mi_stride,

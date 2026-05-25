@@ -80,6 +80,9 @@ include("${AOM_ROOT}/aom_ports/aom_ports.cmake")
 include("${AOM_ROOT}/aom_scale/aom_scale.cmake")
 include("${AOM_ROOT}/aom_util/aom_util.cmake")
 include("${AOM_ROOT}/av1/av1.cmake")
+if(CONFIG_AV2)
+  include("${AOM_ROOT}/av2/av2.cmake")
+endif()
 include("${AOM_ROOT}/cmake/aom_install.cmake")
 include("${AOM_ROOT}/cmake/sanitizers.cmake")
 include("${AOM_ROOT}/cmake/util.cmake")
@@ -96,6 +99,13 @@ list(APPEND AOM_RTCD_SOURCES
             "${AOM_ROOT}/av1/common/av1_rtcd_defs.pl"
             "${AOM_ROOT}/av1/common/av1_rtcd.c"
             "${AOM_ROOT}/cmake/rtcd.pl")
+
+if(CONFIG_AV2)
+  list(APPEND AOM_RTCD_SOURCES
+              "${AOM_CONFIG_DIR}/config/av2_rtcd.h"
+              "${AOM_ROOT}/av2/common/av2_rtcd_defs.pl"
+              "${AOM_ROOT}/av2/common/av2_rtcd.c")
+endif()
 
 list(APPEND AOM_LIBWEBM_SOURCES
             "${AOM_ROOT}/third_party/libwebm/common/hdr_util.cc"
@@ -266,6 +276,11 @@ add_rtcd_build_step("${AOM_ROOT}/aom_scale/aom_scale_rtcd.pl"
 add_rtcd_build_step("${AOM_ROOT}/av1/common/av1_rtcd_defs.pl"
                     "${AOM_CONFIG_DIR}/config/av1_rtcd.h"
                     "${AOM_ROOT}/av1/common/av1_rtcd.c" "av1_rtcd")
+if(CONFIG_AV2)
+  add_rtcd_build_step("${AOM_ROOT}/av2/common/av2_rtcd_defs.pl"
+                      "${AOM_CONFIG_DIR}/config/av2_rtcd.h"
+                      "${AOM_ROOT}/av2/common/av2_rtcd.c" "av2_rtcd")
+endif()
 
 add_library(aom_rtcd OBJECT ${AOM_RTCD_SOURCES})
 add_dependencies(aom_rtcd aom_version)
@@ -418,6 +433,9 @@ setup_aom_ports_targets()
 setup_aom_util_targets()
 setup_aom_scale_targets()
 setup_av1_targets()
+if(CONFIG_AV2)
+  setup_av2_targets()
+endif()
 
 # Make all library targets depend on aom_rtcd to make sure it builds first.
 foreach(aom_lib ${AOM_LIB_TARGETS})
