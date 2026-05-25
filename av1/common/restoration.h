@@ -22,6 +22,22 @@
 extern "C" {
 #endif
 
+#ifndef WienerInfo_defined
+#define WienerInfo_defined
+typedef struct WienerInfo {
+  DECLARE_ALIGNED(16, InterpKernel, vfilter);
+  DECLARE_ALIGNED(16, InterpKernel, hfilter);
+} WienerInfo;
+#endif
+
+#ifndef SgrprojInfo_defined
+#define SgrprojInfo_defined
+typedef struct SgrprojInfo {
+  int ep;
+  int xqd[2];
+} SgrprojInfo;
+#endif
+
 /*! @file */
 
 /*!\cond */
@@ -187,22 +203,14 @@ typedef struct {
 /*!\endcond */
 
 /*!\brief Parameters related to Restoration Unit Info */
+#ifndef RestorationUnitInfo_defined
+#define RestorationUnitInfo_defined
 typedef struct {
-  /*!
-   * restoration type
-   */
   RestorationType restoration_type;
-
-  /*!
-   * Wiener filter parameters if restoration_type indicates Wiener
-   */
   WienerInfo wiener_info;
-
-  /*!
-   * Sgrproj filter parameters if restoration_type indicates Sgrproj
-   */
   SgrprojInfo sgrproj_info;
 } RestorationUnitInfo;
+#endif
 
 /*!\cond */
 
@@ -211,86 +219,40 @@ typedef struct {
 #define RESTORATION_LINEBUFFER_WIDTH \
   (RESTORATION_UNITSIZE_MAX * 3 / 2 + 2 * RESTORATION_EXTRA_HORZ)
 
+#ifndef RestorationLineBuffers_defined
+#define RestorationLineBuffers_defined
 typedef struct {
-  // Temporary buffers to save/restore 3 lines above/below the restoration
-  // stripe.
   uint16_t tmp_save_above[RESTORATION_BORDER][RESTORATION_LINEBUFFER_WIDTH];
   uint16_t tmp_save_below[RESTORATION_BORDER][RESTORATION_LINEBUFFER_WIDTH];
 } RestorationLineBuffers;
+#endif
 /*!\endcond */
 
 /*!\brief Parameters related to Restoration Stripe boundaries */
+#ifndef RestorationStripeBoundaries_defined
+#define RestorationStripeBoundaries_defined
 typedef struct {
-  /*!
-   * stripe boundary above
-   */
   uint8_t *stripe_boundary_above;
-
-  /*!
-   * stripe boundary below
-   */
   uint8_t *stripe_boundary_below;
-
-  /*!
-   * strides for stripe boundaries above and below
-   */
   int stripe_boundary_stride;
-
-  /*!
-   * size of stripe boundaries above and below
-   */
   int stripe_boundary_size;
 } RestorationStripeBoundaries;
+#endif
 
 /*!\brief Parameters related to Restoration Info */
+#ifndef RestorationInfo_defined
+#define RestorationInfo_defined
 typedef struct {
-  /*!
-   * Restoration type for frame
-   */
   RestorationType frame_restoration_type;
-
-  /*!
-   * Restoration unit size
-   */
   int restoration_unit_size;
-
-  /**
-   * \name Fields allocated and initialised by av1_alloc_restoration_struct.
-   */
-  /**@{*/
-  /*!
-   * Total number of restoration units in this plane
-   */
   int num_rest_units;
-
-  /*!
-   * Number of vertical restoration units in this plane
-   */
   int vert_units;
-
-  /*!
-   * Number of horizontal restoration units in this plane
-   */
   int horz_units;
-  /**@}*/
-
-  /*!
-   * Parameters for each restoration unit in this plane
-   */
   RestorationUnitInfo *unit_info;
-
-  /*!
-   * Restoration Stripe boundary info
-   */
   RestorationStripeBoundaries boundaries;
-
-  /*!
-   * Whether optimized lr can be used for speed.
-   * That includes cases of no cdef and no superres, or if fast trial runs
-   * are used on the encoder side.
-   */
   int optimized_lr;
 } RestorationInfo;
+#endif
 
 /*!\cond */
 
@@ -311,16 +273,24 @@ static inline void set_default_wiener(WienerInfo *wiener_info) {
   wiener_info->vfilter[6] = wiener_info->hfilter[6] = WIENER_FILT_TAP0_MIDV;
 }
 
+#ifndef RestorationTileLimits_defined
+#define RestorationTileLimits_defined
 typedef struct {
   int h_start, h_end, v_start, v_end;
 } RestorationTileLimits;
+#endif
 
+#ifndef rest_unit_visitor_t_defined
+#define rest_unit_visitor_t_defined
 typedef void (*rest_unit_visitor_t)(const RestorationTileLimits *limits,
                                     int rest_unit_idx, void *priv,
                                     int32_t *tmpbuf,
                                     RestorationLineBuffers *rlbs,
                                     struct aom_internal_error_info *error_info);
+#endif
 
+#ifndef FilterFrameCtxt_defined
+#define FilterFrameCtxt_defined
 typedef struct FilterFrameCtxt {
   const RestorationInfo *rsi;
   int ss_x, ss_y;
@@ -329,6 +299,7 @@ typedef struct FilterFrameCtxt {
   uint8_t *data8, *dst8;
   int data_stride, dst_stride;
 } FilterFrameCtxt;
+#endif
 
 typedef struct AV1LrStruct {
   rest_unit_visitor_t on_rest_unit;

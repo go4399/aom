@@ -53,6 +53,10 @@ static inline __m256i yy_set2_epi16(int16_t a, int16_t b) {
   return _mm256_setr_epi16(a, b, a, b, a, b, a, b, a, b, a, b, a, b, a, b);
 }
 
+static inline __m256i yy_set1_64_from_32i(int32_t a) {
+  return _mm256_set1_epi64x((uint32_t)a);
+}
+
 // Some compilers don't have _mm256_set_m128i defined in immintrin.h. We
 // therefore define an equivalent function using a different intrinsic.
 // ([ hi ], [ lo ]) -> [ hi ][ lo ]

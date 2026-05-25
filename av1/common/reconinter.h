@@ -35,7 +35,11 @@
 extern "C" {
 #endif
 
+#if CONFIG_AV2_DECODER || CONFIG_AV2_ENCODER
+#define MAX_WEDGE_TYPES 68
+#else
 #define MAX_WEDGE_TYPES 16
+#endif
 
 #define MAX_WEDGE_SIZE_LOG2 5  // 32x32
 #define MAX_WEDGE_SIZE (1 << MAX_WEDGE_SIZE_LOG2)
@@ -45,6 +49,7 @@ extern "C" {
 
 #define WEDGE_NONE -1
 
+#if !CONFIG_AV2_DECODER && !CONFIG_AV2_ENCODER
 // Angles are with respect to horizontal anti-clockwise
 enum {
   WEDGE_HORIZONTAL = 0,
@@ -55,6 +60,7 @@ enum {
   WEDGE_OBLIQUE153 = 5,
   WEDGE_DIRECTIONS
 } UENUM1BYTE(WedgeDirectionType);
+#endif
 
 // 3-tuple: {direction, x_offset, y_offset}
 typedef struct {

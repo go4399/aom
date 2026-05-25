@@ -11,6 +11,22 @@
 #ifndef AOM_AOM_AOM_INTEGER_H_
 #define AOM_AOM_AOM_INTEGER_H_
 
+#ifndef INLINE
+#define INLINE inline
+#endif
+
+#ifndef MAX_NUM_THREADS
+#define MAX_NUM_THREADS 64
+#endif
+
+#ifndef QUANT_FP_BITS
+#define QUANT_FP_BITS 4
+#endif
+
+#ifndef QUANT_TABLE_BITS
+#define QUANT_TABLE_BITS 3
+#endif
+
 /* get ptrdiff_t, size_t, wchar_t, NULL */
 #include <stddef.h>  // IWYU pragma: export
 

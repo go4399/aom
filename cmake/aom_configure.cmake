@@ -293,7 +293,13 @@ if(ENABLE_GOMA)
   set_compiler_launcher(ENABLE_GOMA gomacc)
 endif()
 
-if(NOT CONFIG_AV1_DECODER AND NOT CONFIG_AV1_ENCODER)
+if(CONFIG_AV2_ENCODER OR CONFIG_AV2_DECODER)
+  set(CONFIG_AV2 1)
+else()
+  set(CONFIG_AV2 0)
+endif()
+
+if(NOT CONFIG_AV1_DECODER AND NOT CONFIG_AV1_ENCODER AND NOT CONFIG_AV2_DECODER AND NOT CONFIG_AV2_ENCODER)
   message(FATAL_ERROR "Decoder and encoder disabled, nothing to build.")
 endif()
 
@@ -471,6 +477,17 @@ configure_file("${aom_config_asm_template}"
                "${AOM_CONFIG_DIR}/config/aom_config.asm")
 configure_file("${aom_config_h_template}"
                "${AOM_CONFIG_DIR}/config/aom_config.h")
+
+if(CONFIG_AV2)
+  file(WRITE "${AOM_CONFIG_DIR}/config/avm_config.h"
+       "#ifndef AVM_CONFIG_H_\n#define AVM_CONFIG_H_\n#include \"config/aom_config.h\"\n#endif  // AVM_CONFIG_H_\n")
+  file(WRITE "${AOM_CONFIG_DIR}/config/avm_dsp_rtcd.h"
+       "#ifndef AVM_DSP_RTCD_H_\n#define AVM_DSP_RTCD_H_\n#include <stdbool.h>\n#include \"aom_dsp/aom_filter.h\"\n#include \"av2/common/filter.h\"\n#include \"av2/common/convolve.h\"\n#define AOM_AV1_COMMON_BLOCKD_H_\n#define AOM_AV1_COMMON_ENUMS_H_\n#define AOM_AV1_COMMON_MV_H_\n#define AOM_AV1_COMMON_SCALE_H_\n#define AOM_AV1_COMMON_TILE_COMMON_H_\n#define AOM_AV1_COMMON_ENTROPYMV_H_\n#define AOM_AV1_COMMON_ENTROPYMODE_H_\n#include \"config/aom_dsp_rtcd.h\"\n#endif  // AVM_DSP_RTCD_H_\n")
+  file(WRITE "${AOM_CONFIG_DIR}/config/avm_scale_rtcd.h"
+       "#ifndef AVM_SCALE_RTCD_H_\n#define AVM_SCALE_RTCD_H_\n#include \"config/aom_scale_rtcd.h\"\n#endif  // AVM_SCALE_RTCD_H_\n")
+  file(WRITE "${AOM_CONFIG_DIR}/config/avm_version.h"
+       "#ifndef AVM_VERSION_H_\n#define AVM_VERSION_H_\n#include \"config/aom_version.h\"\n#endif  // AVM_VERSION_H_\n")
+endif()
 
 # Read the current git hash.
 find_package(Git)
