@@ -1,0 +1,940 @@
+/*
+ * Copyright (c) 2021, Alliance for Open Media. All rights reserved
+ *
+ * This source code is subject to the terms of the BSD 3-Clause Clear License
+ * and the Alliance for Open Media Patent License 1.0. If the BSD 3-Clause Clear
+ * License was not distributed with this source code in the LICENSE file, you
+ * can obtain it at aomedia.org/license/software-license/bsd-3-c-c/.  If the
+ * Alliance for Open Media Patent License 1.0 was not distributed with this
+ * source code in the PATENTS file, you can obtain it at
+ * aomedia.org/license/patent-license/.
+ */
+
+#include <assert.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include "config/av2_rtcd.h"
+#include "config/avm_dsp_rtcd.h"
+#include "config/avm_scale_rtcd.h"
+
+#include "aom_dsp/aom_dsp_common.h"
+#include "aom_mem/aom_mem.h"
+#include "aom_ports/system_state.h"
+#include "aom_ports/aom_once.h"
+#include "aom_ports/avm_timer.h"
+#include "aom_scale/aom_scale.h"
+#include "aom_util/aom_thread.h"
+#if CONFIG_MISMATCH_DEBUG
+#include "aom_util/debug_util.h"
+#endif  // CONFIG_MISMATCH_DEBUG
+
+#include "av2/common/alloccommon.h"
+#include "av2/common/av2_common_int.h"
+#include "av2/common/av2_loopfilter.h"
+#include "av2/common/bru.h"
+#include "av2/common/pred_common.h"
+#include "av2/common/quant_common.h"
+#include "av2/common/reconinter.h"
+#include "av2/common/reconintra.h"
+
+#include "av2/decoder/decodeframe.h"
+#include "av2/decoder/decoder.h"
+#include "av2/decoder/detokenize.h"
+#include "av2/decoder/obu.h"
+
+#if CONFIG_PARAKIT_COLLECT_DATA
+#include "av2/common/entropy_sideinfo.h"
+int beginningFrameFlag[MAX_NUMBER_CONTEXTS][MAX_DIMS_CONTEXT3]
+                      [MAX_DIMS_CONTEXT2][MAX_DIMS_CONTEXT1][MAX_DIMS_CONTEXT0];
+#endif
+
+static void initialize_dec(void) {
+  av2_rtcd();
+  avm_dsp_rtcd();
+  avm_scale_rtcd();
+  av2_init_intra_predictors();
+  av2_init_stxfm_kernels();
+}
+
+static void update_subgop_stats(const AV2_COMMON *const cm,
+                                SubGOPStatsDec *const subgop_stats,
+                                unsigned int display_order_hint,
+                                unsigned int enable_subgop_stats) {
+  if (!enable_subgop_stats) return;
+  // Update subgop related frame data.
+  subgop_stats->disp_frame_idx[subgop_stats->stat_count] = display_order_hint;
+  subgop_stats->show_existing_frame[subgop_stats->stat_count] =
+      cm->show_existing_frame;
+  subgop_stats->immediate_output_picture[subgop_stats->stat_count] =
+      cm->immediate_output_picture;
+  subgop_stats->qindex[subgop_stats->stat_count] = cm->quant_params.base_qindex;
+  subgop_stats->refresh_frame_flags[subgop_stats->stat_count] =
+      cm->current_frame.refresh_frame_flags;
+  for (MV_REFERENCE_FRAME ref_frame = 0; ref_frame < cm->seq_params.ref_frames;
+       ++ref_frame)
+    if (cm->ref_frame_map[ref_frame] != NULL) {
+      subgop_stats->ref_frame_map[subgop_stats->stat_count][ref_frame] =
+          cm->ref_frame_map[ref_frame]->order_hint;
+    } else {
+      subgop_stats->ref_frame_map[subgop_stats->stat_count][ref_frame] = 0;
+    }
+
+  assert(subgop_stats->stat_count < MAX_SUBGOP_STATS_SIZE);
+  subgop_stats->stat_count++;
+}
+
+static void dec_set_mb_mi(CommonModeInfoParams *mi_params, int width,
+                          int height) {
+  // Ensure that the decoded width and height are both multiples of
+  // 8 luma pixels (note: this may only be a multiple of 4 chroma pixels if
+  // subsampling is used).
+  // This simplifies the implementation of various experiments,
+  // eg. cdef, which operates on units of 8x8 luma pixels.
+  const int aligned_width = ALIGN_POWER_OF_TWO(width, 3);
+  const int aligned_height = ALIGN_POWER_OF_TWO(height, 3);
+
+  mi_params->mi_cols = aligned_width >> MI_SIZE_LOG2;
+  mi_params->mi_rows = aligned_height >> MI_SIZE_LOG2;
+  mi_params->mi_stride = calc_mi_size(mi_params->mi_cols);
+
+  mi_params->mb_cols = (mi_params->mi_cols + 2) >> 2;
+  mi_params->mb_rows = (mi_params->mi_rows + 2) >> 2;
+  mi_params->MBs = mi_params->mb_rows * mi_params->mb_cols;
+
+  mi_params->mi_alloc_bsize = BLOCK_4X4;
+  mi_params->mi_alloc_stride = mi_params->mi_stride;
+
+  assert(mi_size_wide[mi_params->mi_alloc_bsize] ==
+         mi_size_high[mi_params->mi_alloc_bsize]);
+}
+
+static void dec_setup_mi(CommonModeInfoParams *mi_params) {
+  const int mi_grid_size =
+      mi_params->mi_stride * calc_mi_size(mi_params->mi_rows);
+  memset(mi_params->mi_grid_base, 0,
+         mi_grid_size * sizeof(*mi_params->mi_grid_base));
+  memset(mi_params->submi_grid_base, 0,
+         mi_grid_size * sizeof(*mi_params->submi_grid_base));
+  memset(mi_params->cctx_type_map, 0,
+         mi_grid_size * sizeof(*mi_params->cctx_type_map));
+  av2_reset_txk_skip_array_using_mi_params(mi_params);
+}
+
+static void dec_free_mi(CommonModeInfoParams *mi_params) {
+  aom_free(mi_params->mi_alloc);
+  mi_params->mi_alloc = NULL;
+  aom_free(mi_params->mi_grid_base);
+  mi_params->mi_grid_base = NULL;
+  aom_free(mi_params->mi_alloc_sub);
+  mi_params->mi_alloc_sub = NULL;
+  aom_free(mi_params->submi_grid_base);
+  mi_params->submi_grid_base = NULL;
+  mi_params->mi_alloc_size = 0;
+  aom_free(mi_params->tx_type_map);
+  mi_params->tx_type_map = NULL;
+  aom_free(mi_params->cctx_type_map);
+  mi_params->cctx_type_map = NULL;
+  av2_dealloc_class_id_array(mi_params);
+  av2_dealloc_txk_skip_array(mi_params);
+}
+
+static INLINE void dec_init_tip_ref_frame(AV2_COMMON *const cm) {
+  TIP *tip_ref = &cm->tip_ref;
+  tip_ref->tip_frame = aom_calloc(1, sizeof(*tip_ref->tip_frame));
+  tip_ref->tmp_tip_frame = aom_calloc(1, sizeof(*tip_ref->tmp_tip_frame));
+}
+
+static INLINE void dec_free_tip_ref_frame(AV2_COMMON *const cm) {
+  avm_free_frame_buffer(&cm->tip_ref.tip_frame->buf);
+  aom_free(cm->tip_ref.tip_frame);
+  cm->tip_ref.tip_frame = NULL;
+
+  avm_free_frame_buffer(&cm->tip_ref.tmp_tip_frame->buf);
+  aom_free(cm->tip_ref.tmp_tip_frame);
+  cm->tip_ref.tmp_tip_frame = NULL;
+}
+
+#if CONFIG_PARAKIT_COLLECT_DATA
+AV2Decoder *av2_decoder_create(BufferPool *const pool, const char *path,
+                               const char *suffix) {
+#else
+AV2Decoder *av2_decoder_create(BufferPool *const pool) {
+#endif
+  AV2Decoder *volatile const pbi = aom_memalign(32, sizeof(*pbi));
+  if (!pbi) return NULL;
+  av2_zero(*pbi);
+
+  AV2_COMMON *volatile const cm = &pbi->common;
+
+  // The jmp_buf is valid only for the duration of the function that calls
+  // setjmp(). Therefore, this function must reset the 'setjmp' field to 0
+  // before it returns.
+  if (setjmp(cm->error.jmp)) {
+    cm->error.setjmp = 0;
+    av2_decoder_remove(pbi);
+    return NULL;
+  }
+
+  cm->error.setjmp = 1;
+
+  CHECK_MEM_ERROR(cm, cm->fc,
+                  (FRAME_CONTEXT *)aom_memalign(32, sizeof(*cm->fc)));
+  CHECK_MEM_ERROR(
+      cm, cm->default_frame_context,
+      (FRAME_CONTEXT *)aom_memalign(32, sizeof(*cm->default_frame_context)));
+  memset(cm->fc, 0, sizeof(*cm->fc));
+  memset(cm->default_frame_context, 0, sizeof(*cm->default_frame_context));
+
+  pbi->need_resync = 1;
+  aom_once(initialize_dec);
+
+  // Initialize the references to not point to any frame buffers.
+  for (int i = 0; i < NELEMENTS(cm->ref_frame_map); i++) {
+    cm->ref_frame_map[i] = NULL;
+  }
+
+  cm->current_frame.frame_number = 0;
+  pbi->decoding_first_frame = 1;
+  pbi->common.buffer_pool = pool;
+
+  cm->seq_params.bit_depth = AOM_BITS_8;
+  cm->mi_params.free_mi = dec_free_mi;
+  cm->mi_params.setup_mi = dec_setup_mi;
+  cm->mi_params.set_mb_mi = dec_set_mb_mi;
+
+  cm->frame_filter_dictionary_stride = 0;
+  cm->frame_filter_dictionary = NULL;
+  cm->translated_pcwiener_filters = NULL;
+  cm->num_ref_filters = NULL;
+
+  av2_loop_filter_init(cm);
+  for (int i = 0; i < NUM_CUSTOM_QMS; ++i) {
+    pbi->qm_protected[i] = 0;
+  }
+
+  for (int i = 0; i < NUM_CUSTOM_QMS; ++i) {
+    pbi->qm_list[i].qm_from_leading = 0;
+    pbi->qm_list[i].qm_id = -1;
+    pbi->qm_list[i].qm_tlayer_id = -1;
+    pbi->qm_list[i].qm_mlayer_id = -1;
+    pbi->qm_list[i].quantizer_matrix = NULL;
+    pbi->qm_list[i].quantizer_matrix_allocated = false;
+    pbi->qm_list[i].quantizer_matrix_num_planes = -1;
+  }
+  for (int i = 0; i < MAX_FGM_NUM; ++i) {
+    pbi->fgm_list[i].fgm_from_leading = 0;
+    pbi->fgm_list[i].fgm_id = -1;
+    pbi->fgm_list[i].fgm_tlayer_id = -1;
+    pbi->fgm_list[i].fgm_mlayer_id = -1;
+  }
+
+  pbi->selected_ops_id = -1;
+  pbi->selected_op_index = -1;
+
+  memset(&pbi->last_frame_unit, -1, sizeof(pbi->last_frame_unit));
+  memset(&pbi->last_displayable_frame_unit, -1,
+         sizeof(pbi->last_displayable_frame_unit));
+  memset(pbi->last_output_doh, -1, sizeof(pbi->last_output_doh));
+  pbi->this_is_first_vcl_obu_in_tu = 0;
+  pbi->last_decoded_xlayer_id = -1;
+  for (int i = 0; i < MAX_NUM_MLAYERS; i++) {
+    pbi->num_displayable_frame_unit[i] = 0;
+  }
+  for (int j = 0; j < MAX_NUM_TLAYERS; j++)
+    for (int i = 0; i < MAX_NUM_MLAYERS; i++)
+      memset(pbi->obus_in_frame_unit_data[j][i], 0,
+             sizeof(pbi->obus_in_frame_unit_data[j][i]));
+
+  for (int xlayer = 0; xlayer < MAX_NUM_XLAYERS; xlayer++)
+    for (int i = 0; i < MAX_SEQ_NUM; i++)
+      pbi->seq_list[xlayer][i].seq_header_id = -1;
+
+#if CONFIG_ACCOUNTING
+  pbi->acct_enabled = 1;
+  avm_accounting_init(&pbi->accounting);
+#endif
+
+  dec_init_tip_ref_frame(cm);
+
+  cm->error.setjmp = 0;
+
+  avm_get_worker_interface()->init(&pbi->lf_worker);
+  pbi->lf_worker.thread_name = "avm lf worker";
+
+  // Initialize the Content Interpretation parameters
+  for (int i = 0; i < MAX_NUM_MLAYERS; i++) {
+    av2_initialize_ci_params(&cm->ci_params_per_layer[i]);
+  }
+
+#if CONFIG_PARAKIT_COLLECT_DATA
+#include "av2/common/entropy_inits_coeffs.h"
+#include "av2/common/entropy_inits_modes.h"
+#include "av2/common/entropy_inits_mv.h"
+
+  // @ParaKit: add side information needed in array of prob_models structure to
+  // be used in collecting data
+  cm->prob_models[EOB_FLAG_CDF16] =
+      (ProbModelInfo){ .ctx_group_name = "eob_flag_cdf16",
+                       .prob = (aom_cdf_prob *)av2_default_eob_multi16_cdfs,
+                       .cdf_stride = 0,
+                       .num_symb = 5,
+                       .num_dim = 2,
+                       .num_idx = { 0, 0, 4, 3 } };
+  cm->prob_models[EOB_FLAG_CDF32] =
+      (ProbModelInfo){ .ctx_group_name = "eob_flag_cdf32",
+                       .prob = (aom_cdf_prob *)av2_default_eob_multi32_cdfs,
+                       .cdf_stride = 0,
+                       .num_symb = 6,
+                       .num_dim = 2,
+                       .num_idx = { 0, 0, 4, 3 } };
+
+  for (int i = 0; i < MAX_NUM_CTX_GROUPS; i++) {
+    for (int j = 0; j < MAX_DIMS_CONTEXT3; j++)
+      for (int k = 0; k < MAX_DIMS_CONTEXT2; k++)
+        for (int l = 0; l < MAX_DIMS_CONTEXT1; l++)
+          for (int h = 0; h < MAX_DIMS_CONTEXT0; h++)
+            beginningFrameFlag[i][j][k][l][h] = 0;
+  }
+
+  for (int f = 0; f < MAX_NUM_CTX_GROUPS; f++) {
+    cm->prob_models[f].model_idx = f;
+    const int fixed_stride = cm->prob_models[f].cdf_stride;
+    const int num_sym = cm->prob_models[f].num_symb;
+    const int num_dims = cm->prob_models[f].num_dim;
+    const int num_idx0 = cm->prob_models[f].num_idx[0];
+    const int num_idx1 = cm->prob_models[f].num_idx[1];
+    const int num_idx2 = cm->prob_models[f].num_idx[2];
+    const int num_idx3 = cm->prob_models[f].num_idx[3];
+    const char *str_ctx = cm->prob_models[f].ctx_group_name;
+    const char *str_path = path ? path : ".";
+    const char *str_suffix = suffix ? suffix : "data";
+    char filename[2048];
+    sprintf(filename, "%s/Stat_%s_%s.csv", str_path, str_ctx, str_suffix);
+    FILE *fData = fopen(filename, "wt");
+    cm->prob_models[f].fDataCollect = fData;
+
+    fprintf(fData, "Header:%s,%d,%d", str_ctx, num_sym, num_dims);
+    const int dim_offset = MAX_CTX_DIM - num_dims;
+    for (int i = 0; i < num_dims; i++) {
+      fprintf(fData, ",%d", cm->prob_models[f].num_idx[i + dim_offset]);
+    }
+    fprintf(fData, "\n");
+
+    aom_cdf_prob *prob_ptr;
+    prob_ptr = cm->prob_models[f].prob;
+    int ctx_group_counter = 0;
+    for (int d0 = 0; d0 < (num_idx0 == 0 ? 1 : num_idx0); d0++)
+      for (int d1 = 0; d1 < (num_idx1 == 0 ? 1 : num_idx1); d1++)
+        for (int d2 = 0; d2 < (num_idx2 == 0 ? 1 : num_idx2); d2++)
+          for (int d3 = 0; d3 < (num_idx3 == 0 ? 1 : num_idx3); d3++) {
+            // indexing according to MAX_CTX_DIM
+            fprintf(fData, "%d,%d,%d,%d,%d,", ctx_group_counter, d0, d1, d2,
+                    d3);
+            ctx_group_counter++;
+            for (int sym = 0; sym < CDF_SIZE(num_sym); sym++) {
+              int cdf_stride = (fixed_stride == 0) ? num_sym : fixed_stride;
+              int offset =
+                  (d0 * num_idx3 * num_idx2 * num_idx1 * CDF_SIZE(cdf_stride)) +
+                  (d1 * num_idx3 * num_idx2 * CDF_SIZE(cdf_stride)) +
+                  (d2 * num_idx3 * CDF_SIZE(cdf_stride)) +
+                  (d3 * CDF_SIZE(cdf_stride)) + sym;
+              if (sym < num_sym)
+                fprintf(fData, "%d", (int)AVM_ICDF(*(prob_ptr + offset)));
+              else
+                fprintf(fData, "%d", (int)*(prob_ptr + offset));
+              if (sym < CDF_SIZE(num_sym - 1)) {
+                fprintf(fData, ",");
+              } else {
+                fprintf(fData, "\n");
+              }
+            }
+          }
+    // main header
+    for (int i = 0; i < num_dims; i++) {
+      fprintf(fData, "Dim%d,", i);
+    }
+
+    fprintf(fData, "FrameNum,FrameType,isBeginFrame,Counter,Value,Cost");
+
+    for (int sym = 0; sym < num_sym; sym++) {
+      fprintf(fData, ",cdf%d", sym);
+    }
+    fprintf(fData, ",rate");
+    fprintf(fData, "\n");
+  }
+#endif
+  return pbi;
+}
+
+void av2_dealloc_dec_jobs(struct AV2DecTileMTData *tile_mt_info) {
+  if (tile_mt_info != NULL) {
+#if CONFIG_MULTITHREAD
+    if (tile_mt_info->job_mutex != NULL) {
+      pthread_mutex_destroy(tile_mt_info->job_mutex);
+      aom_free(tile_mt_info->job_mutex);
+    }
+#endif
+    aom_free(tile_mt_info->job_queue);
+    // clear the structure as the source of this call may be a resize in which
+    // case this call will be followed by an _alloc() which may fail.
+    av2_zero(*tile_mt_info);
+  }
+}
+
+void av2_dec_free_cb_buf(AV2Decoder *pbi) {
+  aom_free(pbi->cb_buffer_base);
+  pbi->cb_buffer_base = NULL;
+  pbi->cb_buffer_alloc_size = 0;
+}
+
+void av2_decoder_remove(AV2Decoder *pbi) {
+  int i;
+
+  if (!pbi) return;
+
+  avm_get_worker_interface()->end(&pbi->lf_worker);
+  aom_free(pbi->lf_worker.data1);
+
+  if (pbi->thread_data) {
+    for (int worker_idx = 0; worker_idx < pbi->max_threads - 1; worker_idx++) {
+      DecWorkerData *const thread_data = pbi->thread_data + worker_idx;
+      av2_free_mc_tmp_buf(thread_data->td);
+      av2_free_opfl_tmp_bufs(thread_data->td);
+      aom_free(thread_data->td);
+    }
+    aom_free(pbi->thread_data);
+  }
+
+  for (i = 0; i < pbi->num_workers; ++i) {
+    AVxWorker *const worker = &pbi->tile_workers[i];
+    avm_get_worker_interface()->end(worker);
+  }
+#if CONFIG_MULTITHREAD
+  if (pbi->row_mt_mutex_ != NULL) {
+    pthread_mutex_destroy(pbi->row_mt_mutex_);
+    aom_free(pbi->row_mt_mutex_);
+  }
+  if (pbi->row_mt_cond_ != NULL) {
+    pthread_cond_destroy(pbi->row_mt_cond_);
+    aom_free(pbi->row_mt_cond_);
+  }
+#endif
+  for (i = 0; i < pbi->allocated_tiles; i++) {
+    TileDataDec *const tile_data = pbi->tile_data + i;
+    av2_dec_row_mt_dealloc(&tile_data->dec_row_mt_sync);
+  }
+  aom_free(pbi->tile_data);
+  aom_free(pbi->tile_workers);
+
+  if (pbi->num_workers > 0) {
+    av2_loop_filter_dealloc(&pbi->lf_row_sync);
+    av2_ccso_filter_dealloc(&pbi->ccso_sync);
+    av2_loop_restoration_dealloc(&pbi->lr_row_sync, pbi->num_workers);
+    av2_dealloc_dec_jobs(&pbi->tile_mt_info);
+    aom_free(pbi->tip_worker_data);
+    av2_tip_dealloc(&pbi->tip_sync);
+  }
+
+  dec_free_tip_ref_frame(&pbi->common);
+
+  free_bru_info(&pbi->common);
+  av2_dec_free_cb_buf(pbi);
+#if CONFIG_ACCOUNTING
+  avm_accounting_clear(&pbi->accounting);
+#endif
+  av2_free_mc_tmp_buf(&pbi->td);
+  av2_free_opfl_tmp_bufs(&pbi->td);
+  avm_img_metadata_array_free(pbi->metadata);
+
+#if CONFIG_PARAKIT_COLLECT_DATA
+  for (int f = 0; f < MAX_NUM_CTX_GROUPS; f++) {
+    if (pbi->common.prob_models[f].fDataCollect != NULL) {
+      fclose(pbi->common.prob_models[f].fDataCollect);
+    }
+  }
+#endif
+  for (int qm_pos = 0; qm_pos < NUM_CUSTOM_QMS; qm_pos++) {
+    if (pbi->qm_list[qm_pos].quantizer_matrix != NULL)
+      av2_free_qmset(pbi->qm_list[qm_pos].quantizer_matrix);
+  }
+
+  if (pbi->is_multistream) {
+    // Release intermediate buffers to store internal variables per sub-stream
+    if (pbi->stream_info != NULL) {
+      aom_free(pbi->stream_info);
+      pbi->stream_info = NULL;
+      pbi->glcr_stream_info_num_allocated = 0;
+    }
+  }
+
+  aom_free(pbi);
+}
+
+void av2_visit_palette(AV2Decoder *const pbi, MACROBLOCKD *const xd,
+                       aom_reader *r, palette_visitor_fn_t visit) {
+  if (!is_inter_block(xd->mi[0], xd->tree_type)) {
+    const int plane_start = get_partition_plane_start(xd->tree_type);
+    const int plane_end = get_partition_plane_end(
+        xd->tree_type, AOMMIN(2, av2_num_planes(&pbi->common)));
+    for (int plane = plane_start; plane < plane_end; ++plane) {
+      if (plane == 0 || xd->is_chroma_ref) {
+        if (xd->mi[0]->palette_mode_info.palette_size[plane])
+          visit(xd, plane, r);
+      } else {
+        assert(xd->mi[0]->palette_mode_info.palette_size[plane] == 0);
+      }
+    }
+  }
+}
+
+static int equal_dimensions(const YV12_BUFFER_CONFIG *a,
+                            const YV12_BUFFER_CONFIG *b) {
+  return a->y_height == b->y_height && a->y_width == b->y_width &&
+         a->uv_height == b->uv_height && a->uv_width == b->uv_width;
+}
+
+aom_codec_err_t av2_copy_reference_dec(AV2Decoder *pbi, int idx,
+                                       YV12_BUFFER_CONFIG *sd) {
+  AV2_COMMON *cm = &pbi->common;
+  const int num_planes = av2_num_planes(cm);
+
+  const YV12_BUFFER_CONFIG *const cfg = get_ref_frame(cm, idx);
+  if (cfg == NULL) {
+    aom_internal_error(&cm->error, AOM_CODEC_ERROR, "No reference frame");
+    return AOM_CODEC_ERROR;
+  }
+  if (!equal_dimensions(cfg, sd))
+    aom_internal_error(&cm->error, AOM_CODEC_ERROR,
+                       "Incorrect buffer dimensions");
+  else
+    avm_yv12_copy_frame(cfg, sd, num_planes);
+
+  return cm->error.error_code;
+}
+
+static int equal_dimensions_and_border(const YV12_BUFFER_CONFIG *a,
+                                       const YV12_BUFFER_CONFIG *b) {
+  return a->y_height == b->y_height && a->y_width == b->y_width &&
+         a->uv_height == b->uv_height && a->uv_width == b->uv_width &&
+         a->y_stride == b->y_stride && a->uv_stride == b->uv_stride &&
+         a->border == b->border;
+}
+
+aom_codec_err_t av2_set_reference_dec(AV2_COMMON *cm, int idx,
+                                      int use_external_ref,
+                                      YV12_BUFFER_CONFIG *sd) {
+  const int num_planes = av2_num_planes(cm);
+  YV12_BUFFER_CONFIG *ref_buf = NULL;
+
+  // Get the destination reference buffer.
+  ref_buf = get_ref_frame(cm, idx);
+
+  if (ref_buf == NULL) {
+    aom_internal_error(&cm->error, AOM_CODEC_ERROR, "No reference frame");
+    return AOM_CODEC_ERROR;
+  }
+
+  if (!use_external_ref) {
+    if (!equal_dimensions(ref_buf, sd)) {
+      aom_internal_error(&cm->error, AOM_CODEC_ERROR,
+                         "Incorrect buffer dimensions");
+    } else {
+      // Overwrite the reference frame buffer.
+      avm_yv12_copy_frame(sd, ref_buf, num_planes);
+    }
+  } else {
+    if (!equal_dimensions_and_border(ref_buf, sd)) {
+      aom_internal_error(&cm->error, AOM_CODEC_ERROR,
+                         "Incorrect buffer dimensions");
+    } else {
+      // Overwrite the reference frame buffer pointers.
+      // Once we no longer need the external reference buffer, these pointers
+      // are restored.
+      ref_buf->store_buf_adr[0] = ref_buf->y_buffer;
+      ref_buf->store_buf_adr[1] = ref_buf->u_buffer;
+      ref_buf->store_buf_adr[2] = ref_buf->v_buffer;
+      ref_buf->y_buffer = sd->y_buffer;
+      ref_buf->u_buffer = sd->u_buffer;
+      ref_buf->v_buffer = sd->v_buffer;
+      ref_buf->use_external_reference_buffers = 1;
+    }
+  }
+
+  return cm->error.error_code;
+}
+
+aom_codec_err_t av2_copy_new_frame_dec(AV2_COMMON *cm,
+                                       YV12_BUFFER_CONFIG *new_frame,
+                                       YV12_BUFFER_CONFIG *sd) {
+  const int num_planes = av2_num_planes(cm);
+
+  if (!equal_dimensions_and_border(new_frame, sd))
+    aom_internal_error(&cm->error, AOM_CODEC_ERROR,
+                       "Incorrect buffer dimensions");
+  else
+    avm_yv12_copy_frame(new_frame, sd, num_planes);
+
+  return cm->error.error_code;
+}
+
+static void release_current_frame(AV2Decoder *pbi) {
+  AV2_COMMON *const cm = &pbi->common;
+  BufferPool *const pool = cm->buffer_pool;
+
+  cm->cur_frame->buf.corrupted = 1;
+  lock_buffer_pool(pool);
+  decrease_ref_count(cm->cur_frame, pool);
+  unlock_buffer_pool(pool);
+  cm->cur_frame = NULL;
+}
+
+// This function flushes out the DPB, all the slots in the dpb is free to use.
+aom_codec_err_t flush_remaining_frames(struct AV2Decoder *pbi,
+                                       int order_hint_limit) {
+  aom_codec_err_t res = AOM_CODEC_OK;
+  AV2_COMMON *const cm = &pbi->common;
+  RefCntBuffer *output_candidate = NULL;
+  do {
+    output_candidate = NULL;
+    for (int i = 0; i < REF_FRAMES; i++) {
+      RefCntBuffer *const buf = cm->ref_frame_map[i];
+      if (buf == NULL) continue;
+      if (!is_frame_eligible_for_output(buf)) continue;
+      if ((int)buf->display_order_hint >= order_hint_limit) continue;
+
+      if ((output_candidate == NULL ||
+           derive_output_order_idx(cm, buf) <=
+               derive_output_order_idx(cm, output_candidate))) {
+        output_candidate = buf;
+      }
+    }
+    if (output_candidate != NULL) {
+      if (pbi->num_output_frames >= (REF_FRAMES + 1) * AV2_MAX_NUM_STREAMS) {
+        return AOM_CODEC_MEM_ERROR;
+      }
+      assign_output_frame_buffer_p(
+          &pbi->output_frames[pbi->num_output_frames++], output_candidate);
+      output_candidate->frame_output_done = 1;
+    }
+  } while (output_candidate != NULL);
+  return res;
+}
+
+// check uniqueness and ascending order at output time, then update
+// last_output_doh.  Returns 0 on success, 1 on violation.
+static int check_and_update_output_doh(AV2Decoder *pbi,
+                                       const RefCntBuffer *frame) {
+  const int xl = frame->xlayer_id;
+  const int ml = frame->mlayer_id;
+  const int doh = frame->display_order_hint;
+
+  const int last_doh = pbi->last_output_doh[xl][ml];
+  if (doh <= last_doh) return 1;
+
+  pbi->last_output_doh[xl][ml] = doh;
+  return 0;
+}
+
+int av2_output_frame_buffers(AV2Decoder *pbi, int ref_idx) {
+  AV2_COMMON *const cm = &pbi->common;
+  RefCntBuffer *trigger_frame = NULL;
+  RefCntBuffer *output_candidate = NULL;
+  int doh_error = 0;
+
+  // Determine if the triggering frame is the current frame or a frame
+  // already stored in the refrence buffer.
+  trigger_frame = (ref_idx >= 0) ? cm->ref_frame_map[ref_idx] : cm->cur_frame;
+
+  // Add the previous frames into the output queue.
+  do {
+    output_candidate = trigger_frame;
+    for (int i = 0; i < cm->seq_params.ref_frames; i++) {
+      if (is_frame_eligible_for_output(cm->ref_frame_map[i]) &&
+          derive_output_order_idx(cm, cm->ref_frame_map[i]) <
+              derive_output_order_idx(cm, output_candidate)) {
+        output_candidate = cm->ref_frame_map[i];
+      }
+    }
+    if (output_candidate != trigger_frame) {
+      if (cm->seq_params.monotonic_output_order_flag == 0) {
+        doh_error |= check_and_update_output_doh(pbi, output_candidate);
+      }
+      assign_output_frame_buffer_p(
+          &pbi->output_frames[pbi->num_output_frames++], output_candidate);
+      output_candidate->frame_output_done = 1;
+#if CONFIG_BITSTREAM_DEBUG
+      avm_bitstream_queue_set_frame_read(
+          derive_output_order_idx(cm, output_candidate) * 2 + 1);
+#endif  // CONFIG_BITSTREAM_DEBUG
+#if CONFIG_MISMATCH_DEBUG
+      mismatch_move_frame_idx_r(0);
+#endif  // CONFIG_MISMATCH_DEBUG
+    }
+  } while (output_candidate != trigger_frame);
+
+  if (cm->seq_params.monotonic_output_order_flag == 0) {
+    // Add the output triggering frame into the output queue.
+    doh_error |= check_and_update_output_doh(pbi, trigger_frame);
+  }
+  assign_output_frame_buffer_p(&pbi->output_frames[pbi->num_output_frames++],
+                               trigger_frame);
+  trigger_frame->frame_output_done = 1;
+
+#if CONFIG_BITSTREAM_DEBUG
+  if (trigger_frame->order_hint != cm->cur_frame->order_hint) {
+    avm_bitstream_queue_set_frame_read(
+        derive_output_order_idx(cm, trigger_frame) * 2 + 1);
+  }
+#endif  // CONFIG_BITSTREAM_DEBUG
+#if CONFIG_MISMATCH_DEBUG
+  if (trigger_frame->display_order_hint != cm->cur_frame->display_order_hint)
+    mismatch_move_frame_idx_r(0);
+#endif  // CONFIG_MISMATCH_DEBUG
+
+  // Add the next frames (implicit_output_picture == 1) into the output queue.
+  uint64_t trigger_frame_output_order =
+      derive_output_order_idx(cm, trigger_frame);
+
+  int successive_output = 1;
+  for (int k = 1; k <= cm->seq_params.ref_frames && successive_output > 0;
+       k++) {
+    uint64_t next_frame_output_order = trigger_frame_output_order + k;
+    successive_output = 0;
+    for (int i = 0; i < cm->seq_params.ref_frames; i++) {
+      if (is_frame_eligible_for_output(cm->ref_frame_map[i]) &&
+          derive_output_order_idx(cm, cm->ref_frame_map[i]) ==
+              next_frame_output_order) {
+        if (cm->seq_params.monotonic_output_order_flag == 0) {
+          doh_error |= check_and_update_output_doh(pbi, cm->ref_frame_map[i]);
+        }
+        assign_output_frame_buffer_p(
+            &pbi->output_frames[pbi->num_output_frames++],
+            cm->ref_frame_map[i]);
+        cm->ref_frame_map[i]->frame_output_done = 1;
+        successive_output++;
+#if CONFIG_BITSTREAM_DEBUG
+        avm_bitstream_queue_set_frame_read(
+            derive_output_order_idx(cm, cm->ref_frame_map[i]) * 2 + 1);
+#endif  // CONFIG_BITSTREAM_DEBUG
+#if CONFIG_MISMATCH_DEBUG
+        mismatch_move_frame_idx_r(0);
+#endif  // CONFIG_MISMATCH_DEBUG
+      }
+    }
+  }
+  return doh_error;
+}
+
+// If any buffer updating is signaled it should be done here.
+// Consumes a reference to cm->cur_frame.
+//
+// This functions returns void. It reports failure by setting
+// cm->error.error_code.
+static void update_frame_buffers(AV2Decoder *pbi, int frame_decoded) {
+  int ref_index = 0;
+  AV2_COMMON *const cm = &pbi->common;
+  BufferPool *const pool = cm->buffer_pool;
+  int doh_error = 0;
+
+  pbi->output_frames_offset = 0;
+
+  if (frame_decoded) {
+    lock_buffer_pool(pool);
+
+    // Don't clear is_restricted for bridge frames - they should maintain
+    // the restricted status inherited from their reference frame
+    if (!cm->bridge_frame_info.is_bridge_frame) {
+      cm->cur_frame->is_restricted = false;
+    }
+
+    int first_ref_index;
+    const bool clear_multiple_insert_in_one =
+        av2_frame_clears_multiple_inserted_in_one(
+            cm->current_frame.refresh_frame_flags, cm->current_frame.frame_type,
+            &first_ref_index);
+
+    // The following for loop needs to release the reference stored in
+    // cm->ref_frame_map[ref_index] before storing a reference to
+    // cm->cur_frame in cm->ref_frame_map[ref_index].
+    for (int mask = cm->current_frame.refresh_frame_flags; mask; mask >>= 1) {
+      if (mask & 1) {
+        if (pbi->bru_opt_mode && cm->bru.enabled) {
+          if (ref_index == cm->bru.explicit_ref_idx) {
+            ++ref_index;
+            continue;  // skip refresh BRU ref
+          }
+        }
+        if (is_frame_eligible_for_output(cm->ref_frame_map[ref_index]))
+          doh_error |= av2_output_frame_buffers(pbi, ref_index);
+        decrease_ref_count(cm->ref_frame_map[ref_index], pool);
+
+        if (av2_skip_reference_buffer_update(clear_multiple_insert_in_one,
+                                             ref_index, first_ref_index)) {
+          cm->ref_frame_map[ref_index] = NULL;
+        } else {
+          cm->ref_frame_map[ref_index] = cm->cur_frame;
+          ++cm->cur_frame->ref_count;
+        }
+      }
+      ++ref_index;
+    }
+    update_subgop_stats(cm, &pbi->subgop_stats, cm->cur_frame->order_hint,
+                        pbi->enable_subgop_stats);
+    if (((cm->immediate_output_picture && !cm->cur_frame->frame_output_done) ||
+         cm->show_existing_frame)) {
+      doh_error |= av2_output_frame_buffers(pbi, -1);
+      decrease_ref_count(cm->cur_frame, pool);
+    } else {
+      decrease_ref_count(cm->cur_frame, pool);
+    }
+    unlock_buffer_pool(pool);
+    if (cm->seq_params.monotonic_output_order_flag == 0) {
+      if (doh_error) {
+        aom_internal_error(
+            &cm->error, AOM_CODEC_UNSUP_BITSTREAM,
+            "Display order hint of an output picture is not unique"
+            " in the same (xlayer_id %d) layer.",
+            cm->xlayer_id);
+      }
+    }
+  } else {
+    // Nothing was decoded, so just drop this frame buffer
+    lock_buffer_pool(pool);
+    decrease_ref_count(cm->cur_frame, pool);
+    unlock_buffer_pool(pool);
+  }
+  cm->cur_frame = NULL;
+
+  // Invalidate these references until the next frame starts.
+  for (ref_index = 0; ref_index < INTER_REFS_PER_FRAME; ref_index++) {
+    cm->remapped_ref_idx[ref_index] = INVALID_IDX;
+  }
+}
+
+int av2_receive_compressed_data(AV2Decoder *pbi, size_t size,
+                                const uint8_t **psource) {
+  AV2_COMMON *volatile const cm = &pbi->common;
+  const uint8_t *source = *psource;
+  cm->error.error_code = AOM_CODEC_OK;
+  cm->error.has_detail = 0;
+  cm->decoding = 1;
+
+  if (size == 0) {
+    // This is used to signal that we are missing frames.
+    // We do not know if the missing frame(s) was supposed to update
+    // any of the reference buffers, but we act conservative and
+    // mark only the last buffer as corrupted.
+    //
+    // TODO(jkoleszar): Error concealment is undefined and non-normative
+    // at this point, but if it becomes so, [0] may not always be the correct
+    // thing to do here.
+    const int last_frame = get_closest_pastcur_ref_or_ref0(cm);
+    RefCntBuffer *ref_buf = get_ref_frame_buf(cm, last_frame);
+    if (ref_buf != NULL) ref_buf->buf.corrupted = 1;
+  }
+  check_ref_count_status_dec(pbi);
+  if (assign_cur_frame_new_fb(cm) == NULL) {
+    cm->error.error_code = AOM_CODEC_MEM_ERROR;
+    return 1;
+  }
+
+  // The jmp_buf is valid only for the duration of the function that calls
+  // setjmp(). Therefore, this function must reset the 'setjmp' field to 0
+  // before it returns.
+  if (setjmp(cm->error.jmp)) {
+    const AVxWorkerInterface *const winterface = avm_get_worker_interface();
+    int i;
+
+    cm->error.setjmp = 0;
+
+    // Synchronize all threads immediately as a subsequent decode call may
+    // cause a resize invalidating some allocations.
+    winterface->sync(&pbi->lf_worker);
+    for (i = 0; i < pbi->num_workers; ++i) {
+      winterface->sync(&pbi->tile_workers[i]);
+    }
+
+    release_current_frame(pbi);
+    aom_clear_system_state();
+    return -1;
+  }
+
+  cm->error.setjmp = 1;
+
+  int frame_decoded =
+      avm_decode_frame_from_obus(pbi, source, source + size, psource);
+#if CONFIG_INSPECTION
+  if (cm->features.tip_frame_mode == TIP_FRAME_AS_OUTPUT) {
+    if (pbi->inspect_tip_cb != NULL) {
+      (*pbi->inspect_tip_cb)(pbi, pbi->inspect_ctx);
+    }
+  }
+#endif
+
+  if (frame_decoded < 0) {
+    assert(cm->error.error_code != AOM_CODEC_OK);
+    release_current_frame(pbi);
+    cm->error.setjmp = 0;
+    return 1;
+  }
+
+#if TXCOEFF_TIMER
+  cm->cum_txcoeff_timer += cm->txcoeff_timer;
+  fprintf(stderr,
+          "txb coeff block number: %d, frame time: %ld, cum time %ld in us\n",
+          cm->txb_count, cm->txcoeff_timer, cm->cum_txcoeff_timer);
+  cm->txcoeff_timer = 0;
+  cm->txb_count = 0;
+#endif
+
+  // Note: At this point, this function holds a reference to cm->cur_frame
+  // in the buffer pool. This reference is consumed by update_frame_buffers().
+  check_ref_count_status_dec(pbi);
+  update_frame_buffers(pbi, frame_decoded);
+  check_ref_count_status_dec(pbi);
+
+  if (frame_decoded) {
+    pbi->decoding_first_frame = 0;
+  }
+
+  if (cm->error.error_code != AOM_CODEC_OK) {
+    cm->error.setjmp = 0;
+    return 1;
+  }
+
+  aom_clear_system_state();
+  if (cm->seg.enabled) {
+    if (cm->prev_frame && (cm->mi_params.mi_rows == cm->prev_frame->mi_rows) &&
+        (cm->mi_params.mi_cols == cm->prev_frame->mi_cols)) {
+      cm->last_frame_seg_map = cm->prev_frame->seg_map;
+    } else {
+      cm->last_frame_seg_map = NULL;
+    }
+  }
+
+  // Update progress in frame parallel decode.
+  cm->error.setjmp = 0;
+
+  return 0;
+}
+
+// Get the frame at a particular index in the output queue
+int av2_get_raw_frame(AV2Decoder *pbi, size_t index, YV12_BUFFER_CONFIG **sd,
+                      aom_film_grain_t **grain_params) {
+  if (index >= pbi->num_output_frames) return -1;
+  *sd = &pbi->output_frames[index]->buf;
+  *grain_params = &pbi->output_frames[index]->film_grain_params;
+  aom_clear_system_state();
+  return 0;
+}
+
+// Get the highest-spatial-layer output
+// TODO(rachelbarker): What should this do?
+int av2_get_frame_to_show(AV2Decoder *pbi, YV12_BUFFER_CONFIG *frame) {
+  if (pbi->num_output_frames == 0) return -1;
+  const size_t out_frame_idx = pbi->output_frames_offset;
+  if (pbi->num_output_frames <= out_frame_idx) return -1;
+  *frame = pbi->output_frames[out_frame_idx]->buf;
+  return 0;
+}

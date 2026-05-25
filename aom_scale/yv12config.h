@@ -98,6 +98,7 @@ typedef struct yv12_buffer_config {
       uint8_t *v_buffer;
     };
     uint8_t *buffers[3];
+    uint16_t *buffers_u16[3];
   };
 
   // Indicate whether y_buffer, u_buffer, and v_buffer points to the internally
@@ -106,7 +107,10 @@ typedef struct yv12_buffer_config {
   // This is needed to store y_buffer, u_buffer, and v_buffer when set reference
   // uses an external refernece, and restore those buffer pointers after the
   // external reference frame is no longer used.
-  uint8_t *store_buf_adr[3];
+  union {
+    uint8_t *store_buf_adr[3];
+    uint16_t *store_buf_adr_u16[3];
+  };
 
   // Global motion search data
 #if CONFIG_AV1_ENCODER && !CONFIG_REALTIME_ONLY
@@ -130,6 +134,18 @@ typedef struct yv12_buffer_config {
   aom_color_range_t color_range;
   int render_width;
   int render_height;
+
+#if CONFIG_AV2
+  int w_conf_win_enabled_flag;
+  int w_win_left_offset;
+  int w_win_right_offset;
+  int w_win_top_offset;
+  int w_win_bottom_offset;
+  int max_width;
+  int max_height;
+  int crop_width;
+  int crop_height;
+#endif
 
   int corrupted;
   int flags;

@@ -79,6 +79,10 @@ sub aom_config($) {
   return (defined $config{$_[0]}) ? $config{$_[0]} : "";
 }
 
+sub avm_config($) {
+  return aom_config($_[0]);
+}
+
 sub specialize {
   if (@_ <= 1) {
     die "'specialize' must be called with a function name and at least one ",

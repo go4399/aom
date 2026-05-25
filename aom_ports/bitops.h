@@ -14,6 +14,7 @@
 
 #include <assert.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #include "config/aom_config.h"
 
@@ -69,6 +70,18 @@ static inline int get_msb(unsigned int n) {
   return log;
 }
 #endif
+
+static inline int get_msb_signed(int32_t n) {
+  return n == 0 ? 0 : get_msb((unsigned int)abs(n));
+}
+
+static inline int get_msb_signed_64(int64_t n) {
+  uint64_t n_abs = (uint64_t)llabs(n);
+  unsigned int high32 = n_abs >> 32;
+  unsigned int low32 = n_abs & 0x00000000ffffffffULL;
+  if (high32 != 0) return 32 + get_msb(high32);
+  return low32 == 0 ? 0 : get_msb((unsigned int)low32);
+}
 
 // Returns (int)ceil(log2(n)).
 static inline int aom_ceil_log2(int n) {

@@ -98,6 +98,10 @@ typedef struct aom_variance_vtable {
   aom_obmc_sad_fn_t osdf;
   aom_obmc_variance_fn_t ovf;
   aom_obmc_subpixvariance_fn_t osvf;
+#if CONFIG_AV2
+  aom_dist_wtd_sad_avg_fn_t jsdaf;
+  aom_dist_wtd_subp_avg_variance_fn_t jsvaf;
+#endif
 } aom_variance_fn_ptr_t;
 
 void aom_highbd_var_filter_block2d_bil_first_pass(

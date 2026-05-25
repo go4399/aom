@@ -54,12 +54,15 @@ extern "C" {
 
 #define BASE_CONTEXT_POSITION_NUM 12
 
+#ifndef TX_CLASS_defined
+#define TX_CLASS_defined
 enum {
   TX_CLASS_2D = 0,
   TX_CLASS_HORIZ = 1,
   TX_CLASS_VERT = 2,
   TX_CLASSES = 3,
 } UENUM1BYTE(TX_CLASS);
+#endif
 
 #define DCT_MAX_VALUE 16384
 #define DCT_MAX_VALUE_HIGH10 65536
@@ -79,11 +82,16 @@ struct frame_contexts;
 
 typedef char ENTROPY_CONTEXT;
 
+#ifndef combine_entropy_contexts_defined
+#define combine_entropy_contexts_defined
 static inline int combine_entropy_contexts(ENTROPY_CONTEXT a,
                                            ENTROPY_CONTEXT b) {
   return (a != 0) + (b != 0);
 }
+#endif
 
+#ifndef get_entropy_context_defined
+#define get_entropy_context_defined
 static inline int get_entropy_context(TX_SIZE tx_size, const ENTROPY_CONTEXT *a,
                                       const ENTROPY_CONTEXT *l) {
   ENTROPY_CONTEXT above_ec = 0, left_ec = 0;
@@ -169,11 +177,15 @@ static inline int get_entropy_context(TX_SIZE tx_size, const ENTROPY_CONTEXT *a,
   }
   return combine_entropy_contexts(above_ec, left_ec);
 }
+#endif
 
+#ifndef get_txsize_entropy_ctx_defined
+#define get_txsize_entropy_ctx_defined
 static inline TX_SIZE get_txsize_entropy_ctx(TX_SIZE txsize) {
   return (TX_SIZE)((txsize_sqr_map[txsize] + txsize_sqr_up_map[txsize] + 1) >>
                    1);
 }
+#endif
 
 #ifdef __cplusplus
 }  // extern "C"
