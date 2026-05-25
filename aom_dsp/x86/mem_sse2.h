@@ -37,6 +37,18 @@ static inline int64_t loadu_int64(const void *src) {
   return v;
 }
 
+static inline uint16_t loadu_uint16(const void *src) {
+  return (uint16_t)loadu_int16(src);
+}
+
+static inline uint32_t loadu_uint32(const void *src) {
+  return (uint32_t)loadu_int32(src);
+}
+
+static inline uint64_t loadu_uint64(const void *src) {
+  return (uint64_t)loadu_int64(src);
+}
+
 static inline void _mm_storeh_epi64(__m128i *const d, const __m128i s) {
   _mm_storeh_pi((__m64 *)d, _mm_castsi128_ps(s));
 }

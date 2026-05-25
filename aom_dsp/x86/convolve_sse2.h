@@ -14,6 +14,12 @@
 
 #include "config/aom_scale_rtcd.h"
 
+#if CONFIG_AV2_DECODER || CONFIG_AV2_ENCODER
+#define av1_get_interp_filter_subpel_kernel av2_get_interp_filter_subpel_kernel
+const int16_t *av2_get_interp_filter_subpel_kernel(
+    const InterpFilterParams *const filter_params, const int subpel);
+#endif
+
 // Note:
 //  This header file should be put below any x86 intrinsics head file
 static inline void prepare_coeffs(const InterpFilterParams *const filter_params,

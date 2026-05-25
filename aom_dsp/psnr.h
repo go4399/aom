@@ -87,6 +87,18 @@ void aom_calc_highbd_psnr(const YV12_BUFFER_CONFIG *a,
                           const YV12_BUFFER_CONFIG *b, PSNR_STATS *psnr,
                           unsigned int bit_depth, unsigned int in_bit_depth);
 #endif
+#if CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
+#ifndef IN_AOM_DSP_PSNR_C
+#define aom_calc_highbd_psnr_6(a, b, psnr, bd, in_bd, lossless) \
+  aom_calc_highbd_psnr(a, b, psnr, bd, in_bd)
+#define aom_calc_highbd_psnr_5(a, b, psnr, bd, in_bd) \
+  aom_calc_highbd_psnr(a, b, psnr, bd, in_bd)
+#define GET_PSNR_MACRO(_1, _2, _3, _4, _5, _6, NAME, ...) NAME
+#define aom_calc_highbd_psnr(...)                     \
+  GET_PSNR_MACRO(__VA_ARGS__, aom_calc_highbd_psnr_6, \
+                 aom_calc_highbd_psnr_5)(__VA_ARGS__)
+#endif
+#endif
 void aom_calc_psnr(const YV12_BUFFER_CONFIG *a, const YV12_BUFFER_CONFIG *b,
                    PSNR_STATS *psnr);
 

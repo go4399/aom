@@ -8,6 +8,7 @@
  * Media Patent License 1.0 was not distributed with this source code in the
  * PATENTS file, you can obtain it at www.aomedia.org/license/patent.
  */
+#define IN_AOM_DSP_PSNR_C
 
 #include <assert.h>
 #include <math.h>

@@ -1,0 +1,115 @@
+/*
+ * Copyright (c) 2025, Alliance for Open Media. All rights reserved
+ *
+ * This source code is subject to the terms of the BSD 3-Clause Clear License
+ * and the Alliance for Open Media Patent License 1.0. If the BSD 3-Clause Clear
+ * License was not distributed with this source code in the LICENSE file, you
+ * can obtain it at aomedia.org/license/software-license/bsd-3-c-c/.  If the
+ * Alliance for Open Media Patent License 1.0 was not distributed with this
+ * source code in the PATENTS file, you can obtain it at
+ * aomedia.org/license/patent-license/.
+ */
+
+#include <assert.h>
+#include <limits.h>
+#include <stdio.h>
+#include <string.h>
+
+#include "aom/aom_encoder.h"
+#include "aom_dsp/aom_dsp_common.h"
+#include "aom_dsp/binary_codes_writer.h"
+#include "aom_dsp/bitwriter_buffer.h"
+#include "aom_mem/aom_mem.h"
+#include "aom_ports/bitops.h"
+#include "aom_ports/mem_ops.h"
+#include "aom_ports/system_state.h"
+#include "av2/common/av2_common_int.h"
+#include "av2/common/blockd.h"
+#include "av2/common/bru.h"
+#include "av2/common/enums.h"
+#if CONFIG_BITSTREAM_DEBUG
+#include "aom_util/debug_util.h"
+#endif  // CONFIG_BITSTREAM_DEBUG
+
+#include "common/md5_utils.h"
+#include "common/rawenc.h"
+
+#include "av2/common/cdef.h"
+#include "av2/common/ccso.h"
+#include "av2/common/cfl.h"
+#include "av2/common/entropy.h"
+#include "av2/common/entropymode.h"
+#include "av2/common/entropymv.h"
+#include "av2/common/intra_dip.h"
+#include "av2/common/mvref_common.h"
+#include "av2/common/pred_common.h"
+#include "av2/common/quant_common.h"
+#include "av2/common/reconinter.h"
+#include "av2/common/reconintra.h"
+#include "av2/common/secondary_tx.h"
+#include "av2/common/seg_common.h"
+#include "av2/common/tile_common.h"
+
+#include "av2/encoder/bitstream.h"
+#include "av2/encoder/brt_syntax.h"
+#include "av2/common/cost.h"
+#include "av2/encoder/encodemv.h"
+#include "av2/encoder/encodetxb.h"
+#include "av2/encoder/mcomp.h"
+#include "av2/encoder/palette.h"
+#include "av2/encoder/pickrst.h"
+#include "av2/encoder/segmentation.h"
+#include "av2/encoder/tokenize.h"
+
+void av2_set_buffer_removal_timing_params(AV2_COMP *const cpi) {
+  AV2_COMMON *const cm = &cpi->common;
+  struct OperatingPointSet *ops = &cm->ops_params;
+  BufferRemovalTimingInfo *brt_info = &cm->brt_info;
+  // ops_id
+  // Enable OPS-dependent BRT mode
+  brt_info->br_ops_dependent_flag = (ops->valid) ? 1 : 0;
+  if (brt_info->br_ops_dependent_flag) {
+    brt_info->br_ops_id = ops->ops_id;
+    // ops_cnt
+    brt_info->br_ops_cnt[brt_info->br_ops_id] = ops->ops_cnt;
+    for (int i = 0; i < brt_info->br_ops_cnt[brt_info->br_ops_id]; i++) {
+      brt_info->br_decoder_model_present_op_flag[brt_info->br_ops_id][i] = 0;
+      if (brt_info->br_decoder_model_present_op_flag[brt_info->br_ops_id][i]) {
+        brt_info->br_time_op[brt_info->br_ops_id][i] = 0;
+      }
+    }
+  } else {
+    brt_info->br_time = 0;
+  }
+}
+
+int av2_write_brt_info(const BufferRemovalTimingInfo *brt_info,
+                       struct aom_write_bit_buffer *wb) {
+  avm_wb_write_bit(wb, brt_info->br_ops_dependent_flag);
+  if (brt_info->br_ops_dependent_flag) {
+    avm_wb_write_literal(wb, brt_info->br_ops_id, 4);
+    avm_wb_write_literal(wb, brt_info->br_ops_cnt[brt_info->br_ops_id], 3);
+    for (int i = 0; i < brt_info->br_ops_cnt[brt_info->br_ops_id]; i++) {
+      avm_wb_write_bit(
+          wb,
+          brt_info->br_decoder_model_present_op_flag[brt_info->br_ops_id][i]);
+      if (brt_info->br_decoder_model_present_op_flag[brt_info->br_ops_id][i]) {
+        avm_wb_write_rice_golomb(
+            wb, brt_info->br_time_op[brt_info->br_ops_id][i], 4);
+      }
+    }
+  } else {
+    avm_wb_write_rice_golomb(wb, brt_info->br_time, 4);
+  }
+  return 0;
+}
+
+uint32_t av2_write_buffer_removal_timing_obu(
+    const BufferRemovalTimingInfo *brt_info, uint8_t *const dst) {
+  struct aom_write_bit_buffer wb = { dst, 0 };
+
+  av2_write_brt_info(brt_info, &wb);
+
+  av2_add_trailing_bits(&wb);
+  return avm_wb_bytes_written(&wb);
+}
