@@ -112,6 +112,40 @@ class ResizingVideoSource : public ::libaom_test::DummyVideoSource {
   int top_height_;
 };
 
+class GrayscaleFlatVideoSource : public ::libaom_test::DummyVideoSource {
+ public:
+  GrayscaleFlatVideoSource() {
+    SetSize(1920, 1080);
+    SetImageFormat(AOM_IMG_FMT_I420);
+    limit_ = 1;
+  }
+
+  ~GrayscaleFlatVideoSource() override = default;
+
+  void SetValue(uint8_t val) { val_ = val; }
+
+ protected:
+  void FillFrame() override {
+    if (img_) {
+      const unsigned int y_stride = img_->stride[0];
+      const unsigned int y_height = img_->h;
+      for (unsigned int r = 0; r < y_height; ++r) {
+        memset(img_->planes[0] + r * y_stride, val_, img_->d_w);
+      }
+      const unsigned int uv_stride = img_->stride[1];
+      const unsigned int uv_height = (img_->h + 1) >> 1;
+      const unsigned int uv_width = (img_->d_w + 1) >> 1;
+      for (unsigned int r = 0; r < uv_height; ++r) {
+        memset(img_->planes[1] + r * uv_stride, 128, uv_width);
+        memset(img_->planes[2] + r * uv_stride, 128, uv_width);
+      }
+    }
+  }
+
+ private:
+  uint8_t val_ = 0;
+};
+
 class DatarateTestSVC
     : public ::libaom_test::CodecTestWith4Params<libaom_test::TestMode, int,
                                                  unsigned int, int>,
@@ -199,6 +233,10 @@ class DatarateTestSVC
                              aom_codec_pts_t pts) override {
     frame_info_list_.push_back(FrameInfo(pts, img.d_w, img.d_h));
     ++decoded_nframes_;
+
+    if (check_perfect_reconstruction_) {
+      CheckPerfectReconstruction(img);
+    }
   }
 
   std::vector<FrameInfo> frame_info_list_;
@@ -248,6 +286,10 @@ class DatarateTestSVC
     dynamic_tl_ = false;
     dynamic_scale_factors_ = false;
     disable_last_ref_ = false;
+    check_perfect_reconstruction_ = false;
+    frame_qp_value_ = 0;
+    expected_val_ = 0;
+    max_allowed_error_ = 0;
   }
 
   void PreEncodeFrameHook(::libaom_test::VideoSource *video,
@@ -2404,6 +2446,44 @@ class DatarateTestSVC
   bool dynamic_tl_;
   bool dynamic_scale_factors_;
   bool disable_last_ref_;
+
+  void CheckPerfectReconstruction(const aom_image_t &img) {
+    const unsigned int w = img.d_w;
+    const unsigned int h = img.d_h;
+    const unsigned int stride = img.stride[0];
+    const uint8_t *y_plane = img.planes[0];
+
+    // Verify bulk of the image (excluding a 2-superblock border margin to avoid
+    // boundary effects) AV1 max superblock size is 128x128, so 2 superblocks
+    // corresponds to 256 pixels.
+    const unsigned int border = 256;
+    const uint8_t base_val = y_plane[border * stride + border];
+
+    // Check that the base_val is exactly equal to expected_val_ (no error
+    // tolerance)
+    const int diff =
+        abs(static_cast<int>(base_val) - static_cast<int>(expected_val_));
+    EXPECT_LE(diff, max_allowed_error_)
+        << "Mismatch for value " << (int)expected_val_ << " and QP "
+        << frame_qp_value_ << ": base reconstructed value " << (int)base_val
+        << " has error " << diff << " which exceeds max allowed"
+        << max_allowed_error_;
+
+    for (unsigned int r = border; r < h - border; ++r) {
+      for (unsigned int c = border; c < w - border; ++c) {
+        EXPECT_EQ(y_plane[r * stride + c], base_val)
+            << "Non-flat reconstructed pixel at (" << r << ", " << c
+            << ") with value " << (int)y_plane[r * stride + c]
+            << " (expected base flat value: " << (int)base_val << ") for input "
+            << (int)expected_val_ << " and QP " << frame_qp_value_;
+      }
+    }
+  }
+
+  bool check_perfect_reconstruction_;
+  int frame_qp_value_;
+  uint8_t expected_val_;
+  int max_allowed_error_;
 };
 
 // Check basic rate targeting for CBR, for 3 temporal layers, 1 spatial.
@@ -2771,6 +2851,48 @@ TEST_P(DatarateTestSVC, BasicRateTargetingSVC3TL1SLDynamicTL) {
 // this encoding.
 TEST_P(DatarateTestSVC, BasicRateTargetingSVC1TL3SLIssue433046392) {
   BasicRateTargetingSVC1TL3SLIssue433046392();
+}
+
+TEST_P(DatarateTestSVC, PerfectReconstructionGrayScaleInput) {
+  if (set_cpu_used_ != 10 || aq_mode_ != 0 || GET_PARAM(4) != 0) return;
+
+  SetUpCbr();
+
+  struct QpTestParams {
+    int quantizer;
+    int qindex;
+    int max_error;
+  };
+  const QpTestParams test_params[] = {
+    { 3, 12, 1 },    { 5, 20, 2 },    { 10, 40, 4 },   { 20, 80, 5 },
+    { 25, 100, 6 },  { 30, 120, 8 },  { 35, 140, 11 }, { 40, 160, 14 },
+    { 45, 180, 19 }, { 50, 200, 25 }, { 55, 220, 34 }
+  };
+
+  for (const auto &param : test_params) {
+    for (int x = 0; x <= 255; ++x) {
+      ResetModel();
+
+      expected_val_ = static_cast<uint8_t>(x);
+      frame_qp_value_ = param.qindex;
+      max_allowed_error_ = param.max_error;
+      check_perfect_reconstruction_ = true;
+
+      GrayscaleFlatVideoSource video;
+      video.SetValue(expected_val_);
+
+      cfg_.g_w = 1920;
+      cfg_.g_h = 1080;
+      cfg_.g_profile = 0;
+      cfg_.g_lag_in_frames = 0;
+      cfg_.rc_end_usage = AOM_CBR;
+      cfg_.rc_min_quantizer = param.quantizer;
+      cfg_.rc_max_quantizer = param.quantizer;
+
+      SetTargetBitratesFor1SL1TL();
+      ASSERT_NO_FATAL_FAILURE(RunLoop(&video));
+    }
+  }
 }
 
 TEST(SvcParams, BitrateOverflow) {
