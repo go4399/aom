@@ -1761,6 +1761,7 @@ void av1_remove_primary_compressor(AV1_PRIMARY *ppi) {
     aom_free(tpl_data->tpl_stats_pool[frame]);
     aom_free_frame_buffer(&tpl_data->tpl_rec_pool[frame]);
     aom_free_frame_buffer(&tpl_data->prev_gop_arf_src);
+    aom_free_frame_buffer(&tpl_data->prev_gop_arf_tpl_recon);
     tpl_data->prev_gop_arf_disp_order = -1;
     tpl_data->tpl_stats_pool[frame] = NULL;
   }
@@ -4582,7 +4583,7 @@ int av1_encode(AV1_COMP *const cpi, uint8_t *const dest, size_t dest_size,
     int is_last = 1;
     for (int i = 0; i < gf_group->size; ++i) {
       if (gf_group->display_idx[i] >
-          (int64_t)current_frame->display_order_hint) {
+          gf_group->display_idx[cpi->gf_frame_index]) {
         is_last = 0;
         break;
       }
@@ -4590,6 +4591,7 @@ int av1_encode(AV1_COMP *const cpi, uint8_t *const dest, size_t dest_size,
     if (is_last) {
       cpi->ppi->tpl_data.prev_gop_arf_disp_order = -1;
       const AV1EncoderConfig *const oxcf = &cpi->oxcf;
+      int available = 1;
       int ret = aom_realloc_frame_buffer(
           &cpi->ppi->tpl_data.prev_gop_arf_src, oxcf->frm_dim_cfg.width,
           oxcf->frm_dim_cfg.height, cm->seq_params->subsampling_x,
@@ -4600,14 +4602,48 @@ int av1_encode(AV1_COMP *const cpi, uint8_t *const dest, size_t dest_size,
         aom_internal_error(cm->error, AOM_CODEC_MEM_ERROR,
                            "Failed to allocate tpl prev_gop_arf_src buf.");
 
-      // Currently it is not supported if source/refernece is resized.
+      // Currently it is not supported if source/reference is resized.
       if (cpi->source->y_width == cpi->ppi->tpl_data.prev_gop_arf_src.y_width &&
           cpi->source->y_height ==
               cpi->ppi->tpl_data.prev_gop_arf_src.y_height) {
         // Copy the content from source to this buffer for next gop.
         aom_yv12_copy_frame(cpi->source, &cpi->ppi->tpl_data.prev_gop_arf_src,
                             av1_num_planes(cm));
+      } else {
+        available = 0;
+      }
 
+      ret = aom_realloc_frame_buffer(
+          &cpi->ppi->tpl_data.prev_gop_arf_tpl_recon, oxcf->frm_dim_cfg.width,
+          oxcf->frm_dim_cfg.height, cm->seq_params->subsampling_x,
+          cm->seq_params->subsampling_y, cm->seq_params->use_highbitdepth,
+          cpi->oxcf.border_in_pixels, cm->features.byte_alignment, NULL, NULL,
+          NULL, cpi->alloc_pyramid, 0);
+      if (ret)
+        aom_internal_error(
+            cm->error, AOM_CODEC_MEM_ERROR,
+            "Failed to allocate tpl prev_gop_arf_tpl_recon buf.");
+
+      YV12_BUFFER_CONFIG *prev_gop_arf_tpl_recon_buf =
+          cpi->ppi->tpl_data.tpl_frame
+              ? cpi->ppi->tpl_data.tpl_frame[cpi->gf_frame_index].rec_picture
+              : NULL;
+
+      // Currently it is not supported if source/reference is resized.
+      if (prev_gop_arf_tpl_recon_buf &&
+          prev_gop_arf_tpl_recon_buf->y_width ==
+              cpi->ppi->tpl_data.prev_gop_arf_tpl_recon.y_width &&
+          prev_gop_arf_tpl_recon_buf->y_height ==
+              cpi->ppi->tpl_data.prev_gop_arf_tpl_recon.y_height) {
+        // Copy the content from source to this buffer for next gop.
+        aom_yv12_copy_frame(prev_gop_arf_tpl_recon_buf,
+                            &cpi->ppi->tpl_data.prev_gop_arf_tpl_recon,
+                            av1_num_planes(cm));
+      } else {
+        available = 0;
+      }
+
+      if (available) {
         cpi->ppi->tpl_data.prev_gop_arf_disp_order =
             current_frame->display_order_hint;
       }
