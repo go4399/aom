@@ -1904,11 +1904,9 @@ static int64_t motion_mode_rd(
     }
     int64_t best_scaled_rd = best_rd;
     int64_t this_scaled_rd = tmp_rd;
-    if (mode_index != 0)
-      increase_motion_mode_rd(&best_mbmi, mbmi, &best_scaled_rd,
-                              &this_scaled_rd,
-                              cpi->sf.inter_sf.bias_warp_mode_rd_scale_pct,
-                              cpi->sf.inter_sf.bias_obmc_mode_rd_scale_pct);
+    increase_motion_mode_rd(&best_mbmi, mbmi, &best_scaled_rd, &this_scaled_rd,
+                            cpi->sf.inter_sf.bias_warp_mode_rd_scale_pct,
+                            cpi->sf.inter_sf.bias_obmc_mode_rd_scale_pct);
 
     if (mode_index == 0 || this_scaled_rd < best_scaled_rd) {
       // Update best_rd data if this is the best motion mode so far
@@ -3374,7 +3372,13 @@ static int64_t handle_inter_mode(
                               rd_stats_uv, mode_enum, NULL, bsize, tmp_rd,
                               cpi->sf.winner_mode_sf.multi_winner_mode_type,
                               do_tx_search);
-      if (tmp_rd < best_rd) {
+      int64_t best_scaled_rd = best_rd;
+      int64_t this_scaled_rd = tmp_rd;
+      increase_motion_mode_rd(&best_mbmi, mbmi, &best_scaled_rd,
+                              &this_scaled_rd,
+                              cpi->sf.inter_sf.bias_warp_mode_rd_scale_pct,
+                              cpi->sf.inter_sf.bias_obmc_mode_rd_scale_pct);
+      if (this_scaled_rd < best_scaled_rd) {
         best_yrd = this_yrd;
         // Update the best rd stats if we found the best mode so far
         best_rd_stats = *rd_stats;
@@ -5625,10 +5629,11 @@ static void tx_search_best_inter_candidates(
 
     int64_t best_scaled_rd = search_state->best_rd;
     int64_t this_scaled_rd = rd_stats.rdcost;
-    increase_motion_mode_rd(&search_state->best_mbmode, mbmi, &best_scaled_rd,
-                            &this_scaled_rd,
-                            cpi->sf.inter_sf.bias_warp_mode_rd_scale_pct,
-                            cpi->sf.inter_sf.bias_obmc_mode_rd_scale_pct);
+    if (search_state->best_mode_index != THR_INVALID)
+      increase_motion_mode_rd(&search_state->best_mbmode, mbmi, &best_scaled_rd,
+                              &this_scaled_rd,
+                              cpi->sf.inter_sf.bias_warp_mode_rd_scale_pct,
+                              cpi->sf.inter_sf.bias_obmc_mode_rd_scale_pct);
     if (this_scaled_rd < best_rd_in_this_partition) {
       best_rd_in_this_partition = rd_stats.rdcost;
       *yrd = this_yrd;
@@ -6417,9 +6422,16 @@ void av1_rd_pick_inter_mode(struct AV1_COMP *cpi, struct TileDataEnc *tile_data,
 
     adjust_cost(cpi, x, &this_rd, /*is_inter_pred=*/true);
     adjust_rdcost(cpi, x, &rd_stats, /*is_inter_pred=*/true);
+    int64_t best_scaled_rd = search_state.best_rd;
+    int64_t this_scaled_rd = this_rd;
+    if (search_state.best_mode_index != THR_INVALID)
+      increase_motion_mode_rd(&search_state.best_mbmode, mbmi, &best_scaled_rd,
+                              &this_scaled_rd,
+                              sf->inter_sf.bias_warp_mode_rd_scale_pct,
+                              sf->inter_sf.bias_obmc_mode_rd_scale_pct);
 
     // Did this mode help, i.e., is it the new best mode
-    if (this_rd < search_state.best_rd) {
+    if (this_scaled_rd < best_scaled_rd) {
       assert(IMPLIES(comp_pred,
                      cm->current_frame.reference_mode != SINGLE_REFERENCE));
       search_state.best_pred_sse = x->pred_sse[ref_frame];
