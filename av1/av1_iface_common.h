@@ -105,6 +105,7 @@ static inline aom_codec_err_t image2yuvconfig(const aom_image_t *img,
       (yv12->y_crop_height + img->y_chroma_shift) >> img->y_chroma_shift;
 
   yv12->y_stride = img->stride[AOM_PLANE_Y];
+  assert(img->stride[AOM_PLANE_U] == img->stride[AOM_PLANE_V]);
   yv12->uv_stride = img->stride[AOM_PLANE_U];
   yv12->color_primaries = img->cp;
   yv12->transfer_characteristics = img->tc;
