@@ -47,7 +47,9 @@ extern "C" {
 
 #define WEDGE_NONE -1
 
-#if !CONFIG_AV2_DECODER && !CONFIG_AV2_ENCODER
+// Defined locally only for AV1 translation units; AV2 translation units inherit
+// the extended WedgeDirectionType from av1/common/enums.h's AV2 branch.
+#if !(defined(CONFIG_AV2_TU) && CONFIG_AV2_TU)
 // Angles are with respect to horizontal anti-clockwise
 enum {
   WEDGE_HORIZONTAL = 0,

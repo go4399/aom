@@ -20,3 +20,17 @@
 #include "aom_dsp/aom_dsp_common.h"
 #include "aom_dsp/aom_filter.h"
 #include "av2/common/convolve.h"
+
+// Public RTCD entry point for the AVX2 highbd separable 2D convolve. The actual
+// kernel lives as a static-inline in av2_convolve_avx2.h; the specialized
+// variant already dispatches on the per-axis tap count (8/6/4/2-tap, the 2-tap
+// branch being the bilinear case), so it is correct for every filter type.
+void av2_highbd_convolve_2d_sr_avx2(
+    const uint16_t *src, int src_stride, uint16_t *dst, int dst_stride, int w,
+    int h, const InterpFilterParams *filter_params_x,
+    const InterpFilterParams *filter_params_y, const int subpel_x_qn,
+    const int subpel_y_qn, ConvolveParams *conv_params, int bd) {
+  av2_highbd_convolve_2d_sr_specialized_avx2(
+      src, src_stride, dst, dst_stride, w, h, filter_params_x, filter_params_y,
+      subpel_x_qn, subpel_y_qn, conv_params, bd);
+}

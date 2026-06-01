@@ -14,7 +14,11 @@
 
 #include "config/aom_config.h"
 
-#if CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
+// Per-translation-unit discriminator: CONFIG_AV2_TU is defined (=1) only for
+// AV2 source files (set via av2/av2.cmake). AV1 translation units never define
+// it and therefore keep the original AV1 enum values, even in a combined build
+// where the global CONFIG_AV2 flag is on. This preserves AV1 bit-exactness.
+#if defined(CONFIG_AV2_TU) && CONFIG_AV2_TU
 // =============================================================================
 // AV2 Unified Enums & Constants
 // =============================================================================
@@ -1175,7 +1179,7 @@ typedef enum {
 #ifdef __cplusplus
 }  // extern "C"
 #endif
-#else  // CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
+#else  // defined(CONFIG_AV2_TU) && CONFIG_AV2_TU
 
 #include "aom/aom_codec.h"
 #include "aom/aom_integer.h"
@@ -1812,5 +1816,5 @@ enum {
 #endif
 
 
-#endif  // CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
+#endif  // defined(CONFIG_AV2_TU) && CONFIG_AV2_TU
 #endif  // AOM_AV1_COMMON_ENUMS_H_

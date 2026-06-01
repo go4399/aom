@@ -14,7 +14,11 @@
 
 #include "config/aom_scale_rtcd.h"
 
-#if CONFIG_AV2_DECODER || CONFIG_AV2_ENCODER
+// Per-translation-unit gating: only AV2 TUs redirect the kernel accessor to the
+// AV2 variant. AV1 TUs keep calling av1_get_interp_filter_subpel_kernel (a
+// static inline in av1/common/filter.h), which preserves AV1 behavior and
+// avoids an unresolved reference to the AV2 (static inline) kernel.
+#if defined(CONFIG_AV2_TU) && CONFIG_AV2_TU
 #define av1_get_interp_filter_subpel_kernel av2_get_interp_filter_subpel_kernel
 const int16_t *av2_get_interp_filter_subpel_kernel(
     const InterpFilterParams *const filter_params, const int subpel);

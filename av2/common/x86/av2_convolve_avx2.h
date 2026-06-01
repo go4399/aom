@@ -1072,62 +1072,10 @@ static INLINE __m256i prepare_coeffs_bilinear(
   return _mm256_set1_epi32(filter_coeff);
 }
 
-static INLINE void highbd_dist_wtd_convolve_2d_copy_do_average(
-    __m256i data, __m256i zero, __m256i res, const __m256i *offset_const,
-    const __m256i *wt0, const __m256i *wt1, int use_wtd_comp_avg,
-    const __m256i *const rounding_const, int rounding_shift,
-    __m256i clip_pixel_to_bd, __m256i *res_clip) {
-  const __m256i data_ref_0_lo = _mm256_unpacklo_epi16(data, zero);
-  const __m256i data_ref_0_hi = _mm256_unpackhi_epi16(data, zero);
-  const __m256i res_32b_lo = _mm256_unpacklo_epi16(res, zero);
-  const __m256i res_unsigned_lo = _mm256_add_epi32(res_32b_lo, *offset_const);
-  const __m256i comp_avg_res_lo = highbd_comp_avg(
-      &data_ref_0_lo, &res_unsigned_lo, wt0, wt1, use_wtd_comp_avg);
-  const __m256i res_32b_hi = _mm256_unpackhi_epi16(res, zero);
-  const __m256i res_unsigned_hi = _mm256_add_epi32(res_32b_hi, *offset_const);
-  const __m256i comp_avg_res_hi = highbd_comp_avg(
-      &data_ref_0_hi, &res_unsigned_hi, wt0, wt1, use_wtd_comp_avg);
-  const __m256i round_result_lo = highbd_convolve_rounding(
-      &comp_avg_res_lo, offset_const, rounding_const, rounding_shift);
-  const __m256i round_result_hi = highbd_convolve_rounding(
-      &comp_avg_res_hi, offset_const, rounding_const, rounding_shift);
-  const __m256i res_16b = _mm256_packus_epi32(round_result_lo, round_result_hi);
-  *res_clip = _mm256_min_epi16(res_16b, clip_pixel_to_bd);
-}
-
-static INLINE void dist_wtd_convolve_horiz_w4(
-    const uint16_t *src_ptr, int src_stride, const __m256i *const coeffs,
-    int im_h, int16_t *im_block, int im_stride, const __m256i *round_const_x,
-    const __m128i *round_shift_x) {
-  __m256i s[2];
-  DECLARE_ALIGNED(32, static const uint8_t,
-                  shuffle_mask0_loc[32]) = { 0, 1, 2, 3, 2, 3, 4, 5, 4, 5, 6,
-                                             7, 6, 7, 8, 9, 0, 1, 2, 3, 2, 3,
-                                             4, 5, 4, 5, 6, 7, 6, 7, 8, 9 };
-  DECLARE_ALIGNED(32, static const uint8_t, shuffle_mask1_loc[32]) = {
-    4, 5, 6, 7, 6, 7, 8, 9, 8, 9, 10, 11, 10, 11, 12, 13,
-    4, 5, 6, 7, 6, 7, 8, 9, 8, 9, 10, 11, 10, 11, 12, 13
-  };
-  for (int i = 0; i < im_h; i += 2) {
-    const __m256i row0 =
-        _mm256_loadu_si256((__m256i *)&src_ptr[i * src_stride]);
-    __m256i row1 = _mm256_set1_epi16(0);
-    if (i + 1 < im_h)
-      row1 = _mm256_loadu_si256((__m256i *)&src_ptr[(i + 1) * src_stride]);
-    const __m256i r0 = _mm256_permute2x128_si256(row0, row1, 0x20);
-    s[0] = _mm256_shuffle_epi8(r0,
-                               _mm256_load_si256((__m256i *)shuffle_mask0_loc));
-    s[1] = _mm256_shuffle_epi8(r0,
-                               _mm256_load_si256((__m256i *)shuffle_mask1_loc));
-    const __m256i res_0 = _mm256_madd_epi16(s[0], coeffs[0]);
-    const __m256i res_1 = _mm256_madd_epi16(s[1], coeffs[1]);
-    __m256i res = _mm256_add_epi32(res_0, res_1);
-    res =
-        _mm256_sra_epi32(_mm256_add_epi32(res, *round_const_x), *round_shift_x);
-    _mm256_store_si256((__m256i *)(im_block + i * im_stride),
-                       _mm256_packs_epi32(res, res));
-  }
-}
+/* Note: highbd_dist_wtd_convolve_2d_copy_do_average and
+ * dist_wtd_convolve_horiz_w4 are defined (and only used) in
+ * highbd_jnt_convolve_avx2.c; they are intentionally not duplicated here to
+ * avoid redefinition errors. */
 
 static INLINE void av2_highbd_convolve_2d_sr_specialized_avx2(
     const uint16_t *src, int src_stride, uint16_t *dst, int dst_stride, int w,

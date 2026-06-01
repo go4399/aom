@@ -280,6 +280,12 @@ if(CONFIG_AV2)
   add_rtcd_build_step("${AOM_ROOT}/av2/common/av2_rtcd_defs.pl"
                       "${AOM_CONFIG_DIR}/config/av2_rtcd.h"
                       "${AOM_ROOT}/av2/common/av2_rtcd.c" "av2_rtcd")
+  # av2_rtcd.c is an AV2 translation unit even though it is compiled as part of
+  # the shared aom_rtcd target. Mark it with the per-TU discriminator so it
+  # picks up the extended AV2 enums from av1/common/enums.h. (The remaining
+  # aom_rtcd sources are AV1/shared and correctly default to AV1 enums.)
+  set_property(SOURCE "${AOM_ROOT}/av2/common/av2_rtcd.c" APPEND PROPERTY
+               COMPILE_DEFINITIONS "CONFIG_AV2_TU=1")
 endif()
 
 add_library(aom_rtcd OBJECT ${AOM_RTCD_SOURCES})

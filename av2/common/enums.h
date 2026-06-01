@@ -13,8 +13,13 @@
 #ifndef AOM_AV2_COMMON_ENUMS_H_
 #define AOM_AV2_COMMON_ENUMS_H_
 
-#include "av1/common/enums.h"
+// av2/common/common.h defines the AV2-specific values of TX_SIZES_ALL,
+// CDF_SIZE and MAX_WEDGE_TYPES (all #ifndef-guarded). It MUST be included
+// before av1/common/enums.h, which transitively pulls in aom_dsp/txfm_common.h
+// whose AV1 fallback (#define TX_SIZES_ALL TX_SIZES_ALL_AV1) would otherwise
+// win and leave AV2 translation units with the smaller AV1 dimensions.
 #include "av2/common/common.h"
+#include "av1/common/enums.h"
 #include "aom_scale/yv12config.h"
 #include "aom/internal/aom_image_internal.h"
 #include "aom_dsp/bitwriter_buffer.h"
@@ -33,69 +38,78 @@ typedef struct dist_wtd_comp_params DIST_WTD_COMP_PARAMS;
 #define avm_count_primitive_quniform wb_count_primitive_quniform
 typedef aom_variance_fn_t avm_variance_fn_t;
 
-extern unsigned int aom_highbd_8_mse8x8(const uint8_t *src_ptr, int src_stride,
-                                        const uint8_t *ref_ptr, int ref_stride,
-                                        unsigned int *sse);
-extern unsigned int aom_highbd_8_mse16x8(const uint8_t *src_ptr, int src_stride,
-                                         const uint8_t *ref_ptr, int ref_stride,
-                                         unsigned int *sse);
-extern unsigned int aom_highbd_8_mse8x16(const uint8_t *src_ptr, int src_stride,
-                                         const uint8_t *ref_ptr, int ref_stride,
-                                         unsigned int *sse);
-extern unsigned int aom_highbd_8_mse16x16(const uint8_t *src_ptr,
+/* aom_highbd_{8,10,12}_mse* and aom_get_mb_ss are RTCD dispatch symbols (their
+ * dispatch names are declared as function pointers by the generated
+ * config/aom_dsp_rtcd.h). To stay self-contained without colliding with that
+ * header, declare and alias the _c implementations directly. */
+extern unsigned int aom_highbd_8_mse8x8_c(const uint8_t *src_ptr,
                                           int src_stride,
                                           const uint8_t *ref_ptr,
                                           int ref_stride, unsigned int *sse);
-
-#define avm_highbd_8_mse8x8 aom_highbd_8_mse8x8
-#define avm_highbd_8_mse16x8 aom_highbd_8_mse16x8
-#define avm_highbd_8_mse8x16 aom_highbd_8_mse8x16
-#define avm_highbd_8_mse16x16 aom_highbd_8_mse16x16
-
-extern unsigned int aom_highbd_10_mse8x8(const uint8_t *src_ptr, int src_stride,
-                                         const uint8_t *ref_ptr, int ref_stride,
-                                         unsigned int *sse);
-extern unsigned int aom_highbd_10_mse16x8(const uint8_t *src_ptr,
-                                          int src_stride,
-                                          const uint8_t *ref_ptr,
-                                          int ref_stride, unsigned int *sse);
-extern unsigned int aom_highbd_10_mse8x16(const uint8_t *src_ptr,
-                                          int src_stride,
-                                          const uint8_t *ref_ptr,
-                                          int ref_stride, unsigned int *sse);
-extern unsigned int aom_highbd_10_mse16x16(const uint8_t *src_ptr,
+extern unsigned int aom_highbd_8_mse16x8_c(const uint8_t *src_ptr,
                                            int src_stride,
                                            const uint8_t *ref_ptr,
                                            int ref_stride, unsigned int *sse);
-
-#define avm_highbd_10_mse8x8 aom_highbd_10_mse8x8
-#define avm_highbd_10_mse16x8 aom_highbd_10_mse16x8
-#define avm_highbd_10_mse8x16 aom_highbd_10_mse8x16
-#define avm_highbd_10_mse16x16 aom_highbd_10_mse16x16
-
-extern unsigned int aom_highbd_12_mse8x8(const uint8_t *src_ptr, int src_stride,
-                                         const uint8_t *ref_ptr, int ref_stride,
-                                         unsigned int *sse);
-extern unsigned int aom_highbd_12_mse16x8(const uint8_t *src_ptr,
-                                          int src_stride,
-                                          const uint8_t *ref_ptr,
-                                          int ref_stride, unsigned int *sse);
-extern unsigned int aom_highbd_12_mse8x16(const uint8_t *src_ptr,
-                                          int src_stride,
-                                          const uint8_t *ref_ptr,
-                                          int ref_stride, unsigned int *sse);
-extern unsigned int aom_highbd_12_mse16x16(const uint8_t *src_ptr,
+extern unsigned int aom_highbd_8_mse8x16_c(const uint8_t *src_ptr,
                                            int src_stride,
                                            const uint8_t *ref_ptr,
                                            int ref_stride, unsigned int *sse);
+extern unsigned int aom_highbd_8_mse16x16_c(const uint8_t *src_ptr,
+                                            int src_stride,
+                                            const uint8_t *ref_ptr,
+                                            int ref_stride, unsigned int *sse);
 
-#define avm_highbd_12_mse8x8 aom_highbd_12_mse8x8
-#define avm_highbd_12_mse16x8 aom_highbd_12_mse16x8
-#define avm_highbd_12_mse8x16 aom_highbd_12_mse8x16
-#define avm_highbd_12_mse16x16 aom_highbd_12_mse16x16
+#define avm_highbd_8_mse8x8 aom_highbd_8_mse8x8_c
+#define avm_highbd_8_mse16x8 aom_highbd_8_mse16x8_c
+#define avm_highbd_8_mse8x16 aom_highbd_8_mse8x16_c
+#define avm_highbd_8_mse16x16 aom_highbd_8_mse16x16_c
 
-extern unsigned int aom_get_mb_ss(const int16_t *src);
-#define avm_get_mb_ss aom_get_mb_ss
+extern unsigned int aom_highbd_10_mse8x8_c(const uint8_t *src_ptr,
+                                           int src_stride,
+                                           const uint8_t *ref_ptr,
+                                           int ref_stride, unsigned int *sse);
+extern unsigned int aom_highbd_10_mse16x8_c(const uint8_t *src_ptr,
+                                            int src_stride,
+                                            const uint8_t *ref_ptr,
+                                            int ref_stride, unsigned int *sse);
+extern unsigned int aom_highbd_10_mse8x16_c(const uint8_t *src_ptr,
+                                            int src_stride,
+                                            const uint8_t *ref_ptr,
+                                            int ref_stride, unsigned int *sse);
+extern unsigned int aom_highbd_10_mse16x16_c(const uint8_t *src_ptr,
+                                             int src_stride,
+                                             const uint8_t *ref_ptr,
+                                             int ref_stride, unsigned int *sse);
+
+#define avm_highbd_10_mse8x8 aom_highbd_10_mse8x8_c
+#define avm_highbd_10_mse16x8 aom_highbd_10_mse16x8_c
+#define avm_highbd_10_mse8x16 aom_highbd_10_mse8x16_c
+#define avm_highbd_10_mse16x16 aom_highbd_10_mse16x16_c
+
+extern unsigned int aom_highbd_12_mse8x8_c(const uint8_t *src_ptr,
+                                           int src_stride,
+                                           const uint8_t *ref_ptr,
+                                           int ref_stride, unsigned int *sse);
+extern unsigned int aom_highbd_12_mse16x8_c(const uint8_t *src_ptr,
+                                            int src_stride,
+                                            const uint8_t *ref_ptr,
+                                            int ref_stride, unsigned int *sse);
+extern unsigned int aom_highbd_12_mse8x16_c(const uint8_t *src_ptr,
+                                            int src_stride,
+                                            const uint8_t *ref_ptr,
+                                            int ref_stride, unsigned int *sse);
+extern unsigned int aom_highbd_12_mse16x16_c(const uint8_t *src_ptr,
+                                             int src_stride,
+                                             const uint8_t *ref_ptr,
+                                             int ref_stride, unsigned int *sse);
+
+#define avm_highbd_12_mse8x8 aom_highbd_12_mse8x8_c
+#define avm_highbd_12_mse16x8 aom_highbd_12_mse16x8_c
+#define avm_highbd_12_mse8x16 aom_highbd_12_mse8x16_c
+#define avm_highbd_12_mse16x16 aom_highbd_12_mse16x16_c
+
+extern unsigned int aom_get_mb_ss_c(const int16_t *src);
+#define avm_get_mb_ss aom_get_mb_ss_c
 
 #include "aom_dsp/noise_model.h"
 #define avm_denoise_and_model_alloc aom_denoise_and_model_alloc
@@ -111,6 +125,9 @@ static INLINE int avm_denoise_and_model_run(struct aom_denoise_and_model_t *ctx,
 #define AVM_BLEND_A64_MAX_ALPHA AOM_BLEND_A64_MAX_ALPHA
 #define av2_s_frame_info aom_s_frame_info
 
+/* Declare the _c SAD implementations directly and call them in the wrappers
+ * below, preserving the original (non-dispatched) behavior without hijacking
+ * the RTCD dispatch names (which collide with config/aom_dsp_rtcd.h). */
 extern unsigned int aom_highbd_sad8x8_c(const uint8_t *src_ptr, int src_stride,
                                         const uint8_t *ref_ptr, int ref_stride);
 extern unsigned int aom_highbd_sad16x8_c(const uint8_t *src_ptr, int src_stride,
@@ -123,38 +140,34 @@ extern unsigned int aom_highbd_sad16x16_c(const uint8_t *src_ptr,
                                           int src_stride,
                                           const uint8_t *ref_ptr,
                                           int ref_stride);
-#define aom_highbd_sad8x8 aom_highbd_sad8x8_c
-#define aom_highbd_sad16x8 aom_highbd_sad16x8_c
-#define aom_highbd_sad8x16 aom_highbd_sad8x16_c
-#define aom_highbd_sad16x16 aom_highbd_sad16x16_c
 
 static INLINE unsigned int avm_highbd_sad8x8(const uint16_t *src,
                                              int src_stride,
                                              const uint16_t *ref,
                                              int ref_stride) {
-  return aom_highbd_sad8x8((const uint8_t *)src, src_stride,
-                           (const uint8_t *)ref, ref_stride);
+  return aom_highbd_sad8x8_c((const uint8_t *)src, src_stride,
+                             (const uint8_t *)ref, ref_stride);
 }
 static INLINE unsigned int avm_highbd_sad16x8(const uint16_t *src,
                                               int src_stride,
                                               const uint16_t *ref,
                                               int ref_stride) {
-  return aom_highbd_sad16x8((const uint8_t *)src, src_stride,
-                            (const uint8_t *)ref, ref_stride);
+  return aom_highbd_sad16x8_c((const uint8_t *)src, src_stride,
+                              (const uint8_t *)ref, ref_stride);
 }
 static INLINE unsigned int avm_highbd_sad8x16(const uint16_t *src,
                                               int src_stride,
                                               const uint16_t *ref,
                                               int ref_stride) {
-  return aom_highbd_sad8x16((const uint8_t *)src, src_stride,
-                            (const uint8_t *)ref, ref_stride);
+  return aom_highbd_sad8x16_c((const uint8_t *)src, src_stride,
+                              (const uint8_t *)ref, ref_stride);
 }
 static INLINE unsigned int avm_highbd_sad16x16(const uint16_t *src,
                                                int src_stride,
                                                const uint16_t *ref,
                                                int ref_stride) {
-  return aom_highbd_sad16x16((const uint8_t *)src, src_stride,
-                             (const uint8_t *)ref, ref_stride);
+  return aom_highbd_sad16x16_c((const uint8_t *)src, src_stride,
+                               (const uint8_t *)ref, ref_stride);
 }
 #define avm_free_frame_buffer aom_free_frame_buffer
 #define avm_denoise_and_model_free aom_denoise_and_model_free
@@ -194,7 +207,6 @@ extern void aom_highbd_quantize_b_c(
     const int16_t *quant_shift_ptr, tran_low_t *qcoeff_ptr,
     tran_low_t *dqcoeff_ptr, const int16_t *dequant_ptr, uint16_t *eob_ptr,
     const int16_t *scan, const int16_t *iscan);
-#define aom_highbd_quantize_b aom_highbd_quantize_b_c
 
 static INLINE void avm_highbd_quantize_b(
     const tran_low_t *coeff_ptr, intptr_t n_coeffs, const int32_t *zbin_ptr,
@@ -210,8 +222,9 @@ static INLINE void avm_highbd_quantize_b(
   int16_t dequant[2] = { (int16_t)dequant_ptr[0], (int16_t)dequant_ptr[1] };
   (void)log_scale;
 
-  aom_highbd_quantize_b(coeff_ptr, n_coeffs, zbin, round, quant, quant_shift,
-                        qcoeff_ptr, dqcoeff_ptr, dequant, eob_ptr, scan, iscan);
+  aom_highbd_quantize_b_c(coeff_ptr, n_coeffs, zbin, round, quant, quant_shift,
+                          qcoeff_ptr, dqcoeff_ptr, dequant, eob_ptr, scan,
+                          iscan);
 }
 
 void avm_highbd_quantize_b_c(const tran_low_t *coeff_ptr, intptr_t n_coeffs,
@@ -226,20 +239,18 @@ void avm_highbd_quantize_b_c(const tran_low_t *coeff_ptr, intptr_t n_coeffs,
 extern int64_t aom_highbd_sse_c(const uint8_t *src, int src_stride,
                                 const uint8_t *ref, int ref_stride, int w,
                                 int h);
-#define aom_highbd_sse aom_highbd_sse_c
-
 static INLINE int64_t avm_highbd_sse(const uint16_t *a, int a_stride,
                                      const uint16_t *b, int b_stride, int width,
                                      int height) {
-  return aom_highbd_sse((const uint8_t *)a, a_stride, (const uint8_t *)b,
-                        b_stride, width, height);
+  return aom_highbd_sse_c((const uint8_t *)a, a_stride, (const uint8_t *)b,
+                          b_stride, width, height);
 }
 
 static INLINE int64_t avm_highbd_sse_c(const uint16_t *a, int a_stride,
                                        const uint16_t *b, int b_stride,
                                        int width, int height) {
-  return aom_highbd_sse((const uint8_t *)a, a_stride, (const uint8_t *)b,
-                        b_stride, width, height);
+  return aom_highbd_sse_c((const uint8_t *)a, a_stride, (const uint8_t *)b,
+                          b_stride, width, height);
 }
 
 extern void aom_highbd_subtract_block_c(int rows, int cols, int16_t *diff_ptr,
@@ -248,16 +259,14 @@ extern void aom_highbd_subtract_block_c(int rows, int cols, int16_t *diff_ptr,
                                         ptrdiff_t src_stride,
                                         const uint8_t *pred_ptr,
                                         ptrdiff_t pred_stride);
-#define aom_highbd_subtract_block aom_highbd_subtract_block_c
-
 static INLINE void avm_highbd_subtract_block(
     int rows, int cols, int16_t *diff_ptr, ptrdiff_t diff_stride,
     const uint16_t *src_ptr, ptrdiff_t src_stride, const uint16_t *pred_ptr,
     ptrdiff_t pred_stride, int bd) {
   (void)bd;
-  aom_highbd_subtract_block(rows, cols, diff_ptr, diff_stride,
-                            (const uint8_t *)src_ptr, src_stride,
-                            (const uint8_t *)pred_ptr, pred_stride);
+  aom_highbd_subtract_block_c(rows, cols, diff_ptr, diff_stride,
+                              (const uint8_t *)src_ptr, src_stride,
+                              (const uint8_t *)pred_ptr, pred_stride);
 }
 
 extern void aom_highbd_blend_a64_d16_mask_c(
@@ -545,14 +554,9 @@ static INLINE uint64_t aom_rb_read_uleb(struct aom_read_bit_buffer *rb) {
 
 #define avm_ext_highbd_warp_affine av2_ext_highbd_warp_affine
 
-struct ConvolveParams;
-struct PadBlock;
-extern void av2_ext_highbd_warp_affine(
-    const int32_t *mat, const uint16_t *ref, int width, int height, int stride,
-    uint16_t *pred, int p_col, int p_row, int p_width, int p_height,
-    int p_stride, int subsampling_x, int subsampling_y, int bd,
-    struct ConvolveParams *conv_params, int use_warp_bd_box,
-    struct PadBlock *warp_bd_box);
+/* Note: av2_ext_highbd_warp_affine is declared (as an RTCD function pointer)
+ * by the generated av2_rtcd.h; do not also declare it as a plain function
+ * prototype here, or the two declarations conflict. */
 
 #define FILTER_UNUSED -1
 

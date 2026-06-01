@@ -1547,24 +1547,38 @@ static void avm_highbd_filter_block1d8_v2_avx2(
   } while (height > 0);
 }
 
-void avm_highbd_filter_block1d4_h8_sse2(const uint16_t *, ptrdiff_t, uint16_t *,
+// The AVX2 1D filters only implement width 8/16; width 4 falls back to the SSE2
+// implementations. Those live in aom_high_subpixel_{8t,bilinear}_sse2.asm under
+// the libaom "aom_" prefix (libavm used an "avm_" prefix), so reference the
+// real "aom_"-prefixed symbols here.
+void aom_highbd_filter_block1d4_h8_sse2(const uint16_t *, ptrdiff_t, uint16_t *,
                                         ptrdiff_t, uint32_t, const int16_t *,
                                         int);
-void avm_highbd_filter_block1d4_h2_sse2(const uint16_t *, ptrdiff_t, uint16_t *,
+void aom_highbd_filter_block1d4_h2_sse2(const uint16_t *, ptrdiff_t, uint16_t *,
                                         ptrdiff_t, uint32_t, const int16_t *,
                                         int);
-void avm_highbd_filter_block1d4_v8_sse2(const uint16_t *, ptrdiff_t, uint16_t *,
+void aom_highbd_filter_block1d4_v8_sse2(const uint16_t *, ptrdiff_t, uint16_t *,
                                         ptrdiff_t, uint32_t, const int16_t *,
                                         int);
-void avm_highbd_filter_block1d4_v2_sse2(const uint16_t *, ptrdiff_t, uint16_t *,
+void aom_highbd_filter_block1d4_v2_sse2(const uint16_t *, ptrdiff_t, uint16_t *,
                                         ptrdiff_t, uint32_t, const int16_t *,
                                         int);
-#define avm_highbd_filter_block1d4_h8_avx2 avm_highbd_filter_block1d4_h8_sse2
-#define avm_highbd_filter_block1d4_h2_avx2 avm_highbd_filter_block1d4_h2_sse2
-#define avm_highbd_filter_block1d4_v8_avx2 avm_highbd_filter_block1d4_v8_sse2
-#define avm_highbd_filter_block1d4_v2_avx2 avm_highbd_filter_block1d4_v2_sse2
+#define avm_highbd_filter_block1d4_h8_avx2 aom_highbd_filter_block1d4_h8_sse2
+#define avm_highbd_filter_block1d4_h2_avx2 aom_highbd_filter_block1d4_h2_sse2
+#define avm_highbd_filter_block1d4_v8_avx2 aom_highbd_filter_block1d4_v8_sse2
+#define avm_highbd_filter_block1d4_v2_avx2 aom_highbd_filter_block1d4_v2_sse2
 
+// HIGH_FUN_CONV_1D hard-codes the public name aom_highbd_convolve8_<dir>_avx2,
+// which is also emitted by the AV1 implementation in
+// aom_dsp/x86/highbd_convolve_avx2.c. To avoid a duplicate-symbol link error,
+// rename the AV2 (6-tap-capable) variant to a distinct avm_ symbol. The legacy
+// aom_highbd_convolve8 RTCD path continues to resolve to the AV1 version, so
+// AV1 behavior is unchanged.
+#define aom_highbd_convolve8_horiz_avx2 avm_highbd_convolve8_horiz_avx2
+#define aom_highbd_convolve8_vert_avx2 avm_highbd_convolve8_vert_avx2
 HIGH_FUN_CONV_1D(horiz, x_step_q4, filter_x, h, src, , avx2);
 HIGH_FUN_CONV_1D(vert, y_step_q4, filter_y, v, src - src_stride * 3, , avx2);
+#undef aom_highbd_convolve8_horiz_avx2
+#undef aom_highbd_convolve8_vert_avx2
 
 #undef HIGHBD_FUNC

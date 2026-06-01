@@ -468,6 +468,29 @@ endif()
 # Setup AV2 common/decoder/encoder targets. The libaom target must exist before
 # this function is called.
 function(setup_av2_targets)
+  # Mark every AV2 translation unit with CONFIG_AV2_TU=1. This is the per-TU
+  # discriminator that av1/common/enums.h uses to select the extended AV2 enum
+  # values. Setting it as a source-file compile definition (rather than the
+  # global CONFIG_AV2 flag) guarantees AV1 translation units keep AV1 enum
+  # values while AV2 translation units get the extended values, independent of
+  # header include order, and covers the per-ISA intrinsics object libraries
+  # too. AV1-only builds never define CONFIG_AV2_TU, so AV1 stays bit-exact.
+  foreach(av2_src_list
+          AOM_AV2_COMMON_SOURCES AOM_AV2_COMMON_INTRIN_SSE2
+          AOM_AV2_COMMON_INTRIN_SSSE3 AOM_AV2_COMMON_INTRIN_SSE4_1
+          AOM_AV2_COMMON_INTRIN_AVX2 AOM_AV2_COMMON_INTRIN_NEON
+          AOM_AV2_COMMON_INTRIN_VSX AOM_AV2_DECODER_SOURCES
+          AOM_AV2_DECODER_INTRIN_SSE2 AOM_AV2_DECODER_INTRIN_SSSE3
+          AOM_AV2_ENCODER_SOURCES AOM_AV2_ENCODER_INTRIN_SSE2
+          AOM_AV2_ENCODER_INTRIN_SSE3 AOM_AV2_ENCODER_INTRIN_SSE4_1
+          AOM_AV2_ENCODER_INTRIN_SSE4_2 AOM_AV2_ENCODER_INTRIN_AVX2
+          AOM_AV2_ENCODER_INTRIN_NEON AOM_AV2_ENCODER_INTRIN_MSA)
+    foreach(av2_src ${${av2_src_list}})
+      set_property(SOURCE "${av2_src}" APPEND PROPERTY
+                   COMPILE_DEFINITIONS "CONFIG_AV2_TU=1")
+    endforeach()
+  endforeach()
+
   add_library(aom_av2_common OBJECT ${AOM_AV2_COMMON_SOURCES})
   list(APPEND AOM_LIB_TARGETS aom_av2_common)
   target_sources(aom PRIVATE $<TARGET_OBJECTS:aom_av2_common>)

@@ -18,6 +18,7 @@
 #include "av2/common/x86/av2_convolve_avx2.h"
 #include "aom_dsp/x86/convolve_common_intrin.h"
 #include "aom_dsp/x86/convolve_sse4_1.h"
+#include "aom_dsp/x86/mem_sse2.h"
 #include "aom_dsp/x86/synonyms.h"
 #include "aom_dsp/aom_dsp_common.h"
 #include "aom_dsp/aom_filter.h"
