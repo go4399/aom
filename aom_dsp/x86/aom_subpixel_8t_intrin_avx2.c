@@ -1405,6 +1405,7 @@ static void aom_filter_block1d4_v4_avx2(
 #endif  // !CONFIG_HIGHWAY
 
 #if HAVE_AVX2 && HAVE_SSSE3
+#if !CONFIG_HIGHWAY
 filter8_1dfunction aom_filter_block1d16_h2_ssse3;
 filter8_1dfunction aom_filter_block1d8_h2_ssse3;
 filter8_1dfunction aom_filter_block1d4_h2_ssse3;
@@ -1419,7 +1420,6 @@ filter8_1dfunction aom_filter_block1d4_h2_ssse3;
 //                                int w, int h);
 FUN_CONV_1D(horiz, x_step_q4, filter_x, h, src, , avx2)
 
-#if !CONFIG_HIGHWAY
 filter8_1dfunction aom_filter_block1d4_v8_ssse3;
 filter8_1dfunction aom_filter_block1d16_v2_ssse3;
 filter8_1dfunction aom_filter_block1d8_v2_ssse3;
@@ -1437,4 +1437,4 @@ filter8_1dfunction aom_filter_block1d4_v2_ssse3;
 FUN_CONV_1D(vert, y_step_q4, filter_y, v, src - src_stride * 3, , avx2)
 #endif  // !CONFIG_HIGHWAY
 
-#endif  // HAVE_AX2 && HAVE_SSSE3
+#endif  // HAVE_AVX2 && HAVE_SSSE3
