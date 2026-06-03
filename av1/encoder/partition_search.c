@@ -2924,6 +2924,14 @@ static void direct_partition_merging(AV1_COMP *cpi, ThreadData *td,
         this_mi[x_idx + y * mi_params->mi_stride] = this_mi[0];
       }
     }
+
+    this_mi[0]->num_proj_ref = 0;
+    if (is_motion_variation_allowed_bsize(this_mi[0]->bsize) &&
+        is_inter_block(this_mi[0]) && !this_mi[0]->skip_mode &&
+        !has_second_ref(this_mi[0])) {
+      int pts[SAMPLES_ARRAY_SIZE], pts_inref[SAMPLES_ARRAY_SIZE];
+      this_mi[0]->num_proj_ref = av1_findSamples(cm, xd, pts, pts_inref);
+    }
   }
 }
 

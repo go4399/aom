@@ -3748,6 +3748,13 @@ void av1_nonrd_pick_inter_mode_sb(AV1_COMP *cpi, TileDataEnc *tile_data,
 
   *rd_cost = search_state.best_rdc;
 
+  mi->num_proj_ref = 0;
+  if (is_inter_block(mi) && !mi->skip_mode &&
+      is_motion_variation_allowed_bsize(mi->bsize) && !has_second_ref(mi)) {
+    int pts[SAMPLES_ARRAY_SIZE], pts_inref[SAMPLES_ARRAY_SIZE];
+    mi->num_proj_ref = av1_findSamples(cm, xd, pts, pts_inref);
+  }
+
   // Reset the xd->block_ref_scale_factors[i], as they may have
   // been set to pointer &sf_no_scale, which becomes invalid afer
   // this function.
