@@ -16,6 +16,24 @@
       "message": "What\u0027s the end-to-end encoding time change due to this cl?",
       "revId": "4d7f0a8e36c9f6e7451f87eb13cf30cb049b56f7",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4f28936_92fd1922",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5022
+      },
+      "writtenOn": "2026-06-03T15:48:37Z",
+      "side": 1,
+      "message": "And what\u0027s the difference between ssse3 vs avx2 for 16x32 block?\n\nI don\u0027t quite understand what makes 16x32 special in this context (?)",
+      "parentUuid": "47ef68d3_c22a0c7b",
+      "revId": "4d7f0a8e36c9f6e7451f87eb13cf30cb049b56f7",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
