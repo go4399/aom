@@ -16,6 +16,24 @@
       "message": "In this CL, we extended the speed feature `dual_sgr_penalty_level` from shorts to VOD test sets for lc-dec mode. We have verified that this CL produces no noticeable artifacts for the max-drop contents.\n\n\nPerformance results of encoder and decoder for the streams generated\nwith low complexity decode enabled.\n\n```\n                      Instruction Count        Time\n                         Reduction(%)      Reduction(%)                    BD-Rate Loss(%)\ncpu   Resolution      Encoder    Decoder     Decoder      avg.psnr    ssim     vmaf    vmaf_neg    uvq_1p5\n 1        HDRES2       0.033      1.702       1.002        0.1090    0.0931   -0.1036   -0.0688    0.1828\n 1      UGCHDRES      -0.259      3.569       3.040        0.1451    0.3175   -0.1354   -0.0651    1.9289\n 1       Average      -0.097      2.532       1.908        0.1250    0.1928   -0.1177   -0.0672    0.9588\n   \n 2        HDRES2       0.117      1.413       1.088        0.0447    0.0443   -0.0668   -0.0452    0.4371\n 2      UGCHDRES      -0.053      2.668       1.913        0.1240    0.1889   -0.0729   -0.0633    0.7725\n 2       Average       0.041      1.971       1.455        0.0799    0.1085   -0.0695   -0.0532    0.5862\n   \n 3        HDRES2       0.029      1.212       1.067        0.0643    0.0445   -0.0708   -0.0403    0.5848\n 3      UGCHDRES       0.060      1.690       1.341        0.1233    0.1214   -0.1276   -0.0667    0.7303\n 3       Average       0.043      1.424       1.189        0.0905    0.0787   -0.0960   -0.0520    0.6495\n ```\n\nThe instruction count reduction specified has been measured using command:\n`$ perf stat -e instructions:u ./aomenc …`\n`$ perf stat -e instructions:u ./dav1d --cpumask avx2 …`\n\n\nThe decode time is measured using command\n`time taskset -c 0  ./dav1d  --cpumask avx2 …`",
       "revId": "9bb74a7deb13c67e26ac9157c20f1da196cc95c5",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a7dc50b_793f3477",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-06-04T18:42:59Z",
+      "side": 1,
+      "message": "This will help reduce speed gap between shorts and vod. Thanks for the visual checking.",
+      "parentUuid": "dc2e69a1_c8b15401",
+      "revId": "9bb74a7deb13c67e26ac9157c20f1da196cc95c5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
