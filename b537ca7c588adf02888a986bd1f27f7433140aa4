@@ -16,6 +16,57 @@
       "message": "While studying the segmentation feature in the encoder we have noticed a syntax signaling issue related to `mode_ref_delta_enabled` flag. As per AV1 specification, Section 5.9.11 (Loop filter params syntax), syntaxes related to loop filter delta should be nested under `mode_ref_delta_enabled` condition (Please refer decodeframe.c: line 1780-1792). However, the encoder writes a `meaningful` update bit to the bitstream regardless of whether `mode_ref_delta_enabled` was true or false. This issue was originally introduced in [CL98781](https://aomedia-review.googlesource.com/c/aom/+/98781).\n \nSince this flag is hardcoded as enabled, the issue was not seen by default. The issue can be reproduced by modifying the code (i.e., by setting `mode_ref_delta_enabled \u003d 1` to `mode_ref_delta_enabled \u003d 0` in the code). This CL resolves the issue by nesting the delta update signaling under the `mode_ref_delta_enabled` check. The fix is bit-exact for all default encodes.\n \nTo add a unit test, we would need to introduce a test-only codec control API in the encoder interface (similar to `AV1E_ENABLE_MOTION_VECTOR_UNIT_TEST`). Please let us know your opinion on adding an API and unit test to the codebase.",
       "revId": "b537ca7c588adf02888a986bd1f27f7433140aa4",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "059913e8_2d2256b6",
+        "filename": "av1/encoder/bitstream.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2050,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-06-04T18:46:53Z",
+      "side": 1,
+      "message": "Thanks for the fix. So the encoder code misses this condition? Will this fix make it the same as in libaom decoder?",
+      "range": {
+        "startLine": 2050,
+        "startChar": 0,
+        "endLine": 2050,
+        "endChar": 33
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "fd63fd49_709fd600",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/bitstream.c",
+              "range": {
+                "startLine": 2051,
+                "startChar": 0,
+                "endLine": 2053,
+                "endChar": 0
+              },
+              "replacement": "    // If mode_ref_delta_enabled is true, signal whether the deltas are\n    // different from the reference frame\u0027s defaults/values.\n"
+            },
+            {
+              "path": "av1/encoder/bitstream.c",
+              "range": {
+                "startLine": 1,
+                "startChar": 0,
+                "endLine": 1,
+                "endChar": 0
+              },
+              "replacement": "    // If meaningful is true, write out the actual loop filter deltas.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "b537ca7c588adf02888a986bd1f27f7433140aa4",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
