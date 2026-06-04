@@ -519,11 +519,11 @@ static void parse_command_line(int argc, const char **argv_,
       enc_cfg->rc_target_bitrate, enc_cfg->kf_max_dist);
 }
 
-static const int mode_to_num_temporal_layers[12] = {
-  1, 2, 3, 3, 2, 1, 1, 3, 3, 3, 3, 3,
+static const int mode_to_num_temporal_layers[13] = {
+  1, 2, 3, 3, 2, 1, 1, 3, 3, 3, 3, 3, 2,
 };
-static const int mode_to_num_spatial_layers[12] = {
-  1, 1, 1, 1, 1, 2, 3, 2, 3, 3, 3, 3,
+static const int mode_to_num_spatial_layers[13] = {
+  1, 1, 1, 1, 1, 2, 3, 2, 3, 3, 3, 3, 2,
 };
 
 // For rate control encoding stats.
@@ -1408,6 +1408,48 @@ static void set_layer_pattern(
         if (!is_key_frame) ref_frame_config->reference[SVC_ALTREF_FRAME] = 1;
         if (base_count % 10 == 0 && layer_id->temporal_layer_id == 0)
           ref_frame_config->refresh[REF_FRAMES - 1] = 1;
+      }
+      break;
+    case 12:
+      // 2 spatial and 2 temporal layers.
+      ref_frame_config->reference[SVC_LAST_FRAME] = 1;
+      if (superframe_cnt % 4 == 0) {
+        // Base temporal layer
+        layer_id->temporal_layer_id = 0;
+        if (layer_id->spatial_layer_id == 0) {
+          // Reference LAST, update LAST
+          // Set all buffer_idx to 0
+          for (i = 0; i < INTER_REFS_PER_FRAME; i++)
+            ref_frame_config->ref_idx[i] = 0;
+          ref_frame_config->refresh[0] = 1;
+        } else if (layer_id->spatial_layer_id == 1) {
+          // Reference LAST and GOLDEN.
+          for (i = 0; i < INTER_REFS_PER_FRAME; i++)
+            ref_frame_config->ref_idx[i] = 0;
+          ref_frame_config->ref_idx[SVC_LAST_FRAME] = 1;
+          ref_frame_config->refresh[1] = 1;
+        }
+      } else if ((superframe_cnt - 1) % 4 == 0) {
+        // Top temporal enhancement layer.
+        layer_id->temporal_layer_id = 1;
+        if (layer_id->spatial_layer_id == 0) {
+          // Reference LAST.
+          // Set all buffer_idx to 0.
+          // Set GOLDEN to slot 5 and update slot 5.
+          for (i = 0; i < INTER_REFS_PER_FRAME; i++)
+            ref_frame_config->ref_idx[i] = 0;
+          ref_frame_config->ref_idx[SVC_GOLDEN_FRAME] = 5 - shift;
+          ref_frame_config->refresh[5 - shift] = 1;
+        } else if (layer_id->spatial_layer_id == 1) {
+          // Reference LAST and GOLDEN. Set buffer_idx for LAST to slot 1,
+          // GOLDEN (and all other refs) to slot 5.
+          // Set LAST3 to slot 6 and update slot 6.
+          for (i = 0; i < INTER_REFS_PER_FRAME; i++)
+            ref_frame_config->ref_idx[i] = 5 - shift;
+          ref_frame_config->ref_idx[SVC_LAST_FRAME] = 1;
+          ref_frame_config->ref_idx[SVC_LAST3_FRAME] = 6 - shift;
+          ref_frame_config->refresh[6 - shift] = 1;
+        }
       }
       break;
     default: assert(0); die("Error: Unsupported temporal layering mode!\n");
