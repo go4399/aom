@@ -66,9 +66,8 @@ enum {
   NUM_AB_PARTS
 } UENUM1BYTE(AB_PART_TYPE);
 
-// Defined locally only for AV1 translation units; AV2 translation units inherit
-// the extended RECT_PART_TYPE from av1/common/enums.h's AV2 branch.
-#if !(defined(CONFIG_AV2_TU) && CONFIG_AV2_TU)
+#ifndef RECT_PART_TYPE_DEFINED
+#define RECT_PART_TYPE_DEFINED
 // Rectangular partition types.
 enum { HORZ = 0, VERT, NUM_RECT_PARTS } UENUM1BYTE(RECT_PART_TYPE);
 #endif

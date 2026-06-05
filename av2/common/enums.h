@@ -19,6 +19,9 @@
 // whose AV1 fallback (#define TX_SIZES_ALL TX_SIZES_ALL_AV1) would otherwise
 // win and leave AV2 translation units with the smaller AV1 dimensions.
 #include "av2/common/common.h"
+#ifndef AV2_CONVOLVE_SUBPEL_REDIRECT
+#define AV2_CONVOLVE_SUBPEL_REDIRECT 1
+#endif
 // =============================================================================
 // AV2 Unified Enums & Constants
 // =============================================================================
@@ -271,6 +274,8 @@ extern "C" {
 
 /*WEDGE_0 is defined in the three o'clock direciton, the angles are defined in
  * the anticlockwise.*/
+#ifndef WEDGE_DIRECTIONS_DEFINED
+#define WEDGE_DIRECTIONS_DEFINED
 enum {
   WEDGE_0,
   WEDGE_14,
@@ -294,6 +299,7 @@ enum {
   WEDGE_346,
   WEDGE_ANGLES
 } UENUM1BYTE(WedgeDirectionType);
+#endif
 
 #define H_WEDGE_ANGLES 10
 #define NUM_WEDGE_DIST 4
@@ -646,12 +652,15 @@ enum {
   PARTITION_INVALID = 255
 } UENUM1BYTE(PARTITION_TYPE);
 
+#ifndef RECT_PART_TYPE_DEFINED
+#define RECT_PART_TYPE_DEFINED
 enum {
   HORZ = 0,
   VERT,
   NUM_RECT_PARTS,
   RECT_INVALID = NUM_RECT_PARTS
 } UENUM1BYTE(RECT_PART_TYPE);
+#endif
 
 enum {
   UNEVEN_4A = 0,
