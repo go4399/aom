@@ -1159,7 +1159,7 @@ static void update_stats(const AV2_COMMON *const cm, ThreadData *td) {
 #endif  // CONFIG_ENTROPY_STATS
       }
 
-      const int allowed_motion_modes = motion_mode_allowed(
+      const int allowed_motion_modes = av2_motion_mode_allowed(
           cm, xd, mbmi_ext->ref_mv_stack[mbmi->ref_frame[0]], mbmi);
       MOTION_MODE motion_mode = mbmi->motion_mode;
 
@@ -1688,7 +1688,7 @@ static void encode_b(const AV2_COMP *const cpi, TileDataEnc *tile_data,
       const int inter_block = is_inter_block(mbmi, xd->tree_type);
       const int seg_ref_active = 0;
       if (!seg_ref_active && inter_block) {
-        const int allowed_motion_modes = motion_mode_allowed(
+        const int allowed_motion_modes = av2_motion_mode_allowed(
             cm, xd, x->mbmi_ext->ref_mv_stack[mbmi->ref_frame[0]], mbmi);
         if (mbmi->motion_mode != INTERINTRA) {
           int is_warp_allowed = (allowed_motion_modes & (1 << WARP_CAUSAL)) ||

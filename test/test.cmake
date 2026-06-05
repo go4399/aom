@@ -323,6 +323,57 @@ if(NOT BUILD_SHARED_LIBS)
                 "${AOM_ROOT}/test/frame_parallel_enc_test.cc")
   endif()
 
+  if(CONFIG_AV2_ENCODER OR CONFIG_AV2_DECODER)
+    set(AV2_UNIT_TEST_SOURCES
+        "${AOM_ROOT}/test/av2_common_int_test.cc"
+        "${AOM_ROOT}/test/av2_config_test.cc"
+        "${AOM_ROOT}/test/av2_key_value_api_test.cc")
+
+    if(CONFIG_AV2_ENCODER)
+      list(APPEND AV2_UNIT_TEST_SOURCES
+                  "${AOM_ROOT}/test/av2_ccso_simd_cmp.cc"
+                  "${AOM_ROOT}/test/av2_convolve_scale_test.cc"
+                  "${AOM_ROOT}/test/av2_convolve_test.cc"
+                  "${AOM_ROOT}/test/av2_fwd_txfm2d_test.cc"
+                  "${AOM_ROOT}/test/av2_nn_predict_test.cc"
+                  "${AOM_ROOT}/test/av2_quantize_test.cc"
+                  "${AOM_ROOT}/test/av2_wedge_utils_test.cc"
+                  "${AOM_ROOT}/test/gdf_test.cc")
+    endif()
+
+    if(CONFIG_AV2_ENCODER AND CONFIG_AV2_DECODER)
+      list(APPEND AV2_UNIT_TEST_SOURCES
+                  "${AOM_ROOT}/test/av2_encoder_parms_get_to_decoder.cc")
+    endif()
+
+    foreach(av2_test_src ${AV2_UNIT_TEST_SOURCES})
+      set_property(SOURCE "${av2_test_src}" APPEND PROPERTY
+                   COMPILE_DEFINITIONS "CONFIG_AV2_TU=1")
+    endforeach()
+
+    list(APPEND AOM_UNIT_TEST_COMMON_SOURCES
+                "${AOM_ROOT}/test/av2_common_int_test.cc"
+                "${AOM_ROOT}/test/av2_config_test.cc"
+                "${AOM_ROOT}/test/av2_key_value_api_test.cc")
+
+    if(CONFIG_AV2_ENCODER)
+      list(APPEND AOM_UNIT_TEST_ENCODER_SOURCES
+                  "${AOM_ROOT}/test/av2_ccso_simd_cmp.cc"
+                  "${AOM_ROOT}/test/av2_convolve_scale_test.cc"
+                  "${AOM_ROOT}/test/av2_convolve_test.cc"
+                  "${AOM_ROOT}/test/av2_fwd_txfm2d_test.cc"
+                  "${AOM_ROOT}/test/av2_nn_predict_test.cc"
+                  "${AOM_ROOT}/test/av2_quantize_test.cc"
+                  "${AOM_ROOT}/test/av2_wedge_utils_test.cc"
+                  "${AOM_ROOT}/test/gdf_test.cc")
+    endif()
+
+    if(CONFIG_AV2_ENCODER AND CONFIG_AV2_DECODER)
+      list(APPEND AOM_UNIT_TEST_COMMON_SOURCES
+                  "${AOM_ROOT}/test/av2_encoder_parms_get_to_decoder.cc")
+    endif()
+  endif()
+
   if(HAVE_SSE2)
     list(APPEND AOM_UNIT_TEST_COMMON_SOURCES
                 "${AOM_ROOT}/test/simd_sse2_test.cc")

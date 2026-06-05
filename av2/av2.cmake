@@ -18,6 +18,8 @@ list(
   AOM_AV2_COMMON_SOURCES
   "${AOM_ROOT}/common/args_helper.h"
   "${AOM_ROOT}/common/args_helper.c"
+  "${AOM_ROOT}/common/av2_config.h"
+  "${AOM_ROOT}/common/av2_config.c"
   "${AOM_ROOT}/av2/common/annexA.c"
   "${AOM_ROOT}/av2/common/annexA.h"
   "${AOM_ROOT}/av2/arg_defs.h"

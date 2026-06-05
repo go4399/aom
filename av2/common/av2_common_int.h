@@ -5795,7 +5795,7 @@ uint8_t av2_is_warp_causal_allowed(const AV2_COMMON *cm, const MACROBLOCKD *xd,
  * the i'th bit is set.
  *
  * That is, to check if a given motion mode is allowed, do the following:
- *   int allowed_motion_modes = motion_mode_allowed([...]);
+ *   int allowed_motion_modes = av2_motion_mode_allowed([...]);
  *   if (allowed_motion_modes & (1 << i)) {
  *     [...]
  *   }
@@ -5835,10 +5835,10 @@ static INLINE int is_warp_newmv_allowed(const AV2_COMMON *cm,
   return allow_warped_motion;
 }
 
-static INLINE int motion_mode_allowed(const AV2_COMMON *cm,
-                                      const MACROBLOCKD *xd,
-                                      const CANDIDATE_MV *ref_mv_stack,
-                                      const MB_MODE_INFO *mbmi) {
+static INLINE int av2_motion_mode_allowed(const AV2_COMMON *cm,
+                                          const MACROBLOCKD *xd,
+                                          const CANDIDATE_MV *ref_mv_stack,
+                                          const MB_MODE_INFO *mbmi) {
   (void)ref_mv_stack;
   const BLOCK_SIZE bsize = mbmi->sb_type[PLANE_TYPE_Y];
   int enabled_motion_modes = cm->features.enabled_motion_modes;

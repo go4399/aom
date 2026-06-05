@@ -477,7 +477,7 @@ static INLINE void write_motion_mode(
     const MB_MODE_INFO_EXT_FRAME *mbmi_ext_frame, aom_writer *w) {
   const BLOCK_SIZE bsize = mbmi->sb_type[PLANE_TYPE_Y];
   const int allowed_motion_modes =
-      motion_mode_allowed(cm, xd, mbmi_ext_frame->ref_mv_stack[0], mbmi);
+      av2_motion_mode_allowed(cm, xd, mbmi_ext_frame->ref_mv_stack[0], mbmi);
   assert((allowed_motion_modes & (1 << mbmi->motion_mode)) != 0);
   assert((cm->features.enabled_motion_modes & (1 << mbmi->motion_mode)) != 0);
 

@@ -16,8 +16,13 @@ print <<EOF
 
 #include "aom/aom_integer.h"
 #include "aom_dsp/aom_dsp_common.h"
+#if defined(CONFIG_AV2_TU) && CONFIG_AV2_TU
+#include "av2/common/blockd.h"
+#include "av2/common/enums.h"
+#else
 #include "av1/common/blockd.h"
 #include "av1/common/enums.h"
+#endif
 
 EOF
 }

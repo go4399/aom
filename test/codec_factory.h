@@ -174,5 +174,95 @@ const libaom_test::AV1CodecFactory kAV1;
               &libaom_test::kAV1)),                                         \
           __VA_ARGS__))
 
+/*
+ * AV2 Codec Definitions
+ */
+class AV2Decoder : public Decoder {
+ public:
+  explicit AV2Decoder(aom_codec_dec_cfg_t cfg) : Decoder(cfg) {}
+
+  AV2Decoder(aom_codec_dec_cfg_t cfg, const aom_codec_flags_t flag)
+      : Decoder(cfg, flag) {}
+
+ protected:
+  aom_codec_iface_t *CodecInterface() const override {
+#if CONFIG_AV2_DECODER
+    return aom_codec_av2_dx();
+#else
+    return nullptr;
+#endif
+  }
+};
+
+class AV2Encoder : public Encoder {
+ public:
+  AV2Encoder(aom_codec_enc_cfg_t cfg, const aom_codec_flags_t init_flags,
+             TwopassStatsStore *stats)
+      : Encoder(cfg, init_flags, stats) {}
+
+ protected:
+  aom_codec_iface_t *CodecInterface() const override {
+#if CONFIG_AV2_ENCODER
+    return aom_codec_av2_cx();
+#else
+    return nullptr;
+#endif
+  }
+};
+
+class AV2CodecFactory : public CodecFactory {
+ public:
+  AV2CodecFactory() : CodecFactory() {}
+
+  Decoder *CreateDecoder(aom_codec_dec_cfg_t cfg) const override {
+    return CreateDecoder(cfg, 0);
+  }
+
+  Decoder *CreateDecoder(aom_codec_dec_cfg_t cfg,
+                         const aom_codec_flags_t flags) const override {
+#if CONFIG_AV2_DECODER
+    return new AV2Decoder(cfg, flags);
+#else
+    (void)cfg;
+    (void)flags;
+    return nullptr;
+#endif
+  }
+
+  Encoder *CreateEncoder(aom_codec_enc_cfg_t cfg,
+                         const aom_codec_flags_t init_flags,
+                         TwopassStatsStore *stats) const override {
+#if CONFIG_AV2_ENCODER
+    return new AV2Encoder(cfg, init_flags, stats);
+#else
+    (void)cfg;
+    (void)init_flags;
+    (void)stats;
+    return nullptr;
+#endif
+  }
+
+  aom_codec_err_t DefaultEncoderConfig(aom_codec_enc_cfg_t *cfg,
+                                       unsigned int usage) const override {
+#if CONFIG_AV2_ENCODER
+    return aom_codec_enc_config_default(aom_codec_av2_cx(), cfg, usage);
+#else
+    (void)cfg;
+    (void)usage;
+    return AOM_CODEC_INCAPABLE;
+#endif
+  }
+};
+
+const libaom_test::AV2CodecFactory kAV2;
+
+#define AV2_INSTANTIATE_TEST_SUITE(test, ...)                               \
+  INSTANTIATE_TEST_SUITE_P(                                                 \
+      AV2, test,                                                            \
+      ::testing::Combine(                                                   \
+          ::testing::Values(static_cast<const libaom_test::CodecFactory *>( \
+              &libaom_test::kAV2)),                                         \
+          __VA_ARGS__))
+
 }  // namespace libaom_test
 #endif  // AOM_TEST_CODEC_FACTORY_H_

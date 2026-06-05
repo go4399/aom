@@ -620,7 +620,7 @@ static MOTION_MODE read_motion_mode(AV2_COMMON *cm, MACROBLOCKD *xd,
   mbmi->warp_precision_idx = 0;
 
   const int allowed_motion_modes =
-      motion_mode_allowed(cm, xd, xd->ref_mv_stack[mbmi->ref_frame[0]], mbmi);
+      av2_motion_mode_allowed(cm, xd, xd->ref_mv_stack[mbmi->ref_frame[0]], mbmi);
 
   if (mbmi->mode == WARPMV) {
     return WARP_DELTA;

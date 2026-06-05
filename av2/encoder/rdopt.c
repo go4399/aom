@@ -2277,7 +2277,7 @@ static int64_t motion_mode_rd(
   mbmi->warp_inter_intra = 0;
   const uint8_t is_low_delay_enc = (cpi->oxcf.gf_cfg.lag_in_frames == 0);
 
-  int allowed_motion_modes = motion_mode_allowed(
+  int allowed_motion_modes = av2_motion_mode_allowed(
       cm, xd, mbmi_ext->ref_mv_stack[mbmi->ref_frame[0]], mbmi);
   if ((allowed_motion_modes & (1 << WARP_CAUSAL))) {
     // Collect projection samples used in least squares approximation of

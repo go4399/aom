@@ -53,10 +53,6 @@ static INLINE void avm_wb_write_uleb(struct aom_write_bit_buffer *wb,
 #define AVM_MIF_KEY_FRAME AOM_MIF_KEY_FRAME
 #define AVM_MIF_NON_KEY_FRAME AOM_MIF_NON_KEY_FRAME
 
-#define AVM_BITDEPTH_0 0
-#define AVM_BITDEPTH_1 1
-#define AVM_BITDEPTH_2 2
-
 static INLINE void avm_wb_write_rice_golomb(struct aom_write_bit_buffer *wb,
                                             uint32_t data, int k) {
   assert(k <= 26);

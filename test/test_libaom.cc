@@ -27,6 +27,9 @@
 
 extern "C" {
 extern void av1_rtcd();
+#if CONFIG_AV2
+extern void av2_rtcd();
+#endif
 extern void aom_dsp_rtcd();
 extern void aom_scale_rtcd();
 }
@@ -85,6 +88,9 @@ int main(int argc, char **argv) {
   // Shared library builds don't support whitebox tests that exercise internal
   // symbols.
   av1_rtcd();
+#if CONFIG_AV2
+  av2_rtcd();
+#endif
   aom_dsp_rtcd();
   aom_scale_rtcd();
 #endif  // !CONFIG_SHARED

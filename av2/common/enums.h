@@ -455,6 +455,13 @@ enum {
 } SENUM1BYTE(BITSTREAM_PROFILE);
 
 #define AV2_MAX_NUM_STREAMS 32
+
+enum {
+  AVM_BITDEPTH_0 = 0,        /**< 10 bits */
+  AVM_BITDEPTH_1 = 1,        /**< 8 bits */
+  AVM_BITDEPTH_2 = 2,        /**< 12 bits */
+  AVM_NUM_SUPPORTED_BITDEPTH /**<number of supported bitdepth>*/
+};
 #define FIXED_QP_OFFSET_COUNT 6
 
 typedef enum {
@@ -1214,6 +1221,9 @@ typedef uint16_t av2_tx_type;
  * dispatch names are declared as function pointers by the generated
  * config/aom_dsp_rtcd.h). To stay self-contained without colliding with that
  * header, declare and alias the _c implementations directly. */
+#ifdef __cplusplus
+extern "C" {
+#endif
 extern unsigned int aom_highbd_8_mse8x8_c(const uint8_t *src_ptr,
                                           int src_stride,
                                           const uint8_t *ref_ptr,
@@ -1281,6 +1291,9 @@ extern unsigned int aom_highbd_12_mse16x16_c(const uint8_t *src_ptr,
 #define avm_highbd_12_mse16x16 aom_highbd_12_mse16x16_c
 
 extern unsigned int aom_get_mb_ss_c(const int16_t *src);
+#ifdef __cplusplus
+}
+#endif
 #define avm_get_mb_ss aom_get_mb_ss_c
 
 #include "aom_dsp/noise_model.h"
@@ -1300,6 +1313,9 @@ static INLINE int avm_denoise_and_model_run(struct aom_denoise_and_model_t *ctx,
 /* Declare the _c SAD implementations directly and call them in the wrappers
  * below, preserving the original (non-dispatched) behavior without hijacking
  * the RTCD dispatch names (which collide with config/aom_dsp_rtcd.h). */
+#ifdef __cplusplus
+extern "C" {
+#endif
 extern unsigned int aom_highbd_sad8x8_c(const uint8_t *src_ptr, int src_stride,
                                         const uint8_t *ref_ptr, int ref_stride);
 extern unsigned int aom_highbd_sad16x8_c(const uint8_t *src_ptr, int src_stride,
@@ -1309,9 +1325,12 @@ extern unsigned int aom_highbd_sad8x16_c(const uint8_t *src_ptr, int src_stride,
                                          const uint8_t *ref_ptr,
                                          int ref_stride);
 extern unsigned int aom_highbd_sad16x16_c(const uint8_t *src_ptr,
-                                          int src_stride,
-                                          const uint8_t *ref_ptr,
-                                          int ref_stride);
+                                           int src_stride,
+                                           const uint8_t *ref_ptr,
+                                           int ref_stride);
+#ifdef __cplusplus
+}
+#endif
 
 static INLINE unsigned int avm_highbd_sad8x8(const uint16_t *src,
                                              int src_stride,
@@ -1351,6 +1370,9 @@ static INLINE unsigned int avm_highbd_sad16x16(const uint16_t *src,
 #define avm_yv12_partial_coloc_copy_v aom_yv12_partial_coloc_copy_v
 
 struct yv12_buffer_config;
+#ifdef __cplusplus
+extern "C" {
+#endif
 extern void aom_yv12_partial_coloc_copy_y(
     const struct yv12_buffer_config *src_ybc,
     struct yv12_buffer_config *dst_ybc, int hstart, int hend, int vstart,
@@ -1363,6 +1385,9 @@ extern void aom_yv12_partial_coloc_copy_v(
     const struct yv12_buffer_config *src_ybc,
     struct yv12_buffer_config *dst_ybc, int hstart, int hend, int vstart,
     int vend);
+#ifdef __cplusplus
+}
+#endif
 
 #define avm_free aom_free
 #define avm_malloc aom_malloc
@@ -1373,12 +1398,18 @@ extern void aom_yv12_partial_coloc_copy_v(
 #define avm_extend_frame_borders aom_extend_frame_borders
 #define avm_denoise_and_model_t aom_denoise_and_model_t
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 extern void aom_highbd_quantize_b_c(
     const tran_low_t *coeff_ptr, intptr_t n_coeffs, const int16_t *zbin_ptr,
     const int16_t *round_ptr, const int16_t *quant_ptr,
     const int16_t *quant_shift_ptr, tran_low_t *qcoeff_ptr,
     tran_low_t *dqcoeff_ptr, const int16_t *dequant_ptr, uint16_t *eob_ptr,
     const int16_t *scan, const int16_t *iscan);
+#ifdef __cplusplus
+}
+#endif
 
 static INLINE void avm_highbd_quantize_b(
     const tran_low_t *coeff_ptr, intptr_t n_coeffs, const int32_t *zbin_ptr,
@@ -1408,9 +1439,15 @@ void avm_highbd_quantize_b_c(const tran_low_t *coeff_ptr, intptr_t n_coeffs,
                              const int16_t *scan, const int16_t *iscan,
                              const int log_scale);
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 extern int64_t aom_highbd_sse_c(const uint8_t *src, int src_stride,
                                 const uint8_t *ref, int ref_stride, int w,
                                 int h);
+#ifdef __cplusplus
+}
+#endif
 static INLINE int64_t avm_highbd_sse(const uint16_t *a, int a_stride,
                                      const uint16_t *b, int b_stride, int width,
                                      int height) {
@@ -1425,12 +1462,18 @@ static INLINE int64_t avm_highbd_sse_c(const uint16_t *a, int a_stride,
                           b_stride, width, height);
 }
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 extern void aom_highbd_subtract_block_c(int rows, int cols, int16_t *diff_ptr,
                                         ptrdiff_t diff_stride,
                                         const uint8_t *src_ptr,
                                         ptrdiff_t src_stride,
                                         const uint8_t *pred_ptr,
                                         ptrdiff_t pred_stride);
+#ifdef __cplusplus
+}
+#endif
 static INLINE void avm_highbd_subtract_block(
     int rows, int cols, int16_t *diff_ptr, ptrdiff_t diff_stride,
     const uint16_t *src_ptr, ptrdiff_t src_stride, const uint16_t *pred_ptr,
@@ -1441,6 +1484,9 @@ static INLINE void avm_highbd_subtract_block(
                               CONVERT_TO_BYTEPTR(pred_ptr), pred_stride);
 }
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 extern void aom_highbd_blend_a64_d16_mask_c(
     uint8_t *dst, uint32_t dst_stride, const CONV_BUF_TYPE *src0,
     uint32_t src0_stride, const CONV_BUF_TYPE *src1, uint32_t src1_stride,
@@ -1452,6 +1498,9 @@ extern void aom_highbd_blend_a64_mask_c(
     uint32_t src0_stride, const uint8_t *src1, uint32_t src1_stride,
     const uint8_t *mask, uint32_t mask_stride, int w, int h, int subw, int subh,
     int bd);
+#ifdef __cplusplus
+}
+#endif
 
 static INLINE void avm_highbd_blend_a64_d16_mask(
     void *dst, uint32_t dst_stride, const void *src0, uint32_t src0_stride,
@@ -1741,9 +1790,15 @@ static INLINE uint64_t aom_rb_read_uleb(struct aom_read_bit_buffer *rb) {
 
 #define FILTER_UNUSED -1
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 extern void aom_highbd_convolve_copy_c(const uint16_t *src,
                                        ptrdiff_t src_stride, uint16_t *dst,
                                        ptrdiff_t dst_stride, int w, int h);
+#ifdef __cplusplus
+}
+#endif
 #define avm_highbd_convolve_copy(src, src_stride, dst, dst_stride, w, h) \
   ((((intptr_t)(dst) & 15) != 0 || ((dst_stride) & 7) != 0)              \
        ? aom_highbd_convolve_copy_c(src, src_stride, dst, dst_stride, w, \
@@ -1765,6 +1820,9 @@ static INLINE uint64_t avm_sum_squares_i32(const int32_t *src, uint32_t n) {
 #define avm_memset_int16(dest, val, count) \
   aom_memset16((uint16_t *)(dest), (uint16_t)(val), (count))
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 extern void avm_highbd_subtract_block_vert(
     int rows, int cols, int16_t *diff_ptr, ptrdiff_t diff_stride,
     const uint16_t *src_ptr, ptrdiff_t src_stride, const uint16_t *pred_ptr,
@@ -1773,6 +1831,9 @@ extern void avm_highbd_subtract_block_horz(
     int rows, int cols, int16_t *diff_ptr, ptrdiff_t diff_stride,
     const uint16_t *src_ptr, ptrdiff_t src_stride, const uint16_t *pred_ptr,
     ptrdiff_t pred_stride, int bd);
+#ifdef __cplusplus
+}
+#endif
 
 #define avm_codec_pkt_list_decl aom_codec_pkt_list_decl
 #define avm_codec_pkt_list_init aom_codec_pkt_list_init
@@ -1789,6 +1850,9 @@ extern void avm_highbd_subtract_block_horz(
 #define avm_sum_sse_2d_i16 aom_sum_sse_2d_i16
 
 struct yv12_buffer_config;
+#ifdef __cplusplus
+extern "C" {
+#endif
 extern void aom_yv12_copy_y(const struct yv12_buffer_config *src_ybc,
                             struct yv12_buffer_config *dst_ybc, int use_crop);
 extern void aom_yv12_copy_u(const struct yv12_buffer_config *src_ybc,
@@ -1801,6 +1865,9 @@ extern int64_t aom_get_sse_plane(const struct yv12_buffer_config *a,
 extern uint64_t aom_highbd_sse_odd_size(const uint8_t *a, int a_stride,
                                         const uint8_t *b, int b_stride, int w,
                                         int h);
+#ifdef __cplusplus
+}
+#endif
 
 static INLINE uint64_t avm_highbd_sse_odd_size(const uint16_t *a, int a_stride,
                                                const uint16_t *b, int b_stride,
