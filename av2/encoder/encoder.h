@@ -180,11 +180,6 @@ static INLINE int avm_wb_count_primitive_refsubexpfin(uint16_t n, uint16_t k,
   return wb_count_primitive_subexpfin(n, k, recenter_finite_nonneg(n, ref, v));
 }
 
-#define y_buffer buffers_u16[0]
-#define u_buffer buffers_u16[1]
-#define v_buffer buffers_u16[2]
-#define store_buf_adr store_buf_adr_u16
-
 #define AVMSIGN AOMSIGN
 #define avm_write_literal aom_write_literal
 #define avm_write_symbol aom_write_symbol

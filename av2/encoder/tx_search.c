@@ -10,6 +10,7 @@
  * aomedia.org/license/patent-license/.
  */
 
+#include "config/avm_dsp_rtcd.h"
 #include "av2/common/blockd.h"
 #include "av2/common/cfl.h"
 #include "av2/common/reconintra.h"
@@ -40,7 +41,7 @@ struct rdcost_block_args {
 typedef struct {
   int64_t rd;
   int txb_entropy_ctx;
-  TX_TYPE tx_type;
+  av2_tx_type tx_type;
 } TxCandidateInfo;
 
 typedef struct tx_size_rd_info_node {
@@ -173,7 +174,11 @@ static INLINE int64_t pixel_diff_dist(const AV2_COMMON *cm, const MACROBLOCK *x,
   diff += ((blk_row * diff_stride + blk_col) << MI_SIZE_LOG2);
   uint64_t sse;
   if (visible_cols > 0 && visible_rows > 0) {
-    sse = avm_sum_squares_2d_i16(diff, diff_stride, visible_cols, visible_rows);
+    if (((intptr_t)diff & 15) != 0) {
+      sse = aom_sum_squares_2d_i16_c(diff, diff_stride, visible_cols, visible_rows);
+    } else {
+      sse = avm_sum_squares_2d_i16(diff, diff_stride, visible_cols, visible_rows);
+    }
   } else {
     sse = 0;
   }
@@ -204,7 +209,11 @@ static INLINE int64_t pixel_diff_stats(
   diff += ((blk_row * diff_stride + blk_col) << MI_SIZE_LOG2);
   uint64_t sse = 0;
   int sum = 0;
-  sse = avm_sum_sse_2d_i16(diff, diff_stride, visible_cols, visible_rows, &sum);
+  if (((intptr_t)diff & 15) != 0) {
+    sse = aom_sum_sse_2d_i16_c(diff, diff_stride, visible_cols, visible_rows, &sum);
+  } else {
+    sse = avm_sum_sse_2d_i16(diff, diff_stride, visible_cols, visible_rows, &sum);
+  }
   if (visible_cols > 0 && visible_rows > 0) {
     aom_clear_system_state();
     double norm_factor = 1.0 / (visible_cols * visible_rows);
@@ -575,7 +584,7 @@ static double get_mean(const int16_t *diff, int stride, int w, int h) {
 static INLINE void PrintTransformUnitStats(
     const AV2_COMP *const cpi, MACROBLOCK *x, const RD_STATS *const rd_stats,
     int blk_row, int blk_col, BLOCK_SIZE plane_bsize, TX_SIZE tx_size,
-    TX_TYPE tx_type, int64_t rd) {
+    av2_tx_type tx_type, int64_t rd) {
   if (rd_stats->rate == INT_MAX || rd_stats->dist == INT64_MAX) return;
 
   // Generate small sample to restrict output size.
@@ -876,7 +885,7 @@ static INLINE void inverse_transform_block_facade(
   MACROBLOCKD *const xd = &x->e_mbd;
   tran_low_t *dqcoeff = p->dqcoeff + BLOCK_OFFSET(block);
   const PLANE_TYPE plane_type = get_plane_type(plane);
-  const TX_TYPE tx_type = av2_get_tx_type(xd, plane_type, blk_row, blk_col,
+  const av2_tx_type tx_type = av2_get_tx_type(xd, plane_type, blk_row, blk_col,
                                           tx_size, reduced_tx_set);
 
   struct macroblockd_plane *const pd = &xd->plane[plane];
@@ -891,7 +900,7 @@ static INLINE void recon_intra(const AV2_COMP *cpi, MACROBLOCK *x, int plane,
                                int block, int blk_row, int blk_col,
                                BLOCK_SIZE plane_bsize, TX_SIZE tx_size,
                                const TXB_CTX *const txb_ctx, int skip_trellis,
-                               TX_TYPE best_tx_type, int do_quant,
+                               av2_tx_type best_tx_type, int do_quant,
                                int *rate_cost, uint16_t best_eob) {
   const AV2_COMMON *cm = &cpi->common;
   MACROBLOCKD *xd = &x->e_mbd;
@@ -1054,7 +1063,7 @@ static INLINE int64_t dist_block_px_domain(const AV2_COMP *cpi, MACROBLOCK *x,
   avm_highbd_convolve_copy(dst, dst_stride, recon, MAX_TX_SIZE, bsw, bsh);
 
   const PLANE_TYPE plane_type = get_plane_type(plane);
-  TX_TYPE tx_type =
+  av2_tx_type tx_type =
       av2_get_tx_type(xd, plane_type, blk_row, blk_col, tx_size,
                       is_reduced_tx_set_used(&cpi->common, plane_type));
   av2_inverse_transform_block(
@@ -1117,7 +1126,7 @@ static INLINE int64_t joint_uv_dist_block_px_domain(const AV2_COMP *cpi,
                            bsw, bsh);
 
   CctxType cctx_type = av2_get_cctx_type(xd, blk_row, blk_col);
-  TX_TYPE tx_type =
+  av2_tx_type tx_type =
       av2_get_tx_type(xd, PLANE_TYPE_UV, blk_row, blk_col, tx_size,
                       is_reduced_tx_set_used(&cpi->common, PLANE_TYPE_UV));
   av2_inv_cross_chroma_tx_block(tmp_dqcoeff_c1, tmp_dqcoeff_c2, tx_size,
@@ -1948,7 +1957,7 @@ static INLINE void update_txb_coeff_cost(RD_STATS *rd_stats, int plane,
 #endif
 
 static INLINE int cost_coeffs(const AV2_COMMON *cm, MACROBLOCK *x, int plane,
-                              int block, TX_SIZE tx_size, const TX_TYPE tx_type,
+                              int block, TX_SIZE tx_size, const av2_tx_type tx_type,
                               const CctxType cctx_type,
                               const TXB_CTX *const txb_ctx,
                               int reduced_tx_set_used) {
@@ -2112,7 +2121,7 @@ static void search_tx_type(const AV2_COMP *cpi, MACROBLOCK *x, int plane,
   const TxfmSearchParams *txfm_params = &x->txfm_search_params;
   int64_t best_rd = INT64_MAX;
   uint16_t best_eob = 0;
-  TX_TYPE best_tx_type = DCT_DCT;
+  av2_tx_type best_tx_type = DCT_DCT;
   int rate_cost = 0;
   // The buffer used to swap dqcoeff in macroblockd_plane so we can keep dqcoeff
   // of the best tx_type
@@ -2360,7 +2369,7 @@ static void search_tx_type(const AV2_COMP *cpi, MACROBLOCK *x, int plane,
       for (int stx = 0; stx < max_stx; ++stx) {
         // Skip repeated evaluation of no secondary transform.
         if (set_idx && !stx) continue;
-        TX_TYPE tx_type = primary_tx_type;
+        av2_tx_type tx_type = primary_tx_type;
         if (eob_found) skip_stx = true;
         uint16_t stx_set = 0;
 
@@ -2370,7 +2379,7 @@ static void search_tx_type(const AV2_COMP *cpi, MACROBLOCK *x, int plane,
         txfm_param.tx_type = primary_tx_type;
         txfm_param.sec_tx_type = stx;
 
-        TX_TYPE tx_type1 = tx_type;  // does not keep set info
+        av2_tx_type tx_type1 = tx_type;  // does not keep set info
         stx_set = (primary_tx_type == ADST_ADST && stx) ? set_id + IST_SET_SIZE
                                                         : set_id;
         set_secondary_tx_set(&tx_type, stx_set);
@@ -2624,6 +2633,11 @@ static void search_tx_type(const AV2_COMP *cpi, MACROBLOCK *x, int plane,
   }
 
   best_rd_stats->skip_txfm = best_eob == 0;
+  if (plane == 0 && get_primary_tx_type(best_tx_type) == ADST_ADST && get_secondary_tx_type(best_tx_type) > 0) {
+    fprintf(stderr, "DEBUG_SEARCH: blk_row=%d, blk_col=%d, best_tx_type=%d, primary=%d, sec_type=%d, sec_set=%d\n",
+            blk_row, blk_col, best_tx_type, get_primary_tx_type(best_tx_type),
+            get_secondary_tx_type(best_tx_type), get_secondary_tx_set(best_tx_type));
+  }
   if (plane == 0) update_txk_array(xd, blk_row, blk_col, tx_size, best_tx_type);
   x->plane[plane].txb_entropy_ctx[block] = best_txb_ctx;
   x->plane[plane].eobs[block] = best_eob;
@@ -2674,7 +2688,7 @@ static void search_cctx_type(const AV2_COMP *cpi, MACROBLOCK *x, int block,
   uint16_t best_eob_c1 = p_c1->eobs[block];
   uint16_t best_eob_c2 = p_c2->eobs[block];
   CctxType best_cctx_type = CCTX_NONE;
-  TX_TYPE tx_type =
+  av2_tx_type tx_type =
       av2_get_tx_type(xd, PLANE_TYPE_UV, blk_row, blk_col, tx_size,
                       is_reduced_tx_set_used(cm, PLANE_TYPE_UV));
   for (int plane = AOM_PLANE_U; plane <= AOM_PLANE_V; plane++) {
@@ -3346,7 +3360,7 @@ static void choose_tx_size_type_from_rd(const AV2_COMP *const cpi,
   if (!tx_select)
     chosen_tx_size = tx_size_from_tx_mode(bs, txfm_params->tx_mode_search_type);
 
-  TX_TYPE best_txk_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
+  av2_tx_type best_txk_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
   uint8_t best_blk_skip[MAX_MIB_SIZE * MAX_MIB_SIZE];
   TX_SIZE best_tx_size = max_tx_size;
   int is_wide_angle_mapped[MAX_TX_PARTITIONS] = { 0 };

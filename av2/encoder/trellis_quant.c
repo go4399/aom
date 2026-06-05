@@ -1000,7 +1000,7 @@ and all_zero, back track until it reaches eob.
 |--------------------------------------------------------
 */
 int av2_trellis_quant(const struct AV2_COMP *cpi, MACROBLOCK *x, int plane,
-                      int block, TX_SIZE tx_size, TX_TYPE tx_type,
+                      int block, TX_SIZE tx_size, av2_tx_type tx_type,
                       CctxType cctx_type, const TXB_CTX *const txb_ctx,
                       int *rate_cost, int sharpness) {
   MACROBLOCKD *xd = &x->e_mbd;

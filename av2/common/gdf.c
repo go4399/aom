@@ -248,7 +248,7 @@ void gdf_copy_guided_frame(AV2_COMMON *cm) {
   for (int i = top_buf; i < top_buf + rec_height; i++) {
     memcpy(
         cm->gdf_info.inp_pad_ptr + i * input_stride + GDF_TEST_EXTRA_HOR_BORDER,
-        cm->cur_frame->buf.buffers_u16[AOM_PLANE_Y] +
+        CONVERT_TO_SHORTPTR(cm->cur_frame->buf.y_buffer) +
             (i - top_buf) * rec_stride,
         sizeof(uint16_t) * rec_width);
     if (cm->cur_frame->buf.bit_depth > GDF_TEST_INP_PREC) {
@@ -528,7 +528,7 @@ int gdf_get_qp_idx_base(const AV2_COMMON *cm) {
 }
 
 void gdf_filter_frame(AV2_COMMON *cm) {
-  uint16_t *const rec_pnt = cm->cur_frame->buf.buffers_u16[AOM_PLANE_Y];
+  uint16_t *const rec_pnt = CONVERT_TO_SHORTPTR(cm->cur_frame->buf.y_buffer);
   const int rec_stride = cm->cur_frame->buf.y_stride;
 
   if (cm->bru.frame_inactive_flag) return;

@@ -177,6 +177,8 @@ struct avm_codec_alg_priv {
   aom_image_t img;
   int flushed;
   int invert_tile_order;
+  unsigned int is_annexb;
+  int operating_point;
   RefCntBuffer *last_show_frame;  // Last output frame buffer
   int byte_alignment;
   int skip_loop_filter;
@@ -1974,6 +1976,22 @@ static aom_codec_err_t ctrl_set_invert_tile_order(aom_codec_alg_priv_t *ctx,
   return AOM_CODEC_OK;
 }
 
+static aom_codec_err_t ctrl_set_is_annexb(aom_codec_alg_priv_t *ctx,
+                                          va_list args) {
+  // The shared aomenc/aomdec CLI issues AV1D_SET_IS_ANNEXB for every codec.
+  // AV2's bitstream reader determines the framing itself and does not consume
+  // this flag, but the control must succeed so the CLI doesn't abort. Store it
+  // for parity with the AV1 decoder.
+  ctx->is_annexb = va_arg(args, unsigned int);
+  return AOM_CODEC_OK;
+}
+
+static aom_codec_err_t ctrl_set_operating_point(aom_codec_alg_priv_t *ctx,
+                                                va_list args) {
+  ctx->operating_point = va_arg(args, int);
+  return AOM_CODEC_OK;
+}
+
 static aom_codec_err_t ctrl_set_byte_alignment(aom_codec_alg_priv_t *ctx,
                                                va_list args) {
   const int legacy_byte_alignment = 0;
@@ -2138,6 +2156,19 @@ static aom_codec_ctrl_fn_map_t decoder_ctrl_maps[] = {
 
   // Setters
   { AV2_SET_REFERENCE, ctrl_set_reference },
+  // Generic decoder controls issued by the shared aomdec/aomenc CLI using the
+  // AV1D_*/AOMD_* IDs. The AV2 codec also exposes these under its own AV2D_*/
+  // AVMD_* IDs below; registering the shared IDs here (reusing the same
+  // handlers) lets the common CLI drive the AV2 decoder. AV1 is a separate
+  // codec/map and is unaffected.
+  { AV1D_SET_IS_ANNEXB, ctrl_set_is_annexb },
+  { AV1D_SET_OPERATING_POINT, ctrl_set_operating_point },
+  { AV1D_SET_OUTPUT_ALL_LAYERS, ctrl_set_output_all_layers },
+  { AV1D_SET_SKIP_FILM_GRAIN, ctrl_set_skip_film_grain },
+  { AV1D_SET_ROW_MT, ctrl_set_row_mt },
+  { AOMD_GET_LAST_QUANTIZER, ctrl_get_last_quantizer },
+  { AOMD_GET_FRAME_CORRUPTED, ctrl_get_frame_corrupted },
+  { AV1D_GET_DISPLAY_SIZE, ctrl_get_render_size },
   { AV2_INVERT_TILE_DECODE_ORDER, ctrl_set_invert_tile_order },
   { AV2_SET_BYTE_ALIGNMENT, ctrl_set_byte_alignment },
   { AV2_SET_SKIP_LOOP_FILTER, ctrl_set_skip_loop_filter },

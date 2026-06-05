@@ -42,8 +42,7 @@ void compute_residual_stats(AV2_COMP *const cpi, ThreadData *td, MACROBLOCK *x,
   out->var = cpi->fn_ptr[bsize].vf(src, src_stride, dst, dst_stride, &out->sse);
 
   const int num_blk = mi_size_wide[bsize] * mi_size_high[bsize];
-  struct aom_internal_error_info error;
-  AOM_CHECK_MEM_ERROR(&error, p->eobs,
+  CHECK_MEM_ERROR(cm, p->eobs,
                       aom_memalign(32, num_blk * sizeof(p->eobs[0])));
   p->coeff = td->shared_coeff_buf.coeff_buf[plane];
   p->qcoeff = td->shared_coeff_buf.qcoeff_buf[plane];
@@ -51,10 +50,10 @@ void compute_residual_stats(AV2_COMP *const cpi, ThreadData *td, MACROBLOCK *x,
   tran_low_t *const dqcoeff = p->dqcoeff + BLOCK_OFFSET(block);
   tran_low_t *const qcoeff = p->qcoeff + BLOCK_OFFSET(block);
   tran_low_t *const coeff = p->coeff + BLOCK_OFFSET(block);
-  AOM_CHECK_MEM_ERROR(&error, p->bobs,
+  CHECK_MEM_ERROR(cm, p->bobs,
                       aom_memalign(32, num_blk * sizeof(p->bobs[0])));
-  AOM_CHECK_MEM_ERROR(
-      &error, p->txb_entropy_ctx,
+  CHECK_MEM_ERROR(
+      cm, p->txb_entropy_ctx,
       aom_memalign(32, num_blk * sizeof(p->txb_entropy_ctx[0])));
 
   TxfmParam txfm_param;

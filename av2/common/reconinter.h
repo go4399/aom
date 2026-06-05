@@ -1083,7 +1083,7 @@ static INLINE void setup_pred_planes_for_tip(const TIP *tip_ref,
 
     for (int ref = 0; ref < 2; ++ref) {
       const YV12_BUFFER_CONFIG *ref_buf = &tip_ref->ref_frame_buffer[ref]->buf;
-      setup_pred_plane(&pd->pre[ref], (uint16_t *)ref_buf->buffers[plane],
+      setup_pred_plane(&pd->pre[ref], CONVERT_TO_SHORTPTR(ref_buf->buffers[plane]),
                        ref_buf->widths[is_uv], ref_buf->heights[is_uv],
                        ref_buf->crop_widths[is_uv],
                        ref_buf->crop_heights[is_uv], ref_buf->strides[is_uv],

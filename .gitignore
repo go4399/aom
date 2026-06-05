@@ -7,3 +7,4 @@ cmbuild
 .vscode
 .gitignore
 TAGS
+.av2-integration/

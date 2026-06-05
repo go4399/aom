@@ -1092,7 +1092,7 @@ void av2_read_tx_type(const AV2_COMMON *const cm, MACROBLOCKD *xd, int blk_row,
                       const int plane, const int eob, const int dc_skip) {
   if (plane != PLANE_TYPE_Y) return;
   MB_MODE_INFO *mbmi = xd->mi[0];
-  TX_TYPE *tx_type =
+  av2_tx_type *tx_type =
       &xd->tx_type_map[blk_row * xd->tx_type_map_stride + blk_col];
   *tx_type = DCT_DCT;
 
@@ -1248,7 +1248,7 @@ void av2_read_cctx_type(const AV2_COMMON *const cm, MACROBLOCKD *xd,
 // This function reads a 'secondary tx set' from the bitstream
 static void read_secondary_tx_set(MACROBLOCKD *xd, FRAME_CONTEXT *ec_ctx,
                                   aom_reader *r, MB_MODE_INFO *mbmi,
-                                  TX_SIZE tx_size, TX_TYPE *tx_type) {
+                                  TX_SIZE tx_size, av2_tx_type *tx_type) {
   const int inter_block = is_inter_block(mbmi, xd->tree_type);
   TX_TYPE stx_set_flag = DC_PRED;
   if (!inter_block) {
@@ -1281,7 +1281,7 @@ void av2_read_sec_tx_type(const AV2_COMMON *const cm, MACROBLOCKD *xd,
                           int blk_row, int blk_col, TX_SIZE tx_size,
                           uint16_t *eob, aom_reader *r) {
   MB_MODE_INFO *mbmi = xd->mi[0];
-  TX_TYPE *tx_type =
+  av2_tx_type *tx_type =
       &xd->tx_type_map[blk_row * xd->tx_type_map_stride + blk_col];
 
   // No need to read transform type if block is skipped.

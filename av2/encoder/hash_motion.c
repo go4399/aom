@@ -152,7 +152,7 @@ void av2_generate_block_2x2_hash_value(IntraBCHashInfo *intrabc_hash_info,
   for (int y_pos = 0; y_pos < y_end; y_pos++) {
     for (int x_pos = 0; x_pos < x_end; x_pos++) {
       get_pixels_in_1D_short_array_by_block_2x2(
-          picture->y_buffer + y_pos * picture->y_stride + x_pos,
+          CONVERT_TO_SHORTPTR(picture->y_buffer) + y_pos * picture->y_stride + x_pos,
           picture->y_stride, p);
       pic_block_same_info[0][pos] = is_block16_2x2_row_same_value(p);
       pic_block_same_info[1][pos] = is_block16_2x2_col_same_value(p);
@@ -277,7 +277,7 @@ void av2_add_to_hash_map_by_row_with_precal_data(hash_table *p_hash_table,
 int av2_hash_is_horizontal_perfect(const YV12_BUFFER_CONFIG *picture,
                                    int block_size, int x_start, int y_start) {
   const int stride = picture->y_stride;
-  const uint16_t *p = picture->y_buffer + y_start * stride + x_start;
+  const uint16_t *p = CONVERT_TO_SHORTPTR(picture->y_buffer) + y_start * stride + x_start;
 
   for (int i = 0; i < block_size; i++) {
     for (int j = 1; j < block_size; j++) {
@@ -294,7 +294,7 @@ int av2_hash_is_horizontal_perfect(const YV12_BUFFER_CONFIG *picture,
 int av2_hash_is_vertical_perfect(const YV12_BUFFER_CONFIG *picture,
                                  int block_size, int x_start, int y_start) {
   const int stride = picture->y_stride;
-  const uint16_t *p = picture->y_buffer + y_start * stride + x_start;
+  const uint16_t *p = CONVERT_TO_SHORTPTR(picture->y_buffer) + y_start * stride + x_start;
 
   for (int i = 0; i < block_size; i++) {
     for (int j = 1; j < block_size; j++) {

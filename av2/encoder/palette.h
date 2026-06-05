@@ -165,7 +165,7 @@ void av2_rd_pick_palette_intra_sby(
     int64_t *best_rd, int64_t *best_model_rd, int *rate, int *rate_tokenonly,
     int64_t *distortion, int *skippable, int *beat_best_rd,
     struct PICK_MODE_CONTEXT *ctx, uint8_t *best_blk_skip,
-    TX_TYPE *tx_type_map);
+    av2_tx_type *tx_type_map);
 
 #ifdef __cplusplus
 }  // extern "C"

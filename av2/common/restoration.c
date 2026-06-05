@@ -1662,7 +1662,7 @@ uint16_t *wienerns_copy_luma_with_virtual_lines(struct AV2Common *cm,
 
   const YV12_BUFFER_CONFIG *frame_buf = &cm->cur_frame->buf;
 
-  uint16_t *dgd = frame_buf->buffers_u16[AOM_PLANE_Y];
+  uint16_t *dgd = CONVERT_TO_SHORTPTR(frame_buf->y_buffer);
   int width_y = frame_buf->widths[AOM_PLANE_Y];
   int height_y = frame_buf->heights[AOM_PLANE_Y];
   int width_uv = frame_buf->widths[1];
@@ -2234,7 +2234,7 @@ void av2_loop_restoration_filter_frame_init(AV2LrStruct *lr_ctxt,
     const int plane_height = frame->heights[is_uv];
     FilterFrameCtxt *lr_plane_ctxt = &lr_ctxt->ctxt[plane];
 
-    av2_extend_frame(frame->buffers_u16[plane], plane_width, plane_height,
+    av2_extend_frame(CONVERT_TO_SHORTPTR(frame->buffers[plane]), plane_width, plane_height,
                      frame->strides[is_uv], RESTORATION_BORDER_HORZ,
                      RESTORATION_BORDER_VERT);
 
@@ -2242,8 +2242,8 @@ void av2_loop_restoration_filter_frame_init(AV2LrStruct *lr_ctxt,
     lr_plane_ctxt->ss_x = is_uv && seq_params->subsampling_x;
     lr_plane_ctxt->ss_y = is_uv && seq_params->subsampling_y;
     lr_plane_ctxt->bit_depth = bit_depth;
-    lr_plane_ctxt->data8 = frame->buffers_u16[plane];
-    lr_plane_ctxt->dst8 = lr_ctxt->dst->buffers_u16[plane];
+    lr_plane_ctxt->data8 = CONVERT_TO_SHORTPTR(frame->buffers[plane]);
+    lr_plane_ctxt->dst8 = CONVERT_TO_SHORTPTR(lr_ctxt->dst->buffers[plane]);
     lr_plane_ctxt->data_stride = frame->strides[is_uv];
     lr_plane_ctxt->dst_stride = lr_ctxt->dst->strides[is_uv];
     lr_plane_ctxt->tile_rect = av2_whole_frame_rect(cm, is_uv);
@@ -2950,7 +2950,7 @@ static void save_deblock_boundary_lines(
   (void)cm;
   assert(stripe < boundaries->num_stripes);
   const int is_uv = plane > 0;
-  const uint16_t *src_buf = frame->buffers_u16[plane];
+  const uint16_t *src_buf = CONVERT_TO_SHORTPTR(frame->buffers[plane]);
   const int src_stride = frame->strides[is_uv];
   const uint16_t *src_rows = src_buf + row * src_stride;
 
@@ -2992,7 +2992,7 @@ static void save_cdef_boundary_lines(const YV12_BUFFER_CONFIG *frame,
   (void)cm;
   assert(stripe < boundaries->num_stripes);
   const int is_uv = plane > 0;
-  const uint16_t *src_buf = frame->buffers_u16[plane];
+  const uint16_t *src_buf = CONVERT_TO_SHORTPTR(frame->buffers[plane]);
   const int src_stride = frame->strides[is_uv];
   const uint16_t *src_rows = src_buf + row * src_stride;
 

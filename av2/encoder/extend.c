@@ -17,10 +17,6 @@
 #include "av2/common/common.h"
 #include "av2/encoder/extend.h"
 
-#define y_buffer buffers_u16[0]
-#define u_buffer buffers_u16[1]
-#define v_buffer buffers_u16[2]
-
 static void highbd_copy_and_extend_plane(const uint16_t *src, int src_pitch,
                                          uint16_t *dst, int dst_pitch, int w,
                                          int h, int extend_top, int extend_left,
@@ -80,15 +76,18 @@ void av2_copy_and_extend_frame(const YV12_BUFFER_CONFIG *src,
   const int eb_uv = eb_y >> uv_height_subsampling;
   const int er_uv = er_y >> uv_width_subsampling;
 
-  highbd_copy_and_extend_plane(src->y_buffer, src->y_stride, dst->y_buffer,
-                               dst->y_stride, src->y_crop_width,
-                               src->y_crop_height, et_y, el_y, eb_y, er_y);
+  highbd_copy_and_extend_plane(CONVERT_TO_SHORTPTR(src->y_buffer), src->y_stride,
+                               CONVERT_TO_SHORTPTR(dst->y_buffer), dst->y_stride,
+                               src->y_crop_width, src->y_crop_height, et_y, el_y,
+                               eb_y, er_y);
   if (!src->monochrome) {
     highbd_copy_and_extend_plane(
-        src->u_buffer, src->uv_stride, dst->u_buffer, dst->uv_stride,
-        src->uv_crop_width, src->uv_crop_height, et_uv, el_uv, eb_uv, er_uv);
+        CONVERT_TO_SHORTPTR(src->u_buffer), src->uv_stride,
+        CONVERT_TO_SHORTPTR(dst->u_buffer), dst->uv_stride, src->uv_crop_width,
+        src->uv_crop_height, et_uv, el_uv, eb_uv, er_uv);
     highbd_copy_and_extend_plane(
-        src->v_buffer, src->uv_stride, dst->v_buffer, dst->uv_stride,
-        src->uv_crop_width, src->uv_crop_height, et_uv, el_uv, eb_uv, er_uv);
+        CONVERT_TO_SHORTPTR(src->v_buffer), src->uv_stride,
+        CONVERT_TO_SHORTPTR(dst->v_buffer), dst->uv_stride, src->uv_crop_width,
+        src->uv_crop_height, et_uv, el_uv, eb_uv, er_uv);
   }
 }

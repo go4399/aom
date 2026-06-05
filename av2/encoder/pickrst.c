@@ -298,9 +298,9 @@ static INLINE void init_rsc(const YV12_BUFFER_CONFIG *src, const AV2_COMMON *cm,
   const int is_uv = plane != AOM_PLANE_Y;
   rsc->plane_width = src->widths[is_uv];
   rsc->plane_height = src->heights[is_uv];
-  rsc->src_buffer = src->buffers_u16[plane];
+  rsc->src_buffer = CONVERT_TO_SHORTPTR(src->buffers[plane]);
   rsc->src_stride = src->strides[is_uv];
-  rsc->dgd_buffer = dgd->buffers_u16[plane];
+  rsc->dgd_buffer = CONVERT_TO_SHORTPTR(dgd->buffers[plane]);
   rsc->dgd_stride = dgd->strides[is_uv];
   rsc->tile_rect = av2_whole_frame_rect(cm, is_uv);
   assert(src->widths[is_uv] == dgd->widths[is_uv]);
@@ -338,8 +338,9 @@ static int64_t try_restoration_unit(const RestSearchCtxt *rsc,
   av2_loop_restoration_filter_unit(
       limits, rui, &rsi->boundaries, rlbs, tile_rect, rsc->tile_stripe0,
       is_uv && cm->seq_params.subsampling_x,
-      is_uv && cm->seq_params.subsampling_y, bit_depth, fts->buffers_u16[plane],
-      fts->strides[is_uv], rsc->dst->buffers_u16[plane],
+      is_uv && cm->seq_params.subsampling_y, bit_depth,
+      CONVERT_TO_SHORTPTR(fts->buffers[plane]), fts->strides[is_uv],
+      CONVERT_TO_SHORTPTR(rsc->dst->buffers[plane]),
       rsc->dst->strides[is_uv], rsc->plane_width,
       cm->seq_params.disable_loopfilters_across_tiles, optimized_lr);
 
@@ -3831,7 +3832,7 @@ void av2_pick_filter_restoration(const YV12_BUFFER_CONFIG *src, AV2_COMP *cpi) {
   const YV12_BUFFER_CONFIG *dgd = &cpi->common.cur_frame->buf;
   rsc.luma_stride = dgd->widths[1] + 2 * WIENERNS_UV_BRD;
   luma_buf = wienerns_copy_luma_highbd(
-      dgd->buffers_u16[AOM_PLANE_Y], dgd->heights[AOM_PLANE_Y],
+      CONVERT_TO_SHORTPTR(dgd->buffers[AOM_PLANE_Y]), dgd->heights[AOM_PLANE_Y],
       dgd->widths[AOM_PLANE_Y], dgd->strides[AOM_PLANE_Y], &luma,
       dgd->heights[1], dgd->widths[1], WIENERNS_UV_BRD, rsc.luma_stride,
       cm->seq_params.bit_depth

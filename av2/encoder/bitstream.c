@@ -628,7 +628,7 @@ static INLINE void av2_write_coeffs_txb_facade(aom_writer *w, AV2_COMMON *cm,
   // code significance and TXB
   const int code_rest =
       av2_write_sig_txtype(cm, x, w, blk_row, blk_col, plane, block, tx_size);
-  const TX_TYPE tx_type =
+  const av2_tx_type tx_type =
       av2_get_tx_type(xd, get_plane_type(plane), blk_row, blk_col, tx_size,
                       is_reduced_tx_set_used(cm, get_plane_type(plane)));
   const int is_inter = is_inter_block(mbmi, xd->tree_type);
@@ -1036,7 +1036,7 @@ static INLINE void write_palette_mode_info(const AV2_COMMON *cm,
 }
 
 void av2_write_tx_type(const AV2_COMMON *const cm, const MACROBLOCKD *xd,
-                       TX_TYPE tx_type, TX_SIZE tx_size, aom_writer *w,
+                       av2_tx_type tx_type, TX_SIZE tx_size, aom_writer *w,
                        const int plane, const int eob, const int dc_skip) {
   if (plane != PLANE_TYPE_Y || dc_skip) return;
   MB_MODE_INFO *mbmi = xd->mi[0];
@@ -1068,7 +1068,7 @@ void av2_write_tx_type(const AV2_COMMON *const cm, const MACROBLOCKD *xd,
         get_ext_tx_set(tx_size, is_inter, features->reduced_tx_set_used);
     // eset == 0 should correspond to a set with only DCT_DCT and there
     // is no need to send the tx_type
-    assert(eset > 0);
+    assert(eset != 0);
     const int size_info = av2_size_class[tx_size];
     if (!is_inter) {
       assert(av2_ext_tx_used[tx_set_type][get_primary_tx_type(tx_type)]);
@@ -1173,7 +1173,7 @@ void av2_write_cctx_type(const AV2_COMMON *const cm, const MACROBLOCKD *xd,
 // This function writes a 'secondary tx set' onto the bitstream
 static void write_sec_tx_set(FRAME_CONTEXT *ec_ctx, aom_writer *w,
                              MB_MODE_INFO *mbmi, TX_SIZE tx_size,
-                             TX_TYPE tx_type) {
+                             av2_tx_type tx_type) {
   TX_TYPE stx_set_flag = get_secondary_tx_set(tx_type);
   if (get_primary_tx_type(tx_type) == ADST_ADST) stx_set_flag -= IST_SET_SIZE;
   uint8_t intra_mode = get_intra_mode(mbmi, PLANE_TYPE_Y);
@@ -1189,6 +1189,10 @@ static void write_sec_tx_set(FRAME_CONTEXT *ec_ctx, aom_writer *w,
   } else {
     uint8_t stx_set_in_bitstream =
         most_probable_stx_mapping[intra_mode][stx_set_flag];
+    if (stx_set_flag >= IST_SET_SIZE) {
+      fprintf(stderr, "DEBUG_PRINT: tx_type=%d, primary=%d, sec_set=%d, stx_set_flag=%d\n",
+              tx_type, get_primary_tx_type(tx_type), get_secondary_tx_set(tx_type), stx_set_flag);
+    }
     assert(stx_set_flag < IST_SET_SIZE);
     avm_write_symbol(w, stx_set_in_bitstream, ec_ctx->most_probable_stx_set_cdf,
                      IST_SET_SIZE);
@@ -1196,7 +1200,7 @@ static void write_sec_tx_set(FRAME_CONTEXT *ec_ctx, aom_writer *w,
 }
 
 void av2_write_sec_tx_type(const AV2_COMMON *const cm, const MACROBLOCKD *xd,
-                           TX_TYPE tx_type, TX_SIZE tx_size, uint16_t eob,
+                           av2_tx_type tx_type, TX_SIZE tx_size, uint16_t eob,
                            aom_writer *w) {
   MB_MODE_INFO *mbmi = xd->mi[0];
   const FeatureFlags *const features = &cm->features;

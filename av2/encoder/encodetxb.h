@@ -78,7 +78,7 @@ void av2_free_txb_buf(AV2_COMP *cpi);
 
 int av2_cost_coeffs_txb(const AV2_COMMON *cm, const MACROBLOCK *x,
                         const int plane, const int block, const TX_SIZE tx_size,
-                        const TX_TYPE tx_type, const CctxType cctx_type,
+                        const av2_tx_type tx_type, const CctxType cctx_type,
                         const TXB_CTX *const txb_ctx, int reduced_tx_set_used);
 
 /*!\brief Estimate the entropy cost of coding a transform block using Laplacian
@@ -121,7 +121,7 @@ int av2_cost_coeffs_txb(const AV2_COMMON *cm, const MACROBLOCK *x,
  */
 int av2_cost_coeffs_txb_laplacian(const AV2_COMMON *cm, const MACROBLOCK *x,
                                   const int plane, const int block,
-                                  const TX_SIZE tx_size, const TX_TYPE tx_type,
+                                  const TX_SIZE tx_size, const av2_tx_type tx_type,
                                   const CctxType cctx_type,
                                   const TXB_CTX *const txb_ctx,
                                   const int reduced_tx_set_used,
@@ -158,7 +158,7 @@ int av2_cost_coeffs_txb_laplacian(const AV2_COMMON *cm, const MACROBLOCK *x,
  */
 int av2_cost_coeffs_txb_estimate(const MACROBLOCK *x, const int plane,
                                  const int block, const TX_SIZE tx_size,
-                                 const TX_TYPE tx_type);
+                                 const av2_tx_type tx_type);
 
 /*!\brief Write quantized coefficients in a transform block into bitstream using
  * entropy coding.
@@ -262,7 +262,7 @@ int av2_write_sig_txtype(const AV2_COMMON *const cm, MACROBLOCK *const x,
  */
 int av2_cost_coeffs_txb_skip_estimate(const MACROBLOCK *x, const int plane,
                                       const int block, const TX_SIZE tx_size,
-                                      const TX_TYPE tx_type);
+                                      const av2_tx_type tx_type);
 
 /*!\brief Write quantized coefficients in a identity transform block into
  * bitstream using forward skip coding.
@@ -468,7 +468,7 @@ void av2_update_and_record_txb_skip_context(int plane, int block, int blk_row,
  * and therefore preserve the sharpness of the reconstructed block.
  */
 int av2_optimize_txb_new(const struct AV2_COMP *cpi, MACROBLOCK *x, int plane,
-                         int block, TX_SIZE tx_size, TX_TYPE tx_type,
+                         int block, TX_SIZE tx_size, av2_tx_type tx_type,
                          CctxType cctx_type, const TXB_CTX *const txb_ctx,
                          int *rate_cost, int sharpness);
 
@@ -503,7 +503,7 @@ int av2_optimize_txb_new(const struct AV2_COMP *cpi, MACROBLOCK *x, int plane,
  * and therefore preserve the sharpness of the reconstructed block.
  */
 int av2_optimize_fsc_block(const struct AV2_COMP *cpi, MACROBLOCK *x, int plane,
-                           int block, TX_SIZE tx_size, TX_TYPE tx_type,
+                           int block, TX_SIZE tx_size, av2_tx_type tx_type,
                            const TXB_CTX *const txb_ctx, int *rate_cost,
                            int sharpness);
 
@@ -605,7 +605,7 @@ static INLINE int64_t av2_compute_rdmult_for_plane(int64_t base_rdmult,
 }
 
 int get_tx_type_cost(const MACROBLOCK *x, const MACROBLOCKD *xd, int plane,
-                     TX_SIZE tx_size, TX_TYPE tx_type, int reduced_tx_set_used,
+                     TX_SIZE tx_size, av2_tx_type tx_type, int reduced_tx_set_used,
                      int eob, int bob_code, int is_fsc);
 
 #ifdef __cplusplus

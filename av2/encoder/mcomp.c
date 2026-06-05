@@ -33,6 +33,7 @@
 #include "av2/encoder/mcomp.h"
 #include "av2/encoder/rdopt.h"
 #include "av2/encoder/reconinter_enc.h"
+#include "av2/encoder/avm_compatibility_dsp.h"
 
 #include "aom_dsp/binary_codes_writer.h"
 
@@ -79,6 +80,17 @@ void av2_make_default_fullpel_ms_params(
       enable_adaptive_mvd_resolution(&cpi->common, mbmi);
 
   ms_params->xd = xd;
+
+  // cm is dereferenced unconditionally by av2_sdx4df_wrapper() (for the
+  // bit_depth check) on every full-pixel search, not just the intra-BC path.
+  // Initialize it here so non-intrabc callers (TPL, inter search, ...) don't
+  // read an uninitialized pointer. The mi_row/mi_col/mib_size_log2 fields are
+  // only consumed under is_intra_mode && allow_local_intrabc (set up by the
+  // intra-BC caller in rdopt.c); zero them defensively.
+  ms_params->cm = &cpi->common;
+  ms_params->mib_size_log2 = cpi->common.mib_size_log2;
+  ms_params->mi_row = 0;
+  ms_params->mi_col = 0;
 
   // High level params
   ms_params->bsize = bsize;
@@ -1318,6 +1330,34 @@ static int update_mvs_and_sad(const unsigned int this_sad, const FULLPEL_MV *mv,
   return 0;
 }
 
+static INLINE void av2_sdx4df_wrapper(
+    const FULLPEL_MOTION_SEARCH_PARAMS *ms_params, const uint8_t *src_ptr,
+    int src_stride, const uint8_t *const ref_ptr[], int ref_stride,
+    unsigned int *sad_array) {
+  const int bw = block_size_wide[ms_params->bsize];
+  const int bh = block_size_high[ms_params->bsize];
+  // The SSE2 highbd sadx4d kernels load src with movdqa (requires 16-byte
+  // alignment). AV2 always stores samples as 16-bit, so an 8-bit but
+  // non-16-byte-aligned src (common for sub-blocks in the intra-BC search)
+  // would fault. Use the alignment-tolerant generic path whenever src is
+  // misaligned, regardless of bit depth; the >8-bit normalization shift below
+  // is a no-op for 8-bit content, so aligned/8-bit results are unchanged.
+  if (((intptr_t)src_ptr & 15) != 0 || (src_stride & 7) != 0) {
+    generic_hbd_sadx4d((const uint16_t *)src_ptr, src_stride,
+                       (const uint16_t *const *)ref_ptr, ref_stride, sad_array,
+                       bw, bh);
+    const int shift = (ms_params->cm->seq_params.bit_depth == AOM_BITS_10) ? 2
+                      : (ms_params->cm->seq_params.bit_depth == AOM_BITS_12)
+                          ? 4
+                          : 0;
+    if (shift) {
+      for (int i = 0; i < 4; ++i) sad_array[i] >>= shift;
+    }
+    return;
+  }
+  ms_params->sdx4df(src_ptr, src_stride, ref_ptr, ref_stride, sad_array);
+}
+
 // Calculate sad4 and update the bestmv information
 // in FAST_DIAMOND search method.
 static void calc_sad4_update_bestmv(
@@ -1339,9 +1379,8 @@ static void calc_sad4_update_bestmv(
   for (int j = 0; j < 4; j++)
     block_offset[j] = site[cand_start + j].offset + best_address;
 
-  // 4-point sad calculation.
-  ms_params->sdx4df((const uint8_t *)src_buf, src_stride,
-                    (const uint8_t *const *)block_offset, ref->stride, sads);
+  av2_sdx4df_wrapper(ms_params, (const uint8_t *)src_buf, src_stride,
+                     (const uint8_t *const *)block_offset, ref->stride, sads);
   assert(ms_params->mv_cost_params.pb_mv_precision >= MV_PRECISION_ONE_PEL);
 
   for (int j = 0; j < 4; j++) {
@@ -1866,9 +1905,9 @@ static int diamond_search_sad(FULLPEL_MV start_mv,
           block_offset[j] = (row * ref_stride + col) + best_address;
         }
 
-        ms_params->sdx4df((const uint8_t *)src_buf, src_stride,
-                          (const uint8_t *const *)block_offset, ref_stride,
-                          sads);
+        av2_sdx4df_wrapper(ms_params, (const uint8_t *)src_buf, src_stride,
+                           (const uint8_t *const *)block_offset, ref_stride,
+                           sads);
         for (j = 0; j < 4; j++) {
           if (sads[j] < bestsad) {
             const FULLPEL_MV this_mv = {
@@ -2087,9 +2126,9 @@ static int exhaustive_mesh_search(FULLPEL_MV start_mv,
                   addrs[i] = get_buf_from_fullmv(ref, &mv);
                 }
 
-                ms_params->sdx4df((const uint8_t *)src->buf, src->stride,
-                                  (const uint8_t *const *)addrs, ref_stride,
-                                  sads);
+                av2_sdx4df_wrapper(ms_params, (const uint8_t *)src->buf, src->stride,
+                                   (const uint8_t *const *)addrs, ref_stride,
+                                   sads);
 
                 for (i = 0; i < 4; ++i) {
                   if (sads[i] < best_sad) {
@@ -2154,8 +2193,8 @@ static int exhaustive_mesh_search(FULLPEL_MV start_mv,
             addrs[i] = get_buf_from_fullmv(ref, &mv);
           }
 
-          ms_params->sdx4df((const uint8_t *)src->buf, src->stride,
-                            (const uint8_t *const *)addrs, ref_stride, sads);
+          av2_sdx4df_wrapper(ms_params, (const uint8_t *)src->buf, src->stride,
+                             (const uint8_t *const *)addrs, ref_stride, sads);
 
           for (i = 0; i < 4; ++i) {
             if (sads[i] < best_sad) {

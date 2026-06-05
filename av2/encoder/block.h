@@ -362,7 +362,7 @@ typedef struct {
   //! Map showing which txfm block skips the txfm process.
   uint8_t blk_skip[MAX_MIB_SIZE * MAX_MIB_SIZE];
   //! Map showing the txfm types for each blcok.
-  TX_TYPE tx_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
+  av2_tx_type tx_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
   //! Map showing the cctx types for each block.
   CctxType cctx_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
   //! Rd_stats for the whole partition block.
@@ -811,7 +811,7 @@ typedef struct {
    * of each element stores secondary tx_type Bits 0~3 of each element stores
    * primary tx_type
    */
-  TX_TYPE tx_type_map_[MAX_MIB_SIZE * MAX_MIB_SIZE];
+  av2_tx_type tx_type_map_[MAX_MIB_SIZE * MAX_MIB_SIZE];
   //! \brief CCTX types inside the partition block.
   CctxType cctx_type_map_[MAX_MIB_SIZE * MAX_MIB_SIZE];
 

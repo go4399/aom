@@ -720,7 +720,7 @@ int av2_write_sig_txtype(const AV2_COMMON *const cm, MACROBLOCK *const x,
   FRAME_CONTEXT *ec_ctx = xd->tile_ctx;
 
   const PLANE_TYPE plane_type = get_plane_type(plane);
-  const TX_TYPE tx_type =
+  const av2_tx_type tx_type =
       av2_get_tx_type(xd, plane_type, blk_row, blk_col, tx_size,
                       is_reduced_tx_set_used(cm, plane_type));
   const int is_inter = is_inter_block(xd->mi[0], xd->tree_type);
@@ -788,7 +788,7 @@ void av2_write_coeffs_txb_skip(const AV2_COMMON *const cm, MACROBLOCK *const x,
   const uint16_t eob = av2_get_max_eob(tx_size);
   FRAME_CONTEXT *ec_ctx = xd->tile_ctx;
   const PLANE_TYPE plane_type = get_plane_type(plane);
-  const TX_TYPE tx_type =
+  const av2_tx_type tx_type =
       av2_get_tx_type(xd, plane_type, blk_row, blk_col, tx_size,
                       is_reduced_tx_set_used(cm, plane_type));
   const int width = get_txb_wide(tx_size);
@@ -915,7 +915,7 @@ void av2_write_coeffs_txb(const AV2_COMMON *const cm, MACROBLOCK *const x,
   if (eob == 0) return;
 
   const PLANE_TYPE plane_type = get_plane_type(plane);
-  const TX_TYPE tx_type =
+  const av2_tx_type tx_type =
       av2_get_tx_type(xd, plane_type, blk_row, blk_col, tx_size,
                       is_reduced_tx_set_used(cm, plane_type));
 
@@ -1256,7 +1256,7 @@ void av2_write_intra_coeffs_mb(const AV2_COMMON *const cm, MACROBLOCK *x,
 
                 const int code_rest = av2_write_sig_txtype(
                     cm, x, w, blk_row, blk_col, plane, block[plane], tx_size);
-                const TX_TYPE tx_type = av2_get_tx_type(
+                const av2_tx_type tx_type = av2_get_tx_type(
                     xd, get_plane_type(plane), blk_row, blk_col, tx_size,
                     is_reduced_tx_set_used(cm, get_plane_type(plane)));
                 if (code_rest) {
@@ -1317,7 +1317,7 @@ void av2_write_intra_coeffs_mb(const AV2_COMMON *const cm, MACROBLOCK *x,
 
                   const int code_rest = av2_write_sig_txtype(
                       cm, x, w, blk_row, blk_col, plane, block[plane], tx_size);
-                  const TX_TYPE tx_type = av2_get_tx_type(
+                  const av2_tx_type tx_type = av2_get_tx_type(
                       xd, get_plane_type(plane), blk_row, blk_col, tx_size,
                       is_reduced_tx_set_used(cm, get_plane_type(plane)));
                   if (code_rest) {
@@ -1362,9 +1362,13 @@ int get_cctx_type_cost(const AV2_COMMON *cm, const MACROBLOCK *x,
 // This function gets the estimated bit cost for a 'secondary tx set'
 static int get_sec_tx_set_cost(const MACROBLOCK *x, const MACROBLOCKD *xd,
                                const MB_MODE_INFO *mbmi, TX_SIZE tx_size,
-                               TX_TYPE tx_type) {
+                               av2_tx_type tx_type) {
   uint8_t stx_set_flag = get_secondary_tx_set(tx_type);
   if (get_primary_tx_type(tx_type) == ADST_ADST) stx_set_flag -= IST_SET_SIZE;
+  if (stx_set_flag >= IST_SET_SIZE) {
+    fprintf(stderr, "ERROR: stx_set_flag = %d, tx_type = %d, primary_tx_type = %d, raw_set = %d\n",
+            stx_set_flag, tx_type, get_primary_tx_type(tx_type), get_secondary_tx_set(tx_type));
+  }
   assert(stx_set_flag < IST_SET_SIZE);
   uint8_t intra_mode = get_intra_mode(mbmi, PLANE_TYPE_Y);
   if (!is_inter_block(mbmi, xd->tree_type) && tx_size_wide[tx_size] >= 8 &&
@@ -1379,7 +1383,7 @@ static int get_sec_tx_set_cost(const MACROBLOCK *x, const MACROBLOCKD *xd,
 
 // TODO(angiebird): use this function whenever it's possible
 int get_tx_type_cost(const MACROBLOCK *x, const MACROBLOCKD *xd, int plane,
-                     TX_SIZE tx_size, TX_TYPE tx_type, int reduced_tx_set_used,
+                     TX_SIZE tx_size, av2_tx_type tx_type, int reduced_tx_set_used,
                      int eob, int bob_code, int is_fsc) {
   if (plane > 0) return 0;
 
@@ -1403,7 +1407,7 @@ int get_tx_type_cost(const MACROBLOCK *x, const MACROBLOCKD *xd, int plane,
     const int ext_tx_set =
         get_ext_tx_set(tx_size, is_inter, reduced_tx_set_used);
     if (is_inter) {
-      if (ext_tx_set > 0) {
+      if (ext_tx_set != 0) {
         const int esc_eob = is_fsc ? bob_code : eob;
         const int eob_tx_ctx =
             get_lp2tx_ctx(tx_size, get_txb_bwl(tx_size), esc_eob);
@@ -1469,7 +1473,7 @@ int get_tx_type_cost(const MACROBLOCK *x, const MACROBLOCKD *xd, int plane,
       if (reduced_tx_set_used == 2) {
         return 0;
       }
-      if (ext_tx_set > 0) {
+      if (ext_tx_set != 0) {
         PREDICTION_MODE intra_dir;
         intra_dir = get_intra_mode(mbmi, AOM_PLANE_Y);
         int tx_type_cost = 0;
@@ -1567,7 +1571,7 @@ static AOM_FORCE_INLINE int warehouse_efficients_txb_skip(
     const TX_SIZE tx_size, const TXB_CTX *const txb_ctx,
     const struct macroblock_plane *p, const int eob,
     const LV_MAP_COEFF_COST *const coeff_costs, const MACROBLOCKD *const xd,
-    const TX_TYPE tx_type, const CctxType cctx_type, int reduced_tx_set_used) {
+    const av2_tx_type tx_type, const CctxType cctx_type, int reduced_tx_set_used) {
   const tran_low_t *const qcoeff = p->qcoeff + BLOCK_OFFSET(block);
   const int txb_skip_ctx = txb_ctx->txb_skip_ctx;
   const int bwl = get_txb_bwl(tx_size);
@@ -1645,7 +1649,7 @@ static AOM_FORCE_INLINE int warehouse_efficients_txb(
     const TX_SIZE tx_size, const TXB_CTX *const txb_ctx,
     const struct macroblock_plane *p, const int eob,
     const PLANE_TYPE plane_type, const LV_MAP_COEFF_COST *const coeff_costs,
-    const MACROBLOCKD *const xd, const TX_TYPE tx_type,
+    const MACROBLOCKD *const xd, const av2_tx_type tx_type,
     const CctxType cctx_type, const TX_CLASS tx_class, int reduced_tx_set_used,
     bool enable_parity_hiding, const LV_MAP_COEFF_COST *const coeff_costs_ph) {
   const tran_low_t *const qcoeff = p->qcoeff + BLOCK_OFFSET(block);
@@ -1956,7 +1960,7 @@ static AOM_FORCE_INLINE int warehouse_efficients_txb_laplacian(
     const AV2_COMMON *cm, const MACROBLOCK *x, const int plane, const int block,
     const TX_SIZE tx_size, const TXB_CTX *const txb_ctx, const int eob,
     const PLANE_TYPE plane_type, const LV_MAP_COEFF_COST *const coeff_costs,
-    const MACROBLOCKD *const xd, const TX_TYPE tx_type,
+    const MACROBLOCKD *const xd, const av2_tx_type tx_type,
     const CctxType cctx_type, int reduced_tx_set_used) {
   int txb_skip_ctx = txb_ctx->txb_skip_ctx;
   if (plane == AOM_PLANE_V) {
@@ -2013,7 +2017,7 @@ static const int const_term = (1 << AV2_PROB_COST_SHIFT);
 static const int loge_par = ((14427 << AV2_PROB_COST_SHIFT) + 5000) / 10000;
 int av2_cost_coeffs_txb_estimate(const MACROBLOCK *x, const int plane,
                                  const int block, const TX_SIZE tx_size,
-                                 const TX_TYPE tx_type) {
+                                 const av2_tx_type tx_type) {
   assert(plane == 0);
 
   int cost = 0;
@@ -2050,7 +2054,7 @@ int av2_cost_coeffs_txb_estimate(const MACROBLOCK *x, const int plane,
 
 int av2_cost_coeffs_txb_skip_estimate(const MACROBLOCK *x, const int plane,
                                       const int block, const TX_SIZE tx_size,
-                                      const TX_TYPE tx_type) {
+                                      const av2_tx_type tx_type) {
   assert(plane == PLANE_TYPE_Y);
   int cost = 0;
   const struct macroblock_plane *p = &x->plane[plane];
@@ -2072,7 +2076,7 @@ int av2_cost_coeffs_txb_skip_estimate(const MACROBLOCK *x, const int plane,
 
 int av2_cost_coeffs_txb(const AV2_COMMON *cm, const MACROBLOCK *x,
                         const int plane, const int block, const TX_SIZE tx_size,
-                        const TX_TYPE tx_type, const CctxType cctx_type,
+                        const av2_tx_type tx_type, const CctxType cctx_type,
                         const TXB_CTX *const txb_ctx, int reduced_tx_set_used) {
   const struct macroblock_plane *p = &x->plane[plane];
   const int eob = p->eobs[block];
@@ -2124,7 +2128,7 @@ int av2_cost_coeffs_txb(const AV2_COMMON *cm, const MACROBLOCK *x,
 
 int av2_cost_coeffs_txb_laplacian(const AV2_COMMON *cm, const MACROBLOCK *x,
                                   const int plane, const int block,
-                                  const TX_SIZE tx_size, const TX_TYPE tx_type,
+                                  const TX_SIZE tx_size, const av2_tx_type tx_type,
                                   const CctxType cctx_type,
                                   const TXB_CTX *const txb_ctx,
                                   const int reduced_tx_set_used,
@@ -3394,7 +3398,7 @@ static AOM_FORCE_INLINE bool parity_hide_tb(
  samples when the transform type is 2D IDTX. See av2_optimize_fsc(...).
  */
 int av2_optimize_fsc_block(const struct AV2_COMP *cpi, MACROBLOCK *x, int plane,
-                           int block, TX_SIZE tx_size, TX_TYPE tx_type,
+                           int block, TX_SIZE tx_size, av2_tx_type tx_type,
                            const TXB_CTX *const txb_ctx, int *rate_cost,
                            int sharpness) {
   MACROBLOCKD *xd = &x->e_mbd;
@@ -3521,7 +3525,7 @@ int av2_optimize_fsc_block(const struct AV2_COMP *cpi, MACROBLOCK *x, int plane,
 }
 
 int av2_optimize_txb_new(const struct AV2_COMP *cpi, MACROBLOCK *x, int plane,
-                         int block, TX_SIZE tx_size, TX_TYPE tx_type,
+                         int block, TX_SIZE tx_size, av2_tx_type tx_type,
                          CctxType cctx_type, const TXB_CTX *const txb_ctx,
                          int *rate_cost, int sharpness) {
   MACROBLOCKD *xd = &x->e_mbd;
@@ -3741,7 +3745,7 @@ static void update_cctx_type_count(const AV2_COMMON *cm, MACROBLOCKD *xd,
 // This function updates the cdf for a 'secondary tx set'
 static void update_sec_tx_set_cdf(MACROBLOCKD *xd, FRAME_CONTEXT *fc,
                                   MB_MODE_INFO *mbmi, TX_SIZE tx_size,
-                                  TX_TYPE tx_type) {
+                                  av2_tx_type tx_type) {
   uint8_t stx_set_flag = get_secondary_tx_set(tx_type);
   if (get_primary_tx_type(tx_type) == ADST_ADST) stx_set_flag -= IST_SET_SIZE;
   assert(stx_set_flag < IST_SET_SIZE);
@@ -3774,7 +3778,7 @@ static void update_tx_type_count(const AV2_COMP *cpi, const AV2_COMMON *cm,
 
   // Only y plane's tx_type is updated
   if (plane > 0) return;
-  const TX_TYPE tx_type = av2_get_tx_type(xd, PLANE_TYPE_Y, blk_row, blk_col,
+  const av2_tx_type tx_type = av2_get_tx_type(xd, PLANE_TYPE_Y, blk_row, blk_col,
                                           tx_size, reduced_tx_set_used);
   if (is_inter) {
     if (cpi->oxcf.txfm_cfg.use_inter_dct_only) {
@@ -3805,7 +3809,7 @@ static void update_tx_type_count(const AV2_COMP *cpi, const AV2_COMMON *cm,
       !mbmi->skip_txfm[xd->tree_type == CHROMA_PART] &&
       !segfeature_active(&cm->seg, mbmi->segment_id, SEG_LVL_SKIP)) {
     const int eset = get_ext_tx_set(tx_size, is_inter, reduced_tx_set_used);
-    if (eset > 0) {
+    if (eset != 0) {
       const TxSetType tx_set_type =
           av2_get_ext_tx_set_type(tx_size, is_inter, reduced_tx_set_used);
       const TX_SIZE tx_size_sqr_up = txsize_sqr_up_map[tx_size];
@@ -3997,7 +4001,7 @@ void av2_update_and_record_txb_skip_context(int plane, int block, int blk_row,
   const int block_offset = BLOCK_OFFSET(block);
   tran_low_t *qcoeff = p->qcoeff + block_offset;
   const PLANE_TYPE plane_type = pd->plane_type;
-  const TX_TYPE tx_type =
+  const av2_tx_type tx_type =
       av2_get_tx_type(xd, plane_type, blk_row, blk_col, tx_size,
                       is_reduced_tx_set_used(cm, plane_type));
   const SCAN_ORDER *const scan_order = get_scan(tx_size, tx_type);
@@ -4182,7 +4186,7 @@ void av2_update_and_record_txb_context(int plane, int block, int blk_row,
       !xd->mi[0]->fsc_mode[xd->tree_type == CHROMA_PART] && !is_inter) {
     update_txk_array(xd, blk_row, blk_col, tx_size, DCT_DCT);
   }
-  const TX_TYPE tx_type =
+  const av2_tx_type tx_type =
       av2_get_tx_type(xd, plane_type, blk_row, blk_col, tx_size,
                       is_reduced_tx_set_used(cm, plane_type));
   if (((cm->seq_params.enable_fsc &&

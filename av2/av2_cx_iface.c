@@ -397,6 +397,7 @@ typedef struct {
 #include "av2/common/quant_common.h"
 #include "av2/encoder/bitstream.h"
 #include "av2/encoder/encoder.h"
+#include "av2/encoder/av2_quantize.h"
 #include "av2/encoder/ethread.h"
 #include "av2/encoder/firstpass.h"
 #include "av2/arg_defs.h"
@@ -407,6 +408,33 @@ typedef struct {
 #include "aom_ports/aom_timer.h"
 
 #define MAG_SIZE (4)
+
+// Creates a setjmp target using `CPI->common.error.jmp` and sets
+// `CPI->common.error.setjmp = 1`. Returns `CPI->common.error.error_code` on
+// longjmp. This macro expects `aom_codec_alg_priv_t *ctx` to be available.
+// This should be accompanied by a call to DISABLE_SETJMP using the same CPI
+// before going out of scope.
+#define ENABLE_SETJMP(CPI)                                      \
+  do {                                                          \
+    struct aom_internal_error_info *const enable_setjmp_error = \
+        &(CPI)->common.error;                                   \
+    if (setjmp(enable_setjmp_error->jmp)) {                     \
+      enable_setjmp_error->setjmp = 0;                          \
+      ctx->base.err_detail = enable_setjmp_error->has_detail    \
+                                 ? enable_setjmp_error->detail  \
+                                 : NULL;                        \
+      return enable_setjmp_error->error_code;                   \
+    }                                                           \
+    enable_setjmp_error->setjmp = 1;                            \
+  } while (0)
+
+// Sets CPI->common.error.setjmp = 0.
+#define DISABLE_SETJMP(CPI)                                     \
+  do {                                                          \
+    struct aom_internal_error_info *const enable_setjmp_error = \
+        &(CPI)->common.error;                                   \
+    enable_setjmp_error->setjmp = 0;                            \
+  } while (0)
 
 struct av2_extracfg {
   int cpu_used;
@@ -1009,10 +1037,10 @@ static aom_codec_err_t update_error_state(
     return AOM_CODEC_INVALID_PARAM; \
   } while (0)
 
-#define RANGE_CHECK(p, memb, lo, hi)                   \
-  do {                                                 \
-    if (!((p)->memb >= (lo) && (p)->memb <= (hi)))     \
-      ERROR(#memb " out of range [" #lo ".." #hi "]"); \
+#define RANGE_CHECK(p, memb, lo, hi)                                 \
+  do {                                                               \
+    if (!((int)(p)->memb >= (int)(lo) && (int)(p)->memb <= (int)(hi))) \
+      ERROR(#memb " out of range [" #lo ".." #hi "]");               \
   } while (0)
 
 #define RANGE_CHECK_HI(p, memb, hi)                                     \
@@ -1928,9 +1956,13 @@ static aom_codec_err_t encoder_set_config(aom_codec_alg_priv_t *ctx,
     // On profile change, request a key frame
     force_key |=
         ctx->cpi->common.seq_params.seq_profile_idc != ctx->oxcf.profile;
+    ENABLE_SETJMP(ctx->cpi);
     av2_change_config(ctx->cpi, &ctx->oxcf);
+    DISABLE_SETJMP(ctx->cpi);
     if (ctx->cpi_lap != NULL) {
+      ENABLE_SETJMP(ctx->cpi_lap);
       av2_change_config(ctx->cpi_lap, &ctx->oxcf);
+      DISABLE_SETJMP(ctx->cpi_lap);
     }
   }
 
@@ -1948,6 +1980,14 @@ static aom_codec_err_t ctrl_get_quantizer(aom_codec_alg_priv_t *ctx,
   int *const arg = va_arg(args, int *);
   if (arg == NULL) return AOM_CODEC_INVALID_PARAM;
   *arg = av2_get_quantizer(ctx->cpi);
+  return AOM_CODEC_OK;
+}
+
+static aom_codec_err_t ctrl_get_quantizer64(aom_codec_alg_priv_t *ctx,
+                                            va_list args) {
+  int *const arg = va_arg(args, int *);
+  if (arg == NULL) return AOM_CODEC_INVALID_PARAM;
+  *arg = av2_qindex_to_quantizer(av2_get_quantizer(ctx->cpi), ctx->cfg.g_bit_depth);
   return AOM_CODEC_OK;
 }
 
@@ -2035,9 +2075,13 @@ static aom_codec_err_t update_extra_cfg(aom_codec_alg_priv_t *ctx,
   if (res == AOM_CODEC_OK) {
     ctx->extra_cfg = *extra_cfg;
     set_encoder_config(&ctx->oxcf, &ctx->cfg, &ctx->extra_cfg, 1);
+    ENABLE_SETJMP(ctx->cpi);
     av2_change_config(ctx->cpi, &ctx->oxcf);
+    DISABLE_SETJMP(ctx->cpi);
     if (ctx->cpi_lap != NULL) {
+      ENABLE_SETJMP(ctx->cpi_lap);
       av2_change_config(ctx->cpi_lap, &ctx->oxcf);
+      DISABLE_SETJMP(ctx->cpi_lap);
     }
   }
   return res;
@@ -3339,7 +3383,9 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
   }
   if (ctx->oxcf.mode != GOOD) {
     ctx->oxcf.mode = GOOD;
+    ENABLE_SETJMP(ctx->cpi);
     av2_change_config(ctx->cpi, &ctx->oxcf);
+    DISABLE_SETJMP(ctx->cpi);
   }
 
   avm_codec_pkt_list_init(&ctx->pkt_list);
@@ -3445,9 +3491,9 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
 
         cpi->lookahead = av2_lookahead_init(
             cpi->oxcf.frm_dim_cfg.width, cpi->oxcf.frm_dim_cfg.height,
-            subsampling_x, subsampling_y, lag_in_frames,
-            cpi->oxcf.border_in_pixels, cpi->common.features.byte_alignment,
-            ctx->num_lap_buffers,
+            subsampling_x, subsampling_y, 1,
+            lag_in_frames, cpi->oxcf.border_in_pixels,
+            cpi->common.features.byte_alignment, ctx->num_lap_buffers,
             cpi->common.seq_params.enable_bru ? BRU_ENC_LOOKAHEAD_DIST_MINUS_1
                                               : 0,
             cpi->oxcf.tool_cfg.enable_global_motion);
@@ -4686,6 +4732,10 @@ static aom_codec_err_t encoder_set_option(aom_codec_alg_priv_t *ctx,
                                   argv, err_string)) {
     extra_cfg.operating_points_count =
         avm_arg_parse_int_helper(&arg, err_string);
+  } else if (strcmp(name, "passes") == 0 ||
+             strcmp(name, "two-pass-output") == 0) {
+    // Ignore pass-related options unconditionally set by standard aomenc
+    match = 1;
   } else {
     match = 0;
     snprintf(err_string, ARG_ERR_MSG_MAX_LEN, "Cannot find avm option %s",
@@ -4740,6 +4790,7 @@ static aom_codec_ctrl_fn_map_t encoder_ctrl_maps[] = {
   { AVME_SET_ARNR_STRENGTH, ctrl_set_arnr_strength },
   { AVME_SET_TUNING, ctrl_set_tuning },
   { AVME_SET_QP, ctrl_set_qp },
+  { AOME_SET_CQ_LEVEL, ctrl_set_qp },
   { AVME_SET_MAX_INTRA_BITRATE_PCT, ctrl_set_rc_max_intra_bitrate_pct },
   { AVME_SET_NUMBER_MLAYERS, ctrl_set_number_mlayers },
   { AVME_SET_NUMBER_TLAYERS, ctrl_set_number_tlayers },
@@ -4851,6 +4902,7 @@ static aom_codec_ctrl_fn_map_t encoder_ctrl_maps[] = {
 
   // Getters
   { AVME_GET_LAST_QUANTIZER, ctrl_get_quantizer },
+  { AOME_GET_LAST_QUANTIZER_64, ctrl_get_quantizer64 },
   { AV2_GET_REFERENCE, ctrl_get_reference },
   { AV2E_GET_ACTIVEMAP, ctrl_get_active_map },
   { AV2_GET_NEW_FRAME_IMAGE, ctrl_get_new_frame_image },
@@ -4932,8 +4984,8 @@ static const aom_codec_enc_cfg_t encoder_usage_cfg[] = {
       0,                       // tile_height_count
       { 0 },                   // tile_widths
       { 0 },                   // tile_heights
-      0,                       // use_fixed_qp_offsets
-      { -1, -1, -1, -1, -1 },  // fixed_qp_offsets
+      0,                          // use_fixed_qp_offsets
+      { -1, -1, -1, -1, -1, -1 }, // fixed_qp_offsets
       { 0, 128, 128, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0,   0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  // encoder_cfg
   },
@@ -5003,8 +5055,8 @@ static const aom_codec_enc_cfg_t encoder_usage_cfg[] = {
       0,                       // tile_height_count
       { 0 },                   // tile_widths
       { 0 },                   // tile_heights
-      0,                       // use_fixed_qp_offsets
-      { -1, -1, -1, -1, -1 },  // fixed_qp_offsets
+      0,                          // use_fixed_qp_offsets
+      { -1, -1, -1, -1, -1, -1 }, // fixed_qp_offsets
       { 0, 128, 128, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0,   0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  // encoder_cfg
   },
@@ -5074,8 +5126,8 @@ static const aom_codec_enc_cfg_t encoder_usage_cfg[] = {
       0,                       // tile_height_count
       { 0 },                   // tile_widths
       { 0 },                   // tile_heights
-      0,                       // use_fixed_qp_offsets
-      { -1, -1, -1, -1, -1 },  // fixed_qp_offsets
+      0,                          // use_fixed_qp_offsets
+      { -1, -1, -1, -1, -1, -1 }, // fixed_qp_offsets
       { 0, 128, 128, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0,   0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  // encoder_cfg
   },
@@ -5089,7 +5141,8 @@ static const aom_codec_enc_cfg_t encoder_usage_cfg[] = {
 aom_codec_iface_t avm_codec_av2_cx_algo_temp = {
   "AOMedia Project AV2 Encoder" VERSION_STRING,
   AOM_CODEC_INTERNAL_ABI_VERSION,
-  AOM_CODEC_CAP_ENCODER | AOM_CODEC_CAP_PSNR,  // aom_codec_caps_t
+  (CONFIG_AV1_HIGHBITDEPTH ? AOM_CODEC_CAP_HIGHBITDEPTH : 0) |
+      AOM_CODEC_CAP_ENCODER | AOM_CODEC_CAP_PSNR,  // aom_codec_caps_t
   encoder_init,                                // avm_codec_init_fn_t
   encoder_destroy,                             // avm_codec_destroy_fn_t
   encoder_ctrl_maps,                           // aom_codec_ctrl_fn_map_t

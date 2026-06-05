@@ -295,6 +295,47 @@ static intra_high_pred_fn pred_high[INTRA_MODES][TX_SIZES_ALL];
 static intra_high_pred_fn dc_pred_high[2][2][TX_SIZES_ALL];
 static intra_high_pred_fn ibp_dc_pred_high[2][2][TX_SIZES_ALL];
 
+static intra_high_pred_fn pred_high_c[INTRA_MODES][TX_SIZES_ALL];
+static intra_high_pred_fn dc_pred_high_c[2][2][TX_SIZES_ALL];
+static intra_high_pred_fn ibp_dc_pred_high_c[2][2][TX_SIZES_ALL];
+
+static INLINE void pred_high_dispatch(int mode, TX_SIZE tx_size, uint16_t *dst,
+                                      ptrdiff_t stride, const uint16_t *above,
+                                      const uint16_t *left, int bd) {
+  if (((intptr_t)dst & 15) != 0) {
+    pred_high_c[mode][tx_size](dst, stride, above, left, bd);
+  } else {
+    pred_high[mode][tx_size](dst, stride, above, left, bd);
+  }
+}
+
+static INLINE void dc_pred_high_dispatch(int left_available, int top_available,
+                                         TX_SIZE tx_size, uint16_t *dst,
+                                         ptrdiff_t stride, const uint16_t *above,
+                                         const uint16_t *left, int bd) {
+  if (((intptr_t)dst & 15) != 0) {
+    dc_pred_high_c[left_available][top_available][tx_size](dst, stride, above,
+                                                           left, bd);
+  } else {
+    dc_pred_high[left_available][top_available][tx_size](dst, stride, above,
+                                                         left, bd);
+  }
+}
+
+static INLINE void ibp_dc_pred_high_dispatch(int left_available,
+                                             int top_available, TX_SIZE tx_size,
+                                             uint16_t *dst, ptrdiff_t stride,
+                                             const uint16_t *above,
+                                             const uint16_t *left, int bd) {
+  if (((intptr_t)dst & 15) != 0) {
+    ibp_dc_pred_high_c[left_available][top_available][tx_size](
+        dst, stride, above, left, bd);
+  } else {
+    ibp_dc_pred_high[left_available][top_available][tx_size](dst, stride, above,
+                                                             left, bd);
+  }
+}
+
 static void init_intra_predictors_internal(void) {
   assert(NELEMENTS(mode_to_angle_map) == INTRA_MODES);
 
@@ -345,6 +386,59 @@ static void init_intra_predictors_internal(void) {
   INIT_ALL_SIZES(ibp_dc_pred_high[0][1], highbd_ibp_dc_top);
   INIT_ALL_SIZES(ibp_dc_pred_high[1][0], highbd_ibp_dc_left);
   INIT_ALL_SIZES(ibp_dc_pred_high[1][1], highbd_ibp_dc);
+
+#define INIT_RECTANGULAR_C(p, type)             \
+  p[TX_4X8] = aom_##type##_predictor_4x8_c;     \
+  p[TX_8X4] = aom_##type##_predictor_8x4_c;     \
+  p[TX_8X16] = aom_##type##_predictor_8x16_c;   \
+  p[TX_16X8] = aom_##type##_predictor_16x8_c;   \
+  p[TX_16X32] = aom_##type##_predictor_16x32_c; \
+  p[TX_32X16] = aom_##type##_predictor_32x16_c; \
+  p[TX_32X64] = aom_##type##_predictor_32x64_c; \
+  p[TX_64X32] = aom_##type##_predictor_64x32_c; \
+  p[TX_4X16] = aom_##type##_predictor_4x16_c;   \
+  p[TX_16X4] = aom_##type##_predictor_16x4_c;   \
+  p[TX_8X32] = aom_##type##_predictor_8x32_c;   \
+  p[TX_32X8] = aom_##type##_predictor_32x8_c;   \
+  p[TX_16X64] = aom_##type##_predictor_16x64_c; \
+  p[TX_64X16] = aom_##type##_predictor_64x16_c; \
+  p[TX_4X32] = aom_##type##_predictor_4x32_c;   \
+  p[TX_32X4] = aom_##type##_predictor_32x4_c;   \
+  p[TX_8X64] = aom_##type##_predictor_8x64_c;   \
+  p[TX_64X8] = aom_##type##_predictor_64x8_c;   \
+  p[TX_4X64] = aom_##type##_predictor_4x64_c;   \
+  p[TX_64X4] = aom_##type##_predictor_64x4_c;
+
+#define INIT_NO_4X4_C(p, type)                  \
+  p[TX_8X8] = aom_##type##_predictor_8x8_c;     \
+  p[TX_16X16] = aom_##type##_predictor_16x16_c; \
+  p[TX_32X32] = aom_##type##_predictor_32x32_c; \
+  p[TX_64X64] = aom_##type##_predictor_64x64_c; \
+  INIT_RECTANGULAR_C(p, type)
+
+#define INIT_ALL_SIZES_C(p, type)           \
+  p[TX_4X4] = aom_##type##_predictor_4x4_c; \
+  INIT_NO_4X4_C(p, type)
+
+  INIT_ALL_SIZES_C(pred_high_c[V_PRED], highbd_v);
+  INIT_ALL_SIZES_C(pred_high_c[H_PRED], highbd_h);
+  INIT_ALL_SIZES_C(pred_high_c[PAETH_PRED], highbd_paeth);
+  INIT_ALL_SIZES_C(pred_high_c[SMOOTH_PRED], highbd_smooth);
+  INIT_ALL_SIZES_C(pred_high_c[SMOOTH_V_PRED], highbd_smooth_v);
+  INIT_ALL_SIZES_C(pred_high_c[SMOOTH_H_PRED], highbd_smooth_h);
+  INIT_ALL_SIZES_C(dc_pred_high_c[0][0], highbd_dc_128);
+  INIT_ALL_SIZES_C(dc_pred_high_c[0][1], highbd_dc_top);
+  INIT_ALL_SIZES_C(dc_pred_high_c[1][0], highbd_dc_left);
+  INIT_ALL_SIZES_C(dc_pred_high_c[1][1], highbd_dc);
+  INIT_ALL_SIZES_C(ibp_dc_pred_high_c[0][0], highbd_dc_128);
+  INIT_ALL_SIZES_C(ibp_dc_pred_high_c[0][1], highbd_ibp_dc_top);
+  INIT_ALL_SIZES_C(ibp_dc_pred_high_c[1][0], highbd_ibp_dc_left);
+  INIT_ALL_SIZES_C(ibp_dc_pred_high_c[1][1], highbd_ibp_dc);
+
+#undef INIT_RECTANGULAR_C
+#undef INIT_NO_4X4_C
+#undef INIT_ALL_SIZES_C
+
 #undef intra_pred_allsizes
 }
 
@@ -839,9 +933,9 @@ static void highbd_dr_predictor_idif(uint16_t *dst, ptrdiff_t stride,
                                      bd, mrl_index);
 
   } else if (angle == 90) {
-    pred_high[V_PRED][tx_size](dst, stride, above, left, bd);
+    pred_high_dispatch(V_PRED, tx_size, dst, stride, above, left, bd);
   } else if (angle == 180) {
-    pred_high[H_PRED][tx_size](dst, stride, above, left, bd);
+    pred_high_dispatch(H_PRED, tx_size, dst, stride, above, left, bd);
   }
 }
 
@@ -865,9 +959,9 @@ static void highbd_dr_predictor(uint16_t *dst, ptrdiff_t stride,
     av2_highbd_dr_prediction_z3(dst, stride, bw, bh, above, left, dx, dy, bd,
                                 mrl_index);
   } else if (angle == 90) {
-    pred_high[V_PRED][tx_size](dst, stride, above, left, bd);
+    pred_high_dispatch(V_PRED, tx_size, dst, stride, above, left, bd);
   } else if (angle == 180) {
-    pred_high[H_PRED][tx_size](dst, stride, above, left, bd);
+    pred_high_dispatch(H_PRED, tx_size, dst, stride, above, left, bd);
   }
 }
 
@@ -1398,16 +1492,16 @@ void av2_build_intra_predictors_high(
                                      n_left_px > 0, txwpx, txhpx, above_row_1st,
                                      left_col_1st, xd->bd);
     } else
-      dc_pred_high[n_left_px > 0][n_top_px > 0][tx_size](
-          dst, dst_stride, above_row_1st, left_col_1st, xd->bd);
+      dc_pred_high_dispatch(n_left_px > 0, n_top_px > 0, tx_size,
+                            dst, dst_stride, above_row_1st, left_col_1st, xd->bd);
     if (apply_ibp && ((plane == 0) || (xd->mi[0]->uv_mode != UV_CFL_PRED)) &&
         ((n_left_px > 0) || (n_top_px > 0))) {
-      ibp_dc_pred_high[n_left_px > 0][n_top_px > 0][tx_size](
-          dst, dst_stride, above_row_1st, left_col_1st, xd->bd);
+      ibp_dc_pred_high_dispatch(n_left_px > 0, n_top_px > 0, tx_size,
+                                dst, dst_stride, above_row_1st, left_col_1st, xd->bd);
     }
   } else {
-    pred_high[mode][tx_size](dst, dst_stride, above_row_1st, left_col_1st,
-                             xd->bd);
+    pred_high_dispatch(mode, tx_size, dst, dst_stride, above_row_1st, left_col_1st,
+                       xd->bd);
   }
 }
 
@@ -1668,16 +1762,16 @@ void av2_build_intra_predictors_high_default(
                                      n_left_px > 0, txwpx, txhpx, above_row_1st,
                                      left_col_1st, xd->bd);
     } else
-      dc_pred_high[n_left_px > 0][n_top_px > 0][tx_size](
-          dst, dst_stride, above_row_1st, left_col_1st, xd->bd);
+      dc_pred_high_dispatch(n_left_px > 0, n_top_px > 0, tx_size,
+                            dst, dst_stride, above_row_1st, left_col_1st, xd->bd);
     if (apply_ibp && ((plane == 0) || (mbmi->uv_mode != UV_CFL_PRED)) &&
         ((n_left_px > 0) || (n_top_px > 0))) {
-      ibp_dc_pred_high[n_left_px > 0][n_top_px > 0][tx_size](
-          dst, dst_stride, above_row_1st, left_col_1st, xd->bd);
+      ibp_dc_pred_high_dispatch(n_left_px > 0, n_top_px > 0, tx_size,
+                                dst, dst_stride, above_row_1st, left_col_1st, xd->bd);
     }
   } else {
-    pred_high[mode][tx_size](dst, dst_stride, above_row_1st, left_col_1st,
-                             xd->bd);
+    pred_high_dispatch(mode, tx_size, dst, dst_stride, above_row_1st, left_col_1st,
+                       xd->bd);
   }
 }
 

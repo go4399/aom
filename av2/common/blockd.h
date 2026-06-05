@@ -2025,7 +2025,7 @@ typedef struct macroblockd {
    * 'tx_type_map' in one of 'CommonModeInfoParams', 'PICK_MODE_CONTEXT' or
    * 'MACROBLOCK' structs.
    */
-  TX_TYPE *tx_type_map;
+  av2_tx_type *tx_type_map;
   /*!
    * Stride for 'tx_type_map'. Note that this may / may not be same as
    * 'mi_stride', depending on which actual array 'tx_type_map' points to.
@@ -2782,7 +2782,7 @@ static INLINE int av2_get_txk_type_index(BLOCK_SIZE bsize, int blk_row,
 
 static INLINE void update_txk_array(MACROBLOCKD *const xd, int blk_row,
                                     int blk_col, TX_SIZE tx_size,
-                                    TX_TYPE tx_type) {
+                                    av2_tx_type tx_type) {
   const int txw = tx_size_wide_unit[tx_size];
   const int txh = tx_size_high_unit[tx_size];
   // This covers all the 16x16 units copy inside a 64 or 32 level transform.
@@ -2856,19 +2856,19 @@ static INLINE CctxType av2_get_cctx_type(const MACROBLOCKD *xd, int blk_row,
  * This function masks secondary transform type used by the transform block
  *
  */
-static INLINE void disable_secondary_tx_type(TX_TYPE *tx_type) {
+static INLINE void disable_secondary_tx_type(av2_tx_type *tx_type) {
   *tx_type &= 0x000f;
 }
 /*
  * This function masks primary transform type used by the transform block
  */
-static INLINE void disable_primary_tx_type(TX_TYPE *tx_type) {
+static INLINE void disable_primary_tx_type(av2_tx_type *tx_type) {
   *tx_type &= 0xfff0;
 }
 /*
  * This function returns primary transform type used by the transform block
  */
-static INLINE TX_TYPE get_primary_tx_type(TX_TYPE tx_type) {
+static INLINE TX_TYPE get_primary_tx_type(av2_tx_type tx_type) {
   return tx_type & 0x000f;
 }
 
@@ -2970,18 +2970,18 @@ get_txtype_from_idx_for_large_txfm(TX_SIZE tx_size, const TxSetType tx_set_type,
 /*
  * This function returns secondary transform type used by the transform block
  */
-static INLINE TX_TYPE get_secondary_tx_type(TX_TYPE tx_type) {
+static INLINE TX_TYPE get_secondary_tx_type(av2_tx_type tx_type) {
   return (tx_type >> PRIMARY_TX_BITS) & SECONDARY_TX_MASK;
 }
 
-static INLINE void set_secondary_tx_type(TX_TYPE *tx_type, TX_TYPE stx_flag) {
+static INLINE void set_secondary_tx_type(av2_tx_type *tx_type, TX_TYPE stx_flag) {
   *tx_type |= (stx_flag << PRIMARY_TX_BITS);
 }
 
 /*
  * This function returns secondary transform set used by the transform block
  */
-static INLINE TX_TYPE get_secondary_tx_set(TX_TYPE tx_type) {
+static INLINE TX_TYPE get_secondary_tx_set(av2_tx_type tx_type) {
   return (tx_type >> (PRIMARY_TX_BITS + SECONDARY_TX_BITS)) &
          SECONDARY_TX_SET_MASK;
 }
@@ -2990,7 +2990,7 @@ static INLINE TX_TYPE get_secondary_tx_set(TX_TYPE tx_type) {
  * This function sets the 'secondary transform set' info on the input 'tx_type'
  * parameter
  */
-static INLINE void set_secondary_tx_set(TX_TYPE *tx_type,
+static INLINE void set_secondary_tx_set(av2_tx_type *tx_type,
                                         TX_TYPE stx_set_flag) {
   *tx_type |= (stx_set_flag << (PRIMARY_TX_BITS + SECONDARY_TX_BITS));
 }
@@ -3000,7 +3000,7 @@ static INLINE void set_secondary_tx_set(TX_TYPE *tx_type,
  * signaled for the transform block
  */
 static INLINE int block_signals_sec_tx_type(const MACROBLOCKD *xd,
-                                            TX_SIZE tx_size, TX_TYPE tx_type,
+                                            TX_SIZE tx_size, av2_tx_type tx_type,
                                             int eob) {
   if (is_inter_block(xd->mi[0], xd->tree_type) ? (eob <= 3) : (eob <= 1))
     return 0;
@@ -3041,21 +3041,25 @@ static INLINE void adjust_ext_tx_used_flag(TX_SIZE tx_size,
 
   if (tx_set_type == EXT_TX_SET_LONG_SIDE_64) {
     if (is_rect_horz) {
-      (*ext_tx_used_flag) &=
-          ~((1 << DCT_ADST) | (1 << DCT_FLIPADST) | (1 << V_DCT));
+      (*ext_tx_used_flag) &= (1 << DCT_DCT) | (1 << ADST_DCT) |
+                             (1 << FLIPADST_DCT) | (1 << H_DCT);
     } else {
-      (*ext_tx_used_flag) &=
-          ~((1 << ADST_DCT) | (1 << FLIPADST_DCT) | (1 << H_DCT));
+      (*ext_tx_used_flag) &= (1 << DCT_DCT) | (1 << DCT_ADST) |
+                             (1 << DCT_FLIPADST) | (1 << V_DCT);
     }
   } else {
     assert(tx_set_type == EXT_TX_SET_LONG_SIDE_32);
 
     if (is_rect_horz) {
-      (*ext_tx_used_flag) &= ~((1 << DCT_ADST) | (1 << DCT_FLIPADST) |
-                               (1 << H_ADST) | (1 << H_FLIPADST));
+      (*ext_tx_used_flag) &= (1 << DCT_DCT) | (1 << ADST_DCT) |
+                             (1 << FLIPADST_DCT) | (1 << IDTX) |
+                             (1 << V_DCT) | (1 << H_DCT) |
+                             (1 << V_ADST) | (1 << V_FLIPADST);
     } else {
-      (*ext_tx_used_flag) &= ~((1 << ADST_DCT) | (1 << FLIPADST_DCT) |
-                               (1 << V_ADST) | (1 << V_FLIPADST));
+      (*ext_tx_used_flag) &= (1 << DCT_DCT) | (1 << DCT_ADST) |
+                             (1 << DCT_FLIPADST) | (1 << IDTX) |
+                             (1 << V_DCT) | (1 << H_DCT) |
+                             (1 << H_ADST) | (1 << H_FLIPADST);
     }
   }
 }
@@ -3067,7 +3071,7 @@ static INLINE void adjust_ext_tx_used_flag(TX_SIZE tx_size,
  * Bits 4~5 of tx_type stores secondary tx_type
  * Bits 0~3 of tx_type stores primary tx_type
  */
-static INLINE TX_TYPE av2_get_tx_type(const MACROBLOCKD *xd,
+static INLINE av2_tx_type av2_get_tx_type(const MACROBLOCKD *xd,
                                       PLANE_TYPE plane_type, int blk_row,
                                       int blk_col, TX_SIZE tx_size,
                                       int reduced_tx_set) {
@@ -3080,7 +3084,7 @@ static INLINE TX_TYPE av2_get_tx_type(const MACROBLOCKD *xd,
   }
   const int is_inter = is_inter_block(mbmi, xd->tree_type);
   if (xd->lossless[mbmi->segment_id]) {
-    TX_TYPE lossless_inter_tx_type = TX_TYPES;
+    av2_tx_type lossless_inter_tx_type = TX_TYPES;
     const bool fsc_flag = xd->mi[0]->fsc_mode[PLANE_TYPE_Y];
     if (!is_inter && plane_type == PLANE_TYPE_Y) {
       return DCT_DCT;
@@ -3117,7 +3121,7 @@ static INLINE TX_TYPE av2_get_tx_type(const MACROBLOCKD *xd,
     return lossless_inter_tx_type;
   }
 
-  TX_TYPE tx_type;
+  av2_tx_type tx_type;
   if (plane_type == PLANE_TYPE_Y) {
     tx_type = xd->tx_type_map[blk_row * xd->tx_type_map_stride + blk_col];
   } else {

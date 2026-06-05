@@ -139,12 +139,62 @@ static INLINE void init_buffer_indices(
   HIGHBD_BFP(                                                                \
       BLOCK_##WIDTH##X##HEIGHT, avm_highbd_sad##WIDTH##x##HEIGHT##_bits##BD, \
       avm_highbd_sad##WIDTH##x##HEIGHT##_avg_bits##BD,                       \
-      aom_highbd_##BD##_variance##WIDTH##x##HEIGHT,                          \
-      aom_highbd_##BD##_sub_pixel_variance##WIDTH##x##HEIGHT,                \
-      aom_highbd_##BD##_sub_pixel_avg_variance##WIDTH##x##HEIGHT,            \
+      aom_highbd_##BD##_variance##WIDTH##x##HEIGHT##_wrapper,                \
+      aom_highbd_##BD##_sub_pixel_variance##WIDTH##x##HEIGHT##_wrapper,      \
+      aom_highbd_##BD##_sub_pixel_avg_variance##WIDTH##x##HEIGHT##_wrapper,  \
       avm_highbd_sad##WIDTH##x##HEIGHT##x4d_bits##BD,                        \
       avm_highbd_dist_wtd_sad##WIDTH##x##HEIGHT##_avg_bits##BD,              \
-      aom_highbd_##BD##_dist_wtd_sub_pixel_avg_variance##WIDTH##x##HEIGHT)
+      aom_highbd_##BD##_dist_wtd_sub_pixel_avg_variance##WIDTH##x##HEIGHT##_wrapper)
+
+#define MAKE_BFP_VAR_WRAPPER(fnname)                                         \
+  static unsigned int fnname##_wrapper(                                      \
+      const uint8_t *a, int a_stride, const uint8_t *b, int b_stride,        \
+      unsigned int *sse) {                                                   \
+    return fnname(CONVERT_TO_BYTEPTR((const uint16_t *)a), a_stride,         \
+                  CONVERT_TO_BYTEPTR((const uint16_t *)b), b_stride, sse);   \
+  }
+
+#define MAKE_BFP_SUBPIX_VAR_WRAPPER(fnname)                                  \
+  static unsigned int fnname##_wrapper(                                      \
+      const uint8_t *src, int src_stride, int xoffset, int yoffset,          \
+      const uint8_t *dst, int dst_stride, unsigned int *sse) {               \
+    return fnname(CONVERT_TO_BYTEPTR((const uint16_t *)src), src_stride,     \
+                  xoffset, yoffset,                                          \
+                  CONVERT_TO_BYTEPTR((const uint16_t *)dst), dst_stride,     \
+                  sse);                                                      \
+  }
+
+#define MAKE_BFP_SUBPIX_AVG_VAR_WRAPPER(fnname)                              \
+  static unsigned int fnname##_wrapper(                                      \
+      const uint8_t *src, int src_stride, int xoffset, int yoffset,          \
+      const uint8_t *dst, int dst_stride, unsigned int *sse,                 \
+      const uint8_t *second_pred) {                                          \
+    return fnname(CONVERT_TO_BYTEPTR((const uint16_t *)src), src_stride,     \
+                  xoffset, yoffset,                                          \
+                  CONVERT_TO_BYTEPTR((const uint16_t *)dst), dst_stride,     \
+                  sse,                                                       \
+                  CONVERT_TO_BYTEPTR((const uint16_t *)second_pred));        \
+  }
+
+#define MAKE_BFP_DIST_WTD_SUBPIX_AVG_VAR_WRAPPER(fnname)                     \
+  static unsigned int fnname##_wrapper(                                      \
+      const uint8_t *src, int src_stride, int xoffset, int yoffset,          \
+      const uint8_t *dst, int dst_stride, unsigned int *sse,                 \
+      const uint8_t *second_pred,                                            \
+      const struct dist_wtd_comp_params *jcp_param) {                        \
+    return fnname(CONVERT_TO_BYTEPTR((const uint16_t *)src), src_stride,     \
+                  xoffset, yoffset,                                          \
+                  CONVERT_TO_BYTEPTR((const uint16_t *)dst), dst_stride,     \
+                  sse,                                                       \
+                  CONVERT_TO_BYTEPTR((const uint16_t *)second_pred),         \
+                  jcp_param);                                                \
+  }
+
+#define MAKE_BFP_VAR_ALL_WRAPPERS(WIDTH, HEIGHT, BD) \
+  MAKE_BFP_VAR_WRAPPER(aom_highbd_##BD##_variance##WIDTH##x##HEIGHT) \
+  MAKE_BFP_SUBPIX_VAR_WRAPPER(aom_highbd_##BD##_sub_pixel_variance##WIDTH##x##HEIGHT) \
+  MAKE_BFP_SUBPIX_AVG_VAR_WRAPPER(aom_highbd_##BD##_sub_pixel_avg_variance##WIDTH##x##HEIGHT) \
+  MAKE_BFP_DIST_WTD_SUBPIX_AVG_VAR_WRAPPER(aom_highbd_##BD##_dist_wtd_sub_pixel_avg_variance##WIDTH##x##HEIGHT)
 
 #define MAKE_BFP_SAD_WRAPPER(fnname)                                       \
   static unsigned int fnname##_bits8(                                      \
@@ -368,31 +418,57 @@ MAKE_BFP_JSADAVG_WRAPPER(avm_highbd_dist_wtd_sad32x4_avg)
 #define HIGHBD_MBFP_WRAPPER(WIDTH, HEIGHT, BD)                    \
   HIGHBD_MBFP(BLOCK_##WIDTH##X##HEIGHT,                           \
               avm_highbd_masked_sad##WIDTH##x##HEIGHT##_bits##BD, \
-              aom_highbd_##BD##_masked_sub_pixel_variance##WIDTH##x##HEIGHT)
+              aom_highbd_##BD##_masked_sub_pixel_variance##WIDTH##x##HEIGHT##_wrapper)
 
-#define MAKE_MBFP_COMPOUND_SAD_WRAPPER(fnname)                           \
-  static unsigned int fnname##_bits8(                                    \
-      const uint8_t *src_ptr, int source_stride, const uint8_t *ref_ptr, \
-      int ref_stride, const uint8_t *second_pred_ptr, const uint8_t *m,  \
-      int m_stride, int invert_mask) {                                   \
-    return fnname(src_ptr, source_stride, ref_ptr, ref_stride,           \
-                  second_pred_ptr, m, m_stride, invert_mask);            \
-  }                                                                      \
-  static unsigned int fnname##_bits10(                                   \
-      const uint8_t *src_ptr, int source_stride, const uint8_t *ref_ptr, \
-      int ref_stride, const uint8_t *second_pred_ptr, const uint8_t *m,  \
-      int m_stride, int invert_mask) {                                   \
-    return fnname(src_ptr, source_stride, ref_ptr, ref_stride,           \
-                  second_pred_ptr, m, m_stride, invert_mask) >>          \
-           2;                                                            \
-  }                                                                      \
-  static unsigned int fnname##_bits12(                                   \
-      const uint8_t *src_ptr, int source_stride, const uint8_t *ref_ptr, \
-      int ref_stride, const uint8_t *second_pred_ptr, const uint8_t *m,  \
-      int m_stride, int invert_mask) {                                   \
-    return fnname(src_ptr, source_stride, ref_ptr, ref_stride,           \
-                  second_pred_ptr, m, m_stride, invert_mask) >>          \
-           4;                                                            \
+#define MAKE_BFP_MASKED_SUBPIX_VAR_WRAPPER(fnname)                           \
+  static unsigned int fnname##_wrapper(                                      \
+      const uint8_t *src, int src_stride, int xoffset, int yoffset,          \
+      const uint8_t *ref, int ref_stride, const uint8_t *second_pred,        \
+      const uint8_t *msk, int msk_stride, int invert_mask,                   \
+      unsigned int *sse) {                                                   \
+    return fnname(CONVERT_TO_BYTEPTR((const uint16_t *)src), src_stride,     \
+                  xoffset, yoffset,                                          \
+                  CONVERT_TO_BYTEPTR((const uint16_t *)ref), ref_stride,     \
+                  CONVERT_TO_BYTEPTR((const uint16_t *)second_pred),         \
+                  msk, msk_stride, invert_mask, sse);                        \
+  }
+
+#define MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(WIDTH, HEIGHT, BD) \
+  MAKE_BFP_MASKED_SUBPIX_VAR_WRAPPER(aom_highbd_##BD##_masked_sub_pixel_variance##WIDTH##x##HEIGHT)
+
+// fnname is aom_highbd_masked_sad*, which applies CONVERT_TO_SHORTPTR to its
+// pixel pointers. Callers pass real uint16_t* (as uint8_t*) per the AV2 fn_ptr
+// convention (matching the variance/msvf wrappers), so tag src/ref/second_pred
+// with CONVERT_TO_BYTEPTR here. The mask (m) is a real uint8_t* alpha map.
+#define MAKE_MBFP_COMPOUND_SAD_WRAPPER(fnname)                                  \
+  static unsigned int fnname##_bits8(                                          \
+      const uint8_t *src_ptr, int source_stride, const uint8_t *ref_ptr,      \
+      int ref_stride, const uint8_t *second_pred_ptr, const uint8_t *m,       \
+      int m_stride, int invert_mask) {                                        \
+    return fnname(CONVERT_TO_BYTEPTR((const uint16_t *)src_ptr), source_stride,\
+                  CONVERT_TO_BYTEPTR((const uint16_t *)ref_ptr), ref_stride,   \
+                  CONVERT_TO_BYTEPTR((const uint16_t *)second_pred_ptr), m,    \
+                  m_stride, invert_mask);                                      \
+  }                                                                            \
+  static unsigned int fnname##_bits10(                                        \
+      const uint8_t *src_ptr, int source_stride, const uint8_t *ref_ptr,      \
+      int ref_stride, const uint8_t *second_pred_ptr, const uint8_t *m,       \
+      int m_stride, int invert_mask) {                                        \
+    return fnname(CONVERT_TO_BYTEPTR((const uint16_t *)src_ptr), source_stride,\
+                  CONVERT_TO_BYTEPTR((const uint16_t *)ref_ptr), ref_stride,   \
+                  CONVERT_TO_BYTEPTR((const uint16_t *)second_pred_ptr), m,    \
+                  m_stride, invert_mask) >>                                    \
+           2;                                                                  \
+  }                                                                            \
+  static unsigned int fnname##_bits12(                                        \
+      const uint8_t *src_ptr, int source_stride, const uint8_t *ref_ptr,      \
+      int ref_stride, const uint8_t *second_pred_ptr, const uint8_t *m,       \
+      int m_stride, int invert_mask) {                                        \
+    return fnname(CONVERT_TO_BYTEPTR((const uint16_t *)src_ptr), source_stride,\
+                  CONVERT_TO_BYTEPTR((const uint16_t *)ref_ptr), ref_stride,   \
+                  CONVERT_TO_BYTEPTR((const uint16_t *)second_pred_ptr), m,    \
+                  m_stride, invert_mask) >>                                    \
+           4;                                                                  \
   }
 
 MAKE_MBFP_COMPOUND_SAD_WRAPPER(avm_highbd_masked_sad256x256)
@@ -528,6 +604,74 @@ MAKE_SDSF_SKIP_SAD_4D_WRAPPER(avm_highbd_sad_skip_4x64x4d)
 MAKE_SDSF_SKIP_SAD_4D_WRAPPER(avm_highbd_sad_skip_64x4x4d)
 MAKE_SDSF_SKIP_SAD_4D_WRAPPER(avm_highbd_sad_skip_4x32x4d)
 MAKE_SDSF_SKIP_SAD_4D_WRAPPER(avm_highbd_sad_skip_32x4x4d)
+
+#define GENERATE_ALL_VAR_WRAPPERS_FOR_BD(BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(64, 16, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(16, 64, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(32, 8, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(8, 32, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(16, 4, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(4, 16, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(32, 16, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(16, 32, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(64, 32, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(32, 64, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(32, 32, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(64, 64, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(16, 16, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(16, 8, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(8, 16, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(8, 8, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(8, 4, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(4, 8, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(4, 4, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(128, 128, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(128, 64, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(64, 128, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(64, 8, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(8, 64, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(32, 4, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(4, 32, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(64, 4, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(4, 64, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(128, 256, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(256, 128, BD) \
+  MAKE_BFP_VAR_ALL_WRAPPERS(256, 256, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(256, 256, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(256, 128, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(128, 256, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(128, 128, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(128, 64, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(64, 128, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(64, 64, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(64, 32, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(32, 64, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(32, 32, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(32, 16, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(16, 32, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(16, 16, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(8, 16, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(16, 8, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(8, 8, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(4, 8, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(8, 4, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(4, 4, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(64, 16, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(16, 64, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(32, 8, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(8, 32, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(16, 4, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(4, 16, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(64, 8, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(8, 64, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(32, 4, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(4, 32, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(64, 4, BD) \
+  MAKE_BFP_MASKED_VAR_ALL_WRAPPERS(4, 64, BD)
+
+GENERATE_ALL_VAR_WRAPPERS_FOR_BD(8)
+GENERATE_ALL_VAR_WRAPPERS_FOR_BD(10)
+GENERATE_ALL_VAR_WRAPPERS_FOR_BD(12)
 
 static INLINE void highbd_set_var_fns(AV2_COMP *const cpi) {
   AV2_COMMON *const cm = &cpi->common;

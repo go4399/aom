@@ -471,7 +471,9 @@ void av2_cdef_search(const YV12_BUFFER_CONFIG *frame,
   int mi_high_l2[3];
   int xdec[3];
   int ydec[3];
-  uint16_t *ref_buffer[3] = { ref->y_buffer, ref->u_buffer, ref->v_buffer };
+  uint16_t *ref_buffer[3] = { CONVERT_TO_SHORTPTR(ref->y_buffer),
+                              CONVERT_TO_SHORTPTR(ref->u_buffer),
+                              CONVERT_TO_SHORTPTR(ref->v_buffer) };
   int ref_stride[3] = { ref->y_stride, ref->uv_stride, ref->uv_stride };
 
   for (int pli = 0; pli < num_planes; pli++) {

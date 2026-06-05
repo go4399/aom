@@ -2146,7 +2146,8 @@ static void build_inter_predictors_sub8x8(
       const struct scale_factors *const sf = ref_scale_factors;
       const struct buf_2d pre_buf = {
         NULL,
-        (plane == 1) ? ref_buf->buf.u_buffer : ref_buf->buf.v_buffer,
+        (plane == 1) ? CONVERT_TO_SHORTPTR(ref_buf->buf.u_buffer)
+                     : CONVERT_TO_SHORTPTR(ref_buf->buf.v_buffer),
         ref_buf->buf.uv_width,
         ref_buf->buf.uv_height,
         ref_buf->buf.uv_crop_width,
@@ -2295,9 +2296,9 @@ void bru_extend_mc_border(const AV2_COMMON *const cm, int mi_row, int mi_col,
 
       int stride = src->strides[is_uv];
       // Get reference block pointer.
-      src_data = src->buffers_u16[plane] +
+      src_data = CONVERT_TO_SHORTPTR(src->buffers[plane]) +
                  scaled_buffer_offset(block.x0, block.y0, stride, NULL);
-      dst_data = src->buffers_u16[plane] +
+      dst_data = CONVERT_TO_SHORTPTR(src->buffers[plane]) +
                  scaled_buffer_offset(block.x0, block.y0, stride, NULL);
 
       highbd_build_mc_border(src_data, stride, dst_data, stride, block.x0,
@@ -3793,7 +3794,7 @@ void av2_setup_dst_planes(struct macroblockd_plane *planes,
   for (int i = plane_start; i < AOMMIN(plane_end, MAX_MB_PLANE); ++i) {
     struct macroblockd_plane *const pd = &planes[i];
     const int is_uv = i > 0;
-    setup_pred_plane(&pd->dst, src->buffers_u16[i], src->widths[is_uv],
+    setup_pred_plane(&pd->dst, CONVERT_TO_SHORTPTR(src->buffers[i]), src->widths[is_uv],
                      src->heights[is_uv], src->crop_widths[is_uv],
                      src->crop_heights[is_uv], src->strides[is_uv], mi_row,
                      mi_col, NULL, pd->subsampling_x, pd->subsampling_y,
@@ -3812,7 +3813,7 @@ void av2_setup_pre_planes(MACROBLOCKD *xd, int idx,
     for (int i = 0; i < AOMMIN(num_planes, MAX_MB_PLANE); ++i) {
       struct macroblockd_plane *const pd = &xd->plane[i];
       const int is_uv = i > 0;
-      setup_pred_plane(&pd->pre[idx], src->buffers_u16[i], src->widths[is_uv],
+      setup_pred_plane(&pd->pre[idx], CONVERT_TO_SHORTPTR(src->buffers[i]), src->widths[is_uv],
                        src->heights[is_uv], src->crop_widths[is_uv],
                        src->crop_heights[is_uv], src->strides[is_uv], mi_row,
                        mi_col, sf, pd->subsampling_x, pd->subsampling_y,

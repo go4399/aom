@@ -190,149 +190,142 @@ static inline unsigned int generic_hbd_masked_sad(
 #define avm_highbd_sad128x128_avg(s, ss, r, rs, sp)                           \
   aom_highbd_sad128x128_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), \
                             rs, CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad128x128x4d(s, ss, r, rs, sa)    \
-  aom_highbd_sad128x128x4d(CONVERT_TO_BYTEPTR(s), ss, \
-                           (const uint8_t *const *)r, rs, sa)
+#define HBD_SAD_X4D_WRAPPER(fnname, s, ss, r, rs, sa)                           \
+  do {                                                                         \
+    const uint8_t *r_shifted[4] = {                                            \
+      CONVERT_TO_BYTEPTR((r)[0]),                                              \
+      CONVERT_TO_BYTEPTR((r)[1]),                                              \
+      CONVERT_TO_BYTEPTR((r)[2]),                                              \
+      CONVERT_TO_BYTEPTR((r)[3])                                               \
+    };                                                                         \
+    fnname(CONVERT_TO_BYTEPTR(s), ss, r_shifted, rs, sa);                      \
+  } while (0)
+
+#define avm_highbd_sad128x128x4d(s, ss, r, rs, sa) \
+  HBD_SAD_X4D_WRAPPER(aom_highbd_sad128x128x4d, s, ss, r, rs, sa)
 
 #define avm_highbd_sad128x64(s, ss, r, rs) \
   aom_highbd_sad128x64(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
 #define avm_highbd_sad128x64_avg(s, ss, r, rs, sp)                           \
   aom_highbd_sad128x64_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), \
                            rs, CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad128x64x4d(s, ss, r, rs, sa)    \
-  aom_highbd_sad128x64x4d(CONVERT_TO_BYTEPTR(s), ss, \
-                          (const uint8_t *const *)r, rs, sa)
+#define avm_highbd_sad128x64x4d(s, ss, r, rs, sa) \
+  HBD_SAD_X4D_WRAPPER(aom_highbd_sad128x64x4d, s, ss, r, rs, sa)
 
 #define avm_highbd_sad64x128(s, ss, r, rs) \
   aom_highbd_sad64x128(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
 #define avm_highbd_sad64x128_avg(s, ss, r, rs, sp)                           \
   aom_highbd_sad64x128_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), \
                            rs, CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad64x128x4d(s, ss, r, rs, sa)    \
-  aom_highbd_sad64x128x4d(CONVERT_TO_BYTEPTR(s), ss, \
-                          (const uint8_t *const *)r, rs, sa)
+#define avm_highbd_sad64x128x4d(s, ss, r, rs, sa) \
+  HBD_SAD_X4D_WRAPPER(aom_highbd_sad64x128x4d, s, ss, r, rs, sa)
 
 #define avm_highbd_sad64x64(s, ss, r, rs) \
   aom_highbd_sad64x64(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
 #define avm_highbd_sad64x64_avg(s, ss, r, rs, sp)                           \
   aom_highbd_sad64x64_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), \
-                          rs, CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad64x64x4d(s, ss, r, rs, sa)                               \
-  aom_highbd_sad64x64x4d(CONVERT_TO_BYTEPTR(s), ss, (const uint8_t *const *)r, \
-                         rs, sa)
+                           rs, CONVERT_TO_BYTEPTR(sp))
+#define avm_highbd_sad64x64x4d(s, ss, r, rs, sa) \
+  HBD_SAD_X4D_WRAPPER(aom_highbd_sad64x64x4d, s, ss, r, rs, sa)
 
 #define avm_highbd_sad64x32(s, ss, r, rs) \
   aom_highbd_sad64x32(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
 #define avm_highbd_sad64x32_avg(s, ss, r, rs, sp)                           \
   aom_highbd_sad64x32_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), \
-                          rs, CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad64x32x4d(s, ss, r, rs, sa)                               \
-  aom_highbd_sad64x32x4d(CONVERT_TO_BYTEPTR(s), ss, (const uint8_t *const *)r, \
-                         rs, sa)
+                           rs, CONVERT_TO_BYTEPTR(sp))
+#define avm_highbd_sad64x32x4d(s, ss, r, rs, sa) \
+  HBD_SAD_X4D_WRAPPER(aom_highbd_sad64x32x4d, s, ss, r, rs, sa)
 
 #define avm_highbd_sad32x64(s, ss, r, rs) \
   aom_highbd_sad32x64(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
 #define avm_highbd_sad32x64_avg(s, ss, r, rs, sp)                           \
   aom_highbd_sad32x64_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), \
-                          rs, CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad32x64x4d(s, ss, r, rs, sa)                               \
-  aom_highbd_sad32x64x4d(CONVERT_TO_BYTEPTR(s), ss, (const uint8_t *const *)r, \
-                         rs, sa)
+                           rs, CONVERT_TO_BYTEPTR(sp))
+#define avm_highbd_sad32x64x4d(s, ss, r, rs, sa) \
+  HBD_SAD_X4D_WRAPPER(aom_highbd_sad32x64x4d, s, ss, r, rs, sa)
 
 #define avm_highbd_sad32x32(s, ss, r, rs) \
   aom_highbd_sad32x32(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
 #define avm_highbd_sad32x32_avg(s, ss, r, rs, sp)                           \
   aom_highbd_sad32x32_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), \
-                          rs, CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad32x32x4d(s, ss, r, rs, sa)                               \
-  aom_highbd_sad32x32x4d(CONVERT_TO_BYTEPTR(s), ss, (const uint8_t *const *)r, \
-                         rs, sa)
+                           rs, CONVERT_TO_BYTEPTR(sp))
+#define avm_highbd_sad32x32x4d(s, ss, r, rs, sa) \
+  HBD_SAD_X4D_WRAPPER(aom_highbd_sad32x32x4d, s, ss, r, rs, sa)
 
 #define avm_highbd_sad32x16(s, ss, r, rs) \
   aom_highbd_sad32x16(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
 #define avm_highbd_sad32x16_avg(s, ss, r, rs, sp)                           \
   aom_highbd_sad32x16_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), \
-                          rs, CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad32x16x4d(s, ss, r, rs, sa)                               \
-  aom_highbd_sad32x16x4d(CONVERT_TO_BYTEPTR(s), ss, (const uint8_t *const *)r, \
-                         rs, sa)
+                           rs, CONVERT_TO_BYTEPTR(sp))
+#define avm_highbd_sad32x16x4d(s, ss, r, rs, sa) \
+  HBD_SAD_X4D_WRAPPER(aom_highbd_sad32x16x4d, s, ss, r, rs, sa)
 
 #define avm_highbd_sad16x32(s, ss, r, rs) \
   aom_highbd_sad16x32(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
 #define avm_highbd_sad16x32_avg(s, ss, r, rs, sp)                           \
   aom_highbd_sad16x32_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), \
-                          rs, CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad16x32x4d(s, ss, r, rs, sa)                               \
-  aom_highbd_sad16x32x4d(CONVERT_TO_BYTEPTR(s), ss, (const uint8_t *const *)r, \
-                         rs, sa)
+                           rs, CONVERT_TO_BYTEPTR(sp))
+#define avm_highbd_sad16x32x4d(s, ss, r, rs, sa) \
+  HBD_SAD_X4D_WRAPPER(aom_highbd_sad16x32x4d, s, ss, r, rs, sa)
 
 #define avm_highbd_sad16x16_avg(s, ss, r, rs, sp)                           \
   aom_highbd_sad16x16_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), \
-                          rs, CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad16x16x4d(s, ss, r, rs, sa)                               \
-  aom_highbd_sad16x16x4d(CONVERT_TO_BYTEPTR(s), ss, (const uint8_t *const *)r, \
-                         rs, sa)
+                           rs, CONVERT_TO_BYTEPTR(sp))
+#define avm_highbd_sad16x16x4d(s, ss, r, rs, sa) \
+  HBD_SAD_X4D_WRAPPER(aom_highbd_sad16x16x4d, s, ss, r, rs, sa)
 
 #define avm_highbd_sad16x8_avg(s, ss, r, rs, sp)                               \
   aom_highbd_sad16x8_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs, \
                          CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad16x8x4d(s, ss, r, rs, sa)                               \
-  aom_highbd_sad16x8x4d(CONVERT_TO_BYTEPTR(s), ss, (const uint8_t *const *)r, \
-                        rs, sa)
+#define avm_highbd_sad16x8x4d(s, ss, r, rs, sa) \
+  HBD_SAD_X4D_WRAPPER(aom_highbd_sad16x8x4d, s, ss, r, rs, sa)
 
 #define avm_highbd_sad8x16_avg(s, ss, r, rs, sp)                               \
   aom_highbd_sad8x16_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs, \
                          CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad8x16x4d(s, ss, r, rs, sa)                               \
-  aom_highbd_sad8x16x4d(CONVERT_TO_BYTEPTR(s), ss, (const uint8_t *const *)r, \
-                        rs, sa)
+#define avm_highbd_sad8x16x4d(s, ss, r, rs, sa) \
+  HBD_SAD_X4D_WRAPPER(aom_highbd_sad8x16x4d, s, ss, r, rs, sa)
 
 #define avm_highbd_sad8x8_avg(s, ss, r, rs, sp)                               \
   aom_highbd_sad8x8_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs, \
                         CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad8x8x4d(s, ss, r, rs, sa)                               \
-  aom_highbd_sad8x8x4d(CONVERT_TO_BYTEPTR(s), ss, (const uint8_t *const *)r, \
-                       rs, sa)
+#define avm_highbd_sad8x8x4d(s, ss, r, rs, sa) \
+  HBD_SAD_X4D_WRAPPER(aom_highbd_sad8x8x4d, s, ss, r, rs, sa)
 
 #define avm_highbd_sad8x4(s, ss, r, rs) \
   aom_highbd_sad8x4(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
 #define avm_highbd_sad8x4_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 8, 4)
-#define avm_highbd_sad8x4x4d(s, ss, r, rs, sa)                               \
-  aom_highbd_sad8x4x4d(CONVERT_TO_BYTEPTR(s), ss, (const uint8_t *const *)r, \
-                       rs, sa)
+#define avm_highbd_sad8x4x4d(s, ss, r, rs, sa) \
+  HBD_SAD_X4D_WRAPPER(aom_highbd_sad8x4x4d, s, ss, r, rs, sa)
 
 #define avm_highbd_sad4x8(s, ss, r, rs) \
   aom_highbd_sad4x8(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
 #define avm_highbd_sad4x8_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 4, 8)
-#define avm_highbd_sad4x8x4d(s, ss, r, rs, sa)                               \
-  aom_highbd_sad4x8x4d(CONVERT_TO_BYTEPTR(s), ss, (const uint8_t *const *)r, \
-                       rs, sa)
+#define avm_highbd_sad4x8x4d(s, ss, r, rs, sa) \
+  HBD_SAD_X4D_WRAPPER(aom_highbd_sad4x8x4d, s, ss, r, rs, sa)
 
 #define avm_highbd_sad4x4(s, ss, r, rs) \
   aom_highbd_sad4x4(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
 #define avm_highbd_sad4x4_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 4, 4)
-#define avm_highbd_sad4x4x4d(s, ss, r, rs, sa)                               \
-  aom_highbd_sad4x4x4d(CONVERT_TO_BYTEPTR(s), ss, (const uint8_t *const *)r, \
-                       rs, sa)
+#define avm_highbd_sad4x4x4d(s, ss, r, rs, sa) \
+  HBD_SAD_X4D_WRAPPER(aom_highbd_sad4x4x4d, s, ss, r, rs, sa)
 
 #define avm_highbd_sad4x16(s, ss, r, rs) \
   aom_highbd_sad4x16(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
 #define avm_highbd_sad4x16_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 4, 16)
-#define avm_highbd_sad4x16x4d(s, ss, r, rs, sa)                               \
-  aom_highbd_sad4x16x4d(CONVERT_TO_BYTEPTR(s), ss, (const uint8_t *const *)r, \
-                        rs, sa)
+#define avm_highbd_sad4x16x4d(s, ss, r, rs, sa) \
+  HBD_SAD_X4D_WRAPPER(aom_highbd_sad4x16x4d, s, ss, r, rs, sa)
 
 #define avm_highbd_sad16x4(s, ss, r, rs) \
   aom_highbd_sad16x4(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
 #define avm_highbd_sad16x4_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 16, 4)
-#define avm_highbd_sad16x4x4d(s, ss, r, rs, sa)                               \
-  aom_highbd_sad16x4x4d(CONVERT_TO_BYTEPTR(s), ss, (const uint8_t *const *)r, \
-                        rs, sa)
+#define avm_highbd_sad16x4x4d(s, ss, r, rs, sa) \
+  HBD_SAD_X4D_WRAPPER(aom_highbd_sad16x4x4d, s, ss, r, rs, sa)
 
 // Non-standard sizes HBD SAD fallbacks
 #define avm_highbd_sad256x256(s, ss, r, rs) \

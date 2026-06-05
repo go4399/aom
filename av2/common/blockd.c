@@ -106,6 +106,11 @@ PARTITION_TREE *av2_alloc_ptree_node(PARTITION_TREE *parent, int index) {
   PARTITION_TREE *ptree = NULL;
   struct aom_internal_error_info error;
 
+  if (setjmp(error.jmp)) {
+    return NULL;
+  }
+  error.setjmp = 1;
+
   AOM_CHECK_MEM_ERROR(&error, ptree, aom_calloc(1, sizeof(*ptree)));
 
   ptree->parent = parent;

@@ -114,7 +114,7 @@ static int rd_pick_intra_dip_sby(const AV2_COMP *const cpi, ThreadData *td,
   int best_ml_mode = 0;
   TX_SIZE best_tx_size = TX_8X8;
   TX_PARTITION_TYPE best_tx_partition = TX_PARTITION_NONE;
-  TX_TYPE best_tx_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
+  av2_tx_type best_tx_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
   (void)ctx;
   mbmi->use_intra_dip = 1;
   mbmi->mode = DC_PRED;
@@ -811,7 +811,7 @@ int av2_search_palette_mode(IntraModeSearchState *intra_search_state,
   uint8_t *const color_map = xd->plane[0].color_index_map;
   MB_MODE_INFO best_mbmi_palette = *mbmi;
   uint8_t best_blk_skip[MAX_MIB_SIZE * MAX_MIB_SIZE];
-  TX_TYPE best_tx_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
+  av2_tx_type best_tx_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
   const ModeCosts *mode_costs = &x->mode_costs;
   const int *const intra_mode_cost =
       mode_costs->mbmode_cost[size_group_lookup[bsize]];
@@ -994,7 +994,7 @@ static INLINE void handle_intra_dip_mode(const AV2_COMP *cpi, MACROBLOCK *x,
   uint8_t best_blk_skip[MAX_MIB_SIZE * MAX_MIB_SIZE];
   memcpy(best_blk_skip, x->txfm_search_info.blk_skip[AOM_PLANE_Y],
          sizeof(best_blk_skip[0]) * ctx->num_4x4_blk);
-  TX_TYPE best_tx_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
+  av2_tx_type best_tx_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
   TX_SIZE best_tx_partition = mbmi->tx_partition_type[0];
   av2_copy_array(best_tx_type_map, xd->tx_type_map, ctx->num_4x4_blk);
   mbmi->use_intra_dip = 1;
@@ -1317,7 +1317,7 @@ void search_fsc_mode(const AV2_COMP *const cpi, MACROBLOCK *x, int *rate,
   TX_SIZE best_tx_size = best_mbmi->tx_size;
   TX_PARTITION_TYPE best_tx_partition_type[TX_PARTITION_BUF];
   av2_copy(best_tx_partition_type, best_mbmi->tx_partition_type);
-  TX_TYPE best_tx_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
+  av2_tx_type best_tx_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
   int8_t best_angle_delta = best_mbmi->angle_delta[PLANE_TYPE_Y];
   uint8_t best_mrl = best_mbmi->mrl_index;
   uint8_t enable_mrls_flag = cpi->common.seq_params.enable_mrls;

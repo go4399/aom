@@ -46,7 +46,7 @@ typedef struct PICK_MODE_CONTEXT {
   uint16_t *eobs[MAX_MB_PLANE];
   uint16_t *bobs[MAX_MB_PLANE];
   uint8_t *txb_entropy_ctx[MAX_MB_PLANE];
-  TX_TYPE *tx_type_map;
+  av2_tx_type *tx_type_map;
   CctxType *cctx_type_map;
 
   int num_4x4_blk;

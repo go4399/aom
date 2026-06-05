@@ -46,11 +46,6 @@
 extern "C" {
 #endif
 
-#define y_buffer buffers_u16[0]
-#define u_buffer buffers_u16[1]
-#define v_buffer buffers_u16[2]
-#define store_buf_adr store_buf_adr_u16
-
 #if defined(__clang__) && defined(__has_warning)
 #if __has_feature(cxx_attributes) && __has_warning("-Wimplicit-fallthrough")
 #define AVM_FALLTHROUGH_INTENDED [[clang::fallthrough]]  // NOLINT
@@ -1672,7 +1667,7 @@ struct CommonModeInfoParams {
    * of each element stores secondary tx_type Bits 0~3 of each element stores
    * primary tx_type
    */
-  TX_TYPE *tx_type_map;
+  av2_tx_type *tx_type_map;
   /*!
    * indicate if a transform block has any non-zero coefficients or not.
    * the buffer is allocated for each 4x4 block
