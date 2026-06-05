@@ -11,6 +11,24 @@
 #ifndef AOM_AOM_AOM_INTEGER_H_
 #define AOM_AOM_AOM_INTEGER_H_
 
+#include "config/aom_config.h"
+
+#ifndef CONFIG_DIP_EXT_PRUNING
+#define CONFIG_DIP_EXT_PRUNING 0
+#endif
+
+#ifndef CONFIG_ML_PART_SPLIT
+#define CONFIG_ML_PART_SPLIT 0
+#endif
+
+#ifndef CONFIG_AV2_ENCODER
+#define CONFIG_AV2_ENCODER 0
+#endif
+
+#ifndef CONFIG_AV2_DECODER
+#define CONFIG_AV2_DECODER 0
+#endif
+
 #ifndef INLINE
 #define INLINE inline
 #endif

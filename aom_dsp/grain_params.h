@@ -84,6 +84,7 @@ typedef struct {
   int grain_scale_shift;
 
   uint16_t random_seed;
+#if CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
   int fgm_scaling_points_0[14][2];
   int fgm_points[3];
   int fgm_scaling_points_1[14][2];
@@ -91,6 +92,7 @@ typedef struct {
   int mc_identity;
   int fgm_scale_from_channel0_flag;
   int block_size;
+#endif
 
   // This structure is compared element-by-element in the function
   // aom_check_grain_params_equiv: this function must be updated if any changes

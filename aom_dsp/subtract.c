@@ -52,6 +52,7 @@ void aom_highbd_subtract_block_c(int rows, int cols, int16_t *diff,
   }
 }
 
+#if CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
 void avm_highbd_subtract_block_vert(int rows, int cols, int16_t *diff,
                                     ptrdiff_t diff_stride, const uint16_t *src,
                                     ptrdiff_t src_stride, const uint16_t *pred,
@@ -101,4 +102,5 @@ void avm_highbd_subtract_block_horz(int rows, int cols, int16_t *diff,
     src += src_stride;
   }
 }
+#endif
 #endif

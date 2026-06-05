@@ -8,3 +8,8 @@ cmbuild
 .gitignore
 TAGS
 .av2-integration/
+build/
+scratch/
+check_includes.py
+compare_repos.py
+
