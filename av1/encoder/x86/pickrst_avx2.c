@@ -1540,140 +1540,395 @@ void av1_compute_stats_avx2(int wiener_win, const uint8_t *dgd,
   }
 }
 
+static inline int64_t xx_cvtsi128_si64(__m128i a) {
+#if AOM_ARCH_X86_64
+  return _mm_cvtsi128_si64(a);
+#else
+  {
+    int64_t tmp;
+    _mm_storel_epi64((__m128i *)&tmp, a);
+    return tmp;
+  }
+#endif
+}
+
 static inline __m256i pair_set_epi16(int a, int b) {
   return _mm256_set1_epi32(
       (int32_t)(((uint16_t)(a)) | (((uint32_t)(uint16_t)(b)) << 16)));
 }
 
+static const int16_t kMaskTable[32] = { 0,  0,  0,  0,  0,  0,  0,  0,
+                                        0,  0,  0,  0,  0,  0,  0,  0,
+                                        -1, -1, -1, -1, -1, -1, -1, -1,
+                                        -1, -1, -1, -1, -1, -1, -1, -1 };
+
 int64_t av1_lowbd_pixel_proj_error_avx2(
     const uint8_t *src8, int width, int height, int src_stride,
     const uint8_t *dat8, int dat_stride, int32_t *flt0, int flt0_stride,
     int32_t *flt1, int flt1_stride, int xq[2], const sgr_params_type *params) {
-  int i, j, k;
+  int i, k;
   const int32_t shift = SGRPROJ_RST_BITS + SGRPROJ_PRJ_BITS;
   const __m256i rounding = _mm256_set1_epi32(1 << (shift - 1));
-  __m256i sum64 = _mm256_setzero_si256();
-  const uint8_t *src = src8;
-  const uint8_t *dat = dat8;
+  const __m256i mask_32 = _mm256_set1_epi64x(0xFFFFFFFF);
+  __m256i sum64;
   int64_t err = 0;
+  const int main_width = (width >= 16) ? (width & ~15) : 0;
+
   if (params->r[0] > 0 && params->r[1] > 0) {
     __m256i xq_coeff = pair_set_epi16(xq[0], xq[1]);
-    for (i = 0; i < height; ++i) {
+    __m256i sum64_acc = _mm256_setzero_si256();
+    const uint8_t *src = src8;
+    const uint8_t *dat = dat8;
+    int32_t *flt0_ptr_base = flt0;
+    int32_t *flt1_ptr_base = flt1;
+
+    // PHASE 1: MAIN FULL-VECTOR PROCESSING
+    if (main_width > 0) {
+      for (i = 0; i < height; i += 8) {
+        const int next_i = (i + 8 < height) ? (i + 8) : height;
+        __m256i sum32 = _mm256_setzero_si256();
+        for (int r = i; r < next_i; ++r) {
+          const uint8_t *dat_ptr = dat;
+          const uint8_t *src_ptr = src;
+          const int32_t *flt0_ptr = flt0_ptr_base;
+          const int32_t *flt1_ptr = flt1_ptr_base;
+          const uint8_t *const dat_end = dat + main_width - 16;
+
+          while (dat_ptr <= dat_end) {
+            const __m256i d0 = _mm256_cvtepu8_epi16(xx_loadu_128(dat_ptr));
+            const __m256i s0 = _mm256_cvtepu8_epi16(xx_loadu_128(src_ptr));
+            const __m256i flt0_16b = _mm256_packs_epi32(
+                yy_loadu_256(flt0_ptr), yy_loadu_256(flt0_ptr + 8));
+            const __m256i flt1_16b = _mm256_packs_epi32(
+                yy_loadu_256(flt1_ptr), yy_loadu_256(flt1_ptr + 8));
+            const __m256i d0_p = _mm256_permute4x64_epi64(d0, 0xd8);
+            const __m256i u0 = _mm256_slli_epi16(d0_p, SGRPROJ_RST_BITS);
+            const __m256i flt0_0_sub_u = _mm256_sub_epi16(flt0_16b, u0);
+            const __m256i flt1_0_sub_u = _mm256_sub_epi16(flt1_16b, u0);
+            const __m256i v0 = _mm256_madd_epi16(
+                xq_coeff, _mm256_unpacklo_epi16(flt0_0_sub_u, flt1_0_sub_u));
+            const __m256i v1 = _mm256_madd_epi16(
+                xq_coeff, _mm256_unpackhi_epi16(flt0_0_sub_u, flt1_0_sub_u));
+
+            // Mid-loop precomputation of diff0 and diff0_p
+            const __m256i diff0 = _mm256_sub_epi16(d0, s0);
+            const __m256i diff0_p = _mm256_permute4x64_epi64(diff0, 0xd8);
+
+            const __m256i vr0 =
+                _mm256_srai_epi32(_mm256_add_epi32(v0, rounding), shift);
+            const __m256i vr1 =
+                _mm256_srai_epi32(_mm256_add_epi32(v1, rounding), shift);
+            const __m256i e0 =
+                _mm256_add_epi16(_mm256_packs_epi32(vr0, vr1), diff0_p);
+            const __m256i err0 = _mm256_madd_epi16(e0, e0);
+            sum32 = _mm256_add_epi32(sum32, err0);
+            dat_ptr += 16;
+            src_ptr += 16;
+            flt0_ptr += 16;
+            flt1_ptr += 16;
+          }
+          dat += dat_stride;
+          src += src_stride;
+          flt0_ptr_base += flt0_stride;
+          flt1_ptr_base += flt1_stride;
+        }
+        const __m256i sum32_even = _mm256_and_si256(sum32, mask_32);
+        const __m256i sum32_odd = _mm256_srli_epi64(sum32, 32);
+        const __m256i sum64_chunk = _mm256_add_epi64(sum32_even, sum32_odd);
+        sum64_acc = _mm256_add_epi64(sum64_acc, sum64_chunk);
+      }
+    }
+
+    // PHASE 2: AST-DECONGESTED FLAT ROW LOOP VECTORIZED REMAINDER PROCESSING
+    if (width >= 16 && (width & 15) != 0) {
+      const int remainder_j = width - 16;
+      const int overlap = main_width - remainder_j;
+      const uint8_t *dat_rem = dat8;
+      const uint8_t *src_rem = src8;
+      const int32_t *flt0_rem = flt0;
+      const int32_t *flt1_rem = flt1;
       __m256i sum32 = _mm256_setzero_si256();
-      for (j = 0; j <= width - 16; j += 16) {
-        const __m256i d0 = _mm256_cvtepu8_epi16(xx_loadu_128(dat + j));
-        const __m256i s0 = _mm256_cvtepu8_epi16(xx_loadu_128(src + j));
-        const __m256i flt0_16b = _mm256_permute4x64_epi64(
-            _mm256_packs_epi32(yy_loadu_256(flt0 + j),
-                               yy_loadu_256(flt0 + j + 8)),
-            0xd8);
-        const __m256i flt1_16b = _mm256_permute4x64_epi64(
-            _mm256_packs_epi32(yy_loadu_256(flt1 + j),
-                               yy_loadu_256(flt1 + j + 8)),
-            0xd8);
-        const __m256i u0 = _mm256_slli_epi16(d0, SGRPROJ_RST_BITS);
+      const __m256i mask = yy_loadu_256(&kMaskTable[16 - overlap]);
+      const __m256i mask_p = _mm256_permute4x64_epi64(mask, 0xd8);
+      for (i = 0; i < height; ++i) {
+        const uint8_t *dat_ptr = dat_rem + remainder_j;
+        const uint8_t *src_ptr = src_rem + remainder_j;
+        const int32_t *flt0_ptr = flt0_rem + remainder_j;
+        const int32_t *flt1_ptr = flt1_rem + remainder_j;
+        const __m256i d0 = _mm256_cvtepu8_epi16(xx_loadu_128(dat_ptr));
+        const __m256i s0 = _mm256_cvtepu8_epi16(xx_loadu_128(src_ptr));
+        const __m256i flt0_16b = _mm256_packs_epi32(yy_loadu_256(flt0_ptr),
+                                                    yy_loadu_256(flt0_ptr + 8));
+        const __m256i flt1_16b = _mm256_packs_epi32(yy_loadu_256(flt1_ptr),
+                                                    yy_loadu_256(flt1_ptr + 8));
+        const __m256i d0_p = _mm256_permute4x64_epi64(d0, 0xd8);
+        const __m256i u0 = _mm256_slli_epi16(d0_p, SGRPROJ_RST_BITS);
         const __m256i flt0_0_sub_u = _mm256_sub_epi16(flt0_16b, u0);
         const __m256i flt1_0_sub_u = _mm256_sub_epi16(flt1_16b, u0);
         const __m256i v0 = _mm256_madd_epi16(
             xq_coeff, _mm256_unpacklo_epi16(flt0_0_sub_u, flt1_0_sub_u));
         const __m256i v1 = _mm256_madd_epi16(
             xq_coeff, _mm256_unpackhi_epi16(flt0_0_sub_u, flt1_0_sub_u));
+
+        // Mid-loop precomputation
+        const __m256i diff0 = _mm256_sub_epi16(d0, s0);
+        const __m256i diff0_p = _mm256_permute4x64_epi64(diff0, 0xd8);
+
         const __m256i vr0 =
             _mm256_srai_epi32(_mm256_add_epi32(v0, rounding), shift);
         const __m256i vr1 =
             _mm256_srai_epi32(_mm256_add_epi32(v1, rounding), shift);
-        const __m256i e0 = _mm256_sub_epi16(
-            _mm256_add_epi16(_mm256_packs_epi32(vr0, vr1), d0), s0);
-        const __m256i err0 = _mm256_madd_epi16(e0, e0);
+        const __m256i e0 =
+            _mm256_add_epi16(_mm256_packs_epi32(vr0, vr1), diff0_p);
+
+        __m256i e0_masked = _mm256_and_si256(e0, mask_p);
+        const __m256i err0 = _mm256_madd_epi16(e0_masked, e0_masked);
         sum32 = _mm256_add_epi32(sum32, err0);
+
+        dat_rem += dat_stride;
+        src_rem += src_stride;
+        flt0_rem += flt0_stride;
+        flt1_rem += flt1_stride;
       }
-      for (k = j; k < width; ++k) {
-        const int32_t u = (int32_t)(dat[k] << SGRPROJ_RST_BITS);
-        int32_t v = xq[0] * (flt0[k] - u) + xq[1] * (flt1[k] - u);
-        const int32_t e = ROUND_POWER_OF_TWO(v, shift) + dat[k] - src[k];
-        err += ((int64_t)e * e);
-      }
-      dat += dat_stride;
-      src += src_stride;
-      flt0 += flt0_stride;
-      flt1 += flt1_stride;
-      const __m256i sum64_0 =
-          _mm256_cvtepi32_epi64(_mm256_castsi256_si128(sum32));
-      const __m256i sum64_1 =
-          _mm256_cvtepi32_epi64(_mm256_extracti128_si256(sum32, 1));
-      sum64 = _mm256_add_epi64(sum64, sum64_0);
-      sum64 = _mm256_add_epi64(sum64, sum64_1);
+      const __m256i sum32_even = _mm256_and_si256(sum32, mask_32);
+      const __m256i sum32_odd = _mm256_srli_epi64(sum32, 32);
+      const __m256i sum64_rem = _mm256_add_epi64(sum32_even, sum32_odd);
+      sum64_acc = _mm256_add_epi64(sum64_acc, sum64_rem);
     }
+
+    // PHASE 3: SCALAR FALLBACK PROCESSING
+    if (width < 16) {
+      const uint8_t *dat_scal = dat8;
+      const uint8_t *src_scal = src8;
+      const int32_t *flt0_scal = flt0;
+      const int32_t *flt1_scal = flt1;
+      for (i = 0; i < height; ++i) {
+        for (k = 0; k < width; ++k) {
+          const int32_t u = (int32_t)(dat_scal[k] << SGRPROJ_RST_BITS);
+          int32_t v = xq[0] * (flt0_scal[k] - u) + xq[1] * (flt1_scal[k] - u);
+          const int32_t e =
+              ROUND_POWER_OF_TWO(v, shift) + dat_scal[k] - src_scal[k];
+          err += ((int64_t)e * e);
+        }
+        dat_scal += dat_stride;
+        src_scal += src_stride;
+        flt0_scal += flt0_stride;
+        flt1_scal += flt1_stride;
+      }
+    }
+    sum64 = sum64_acc;
   } else if (params->r[0] > 0 || params->r[1] > 0) {
     const int xq_active = (params->r[0] > 0) ? xq[0] : xq[1];
     const __m256i xq_coeff =
         pair_set_epi16(xq_active, -xq_active * (1 << SGRPROJ_RST_BITS));
     const int32_t *flt = (params->r[0] > 0) ? flt0 : flt1;
     const int flt_stride = (params->r[0] > 0) ? flt0_stride : flt1_stride;
-    for (i = 0; i < height; ++i) {
+    __m256i sum64_acc = _mm256_setzero_si256();
+    const uint8_t *src = src8;
+    const uint8_t *dat = dat8;
+    const int32_t *flt_ptr_base = flt;
+
+    // --- PHASE 1: MAIN FULL-VECTOR PROCESSING ---
+    if (main_width > 0) {
+      for (i = 0; i < height; i += 8) {
+        const int next_i = (i + 8 < height) ? (i + 8) : height;
+        __m256i sum32 = _mm256_setzero_si256();
+        for (int r = i; r < next_i; ++r) {
+          const uint8_t *dat_ptr = dat;
+          const uint8_t *src_ptr = src;
+          const int32_t *flt_ptr = flt_ptr_base;
+          const uint8_t *const dat_end = dat + main_width - 16;
+
+          while (dat_ptr <= dat_end) {
+            const __m256i d0 = _mm256_cvtepu8_epi16(xx_loadu_128(dat_ptr));
+            const __m256i s0 = _mm256_cvtepu8_epi16(xx_loadu_128(src_ptr));
+            const __m256i flt_16b = _mm256_packs_epi32(
+                yy_loadu_256(flt_ptr), yy_loadu_256(flt_ptr + 8));
+            const __m256i d0_p = _mm256_permute4x64_epi64(d0, 0xd8);
+            const __m256i v0 = _mm256_madd_epi16(
+                xq_coeff, _mm256_unpacklo_epi16(flt_16b, d0_p));
+            const __m256i v1 = _mm256_madd_epi16(
+                xq_coeff, _mm256_unpackhi_epi16(flt_16b, d0_p));
+
+            // Mid-loop precomputation
+            const __m256i diff0 = _mm256_sub_epi16(d0, s0);
+            const __m256i diff0_p = _mm256_permute4x64_epi64(diff0, 0xd8);
+
+            const __m256i vr0 =
+                _mm256_srai_epi32(_mm256_add_epi32(v0, rounding), shift);
+            const __m256i vr1 =
+                _mm256_srai_epi32(_mm256_add_epi32(v1, rounding), shift);
+            const __m256i e0 =
+                _mm256_add_epi16(_mm256_packs_epi32(vr0, vr1), diff0_p);
+            const __m256i err0 = _mm256_madd_epi16(e0, e0);
+            sum32 = _mm256_add_epi32(sum32, err0);
+            dat_ptr += 16;
+            src_ptr += 16;
+            flt_ptr += 16;
+          }
+          dat += dat_stride;
+          src += src_stride;
+          flt_ptr_base += flt_stride;
+        }
+        const __m256i sum32_even = _mm256_and_si256(sum32, mask_32);
+        const __m256i sum32_odd = _mm256_srli_epi64(sum32, 32);
+        const __m256i sum64_chunk = _mm256_add_epi64(sum32_even, sum32_odd);
+        sum64_acc = _mm256_add_epi64(sum64_acc, sum64_chunk);
+      }
+    }
+
+    // PHASE 2: AST-DECONGESTED FLAT ROW LOOP VECTORIZED REMAINDER PROCESSING
+    if (width >= 16 && (width & 15) != 0) {
+      const int remainder_j = width - 16;
+      const int overlap = main_width - remainder_j;
+      const uint8_t *dat_rem = dat8;
+      const uint8_t *src_rem = src8;
+      const int32_t *flt_rem = flt;
       __m256i sum32 = _mm256_setzero_si256();
-      for (j = 0; j <= width - 16; j += 16) {
-        const __m256i d0 = _mm256_cvtepu8_epi16(xx_loadu_128(dat + j));
-        const __m256i s0 = _mm256_cvtepu8_epi16(xx_loadu_128(src + j));
-        const __m256i flt_16b = _mm256_permute4x64_epi64(
-            _mm256_packs_epi32(yy_loadu_256(flt + j),
-                               yy_loadu_256(flt + j + 8)),
-            0xd8);
+      const __m256i mask = yy_loadu_256(&kMaskTable[16 - overlap]);
+      const __m256i mask_p = _mm256_permute4x64_epi64(mask, 0xd8);
+      for (i = 0; i < height; ++i) {
+        const uint8_t *dat_ptr = dat_rem + remainder_j;
+        const uint8_t *src_ptr = src_rem + remainder_j;
+        const int32_t *flt_ptr = flt_rem + remainder_j;
+        const __m256i d0 = _mm256_cvtepu8_epi16(xx_loadu_128(dat_ptr));
+        const __m256i s0 = _mm256_cvtepu8_epi16(xx_loadu_128(src_ptr));
+        const __m256i flt_16b = _mm256_packs_epi32(yy_loadu_256(flt_ptr),
+                                                   yy_loadu_256(flt_ptr + 8));
+        const __m256i d0_p = _mm256_permute4x64_epi64(d0, 0xd8);
         const __m256i v0 =
-            _mm256_madd_epi16(xq_coeff, _mm256_unpacklo_epi16(flt_16b, d0));
+            _mm256_madd_epi16(xq_coeff, _mm256_unpacklo_epi16(flt_16b, d0_p));
         const __m256i v1 =
-            _mm256_madd_epi16(xq_coeff, _mm256_unpackhi_epi16(flt_16b, d0));
+            _mm256_madd_epi16(xq_coeff, _mm256_unpackhi_epi16(flt_16b, d0_p));
+
+        // Mid-loop precomputation
+        const __m256i diff0 = _mm256_sub_epi16(d0, s0);
+        const __m256i diff0_p = _mm256_permute4x64_epi64(diff0, 0xd8);
+
         const __m256i vr0 =
             _mm256_srai_epi32(_mm256_add_epi32(v0, rounding), shift);
         const __m256i vr1 =
             _mm256_srai_epi32(_mm256_add_epi32(v1, rounding), shift);
-        const __m256i e0 = _mm256_sub_epi16(
-            _mm256_add_epi16(_mm256_packs_epi32(vr0, vr1), d0), s0);
-        const __m256i err0 = _mm256_madd_epi16(e0, e0);
+        const __m256i e0 =
+            _mm256_add_epi16(_mm256_packs_epi32(vr0, vr1), diff0_p);
+
+        __m256i e0_masked = _mm256_and_si256(e0, mask_p);
+        const __m256i err0 = _mm256_madd_epi16(e0_masked, e0_masked);
         sum32 = _mm256_add_epi32(sum32, err0);
+
+        dat_rem += dat_stride;
+        src_rem += src_stride;
+        flt_rem += flt_stride;
       }
-      for (k = j; k < width; ++k) {
-        const int32_t u = (int32_t)(dat[k] << SGRPROJ_RST_BITS);
-        int32_t v = xq_active * (flt[k] - u);
-        const int32_t e = ROUND_POWER_OF_TWO(v, shift) + dat[k] - src[k];
-        err += ((int64_t)e * e);
-      }
-      dat += dat_stride;
-      src += src_stride;
-      flt += flt_stride;
-      const __m256i sum64_0 =
-          _mm256_cvtepi32_epi64(_mm256_castsi256_si128(sum32));
-      const __m256i sum64_1 =
-          _mm256_cvtepi32_epi64(_mm256_extracti128_si256(sum32, 1));
-      sum64 = _mm256_add_epi64(sum64, sum64_0);
-      sum64 = _mm256_add_epi64(sum64, sum64_1);
+      const __m256i sum32_even = _mm256_and_si256(sum32, mask_32);
+      const __m256i sum32_odd = _mm256_srli_epi64(sum32, 32);
+      const __m256i sum64_rem = _mm256_add_epi64(sum32_even, sum32_odd);
+      sum64_acc = _mm256_add_epi64(sum64_acc, sum64_rem);
     }
+
+    // PHASE 3: SCALAR FALLBACK PROCESSING
+    if (width < 16) {
+      const uint8_t *dat_scal = dat8;
+      const uint8_t *src_scal = src8;
+      const int32_t *flt_scal = flt;
+      for (i = 0; i < height; ++i) {
+        for (k = 0; k < width; ++k) {
+          const int32_t u = (int32_t)(dat_scal[k] << SGRPROJ_RST_BITS);
+          int32_t v = xq_active * (flt_scal[k] - u);
+          const int32_t e =
+              ROUND_POWER_OF_TWO(v, shift) + dat_scal[k] - src_scal[k];
+          err += ((int64_t)e * e);
+        }
+        dat_scal += dat_stride;
+        src_scal += src_stride;
+        flt_scal += flt_stride;
+      }
+    }
+    sum64 = sum64_acc;
   } else {
-    __m256i sum32 = _mm256_setzero_si256();
-    for (i = 0; i < height; ++i) {
-      for (j = 0; j <= width - 16; j += 16) {
-        const __m256i d0 = _mm256_cvtepu8_epi16(xx_loadu_128(dat + j));
-        const __m256i s0 = _mm256_cvtepu8_epi16(xx_loadu_128(src + j));
-        const __m256i diff0 = _mm256_sub_epi16(d0, s0);
-        const __m256i err0 = _mm256_madd_epi16(diff0, diff0);
-        sum32 = _mm256_add_epi32(sum32, err0);
+    __m256i sum64_acc = _mm256_setzero_si256();
+    const uint8_t *src = src8;
+    const uint8_t *dat = dat8;
+
+    // PHASE 1: MAIN FULL-VECTOR PROCESSING
+    if (main_width > 0) {
+      for (i = 0; i < height; i += 8) {
+        const int next_i = (i + 8 < height) ? (i + 8) : height;
+        __m256i sum32 = _mm256_setzero_si256();
+        for (int r = i; r < next_i; ++r) {
+          const uint8_t *dat_ptr = dat;
+          const uint8_t *src_ptr = src;
+          const uint8_t *const dat_end = dat + main_width - 16;
+
+          while (dat_ptr <= dat_end) {
+            const __m256i d0 = _mm256_cvtepu8_epi16(xx_loadu_128(dat_ptr));
+            const __m256i s0 = _mm256_cvtepu8_epi16(xx_loadu_128(src_ptr));
+            const __m256i diff0 = _mm256_sub_epi16(d0, s0);
+            const __m256i err0 = _mm256_madd_epi16(diff0, diff0);
+            sum32 = _mm256_add_epi32(sum32, err0);
+            dat_ptr += 16;
+            src_ptr += 16;
+          }
+          dat += dat_stride;
+          src += src_stride;
+        }
+        const __m256i sum32_even = _mm256_and_si256(sum32, mask_32);
+        const __m256i sum32_odd = _mm256_srli_epi64(sum32, 32);
+        const __m256i sum64_chunk = _mm256_add_epi64(sum32_even, sum32_odd);
+        sum64_acc = _mm256_add_epi64(sum64_acc, sum64_chunk);
       }
-      for (k = j; k < width; ++k) {
-        const int32_t e = (int32_t)(dat[k]) - src[k];
-        err += ((int64_t)e * e);
-      }
-      dat += dat_stride;
-      src += src_stride;
     }
-    const __m256i sum64_0 =
-        _mm256_cvtepi32_epi64(_mm256_castsi256_si128(sum32));
-    const __m256i sum64_1 =
-        _mm256_cvtepi32_epi64(_mm256_extracti128_si256(sum32, 1));
-    sum64 = _mm256_add_epi64(sum64_0, sum64_1);
+
+    // PHASE 2: AST-DECONGESTED FLAT ROW LOOP VECTORIZED REMAINDER PROCESSING
+    if (width >= 16 && (width & 15) != 0) {
+      const int remainder_j = width - 16;
+      const int overlap = main_width - remainder_j;
+      const uint8_t *dat_rem = dat8;
+      const uint8_t *src_rem = src8;
+      __m256i sum32 = _mm256_setzero_si256();
+      const __m256i mask = yy_loadu_256(&kMaskTable[16 - overlap]);
+      for (i = 0; i < height; ++i) {
+        const uint8_t *dat_ptr = dat_rem + remainder_j;
+        const uint8_t *src_ptr = src_rem + remainder_j;
+        const __m256i d0 = _mm256_cvtepu8_epi16(xx_loadu_128(dat_ptr));
+        const __m256i s0 = _mm256_cvtepu8_epi16(xx_loadu_128(src_ptr));
+        const __m256i diff0 = _mm256_sub_epi16(d0, s0);
+        __m256i diff0_masked = _mm256_and_si256(diff0, mask);
+        const __m256i err0 = _mm256_madd_epi16(diff0_masked, diff0_masked);
+        sum32 = _mm256_add_epi32(sum32, err0);
+
+        dat_rem += dat_stride;
+        src_rem += src_stride;
+      }
+      const __m256i sum32_even = _mm256_and_si256(sum32, mask_32);
+      const __m256i sum32_odd = _mm256_srli_epi64(sum32, 32);
+      const __m256i sum64_rem = _mm256_add_epi64(sum32_even, sum32_odd);
+      sum64_acc = _mm256_add_epi64(sum64_acc, sum64_rem);
+    }
+
+    // PHASE 3: SCALAR FALLBACK PROCESSING
+    if (width < 16) {
+      const uint8_t *dat_scal = dat8;
+      const uint8_t *src_scal = src8;
+      for (i = 0; i < height; ++i) {
+        for (k = 0; k < width; ++k) {
+          const int32_t e = (int32_t)(dat_scal[k]) - src_scal[k];
+          err += ((int64_t)e * e);
+        }
+        dat_scal += dat_stride;
+        src_scal += src_stride;
+      }
+    }
+    sum64 = sum64_acc;
   }
-  int64_t sum[4];
-  yy_storeu_256(sum, sum64);
-  err += sum[0] + sum[1] + sum[2] + sum[3];
+
+  // 128-bit Register-Direct SIMD Horizontal Reduction
+  const __m128i sum64_lo = _mm256_castsi256_si128(sum64);
+  const __m128i sum64_hi = _mm256_extracti128_si256(sum64, 1);
+  const __m128i sum128 = _mm_add_epi64(sum64_lo, sum64_hi);
+  const __m128i sum128_hi = _mm_unpackhi_epi64(sum128, sum128);
+  const __m128i sum_final = _mm_add_epi64(sum128, sum128_hi);
+  err += xx_cvtsi128_si64(sum_final);
   return err;
 }
 
