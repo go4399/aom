@@ -123,6 +123,7 @@ static INLINE int read_high_range(MACROBLOCKD *xd, aom_reader *r, int tcq_mode,
   int use_tcq_hr = tcq_mode && (level >= max_br - 1);
   int hr_level_avg = *hr_avg;
   int use_hr = use_tcq_hr || level >= max_br;
+
   if (use_hr) {
     int hr = read_adaptive_hr(xd, r, hr_level_avg);
     level += hr << (tcq_mode ? 1 : 0);
@@ -212,6 +213,7 @@ static INLINE void read_coeffs_reverse_2d(
       }
     }
     levels[get_padded_idx(pos, bwl)] = level;
+
     *state = tcq_next_state(*state, level);
   }
 }
@@ -272,6 +274,7 @@ static INLINE void read_coeffs_reverse(
       }
     }
     levels[get_padded_idx(pos, bwl)] = level;
+
     *state = tcq_next_state(*state, level);
   }
 }
@@ -784,6 +787,7 @@ uint8_t av2_read_coeffs_txb(const AV2_COMMON *const cm, DecoderCodingBlock *dcb,
       }
     }
     levels[get_padded_idx(pos, bwl)] = level;
+
     state = tcq_next_state(state, level);
   }
 
@@ -998,7 +1002,6 @@ void av2_read_coeffs_txb_facade(const AV2_COMMON *const cm,
 
   const uint8_t decode_rest =
       av2_read_sig_txtype(cm, dcb, r, row, col, plane, &txb_ctx, tx_size);
-
   const PLANE_TYPE plane_type = get_plane_type(plane);
   const av2_tx_type tx_type =
       av2_get_tx_type(xd, plane_type, row, col, tx_size,
@@ -1020,6 +1023,7 @@ void av2_read_coeffs_txb_facade(const AV2_COMMON *const cm,
     av2_update_txk_skip_array(cm, xd->mi_row, xd->mi_col, xd->tree_type,
                               &mbmi->chroma_ref_info, plane, row, col, tx_size);
   }
+
   av2_set_entropy_contexts(xd, pd, plane, plane_bsize, tx_size, cul_level, col,
                            row);
   if (is_inter_block(mbmi, xd->tree_type) && (plane == 0)) {

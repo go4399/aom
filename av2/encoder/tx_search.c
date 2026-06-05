@@ -2633,11 +2633,7 @@ static void search_tx_type(const AV2_COMP *cpi, MACROBLOCK *x, int plane,
   }
 
   best_rd_stats->skip_txfm = best_eob == 0;
-  if (plane == 0 && get_primary_tx_type(best_tx_type) == ADST_ADST && get_secondary_tx_type(best_tx_type) > 0) {
-    fprintf(stderr, "DEBUG_SEARCH: blk_row=%d, blk_col=%d, best_tx_type=%d, primary=%d, sec_type=%d, sec_set=%d\n",
-            blk_row, blk_col, best_tx_type, get_primary_tx_type(best_tx_type),
-            get_secondary_tx_type(best_tx_type), get_secondary_tx_set(best_tx_type));
-  }
+
   if (plane == 0) update_txk_array(xd, blk_row, blk_col, tx_size, best_tx_type);
   x->plane[plane].txb_entropy_ctx[block] = best_txb_ctx;
   x->plane[plane].eobs[block] = best_eob;

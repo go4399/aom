@@ -1742,6 +1742,7 @@ static void read_intra_frame_mode_info(AV2_COMMON *const cm,
         mbmi->dpcm_mode_uv = 0;
       }
 
+
       if (mbmi->uv_mode == UV_CFL_PRED) {
         {
           if (is_mhccp_allowed(cm, xd)) {

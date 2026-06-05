@@ -2533,6 +2533,7 @@ static INLINE void decode_restoration_mode(AV2_COMMON *cm,
     av2_set_lr_tools(plane_lr_tools_disable_mask, p, &cm->features);
     const int ndx = rb_read_uniform(rb, cm->features.lr_frame_tools_count[p]);
     rsi->frame_restoration_type = index_to_frame_restoration_type(cm, p, ndx);
+
     if (rsi->frame_restoration_type != RESTORE_NONE) {
       luma_none &= p > 0;
       chroma_none &= p == 0;
@@ -2963,6 +2964,7 @@ static void read_wienerns_filter(MACROBLOCKD *xd, int is_uv,
               wienerns_coeffs[i - beg_feat][WIENERNS_BIT_ID],
               ACCT_INFO("wienerns_info_nsfilter")) +
           wienerns_coeffs[i - beg_feat][WIENERNS_MIN_ID];
+
       const int is_asym_coeff =
           (i < nsfilter_params->nsfilter_config.asymmetric ||
            (i >= ncoeffs1 &&
@@ -7982,6 +7984,7 @@ static int read_uncompressed_header(AV2Decoder *pbi, OBU_TYPE obu_type,
   BufferPool *const pool = cm->buffer_pool;
   av2_s_frame_info *sframe_info = &pbi->sframe_info;
   init_bru_params(cm);
+
 #if CONFIG_PARAKIT_COLLECT_DATA
   for (int i = 0; i < MAX_NUM_CTX_GROUPS; i++) {
     cm->prob_models[i].frameNumber = current_frame->frame_number;
@@ -7998,6 +8001,7 @@ static int read_uncompressed_header(AV2Decoder *pbi, OBU_TYPE obu_type,
 
   int seq_header_id_for_frame_header = setup_sequence_header_id(cm, rb);
   assert(seq_header_id_for_frame_header >= 0);
+
 
   handle_sequence_header(pbi, obu_type, obu_xlayer_id,
                          seq_header_id_for_frame_header);
@@ -8129,6 +8133,7 @@ static int read_uncompressed_header(AV2Decoder *pbi, OBU_TYPE obu_type,
       current_frame->frame_type =
           avm_rb_read_bit(rb) ? INTER_FRAME : INTRA_ONLY_FRAME;
     }
+
     current_frame->long_term_id = -1;
     if (current_frame->frame_type == KEY_FRAME) {
       const int long_term_id_plus_1 =
@@ -8222,6 +8227,7 @@ static int read_uncompressed_header(AV2Decoder *pbi, OBU_TYPE obu_type,
       frame_size_override_flag = frame_is_sframe(cm) ? 1 : avm_rb_read_bit(rb);
       current_frame->order_hint = avm_rb_read_literal(
           rb, seq_params->order_hint_info.order_hint_bits_minus_1 + 1);
+
       current_frame->display_order_hint = get_disp_order_hint(
           cm, obu_type, pbi->random_accessed, false, -1, -1);
       check_consistent_disp_order_hint_derivation(pbi, obu_type,
@@ -8425,6 +8431,7 @@ static int read_uncompressed_header(AV2Decoder *pbi, OBU_TYPE obu_type,
       }
     }
   }
+
 
   if (cm->immediate_output_picture == 0 &&
       current_frame->refresh_frame_flags == 0) {
@@ -9185,6 +9192,7 @@ static int read_uncompressed_header(AV2Decoder *pbi, OBU_TYPE obu_type,
       xd->current_base_qindex = quant_params->base_qindex;
       cm->delta_q_info.delta_q_res = 1 << avm_rb_read_literal(rb, 2);
     }
+
 
     xd->cur_frame_force_integer_mv = features->cur_frame_force_integer_mv;
     features->has_lossless_segment = 0;

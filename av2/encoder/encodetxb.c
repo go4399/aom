@@ -102,8 +102,11 @@ static void write_exp_golomb(aom_writer *w, int level, int k) {
   length = get_msb(x) + 1;
   assert(length > k);
 
-  avm_write_literal(w, 0, length - 1 - k);
-  avm_write_literal(w, x, length);
+  const int L = length - 1 - k;
+  avm_write_literal(w, (1 << L) - 1, L);
+  avm_write_literal(w, 0, 1);
+  const int mask = (1 << (length - 1)) - 1;
+  avm_write_literal(w, x & mask, length - 1);
 }
 
 /*!\brief Encode an input integer value using Truncated-Rice coding and write
@@ -136,12 +139,12 @@ static void write_truncated_rice(aom_writer *w, int level, int m, int k,
   int q = level >> m;
 
   if (q >= cmax) {
-    avm_write_literal(w, 0, cmax);
+    avm_write_literal(w, (1 << cmax) - 1, cmax);
     write_exp_golomb(w, level - (cmax << m), k);
   } else {
     const int mask = (1 << m) - 1;
-    avm_write_literal(w, 0, q);
-    avm_write_literal(w, 1, 1);
+    avm_write_literal(w, (1 << q) - 1, q);
+    avm_write_literal(w, 0, 1);
     avm_write_literal(w, level & mask, m);
   }
 }
@@ -872,6 +875,7 @@ static void write_high_range(aom_writer *w, int enable_tcq, int level, int lf,
                              : LF_NUM_BASE_LEVELS)
                : COEFF_BASE_RANGE + NUM_BASE_LEVELS;
   max -= enable_tcq ? 1 : 0;
+
   if (level > max) {
     int hr = 0;
     if (enable_tcq) {
@@ -1036,6 +1040,7 @@ void av2_write_coeffs_txb(const AV2_COMMON *const cm, MACROBLOCK *const x,
         }
       }
     }
+
     state = tcq_next_state(state, level);
   }
 
@@ -1143,6 +1148,7 @@ void av2_write_coeffs_txb(const AV2_COMMON *const cm, MACROBLOCK *const x,
         }
       }
     }
+
   }
 
   int hr_level_avg = 0;
@@ -1304,6 +1310,7 @@ void av2_write_intra_coeffs_mb(const AV2_COMMON *const cm, MACROBLOCK *x,
                   // Loop order for the two chroma planes is changed for CCTX
                   // because the transform information for both planes are
                   // needed at once at the decoder side.
+
                   if (plane == AOM_PLANE_V && is_cctx_allowed(cm, xd)) {
                     const int code_rest = av2_write_sig_txtype(
                         cm, x, w, blk_row, blk_col, AOM_PLANE_U,

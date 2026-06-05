@@ -3658,6 +3658,7 @@ static INLINE void write_wienerns_filter(MACROBLOCKD *xd, int plane,
           xd->tile_ctx->wienerns_4part_cdf[wienerns_coeffs[i - beg_feat]
                                                           [WIENERNS_PAR_ID]],
           wienerns_coeffs[i - beg_feat][WIENERNS_BIT_ID]);
+
       if (sym && is_asym_coeff) {
         // Don't code symmetrical taps
         assert(wienerns_info_nsfilter[i + 1] == wienerns_info_nsfilter[i]);
@@ -5201,10 +5202,10 @@ static INLINE void write_uncompressed_header(
   AV2_COMMON *const cm = &cpi->common;
   const SequenceHeader *const seq_params = &cm->seq_params;
   const CommonQuantParams *quant_params = &cm->quant_params;
-  MACROBLOCKD *const xd = &cpi->td.mb.e_mbd;
   CurrentFrame *const current_frame = &cm->current_frame;
   FeatureFlags *const features = &cm->features;
-  cm->current_frame.print_obu_type = obu_type;
+  MACROBLOCKD *const xd = &cpi->td.mb.e_mbd;
+
 
   if (cm->bridge_frame_info.is_bridge_frame) {
     assert(cm->cur_mfh_id == 0);
@@ -5217,6 +5218,7 @@ static INLINE void write_uncompressed_header(
       avm_wb_write_uvlc(wb, cm->seq_params.seq_header_id);
     }
   }
+
 
   if (seq_params->still_picture) {
     assert(cm->immediate_output_picture == 1);
@@ -5243,6 +5245,7 @@ static INLINE void write_uncompressed_header(
       const int is_inter_frame = (current_frame->frame_type == INTER_FRAME);
       avm_wb_write_bit(wb, is_inter_frame);
     }
+
 
     if (current_frame->frame_type == KEY_FRAME) {
       // When long term id is not in use for the sequence coding,
@@ -5349,6 +5352,7 @@ static INLINE void write_uncompressed_header(
           wb, current_frame->order_hint,
           seq_params->order_hint_info.order_hint_bits_minus_1 + 1);
     }
+
 
     if (!frame_is_sframe(cm) && !frame_is_intra_only(cm)) {
       if (cm->bridge_frame_info.is_bridge_frame) {
@@ -5479,6 +5483,7 @@ static INLINE void write_uncompressed_header(
       }
     }
   }
+
 
   if (current_frame->frame_type == KEY_FRAME) {
     write_frame_size(cm, frame_size_override_flag, wb);
@@ -5679,6 +5684,7 @@ static INLINE void write_uncompressed_header(
         xd->current_base_qindex = quant_params->base_qindex;
       }
     }
+
 
     if (quant_params->using_qmatrix) {
       const struct segmentation *seg = &cm->seg;
