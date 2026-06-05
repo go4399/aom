@@ -553,7 +553,7 @@ uint8_t av2_read_coeffs_txb_skip(const AV2_COMMON *const cm,
   eob_info *bob_data = dcb->bob_data[plane] + dcb->txb_offset[plane];
   bob_data->max_scan_line = 0;
 
-  const TX_TYPE tx_type =
+  const av2_tx_type tx_type =
       av2_get_tx_type(xd, plane_type, blk_row, blk_col, tx_size,
                       is_reduced_tx_set_used(cm, plane_type));
   const qm_val_t *iqmatrix =
@@ -696,7 +696,7 @@ uint8_t av2_read_coeffs_txb(const AV2_COMMON *const cm, DecoderCodingBlock *dcb,
   uint16_t *const eob = &(eob_data->eob);
   uint16_t *const max_scan_line = &(eob_data->max_scan_line);
 
-  const TX_TYPE tx_type =
+  const av2_tx_type tx_type =
       av2_get_tx_type(xd, plane_type, blk_row, blk_col, tx_size,
                       is_reduced_tx_set_used(cm, plane_type));
   const TX_CLASS tx_class = tx_type_to_class[get_primary_tx_type(tx_type)];
@@ -1000,7 +1000,7 @@ void av2_read_coeffs_txb_facade(const AV2_COMMON *const cm,
       av2_read_sig_txtype(cm, dcb, r, row, col, plane, &txb_ctx, tx_size);
 
   const PLANE_TYPE plane_type = get_plane_type(plane);
-  const TX_TYPE tx_type =
+  const av2_tx_type tx_type =
       av2_get_tx_type(xd, plane_type, row, col, tx_size,
                       is_reduced_tx_set_used(cm, plane_type));
   const int is_inter = is_inter_block(mbmi, xd->tree_type);
@@ -1023,7 +1023,7 @@ void av2_read_coeffs_txb_facade(const AV2_COMMON *const cm,
   av2_set_entropy_contexts(xd, pd, plane, plane_bsize, tx_size, cul_level, col,
                            row);
   if (is_inter_block(mbmi, xd->tree_type) && (plane == 0)) {
-    const TX_TYPE tx_type_inter =
+    const av2_tx_type tx_type_inter =
         av2_get_tx_type(xd, plane_type, row, col, tx_size,
                         is_reduced_tx_set_used(cm, plane_type));
     update_txk_array(xd, row, col, tx_size, tx_type_inter);

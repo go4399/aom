@@ -233,7 +233,7 @@ void av2_update_state(const AV2_COMP *const cpi, ThreadData *td,
     // Encoder will fetch tx types when writing bitstream.
     if (!dry_run) {
       const int grid_idx = get_mi_grid_idx(mi_params, mi_row, mi_col);
-      TX_TYPE *const tx_type_map = mi_params->tx_type_map + grid_idx;
+      av2_tx_type *const tx_type_map = mi_params->tx_type_map + grid_idx;
       const int mi_stride = mi_params->mi_stride;
       for (int blk_row = 0; blk_row < bh; ++blk_row) {
         av2_copy_array(tx_type_map + blk_row * mi_stride,
@@ -837,6 +837,7 @@ int av2_get_rdmult_delta(AV2_COMP *cpi, BLOCK_SIZE bsize, int mi_row,
                  cpi->gf_group.index < cpi->gf_group.size));
   const int tpl_idx = cpi->gf_group.index;
   TplParams *const tpl_data = &cpi->tpl_data;
+  if (tpl_data->tpl_frame == NULL) return orig_rdmult;
   TplDepFrame *tpl_frame = &tpl_data->tpl_frame[tpl_idx];
   TplDepStats *tpl_stats = tpl_frame->tpl_stats_ptr;
   const uint8_t block_mis_log2 = tpl_data->tpl_stats_block_mis_log2;
@@ -945,6 +946,7 @@ void av2_get_tpl_stats_sb(AV2_COMP *cpi, BLOCK_SIZE bsize, int mi_row,
   AV2_COMMON *const cm = &cpi->common;
   const int gf_group_index = cpi->gf_group.index;
   TplParams *const tpl_data = &cpi->tpl_data;
+  if (tpl_data->tpl_frame == NULL) return;
   TplDepFrame *tpl_frame = &tpl_data->tpl_frame[gf_group_index];
   TplDepStats *tpl_stats = tpl_frame->tpl_stats_ptr;
   int tpl_stride = tpl_frame->stride;
@@ -1011,6 +1013,7 @@ int av2_get_q_for_deltaq_objective(AV2_COMP *const cpi, BLOCK_SIZE bsize,
                  cpi->gf_group.index < cpi->gf_group.size));
   const int tpl_idx = cpi->gf_group.index;
   TplParams *const tpl_data = &cpi->tpl_data;
+  if (tpl_data->tpl_frame == NULL) return cm->quant_params.base_qindex;
   TplDepFrame *tpl_frame = &tpl_data->tpl_frame[tpl_idx];
   TplDepStats *tpl_stats = tpl_frame->tpl_stats_ptr;
   const uint8_t block_mis_log2 = tpl_data->tpl_stats_block_mis_log2;

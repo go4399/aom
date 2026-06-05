@@ -266,7 +266,8 @@ void av2_highbd_apply_temporal_filter_sse2(
     const uint32_t frame_stride = frame_to_filter->strides[plane == 0 ? 0 : 1];
     const int frame_offset = mb_row * plane_h * frame_stride + mb_col * plane_w;
 
-    const uint16_t *ref = frame_to_filter->buffers[plane] + frame_offset;
+    const uint16_t *ref =
+        (const uint16_t *)frame_to_filter->buffers[plane] + frame_offset;
     const int ss_x_shift =
         mbd->plane[plane].subsampling_x - mbd->plane[0].subsampling_x;
     const int ss_y_shift =

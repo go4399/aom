@@ -23,7 +23,6 @@
 #include "av2/common/filter.h"
 #include "av2/common/resize.h"
 #include "aom_dsp/aom_dsp_common.h"
-#define avm_highbd_convolve_copy aom_highbd_convolve_copy
 #include "aom_ports/mem.h"
 
 void av2_highbd_convolve_horiz_rs_c(const uint16_t *src, int src_stride,

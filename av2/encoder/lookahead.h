@@ -65,9 +65,10 @@ struct lookahead_ctx {
  * may be done when buffers are enqueued.
  */
 struct lookahead_ctx *av2_lookahead_init(
-    int width, int height, int subsampling_x, int subsampling_y, int depth,
-    const int border_in_pixels, int byte_alignment, int num_lap_buffers,
-    int num_extra_buffers, bool alloc_pyramid);
+    int width, int height, int subsampling_x, int subsampling_y,
+    int use_highbitdepth, int depth, const int border_in_pixels,
+    int byte_alignment, int num_lap_buffers, int num_extra_buffers,
+    bool alloc_pyramid);
 
 /**\brief Destroys the lookahead stage
  */
@@ -85,14 +86,16 @@ void av2_lookahead_destroy(struct lookahead_ctx *ctx);
  * \param[in] src               Pointer to the image to enqueue
  * \param[in] ts_start          Timestamp for the start of this frame
  * \param[in] ts_end            Timestamp for the end of this frame
+ * \param[in] use_highbitdepth  Whether to use high bit depth (16-bit) buffers
  * \param[in] disp_order_hint        Display order hint of this frame
  * \param[in] flags             Flags set on this frame
  * \param[in] alloc_pyramid     Whether to allocate a downsampling pyramid
  *                              for each frame buffer
  */
 int av2_lookahead_push(struct lookahead_ctx *ctx, const YV12_BUFFER_CONFIG *src,
-                       int64_t ts_start, int64_t ts_end, int disp_order_hint,
-                       aom_enc_frame_flags_t flags, bool alloc_pyramid);
+                       int64_t ts_start, int64_t ts_end, int use_highbitdepth,
+                       int disp_order_hint, aom_enc_frame_flags_t flags,
+                       bool alloc_pyramid);
 
 /**\brief Get the next source buffer to encode
  *

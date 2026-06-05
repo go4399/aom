@@ -195,13 +195,13 @@ const qm_val_t *av2_qmatrix(const CommonQuantParams *quant_params, int qmlevel,
 
 // Returns true if the tx_type corresponds to non-identity transform in both
 // horizontal and vertical directions.
-static INLINE bool is_2d_transform(TX_TYPE tx_type) {
+static INLINE bool is_2d_transform(av2_tx_type tx_type) {
   return (get_primary_tx_type(tx_type) < IDTX);
 }
 
 const qm_val_t *av2_get_iqmatrix(const CommonQuantParams *quant_params,
                                  const MACROBLOCKD *xd, int plane,
-                                 TX_SIZE tx_size, TX_TYPE tx_type) {
+                                 TX_SIZE tx_size, av2_tx_type tx_type) {
   const struct macroblockd_plane *const pd = &xd->plane[plane];
   const MB_MODE_INFO *const mbmi = xd->mi[0];
   const int seg_id = mbmi->segment_id;
@@ -214,7 +214,7 @@ const qm_val_t *av2_get_iqmatrix(const CommonQuantParams *quant_params,
 
 const qm_val_t *av2_get_qmatrix(const CommonQuantParams *quant_params,
                                 const MACROBLOCKD *xd, int plane,
-                                TX_SIZE tx_size, TX_TYPE tx_type) {
+                                TX_SIZE tx_size, av2_tx_type tx_type) {
   const struct macroblockd_plane *const pd = &xd->plane[plane];
   const MB_MODE_INFO *const mbmi = xd->mi[0];
   const int seg_id = mbmi->segment_id;

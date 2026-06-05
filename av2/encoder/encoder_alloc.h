@@ -355,6 +355,7 @@ static INLINE YV12_BUFFER_CONFIG *realloc_and_scale_source(AV2_COMP *cpi,
   AV2_COMMON *cm = &cpi->common;
   const int num_planes = av2_num_planes(cm);
 
+  if (cpi->unscaled_source == NULL) return NULL;
   if (scaled_width == cpi->unscaled_source->y_crop_width &&
       scaled_height == cpi->unscaled_source->y_crop_height) {
     return cpi->unscaled_source;

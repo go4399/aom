@@ -2247,7 +2247,7 @@ static int64_t motion_mode_rd(
   int best_xskip_txfm = 0;
   RD_STATS best_rd_stats, best_rd_stats_y, best_rd_stats_uv;
   uint8_t best_blk_skip[MAX_MB_PLANE][MAX_MIB_SIZE * MAX_MIB_SIZE];
-  TX_TYPE best_tx_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
+  av2_tx_type best_tx_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
   CctxType best_cctx_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
   const int rate_mv0 = this_mode == WARPMV ? 0 : *rate_mv;
   int pts0[SAMPLES_ARRAY_SIZE], pts_inref0[SAMPLES_ARRAY_SIZE];
@@ -3853,6 +3853,7 @@ static INLINE void get_block_level_tpl_stats(
   assert(IMPLIES(gf_group->size > 0, gf_group->index < gf_group->size));
   const int tpl_idx = gf_group->index;
   TplParams *const tpl_data = &cpi->tpl_data;
+  if (tpl_data->tpl_frame == NULL) return;
   const TplDepFrame *tpl_frame = &tpl_data->tpl_frame[tpl_idx];
   if (tpl_idx >= MAX_TPL_FRAME_IDX || !tpl_frame->is_valid) {
     return;
@@ -4454,10 +4455,10 @@ static int64_t handle_inter_mode(
 
   const GF_GROUP *const gf_group = &cpi->gf_group;
   const int tpl_idx = gf_group->index;
-  TplDepFrame *tpl_frame = &cpi->tpl_data.tpl_frame[tpl_idx];
+  TplDepFrame *tpl_frame = cpi->tpl_data.tpl_frame ? &cpi->tpl_data.tpl_frame[tpl_idx] : NULL;
   const int prune_modes_based_on_tpl =
       cpi->sf.inter_sf.prune_inter_modes_based_on_tpl &&
-      tpl_idx < MAX_TPL_FRAME_IDX && tpl_frame->is_valid;
+      tpl_frame != NULL && tpl_idx < MAX_TPL_FRAME_IDX && tpl_frame->is_valid;
   int i;
   // Reference frames for this mode
   const MV_REFERENCE_FRAME refs[2] = { COMPACT_INDEX0_NRS(mbmi->ref_frame[0]),
@@ -4482,7 +4483,7 @@ static int64_t handle_inter_mode(
   RD_STATS best_rd_stats, best_rd_stats_y, best_rd_stats_uv;
   int64_t best_rd = INT64_MAX;
   uint8_t best_blk_skip[MAX_MB_PLANE][MAX_MIB_SIZE * MAX_MIB_SIZE];
-  TX_TYPE best_tx_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
+  av2_tx_type best_tx_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
   CctxType best_cctx_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
   MB_MODE_INFO best_mbmi = *mbmi;
   SUBMB_INFO best_submi[MAX_MIB_SIZE * MAX_MIB_SIZE];
@@ -5551,7 +5552,7 @@ static int64_t rd_pick_intrabc_mode_sb(const AV2_COMP *cpi, MACROBLOCK *x,
   MB_MODE_INFO best_mbmi = *mbmi;
   RD_STATS best_rdstats = *rd_stats;
   uint8_t best_blk_skip[MAX_MB_PLANE][MAX_MIB_SIZE * MAX_MIB_SIZE] = { 0 };
-  TX_TYPE best_tx_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
+  av2_tx_type best_tx_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
   av2_copy_array(best_tx_type_map, xd->tx_type_map, ctx->num_4x4_blk);
   CctxType best_cctx_type_map[MAX_MIB_SIZE * MAX_MIB_SIZE];
   av2_copy_array(best_cctx_type_map, xd->cctx_type_map,

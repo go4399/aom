@@ -226,7 +226,7 @@ static INLINE int get_br_cost_tcq(tran_low_t level, const int *coeff_lps) {
  * and therefore preserve the sharpness of the reconstructed block.
  */
 int av2_trellis_quant(const struct AV2_COMP *cpi, MACROBLOCK *x, int plane,
-                      int block, TX_SIZE tx_size, TX_TYPE tx_type,
+                      int block, TX_SIZE tx_size, av2_tx_type tx_type,
                       CctxType cctx_type, const TXB_CTX *const txb_ctx,
                       int *rate_cost, int sharpness);
 

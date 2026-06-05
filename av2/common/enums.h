@@ -21,6 +21,7 @@
 #include "av2/common/common.h"
 #include "av1/common/enums.h"
 #include "aom_scale/yv12config.h"
+#include "aom_ports/mem.h"
 #include "aom/internal/aom_image_internal.h"
 #include "aom_dsp/bitwriter_buffer.h"
 #include "aom_dsp/bitwriter.h"
@@ -37,6 +38,8 @@ typedef struct dist_wtd_comp_params DIST_WTD_COMP_PARAMS;
   aom_count_signed_primitive_refsubexpfin
 #define avm_count_primitive_quniform wb_count_primitive_quniform
 typedef aom_variance_fn_t avm_variance_fn_t;
+
+typedef uint16_t av2_tx_type;
 
 /* aom_highbd_{8,10,12}_mse* and aom_get_mb_ss are RTCD dispatch symbols (their
  * dispatch names are declared as function pointers by the generated
@@ -145,29 +148,29 @@ static INLINE unsigned int avm_highbd_sad8x8(const uint16_t *src,
                                              int src_stride,
                                              const uint16_t *ref,
                                              int ref_stride) {
-  return aom_highbd_sad8x8_c((const uint8_t *)src, src_stride,
-                             (const uint8_t *)ref, ref_stride);
+  return aom_highbd_sad8x8_c(CONVERT_TO_BYTEPTR(src), src_stride,
+                             CONVERT_TO_BYTEPTR(ref), ref_stride);
 }
 static INLINE unsigned int avm_highbd_sad16x8(const uint16_t *src,
                                               int src_stride,
                                               const uint16_t *ref,
                                               int ref_stride) {
-  return aom_highbd_sad16x8_c((const uint8_t *)src, src_stride,
-                              (const uint8_t *)ref, ref_stride);
+  return aom_highbd_sad16x8_c(CONVERT_TO_BYTEPTR(src), src_stride,
+                              CONVERT_TO_BYTEPTR(ref), ref_stride);
 }
 static INLINE unsigned int avm_highbd_sad8x16(const uint16_t *src,
                                               int src_stride,
                                               const uint16_t *ref,
                                               int ref_stride) {
-  return aom_highbd_sad8x16_c((const uint8_t *)src, src_stride,
-                              (const uint8_t *)ref, ref_stride);
+  return aom_highbd_sad8x16_c(CONVERT_TO_BYTEPTR(src), src_stride,
+                              CONVERT_TO_BYTEPTR(ref), ref_stride);
 }
 static INLINE unsigned int avm_highbd_sad16x16(const uint16_t *src,
                                                int src_stride,
                                                const uint16_t *ref,
                                                int ref_stride) {
-  return aom_highbd_sad16x16_c((const uint8_t *)src, src_stride,
-                               (const uint8_t *)ref, ref_stride);
+  return aom_highbd_sad16x16_c(CONVERT_TO_BYTEPTR(src), src_stride,
+                               CONVERT_TO_BYTEPTR(ref), ref_stride);
 }
 #define avm_free_frame_buffer aom_free_frame_buffer
 #define avm_denoise_and_model_free aom_denoise_and_model_free
@@ -242,14 +245,14 @@ extern int64_t aom_highbd_sse_c(const uint8_t *src, int src_stride,
 static INLINE int64_t avm_highbd_sse(const uint16_t *a, int a_stride,
                                      const uint16_t *b, int b_stride, int width,
                                      int height) {
-  return aom_highbd_sse_c((const uint8_t *)a, a_stride, (const uint8_t *)b,
+  return aom_highbd_sse_c(CONVERT_TO_BYTEPTR(a), a_stride, CONVERT_TO_BYTEPTR(b),
                           b_stride, width, height);
 }
 
 static INLINE int64_t avm_highbd_sse_c(const uint16_t *a, int a_stride,
                                        const uint16_t *b, int b_stride,
                                        int width, int height) {
-  return aom_highbd_sse_c((const uint8_t *)a, a_stride, (const uint8_t *)b,
+  return aom_highbd_sse_c(CONVERT_TO_BYTEPTR(a), a_stride, CONVERT_TO_BYTEPTR(b),
                           b_stride, width, height);
 }
 
@@ -265,8 +268,8 @@ static INLINE void avm_highbd_subtract_block(
     ptrdiff_t pred_stride, int bd) {
   (void)bd;
   aom_highbd_subtract_block_c(rows, cols, diff_ptr, diff_stride,
-                              (const uint8_t *)src_ptr, src_stride,
-                              (const uint8_t *)pred_ptr, pred_stride);
+                              CONVERT_TO_BYTEPTR(src_ptr), src_stride,
+                              CONVERT_TO_BYTEPTR(pred_ptr), pred_stride);
 }
 
 extern void aom_highbd_blend_a64_d16_mask_c(
@@ -471,7 +474,7 @@ static INLINE int avm_realloc_frame_buffer(YV12_BUFFER_CONFIG *ybf, int width,
                                            aom_get_frame_buffer_cb_fn_t cb,
                                            void *cb_priv, bool alloc_pyramid) {
   return aom_realloc_frame_buffer(ybf, width, height, ss_x, ss_y,
-                                  (ybf->bit_depth > 8), border, byte_alignment,
+                                  1, border, byte_alignment,
                                   fb, cb, cb_priv, alloc_pyramid, 0);
 }
 
@@ -480,7 +483,7 @@ static INLINE int avm_alloc_frame_buffer(YV12_BUFFER_CONFIG *ybf, int width,
                                          int border, int byte_alignment,
                                          bool alloc_pyramid) {
   return aom_alloc_frame_buffer(ybf, width, height, ss_x, ss_y,
-                                (ybf->bit_depth > 8), border, byte_alignment,
+                                1, border, byte_alignment,
                                 alloc_pyramid, 0);
 }
 #define avm_remove_metadata_from_frame_buffer \
@@ -560,7 +563,14 @@ static INLINE uint64_t aom_rb_read_uleb(struct aom_read_bit_buffer *rb) {
 
 #define FILTER_UNUSED -1
 
-#define avm_highbd_convolve_copy aom_highbd_convolve_copy
+extern void aom_highbd_convolve_copy_c(const uint16_t *src,
+                                       ptrdiff_t src_stride, uint16_t *dst,
+                                       ptrdiff_t dst_stride, int w, int h);
+#define avm_highbd_convolve_copy(src, src_stride, dst, dst_stride, w, h) \
+  ((((intptr_t)(dst) & 15) != 0 || ((dst_stride) & 7) != 0)              \
+       ? aom_highbd_convolve_copy_c(src, src_stride, dst, dst_stride, w, \
+                                    h)                                   \
+       : aom_highbd_convolve_copy(src, src_stride, dst, dst_stride, w, h))
 #define avm_mse_wxh_16bit_highbd aom_mse_wxh_16bit_highbd
 
 static INLINE uint64_t avm_sum_squares_i32(const int32_t *src, uint32_t n) {

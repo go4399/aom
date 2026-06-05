@@ -946,10 +946,29 @@ void av2_resize_and_extend_frame_c(const YV12_BUFFER_CONFIG *src,
                                    const int num_planes) {
   const int src_w = src->y_crop_width;
   const int src_h = src->y_crop_height;
-  const uint16_t *const srcs[3] = { src->y_buffer, src->u_buffer,
-                                    src->v_buffer };
+  const uint16_t *const srcs[3] = {
+    (src->flags & YV12_FLAG_HIGHBITDEPTH)
+        ? CONVERT_TO_SHORTPTR(src->buffers[0])
+        : src->buffers_u16[0],
+    (src->flags & YV12_FLAG_HIGHBITDEPTH)
+        ? CONVERT_TO_SHORTPTR(src->buffers[1])
+        : src->buffers_u16[1],
+    (src->flags & YV12_FLAG_HIGHBITDEPTH)
+        ? CONVERT_TO_SHORTPTR(src->buffers[2])
+        : src->buffers_u16[2]
+  };
   const int src_strides[3] = { src->y_stride, src->uv_stride, src->uv_stride };
-  uint16_t *const dsts[3] = { dst->y_buffer, dst->u_buffer, dst->v_buffer };
+  uint16_t *const dsts[3] = {
+    (dst->flags & YV12_FLAG_HIGHBITDEPTH)
+        ? CONVERT_TO_SHORTPTR(dst->buffers[0])
+        : dst->buffers_u16[0],
+    (dst->flags & YV12_FLAG_HIGHBITDEPTH)
+        ? CONVERT_TO_SHORTPTR(dst->buffers[1])
+        : dst->buffers_u16[1],
+    (dst->flags & YV12_FLAG_HIGHBITDEPTH)
+        ? CONVERT_TO_SHORTPTR(dst->buffers[2])
+        : dst->buffers_u16[2]
+  };
   const int dst_strides[3] = { dst->y_stride, dst->uv_stride, dst->uv_stride };
   assert(filter == BILINEAR || filter == EIGHTTAP_SMOOTH ||
          filter == EIGHTTAP_REGULAR);
@@ -988,9 +1007,17 @@ void av2_resize_and_extend_frame_nonnormative(const YV12_BUFFER_CONFIG *src,
   // the static analysis warnings.
   for (int i = 0; i < AOMMIN(num_planes, MAX_MB_PLANE); ++i) {
     const int is_uv = i > 0;
-    av2_highbd_resize_plane(src->buffers_u16[i], src->heights[is_uv],
+    uint16_t *src_buf = src->buffers_u16[i];
+    uint16_t *dst_buf = dst->buffers_u16[i];
+    if (src->flags & YV12_FLAG_HIGHBITDEPTH) {
+      src_buf = CONVERT_TO_SHORTPTR(src->buffers[i]);
+    }
+    if (dst->flags & YV12_FLAG_HIGHBITDEPTH) {
+      dst_buf = CONVERT_TO_SHORTPTR(dst->buffers[i]);
+    }
+    av2_highbd_resize_plane(src_buf, src->heights[is_uv],
                             src->widths[is_uv], src->strides[is_uv],
-                            dst->buffers_u16[i], dst->heights[is_uv],
+                            dst_buf, dst->heights[is_uv],
                             dst->widths[is_uv], dst->strides[is_uv], bd);
   }
   aom_extend_frame_borders(dst, num_planes);
@@ -1002,6 +1029,7 @@ YV12_BUFFER_CONFIG *av2_scale_if_required(AV2_COMMON *cm,
                                           const InterpFilter filter,
                                           const int phase,
                                           const bool use_optimized_scaler) {
+  if (unscaled == NULL) return NULL;
   const bool scaling_required = (cm->width != unscaled->y_crop_width ||
                                  cm->height != unscaled->y_crop_height);
 

@@ -796,7 +796,7 @@ static INLINE void tip_component_setup_dst_planes(AV2_COMMON *const cm,
     subsampling_x = cm->seq_params.subsampling_x;
     subsampling_y = cm->seq_params.subsampling_y;
   }
-  tip_setup_pred_plane(&pd->dst, src->buffers[plane], src->widths[is_uv],
+  tip_setup_pred_plane(&pd->dst, CONVERT_TO_SHORTPTR(src->buffers[plane]), src->widths[is_uv],
                        src->heights[is_uv], src->crop_widths[is_uv],
                        src->crop_heights[is_uv], src->strides[is_uv], tpl_row,
                        tpl_col, NULL, subsampling_x, subsampling_y);

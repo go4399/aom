@@ -188,7 +188,7 @@ static INLINE void palette_rd_y(
     uint8_t *best_palette_color_map, int64_t *best_rd, int64_t *best_model_rd,
     int *rate, int *rate_tokenonly, int64_t *distortion, int *skippable,
     int *beat_best_rd, PICK_MODE_CONTEXT *ctx, uint8_t *blk_skip,
-    TX_TYPE *tx_type_map, int *beat_best_palette_rd) {
+    av2_tx_type *tx_type_map, int *beat_best_palette_rd) {
   optimize_palette_colors(color_cache, n_cache, n, 1, centroids,
                           cpi->common.seq_params.bit_depth);
   const int num_unique_colors = av2_remove_duplicates(centroids, n);
@@ -276,7 +276,7 @@ static INLINE int perform_top_color_palette_search(
     uint8_t *best_palette_color_map, int64_t *best_rd, int64_t *best_model_rd,
     int *rate, int *rate_tokenonly, int64_t *distortion, int *skippable,
     int *beat_best_rd, PICK_MODE_CONTEXT *ctx, uint8_t *best_blk_skip,
-    TX_TYPE *tx_type_map) {
+    av2_tx_type *tx_type_map) {
   int centroids[PALETTE_MAX_SIZE];
   int n = start_n;
   int top_color_winner = end_n;
@@ -316,7 +316,7 @@ static INLINE int perform_k_means_palette_search(
     uint8_t *best_palette_color_map, int64_t *best_rd, int64_t *best_model_rd,
     int *rate, int *rate_tokenonly, int64_t *distortion, int *skippable,
     int *beat_best_rd, PICK_MODE_CONTEXT *ctx, uint8_t *best_blk_skip,
-    TX_TYPE *tx_type_map, uint8_t *color_map, int data_points) {
+    av2_tx_type *tx_type_map, uint8_t *color_map, int data_points) {
   int centroids[PALETTE_MAX_SIZE];
   const int max_itr = 50;
   int n = start_n;
@@ -370,7 +370,7 @@ void av2_rd_pick_palette_intra_sby(
     MB_MODE_INFO *best_mbmi, uint8_t *best_palette_color_map, int64_t *best_rd,
     int64_t *best_model_rd, int *rate, int *rate_tokenonly, int64_t *distortion,
     int *skippable, int *beat_best_rd, PICK_MODE_CONTEXT *ctx,
-    uint8_t *best_blk_skip, TX_TYPE *tx_type_map) {
+    uint8_t *best_blk_skip, av2_tx_type *tx_type_map) {
   MACROBLOCKD *const xd = &x->e_mbd;
   MB_MODE_INFO *const mbmi = xd->mi[0];
 
@@ -399,11 +399,15 @@ void av2_rd_pick_palette_intra_sby(
   const int bit_depth = seq_params->bit_depth;
   int unused;
 
+  // Convert from shifted pointer to unshifted short pointer.
+  const uint16_t *src_unshifted = CONVERT_TO_SHORTPTR(src);
+
   int count_buf[1 << 12];      // Maximum (1 << 12) color levels.
   int count_buf_8bit[1 << 8];  // Maximum (1 << 8) bins for hbd path.
   int colors, colors_threshold = 0;
-  av2_count_colors_highbd(src, src_stride, rows, cols, bit_depth, count_buf,
-                          count_buf_8bit, &colors_threshold, &colors);
+  av2_count_colors_highbd(src_unshifted, src_stride, rows, cols, bit_depth,
+                          count_buf, count_buf_8bit, &colors_threshold,
+                          &colors);
 
   uint8_t *const color_map = xd->plane[0].color_index_map;
   if (colors_threshold > 1 && colors_threshold <= 64) {
@@ -411,15 +415,16 @@ void av2_rd_pick_palette_intra_sby(
     int centroids[PALETTE_MAX_SIZE];
     int lb, ub;
     int *data_pt = data;
-    lb = ub = src[0];
+    const uint16_t *src_row = src_unshifted;
+    lb = ub = src_row[0];
     for (int r = 0; r < rows; ++r) {
       for (int c = 0; c < cols; ++c) {
-        const int val = src[c];
+        const int val = src_row[c];
         data_pt[c] = val;
         lb = AOMMIN(lb, val);
         ub = AOMMAX(ub, val);
       }
-      src += src_stride;
+      src_row += src_stride;
       data_pt += cols;
     }
 

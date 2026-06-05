@@ -875,7 +875,7 @@ void av2_highbd_inv_txfm_add_4x4_horz_c(const tran_low_t *input, uint16_t *dest,
 }
 
 static void init_txfm_param(const MACROBLOCKD *xd, int plane, TX_SIZE tx_size,
-                            TX_TYPE tx_type, int eob, int reduced_tx_set,
+                            av2_tx_type tx_type, int eob, int reduced_tx_set,
                             int use_ddt, TxfmParam *txfm_param) {
   (void)plane;
   MB_MODE_INFO *const mbmi = xd->mi[0];
@@ -997,7 +997,7 @@ static void av2_highbd_inv_txfm_add_master(const tran_low_t *input,
 
 void av2_inverse_transform_block(const MACROBLOCKD *xd,
                                  const tran_low_t *dqcoeff, int plane,
-                                 TX_TYPE tx_type, TX_SIZE tx_size,
+                                 av2_tx_type tx_type, TX_SIZE tx_size,
                                  uint16_t *dst, int stride, int eob,
                                  int use_ddt, int reduced_tx_set) {
   if (!eob) return;

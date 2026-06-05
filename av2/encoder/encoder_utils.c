@@ -304,6 +304,7 @@ static void process_tpl_stats_frame(AV2_COMP *cpi) {
 
   const int tpl_idx = gf_group->index;
   TplParams *const tpl_data = &cpi->tpl_data;
+  if (tpl_data->tpl_frame == NULL) return;
   TplDepFrame *tpl_frame = &tpl_data->tpl_frame[tpl_idx];
   TplDepStats *tpl_stats = tpl_frame->tpl_stats_ptr;
 
@@ -818,6 +819,9 @@ void av2_determine_sc_tools_with_encoding(AV2_COMP *cpi, const int q_orig) {
       cpi->sf.part_sf.fixed_partition_size;
 
   // Setup necessary params for encoding, including frame source, etc.
+  if (cpi->unscaled_source == NULL) {
+    return;
+  }
   aom_clear_system_state();
 
   cpi->source =
@@ -994,22 +998,35 @@ int av2_is_integer_mv(const YV12_BUFFER_CONFIG *cur_picture,
       int match = 1;
       T++;
 
-      // check whether collocated block match with current
-      uint16_t *p_cur = cur_picture->y_buffer;
-      uint16_t *p_ref = last_picture->y_buffer;
+      uint8_t *p_cur = cur_picture->y_buffer;
+      uint8_t *p_ref = last_picture->y_buffer;
       int stride_cur = cur_picture->y_stride;
       int stride_ref = last_picture->y_stride;
       p_cur += (y_pos * stride_cur + x_pos);
       p_ref += (y_pos * stride_ref + x_pos);
 
-      for (int tmpY = 0; tmpY < block_size && match; tmpY++) {
-        for (int tmpX = 0; tmpX < block_size && match; tmpX++) {
-          if (p_cur[tmpX] != p_ref[tmpX]) {
-            match = 0;
+      if (cur_picture->flags & YV12_FLAG_HIGHBITDEPTH) {
+        uint16_t *p16_cur = CONVERT_TO_SHORTPTR(p_cur);
+        uint16_t *p16_ref = CONVERT_TO_SHORTPTR(p_ref);
+        for (int tmpY = 0; tmpY < block_size && match; tmpY++) {
+          for (int tmpX = 0; tmpX < block_size && match; tmpX++) {
+            if (p16_cur[tmpX] != p16_ref[tmpX]) {
+              match = 0;
+            }
           }
+          p16_cur += stride_cur;
+          p16_ref += stride_ref;
         }
-        p_cur += stride_cur;
-        p_ref += stride_ref;
+      } else {
+        for (int tmpY = 0; tmpY < block_size && match; tmpY++) {
+          for (int tmpX = 0; tmpX < block_size && match; tmpX++) {
+            if (p_cur[tmpX] != p_ref[tmpX]) {
+              match = 0;
+            }
+          }
+          p_cur += stride_cur;
+          p_ref += stride_ref;
+        }
       }
 
       if (match) {
@@ -1163,8 +1180,13 @@ void active_region_detection(AV2_COMP *cpi,
     const int plane_width = cur_picture->widths[uv_flag];
     const int plane_height = cur_picture->heights[uv_flag];
     const int stride = cur_picture->strides[uv_flag];
-    uint16_t *cur_buffer = cur_picture->buffers_u16[comp];
-    uint16_t *last_buffer = last_picture->buffers_u16[comp];
+    uint16_t *cur_buffer = (cur_picture->flags & YV12_FLAG_HIGHBITDEPTH)
+                               ? CONVERT_TO_SHORTPTR(cur_picture->buffers[comp])
+                               : cur_picture->buffers_u16[comp];
+    uint16_t *last_buffer =
+        (last_picture->flags & YV12_FLAG_HIGHBITDEPTH)
+            ? CONVERT_TO_SHORTPTR(last_picture->buffers[comp])
+            : last_picture->buffers_u16[comp];
     const int comp_mi_width =
         uv_flag ? (MI_SIZE >> cur_picture->subsampling_x) : MI_SIZE;
     const int comp_mi_height =

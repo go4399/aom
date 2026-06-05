@@ -158,8 +158,9 @@ static unsigned int get_sby_perpixel_diff_variance(const AV2_COMP *const cpi,
       &cpi->common, get_closest_pastcur_ref_or_ref0(&cpi->common));
 
   assert(last != NULL);
+  uint16_t *last_y_ptr = CONVERT_TO_SHORTPTR(last->y_buffer);
   last_y =
-      &last->y_buffer[mi_row * MI_SIZE * last->y_stride + mi_col * MI_SIZE];
+      &last_y_ptr[mi_row * MI_SIZE * last->y_stride + mi_col * MI_SIZE];
   var = cpi->fn_ptr[bs].vf((const uint8_t *)ref->buf, ref->stride,
                            (const uint8_t *)last_y, last->y_stride, &sse);
   return ROUND_POWER_OF_TWO(var, num_pels_log2_lookup[bs]);
@@ -189,7 +190,7 @@ void av2_setup_src_planes(MACROBLOCK *x, const YV12_BUFFER_CONFIG *src,
   // the static analysis warnings.
   for (int i = 0; i < AOMMIN(num_planes, MAX_MB_PLANE); i++) {
     const int is_uv = i > 0;
-    setup_pred_plane(&x->plane[i].src, (uint16_t *)src->buffers[i],
+    setup_pred_plane(&x->plane[i].src, CONVERT_TO_SHORTPTR(src->buffers[i]),
                      src->crop_widths[is_uv], src->crop_heights[is_uv],
                      src->crop_widths[is_uv], src->crop_heights[is_uv],
                      src->strides[is_uv], mi_row, mi_col, NULL,
@@ -292,10 +293,10 @@ static void init_ref_frame_space(AV2_COMP *cpi, ThreadData *td, int mi_row,
   MACROBLOCK *x = &td->mb;
   const int frame_idx = cpi->gf_group.index;
   TplParams *const tpl_data = &cpi->tpl_data;
+  av2_zero(x->tpl_keep_ref_frame);
+  if (tpl_data->tpl_frame == NULL) return;
   TplDepFrame *tpl_frame = &tpl_data->tpl_frame[frame_idx];
   const uint8_t block_mis_log2 = tpl_data->tpl_stats_block_mis_log2;
-
-  av2_zero(x->tpl_keep_ref_frame);
 
   if (tpl_frame->is_valid == 0) return;
   if (!is_frame_tpl_eligible(gf_group, gf_group->index)) return;
@@ -1873,6 +1874,8 @@ static INLINE int could_tip_mode_be_selected(AV2_COMP *const cpi) {
   return 0;
 }
 
+extern int fflush(FILE *stream);
+
 static INLINE void decide_tip_setting_and_setup_tip_frame(AV2_COMP *cpi) {
   ThreadData *const td = &cpi->td;
   AV2_COMMON *const cm = &cpi->common;
@@ -1887,14 +1890,21 @@ static INLINE void decide_tip_setting_and_setup_tip_frame(AV2_COMP *cpi) {
                             av2_enc_calc_subpel_params, 0 /* copy_refined_mvs */
         );
 
+        fprintf(stderr, "DEBUG_TIP: cpi->source=%p, u_buffer=%p, short_u_buffer=%p\n",
+                cpi->source, cpi->source->u_buffer, CONVERT_TO_SHORTPTR(cpi->source->u_buffer));
+        fprintf(stderr, "DEBUG_TIP: tip_frame_buf=%p, u_buffer=%p, short_u_buffer=%p\n",
+                tip_frame_buf, tip_frame_buf->u_buffer, CONVERT_TO_SHORTPTR(tip_frame_buf->u_buffer));
+        fprintf(stderr, "DEBUG_TIP: uv_width=%d, uv_height=%d, uv_stride=%d\n",
+                cpi->source->uv_width, cpi->source->uv_height, cpi->source->uv_stride);
+        fflush(stderr);
         int64_t this_sse = aom_highbd_get_y_sse(cpi->source, tip_frame_buf);
         this_sse +=
-            avm_highbd_sse(cpi->source->u_buffer, cpi->source->uv_stride,
-                           tip_frame_buf->u_buffer, tip_frame_buf->uv_stride,
+            avm_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->u_buffer), cpi->source->uv_stride,
+                           CONVERT_TO_SHORTPTR(tip_frame_buf->u_buffer), tip_frame_buf->uv_stride,
                            cpi->source->uv_width, cpi->source->uv_height);
         this_sse +=
-            avm_highbd_sse(cpi->source->v_buffer, cpi->source->uv_stride,
-                           tip_frame_buf->v_buffer, tip_frame_buf->uv_stride,
+            avm_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->v_buffer), cpi->source->uv_stride,
+                           CONVERT_TO_SHORTPTR(tip_frame_buf->v_buffer), tip_frame_buf->uv_stride,
                            cpi->source->uv_width, cpi->source->uv_height);
         if (this_sse < best_sse) {
           best_wtd_index = wtd_index;

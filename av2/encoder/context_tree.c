@@ -111,8 +111,14 @@ PICK_MODE_CONTEXT *av2_alloc_pmc(const AV2_COMMON *cm, TREE_TYPE tree_type,
                                  PARTITION_TYPE parent_partition, int index,
                                  int subsampling_x, int subsampling_y,
                                  PC_TREE_SHARED_BUFFERS *shared_bufs) {
-  PICK_MODE_CONTEXT *ctx = NULL;
+  PICK_MODE_CONTEXT *volatile ctx = NULL;
   struct aom_internal_error_info error;
+
+  if (setjmp(error.jmp)) {
+    av2_free_pmc(ctx, av2_num_planes(cm));
+    return NULL;
+  }
+  error.setjmp = 1;
 
   AOM_CHECK_MEM_ERROR(&error, ctx, aom_calloc(1, sizeof(*ctx)));
   ctx->rd_mode_is_ready = 0;
@@ -216,8 +222,14 @@ PC_TREE *av2_alloc_pc_tree_node(TREE_TYPE tree_type, int mi_row, int mi_col,
                                 PARTITION_TYPE parent_partition, int index,
                                 int is_last, int subsampling_x,
                                 int subsampling_y) {
-  PC_TREE *pc_tree = NULL;
+  PC_TREE *volatile pc_tree = NULL;
   struct aom_internal_error_info error;
+
+  if (setjmp(error.jmp)) {
+    aom_free(pc_tree);
+    return NULL;
+  }
+  error.setjmp = 1;
 
   AOM_CHECK_MEM_ERROR(&error, pc_tree, aom_calloc(1, sizeof(*pc_tree)));
 

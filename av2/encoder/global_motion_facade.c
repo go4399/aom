@@ -148,17 +148,17 @@ static INLINE void compute_global_motion_for_ref_frame(
           motion_models[i].num_inliers);
 
       int64_t ref_frame_error = av2_segmented_frame_error(
-          bit_depth, ref_buf[frame]->y_buffer, ref_buf[frame]->y_stride,
-          cpi->source->y_buffer, src_stride, src_width, src_height, segment_map,
+          bit_depth, CONVERT_TO_SHORTPTR(ref_buf[frame]->y_buffer), ref_buf[frame]->y_stride,
+          CONVERT_TO_SHORTPTR(cpi->source->y_buffer), src_stride, src_width, src_height, segment_map,
           segment_map_w);
 
       if (ref_frame_error == 0) continue;
 
       const int64_t warp_error = av2_refine_integerized_param(
           &tmp_wm_params, tmp_wm_params.wmtype, bit_depth,
-          ref_buf[frame]->y_buffer, ref_buf[frame]->y_crop_width,
+          CONVERT_TO_SHORTPTR(ref_buf[frame]->y_buffer), ref_buf[frame]->y_crop_width,
           ref_buf[frame]->y_crop_height, ref_buf[frame]->y_stride,
-          cpi->source->y_buffer, src_width, src_height, src_stride,
+          CONVERT_TO_SHORTPTR(cpi->source->y_buffer), src_width, src_height, src_stride,
           num_refinements, ref_frame_error, segment_map, segment_map_w,
           get_ref_scale_factors_const(cm, frame)
 

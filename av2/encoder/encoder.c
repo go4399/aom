@@ -2092,7 +2092,7 @@ int av2_set_reference_enc(AV2_COMP *cpi, int idx, YV12_BUFFER_CONFIG *sd) {
 
 #ifdef OUTPUT_YUV_REC
 void avm_write_one_yuv_frame(AV2_COMMON *cm, YV12_BUFFER_CONFIG *s) {
-  uint16_t *src = s->y_buffer;
+  uint16_t *src = CONVERT_TO_SHORTPTR(s->y_buffer);
   int h = cm->height;
   if (yuv_rec_file == NULL) return;
 
@@ -2101,7 +2101,7 @@ void avm_write_one_yuv_frame(AV2_COMMON *cm, YV12_BUFFER_CONFIG *s) {
     src += s->y_stride;
   } while (--h);
 
-  src = s->u_buffer;
+  src = CONVERT_TO_SHORTPTR(s->u_buffer);
   h = s->uv_height;
 
   do {
@@ -2109,7 +2109,7 @@ void avm_write_one_yuv_frame(AV2_COMMON *cm, YV12_BUFFER_CONFIG *s) {
     src += s->uv_stride;
   } while (--h);
 
-  src = s->v_buffer;
+  src = CONVERT_TO_SHORTPTR(s->v_buffer);
   h = s->uv_height;
 
   do {
@@ -2256,9 +2256,9 @@ static void cfl_luma_subsampling_420_hbd_c(const uint16_t *input,
 
 void av2_set_downsample_filter_options(AV2_COMP *cpi) {
   AV2_COMMON *cm = &cpi->common;
-  const uint16_t *src = cpi->unfiltered_source->y_buffer;
-  uint16_t *src_chroma_u = cpi->unfiltered_source->u_buffer;
-  uint16_t *src_chroma_v = cpi->unfiltered_source->v_buffer;
+  const uint16_t *src = CONVERT_TO_SHORTPTR(cpi->unfiltered_source->y_buffer);
+  uint16_t *src_chroma_u = CONVERT_TO_SHORTPTR(cpi->unfiltered_source->u_buffer);
+  uint16_t *src_chroma_v = CONVERT_TO_SHORTPTR(cpi->unfiltered_source->v_buffer);
   assert(src != NULL);
   const int stride = cpi->unfiltered_source->y_stride;
   const int width = cpi->unfiltered_source->y_width;
@@ -2355,7 +2355,7 @@ void av2_set_screen_content_options(AV2_COMP *cpi, FeatureFlags *features) {
   const AV2_COMMON *const cm = &cpi->common;
   // Estimate if the source frame is screen content, based on the portion of
   // blocks that have few luma colors.
-  const uint16_t *src = cpi->unfiltered_source->y_buffer;
+  const uint16_t *src = CONVERT_TO_SHORTPTR(cpi->unfiltered_source->y_buffer);
   assert(src != NULL);
   const int stride = cpi->unfiltered_source->y_stride;
   const int width = cpi->unfiltered_source->y_width;
@@ -2377,8 +2377,8 @@ void av2_set_screen_content_options(AV2_COMP *cpi, FeatureFlags *features) {
       int count_buf[1 << 8];  // Maximum (1 << 8) bins for hbd path.
       const uint16_t *const this_src = src + r * stride + c;
       int n_colors;
-      av2_count_colors_highbd(this_src, stride, blk_w, blk_h, bd, NULL,
-                              count_buf, &n_colors, NULL);
+      av2_count_colors_highbd(this_src, stride, blk_w,
+                              blk_h, bd, NULL, count_buf, &n_colors, NULL);
       if (n_colors > 1 && n_colors <= color_thresh) {
         ++counts_1;
         struct buf_2d buf;
@@ -2700,10 +2700,11 @@ void av2_set_frame_size(AV2_COMP *cpi, int width, int height) {
 /*!\brief Function to perform rate-distortion optimization for GDF
  */
 void gdf_optimizer(AV2_COMP *cpi, AV2_COMMON *cm) {
-  uint16_t *org_pnt = cpi->source->y_buffer;
+  uint16_t *org_pnt = CONVERT_TO_SHORTPTR(cpi->source->y_buffer);
   const int org_stride = cpi->source->y_stride;
 
-  uint16_t *rec_pnt = (uint16_t *)cm->cur_frame->buf.buffers[AOM_PLANE_Y];
+  uint16_t *rec_pnt =
+      CONVERT_TO_SHORTPTR(cm->cur_frame->buf.buffers[AOM_PLANE_Y]);
   const int rec_height = cm->cur_frame->buf.y_height;
   const int rec_width = cm->cur_frame->buf.y_width;
   const int rec_stride = cm->cur_frame->buf.y_stride;
@@ -3061,7 +3062,7 @@ static void cdef_restoration_frame(AV2_COMP *cpi, AV2_COMMON *cm,
     const int pic_height = cm->cur_frame->buf.y_height;
     const int pic_width = cm->cur_frame->buf.y_width;
     const int dst_stride = cm->cur_frame->buf.y_stride;
-    const uint16_t *rec_y = cm->cur_frame->buf.y_buffer;
+    const uint16_t *rec_y = CONVERT_TO_SHORTPTR(cm->cur_frame->buf.y_buffer);
     const int ccso_stride_ext = pic_width + (CCSO_PADDING_SIZE << 1);
     ext_rec_y = aom_malloc(sizeof(*ext_rec_y) *
                            (pic_height + (CCSO_PADDING_SIZE << 1)) *
@@ -3131,15 +3132,15 @@ static void cdef_restoration_frame(AV2_COMP *cpi, AV2_COMMON *cm,
       const int dst_stride = xd->plane[pli].dst.stride;
       switch (pli) {
         case 0:
-          ref_buffer = ref->y_buffer;
+          ref_buffer = CONVERT_TO_SHORTPTR(ref->y_buffer);
           ref_stride = ref->y_stride;
           break;
         case 1:
-          ref_buffer = ref->u_buffer;
+          ref_buffer = CONVERT_TO_SHORTPTR(ref->u_buffer);
           ref_stride = ref->uv_stride;
           break;
         case 2:
-          ref_buffer = ref->v_buffer;
+          ref_buffer = CONVERT_TO_SHORTPTR(ref->v_buffer);
           ref_stride = ref->uv_stride;
           break;
         default: ref_stride = 0;
@@ -3867,12 +3868,12 @@ static INLINE int compute_tip_direct_output_mode_RD(AV2_COMP *cpi,
     };
     int64_t best_sse = aom_highbd_get_y_sse(cpi->source, tip_frame_buf);
     best_sse +=
-        avm_highbd_sse(cpi->source->u_buffer, cpi->source->uv_stride,
-                       tip_frame_buf->u_buffer, tip_frame_buf->uv_stride,
+        avm_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->u_buffer), cpi->source->uv_stride,
+                       CONVERT_TO_SHORTPTR(tip_frame_buf->u_buffer), tip_frame_buf->uv_stride,
                        cpi->source->uv_width, cpi->source->uv_height);
     best_sse +=
-        avm_highbd_sse(cpi->source->v_buffer, cpi->source->uv_stride,
-                       tip_frame_buf->v_buffer, tip_frame_buf->uv_stride,
+        avm_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->v_buffer), cpi->source->uv_stride,
+                       CONVERT_TO_SHORTPTR(tip_frame_buf->v_buffer), tip_frame_buf->uv_stride,
                        cpi->source->uv_width, cpi->source->uv_height);
     int_mv ref_mv;
     ref_mv.as_int = 0;
@@ -3901,12 +3902,12 @@ static INLINE int compute_tip_direct_output_mode_RD(AV2_COMP *cpi,
 
         int64_t this_sse = aom_highbd_get_y_sse(cpi->source, tip_frame_buf);
         this_sse +=
-            avm_highbd_sse(cpi->source->u_buffer, cpi->source->uv_stride,
-                           tip_frame_buf->u_buffer, tip_frame_buf->uv_stride,
+            avm_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->u_buffer), cpi->source->uv_stride,
+                           CONVERT_TO_SHORTPTR(tip_frame_buf->u_buffer), tip_frame_buf->uv_stride,
                            cpi->source->uv_width, cpi->source->uv_height);
         this_sse +=
-            avm_highbd_sse(cpi->source->v_buffer, cpi->source->uv_stride,
-                           tip_frame_buf->v_buffer, tip_frame_buf->uv_stride,
+            avm_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->v_buffer), cpi->source->uv_stride,
+                           CONVERT_TO_SHORTPTR(tip_frame_buf->v_buffer), tip_frame_buf->uv_stride,
                            cpi->source->uv_width, cpi->source->uv_height);
 
         sym_rate_cost = 13;
@@ -3939,13 +3940,13 @@ static INLINE int compute_tip_direct_output_mode_RD(AV2_COMP *cpi,
 
       int64_t this_sse = aom_highbd_get_y_sse(cpi->source, tip_frame_buf);
       this_sse +=
-          avm_highbd_sse(cpi->source->u_buffer, cpi->source->uv_stride,
-                         tip_frame_buf->u_buffer, tip_frame_buf->uv_stride,
+          avm_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->u_buffer), cpi->source->uv_stride,
+                         CONVERT_TO_SHORTPTR(tip_frame_buf->u_buffer), tip_frame_buf->uv_stride,
                          cpi->source->uv_width, cpi->source->uv_height);
 
       this_sse +=
-          avm_highbd_sse(cpi->source->v_buffer, cpi->source->uv_stride,
-                         tip_frame_buf->v_buffer, tip_frame_buf->uv_stride,
+          avm_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->v_buffer), cpi->source->uv_stride,
+                         CONVERT_TO_SHORTPTR(tip_frame_buf->v_buffer), tip_frame_buf->uv_stride,
                          cpi->source->uv_width, cpi->source->uv_height);
 
       if (this_sse < best_sse) {
@@ -3987,12 +3988,12 @@ static INLINE int finalize_tip_mode(AV2_COMP *cpi, uint8_t *dest, size_t *size,
   } else {
     tip_as_ref_sse = aom_highbd_get_y_sse(cpi->source, &cm->cur_frame->buf);
     tip_as_ref_sse += avm_highbd_sse(
-        cpi->source->u_buffer, cpi->source->uv_stride,
-        cm->cur_frame->buf.u_buffer, cm->cur_frame->buf.uv_stride,
+        CONVERT_TO_SHORTPTR(cpi->source->u_buffer), cpi->source->uv_stride,
+        CONVERT_TO_SHORTPTR(cm->cur_frame->buf.u_buffer), cm->cur_frame->buf.uv_stride,
         cpi->source->uv_width, cpi->source->uv_height);
     tip_as_ref_sse += avm_highbd_sse(
-        cpi->source->v_buffer, cpi->source->uv_stride,
-        cm->cur_frame->buf.v_buffer, cm->cur_frame->buf.uv_stride,
+        CONVERT_TO_SHORTPTR(cpi->source->v_buffer), cpi->source->uv_stride,
+        CONVERT_TO_SHORTPTR(cm->cur_frame->buf.v_buffer), cm->cur_frame->buf.uv_stride,
         cpi->source->uv_width, cpi->source->uv_height);
 
     const int64_t bits = (*size << 3);
@@ -4464,12 +4465,12 @@ static int encode_with_recode_loop_and_filter(AV2_COMP *cpi, size_t *size,
     int64_t tip_as_ref_sse =
         aom_highbd_get_y_sse(cpi->source, &cm->cur_frame->buf);
     tip_as_ref_sse += avm_highbd_sse(
-        cpi->source->u_buffer, cpi->source->uv_stride,
-        cm->cur_frame->buf.u_buffer, cm->cur_frame->buf.uv_stride,
+        CONVERT_TO_SHORTPTR(cpi->source->u_buffer), cpi->source->uv_stride,
+        CONVERT_TO_SHORTPTR(cm->cur_frame->buf.u_buffer), cm->cur_frame->buf.uv_stride,
         cpi->source->uv_width, cpi->source->uv_height);
     tip_as_ref_sse += avm_highbd_sse(
-        cpi->source->v_buffer, cpi->source->uv_stride,
-        cm->cur_frame->buf.v_buffer, cm->cur_frame->buf.uv_stride,
+        CONVERT_TO_SHORTPTR(cpi->source->v_buffer), cpi->source->uv_stride,
+        CONVERT_TO_SHORTPTR(cm->cur_frame->buf.v_buffer), cm->cur_frame->buf.uv_stride,
         cpi->source->uv_width, cpi->source->uv_height);
     *sse = tip_as_ref_sse;
   }
@@ -5350,6 +5351,7 @@ int av2_receive_raw_frame(AV2_COMP *cpi, aom_enc_frame_flags_t frame_flags,
                                    ? cpi->common.number_mlayers
                                    : 1);
   if (av2_lookahead_push(cpi->lookahead, sd, time_stamp, end_time,
+                         1,
                          disp_order_hint, frame_flags, cpi->alloc_pyramid))
     res = -1;
 #if CONFIG_INTERNAL_STATS

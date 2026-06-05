@@ -303,7 +303,7 @@ void av2_subtract_plane(MACROBLOCK *x, BLOCK_SIZE plane_bsize, int plane,
    shrinking the number of coefficient samples to be encoded.
 */
 int av2_optimize_fsc(const struct AV2_COMP *cpi, MACROBLOCK *x, int plane,
-                     int block, TX_SIZE tx_size, TX_TYPE tx_type,
+                     int block, TX_SIZE tx_size, av2_tx_type tx_type,
                      const TXB_CTX *const txb_ctx, int *rate_cost) {
   MACROBLOCKD *const xd = &x->e_mbd;
   struct macroblock_plane *const p = &x->plane[plane];
@@ -326,7 +326,7 @@ int av2_optimize_fsc(const struct AV2_COMP *cpi, MACROBLOCK *x, int plane,
  the end of block by shrinking the number of coefficient samples to be encoded.
  */
 int av2_optimize_b(const struct AV2_COMP *cpi, MACROBLOCK *x, int plane,
-                   int block, TX_SIZE tx_size, TX_TYPE tx_type,
+                   int block, TX_SIZE tx_size, av2_tx_type tx_type,
                    CctxType cctx_type, const TXB_CTX *const txb_ctx,
                    int *rate_cost) {
   MACROBLOCKD *const xd = &x->e_mbd;
@@ -367,7 +367,7 @@ static INLINE int get_dqv(const int32_t *dequant, int coeff_idx,
 // This function tunes the coefficients when trellis quantization is off.
 void parity_hiding_trellis_off(const struct AV2_COMP *cpi, MACROBLOCK *mb,
                                const int plane_type, int block, TX_SIZE tx_size,
-                               TX_TYPE tx_type) {
+                               av2_tx_type tx_type) {
   MACROBLOCKD *xd = &mb->e_mbd;
   const struct macroblock_plane *const p = &mb->plane[plane_type];
   const int32_t *dequant = p->dequant_QTX;
@@ -841,7 +841,7 @@ void av2_update_trellisq(int use_optimize_b, int xform_quant_idx,
 
 void av2_setup_qmatrix(const CommonQuantParams *quant_params,
                        const MACROBLOCKD *xd, int plane, TX_SIZE tx_size,
-                       TX_TYPE tx_type, QUANT_PARAM *qparam) {
+                       av2_tx_type tx_type, QUANT_PARAM *qparam) {
   qparam->qmatrix = av2_get_qmatrix(quant_params, xd, plane, tx_size, tx_type);
   qparam->iqmatrix =
       av2_get_iqmatrix(quant_params, xd, plane, tx_size, tx_type);
@@ -870,7 +870,7 @@ static void encode_block(int plane, int block, int blk_row, int blk_col,
   a = &args->ta[blk_col];
   l = &args->tl[blk_row];
 
-  TX_TYPE tx_type =
+  av2_tx_type tx_type =
       av2_get_tx_type(xd, pd->plane_type, blk_row, blk_col, tx_size,
                       is_reduced_tx_set_used(cm, pd->plane_type));
   // Subtract first, so both U and V residues will be available when U
@@ -878,7 +878,7 @@ static void encode_block(int plane, int block, int blk_row, int blk_col,
   const int plane_end = (plane == AOM_PLANE_U) ? AOM_PLANE_V : plane;
   for (int i = plane; i <= plane_end; i++) {
     PLANE_TYPE plane_type = get_plane_type(i);
-    TX_TYPE plane_tx_type =
+    av2_tx_type plane_tx_type =
         av2_get_tx_type(xd, plane_type, blk_row, blk_col, tx_size,
                         is_reduced_tx_set_used(cm, plane_type));
     const int ss_x = xd->plane[i].subsampling_x;
@@ -1373,7 +1373,7 @@ void av2_encode_block_intra(int plane, int block, int blk_row, int blk_col,
   }
 #endif  // CONFIG_MISMATCH_DEBUG
 
-  TX_TYPE tx_type = DCT_DCT;
+  av2_tx_type tx_type = DCT_DCT;
   const int bw = mi_size_wide[plane_bsize];
 
   if (plane == 0 && is_blk_skip(x->txfm_search_info.blk_skip[plane],
@@ -1686,7 +1686,7 @@ void av2_encode_block_intra_joint_uv(int block, int blk_row, int blk_col,
   }
 #endif  // CONFIG_MISMATCH_DEBUG
 
-  TX_TYPE tx_type =
+  av2_tx_type tx_type =
       av2_get_tx_type(xd, PLANE_TYPE_UV, blk_row, blk_col, tx_size,
                       is_reduced_tx_set_used(cm, PLANE_TYPE_UV));
   CctxType cctx_type = av2_get_cctx_type(xd, blk_row, blk_col);

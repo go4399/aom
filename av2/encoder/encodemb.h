@@ -85,7 +85,7 @@ void av2_update_trellisq(int use_optimize_b, int xform_quant_idx,
 
 void av2_setup_qmatrix(const CommonQuantParams *quant_params,
                        const MACROBLOCKD *xd, int plane, TX_SIZE tx_size,
-                       TX_TYPE tx_type, QUANT_PARAM *qparam);
+                       av2_tx_type tx_type, QUANT_PARAM *qparam);
 
 void av2_xform_dc_only(MACROBLOCK *x, int plane, int block,
                        TxfmParam *txfm_param, int64_t per_px_mean);
@@ -109,17 +109,17 @@ void av2_quant(MACROBLOCK *x, int plane, int block, TxfmParam *txfm_param,
                QUANT_PARAM *qparam);
 
 int av2_optimize_fsc(const struct AV2_COMP *cpi, MACROBLOCK *mb, int plane,
-                     int block, TX_SIZE tx_size, TX_TYPE tx_type,
+                     int block, TX_SIZE tx_size, av2_tx_type tx_type,
                      const TXB_CTX *const txb_ctx, int *rate_cost);
 
 int av2_optimize_b(const struct AV2_COMP *cpi, MACROBLOCK *mb, int plane,
-                   int block, TX_SIZE tx_size, TX_TYPE tx_type,
+                   int block, TX_SIZE tx_size, av2_tx_type tx_type,
                    CctxType cctx_type, const TXB_CTX *const txb_ctx,
                    int *rate_cost);
 // This function tunes the coefficients when trellis quantization is off.
 void parity_hiding_trellis_off(const struct AV2_COMP *cpi, MACROBLOCK *mb,
                                const int plane_type, int block, TX_SIZE tx_size,
-                               TX_TYPE tx_type);
+                               av2_tx_type tx_type);
 
 // This function can be used as (i) a further optimization to reduce the
 // redundancy of quantized coefficients (a.k.a., `qcoeff`) after trellis

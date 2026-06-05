@@ -318,12 +318,12 @@ static INLINE void mode_estimation(AV2_COMP *cpi, MACROBLOCK *x, int mi_row,
   PREDICTION_MODE best_mode = DC_PRED;
 
   int mb_y_offset = mi_row * MI_SIZE * xd->cur_buf->y_stride + mi_col * MI_SIZE;
-  uint16_t *src_mb_buffer = xd->cur_buf->y_buffer + mb_y_offset;
+  uint16_t *src_mb_buffer = CONVERT_TO_SHORTPTR(xd->cur_buf->y_buffer) + mb_y_offset;
   const int src_stride = xd->cur_buf->y_stride;
 
   const int dst_mb_offset =
       mi_row * MI_SIZE * tpl_frame->rec_picture->y_stride + mi_col * MI_SIZE;
-  uint16_t *dst_buffer = tpl_frame->rec_picture->y_buffer + dst_mb_offset;
+  uint16_t *dst_buffer = CONVERT_TO_SHORTPTR(tpl_frame->rec_picture->y_buffer) + dst_mb_offset;
   const int dst_buffer_stride = tpl_frame->rec_picture->y_stride;
 
   // Number of pixels in a tpl block
@@ -401,7 +401,7 @@ static INLINE void mode_estimation(AV2_COMP *cpi, MACROBLOCK *x, int mi_row,
     const YV12_BUFFER_CONFIG *ref_frame_ptr = tpl_data->src_ref_frame[rf_idx];
     int ref_mb_offset =
         mi_row * MI_SIZE * ref_frame_ptr->y_stride + mi_col * MI_SIZE;
-    uint16_t *ref_mb = ref_frame_ptr->y_buffer + ref_mb_offset;
+    uint16_t *ref_mb = CONVERT_TO_SHORTPTR(ref_frame_ptr->y_buffer) + ref_mb_offset;
     int ref_stride = ref_frame_ptr->y_stride;
 
     int_mv best_rfidx_mv = { 0 };
@@ -485,7 +485,7 @@ static INLINE void mode_estimation(AV2_COMP *cpi, MACROBLOCK *x, int mi_row,
     tpl_stats->mv[rf_idx].as_int = best_rfidx_mv.as_int;
 
     struct buf_2d ref_buf = { NULL,
-                              ref_frame_ptr->y_buffer,
+                              CONVERT_TO_SHORTPTR(ref_frame_ptr->y_buffer),
                               ref_frame_ptr->y_width,
                               ref_frame_ptr->y_height,
                               ref_frame_ptr->y_crop_width,
@@ -541,7 +541,7 @@ static INLINE void mode_estimation(AV2_COMP *cpi, MACROBLOCK *x, int mi_row,
 
     InterPredParams inter_pred_params;
     struct buf_2d ref_buf = { NULL,
-                              ref_frame_ptr->y_buffer,
+                              CONVERT_TO_SHORTPTR(ref_frame_ptr->y_buffer),
                               ref_frame_ptr->y_width,
                               ref_frame_ptr->y_height,
                               ref_frame_ptr->y_crop_width,

@@ -191,7 +191,7 @@ static REFERENCE_MODE read_frame_reference_mode(
 
 static INLINE void inverse_transform_block(DecoderCodingBlock *dcb,
                                            const AV2_COMMON *cm, int plane,
-                                           const TX_TYPE tx_type,
+                                           const av2_tx_type tx_type,
                                            const TX_SIZE tx_size, uint16_t *dst,
                                            int stride, int reduced_tx_set) {
   tran_low_t *dqcoeff = dcb->dqcoeff_block[plane] + dcb->cb_offset[plane];
@@ -347,7 +347,7 @@ static INLINE void predict_and_reconstruct_intra_block(
       const uint8_t reduced_tx_set_used =
           is_reduced_tx_set_used(cm, plane_type);
       // tx_type was read out in av2_read_coeffs_txb.
-      const TX_TYPE tx_type = av2_get_tx_type(xd, plane_type, row, col, tx_size,
+      const av2_tx_type tx_type = av2_get_tx_type(xd, plane_type, row, col, tx_size,
                                               reduced_tx_set_used);
       struct macroblockd_plane *const pd = &xd->plane[plane];
       uint16_t *dst =
@@ -407,7 +407,7 @@ static INLINE void inverse_transform_inter_block(
   const struct macroblockd_plane *const pd = &xd->plane[plane];
   const uint8_t reduced_tx_set_used = is_reduced_tx_set_used(cm, plane_type);
   // tx_type was read out in av2_read_coeffs_txb.
-  const TX_TYPE tx_type = av2_get_tx_type(xd, plane_type, blk_row, blk_col,
+  const av2_tx_type tx_type = av2_get_tx_type(xd, plane_type, blk_row, blk_col,
                                           tx_size, reduced_tx_set_used);
 
   uint16_t *dst =
@@ -9927,7 +9927,7 @@ void av2_decode_tg_tiles_and_wrapup(AV2Decoder *pbi, const uint8_t *data,
       const int pic_height = cm->cur_frame->buf.y_height;
       const int pic_width = cm->cur_frame->buf.y_width;
       const int dst_stride = cm->cur_frame->buf.y_stride;
-      const uint16_t *rec_y = cm->cur_frame->buf.y_buffer;
+      const uint16_t *rec_y = CONVERT_TO_SHORTPTR(cm->cur_frame->buf.y_buffer);
       const int ccso_stride_ext = pic_width + (CCSO_PADDING_SIZE << 1);
       ext_rec_y = aom_malloc(sizeof(*ext_rec_y) *
                              (pic_height + (CCSO_PADDING_SIZE << 1)) *

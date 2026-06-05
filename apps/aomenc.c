@@ -964,7 +964,8 @@ static int parse_stream_params(struct AvxEncoderConfig *global,
   // Handle codec specific options
   if (0) {
 #if CONFIG_AV1_ENCODER
-  } else if (strcmp(get_short_name_by_aom_encoder(global->codec), "av1") == 0) {
+  } else if (strcmp(get_short_name_by_aom_encoder(global->codec), "av1") == 0 ||
+             strcmp(get_short_name_by_aom_encoder(global->codec), "av2") == 0) {
     // TODO(jingning): Reuse AV1 specific encoder configuration parameters.
     // Consider to expand this set for AV1 encoder control.
     static_assert(NELEMENTS(av1_ctrl_args) == NELEMENTS(av1_arg_ctrl_map),
@@ -1730,6 +1731,8 @@ static void encode_frame(struct stream_state *stream,
   }
 
   aom_usec_timer_start(&timer);
+  fprintf(stderr, "DEBUG: Calling aom_codec_encode with img=%p, pts=%ld, duration=%ld\n",
+          img, (long)frame_start, (long)(next_frame_start - frame_start));
   aom_codec_encode(&stream->encoder, img, frame_start,
                    (uint32_t)(next_frame_start - frame_start), 0);
   aom_usec_timer_mark(&timer);
@@ -1756,12 +1759,15 @@ static void get_cx_data(struct stream_state *stream,
   aom_codec_iter_t iter = NULL;
 
   *got_data = 0;
+  fprintf(stderr, "DEBUG: get_cx_data called\n");
   while ((pkt = aom_codec_get_cx_data(&stream->encoder, &iter))) {
+    fprintf(stderr, "DEBUG: get_cx_data got packet kind %d\n", pkt->kind);
     static size_t fsize = 0;
     static FileOffset ivf_header_pos = 0;
 
     switch (pkt->kind) {
       case AOM_CODEC_CX_FRAME_PKT:
+        fprintf(stderr, "DEBUG: got CX_FRAME_PKT, size %zu\n", pkt->data.frame.sz);
         ++stream->frames_out;
         if (!global->quiet)
           fprintf(stderr, " %6luF", (unsigned long)pkt->data.frame.sz);
@@ -2093,7 +2099,8 @@ int main(int argc, const char **argv_) {
   }
 
   /* Decide if other chroma subsamplings than 4:2:0 are supported */
-  if (get_fourcc_by_aom_encoder(global.codec) == AV1_FOURCC)
+  if (get_fourcc_by_aom_encoder(global.codec) == AV1_FOURCC ||
+      get_fourcc_by_aom_encoder(global.codec) == AV2_FOURCC)
     input.only_i420 = 0;
 
   for (pass = global.pass ? global.pass - 1 : 0; pass < global.passes; pass++) {
@@ -2439,7 +2446,8 @@ int main(int argc, const char **argv_) {
       free(encoder_settings);
     }
 
-    if (strcmp(get_short_name_by_aom_encoder(global.codec), "av1") == 0) {
+    if (strcmp(get_short_name_by_aom_encoder(global.codec), "av1") == 0 ||
+        strcmp(get_short_name_by_aom_encoder(global.codec), "av2") == 0) {
       // Check to see if at least one stream uses 16 bit internal.
       // Currently assume that the bit_depths for all streams using
       // highbitdepth are the same.

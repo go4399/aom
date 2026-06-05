@@ -122,8 +122,8 @@ static void subblock_motion_search(
                         (subblock_width >> MI_SIZE_LOG2),
                         cpi->oxcf.border_in_pixels);
   const int boffset = subblock_ofst_i * y_stride + subblock_ofst_j;
-  mb->plane[0].src.buf = frame_to_filter->y_buffer + y_offset + boffset;
-  mbd->plane[0].pre[0].buf = ref_frame->y_buffer + y_offset + boffset;
+  mb->plane[0].src.buf = CONVERT_TO_SHORTPTR(frame_to_filter->y_buffer) + y_offset + boffset;
+  mbd->plane[0].pre[0].buf = CONVERT_TO_SHORTPTR(ref_frame->y_buffer) + y_offset + boffset;
   av2_make_default_fullpel_ms_params(full_ms_params, cpi, mb, subblock_size,
                                      ref_mv, pb_mv_precision, is_ibc_cost,
 
@@ -239,9 +239,9 @@ static void tf_motion_search(AV2_COMP *cpi,
   const MV baseline_mv = kZeroMv;
 
   // Setup.
-  mb->plane[0].src.buf = frame_to_filter->y_buffer + y_offset;
+  mb->plane[0].src.buf = CONVERT_TO_SHORTPTR(frame_to_filter->y_buffer) + y_offset;
   mb->plane[0].src.stride = y_stride;
-  mbd->plane[0].pre[0].buf = ref_frame->y_buffer + y_offset;
+  mbd->plane[0].pre[0].buf = CONVERT_TO_SHORTPTR(ref_frame->y_buffer) + y_offset;
   mbd->plane[0].pre[0].stride = y_stride;
   // Unused intermediate results for motion search.
   unsigned int sse, error;
@@ -276,8 +276,8 @@ static void tf_motion_search(AV2_COMP *cpi,
     best_mv.as_mv.col = GET_MV_SUBPEL(mv_col);
     const int mv_offset = mv_row * y_stride + mv_col;
     error = cpi->fn_ptr[block_size].vf(
-        (const uint8_t *)(ref_frame->y_buffer + y_offset + mv_offset), y_stride,
-        (const uint8_t *)(frame_to_filter->y_buffer + y_offset), y_stride,
+        CONVERT_TO_BYTEPTR(CONVERT_TO_SHORTPTR(ref_frame->y_buffer) + y_offset + mv_offset), y_stride,
+        CONVERT_TO_BYTEPTR(CONVERT_TO_SHORTPTR(frame_to_filter->y_buffer) + y_offset), y_stride,
         &sse);
     block_mse = DIVIDE_AND_ROUND(error, mb_pels);
     block_mv = best_mv.as_mv;
@@ -504,7 +504,7 @@ static void tf_build_predictor(const YV12_BUFFER_CONFIG *ref_frame,
     const int is_y_plane = (plane == 0);  // Is Y-plane?
 
     const struct buf_2d ref_buf = { NULL,
-                                    (uint16_t *)ref_frame->buffers[plane],
+                                    CONVERT_TO_SHORTPTR(ref_frame->buffers[plane]),
                                     ref_frame->widths[is_y_plane ? 0 : 1],
                                     ref_frame->heights[is_y_plane ? 0 : 1],
                                     ref_frame->crop_widths[is_y_plane ? 0 : 1],
@@ -685,7 +685,7 @@ void av2_highbd_apply_temporal_filter_c(
     const int plane_w = mb_width >> mbd->plane[plane].subsampling_x;
     const int frame_stride = frame_to_filter->strides[plane == 0 ? 0 : 1];
     const int frame_offset = mb_row * plane_h * frame_stride + mb_col * plane_w;
-    const uint16_t *ref = (const uint16_t *)frame_to_filter->buffers[plane];
+    const uint16_t *ref = CONVERT_TO_SHORTPTR(frame_to_filter->buffers[plane]);
     compute_square_diff(ref, frame_offset, frame_stride, pred, plane_offset,
                         plane_w, plane_h, plane_w, square_diff + plane_offset);
     plane_offset += mb_pels;
@@ -822,7 +822,7 @@ static void tf_normalize_filtered_frame(
     const int plane_w = mb_width >> mbd->plane[plane].subsampling_x;
     const int frame_stride = result_buffer->strides[plane == 0 ? 0 : 1];
     const int frame_offset = mb_row * plane_h * frame_stride + mb_col * plane_w;
-    uint16_t *const buf = (uint16_t *)result_buffer->buffers[plane];
+    uint16_t *const buf = CONVERT_TO_SHORTPTR(result_buffer->buffers[plane]);
 
     int plane_idx = 0;             // Pixel index on current plane (block-base).
     int frame_idx = frame_offset;  // Pixel index on the entire frame.
@@ -1021,9 +1021,9 @@ static FRAME_DIFF tf_do_filtering(AV2_COMP *cpi, YV12_BUFFER_CONFIG **frames,
             mb_row * y_height * filter_y_stride + mb_col * y_width;
         unsigned int sse = 0;
         cpi->fn_ptr[block_size].vf(
-            (const uint8_t *)(frame_to_filter->y_buffer + source_offset),
+            CONVERT_TO_BYTEPTR(CONVERT_TO_SHORTPTR(frame_to_filter->y_buffer) + source_offset),
             source_y_stride,
-            (const uint8_t *)(cpi->alt_ref_buffer.y_buffer + filter_offset),
+            CONVERT_TO_BYTEPTR(CONVERT_TO_SHORTPTR(cpi->alt_ref_buffer.y_buffer) + filter_offset),
             filter_y_stride, &sse);
         diff.sum += sse;
         diff.sse += (int64_t)sse * sse;
@@ -1192,7 +1192,7 @@ double av2_estimate_noise_from_single_plane(const YV12_BUFFER_CONFIG *frame,
   const int height = frame->crop_heights[is_y_plane ? 0 : 1];
   const int width = frame->crop_widths[is_y_plane ? 0 : 1];
   const int stride = frame->strides[is_y_plane ? 0 : 1];
-  const uint16_t *src16 = (const uint16_t *)frame->buffers[plane];
+  const uint16_t *src16 = CONVERT_TO_SHORTPTR(frame->buffers[plane]);
 
   int64_t accum = 0;
   int count = 0;

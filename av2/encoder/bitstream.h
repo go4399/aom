@@ -207,11 +207,11 @@ int av2_pack_bitstream(AV2_COMP *cpi, uint8_t *dst, size_t *size,
                        int *const largest_tile_id);
 
 void av2_write_sec_tx_type(const AV2_COMMON *const cm, const MACROBLOCKD *xd,
-                           TX_TYPE tx_type, TX_SIZE tx_size, uint16_t eob,
+                           av2_tx_type tx_type, TX_SIZE tx_size, uint16_t eob,
                            aom_writer *w);
 
 void av2_write_tx_type(const AV2_COMMON *const cm, const MACROBLOCKD *xd,
-                       TX_TYPE tx_type, TX_SIZE tx_size, aom_writer *w,
+                       av2_tx_type tx_type, TX_SIZE tx_size, aom_writer *w,
                        const int plane, const int eob, const int dc_skip);
 
 void av2_write_cctx_type(const AV2_COMMON *const cm, const MACROBLOCKD *xd,

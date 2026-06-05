@@ -1644,10 +1644,10 @@ void av2_setup_pred_block(const MACROBLOCKD *xd,
                           const struct scale_factors *scale,
                           const struct scale_factors *scale_uv,
                           const int num_planes) {
-  dst[0].buf = src->y_buffer;
+  dst[0].buf = CONVERT_TO_SHORTPTR(src->y_buffer);
   dst[0].stride = src->y_stride;
-  dst[1].buf = src->u_buffer;
-  dst[2].buf = src->v_buffer;
+  dst[1].buf = CONVERT_TO_SHORTPTR(src->u_buffer);
+  dst[2].buf = CONVERT_TO_SHORTPTR(src->v_buffer);
   dst[1].stride = dst[2].stride = src->uv_stride;
 
   const int mi_row = xd->mi_row;

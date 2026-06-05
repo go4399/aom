@@ -29,7 +29,11 @@ extern "C" {
 typedef uint16_t aom_cdf_prob;
 
 #ifndef CDF_SIZE
+#if defined(CONFIG_AV2_TU) && CONFIG_AV2_TU
+#define CDF_SIZE(x) ((x) + 4)
+#else
 #define CDF_SIZE(x) ((x) + 1)
+#endif
 #endif
 #define CDF_PROB_BITS 15
 #define CDF_PROB_TOP (1 << CDF_PROB_BITS)

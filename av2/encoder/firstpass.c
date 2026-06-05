@@ -181,7 +181,7 @@ static unsigned int highbd_get_prediction_error(BLOCK_SIZE bsize,
                                                 int bd) {
   unsigned int sse;
   const avm_variance_fn_t fn = highbd_get_block_variance_fn(bsize, bd);
-  fn((const uint8_t *)src->buf, src->stride, (const uint8_t *)ref->buf,
+  fn(CONVERT_TO_BYTEPTR(src->buf), src->stride, CONVERT_TO_BYTEPTR(ref->buf),
      ref->stride, &sse);
   return sse;
 }
@@ -351,9 +351,12 @@ static int firstpass_intra_prediction(
   aom_clear_system_state();
   set_mi_offsets(mi_params, xd, mb_row * mb_scale, mb_col * mb_scale,
                  x_inside_boundary, y_inside_boundary);
-  xd->plane[0].dst.buf = this_frame->y_buffer + y_offset;
-  xd->plane[1].dst.buf = this_frame->u_buffer + uv_offset;
-  xd->plane[2].dst.buf = this_frame->v_buffer + uv_offset;
+  xd->plane[0].dst.buf0 = CONVERT_TO_SHORTPTR(this_frame->y_buffer);
+  xd->plane[0].dst.buf = xd->plane[0].dst.buf0 + y_offset;
+  xd->plane[1].dst.buf0 = CONVERT_TO_SHORTPTR(this_frame->u_buffer);
+  xd->plane[1].dst.buf = xd->plane[1].dst.buf0 + uv_offset;
+  xd->plane[2].dst.buf0 = CONVERT_TO_SHORTPTR(this_frame->v_buffer);
+  xd->plane[2].dst.buf = xd->plane[2].dst.buf0 + uv_offset;
   xd->left_available = (mb_col != 0);
   xd->mi[0]->sb_type[xd->tree_type == CHROMA_PART] = bsize;
   xd->mi[0]->ref_frame[0] = INTRA_FRAME;
@@ -542,7 +545,8 @@ static int firstpass_inter_prediction(
   // Assume 0,0 motion with no mv overhead.
   FULLPEL_MV mv = kZeroFullMv;
   FULLPEL_MV tmp_mv = kZeroFullMv;
-  xd->plane[0].pre[0].buf = last_frame->y_buffer + recon_yoffset;
+  xd->plane[0].pre[0].buf0 = CONVERT_TO_SHORTPTR(last_frame->y_buffer);
+  xd->plane[0].pre[0].buf = xd->plane[0].pre[0].buf0 + recon_yoffset;
   // Set up limit values for motion vectors to prevent them extending
   // outside the UMV borders.
   av2_set_mv_col_limits(mi_params, &x->mv_limits, (mb_col << FP_MIB_SIZE_LOG2),
@@ -556,8 +560,8 @@ static int firstpass_inter_prediction(
   // frame as the reference. Skip the further motion search on
   // reconstructed frame if this error is small.
   struct buf_2d unscaled_last_source_buf_2d;
-  unscaled_last_source_buf_2d.buf =
-      cpi->unscaled_last_source->y_buffer + src_yoffset;
+  unscaled_last_source_buf_2d.buf0 = CONVERT_TO_SHORTPTR(cpi->unscaled_last_source->y_buffer);
+  unscaled_last_source_buf_2d.buf = unscaled_last_source_buf_2d.buf0 + src_yoffset;
   unscaled_last_source_buf_2d.stride = cpi->unscaled_last_source->y_stride;
   const int raw_motion_error = get_prediction_error_bitdepth(
       bitdepth, bsize, &x->plane[0].src, &unscaled_last_source_buf_2d);
@@ -585,7 +589,8 @@ static int firstpass_inter_prediction(
     int gf_motion_error = motion_error;
     if ((current_frame->frame_number > 1) && golden_frame != NULL) {
       // Assume 0,0 motion with no mv overhead.
-      xd->plane[0].pre[0].buf = golden_frame->y_buffer + recon_yoffset;
+      xd->plane[0].pre[0].buf0 = CONVERT_TO_SHORTPTR(golden_frame->y_buffer);
+      xd->plane[0].pre[0].buf = xd->plane[0].pre[0].buf0 + recon_yoffset;
       xd->plane[0].pre[0].stride = golden_frame->y_stride;
       gf_motion_error = get_prediction_error_bitdepth(
           bitdepth, bsize, &x->plane[0].src, &xd->plane[0].pre[0]);
@@ -609,7 +614,8 @@ static int firstpass_inter_prediction(
     // Motion search in 3rd reference frame.
     int alt_motion_error = motion_error;
     if (alt_ref_frame != NULL) {
-      xd->plane[0].pre[0].buf = alt_ref_frame->y_buffer + alt_ref_frame_yoffset;
+      xd->plane[0].pre[0].buf0 = CONVERT_TO_SHORTPTR(alt_ref_frame->y_buffer);
+      xd->plane[0].pre[0].buf = xd->plane[0].pre[0].buf0 + alt_ref_frame_yoffset;
       xd->plane[0].pre[0].stride = alt_ref_frame->y_stride;
       alt_motion_error = get_prediction_error_bitdepth(
           bitdepth, bsize, &x->plane[0].src, &xd->plane[0].pre[0]);
@@ -632,9 +638,12 @@ static int firstpass_inter_prediction(
     }
 
     // Reset to last frame as reference buffer.
-    xd->plane[0].pre[0].buf = last_frame->y_buffer + recon_yoffset;
-    xd->plane[1].pre[0].buf = last_frame->u_buffer + recon_uvoffset;
-    xd->plane[2].pre[0].buf = last_frame->v_buffer + recon_uvoffset;
+    xd->plane[0].pre[0].buf0 = CONVERT_TO_SHORTPTR(last_frame->y_buffer);
+    xd->plane[0].pre[0].buf = xd->plane[0].pre[0].buf0 + recon_yoffset;
+    xd->plane[1].pre[0].buf0 = CONVERT_TO_SHORTPTR(last_frame->u_buffer);
+    xd->plane[1].pre[0].buf = xd->plane[1].pre[0].buf0 + recon_uvoffset;
+    xd->plane[2].pre[0].buf0 = CONVERT_TO_SHORTPTR(last_frame->v_buffer);
+    xd->plane[2].pre[0].buf = xd->plane[2].pre[0].buf0 + recon_uvoffset;
   } else {
     stats->sr_coded_error += motion_error;
     stats->tr_coded_error += motion_error;
