@@ -1766,6 +1766,9 @@ static void get_cx_data(struct stream_state *stream,
     static FileOffset ivf_header_pos = 0;
 
     switch (pkt->kind) {
+      case AOM_CODEC_CX_FRAME_NULL_PKT:
+        *got_data = 1;
+        break;
       case AOM_CODEC_CX_FRAME_PKT:
         fprintf(stderr, "DEBUG: got CX_FRAME_PKT, size %zu\n", pkt->data.frame.sz);
         ++stream->frames_out;

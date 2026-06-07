@@ -111,6 +111,7 @@ enum aom_codec_cx_pkt_kind {
   AOM_CODEC_STATS_PKT,       /**< Two-pass statistics for this frame */
   AOM_CODEC_FPMB_STATS_PKT,  /**< first pass mb statistics for this frame */
   AOM_CODEC_PSNR_PKT,        /**< PSNR statistics for this frame */
+  AOM_CODEC_CX_FRAME_NULL_PKT, /**< Compressed null/empty video frame */
   AOM_CODEC_CUSTOM_PKT = 256 /**< Algorithm extensions  */
 };
 
