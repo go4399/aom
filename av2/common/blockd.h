@@ -3424,12 +3424,12 @@ static INLINE void av2_get_block_dimensions(BLOCK_SIZE bsize, int plane,
 
 /* clang-format off */
 typedef aom_cdf_prob (*MapCdf)[PALETTE_COLOR_INDEX_CONTEXTS]
-                              [CDF_SIZE(PALETTE_COLORS)];
+                              [AV2_CDF_SIZE(PALETTE_COLORS)];
 typedef const int (*ColorCost)[PALETTE_SIZES][PALETTE_COLOR_INDEX_CONTEXTS]
                               [PALETTE_COLORS];
 /* clang-format on */
 
-typedef aom_cdf_prob (*IdentityRowCdf)[CDF_SIZE(3)];
+typedef aom_cdf_prob (*IdentityRowCdf)[AV2_CDF_SIZE(3)];
 typedef const int (*IdentityRowCost)[PALETTE_ROW_FLAG_CONTEXTS][3];
 
 typedef struct {

@@ -31,6 +31,9 @@ typedef uint16_t aom_cdf_prob;
 #ifndef CDF_SIZE
 #define CDF_SIZE(x) ((x) + 1)
 #endif
+#ifndef AV2_CDF_SIZE
+#define AV2_CDF_SIZE(x) ((x) + 4)
+#endif
 #define CDF_PROB_BITS 15
 #define CDF_PROB_TOP (1 << CDF_PROB_BITS)
 /*The value stored in an iCDF is CDF_PROB_TOP minus the actual cumulative

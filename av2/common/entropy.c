@@ -85,7 +85,7 @@ static INLINE void reset_cdf_symbol_counter(aom_cdf_prob *cdf_ptr, int num_cdfs,
 }
 
 #define RESET_CDF_COUNTER(cname, nsymbs) \
-  RESET_CDF_COUNTER_STRIDE(cname, nsymbs, CDF_SIZE(nsymbs))
+  RESET_CDF_COUNTER_STRIDE(cname, nsymbs, AV2_CDF_SIZE(nsymbs))
 
 #define RESET_CDF_COUNTER_STRIDE(cname, nsymbs, cdf_stride)          \
   do {                                                               \
@@ -205,7 +205,7 @@ void av2_reset_cdf_symbol_counters(FRAME_CONTEXT *fc) {
   for (int j = 0; j < PALETTE_SIZES; j++) {
     int nsymbs = j + PALETTE_MIN_SIZE;
     RESET_CDF_COUNTER_STRIDE(fc->palette_y_color_index_cdf[j], nsymbs,
-                             CDF_SIZE(PALETTE_COLORS));
+                             AV2_CDF_SIZE(PALETTE_COLORS));
   }
   RESET_CDF_COUNTER(fc->palette_y_mode_cdf, 2);
   RESET_CDF_COUNTER(fc->palette_uv_mode_cdf, 2);
@@ -259,7 +259,7 @@ void av2_reset_cdf_symbol_counters(FRAME_CONTEXT *fc) {
   RESET_CDF_COUNTER(fc->cdef_strength_index0_cdf, 2);
   for (int j = 0; j < CDEF_STRENGTHS_NUM - 1; j++) {
     RESET_CDF_COUNTER_STRIDE(fc->cdef_cdf[j], j + 2,
-                             CDF_SIZE(CDEF_STRENGTHS_NUM));
+                             AV2_CDF_SIZE(CDEF_STRENGTHS_NUM));
   }
   RESET_CDF_COUNTER(fc->gdf_cdf, 2);
   RESET_CDF_COUNTER(fc->wienerns_restore_cdf, 2);
@@ -309,17 +309,17 @@ void av2_reset_cdf_symbol_counters(FRAME_CONTEXT *fc) {
   RESET_CDF_COUNTER(fc->delta_q_cdf, DELTA_Q_PROBS + 1);
 
   RESET_CDF_COUNTER_STRIDE(fc->intra_ext_tx_cdf[1], INTRA_TX_SET1,
-                           CDF_SIZE(TX_TYPES));
+                           AV2_CDF_SIZE(TX_TYPES));
   RESET_CDF_COUNTER_STRIDE(fc->intra_ext_tx_cdf[2], INTRA_TX_SET2,
-                           CDF_SIZE(TX_TYPES));
+                           AV2_CDF_SIZE(TX_TYPES));
   RESET_CDF_COUNTER_STRIDE(fc->inter_ext_tx_cdf[1], INTER_TX_SET1,
-                           CDF_SIZE(TX_TYPES));
+                           AV2_CDF_SIZE(TX_TYPES));
   RESET_CDF_COUNTER_STRIDE(fc->inter_ext_tx_cdf[2], INTER_TX_SET2,
-                           CDF_SIZE(TX_TYPES));
+                           AV2_CDF_SIZE(TX_TYPES));
   RESET_CDF_COUNTER_STRIDE(fc->inter_ext_tx_cdf[3], INTER_TX_SET3,
-                           CDF_SIZE(TX_TYPES));
+                           AV2_CDF_SIZE(TX_TYPES));
   RESET_CDF_COUNTER_STRIDE(fc->inter_ext_tx_cdf[4], INTER_TX_SET4,
-                           CDF_SIZE(TX_TYPES));
+                           AV2_CDF_SIZE(TX_TYPES));
   RESET_CDF_COUNTER(fc->inter_tx_type_set, 2);
   RESET_CDF_COUNTER(fc->inter_tx_type_idx, INTER_TX_TYPE_INDEX_COUNT);
   RESET_CDF_COUNTER(fc->inter_tx_type_offset_1, INTER_TX_TYPE_OFFSET1_COUNT);
@@ -330,7 +330,7 @@ void av2_reset_cdf_symbol_counters(FRAME_CONTEXT *fc) {
   RESET_CDF_COUNTER(fc->cfl_sign_cdf, CFL_JOINT_SIGNS);
   RESET_CDF_COUNTER(fc->cfl_alpha_cdf, CFL_ALPHABET_SIZE);
 
-  RESET_CDF_COUNTER_STRIDE(fc->stx_cdf, STX_TYPES, CDF_SIZE(STX_TYPES));
+  RESET_CDF_COUNTER_STRIDE(fc->stx_cdf, STX_TYPES, AV2_CDF_SIZE(STX_TYPES));
   RESET_CDF_COUNTER(fc->most_probable_stx_set_cdf, IST_SET_SIZE);
   RESET_CDF_COUNTER(fc->most_probable_stx_set_cdf_ADST_ADST,
                     IST_REDUCED_SET_SIZE);
@@ -343,7 +343,7 @@ void av2_reset_cdf_symbol_counters(FRAME_CONTEXT *fc) {
     for (int j = 0; j < MV_PREC_DOWN_CONTEXTS; ++j) {
       RESET_CDF_COUNTER_STRIDE(
           fc->pb_mv_precision_cdf[j][p - MV_PRECISION_HALF_PEL],
-          num_precisions - 1, CDF_SIZE(FLEX_MV_COSTS_SIZE));
+          num_precisions - 1, AV2_CDF_SIZE(FLEX_MV_COSTS_SIZE));
     }
   }
 

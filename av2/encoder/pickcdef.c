@@ -434,8 +434,8 @@ void av2_cdef_search(const YV12_BUFFER_CONFIG *frame,
     return;
   }
 
-  aom_cdf_prob cdef_strength_index0_cdf[CDEF_STRENGTH_INDEX0_CTX][CDF_SIZE(2)];
-  aom_cdf_prob cdef_cdf[CDEF_STRENGTHS_NUM - 1][CDF_SIZE(CDEF_STRENGTHS_NUM)];
+  aom_cdf_prob cdef_strength_index0_cdf[CDEF_STRENGTH_INDEX0_CTX][AV2_CDF_SIZE(2)];
+  aom_cdf_prob cdef_cdf[CDEF_STRENGTHS_NUM - 1][AV2_CDF_SIZE(CDEF_STRENGTHS_NUM)];
   av2_copy(cdef_strength_index0_cdf, cm->fc->cdef_strength_index0_cdf);
   av2_copy(cdef_cdf, cm->fc->cdef_cdf);
 

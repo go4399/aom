@@ -67,16 +67,16 @@ typedef struct SegmentationInfoSyntax {
 #ifndef struct_segmentation_probs_defined
 #define struct_segmentation_probs_defined
 struct segmentation_probs {
-  aom_cdf_prob pred_cdf[SEG_TEMPORAL_PRED_CTXS][CDF_SIZE(2)];
+  aom_cdf_prob pred_cdf[SEG_TEMPORAL_PRED_CTXS][AV2_CDF_SIZE(2)];
   // *_cdf[]  : seg_id 0 ~ 7, before post-processing
   // *_cdf1[] : seg_id 8 ~ 15, before post-processing
-  aom_cdf_prob tree_cdf[CDF_SIZE(MAX_SEGMENTS_8)];
-  aom_cdf_prob tree_cdf1[CDF_SIZE(MAX_SEGMENTS_8)];
+  aom_cdf_prob tree_cdf[AV2_CDF_SIZE(MAX_SEGMENTS_8)];
+  aom_cdf_prob tree_cdf1[AV2_CDF_SIZE(MAX_SEGMENTS_8)];
   aom_cdf_prob spatial_pred_seg_cdf[SPATIAL_PREDICTION_PROBS]
-                                   [CDF_SIZE(MAX_SEGMENTS_8)];
+                                   [AV2_CDF_SIZE(MAX_SEGMENTS_8)];
   aom_cdf_prob spatial_pred_seg_cdf1[SPATIAL_PREDICTION_PROBS]
-                                    [CDF_SIZE(MAX_SEGMENTS_8)];
-  aom_cdf_prob seg_id_ext_flag_cdf[SPATIAL_PREDICTION_PROBS][CDF_SIZE(2)];
+                                    [AV2_CDF_SIZE(MAX_SEGMENTS_8)];
+  aom_cdf_prob seg_id_ext_flag_cdf[SPATIAL_PREDICTION_PROBS][AV2_CDF_SIZE(2)];
 };
 #endif
 

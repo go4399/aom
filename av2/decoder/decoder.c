@@ -332,18 +332,18 @@ AV2Decoder *av2_decoder_create(BufferPool *const pool) {
             fprintf(fData, "%d,%d,%d,%d,%d,", ctx_group_counter, d0, d1, d2,
                     d3);
             ctx_group_counter++;
-            for (int sym = 0; sym < CDF_SIZE(num_sym); sym++) {
+            for (int sym = 0; sym < AV2_CDF_SIZE(num_sym); sym++) {
               int cdf_stride = (fixed_stride == 0) ? num_sym : fixed_stride;
               int offset =
-                  (d0 * num_idx3 * num_idx2 * num_idx1 * CDF_SIZE(cdf_stride)) +
-                  (d1 * num_idx3 * num_idx2 * CDF_SIZE(cdf_stride)) +
-                  (d2 * num_idx3 * CDF_SIZE(cdf_stride)) +
-                  (d3 * CDF_SIZE(cdf_stride)) + sym;
+                  (d0 * num_idx3 * num_idx2 * num_idx1 * AV2_CDF_SIZE(cdf_stride)) +
+                  (d1 * num_idx3 * num_idx2 * AV2_CDF_SIZE(cdf_stride)) +
+                  (d2 * num_idx3 * AV2_CDF_SIZE(cdf_stride)) +
+                  (d3 * AV2_CDF_SIZE(cdf_stride)) + sym;
               if (sym < num_sym)
                 fprintf(fData, "%d", (int)AVM_ICDF(*(prob_ptr + offset)));
               else
                 fprintf(fData, "%d", (int)*(prob_ptr + offset));
-              if (sym < CDF_SIZE(num_sym - 1)) {
+              if (sym < AV2_CDF_SIZE(num_sym - 1)) {
                 fprintf(fData, ",");
               } else {
                 fprintf(fData, "\n");

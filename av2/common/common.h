@@ -13,8 +13,8 @@
 #ifndef AVM_AV2_COMMON_COMMON_H_
 #define AVM_AV2_COMMON_COMMON_H_
 
-#ifndef CDF_SIZE
-#define CDF_SIZE(x) ((x) + 4)
+#ifndef AV2_CDF_SIZE
+#define AV2_CDF_SIZE(x) ((x) + 4)
 #endif
 
 #ifndef TX_SIZES_ALL

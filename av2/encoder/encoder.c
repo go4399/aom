@@ -2923,7 +2923,7 @@ void gdf_optimizer(AV2_COMP *cpi, AV2_COMMON *cm) {
   block_flags = (int *)aom_calloc(cm->gdf_info.gdf_block_num, sizeof(int));
   int gdf_enable_max_plus_1 = (cm->gdf_info.gdf_block_num <= 1) ? 2 : 3;
   int gdf_block_enable_bit = 1;
-  aom_cdf_prob gdf_cdf[CDF_SIZE(2)];
+  aom_cdf_prob gdf_cdf[AV2_CDF_SIZE(2)];
   // BRU frame does not allow mode 1
   for (int gdf_mode = cm->bru.enabled ? 2 : 1; gdf_mode < gdf_enable_max_plus_1;
        gdf_mode++) {

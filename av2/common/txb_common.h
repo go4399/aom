@@ -507,13 +507,13 @@ static AOM_FORCE_INLINE int get_nz_map_ctx_from_stats(
   return 0;
 }
 
-typedef aom_cdf_prob (*base_lf_cdf_arr)[TCQ_CTXS][CDF_SIZE(LF_BASE_SYMBOLS)];
-typedef aom_cdf_prob (*base_cdf_arr)[TCQ_CTXS][CDF_SIZE(4)];
-typedef aom_cdf_prob (*base_lf_uv_cdf_arr)[CDF_SIZE(LF_BASE_SYMBOLS)];
-typedef aom_cdf_prob (*base_uv_cdf_arr)[CDF_SIZE(4)];
-typedef aom_cdf_prob (*br_cdf_arr)[CDF_SIZE(BR_CDF_SIZE)];
-typedef aom_cdf_prob (*base_fsc_cdf_arr)[CDF_SIZE(4)];
-typedef aom_cdf_prob (*base_ph_cdf_arr)[CDF_SIZE(4)];
+typedef aom_cdf_prob (*base_lf_cdf_arr)[TCQ_CTXS][AV2_CDF_SIZE(LF_BASE_SYMBOLS)];
+typedef aom_cdf_prob (*base_cdf_arr)[TCQ_CTXS][AV2_CDF_SIZE(4)];
+typedef aom_cdf_prob (*base_lf_uv_cdf_arr)[AV2_CDF_SIZE(LF_BASE_SYMBOLS)];
+typedef aom_cdf_prob (*base_uv_cdf_arr)[AV2_CDF_SIZE(4)];
+typedef aom_cdf_prob (*br_cdf_arr)[AV2_CDF_SIZE(BR_CDF_SIZE)];
+typedef aom_cdf_prob (*base_fsc_cdf_arr)[AV2_CDF_SIZE(4)];
+typedef aom_cdf_prob (*base_ph_cdf_arr)[AV2_CDF_SIZE(4)];
 
 // This function returns the base range context index/increment for the
 // coefficients with hidden parity.

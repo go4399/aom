@@ -785,7 +785,7 @@ static void derive_blk_md(AV2_COMMON *cm, MACROBLOCKD *xd, const int plane,
                           const uint64_t *training_dist, bool *m_filter_control,
                           uint64_t *cur_total_dist, int *cur_total_rate,
                           bool *filter_enable, const int rdmult) {
-  aom_cdf_prob ccso_cdf[CCSO_CONTEXT][CDF_SIZE(2)];
+  aom_cdf_prob ccso_cdf[CCSO_CONTEXT][AV2_CDF_SIZE(2)];
   const int ccso_blk_size = get_ccso_unit_size_log2_adaptive_tile(
       cm, cm->mib_size_log2 + MI_SIZE_LOG2, CCSO_BLK_SIZE);
   const int log2_filter_unit_size =

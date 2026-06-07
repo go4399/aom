@@ -1373,27 +1373,27 @@ typedef struct {
 
 #if CONFIG_ENTROPY_STATS
 typedef struct {
-  unsigned int amvd_indices_cnts[CDF_SIZE(MAX_AMVD_INDEX)];  // placeholder
-  unsigned int sign_cnts[CDF_SIZE(2)];                       // placeholder
+  unsigned int amvd_indices_cnts[AV2_CDF_SIZE(MAX_AMVD_INDEX)];  // placeholder
+  unsigned int sign_cnts[AV2_CDF_SIZE(2)];                       // placeholder
 } nmv_component_count;
 
 typedef struct {
-  unsigned int joint_shell_set_cnts[CDF_SIZE(2)];
+  unsigned int joint_shell_set_cnts[AV2_CDF_SIZE(2)];
   unsigned int joint_shell_class_0_cnts[NUM_MV_PRECISIONS]
-                                       [CDF_SIZE(FIRST_SHELL_CLASS)];
+                                       [AV2_CDF_SIZE(FIRST_SHELL_CLASS)];
   unsigned int joint_shell_class_1_cnts[NUM_MV_PRECISIONS]
-                                       [CDF_SIZE(SECOND_SHELL_CLASS)];
-  unsigned int joint_shell_last_two_classes_cnts[CDF_SIZE(2)];  // placeholder
-  unsigned int shell_offset_low_class_cnts[2][CDF_SIZE(2)];     // placeholder
-  unsigned int shell_offset_class2_cnts[3][CDF_SIZE(2)];  // // placeholder
+                                       [AV2_CDF_SIZE(SECOND_SHELL_CLASS)];
+  unsigned int joint_shell_last_two_classes_cnts[AV2_CDF_SIZE(2)];  // placeholder
+  unsigned int shell_offset_low_class_cnts[2][AV2_CDF_SIZE(2)];     // placeholder
+  unsigned int shell_offset_class2_cnts[3][AV2_CDF_SIZE(2)];  // // placeholder
   unsigned int shell_offset_other_class_cnts[NUM_CTX_CLASS_OFFSETS]
                                             [SHELL_INT_OFFSET_BIT]
-                                            [CDF_SIZE(2)];  // placeholder
+                                            [AV2_CDF_SIZE(2)];  // placeholder
   unsigned int col_mv_greater_flags_cnts[NUM_CTX_COL_MV_GTX]
-                                        [CDF_SIZE(2)];  // placeholder
+                                        [AV2_CDF_SIZE(2)];  // placeholder
   unsigned int col_mv_index_cnts[NUM_CTX_COL_MV_INDEX]
-                                [CDF_SIZE(2)];         // placeholder
-  unsigned int amvd_joints_cnts[CDF_SIZE(MV_JOINTS)];  // placeholder
+                                [AV2_CDF_SIZE(2)];         // placeholder
+  unsigned int amvd_joints_cnts[AV2_CDF_SIZE(MV_JOINTS)];  // placeholder
   nmv_component_count mvd_comp_cnts[2];
 } nmv_context_count;
 #endif  // CONFIG_ENTROPY_STATS
@@ -1408,18 +1408,18 @@ typedef struct FRAME_COUNTS {
   // entries for memory optimization code. These are not currently incremented
   // at the encoder to be able to train CDF entries with
   // "avm_entropy_optimizers", these counters will need be incremented properly.
-  unsigned int delta_q_cnts[CDF_SIZE(DELTA_Q_PROBS + 1)];   // placeholder
-  unsigned int stx_cnts[2][TX_SIZES][CDF_SIZE(STX_TYPES)];  // placeholder
-  unsigned int stx_set_cnts[CDF_SIZE(IST_SET_SIZE)];        // placeholder
+  unsigned int delta_q_cnts[AV2_CDF_SIZE(DELTA_Q_PROBS + 1)];   // placeholder
+  unsigned int stx_cnts[2][TX_SIZES][AV2_CDF_SIZE(STX_TYPES)];  // placeholder
+  unsigned int stx_set_cnts[AV2_CDF_SIZE(IST_SET_SIZE)];        // placeholder
   unsigned int pb_mv_mpp_flag_cnts[NUM_MV_PREC_MPP_CONTEXT]
-                                  [CDF_SIZE(2)];  // placeholder
+                                  [AV2_CDF_SIZE(2)];  // placeholder
   unsigned int pb_mv_precision_cnts[MV_PREC_DOWN_CONTEXTS]
-                                   [NUM_PB_FLEX_QUALIFIED_MAX_PREC][CDF_SIZE(
+                                   [NUM_PB_FLEX_QUALIFIED_MAX_PREC][AV2_CDF_SIZE(
                                        FLEX_MV_COSTS_SIZE)];  // placeholder
-  unsigned int seg_tree_cnts[CDF_SIZE(MAX_SEGMENTS)];         // placeholder
+  unsigned int seg_tree_cnts[AV2_CDF_SIZE(MAX_SEGMENTS)];         // placeholder
   unsigned int segment_pred_cnts[SEG_TEMPORAL_PRED_CTXS]
-                                [CDF_SIZE(2)];  // placeholder
-  unsigned int spatial_pred_seg_tree_cnts[SPATIAL_PREDICTION_PROBS][CDF_SIZE(
+                                [AV2_CDF_SIZE(2)];  // placeholder
+  unsigned int spatial_pred_seg_tree_cnts[SPATIAL_PREDICTION_PROBS][AV2_CDF_SIZE(
       MAX_SEGMENTS)];  // placeholder
 
   nmv_context_count nmvc_cnts;  // For MVD
@@ -1576,7 +1576,7 @@ typedef struct FRAME_COUNTS {
   unsigned int wedge_interintra[2];
   unsigned int compound_type[MASKED_COMPOUND_TYPES];
   unsigned int warp_causal_cnt[WARP_CAUSAL_MODE_CTX][2];
-  unsigned int warpmv_with_mvd_flag[CDF_SIZE(2)];
+  unsigned int warpmv_with_mvd_flag[AV2_CDF_SIZE(2)];
   unsigned int warp_delta_param[2][WARP_DELTA_NUMSYMBOLS_LOW];
   unsigned int warp_delta_param_high[2][WARP_DELTA_NUMSYMBOLS_HIGH];
   unsigned int warp_extend[WARP_EXTEND_CTX][2];
@@ -1626,7 +1626,7 @@ typedef struct FRAME_COUNTS {
   unsigned int intra_dip_mode_n6[6];
   unsigned int switchable_restore[RESTORE_SWITCHABLE_TYPES];
   unsigned int wienerns_4part_cnts[WIENERNS_4PART_CTX_MAX]
-                                  [CDF_SIZE(4)];  // placeholder
+                                  [AV2_CDF_SIZE(4)];  // placeholder
   unsigned int wienerns_length[2];                // placeholder
   unsigned int merged_param_cnts[2];              // placeholder
   unsigned int pc_wiener_restore[2];

@@ -74,33 +74,33 @@ enum {
 #define NUM_CTX_CLASS_OFFSETS 1
 
 typedef struct {
-  aom_cdf_prob amvd_indices_cdf[CDF_SIZE(MAX_AMVD_INDEX)];
+  aom_cdf_prob amvd_indices_cdf[AV2_CDF_SIZE(MAX_AMVD_INDEX)];
 } nmv_component;
 
 typedef struct {
   /*The joint_shell_set is first decoded. Depending on the shell set index, the
    * joint_shell_class is decoded.*/
-  aom_cdf_prob joint_shell_set_cdf[CDF_SIZE(2)];
+  aom_cdf_prob joint_shell_set_cdf[AV2_CDF_SIZE(2)];
   aom_cdf_prob joint_shell_class_cdf_0[NUM_MV_PRECISIONS]
-                                      [CDF_SIZE(FIRST_SHELL_CLASS)];
+                                      [AV2_CDF_SIZE(FIRST_SHELL_CLASS)];
   aom_cdf_prob joint_shell_class_cdf_1[NUM_MV_PRECISIONS]
-                                      [CDF_SIZE(SECOND_SHELL_CLASS)];
+                                      [AV2_CDF_SIZE(SECOND_SHELL_CLASS)];
 
   // Only MV_PRECISION_ONE_EIGHTH_PEL has shell class 15 and class 16.
   // For MV_PRECISION_ONE_EIGHTH_PEL, class 15 and 16 are coded as a
   // single class, then another flag to distinguish them
-  aom_cdf_prob joint_shell_last_two_classes_cdf[CDF_SIZE(2)];
+  aom_cdf_prob joint_shell_last_two_classes_cdf[AV2_CDF_SIZE(2)];
 
-  aom_cdf_prob shell_offset_low_class_cdf[2][CDF_SIZE(2)];
+  aom_cdf_prob shell_offset_low_class_cdf[2][AV2_CDF_SIZE(2)];
 
   aom_cdf_prob
-      shell_offset_class2_cdf[CDF_SIZE(2)];  // First bin for truncated unary
+      shell_offset_class2_cdf[AV2_CDF_SIZE(2)];  // First bin for truncated unary
 
   aom_cdf_prob shell_offset_other_class_cdf[NUM_CTX_CLASS_OFFSETS]
-                                           [SHELL_INT_OFFSET_BIT][CDF_SIZE(2)];
-  aom_cdf_prob col_mv_greater_flags_cdf[NUM_CTX_COL_MV_GTX][CDF_SIZE(2)];
-  aom_cdf_prob col_mv_index_cdf[NUM_CTX_COL_MV_INDEX][CDF_SIZE(2)];
-  aom_cdf_prob amvd_joints_cdf[CDF_SIZE(MV_JOINTS)];
+                                           [SHELL_INT_OFFSET_BIT][AV2_CDF_SIZE(2)];
+  aom_cdf_prob col_mv_greater_flags_cdf[NUM_CTX_COL_MV_GTX][AV2_CDF_SIZE(2)];
+  aom_cdf_prob col_mv_index_cdf[NUM_CTX_COL_MV_INDEX][AV2_CDF_SIZE(2)];
+  aom_cdf_prob amvd_joints_cdf[AV2_CDF_SIZE(MV_JOINTS)];
   nmv_component comps[2];
 } nmv_context;
 
