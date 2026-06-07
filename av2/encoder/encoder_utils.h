@@ -27,7 +27,7 @@ extern "C" {
 #define AM_SEGMENT_ID_INACTIVE 7
 #define AM_SEGMENT_ID_ACTIVE 0
 
-extern const int av2_default_tx_type_probs[FRAME_UPDATE_TYPES][TX_SIZES_ALL]
+extern const int av2_default_tx_type_probs[FRAME_UPDATE_TYPES][TX_SIZES_ALL_AV2]
                                           [TX_TYPES];
 
 extern const int av2_default_warped_probs[FRAME_UPDATE_TYPES];

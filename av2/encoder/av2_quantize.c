@@ -496,7 +496,7 @@ void av2_init_plane_quantizers(const AV2_COMP *cpi, MACROBLOCK *x,
       use_qmatrix ? quant_params->qm_y[qm_index] : NUM_QM_LEVELS - 1;
   const int qmlevel_y0 =
       use_qmatrix ? quant_params->qm_y[0] : NUM_QM_LEVELS - 1;
-  for (int j = 0; j < TX_SIZES_ALL; ++j) {
+  for (int j = 0; j < TX_SIZES_ALL_AV2; ++j) {
     if (j > TX_8X8 && j != TX_4X8 && j != TX_8X4) {
       xd->plane[0].seg_qmatrix[segment_id][j] =
           quant_params->gqmatrix[qmlevel_y0][0][j];
@@ -521,7 +521,7 @@ void av2_init_plane_quantizers(const AV2_COMP *cpi, MACROBLOCK *x,
       use_qmatrix ? quant_params->qm_u[qm_index] : NUM_QM_LEVELS - 1;
   const int qmlevel_u0 =
       use_qmatrix ? quant_params->qm_u[0] : NUM_QM_LEVELS - 1;
-  for (int j = 0; j < TX_SIZES_ALL; ++j) {
+  for (int j = 0; j < TX_SIZES_ALL_AV2; ++j) {
     if (j > TX_8X8 && j != TX_4X8 && j != TX_8X4) {
       xd->plane[1].seg_qmatrix[segment_id][j] =
           quant_params->gqmatrix[qmlevel_u0][1][j];
@@ -546,7 +546,7 @@ void av2_init_plane_quantizers(const AV2_COMP *cpi, MACROBLOCK *x,
       use_qmatrix ? quant_params->qm_v[qm_index] : NUM_QM_LEVELS - 1;
   const int qmlevel_v0 =
       use_qmatrix ? quant_params->qm_v[0] : NUM_QM_LEVELS - 1;
-  for (int j = 0; j < TX_SIZES_ALL; ++j) {
+  for (int j = 0; j < TX_SIZES_ALL_AV2; ++j) {
     if (j > TX_8X8 && j != TX_4X8 && j != TX_8X4) {
       xd->plane[2].seg_qmatrix[segment_id][j] =
           quant_params->gqmatrix[qmlevel_v0][2][j];

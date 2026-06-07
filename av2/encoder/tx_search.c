@@ -101,7 +101,7 @@ static const TX_SIZE max_predict_sf_tx_size[BLOCK_SIZES_ALL] = {
 // look-up table for sqrt of number of pixels in a transform block
 // rounded up to the nearest integer.
 // Note that width or height of 64 is considered 32 instead.
-static const int sqrt_tx_pixels_2d[TX_SIZES_ALL] = {
+static const int sqrt_tx_pixels_2d[TX_SIZES_ALL_AV2] = {
   4, 8, 16, 32, 32, 6,  6,  12, 12, 23, 23, 32, 32,
   8, 8, 16, 16, 23, 23, 11, 11, 16, 16, 11, 11,
 };
@@ -3046,7 +3046,7 @@ static void select_tx_partition_type(
   const int txw = tx_size_wide[max_tx_size];
   const int txh = tx_size_high[max_tx_size];
   const int max_txw_txh = AOMMAX(txw, txh);
-  assert(max_tx_size < TX_SIZES_ALL);
+  assert(max_tx_size < TX_SIZES_ALL_AV2);
   TX_SIZE sub_txs[MAX_TX_PARTITIONS] = { 0 };
 
   int64_t best_rd = INT64_MAX;

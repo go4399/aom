@@ -20,7 +20,7 @@
 extern const int16_t av2_eob_group_start[12];
 extern const int16_t av2_eob_offset_bits[12];
 
-extern const int8_t *av2_nz_map_ctx_offset[TX_SIZES_ALL];
+extern const int8_t *av2_nz_map_ctx_offset[TX_SIZES_ALL_AV2];
 
 // DCT-II
 extern const int tx_kernel_dct2_size4[TXFM_DIRECTIONS][4][4];

@@ -291,13 +291,13 @@ static int has_bottom_left(const AV2_COMMON *cm, const MACROBLOCKD *xd,
 typedef void (*intra_high_pred_fn)(uint16_t *dst, ptrdiff_t stride,
                                    const uint16_t *above, const uint16_t *left,
                                    int bd);
-static intra_high_pred_fn pred_high[INTRA_MODES][TX_SIZES_ALL];
-static intra_high_pred_fn dc_pred_high[2][2][TX_SIZES_ALL];
-static intra_high_pred_fn ibp_dc_pred_high[2][2][TX_SIZES_ALL];
+static intra_high_pred_fn pred_high[INTRA_MODES][TX_SIZES_ALL_AV2];
+static intra_high_pred_fn dc_pred_high[2][2][TX_SIZES_ALL_AV2];
+static intra_high_pred_fn ibp_dc_pred_high[2][2][TX_SIZES_ALL_AV2];
 
-static intra_high_pred_fn pred_high_c[INTRA_MODES][TX_SIZES_ALL];
-static intra_high_pred_fn dc_pred_high_c[2][2][TX_SIZES_ALL];
-static intra_high_pred_fn ibp_dc_pred_high_c[2][2][TX_SIZES_ALL];
+static intra_high_pred_fn pred_high_c[INTRA_MODES][TX_SIZES_ALL_AV2];
+static intra_high_pred_fn dc_pred_high_c[2][2][TX_SIZES_ALL_AV2];
+static intra_high_pred_fn ibp_dc_pred_high_c[2][2][TX_SIZES_ALL_AV2];
 
 static INLINE void pred_high_dispatch(int mode, TX_SIZE tx_size, uint16_t *dst,
                                       ptrdiff_t stride, const uint16_t *above,

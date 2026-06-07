@@ -3473,7 +3473,7 @@ void setup_quant_matrices(AV2Decoder *pbi, CommonQuantParams *quant_params,
                        "qmlevel %d is out of boundary", qmlevel);
   }
   if (qmlevel == NUM_QM_LEVELS - 1) {
-    for (int t = 0; t < TX_SIZES_ALL; ++t) {
+    for (int t = 0; t < TX_SIZES_ALL_AV2; ++t) {
       quant_params->giqmatrix[qmlevel][plane][t] = NULL;
     }
     return;
@@ -3521,7 +3521,7 @@ void setup_quant_matrices(AV2Decoder *pbi, CommonQuantParams *quant_params,
   // Generate matrices for each tx size
   int current = 0;
   const bool is_user_defined_qm = qmset->is_user_defined_qm;
-  for (int t = 0; t < TX_SIZES_ALL; ++t) {
+  for (int t = 0; t < TX_SIZES_ALL_AV2; ++t) {
     const int size = tx_size_2d[t];
     const int qm_tx_size = av2_get_adjusted_tx_size(t);
     if (t != qm_tx_size) {  // Reuse matrices for 'qm_tx_size'
@@ -3646,7 +3646,7 @@ static INLINE void setup_segmentation_dequant(AV2Decoder *const pbi,
     const int qmlevel_y0 =
         use_qmatrix ? quant_params->qm_y[0] : NUM_QM_LEVELS - 1;
 
-    for (int j = 0; j < TX_SIZES_ALL; ++j) {
+    for (int j = 0; j < TX_SIZES_ALL_AV2; ++j) {
       if (j > TX_8X8 && j != TX_4X8 && j != TX_8X4)
         quant_params->y_iqmatrix[i][j] =
             av2_iqmatrix(quant_params, qmlevel_y0, AOM_PLANE_Y, j);
@@ -3660,7 +3660,7 @@ static INLINE void setup_segmentation_dequant(AV2Decoder *const pbi,
           use_qmatrix ? quant_params->qm_u[qm_index] : NUM_QM_LEVELS - 1;
       const int qmlevel_u0 =
           use_qmatrix ? quant_params->qm_u[0] : NUM_QM_LEVELS - 1;
-      for (int j = 0; j < TX_SIZES_ALL; ++j) {
+      for (int j = 0; j < TX_SIZES_ALL_AV2; ++j) {
         if (j > TX_8X8 && j != TX_4X8 && j != TX_8X4)
           quant_params->u_iqmatrix[i][j] =
               av2_iqmatrix(quant_params, qmlevel_u0, AOM_PLANE_U, j);
@@ -3672,7 +3672,7 @@ static INLINE void setup_segmentation_dequant(AV2Decoder *const pbi,
           use_qmatrix ? quant_params->qm_v[qm_index] : NUM_QM_LEVELS - 1;
       const int qmlevel_v0 =
           use_qmatrix ? quant_params->qm_v[0] : NUM_QM_LEVELS - 1;
-      for (int j = 0; j < TX_SIZES_ALL; ++j) {
+      for (int j = 0; j < TX_SIZES_ALL_AV2; ++j) {
         if (j > TX_8X8 && j != TX_4X8 && j != TX_8X4)
           quant_params->v_iqmatrix[i][j] =
               av2_iqmatrix(quant_params, qmlevel_v0, AOM_PLANE_V, j);

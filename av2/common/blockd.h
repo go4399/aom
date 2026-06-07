@@ -1516,8 +1516,8 @@ typedef struct macroblockd_plane {
   // block size in pixels
   uint16_t width, height;
 
-  const qm_val_t *seg_iqmatrix[MAX_SEGMENTS][TX_SIZES_ALL];
-  const qm_val_t *seg_qmatrix[MAX_SEGMENTS][TX_SIZES_ALL];
+  const qm_val_t *seg_iqmatrix[MAX_SEGMENTS][TX_SIZES_ALL_AV2];
+  const qm_val_t *seg_qmatrix[MAX_SEGMENTS][TX_SIZES_ALL_AV2];
 #if CONFIG_INSPECTION
   DECLARE_ALIGNED(32, int16_t, predicted_pixels[MAX_SB_SQUARE]);
 #endif

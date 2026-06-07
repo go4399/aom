@@ -16,8 +16,7 @@ print <<EOF
 
 #include "aom/aom_integer.h"
 // av2/common/common.h must precede aom_dsp/txfm_common.h so the AV2 values of
-// TX_SIZES_ALL / CDF_SIZE / MAX_WEDGE_TYPES (all #ifndef-guarded) win over the
-// AV1 fallback defined in txfm_common.h for AV2 translation units.
+// MAX_WEDGE_TYPES (all #ifndef-guarded) win over the AV1 fallbacks.
 #include "av2/common/common.h"
 #include "aom_dsp/txfm_common.h"
 #include "av2/common/enums.h"

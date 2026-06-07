@@ -342,7 +342,7 @@ void av2_cfl_load_dc_pred(MACROBLOCKD *const xd, uint16_t *dst, int dst_stride,
 // Declare an architecture-specific array of function pointers for size-specific
 // wrappers.
 #define CFL_SUBSAMPLE_FUNCTION_ARRAY(arch, sub, bd)                      \
-  static const av2_cfl_subsample_##bd##_fn subfn_##sub[TX_SIZES_ALL] = { \
+  static const av2_cfl_subsample_##bd##_fn subfn_##sub[TX_SIZES_ALL_AV2] = { \
     av2_cfl_subsample_##bd##_##sub##_4x4_##arch,   /* 4x4 */             \
     av2_cfl_subsample_##bd##_##sub##_8x8_##arch,   /* 8x8 */             \
     av2_cfl_subsample_##bd##_##sub##_16x16_##arch, /* 16x16 */           \
@@ -422,7 +422,7 @@ void av2_cfl_load_dc_pred(MACROBLOCKD *const xd, uint16_t *dst, int dst_stride,
   }
 
 #define CFL_SUBSAMPLE_121_FUNCTION_ARRAY(arch)                          \
-  static const av2_cfl_subsample_hbd_fn subfn_420_121[TX_SIZES_ALL] = { \
+  static const av2_cfl_subsample_hbd_fn subfn_420_121[TX_SIZES_ALL_AV2] = { \
     av2_cfl_subsample_hbd_420_121_4x4_##arch,   /* 4x4 */               \
     av2_cfl_subsample_hbd_420_121_8x8_##arch,   /* 8x8 */               \
     av2_cfl_subsample_hbd_420_121_16x16_##arch, /* 16x16 */             \
@@ -492,7 +492,7 @@ void av2_cfl_load_dc_pred(MACROBLOCKD *const xd, uint16_t *dst, int dst_stride,
   }
 
 #define CFL_SUBSAMPLE_COLOCATED_FUNCTION_ARRAY(arch)                          \
-  static const av2_cfl_subsample_hbd_fn subfn_420_colocated[TX_SIZES_ALL] = { \
+  static const av2_cfl_subsample_hbd_fn subfn_420_colocated[TX_SIZES_ALL_AV2] = { \
     av2_cfl_subsample_hbd_420_colocated_4x4_##arch,   /* 4x4 */               \
     av2_cfl_subsample_hbd_420_colocated_8x8_##arch,   /* 8x8 */               \
     av2_cfl_subsample_hbd_420_colocated_16x16_##arch, /* 16x16 */             \
@@ -563,7 +563,7 @@ void av2_cfl_load_dc_pred(MACROBLOCKD *const xd, uint16_t *dst, int dst_stride,
   CFL_SUB_AVG_X(arch, 4, 64, 128, 8)                                      \
   av2_cfl_subtract_average_fn av2_cfl_get_subtract_average_fn_##arch(     \
       TX_SIZE tx_size) {                                                  \
-    static const av2_cfl_subtract_average_fn sub_avg[TX_SIZES_ALL] = {    \
+    static const av2_cfl_subtract_average_fn sub_avg[TX_SIZES_ALL_AV2] = {    \
       av2_cfl_subtract_average_4x4_##arch,   /* 4x4 */                    \
       av2_cfl_subtract_average_8x8_##arch,   /* 8x8 */                    \
       av2_cfl_subtract_average_16x16_##arch, /* 16x16 */                  \
@@ -590,9 +590,9 @@ void av2_cfl_load_dc_pred(MACROBLOCKD *const xd, uint16_t *dst, int dst_stride,
       av2_cfl_subtract_average_4x64_##arch,  /* 4x64 */                   \
       av2_cfl_subtract_average_64x4_##arch,  /* 64x4 */                   \
     };                                                                    \
-    /* Modulo TX_SIZES_ALL to ensure that an attacker won't be able to */ \
+    /* Modulo TX_SIZES_ALL_AV2 to ensure that an attacker won't be able to */ \
     /* index the function pointer array out of bounds. */                 \
-    return sub_avg[tx_size % TX_SIZES_ALL];                               \
+    return sub_avg[tx_size % TX_SIZES_ALL_AV2];                               \
   }
 
 // For VSX SIMD optimization, the C versions of width == 4 subtract are
@@ -642,7 +642,7 @@ void av2_cfl_subtract_average_4x16_c(const uint16_t *src, int16_t *dst);
   CFL_PREDICT_X(arch, 4, 64, bd)                                          \
   av2_cfl_predict_##bd##_fn av2_cfl_get_predict_##bd##_fn_##arch(         \
       TX_SIZE tx_size) {                                                  \
-    static const av2_cfl_predict_##bd##_fn pred[TX_SIZES_ALL] = {         \
+    static const av2_cfl_predict_##bd##_fn pred[TX_SIZES_ALL_AV2] = {         \
       av2_cfl_predict_##bd##_4x4_##arch,   /* 4x4 */                      \
       av2_cfl_predict_##bd##_8x8_##arch,   /* 8x8 */                      \
       av2_cfl_predict_##bd##_16x16_##arch, /* 16x16 */                    \
@@ -669,9 +669,9 @@ void av2_cfl_subtract_average_4x16_c(const uint16_t *src, int16_t *dst);
       av2_cfl_predict_##bd##_4x64_##arch,  /* 4x64 */                     \
       av2_cfl_predict_##bd##_64x4_##arch,  /* 64x4 */                     \
     };                                                                    \
-    /* Modulo TX_SIZES_ALL to ensure that an attacker won't be able to */ \
+    /* Modulo TX_SIZES_ALL_AV2 to ensure that an attacker won't be able to */ \
     /* index the function pointer array out of bounds. */                 \
-    return pred[tx_size % TX_SIZES_ALL];                                  \
+    return pred[tx_size % TX_SIZES_ALL_AV2];                                  \
   }
 
 #endif  // AVM_AV2_COMMON_CFL_H_

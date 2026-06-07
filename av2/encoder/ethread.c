@@ -32,7 +32,7 @@ static INLINE void accumulate_rd_opt(ThreadData *td, ThreadData *td_t) {
       td_t->rd_counts.compound_ref_used_flag;
   td->rd_counts.skip_mode_used_flag |= td_t->rd_counts.skip_mode_used_flag;
 
-  for (int i = 0; i < TX_SIZES_ALL; i++) {
+  for (int i = 0; i < TX_SIZES_ALL_AV2; i++) {
     for (int j = 0; j < TX_TYPES; j++)
       td->rd_counts.tx_type_used[i][j] += td_t->rd_counts.tx_type_used[i][j];
   }

@@ -542,7 +542,7 @@ static const TX_TYPE_1D htx_tab[TX_TYPES] = {
 #if CONFIG_INSPECTION
 // Smallest sub_tx size units. Used to compute the index in the
 // tx type map.
-static const TX_SIZE smallest_sub_tx_size_map[TX_SIZES_ALL] = {
+static const TX_SIZE smallest_sub_tx_size_map[TX_SIZES_ALL_AV2] = {
   TX_4X4,    // TX_4X4
   TX_4X4,    // TX_8X8
   TX_4X4,    // TX_16X16
@@ -567,7 +567,7 @@ static const TX_SIZE smallest_sub_tx_size_map[TX_SIZES_ALL] = {
 
 #ifndef txsize_horz_map_defined
 #define txsize_horz_map_defined
-static const TX_SIZE txsize_horz_map[TX_SIZES_ALL] = {
+static const TX_SIZE txsize_horz_map[TX_SIZES_ALL_AV2] = {
   TX_4X4,    // TX_4X4
   TX_8X8,    // TX_8X8
   TX_16X16,  // TX_16X16
@@ -598,7 +598,7 @@ static const TX_SIZE txsize_horz_map[TX_SIZES_ALL] = {
 
 #ifndef txsize_vert_map_defined
 #define txsize_vert_map_defined
-static const TX_SIZE txsize_vert_map[TX_SIZES_ALL] = {
+static const TX_SIZE txsize_vert_map[TX_SIZES_ALL_AV2] = {
   TX_4X4,    // TX_4X4
   TX_8X8,    // TX_8X8
   TX_16X16,  // TX_16X16
@@ -632,7 +632,7 @@ static const TX_SIZE txsize_vert_map[TX_SIZES_ALL] = {
 #ifndef tx_size_wide_defined
 #define tx_size_wide_defined
 // Transform block width in pixels
-static const int tx_size_wide[TX_SIZES_ALL] = {
+static const int tx_size_wide[TX_SIZES_ALL_AV2] = {
   4, 8,  16, 32, 64, 4,  8, 8,  16, 16, 32, 32, 64,
   4, 16, 8,  32, 16, 64, 4, 32, 8,  64, 4,  64,
 };
@@ -643,7 +643,7 @@ static const int tx_size_wide[TX_SIZES_ALL] = {
 #ifndef tx_size_high_defined
 #define tx_size_high_defined
 // Transform block height in pixels
-static const int tx_size_high[TX_SIZES_ALL] = {
+static const int tx_size_high[TX_SIZES_ALL_AV2] = {
   4,  8, 16, 32, 64, 8,  4,  16, 8,  32, 16, 64, 32,
   16, 4, 32, 8,  64, 16, 32, 4,  64, 8,  64, 4,
 };
@@ -652,7 +652,7 @@ static const int tx_size_high[TX_SIZES_ALL] = {
 #ifndef tx_size_wide_unit_defined
 #define tx_size_wide_unit_defined
 // Transform block width in unit
-static const int tx_size_wide_unit[TX_SIZES_ALL] = {
+static const int tx_size_wide_unit[TX_SIZES_ALL_AV2] = {
   1, 2, 4, 8, 16, 1,  2, 2, 4, 4,  8, 8,  16,
   1, 4, 2, 8, 4,  16, 1, 8, 2, 16, 1, 16,
 };
@@ -661,7 +661,7 @@ static const int tx_size_wide_unit[TX_SIZES_ALL] = {
 #ifndef tx_size_high_unit_defined
 #define tx_size_high_unit_defined
 // Transform block height in unit
-static const int tx_size_high_unit[TX_SIZES_ALL] = {
+static const int tx_size_high_unit[TX_SIZES_ALL_AV2] = {
   1, 2, 4, 8, 16, 2, 1, 4, 2,  8, 4,  16, 8,
   4, 1, 8, 2, 16, 4, 8, 1, 16, 2, 16, 1,
 };
@@ -670,7 +670,7 @@ static const int tx_size_high_unit[TX_SIZES_ALL] = {
 #ifndef tx_size_wide_log2_defined
 #define tx_size_wide_log2_defined
 // Transform block width in log2
-static const int tx_size_wide_log2[TX_SIZES_ALL] = {
+static const int tx_size_wide_log2[TX_SIZES_ALL_AV2] = {
   2, 3, 4, 5, 6, 2, 3, 3, 4, 4, 5, 5, 6, 2, 4, 3, 5, 4, 6, 2, 5, 3, 6, 2, 6,
 };
 #endif
@@ -678,14 +678,14 @@ static const int tx_size_wide_log2[TX_SIZES_ALL] = {
 #ifndef tx_size_high_log2_defined
 #define tx_size_high_log2_defined
 // Transform block height in log2
-static const int tx_size_high_log2[TX_SIZES_ALL] = {
+static const int tx_size_high_log2[TX_SIZES_ALL_AV2] = {
   2, 3, 4, 5, 6, 3, 2, 4, 3, 5, 4, 6, 5, 4, 2, 5, 3, 6, 4, 5, 2, 6, 3, 6, 2,
 };
 #endif
 
 #ifndef tx_size_2d_defined
 #define tx_size_2d_defined
-static const int tx_size_2d[TX_SIZES_ALL + 1] = {
+static const int tx_size_2d[TX_SIZES_ALL_AV2 + 1] = {
   16, 64, 256, 1024, 4096, 32,   32,  128, 128, 512, 512, 2048, 2048,
   64, 64, 256, 256,  1024, 1024, 128, 128, 512, 512, 256, 256,
 };
@@ -693,7 +693,7 @@ static const int tx_size_2d[TX_SIZES_ALL + 1] = {
 
 #ifndef txsize_sqr_map_defined
 #define txsize_sqr_map_defined
-static const TX_SIZE txsize_sqr_map[TX_SIZES_ALL] = {
+static const TX_SIZE txsize_sqr_map[TX_SIZES_ALL_AV2] = {
   TX_4X4,    // TX_4X4
   TX_8X8,    // TX_8X8
   TX_16X16,  // TX_16X16
@@ -724,7 +724,7 @@ static const TX_SIZE txsize_sqr_map[TX_SIZES_ALL] = {
 
 #ifndef txsize_sqr_up_map_defined
 #define txsize_sqr_up_map_defined
-static const TX_SIZE txsize_sqr_up_map[TX_SIZES_ALL] = {
+static const TX_SIZE txsize_sqr_up_map[TX_SIZES_ALL_AV2] = {
   TX_4X4,    // TX_4X4
   TX_8X8,    // TX_8X8
   TX_16X16,  // TX_16X16
@@ -755,7 +755,7 @@ static const TX_SIZE txsize_sqr_up_map[TX_SIZES_ALL] = {
 
 #ifndef txsize_log2_minus4_defined
 #define txsize_log2_minus4_defined
-static const int8_t txsize_log2_minus4[TX_SIZES_ALL] = {
+static const int8_t txsize_log2_minus4[TX_SIZES_ALL_AV2] = {
   0,  // TX_4X4
   2,  // TX_8X8
   4,  // TX_16X16
@@ -895,7 +895,7 @@ static const int av2_md_class[INTRA_MODES] = {
 };
 
 // Mapping between mode dependent TX size groups based on allowed TX sizes.
-static const int av2_size_class[TX_SIZES_ALL] = { 0, 1, 2, 3, 3, 0, 0, 1, 1,
+static const int av2_size_class[TX_SIZES_ALL_AV2] = { 0, 1, 2, 3, 3, 0, 0, 1, 1,
                                                   3, 3, 3, 3, 1, 1, 3, 3, 3,
                                                   3, 3, 3, 3, 3, 3, 3 };
 
@@ -915,7 +915,7 @@ static INLINE bool is_bsize_gt(BLOCK_SIZE bsize1, BLOCK_SIZE bsize2) {
          block_size_high[bsize1] > block_size_high[bsize2];
 }
 
-static const int fwd_tx_shift[TX_SIZES_ALL][2] = {
+static const int fwd_tx_shift[TX_SIZES_ALL_AV2][2] = {
   { 1, 10 },  // TX_4X4,    // 4x4 transform
   { 2, 10 },  // TX_8X8,    // 8x8 transform
   { 2, 11 },  // TX_16X16,  // 16x16 transform
@@ -943,7 +943,7 @@ static const int fwd_tx_shift[TX_SIZES_ALL][2] = {
   { 1, 12 },  // TX_64X4,   // 64x4 transform
 };
 
-static const int inv_tx_shift[TX_SIZES_ALL][2] = {
+static const int inv_tx_shift[TX_SIZES_ALL_AV2][2] = {
   { 7, 10 },  // TX_4X4,    // 4x4 transform
   { 7, 11 },  // TX_8X8,    // 8x8 transform
   { 6, 13 },  // TX_16X16,  // 16x16 transform

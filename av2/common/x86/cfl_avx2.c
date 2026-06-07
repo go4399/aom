@@ -30,7 +30,7 @@
   CFL_SUBSAMPLE(avx2, sub, bd, 64, 16)                                     \
   av2_cfl_subsample_##bd##_fn                                              \
   av2_cfl_get_luma_subsampling_##sub##_##bd##_avx2(TX_SIZE tx_size) {      \
-    static const av2_cfl_subsample_##bd##_fn subfn_##sub[TX_SIZES_ALL] = { \
+    static const av2_cfl_subsample_##bd##_fn subfn_##sub[TX_SIZES_ALL_AV2] = { \
       av2_cfl_subsample_##bd##_##sub##_4x4_ssse3,   /* 4x4 */              \
       av2_cfl_subsample_##bd##_##sub##_8x8_ssse3,   /* 8x8 */              \
       av2_cfl_subsample_##bd##_##sub##_16x16_ssse3, /* 16x16 */            \
@@ -1267,7 +1267,7 @@ CFL_PREDICT_X(avx2, 32, 32, hbd)
 CFL_PREDICT_X(avx2, 32, 4, hbd)
 
 av2_cfl_predict_hbd_fn av2_cfl_get_predict_hbd_fn_avx2(TX_SIZE tx_size) {
-  static const av2_cfl_predict_hbd_fn pred[TX_SIZES_ALL] = {
+  static const av2_cfl_predict_hbd_fn pred[TX_SIZES_ALL_AV2] = {
     av2_cfl_predict_hbd_4x4_ssse3,  /* 4x4 */
     av2_cfl_predict_hbd_8x8_ssse3,  /* 8x8 */
     av2_cfl_predict_hbd_16x16_avx2, /* 16x16 */
@@ -1294,9 +1294,9 @@ av2_cfl_predict_hbd_fn av2_cfl_get_predict_hbd_fn_avx2(TX_SIZE tx_size) {
     NULL,                           /* 4x64 (invalid CFL size) */
     NULL,                           /* 64x4 (invalid CFL size) */
   };
-  // Modulo TX_SIZES_ALL to ensure that an attacker won't be able to index the
+  // Modulo TX_SIZES_ALL_AV2 to ensure that an attacker won't be able to index the
   // function pointer array out of bounds.
-  return pred[tx_size % TX_SIZES_ALL];
+  return pred[tx_size % TX_SIZES_ALL_AV2];
 }
 
 // Returns a vector where all the (32-bits) elements are the sum of all the
@@ -1392,7 +1392,7 @@ CFL_SUB_AVG_X(avx2, 32, 4, 64, 7)
 // SSE2, we call the SSE2 code for block widths 4 and 8.
 av2_cfl_subtract_average_fn av2_cfl_get_subtract_average_fn_avx2(
     TX_SIZE tx_size) {
-  static const av2_cfl_subtract_average_fn sub_avg[TX_SIZES_ALL] = {
+  static const av2_cfl_subtract_average_fn sub_avg[TX_SIZES_ALL_AV2] = {
     av2_cfl_subtract_average_4x4_sse2,   /* 4x4 */
     av2_cfl_subtract_average_8x8_sse2,   /* 8x8 */
     av2_cfl_subtract_average_16x16_avx2, /* 16x16 */
@@ -1419,9 +1419,9 @@ av2_cfl_subtract_average_fn av2_cfl_get_subtract_average_fn_avx2(
     NULL,                                /* 4x64 (invalid CFL size) */
     NULL,                                /* 64x4 (invalid CFL size) */
   };
-  // Modulo TX_SIZES_ALL to ensure that an attacker won't be able to
+  // Modulo TX_SIZES_ALL_AV2 to ensure that an attacker won't be able to
   // index the function pointer array out of bounds.
-  return sub_avg[tx_size % TX_SIZES_ALL];
+  return sub_avg[tx_size % TX_SIZES_ALL_AV2];
 }
 
 static INLINE __m256i non_linear_avx2(__m256i v, __m256i mid, int bit_depth) {

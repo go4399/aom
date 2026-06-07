@@ -152,7 +152,7 @@ static INLINE ENTROPY_CONTEXT get_entropy_context_1d(const ENTROPY_CONTEXT *ctx,
 #define get_entropy_context_defined
 static INLINE int get_entropy_context(TX_SIZE tx_size, const ENTROPY_CONTEXT *a,
                                       const ENTROPY_CONTEXT *l) {
-  assert(tx_size < TX_SIZES_ALL);
+  assert(tx_size < TX_SIZES_ALL_AV2);
   const int txw = tx_size_wide[tx_size];
   const int txh = tx_size_high[tx_size];
   ENTROPY_CONTEXT above_ec = 0, left_ec = 0;

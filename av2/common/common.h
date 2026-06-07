@@ -17,9 +17,7 @@
 #define AV2_CDF_SIZE(x) ((x) + 4)
 #endif
 
-#ifndef TX_SIZES_ALL
-#define TX_SIZES_ALL TX_SIZES_ALL_AV2
-#endif
+
 
 #ifndef MAX_WEDGE_TYPES
 #define MAX_WEDGE_TYPES 68

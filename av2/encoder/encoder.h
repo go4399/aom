@@ -1368,7 +1368,7 @@ typedef struct {
    * frames. If tx_type_probs[i][j][k] < thresh, then transform search for that
    * type is pruned.
    */
-  int tx_type_probs[FRAME_UPDATE_TYPES][TX_SIZES_ALL][TX_TYPES];
+  int tx_type_probs[FRAME_UPDATE_TYPES][TX_SIZES_ALL_AV2][TX_TYPES];
 } FrameProbInfo;
 
 #if CONFIG_ENTROPY_STATS
@@ -1757,7 +1757,7 @@ typedef struct RD_COUNTS {
   int64_t comp_pred_diff[REFERENCE_MODES];
   int compound_ref_used_flag;
   int skip_mode_used_flag;
-  int tx_type_used[TX_SIZES_ALL][TX_TYPES];
+  int tx_type_used[TX_SIZES_ALL_AV2][TX_TYPES];
   int warped_used[2];
 } RD_COUNTS;
 
@@ -2433,7 +2433,7 @@ typedef struct {
 #define ENCODER_BLOCK_SIZES_ALL (BLOCK_64X4 + 1)
 
 // Used to get block size index for `AV2_COMP.fn_ptr` array.
-static const int enc_txsize_to_bsize[TX_SIZES_ALL] = {
+static const int enc_txsize_to_bsize[TX_SIZES_ALL_AV2] = {
   BLOCK_4X4,    // TX_4X4
   BLOCK_8X8,    // TX_8X8
   BLOCK_16X16,  // TX_16X16

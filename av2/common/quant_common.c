@@ -334,7 +334,7 @@ void av2_qm_frame_update(struct CommonQuantParams *quant_params, int num_planes,
   for (int c = 0; c < num_planes; ++c) {
     // Generate matrices for each tx size
     int current = 0;
-    for (int t = 0; t < TX_SIZES_ALL; ++t) {
+    for (int t = 0; t < TX_SIZES_ALL_AV2; ++t) {
       const int size = tx_size_2d[t];
       const int qm_tx_size = av2_get_adjusted_tx_size(t);
       if (t != qm_tx_size) {  // Reuse matrices for 'qm_tx_size'
@@ -374,7 +374,7 @@ void av2_qm_init(CommonQuantParams *quant_params, int num_planes) {
     for (int c = 0; c < num_planes; ++c) {
       // Generate matrices for each tx size
       int current = 0;
-      for (int t = 0; t < TX_SIZES_ALL; ++t) {
+      for (int t = 0; t < TX_SIZES_ALL_AV2; ++t) {
         const int size = tx_size_2d[t];
         const int qm_tx_size = av2_get_adjusted_tx_size(t);
         if (q == NUM_QM_LEVELS - 1) {
@@ -407,7 +407,7 @@ void av2_qm_replace_level(CommonQuantParams *quant_params, int level,
   for (int c = 0; c < num_planes; ++c) {
     // Generate matrices for each tx size
     int current = 0;
-    for (int t = 0; t < TX_SIZES_ALL; ++t) {
+    for (int t = 0; t < TX_SIZES_ALL_AV2; ++t) {
       const int size = tx_size_2d[t];
       const int qm_tx_size = av2_get_adjusted_tx_size(t);
       if (q == NUM_QM_LEVELS - 1) {

@@ -127,7 +127,7 @@ CFL_SUB_AVG_X(vsx, 32, 32, 512, 10)
 // load and store intrinsics). So we call the C code for block widths 4.
 av2_cfl_subtract_average_fn av2_cfl_get_subtract_average_fn_vsx(
     TX_SIZE tx_size) {
-  static const av2_cfl_subtract_average_fn sub_avg[TX_SIZES_ALL] = {
+  static const av2_cfl_subtract_average_fn sub_avg[TX_SIZES_ALL_AV2] = {
     av2_cfl_subtract_average_4x4_c,     /* 4x4 */
     av2_cfl_subtract_average_8x8_vsx,   /* 8x8 */
     av2_cfl_subtract_average_16x16_vsx, /* 16x16 */
@@ -148,7 +148,7 @@ av2_cfl_subtract_average_fn av2_cfl_get_subtract_average_fn_vsx(
     NULL,                               /* 16x64 (invalid CFL size) */
     NULL,                               /* 64x16 (invalid CFL size) */
   };
-  // Modulo TX_SIZES_ALL to ensure that an attacker won't be able to
+  // Modulo TX_SIZES_ALL_AV2 to ensure that an attacker won't be able to
   // index the function pointer array out of bounds.
-  return sub_avg[tx_size % TX_SIZES_ALL];
+  return sub_avg[tx_size % TX_SIZES_ALL_AV2];
 }

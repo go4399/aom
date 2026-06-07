@@ -283,7 +283,7 @@ static TX_SIZE get_transform_size(const MACROBLOCKD *const xd,
       tx_info->col_offset = txb_pos.col_offset[txb_idx];
       tx_info->tx_size = tmp_tx_size;
 
-      assert(tmp_tx_size < TX_SIZES_ALL);
+      assert(tmp_tx_size < TX_SIZES_ALL_AV2);
       tx_size = tmp_tx_size;
     } else {
       tx_size = get_tx_partition_one_size(partition, max_tx_size);
@@ -298,7 +298,7 @@ static TX_SIZE get_transform_size(const MACROBLOCKD *const xd,
                                  mi_col - mbmi->mi_col_start);
   }
 
-  assert(tx_size < TX_SIZES_ALL);
+  assert(tx_size < TX_SIZES_ALL_AV2);
   // since in case of chrominance or non-square transform need to convert
   // transform size into transform size in particular direction.
   // for vertical edge, filter direction is horizontal, for horizontal

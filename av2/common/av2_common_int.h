@@ -1830,11 +1830,11 @@ struct CommonQuantParams {
   /*!
    * Global dquantization matrix table.
    */
-  const qm_val_t *giqmatrix[NUM_QM_LEVELS][3][TX_SIZES_ALL];
+  const qm_val_t *giqmatrix[NUM_QM_LEVELS][3][TX_SIZES_ALL_AV2];
   /*!
    * Global quantization matrix table.
    */
-  const qm_val_t *gqmatrix[NUM_QM_LEVELS][3][TX_SIZES_ALL];
+  const qm_val_t *gqmatrix[NUM_QM_LEVELS][3][TX_SIZES_ALL_AV2];
   /**@}*/
 
   /**
@@ -1844,15 +1844,15 @@ struct CommonQuantParams {
   /*!
    * Local dequant matrix for Y plane.
    */
-  const qm_val_t *y_iqmatrix[MAX_SEGMENTS][TX_SIZES_ALL];
+  const qm_val_t *y_iqmatrix[MAX_SEGMENTS][TX_SIZES_ALL_AV2];
   /*!
    * Local dequant matrix for U plane.
    */
-  const qm_val_t *u_iqmatrix[MAX_SEGMENTS][TX_SIZES_ALL];
+  const qm_val_t *u_iqmatrix[MAX_SEGMENTS][TX_SIZES_ALL_AV2];
   /*!
    * Local dequant matrix for V plane.
    */
-  const qm_val_t *v_iqmatrix[MAX_SEGMENTS][TX_SIZES_ALL];
+  const qm_val_t *v_iqmatrix[MAX_SEGMENTS][TX_SIZES_ALL_AV2];
   /**@}*/
 
   /*!
@@ -4193,7 +4193,7 @@ static INLINE void av2_zero_left_context(MACROBLOCKD *const xd) {
 }
 
 // Disable array-bounds checks as the TX_SIZE enum contains values larger than
-// TX_SIZES_ALL (TX_INVALID) which make extending the array as a workaround
+// TX_SIZES_ALL_AV2 (TX_INVALID) which make extending the array as a workaround
 // infeasible. The assert is enough for static analysis and this or other tools
 // asan, valgrind would catch oob access at runtime.
 #if defined(__GNUC__) && __GNUC__ >= 4
