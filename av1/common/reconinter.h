@@ -63,16 +63,21 @@ typedef struct {
   int y_offset;
 } wedge_code_type;
 
-typedef uint8_t *wedge_masks_type[MAX_WEDGE_TYPES];
+typedef uint32_t wedge_masks_type[MAX_WEDGE_TYPES];
 
 typedef struct {
   int wedge_types;
   const wedge_code_type *codebook;
-  uint8_t *signflip;
-  wedge_masks_type *masks;
+  const uint8_t *signflip;
+  const wedge_masks_type *masks;
 } wedge_params_type;
 
 extern const wedge_params_type av1_wedge_params_lookup[BLOCK_SIZES_ALL];
+
+// Edge addition (bug 62400357): precomputed compound prediction mask data.
+// Exposed so av1_get_contiguous_soft_mask() can resolve byte offsets stored
+// in `wedge_masks` without going through a relocated pointer table.
+extern const uint8_t wedge_mask_buf[];
 
 typedef struct SubpelParams {
   int xs;
@@ -456,7 +461,8 @@ void av1_init_wedge_masks(void);
 static inline const uint8_t *av1_get_contiguous_soft_mask(int8_t wedge_index,
                                                           int8_t wedge_sign,
                                                           BLOCK_SIZE sb_type) {
-  return av1_wedge_params_lookup[sb_type].masks[wedge_sign][wedge_index];
+  return wedge_mask_buf +
+         av1_wedge_params_lookup[sb_type].masks[wedge_sign][wedge_index];
 }
 
 void av1_dist_wtd_comp_weight_assign(const AV1_COMMON *cm,
