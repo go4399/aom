@@ -68,7 +68,7 @@ static const int wedge_angle_dist_2_index[WEDGE_ANGLES][NUM_WEDGE_DIST] = {
   { -1, 65, 66, 67 },  // WEDGE_346
 };
 
-static const int wedge_index_2_angle[MAX_WEDGE_TYPES] = {
+static const int wedge_index_2_angle[AV2_MAX_WEDGE_TYPES] = {
   WEDGE_0,   WEDGE_0,   WEDGE_0,               // WEDGE_0
   WEDGE_14,  WEDGE_14,  WEDGE_14,  WEDGE_14,   // WEDGE_14
   WEDGE_27,  WEDGE_27,  WEDGE_27,  WEDGE_27,   // WEDGE_27
@@ -91,7 +91,7 @@ static const int wedge_index_2_angle[MAX_WEDGE_TYPES] = {
   WEDGE_346, WEDGE_346, WEDGE_346              // WEDGE_346
 };
 
-static const int wedge_index_2_dist[MAX_WEDGE_TYPES] = {
+static const int wedge_index_2_dist[AV2_MAX_WEDGE_TYPES] = {
   1, 2, 3,     // WEDGE_0
   0, 1, 2, 3,  // WEDGE_14
   0, 1, 2, 3,  // WEDGE_27
@@ -121,9 +121,9 @@ typedef struct {
   int y_offset;
 } wedge_code_type;
 typedef uint8_t
-    *all_wedge_masks_type[MAX_WEDGE_TYPES][MAX_WEDGE_BOUNDARY_TYPES];
+    *all_wedge_masks_type[AV2_MAX_WEDGE_TYPES][MAX_WEDGE_BOUNDARY_TYPES];
 typedef uint8_t
-    *wedge_decisions_type[MAX_WEDGE_TYPES][MAX_WEDGE_BOUNDARY_TYPES];
+    *wedge_decisions_type[AV2_MAX_WEDGE_TYPES][MAX_WEDGE_BOUNDARY_TYPES];
 
 typedef struct {
   int wedge_types;

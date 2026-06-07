@@ -19,8 +19,8 @@
 
 
 
-#ifndef MAX_WEDGE_TYPES
-#define MAX_WEDGE_TYPES 68
+#ifndef AV2_MAX_WEDGE_TYPES
+#define AV2_MAX_WEDGE_TYPES 68
 #endif
 
 #define AVM_PARA2(a, b, c) ((a) + 2), ((b) + 3), ((c) + 4)

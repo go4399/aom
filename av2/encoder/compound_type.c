@@ -198,7 +198,7 @@ static int8_t estimate_wedge_sign(const AV2_COMP *cpi, const MACROBLOCK *x,
 static int get_wedge_cost(const BLOCK_SIZE bsize, const int8_t wedge_index,
                           const MACROBLOCK *const x) {
   (void)bsize;
-  assert(wedge_index >= 0 && wedge_index < MAX_WEDGE_TYPES);
+  assert(wedge_index >= 0 && wedge_index < AV2_MAX_WEDGE_TYPES);
   const int wedge_angle = wedge_index_2_angle[wedge_index];
   const int wedge_dist = wedge_index_2_dist[wedge_index];
   const int wedge_quad = (wedge_angle / QUAD_WEDGE_ANGLES);

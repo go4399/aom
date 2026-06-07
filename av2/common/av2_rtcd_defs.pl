@@ -15,8 +15,6 @@ print <<EOF
  */
 
 #include "aom/aom_integer.h"
-// av2/common/common.h must precede aom_dsp/txfm_common.h so the AV2 values of
-// MAX_WEDGE_TYPES (all #ifndef-guarded) win over the AV1 fallbacks.
 #include "av2/common/common.h"
 #include "aom_dsp/txfm_common.h"
 #include "av2/common/enums.h"

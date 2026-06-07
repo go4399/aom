@@ -13,9 +13,6 @@
 #ifndef AOM_AV2_COMMON_ENUMS_H_
 #define AOM_AV2_COMMON_ENUMS_H_
 
-// av2/common/common.h defines the AV2-specific values of MAX_WEDGE_TYPES
-// (all #ifndef-guarded). It MUST be included before av1/common/enums.h,
-// which transitively pulls in aom_dsp/txfm_common.h.
 #include "av2/common/common.h"
 #ifndef AV2_CONVOLVE_SUBPEL_REDIRECT
 #define AV2_CONVOLVE_SUBPEL_REDIRECT 1
