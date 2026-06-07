@@ -47,10 +47,6 @@ extern "C" {
 
 #define WEDGE_NONE -1
 
-// Defined locally only for AV1 translation units; AV2 translation units inherit
-// the extended WedgeDirectionType from av1/common/enums.h's AV2 branch.
-#ifndef WEDGE_DIRECTIONS_DEFINED
-#define WEDGE_DIRECTIONS_DEFINED
 // Angles are with respect to horizontal anti-clockwise
 enum {
   WEDGE_HORIZONTAL = 0,
@@ -61,7 +57,6 @@ enum {
   WEDGE_OBLIQUE153 = 5,
   WEDGE_DIRECTIONS
 } UENUM1BYTE(WedgeDirectionType);
-#endif
 
 // 3-tuple: {direction, x_offset, y_offset}
 typedef struct {

@@ -45,78 +45,78 @@ extern "C" {
 
 #define WEDGE_WEIGHT_BITS 6
 
-static const int wedge_angle_dist_2_index[WEDGE_ANGLES][NUM_WEDGE_DIST] = {
-  { -1, 0, 1, 2 },     // WEDGE_0
-  { 3, 4, 5, 6 },      // WEDGE_14
-  { 7, 8, 9, 10 },     // WEDGE_27
-  { 11, 12, 13, 14 },  // WEDGE_45
-  { 15, 16, 17, 18 },  // WEDGE_63
-  { -1, 19, 20, 21 },  // WEDGE_90
-  { 22, 23, 24, 25 },  // WEDGE_117
-  { 26, 27, 28, 29 },  // WEDGE_135
-  { 30, 31, 32, 33 },  // WEDGE_153
-  { 34, 35, 36, 37 },  // WEDGE_166
-  { -1, 38, 39, 40 },  // WEDGE_180
-  { -1, 41, 42, 43 },  // WEDGE_194
-  { -1, 44, 45, 46 },  // WEDGE_207
-  { -1, 47, 48, 49 },  // WEDGE_225
-  { -1, 50, 51, 52 },  // WEDGE_243
-  { -1, 53, 54, 55 },  // WEDGE_270
-  { -1, 56, 57, 58 },  // WEDGE_297
-  { -1, 59, 60, 61 },  // WEDGE_315
-  { -1, 62, 63, 64 },  // WEDGE_333
-  { -1, 65, 66, 67 },  // WEDGE_346
+static const int wedge_angle_dist_2_index[AV2_WEDGE_ANGLES][NUM_WEDGE_DIST] = {
+  { -1, 0, 1, 2 },     // AV2_WEDGE_0
+  { 3, 4, 5, 6 },      // AV2_WEDGE_14
+  { 7, 8, 9, 10 },     // AV2_WEDGE_27
+  { 11, 12, 13, 14 },  // AV2_WEDGE_45
+  { 15, 16, 17, 18 },  // AV2_WEDGE_63
+  { -1, 19, 20, 21 },  // AV2_WEDGE_90
+  { 22, 23, 24, 25 },  // AV2_WEDGE_117
+  { 26, 27, 28, 29 },  // AV2_WEDGE_135
+  { 30, 31, 32, 33 },  // AV2_WEDGE_153
+  { 34, 35, 36, 37 },  // AV2_WEDGE_166
+  { -1, 38, 39, 40 },  // AV2_WEDGE_180
+  { -1, 41, 42, 43 },  // AV2_WEDGE_194
+  { -1, 44, 45, 46 },  // AV2_WEDGE_207
+  { -1, 47, 48, 49 },  // AV2_WEDGE_225
+  { -1, 50, 51, 52 },  // AV2_WEDGE_243
+  { -1, 53, 54, 55 },  // AV2_WEDGE_270
+  { -1, 56, 57, 58 },  // AV2_WEDGE_297
+  { -1, 59, 60, 61 },  // AV2_WEDGE_315
+  { -1, 62, 63, 64 },  // AV2_WEDGE_333
+  { -1, 65, 66, 67 },  // AV2_WEDGE_346
 };
 
 static const int wedge_index_2_angle[AV2_MAX_WEDGE_TYPES] = {
-  WEDGE_0,   WEDGE_0,   WEDGE_0,               // WEDGE_0
-  WEDGE_14,  WEDGE_14,  WEDGE_14,  WEDGE_14,   // WEDGE_14
-  WEDGE_27,  WEDGE_27,  WEDGE_27,  WEDGE_27,   // WEDGE_27
-  WEDGE_45,  WEDGE_45,  WEDGE_45,  WEDGE_45,   // WEDGE_45
-  WEDGE_63,  WEDGE_63,  WEDGE_63,  WEDGE_63,   // WEDGE_63
-  WEDGE_90,  WEDGE_90,  WEDGE_90,              // WEDGE_90
-  WEDGE_117, WEDGE_117, WEDGE_117, WEDGE_117,  // WEDGE_117
-  WEDGE_135, WEDGE_135, WEDGE_135, WEDGE_135,  // WEDGE_135
-  WEDGE_153, WEDGE_153, WEDGE_153, WEDGE_153,  // WEDGE_153
-  WEDGE_166, WEDGE_166, WEDGE_166, WEDGE_166,  // WEDGE_166
-  WEDGE_180, WEDGE_180, WEDGE_180,             // WEDGE_180
-  WEDGE_194, WEDGE_194, WEDGE_194,             // WEDGE_194
-  WEDGE_207, WEDGE_207, WEDGE_207,             // WEDGE_207
-  WEDGE_225, WEDGE_225, WEDGE_225,             // WEDGE_225
-  WEDGE_243, WEDGE_243, WEDGE_243,             // WEDGE_243
-  WEDGE_270, WEDGE_270, WEDGE_270,             // WEDGE_270
-  WEDGE_297, WEDGE_297, WEDGE_297,             // WEDGE_297
-  WEDGE_315, WEDGE_315, WEDGE_315,             // WEDGE_315
-  WEDGE_333, WEDGE_333, WEDGE_333,             // WEDGE_333
-  WEDGE_346, WEDGE_346, WEDGE_346              // WEDGE_346
+  AV2_WEDGE_0,   AV2_WEDGE_0,   AV2_WEDGE_0,               // AV2_WEDGE_0
+  AV2_WEDGE_14,  AV2_WEDGE_14,  AV2_WEDGE_14,  AV2_WEDGE_14,   // AV2_WEDGE_14
+  AV2_WEDGE_27,  AV2_WEDGE_27,  AV2_WEDGE_27,  AV2_WEDGE_27,   // AV2_WEDGE_27
+  AV2_WEDGE_45,  AV2_WEDGE_45,  AV2_WEDGE_45,  AV2_WEDGE_45,   // AV2_WEDGE_45
+  AV2_WEDGE_63,  AV2_WEDGE_63,  AV2_WEDGE_63,  AV2_WEDGE_63,   // AV2_WEDGE_63
+  AV2_WEDGE_90,  AV2_WEDGE_90,  AV2_WEDGE_90,              // AV2_WEDGE_90
+  AV2_WEDGE_117, AV2_WEDGE_117, AV2_WEDGE_117, AV2_WEDGE_117,  // AV2_WEDGE_117
+  AV2_WEDGE_135, AV2_WEDGE_135, AV2_WEDGE_135, AV2_WEDGE_135,  // AV2_WEDGE_135
+  AV2_WEDGE_153, AV2_WEDGE_153, AV2_WEDGE_153, AV2_WEDGE_153,  // AV2_WEDGE_153
+  AV2_WEDGE_166, AV2_WEDGE_166, AV2_WEDGE_166, AV2_WEDGE_166,  // AV2_WEDGE_166
+  AV2_WEDGE_180, AV2_WEDGE_180, AV2_WEDGE_180,             // AV2_WEDGE_180
+  AV2_WEDGE_194, AV2_WEDGE_194, AV2_WEDGE_194,             // AV2_WEDGE_194
+  AV2_WEDGE_207, AV2_WEDGE_207, AV2_WEDGE_207,             // AV2_WEDGE_207
+  AV2_WEDGE_225, AV2_WEDGE_225, AV2_WEDGE_225,             // AV2_WEDGE_225
+  AV2_WEDGE_243, AV2_WEDGE_243, AV2_WEDGE_243,             // AV2_WEDGE_243
+  AV2_WEDGE_270, AV2_WEDGE_270, AV2_WEDGE_270,             // AV2_WEDGE_270
+  AV2_WEDGE_297, AV2_WEDGE_297, AV2_WEDGE_297,             // AV2_WEDGE_297
+  AV2_WEDGE_315, AV2_WEDGE_315, AV2_WEDGE_315,             // AV2_WEDGE_315
+  AV2_WEDGE_333, AV2_WEDGE_333, AV2_WEDGE_333,             // AV2_WEDGE_333
+  AV2_WEDGE_346, AV2_WEDGE_346, AV2_WEDGE_346              // AV2_WEDGE_346
 };
 
 static const int wedge_index_2_dist[AV2_MAX_WEDGE_TYPES] = {
-  1, 2, 3,     // WEDGE_0
-  0, 1, 2, 3,  // WEDGE_14
-  0, 1, 2, 3,  // WEDGE_27
-  0, 1, 2, 3,  // WEDGE_45
-  0, 1, 2, 3,  // WEDGE_63
-  1, 2, 3,     // WEDGE_90
-  0, 1, 2, 3,  // WEDGE_117
-  0, 1, 2, 3,  // WEDGE_135
-  0, 1, 2, 3,  // WEDGE_153
-  0, 1, 2, 3,  // WEDGE_166
-  1, 2, 3,     // WEDGE_180
-  1, 2, 3,     // WEDGE_194
-  1, 2, 3,     // WEDGE_207
-  1, 2, 3,     // WEDGE_225
-  1, 2, 3,     // WEDGE_243
-  1, 2, 3,     // WEDGE_270
-  1, 2, 3,     // WEDGE_297
-  1, 2, 3,     // WEDGE_315
-  1, 2, 3,     // WEDGE_333
-  1, 2, 3,     // WEDGE_346
+  1, 2, 3,     // AV2_WEDGE_0
+  0, 1, 2, 3,  // AV2_WEDGE_14
+  0, 1, 2, 3,  // AV2_WEDGE_27
+  0, 1, 2, 3,  // AV2_WEDGE_45
+  0, 1, 2, 3,  // AV2_WEDGE_63
+  1, 2, 3,     // AV2_WEDGE_90
+  0, 1, 2, 3,  // AV2_WEDGE_117
+  0, 1, 2, 3,  // AV2_WEDGE_135
+  0, 1, 2, 3,  // AV2_WEDGE_153
+  0, 1, 2, 3,  // AV2_WEDGE_166
+  1, 2, 3,     // AV2_WEDGE_180
+  1, 2, 3,     // AV2_WEDGE_194
+  1, 2, 3,     // AV2_WEDGE_207
+  1, 2, 3,     // AV2_WEDGE_225
+  1, 2, 3,     // AV2_WEDGE_243
+  1, 2, 3,     // AV2_WEDGE_270
+  1, 2, 3,     // AV2_WEDGE_297
+  1, 2, 3,     // AV2_WEDGE_315
+  1, 2, 3,     // AV2_WEDGE_333
+  1, 2, 3,     // AV2_WEDGE_346
 };
 
 // 3-tuple: {direction, x_offset, y_offset}
 typedef struct {
-  WedgeDirectionType direction;
+  AV2WedgeDirectionType direction;
   int x_offset;
   int y_offset;
 } wedge_code_type;

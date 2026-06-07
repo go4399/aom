@@ -267,34 +267,31 @@ extern "C" {
 
 #define BAWP_MAX_REF_NUMB 16
 
-/*WEDGE_0 is defined in the three o'clock direciton, the angles are defined in
+/*AV2_WEDGE_0 is defined in the three o'clock direciton, the angles are defined in
  * the anticlockwise.*/
-#ifndef WEDGE_DIRECTIONS_DEFINED
-#define WEDGE_DIRECTIONS_DEFINED
 enum {
-  WEDGE_0,
-  WEDGE_14,
-  WEDGE_27,
-  WEDGE_45,
-  WEDGE_63,
-  WEDGE_90,
-  WEDGE_117,
-  WEDGE_135,
-  WEDGE_153,
-  WEDGE_166,
-  WEDGE_180,
-  WEDGE_194,
-  WEDGE_207,
-  WEDGE_225,
-  WEDGE_243,
-  WEDGE_270,
-  WEDGE_297,
-  WEDGE_315,
-  WEDGE_333,
-  WEDGE_346,
-  WEDGE_ANGLES
-} UENUM1BYTE(WedgeDirectionType);
-#endif
+  AV2_WEDGE_0,
+  AV2_WEDGE_14,
+  AV2_WEDGE_27,
+  AV2_WEDGE_45,
+  AV2_WEDGE_63,
+  AV2_WEDGE_90,
+  AV2_WEDGE_117,
+  AV2_WEDGE_135,
+  AV2_WEDGE_153,
+  AV2_WEDGE_166,
+  AV2_WEDGE_180,
+  AV2_WEDGE_194,
+  AV2_WEDGE_207,
+  AV2_WEDGE_225,
+  AV2_WEDGE_243,
+  AV2_WEDGE_270,
+  AV2_WEDGE_297,
+  AV2_WEDGE_315,
+  AV2_WEDGE_333,
+  AV2_WEDGE_346,
+  AV2_WEDGE_ANGLES
+} UENUM1BYTE(AV2WedgeDirectionType);
 
 #define H_WEDGE_ANGLES 10
 #define NUM_WEDGE_DIST 4

@@ -399,7 +399,7 @@ static void write_wedge_mode(aom_writer *w, FRAME_CONTEXT *ec_ctx,
   avm_write_symbol(w, wedge_angle_in_quad, ec_ctx->wedge_angle_cdf[wedge_quad],
                    QUAD_WEDGE_ANGLES);
   if ((wedge_angle >= H_WEDGE_ANGLES) ||
-      (wedge_angle == WEDGE_90 || wedge_angle == WEDGE_0)) {
+      (wedge_angle == AV2_WEDGE_90 || wedge_angle == AV2_WEDGE_0)) {
     assert(wedge_dist != 0);
     avm_write_symbol(w, wedge_dist - 1, ec_ctx->wedge_dist_cdf2,
                      NUM_WEDGE_DIST - 1);

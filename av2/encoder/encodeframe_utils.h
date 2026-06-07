@@ -189,7 +189,7 @@ static INLINE void update_wedge_mode_cdf(FRAME_CONTEXT *fc,
   update_cdf(fc->wedge_angle_cdf[wedge_quad], wedge_angle_in_quad,
              QUAD_WEDGE_ANGLES);
   if ((wedge_angle >= H_WEDGE_ANGLES) ||
-      (wedge_angle == WEDGE_90 || wedge_angle == WEDGE_0)) {
+      (wedge_angle == AV2_WEDGE_90 || wedge_angle == AV2_WEDGE_0)) {
     assert(wedge_dist != 0);
 #if CONFIG_ENTROPY_STATS
     counts->wedge_dist2_cnt[wedge_dist - 1]++;

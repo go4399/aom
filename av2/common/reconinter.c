@@ -161,7 +161,7 @@ void av2_make_inter_predictor(const uint16_t *src, int src_stride,
 
 /* clang-format off */
 // rounded cosine and sine look-up tables given by round(32*cos(i)) and round(16*cos(i)) for two wedge boundaries
-static const int8_t wedge_cos_lut_all[MAX_WEDGE_BOUNDARY_TYPES][WEDGE_ANGLES] = {
+static const int8_t wedge_cos_lut_all[MAX_WEDGE_BOUNDARY_TYPES][AV2_WEDGE_ANGLES] = {
   {
   //   0,  1,  2,  4,  6
       32, 32, 32, 16, 16,
@@ -183,7 +183,7 @@ static const int8_t wedge_cos_lut_all[MAX_WEDGE_BOUNDARY_TYPES][WEDGE_ANGLES] = 
        0,  8,  8, 16, 16
   }
 };
-static const int8_t wedge_sin_lut_all[MAX_WEDGE_BOUNDARY_TYPES][WEDGE_ANGLES] = {
+static const int8_t wedge_sin_lut_all[MAX_WEDGE_BOUNDARY_TYPES][AV2_WEDGE_ANGLES] = {
   {
   //   0,  1,  2,  4,  6,
        0, -8,-16,-16,-32,
@@ -226,7 +226,7 @@ static const int8_t neg_dist_2_bld_weight[WEDGE_BLD_LUT_SIZE] = {
 };
 /* clang-format on */
 DECLARE_ALIGNED(16, static uint8_t,
-                wedge_allmaster_mask[2][WEDGE_ANGLES][MAX_WEDGE_BOUNDARY_TYPES]
+                wedge_allmaster_mask[2][AV2_WEDGE_ANGLES][MAX_WEDGE_BOUNDARY_TYPES]
                                     [MASK_MASTER_SIZE * MASK_MASTER_SIZE]);
 
 DECLARE_ALIGNED(16, static uint8_t,
@@ -249,29 +249,29 @@ static all_wedge_masks_type all_wedge_masks[BLOCK_SIZES_ALL][2];
 static wedge_decisions_type wedge_tmvp_decisions[BLOCK_SIZES_ALL][2];
 
 static const wedge_code_type wedge_codebook_16[AV2_MAX_WEDGE_TYPES] = {
-  { WEDGE_0, 5, 4 },   { WEDGE_0, 6, 4 },   { WEDGE_0, 7, 4 },
-  { WEDGE_14, 4, 4 },  { WEDGE_14, 5, 4 },  { WEDGE_14, 6, 4 },
-  { WEDGE_14, 7, 4 },  { WEDGE_27, 4, 4 },  { WEDGE_27, 5, 4 },
-  { WEDGE_27, 6, 4 },  { WEDGE_27, 7, 4 },  { WEDGE_45, 4, 4 },
-  { WEDGE_45, 5, 4 },  { WEDGE_45, 6, 4 },  { WEDGE_45, 7, 4 },
-  { WEDGE_63, 4, 4 },  { WEDGE_63, 4, 3 },  { WEDGE_63, 4, 2 },
-  { WEDGE_63, 4, 1 },  { WEDGE_90, 4, 3 },  { WEDGE_90, 4, 2 },
-  { WEDGE_90, 4, 1 },  { WEDGE_117, 4, 4 }, { WEDGE_117, 4, 3 },
-  { WEDGE_117, 4, 2 }, { WEDGE_117, 4, 1 }, { WEDGE_135, 4, 4 },
-  { WEDGE_135, 3, 4 }, { WEDGE_135, 2, 4 }, { WEDGE_135, 1, 4 },
-  { WEDGE_153, 4, 4 }, { WEDGE_153, 3, 4 }, { WEDGE_153, 2, 4 },
-  { WEDGE_153, 1, 4 }, { WEDGE_166, 4, 4 }, { WEDGE_166, 3, 4 },
-  { WEDGE_166, 2, 4 }, { WEDGE_166, 1, 4 }, { WEDGE_180, 3, 4 },
-  { WEDGE_180, 2, 4 }, { WEDGE_180, 1, 4 }, { WEDGE_194, 3, 4 },
-  { WEDGE_194, 2, 4 }, { WEDGE_194, 1, 4 }, { WEDGE_207, 3, 4 },
-  { WEDGE_207, 2, 4 }, { WEDGE_207, 1, 4 }, { WEDGE_225, 3, 4 },
-  { WEDGE_225, 2, 4 }, { WEDGE_225, 1, 4 }, { WEDGE_243, 4, 5 },
-  { WEDGE_243, 4, 6 }, { WEDGE_243, 4, 7 }, { WEDGE_270, 4, 5 },
-  { WEDGE_270, 4, 6 }, { WEDGE_270, 4, 7 }, { WEDGE_297, 4, 5 },
-  { WEDGE_297, 4, 6 }, { WEDGE_297, 4, 7 }, { WEDGE_315, 5, 4 },
-  { WEDGE_315, 6, 4 }, { WEDGE_315, 7, 4 }, { WEDGE_333, 5, 4 },
-  { WEDGE_333, 6, 4 }, { WEDGE_333, 7, 4 }, { WEDGE_346, 5, 4 },
-  { WEDGE_346, 6, 4 }, { WEDGE_346, 7, 4 },
+  { AV2_WEDGE_0, 5, 4 },   { AV2_WEDGE_0, 6, 4 },   { AV2_WEDGE_0, 7, 4 },
+  { AV2_WEDGE_14, 4, 4 },  { AV2_WEDGE_14, 5, 4 },  { AV2_WEDGE_14, 6, 4 },
+  { AV2_WEDGE_14, 7, 4 },  { AV2_WEDGE_27, 4, 4 },  { AV2_WEDGE_27, 5, 4 },
+  { AV2_WEDGE_27, 6, 4 },  { AV2_WEDGE_27, 7, 4 },  { AV2_WEDGE_45, 4, 4 },
+  { AV2_WEDGE_45, 5, 4 },  { AV2_WEDGE_45, 6, 4 },  { AV2_WEDGE_45, 7, 4 },
+  { AV2_WEDGE_63, 4, 4 },  { AV2_WEDGE_63, 4, 3 },  { AV2_WEDGE_63, 4, 2 },
+  { AV2_WEDGE_63, 4, 1 },  { AV2_WEDGE_90, 4, 3 },  { AV2_WEDGE_90, 4, 2 },
+  { AV2_WEDGE_90, 4, 1 },  { AV2_WEDGE_117, 4, 4 }, { AV2_WEDGE_117, 4, 3 },
+  { AV2_WEDGE_117, 4, 2 }, { AV2_WEDGE_117, 4, 1 }, { AV2_WEDGE_135, 4, 4 },
+  { AV2_WEDGE_135, 3, 4 }, { AV2_WEDGE_135, 2, 4 }, { AV2_WEDGE_135, 1, 4 },
+  { AV2_WEDGE_153, 4, 4 }, { AV2_WEDGE_153, 3, 4 }, { AV2_WEDGE_153, 2, 4 },
+  { AV2_WEDGE_153, 1, 4 }, { AV2_WEDGE_166, 4, 4 }, { AV2_WEDGE_166, 3, 4 },
+  { AV2_WEDGE_166, 2, 4 }, { AV2_WEDGE_166, 1, 4 }, { AV2_WEDGE_180, 3, 4 },
+  { AV2_WEDGE_180, 2, 4 }, { AV2_WEDGE_180, 1, 4 }, { AV2_WEDGE_194, 3, 4 },
+  { AV2_WEDGE_194, 2, 4 }, { AV2_WEDGE_194, 1, 4 }, { AV2_WEDGE_207, 3, 4 },
+  { AV2_WEDGE_207, 2, 4 }, { AV2_WEDGE_207, 1, 4 }, { AV2_WEDGE_225, 3, 4 },
+  { AV2_WEDGE_225, 2, 4 }, { AV2_WEDGE_225, 1, 4 }, { AV2_WEDGE_243, 4, 5 },
+  { AV2_WEDGE_243, 4, 6 }, { AV2_WEDGE_243, 4, 7 }, { AV2_WEDGE_270, 4, 5 },
+  { AV2_WEDGE_270, 4, 6 }, { AV2_WEDGE_270, 4, 7 }, { AV2_WEDGE_297, 4, 5 },
+  { AV2_WEDGE_297, 4, 6 }, { AV2_WEDGE_297, 4, 7 }, { AV2_WEDGE_315, 5, 4 },
+  { AV2_WEDGE_315, 6, 4 }, { AV2_WEDGE_315, 7, 4 }, { AV2_WEDGE_333, 5, 4 },
+  { AV2_WEDGE_333, 6, 4 }, { AV2_WEDGE_333, 7, 4 }, { AV2_WEDGE_346, 5, 4 },
+  { AV2_WEDGE_346, 6, 4 }, { AV2_WEDGE_346, 7, 4 },
 };
 
 // Look up table of params for wedge mode for different block sizes.
@@ -538,7 +538,7 @@ static INLINE void init_wedge_master_all_masks() {
   const int w = MASK_MASTER_SIZE;
   const int h = MASK_MASTER_SIZE;
   for (int k = 0; k < MAX_WEDGE_BOUNDARY_TYPES; k++) {
-    for (int angle = 0; angle < WEDGE_ANGLES; angle++) {
+    for (int angle = 0; angle < AV2_WEDGE_ANGLES; angle++) {
       int idx = 0;
       for (int n = 0; n < h; n++) {
         int y = ((n << 1) - h + 1) * wedge_sin_lut_all[k][angle];

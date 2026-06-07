@@ -206,7 +206,7 @@ static int get_wedge_cost(const BLOCK_SIZE bsize, const int8_t wedge_index,
   int wedge_cost = x->mode_costs.wedge_quad_cost[wedge_quad];
   wedge_cost += x->mode_costs.wedge_angle_cost[wedge_quad][wedge_angle_in_quad];
   if ((wedge_angle >= H_WEDGE_ANGLES) ||
-      (wedge_angle == WEDGE_90 || wedge_angle == WEDGE_0)) {
+      (wedge_angle == AV2_WEDGE_90 || wedge_angle == AV2_WEDGE_0)) {
     assert(wedge_dist != 0);
     wedge_cost += x->mode_costs.wedge_dist_cost2[wedge_dist - 1];
   } else {

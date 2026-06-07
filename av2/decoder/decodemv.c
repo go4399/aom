@@ -468,14 +468,14 @@ static int8_t read_wedge_mode(aom_reader *r, FRAME_CONTEXT *ec_ctx,
   (void)bsize;
   int wedge_quad_dir = avm_read_symbol(r, ec_ctx->wedge_quad_cdf, WEDGE_QUADS,
                                        ACCT_INFO("wedge_quad"));
-  int wedge_angle = WEDGE_ANGLES;
+  int wedge_angle = AV2_WEDGE_ANGLES;
   wedge_angle = QUAD_WEDGE_ANGLES * wedge_quad_dir +
                 avm_read_symbol(r, ec_ctx->wedge_angle_cdf[wedge_quad_dir],
                                 QUAD_WEDGE_ANGLES,
                                 ACCT_INFO("wedge_angle", "wedge_angle_cdf"));
   int wedge_dist = 0;
   if ((wedge_angle >= H_WEDGE_ANGLES) ||
-      (wedge_angle == WEDGE_90 || wedge_angle == WEDGE_0)) {
+      (wedge_angle == AV2_WEDGE_90 || wedge_angle == AV2_WEDGE_0)) {
     wedge_dist = avm_read_symbol(r, ec_ctx->wedge_dist_cdf2, NUM_WEDGE_DIST - 1,
                                  ACCT_INFO("wedge_dist", "wedge_dist_cdf2")) +
                  1;
