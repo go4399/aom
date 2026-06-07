@@ -125,7 +125,7 @@ void av2_fill_mode_rates(AV2_COMMON *const cm, ModeCosts *mode_costs,
   }
   for (int plane_index = 0; plane_index < PARTITION_STRUCTURE_NUM;
        plane_index++) {
-    for (RECT_PART_TYPE rect_type = 0; rect_type < NUM_RECT_CONTEXTS;
+    for (AV2_RECT_PART_TYPE rect_type = 0; rect_type < NUM_RECT_CONTEXTS;
          rect_type++) {
       for (i = 0; i < PARTITION_CONTEXTS; ++i) {
         av2_cost_tokens_from_cdf(

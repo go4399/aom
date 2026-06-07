@@ -375,11 +375,11 @@ typedef struct PARTITION_SPEED_FEATURES {
   // perform split/no_split decision on intra-frames.
   int intra_cnn_split;
 
-  // Prunes PARTITION_3 if PARTITION_NONE is used instead of PARTITION_HORZ|VERT
+  // Prunes PARTITION_3 if PARTITION_NONE is used instead of PARTITION_HORZ|AV2_VERT
   int prune_rect_with_none_rd;
 
   // Prunes extended partitions if PARTITION_NONE is used instead of
-  // PARTITION_HORZ|VERT.
+  // PARTITION_HORZ|AV2_VERT.
   int prune_ext_part_with_part_none;
 
   // Prunes extended partitions if rect sub-partitions don't further split in
@@ -420,11 +420,11 @@ typedef struct PARTITION_SPEED_FEATURES {
   int adaptive_partition_search_order;
 
   // Prune h partition types if their resulting boundary does not agree with
-  // the current best partition's boundary after searching NONE, HORZ, and VERT.
+  // the current best partition's boundary after searching NONE, AV2_HORZ, and AV2_VERT.
   int prune_part_h_with_partition_boundary;
 
   // Prune r-way partition types if their resulting boundary does not agree with
-  // the current best partition's boundary after searching NONE, HORZ, VERT, and
+  // the current best partition's boundary after searching NONE, AV2_HORZ, AV2_VERT, and
   // H-parts.
   int prune_part_4_with_partition_boundary;
 #if CONFIG_ML_PART_SPLIT

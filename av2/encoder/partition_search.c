@@ -1785,11 +1785,11 @@ static void update_partition_stats(
     return;
   }
 
-  RECT_PART_TYPE rect_type = rect_type_implied_by_bsize(bsize, xd->tree_type);
-  if (rect_type == RECT_INVALID) {
+  AV2_RECT_PART_TYPE rect_type = rect_type_implied_by_bsize(bsize, xd->tree_type);
+  if (rect_type == AV2_RECT_INVALID) {
     rect_type = only_allowed_rect_type(partition_allowed);
   }
-  if (rect_type == RECT_INVALID) {
+  if (rect_type == AV2_RECT_INVALID) {
     rect_type = get_rect_part_type(partition);
     const int rect_type_ctx = partition_plane_context(xd, mi_row, mi_col, bsize,
                                                       0, RECT_TYPE_CTX_MODE);
@@ -2228,9 +2228,9 @@ static void build_one_split_tree(AV2_COMMON *const cm, TREE_TYPE tree_type,
 
   const CHROMA_REF_INFO *chroma_ref_info = &ptree->chroma_ref_info;
 
-  // In general, we simulate SPLIT partition as HORZ followed by VERT partition.
-  // But in case first partition is implied to be VERT, we are forced to use
-  // VERT followed by HORZ.
+  // In general, we simulate SPLIT partition as AV2_HORZ followed by AV2_VERT partition.
+  // But in case first partition is implied to be AV2_VERT, we are forced to use
+  // AV2_VERT followed by AV2_HORZ.
   PARTITION_TYPE first_partition = PARTITION_INVALID;
   {
     PARTITION_TYPE implied_first_partition = PARTITION_INVALID;
@@ -2487,11 +2487,11 @@ static void init_partition_costs(const AV2_COMMON *const cm,
     if (do_square_split) {
       continue;
     }
-    RECT_PART_TYPE rect_type = rect_type_implied_by_bsize(bsize, tree_type);
-    if (rect_type == RECT_INVALID) {
+    AV2_RECT_PART_TYPE rect_type = rect_type_implied_by_bsize(bsize, tree_type);
+    if (rect_type == AV2_RECT_INVALID) {
       rect_type = only_allowed_rect_type(partition_allowed);
     }
-    if (rect_type == RECT_INVALID) {
+    if (rect_type == AV2_RECT_INVALID) {
       rect_type = get_rect_part_type(part);
       const int rect_type_ctx = partition_plane_context(
           xd, mi_row, mi_col, bsize, 0, RECT_TYPE_CTX_MODE);
@@ -2911,8 +2911,8 @@ static INLINE void init_allowed_partitions(
     part_search_state->do_rectangular_split = 0;
     part_search_state->is_block_splittable = 0;
     part_search_state->partition_none_allowed = 1;
-    part_search_state->partition_rect_allowed[HORZ] = 0;
-    part_search_state->partition_rect_allowed[VERT] = 0;
+    part_search_state->partition_rect_allowed[AV2_HORZ] = 0;
+    part_search_state->partition_rect_allowed[AV2_VERT] = 0;
     part_search_state->found_best_partition = true;
 #if CONFIG_ML_PART_SPLIT
     part_search_state->prune_partition_split = false;
@@ -2933,40 +2933,40 @@ static INLINE void init_allowed_partitions(
   // Initialize allowed partition types for the partition block.
   part_search_state->is_block_splittable = is_partition_point(bsize);
   part_search_state->partition_none_allowed = partition_allowed[PARTITION_NONE];
-  part_search_state->partition_rect_allowed[HORZ] =
+  part_search_state->partition_rect_allowed[AV2_HORZ] =
       partition_allowed[PARTITION_HORZ] && allow_rect &&
       is_bsize_geq(horz_subsize, min_partition_size);
-  part_search_state->partition_rect_allowed[VERT] =
+  part_search_state->partition_rect_allowed[AV2_VERT] =
       partition_allowed[PARTITION_VERT] && allow_rect &&
       is_bsize_geq(vert_subsize, min_partition_size);
 
-  part_search_state->partition_3_allowed[HORZ] =
+  part_search_state->partition_3_allowed[AV2_HORZ] =
       partition_allowed[PARTITION_HORZ_3] &&
       is_bsize_geq(get_partition_subsize(bsize, PARTITION_HORZ_3),
                    blk_params->min_partition_size) &&
       is_bsize_geq(get_h_partition_subsize(bsize, 1, PARTITION_HORZ_3),
                    blk_params->min_partition_size);
 
-  part_search_state->partition_3_allowed[VERT] =
+  part_search_state->partition_3_allowed[AV2_VERT] =
       partition_allowed[PARTITION_VERT_3] &&
       is_bsize_geq(get_partition_subsize(bsize, PARTITION_VERT_3),
                    blk_params->min_partition_size) &&
       is_bsize_geq(get_h_partition_subsize(bsize, 1, PARTITION_VERT_3),
                    blk_params->min_partition_size);
 
-  part_search_state->partition_4a_allowed[HORZ] =
+  part_search_state->partition_4a_allowed[AV2_HORZ] =
       partition_allowed[PARTITION_HORZ_4A] &&
       is_bsize_geq(get_partition_subsize(bsize, PARTITION_HORZ_4A),
                    blk_params->min_partition_size);
-  part_search_state->partition_4b_allowed[HORZ] =
+  part_search_state->partition_4b_allowed[AV2_HORZ] =
       partition_allowed[PARTITION_HORZ_4B] &&
       is_bsize_geq(get_partition_subsize(bsize, PARTITION_HORZ_4B),
                    blk_params->min_partition_size);
-  part_search_state->partition_4a_allowed[VERT] =
+  part_search_state->partition_4a_allowed[AV2_VERT] =
       partition_allowed[PARTITION_VERT_4A] &&
       is_bsize_geq(get_partition_subsize(bsize, PARTITION_VERT_4A),
                    blk_params->min_partition_size);
-  part_search_state->partition_4b_allowed[VERT] =
+  part_search_state->partition_4b_allowed[AV2_VERT] =
       partition_allowed[PARTITION_VERT_4B] &&
       is_bsize_geq(get_partition_subsize(bsize, PARTITION_VERT_4B),
                    blk_params->min_partition_size);
@@ -2979,8 +2979,8 @@ static INLINE void init_allowed_partitions(
   // than the bound best_rdc has been found.
   part_search_state->found_best_partition = false;
   assert(part_search_state->partition_none_allowed ||
-         part_search_state->partition_rect_allowed[VERT] ||
-         part_search_state->partition_rect_allowed[HORZ]);
+         part_search_state->partition_rect_allowed[AV2_VERT] ||
+         part_search_state->partition_rect_allowed[AV2_HORZ]);
 }
 
 // Initialize state variables of partition search used in
@@ -3046,10 +3046,10 @@ static void init_partition_search_state_params(
     part_search_state->region_type_cost = x->mode_costs.region_type_cost[ctx];
   }
 
-  // Initialize HORZ and VERT win flags as true for all split partitions.
+  // Initialize AV2_HORZ and AV2_VERT win flags as true for all split partitions.
   for (int i = 0; i < SUB_PARTITIONS_SPLIT; i++) {
-    part_search_state->split_part_rect_win[i].rect_part_win[HORZ] = true;
-    part_search_state->split_part_rect_win[i].rect_part_win[VERT] = true;
+    part_search_state->split_part_rect_win[i].rect_part_win[AV2_HORZ] = true;
+    part_search_state->split_part_rect_win[i].rect_part_win[AV2_VERT] = true;
   }
 
   // Initialize the rd cost.
@@ -3092,26 +3092,26 @@ static void init_partition_search_state_params(
       partition_allowed);
 
   if (max_recursion_depth == 0) {
-    part_search_state->prune_rect_part[HORZ] =
-        part_search_state->prune_rect_part[VERT] = true;
-    part_search_state->prune_partition_3[HORZ] =
-        part_search_state->prune_partition_3[VERT] = true;
-    part_search_state->prune_partition_4a[HORZ] =
-        part_search_state->prune_partition_4a[VERT] = true;
-    part_search_state->prune_partition_4b[HORZ] =
-        part_search_state->prune_partition_4b[VERT] = true;
+    part_search_state->prune_rect_part[AV2_HORZ] =
+        part_search_state->prune_rect_part[AV2_VERT] = true;
+    part_search_state->prune_partition_3[AV2_HORZ] =
+        part_search_state->prune_partition_3[AV2_VERT] = true;
+    part_search_state->prune_partition_4a[AV2_HORZ] =
+        part_search_state->prune_partition_4a[AV2_VERT] = true;
+    part_search_state->prune_partition_4b[AV2_HORZ] =
+        part_search_state->prune_partition_4b[AV2_VERT] = true;
   }
 }
 
-static const int rect_partition_type[NUM_RECT_PARTS] = { PARTITION_HORZ,
+static const int rect_partition_type[AV2_NUM_RECT_PARTS] = { PARTITION_HORZ,
                                                          PARTITION_VERT };
 static void rd_pick_rect_partition(
     AV2_COMP *const cpi, ThreadData *td, TileDataEnc *tile_data,
     TokenExtra **tp, MACROBLOCK *x, PC_TREE *pc_tree,
     PartitionSearchState *part_search_state, const RD_STATS *best_rdc,
-    RECT_PART_TYPE rect_type,
-    const int mi_pos_rect[NUM_RECT_PARTS][SUB_PARTITIONS_RECT][2],
-    BLOCK_SIZE bsize, const int is_not_edge_block[NUM_RECT_PARTS],
+    AV2_RECT_PART_TYPE rect_type,
+    const int mi_pos_rect[AV2_NUM_RECT_PARTS][SUB_PARTITIONS_RECT][2],
+    BLOCK_SIZE bsize, const int is_not_edge_block[AV2_NUM_RECT_PARTS],
     SB_MULTI_PASS_MODE multi_pass_mode, const PARTITION_TREE *ptree_luma,
     const PARTITION_TREE *template_tree, bool *both_blocks_skippable,
     PARTITION_TYPE parent_partition, int max_recursion_depth
@@ -3134,7 +3134,7 @@ static void rd_pick_rect_partition(
 
   RD_STATS this_rdc;
   RD_STATS best_remain_rdcost;
-  PC_TREE **sub_tree = (rect_type == HORZ)
+  PC_TREE **sub_tree = (rect_type == AV2_HORZ)
                            ? pc_tree->horizontal[pc_tree->region_type]
                            : pc_tree->vertical[pc_tree->region_type];
   *both_blocks_skippable = true;
@@ -3142,7 +3142,7 @@ static void rd_pick_rect_partition(
   bool partition_found = av2_rd_pick_partition(
       cpi, td, tile_data, tp, mi_pos_rect[rect_type][0][0],
       mi_pos_rect[rect_type][0][1], bsize,
-      (rect_type == HORZ ? PARTITION_HORZ : PARTITION_VERT), &this_rdc,
+      (rect_type == AV2_HORZ ? PARTITION_HORZ : PARTITION_VERT), &this_rdc,
       best_remain_rdcost, sub_tree[0],
       get_partition_subtree_const(ptree_luma, 0),
       get_partition_subtree_const(template_tree, 0), max_recursion_depth, NULL,
@@ -3169,7 +3169,7 @@ static void rd_pick_rect_partition(
     partition_found = av2_rd_pick_partition(
         cpi, td, tile_data, tp, mi_pos_rect[rect_type][1][0],
         mi_pos_rect[rect_type][1][1], bsize,
-        (rect_type == HORZ ? PARTITION_HORZ : PARTITION_VERT), &this_rdc,
+        (rect_type == AV2_HORZ ? PARTITION_HORZ : PARTITION_VERT), &this_rdc,
         best_remain_rdcost, sub_tree[1],
         get_partition_subtree_const(ptree_luma, 1),
         get_partition_subtree_const(template_tree, 1), max_recursion_depth,
@@ -3201,10 +3201,10 @@ static void rd_pick_rect_partition(
     part_search_state->is_block_splittable = 0;
     part_search_state->forced_partition = 0;
     part_search_state->partition_none_allowed = 0;
-    if (rect_type == HORZ)
-      part_search_state->partition_rect_allowed[VERT] = 0;
+    if (rect_type == AV2_HORZ)
+      part_search_state->partition_rect_allowed[AV2_VERT] = 0;
     else
-      part_search_state->partition_rect_allowed[HORZ] = 0;
+      part_search_state->partition_rect_allowed[AV2_HORZ] = 0;
     part_search_state->found_best_partition = true;
 #if CONFIG_ML_PART_SPLIT
     part_search_state->prune_partition_split = false;
@@ -3220,15 +3220,15 @@ static INLINE bool is_part_pruned_by_forced_partition(
 
 typedef int (*active_edge_info)(const AV2_COMP *cpi, int mi_col, int mi_step);
 
-// Checks if HORZ / VERT partition search is allowed.
+// Checks if AV2_HORZ / AV2_VERT partition search is allowed.
 static INLINE int is_rect_part_allowed(const AV2_COMP *cpi,
                                        PartitionSearchState *part_search_state,
                                        active_edge_info *active_edge,
-                                       RECT_PART_TYPE rect_part,
+                                       AV2_RECT_PART_TYPE rect_part,
                                        const int mi_pos) {
   PartitionBlkParams blk_params = part_search_state->part_blk_params;
   const int mi_step =
-      (rect_part == HORZ) ? blk_params.mi_step_h : blk_params.mi_step_w;
+      (rect_part == AV2_HORZ) ? blk_params.mi_step_h : blk_params.mi_step_w;
   const int is_part_allowed =
       (!part_search_state->terminate_partition_search &&
        part_search_state->partition_rect_allowed[rect_part] &&
@@ -3242,7 +3242,7 @@ static INLINE int is_rect_part_allowed(const AV2_COMP *cpi,
 static INLINE void prune_rect_with_none_rd(
     PartitionSearchState *part_search_state, BLOCK_SIZE bsize, int q_index,
     int rdmult, int64_t part_none_rd, const int *is_not_edge_block) {
-  for (RECT_PART_TYPE rect = 0; rect < NUM_RECT_PARTS; rect++) {
+  for (AV2_RECT_PART_TYPE rect = 0; rect < AV2_NUM_RECT_PARTS; rect++) {
     // Disable pruning on the boundary
     if (!is_not_edge_block[rect]) {
       continue;
@@ -3292,11 +3292,11 @@ static void rectangular_partition_search(
   (void)plane_end;
   const int ss_x = xd->plane[1].subsampling_x;
   const int ss_y = xd->plane[1].subsampling_y;
-  // mi_pos_rect[NUM_RECT_PARTS][SUB_PARTITIONS_RECT][0]: mi_row postion of
-  //                                           HORZ and VERT partition types.
-  // mi_pos_rect[NUM_RECT_PARTS][SUB_PARTITIONS_RECT][1]: mi_col postion of
-  //                                           HORZ and VERT partition types.
-  const int mi_pos_rect[NUM_RECT_PARTS][SUB_PARTITIONS_RECT][2] = {
+  // mi_pos_rect[AV2_NUM_RECT_PARTS][SUB_PARTITIONS_RECT][0]: mi_row postion of
+  //                                           AV2_HORZ and AV2_VERT partition types.
+  // mi_pos_rect[AV2_NUM_RECT_PARTS][SUB_PARTITIONS_RECT][1]: mi_col postion of
+  //                                           AV2_HORZ and AV2_VERT partition types.
+  const int mi_pos_rect[AV2_NUM_RECT_PARTS][SUB_PARTITIONS_RECT][2] = {
     { { blk_params.mi_row, blk_params.mi_col },
       { blk_params.mi_row_edge, blk_params.mi_col } },
     { { blk_params.mi_row, blk_params.mi_col },
@@ -3304,12 +3304,12 @@ static void rectangular_partition_search(
   };
 
   // Initialize active edge_type function pointer
-  // for HOZR and VERT partition types.
-  active_edge_info active_edge_type[NUM_RECT_PARTS] = { av2_active_h_edge,
+  // for HOZR and AV2_VERT partition types.
+  active_edge_info active_edge_type[AV2_NUM_RECT_PARTS] = { av2_active_h_edge,
                                                         av2_active_v_edge };
 
-  // Indicates edge blocks for HORZ and VERT partition types.
-  const int is_not_edge_block[NUM_RECT_PARTS] = { blk_params.has_rows,
+  // Indicates edge blocks for AV2_HORZ and AV2_VERT partition types.
+  const int is_not_edge_block[AV2_NUM_RECT_PARTS] = { blk_params.has_rows,
                                                   blk_params.has_cols };
 
   const CommonModeInfoParams *const mi_params = &cpi->common.mi_params;
@@ -3321,10 +3321,10 @@ static void rectangular_partition_search(
       cpi->sf.part_sf.prune_rect_with_ml && !frame_is_intra_only(cm) &&
       part_search_state->forced_partition == PARTITION_INVALID &&
       is_whole_block_inside && part_none_rd < INT64_MAX &&
-      (is_rect_part_allowed(cpi, part_search_state, active_edge_type, HORZ,
-                            mi_pos_rect[HORZ][0][HORZ]) ||
-       is_rect_part_allowed(cpi, part_search_state, active_edge_type, VERT,
-                            mi_pos_rect[VERT][0][VERT]));
+      (is_rect_part_allowed(cpi, part_search_state, active_edge_type, AV2_HORZ,
+                            mi_pos_rect[AV2_HORZ][0][AV2_HORZ]) ||
+       is_rect_part_allowed(cpi, part_search_state, active_edge_type, AV2_VERT,
+                            mi_pos_rect[AV2_VERT][0][AV2_VERT]));
 
   if (try_prune_with_ml && bsize != BLOCK_4X8 && bsize != BLOCK_8X4 &&
       is_partition_point(bsize)) {
@@ -3335,8 +3335,8 @@ static void rectangular_partition_search(
     const bool is_hd = AOMMIN(cm->width, cm->height) >= 1080;
 
     av2_erp_prune_rect(bsize, is_hd, ml_features,
-                       &part_search_state->prune_rect_part[HORZ],
-                       &part_search_state->prune_rect_part[VERT]);
+                       &part_search_state->prune_rect_part[AV2_HORZ],
+                       &part_search_state->prune_rect_part[AV2_VERT]);
   }
   if (cpi->sf.part_sf.prune_rect_with_none_rd &&
       part_search_state->forced_partition == PARTITION_INVALID &&
@@ -3346,8 +3346,8 @@ static void rectangular_partition_search(
   }
 
   // Loop over rectangular partition types.
-  for (RECT_PART_TYPE i = HORZ; i < NUM_RECT_PARTS; i++) {
-    // Check if the HORZ / VERT partition search is to be performed.
+  for (AV2_RECT_PART_TYPE i = AV2_HORZ; i < AV2_NUM_RECT_PARTS; i++) {
+    // Check if the AV2_HORZ / AV2_VERT partition search is to be performed.
     if (!is_rect_part_allowed(cpi, part_search_state, active_edge_type, i,
                               mi_pos_rect[i][0][i]))
       continue;
@@ -3367,7 +3367,7 @@ static void rectangular_partition_search(
     }
 
     const REGION_TYPE cur_region_type = pc_tree->region_type;
-    PC_TREE **sub_tree = (i == HORZ) ? pc_tree->horizontal[cur_region_type]
+    PC_TREE **sub_tree = (i == AV2_HORZ) ? pc_tree->horizontal[cur_region_type]
                                      : pc_tree->vertical[cur_region_type];
     assert(sub_tree);
 
@@ -3388,7 +3388,7 @@ static void rectangular_partition_search(
     bool both_blocks_skippable = true;
     CFL_ALLOWED_FOR_SDP_TYPE is_cfl_allowed_for_this_chroma_partition_temp =
         is_cfl_allowed_for_sdp(cm, xd, ptree_luma,
-                               (i == HORZ) ? PARTITION_HORZ : PARTITION_VERT,
+                               (i == AV2_HORZ) ? PARTITION_HORZ : PARTITION_VERT,
                                bsize);
     for (int ind = 0; ind < 2; ++ind) {
       sub_tree[ind]->is_cfl_allowed_for_this_chroma =
@@ -3420,7 +3420,7 @@ static void rectangular_partition_search(
       partition_timer_on = 0;
     }
 #endif
-    // Update HORZ / VERT best partition.
+    // Update AV2_HORZ / AV2_VERT best partition.
     if (sum_rdc->rdcost < best_rdc->rdcost) {
       sum_rdc->rdcost = RDCOST(x->rdmult, sum_rdc->rate, sum_rdc->dist);
       if (sum_rdc->rdcost < best_rdc->rdcost) {
@@ -3432,7 +3432,7 @@ static void rectangular_partition_search(
         pc_tree->partitioning = partition_type;
       }
     } else {
-      // Update HORZ / VERT win flag.
+      // Update AV2_HORZ / AV2_VERT win flag.
       if (rect_part_win_info != NULL)
         rect_part_win_info->rect_part_win[i] = false;
     }
@@ -3601,8 +3601,8 @@ static void prune_partitions_after_none(AV2_COMP *const cpi, MACROBLOCK *x,
     part_search_state->is_block_splittable = 0;
     part_search_state->forced_partition = 0;
     part_search_state->partition_none_allowed = 1;
-    part_search_state->partition_rect_allowed[HORZ] = 0;
-    part_search_state->partition_rect_allowed[VERT] = 0;
+    part_search_state->partition_rect_allowed[AV2_HORZ] = 0;
+    part_search_state->partition_rect_allowed[AV2_VERT] = 0;
     part_search_state->found_best_partition = true;
 #if CONFIG_ML_PART_SPLIT
     part_search_state->prune_partition_split = false;
@@ -3966,8 +3966,8 @@ static void split_partition_search(
     part_search_state->do_rectangular_split = 0;
     part_search_state->forced_partition = 0;
     part_search_state->partition_none_allowed = 0;
-    part_search_state->partition_rect_allowed[VERT] = 0;
-    part_search_state->partition_rect_allowed[HORZ] = 0;
+    part_search_state->partition_rect_allowed[AV2_VERT] = 0;
+    part_search_state->partition_rect_allowed[AV2_HORZ] = 0;
 #if CONFIG_ML_PART_SPLIT
     part_search_state->prune_partition_split = false;
 #endif  // CONFIG_ML_PART_SPLIT
@@ -4076,8 +4076,8 @@ static int rd_try_subblock_new(AV2_COMP *const cpi, ThreadData *td,
  *
  * The results are stored in partition_boundaries. The array
  * partition_boundaries has a stride of MAX_MIB_SIZE, and the units are in mi.
- * The actual values stored is a bitmask, with 1 << HORZ means that there is a
- * horizontal boundary, and 1 << VERT means that there is a vertical boundary.
+ * The actual values stored is a bitmask, with 1 << AV2_HORZ means that there is a
+ * horizontal boundary, and 1 << AV2_VERT means that there is a vertical boundary.
  * */
 static INLINE void trace_partition_boundary(bool *partition_boundaries,
                                             const PC_TREE *pc_tree, int mi_row,
@@ -4096,11 +4096,11 @@ static INLINE void trace_partition_boundary(bool *partition_boundaries,
     case PARTITION_NONE:
       for (int col = 0; col < mi_width; col++) {
         partition_boundaries[(mi_row + mi_height - 1) * MAX_MIB_SIZE +
-                             (mi_col + col)] |= (1 << HORZ);
+                             (mi_col + col)] |= (1 << AV2_HORZ);
       }
       for (int row = 0; row < mi_height; row++) {
         partition_boundaries[(mi_row + row) * MAX_MIB_SIZE + mi_col + mi_width -
-                             1] |= (1 << VERT);
+                             1] |= (1 << AV2_VERT);
       }
       break;
     case PARTITION_HORZ:
@@ -4253,7 +4253,7 @@ static INLINE void prune_part_3_with_partition_boundary(
       if (partition_boundaries[(masked_mi_row + mi_height / 4 - 1) *
                                    MAX_MIB_SIZE +
                                masked_mi_col + col] &
-          (1 << HORZ)) {
+          (1 << AV2_HORZ)) {
         keep_horz_3 = true;
         break;
       }
@@ -4263,7 +4263,7 @@ static INLINE void prune_part_3_with_partition_boundary(
         if (partition_boundaries[(masked_mi_row + 3 * mi_height / 4 - 1) *
                                      MAX_MIB_SIZE +
                                  masked_mi_col + col] &
-            (1 << HORZ)) {
+            (1 << AV2_HORZ)) {
           keep_horz_3 = true;
           break;
         }
@@ -4274,20 +4274,20 @@ static INLINE void prune_part_3_with_partition_boundary(
         if (partition_boundaries[(masked_mi_row + mi_height / 4 + row) *
                                      MAX_MIB_SIZE +
                                  masked_mi_col + mi_width / 2 - 1] &
-            (1 << VERT)) {
+            (1 << AV2_VERT)) {
           keep_horz_3 = true;
           break;
         }
       }
     }
-    part_search_state->prune_partition_3[HORZ] |= !keep_horz_3;
+    part_search_state->prune_partition_3[AV2_HORZ] |= !keep_horz_3;
   }
   if (can_search_vert) {
     bool keep_vert_3 = false;
     for (int row = 0; row < mi_height; row++) {
       if (partition_boundaries[(masked_mi_row + row) * MAX_MIB_SIZE +
                                masked_mi_col + mi_width / 4 - 1] &
-          (1 << VERT)) {
+          (1 << AV2_VERT)) {
         keep_vert_3 = true;
         break;
       }
@@ -4296,7 +4296,7 @@ static INLINE void prune_part_3_with_partition_boundary(
       for (int row = 0; row < mi_height; row++) {
         if (partition_boundaries[(masked_mi_row + row) * MAX_MIB_SIZE +
                                  masked_mi_col + 3 * mi_width / 4 - 1] &
-            (1 << VERT)) {
+            (1 << AV2_VERT)) {
           keep_vert_3 = true;
           break;
         }
@@ -4307,13 +4307,13 @@ static INLINE void prune_part_3_with_partition_boundary(
         if (partition_boundaries[(masked_mi_row + mi_height / 2 - 1) *
                                      MAX_MIB_SIZE +
                                  masked_mi_col + mi_width / 4 + col] &
-            (1 << HORZ)) {
+            (1 << AV2_HORZ)) {
           keep_vert_3 = true;
           break;
         }
       }
     }
-    part_search_state->prune_partition_3[VERT] |= !keep_vert_3;
+    part_search_state->prune_partition_3[AV2_VERT] |= !keep_vert_3;
   }
 }
 
@@ -4337,7 +4337,7 @@ static INLINE void prune_part_4_with_partition_boundary(
       if (partition_boundaries[(masked_mi_row + mi_height / 8 - 1) *
                                    MAX_MIB_SIZE +
                                masked_mi_col + col] &
-          (1 << HORZ)) {
+          (1 << AV2_HORZ)) {
         keep_horz_4a = true;
         keep_horz_4b = true;
         break;
@@ -4345,7 +4345,7 @@ static INLINE void prune_part_4_with_partition_boundary(
       if (partition_boundaries[(masked_mi_row + 7 * mi_height / 8 - 1) *
                                    MAX_MIB_SIZE +
                                masked_mi_col + col] &
-          (1 << HORZ)) {
+          (1 << AV2_HORZ)) {
         keep_horz_4a = true;
         keep_horz_4b = true;
         break;
@@ -4356,7 +4356,7 @@ static INLINE void prune_part_4_with_partition_boundary(
         if (partition_boundaries[(masked_mi_row + 3 * mi_height / 8 - 1) *
                                      MAX_MIB_SIZE +
                                  masked_mi_col + col] &
-            (1 << HORZ)) {
+            (1 << AV2_HORZ)) {
           keep_horz_4a = true;
           break;
         }
@@ -4367,27 +4367,27 @@ static INLINE void prune_part_4_with_partition_boundary(
         if (partition_boundaries[(masked_mi_row + 5 * mi_height / 8 - 1) *
                                      MAX_MIB_SIZE +
                                  masked_mi_col + col] &
-            (1 << HORZ)) {
+            (1 << AV2_HORZ)) {
           keep_horz_4b = true;
           break;
         }
       }
     }
-    part_search_state->prune_partition_4a[HORZ] |= !keep_horz_4a;
-    part_search_state->prune_partition_4b[HORZ] |= !keep_horz_4b;
+    part_search_state->prune_partition_4a[AV2_HORZ] |= !keep_horz_4a;
+    part_search_state->prune_partition_4b[AV2_HORZ] |= !keep_horz_4b;
   }
   if (can_search_vert_4a || can_search_vert_4b) {
     for (int row = 0; row < mi_height; row++) {
       if (partition_boundaries[(masked_mi_row + row) * MAX_MIB_SIZE +
                                masked_mi_col + mi_width / 8 - 1] &
-          (1 << VERT)) {
+          (1 << AV2_VERT)) {
         keep_vert_4a = true;
         keep_vert_4b = true;
         break;
       }
       if (partition_boundaries[(masked_mi_row + row) * MAX_MIB_SIZE +
                                masked_mi_col + 7 * mi_width / 8 - 1] &
-          (1 << VERT)) {
+          (1 << AV2_VERT)) {
         keep_vert_4a = true;
         keep_vert_4b = true;
         break;
@@ -4397,7 +4397,7 @@ static INLINE void prune_part_4_with_partition_boundary(
       for (int row = 0; row < mi_height; row++) {
         if (partition_boundaries[(masked_mi_row + row) * MAX_MIB_SIZE +
                                  masked_mi_col + 3 * mi_width / 8 - 1] &
-            (1 << VERT)) {
+            (1 << AV2_VERT)) {
           keep_vert_4a = true;
           break;
         }
@@ -4407,14 +4407,14 @@ static INLINE void prune_part_4_with_partition_boundary(
       for (int row = 0; row < mi_height; row++) {
         if (partition_boundaries[(masked_mi_row + row) * MAX_MIB_SIZE +
                                  masked_mi_col + 5 * mi_width / 8 - 1] &
-            (1 << VERT)) {
+            (1 << AV2_VERT)) {
           keep_vert_4b = true;
           break;
         }
       }
     }
-    part_search_state->prune_partition_4a[VERT] |= !keep_vert_4a;
-    part_search_state->prune_partition_4b[VERT] |= !keep_vert_4b;
+    part_search_state->prune_partition_4a[AV2_VERT] |= !keep_vert_4a;
+    part_search_state->prune_partition_4b[AV2_VERT] |= !keep_vert_4b;
   }
 }
 
@@ -4432,12 +4432,12 @@ static INLINE void prune_ext_partitions_3way(
   REGION_TYPE cur_region_type = pc_tree->region_type;
 
   // Prune horz 3 with speed features
-  if (part_search_state->partition_3_allowed[HORZ] &&
+  if (part_search_state->partition_3_allowed[AV2_HORZ] &&
       !frame_is_intra_only(cm) && forced_partition != PARTITION_HORZ_3) {
     if (part_sf->prune_ext_part_with_part_none &&
         pc_tree->partitioning == PARTITION_NONE) {
       // Prune if the best partition does not split
-      part_search_state->prune_partition_3[HORZ] = 1;
+      part_search_state->prune_partition_3[AV2_HORZ] = 1;
     }
     if (part_sf->prune_ext_part_with_part_rect) {
       // Prune if the best partition is rect but the subtrees did not further
@@ -4447,24 +4447,24 @@ static INLINE void prune_ext_partitions_3way(
           pc_tree->horizontal[cur_region_type][1] &&
           !node_uses_horz(pc_tree->horizontal[cur_region_type][0]) &&
           !node_uses_horz(pc_tree->horizontal[cur_region_type][1])) {
-        part_search_state->prune_partition_3[HORZ] = 1;
+        part_search_state->prune_partition_3[AV2_HORZ] = 1;
       }
       if (pc_tree->partitioning == PARTITION_VERT &&
           pc_tree->vertical[cur_region_type][0] &&
           pc_tree->vertical[cur_region_type][1] &&
           !node_uses_horz(pc_tree->vertical[cur_region_type][0]) &&
           !node_uses_horz(pc_tree->vertical[cur_region_type][1])) {
-        part_search_state->prune_partition_3[HORZ] = 1;
+        part_search_state->prune_partition_3[AV2_HORZ] = 1;
       }
     }
   }
 
-  if (part_search_state->partition_3_allowed[VERT] &&
+  if (part_search_state->partition_3_allowed[AV2_VERT] &&
       !frame_is_intra_only(cm) && forced_partition != PARTITION_VERT_3) {
     if (part_sf->prune_ext_part_with_part_none &&
         pc_tree->partitioning == PARTITION_NONE) {
       // Prune if the best partition does not split
-      part_search_state->prune_partition_3[VERT] = 1;
+      part_search_state->prune_partition_3[AV2_VERT] = 1;
     }
     if (part_sf->prune_ext_part_with_part_rect) {
       // Prune if the best partition is rect but the subtrees did not further
@@ -4474,22 +4474,22 @@ static INLINE void prune_ext_partitions_3way(
           pc_tree->vertical[cur_region_type][1] &&
           !node_uses_vert(pc_tree->vertical[cur_region_type][0]) &&
           !node_uses_vert(pc_tree->vertical[cur_region_type][1])) {
-        part_search_state->prune_partition_3[VERT] = 1;
+        part_search_state->prune_partition_3[AV2_VERT] = 1;
       }
       if (pc_tree->partitioning == PARTITION_HORZ &&
           pc_tree->horizontal[cur_region_type][0] &&
           pc_tree->horizontal[cur_region_type][1] &&
           !node_uses_vert(pc_tree->horizontal[cur_region_type][0]) &&
           !node_uses_vert(pc_tree->horizontal[cur_region_type][1])) {
-        part_search_state->prune_partition_3[VERT] = 1;
+        part_search_state->prune_partition_3[AV2_VERT] = 1;
       }
     }
   }
 
-  const bool can_search_horz = part_search_state->partition_3_allowed[HORZ] &&
-                               !part_search_state->prune_partition_3[HORZ];
-  const bool can_search_vert = part_search_state->partition_3_allowed[VERT] &&
-                               !part_search_state->prune_partition_3[VERT];
+  const bool can_search_horz = part_search_state->partition_3_allowed[AV2_HORZ] &&
+                               !part_search_state->prune_partition_3[AV2_HORZ];
+  const bool can_search_vert = part_search_state->partition_3_allowed[AV2_VERT] &&
+                               !part_search_state->prune_partition_3[AV2_VERT];
   const PartitionBlkParams *blk_params = &part_search_state->part_blk_params;
   const int mi_row = blk_params->mi_row, mi_col = blk_params->mi_col,
             bsize = blk_params->bsize;
@@ -4714,13 +4714,13 @@ static INLINE void prune_ext_partitions_4way(
 
   const int cur_region_type = pc_tree->region_type;
 
-  // Prune HORZ 4A with speed features
-  if (part_search_state->partition_4a_allowed[HORZ] &&
+  // Prune AV2_HORZ 4A with speed features
+  if (part_search_state->partition_4a_allowed[AV2_HORZ] &&
       forced_partition != PARTITION_HORZ_4A) {
     if (part_sf->prune_ext_part_with_part_none &&
         pc_tree->partitioning == PARTITION_NONE) {
       // Prune if the best partition does not split
-      part_search_state->prune_partition_4a[HORZ] = 1;
+      part_search_state->prune_partition_4a[AV2_HORZ] = 1;
     }
     if (part_sf->prune_ext_part_with_part_rect) {
       // Prune if the best partition is rect but subtrees did not further split
@@ -4728,12 +4728,12 @@ static INLINE void prune_ext_partitions_4way(
       if (pc_tree->partitioning == PARTITION_HORZ &&
           !node_uses_horz(pc_tree->horizontal[cur_region_type][0]) &&
           !node_uses_horz(pc_tree->horizontal[cur_region_type][1])) {
-        part_search_state->prune_partition_4a[HORZ] = 1;
+        part_search_state->prune_partition_4a[AV2_HORZ] = 1;
       }
       if (pc_tree->partitioning == PARTITION_VERT &&
           !node_uses_horz(pc_tree->vertical[cur_region_type][0]) &&
           !node_uses_horz(pc_tree->vertical[cur_region_type][1])) {
-        part_search_state->prune_partition_4a[HORZ] = 1;
+        part_search_state->prune_partition_4a[AV2_HORZ] = 1;
       }
     }
     if (part_sf->prune_part_4_with_part_3) {
@@ -4742,33 +4742,33 @@ static INLINE void prune_ext_partitions_4way(
           !node_uses_horz(pc_tree->horizontal3[cur_region_type][3])) {
         // Prune if best partition is horizontal H, but first and last
         // subpartitions did not further split in horizontal direction.
-        part_search_state->prune_partition_4a[HORZ] = 1;
+        part_search_state->prune_partition_4a[AV2_HORZ] = 1;
       }
       if (pc_tree->partitioning == PARTITION_VERT_3 &&
           !node_uses_horz(pc_tree->vertical3[cur_region_type][1]) &&
           !node_uses_horz(pc_tree->vertical3[cur_region_type][2])) {
         // Prune if best partition is vertical H, but middle two
         // subpartitions did not further split in horizontal direction.
-        part_search_state->prune_partition_4a[HORZ] = 1;
+        part_search_state->prune_partition_4a[AV2_HORZ] = 1;
       }
     }
     if (part_sf->prune_part_4_horz_or_vert &&
         pc_tree->partitioning == PARTITION_VERT &&
-        part_search_state->partition_rect_allowed[HORZ] &&
+        part_search_state->partition_rect_allowed[AV2_HORZ] &&
         (!frame_is_intra_only(cm) ||
          (!node_uses_horz(pc_tree->vertical[cur_region_type][0]) &&
           !node_uses_horz(pc_tree->vertical[cur_region_type][1])))) {
-      part_search_state->prune_partition_4a[HORZ] = 1;
+      part_search_state->prune_partition_4a[AV2_HORZ] = 1;
     }
   }
 
-  // Prune HORZ 4B with speed features
-  if (part_search_state->partition_4b_allowed[HORZ] &&
+  // Prune AV2_HORZ 4B with speed features
+  if (part_search_state->partition_4b_allowed[AV2_HORZ] &&
       forced_partition != PARTITION_HORZ_4B) {
     if (part_sf->prune_ext_part_with_part_none &&
         pc_tree->partitioning == PARTITION_NONE) {
       // Prune if the best partition does not split
-      part_search_state->prune_partition_4b[HORZ] = 1;
+      part_search_state->prune_partition_4b[AV2_HORZ] = 1;
     }
     if (part_sf->prune_ext_part_with_part_rect) {
       // Prune if the best partition is rect but subtrees did not further split
@@ -4776,12 +4776,12 @@ static INLINE void prune_ext_partitions_4way(
       if (pc_tree->partitioning == PARTITION_HORZ &&
           !node_uses_horz(pc_tree->horizontal[cur_region_type][0]) &&
           !node_uses_horz(pc_tree->horizontal[cur_region_type][1])) {
-        part_search_state->prune_partition_4b[HORZ] = 1;
+        part_search_state->prune_partition_4b[AV2_HORZ] = 1;
       }
       if (pc_tree->partitioning == PARTITION_VERT &&
           !node_uses_horz(pc_tree->vertical[cur_region_type][0]) &&
           !node_uses_horz(pc_tree->vertical[cur_region_type][1])) {
-        part_search_state->prune_partition_4b[HORZ] = 1;
+        part_search_state->prune_partition_4b[AV2_HORZ] = 1;
       }
     }
     if (part_sf->prune_part_4_with_part_3) {
@@ -4790,33 +4790,33 @@ static INLINE void prune_ext_partitions_4way(
           !node_uses_horz(pc_tree->horizontal3[cur_region_type][3])) {
         // Prune if best partition is horizontal H, but first and last
         // subpartitions did not further split in horizontal direction.
-        part_search_state->prune_partition_4b[HORZ] = 1;
+        part_search_state->prune_partition_4b[AV2_HORZ] = 1;
       }
       if (pc_tree->partitioning == PARTITION_VERT_3 &&
           !node_uses_horz(pc_tree->vertical3[cur_region_type][1]) &&
           !node_uses_horz(pc_tree->vertical3[cur_region_type][2])) {
         // Prune if best partition is vertical H, but middle two
         // subpartitions did not further split in horizontal direction.
-        part_search_state->prune_partition_4b[HORZ] = 1;
+        part_search_state->prune_partition_4b[AV2_HORZ] = 1;
       }
     }
     if (part_sf->prune_part_4_horz_or_vert &&
         pc_tree->partitioning == PARTITION_VERT &&
-        part_search_state->partition_rect_allowed[HORZ] &&
+        part_search_state->partition_rect_allowed[AV2_HORZ] &&
         (!frame_is_intra_only(cm) ||
          (!node_uses_horz(pc_tree->vertical[cur_region_type][0]) &&
           !node_uses_horz(pc_tree->vertical[cur_region_type][1])))) {
-      part_search_state->prune_partition_4b[HORZ] = 1;
+      part_search_state->prune_partition_4b[AV2_HORZ] = 1;
     }
   }
 
   // Prune VERT_4A with speed features
-  if (part_search_state->partition_4a_allowed[VERT] &&
+  if (part_search_state->partition_4a_allowed[AV2_VERT] &&
       forced_partition != PARTITION_VERT_4A) {
     if (part_sf->prune_ext_part_with_part_none &&
         pc_tree->partitioning == PARTITION_NONE) {
       // Prune if the best partition does not split
-      part_search_state->prune_partition_4a[VERT] = 1;
+      part_search_state->prune_partition_4a[AV2_VERT] = 1;
     }
     if (part_sf->prune_ext_part_with_part_rect) {
       // Prune if the best partition is rect but subtrees did not further split
@@ -4824,12 +4824,12 @@ static INLINE void prune_ext_partitions_4way(
       if (pc_tree->partitioning == PARTITION_VERT &&
           !node_uses_vert(pc_tree->vertical[cur_region_type][0]) &&
           !node_uses_vert(pc_tree->vertical[cur_region_type][1])) {
-        part_search_state->prune_partition_4a[VERT] = 1;
+        part_search_state->prune_partition_4a[AV2_VERT] = 1;
       }
       if (pc_tree->partitioning == PARTITION_HORZ &&
           !node_uses_vert(pc_tree->horizontal[cur_region_type][0]) &&
           !node_uses_vert(pc_tree->horizontal[cur_region_type][1])) {
-        part_search_state->prune_partition_4a[VERT] = 1;
+        part_search_state->prune_partition_4a[AV2_VERT] = 1;
       }
     }
     if (part_sf->prune_part_4_with_part_3) {
@@ -4838,33 +4838,33 @@ static INLINE void prune_ext_partitions_4way(
           !node_uses_vert(pc_tree->vertical3[cur_region_type][3])) {
         // Prune if best partition is vertical H, but first and last
         // subpartitions did not further split in vertical direction.
-        part_search_state->prune_partition_4a[VERT] = 1;
+        part_search_state->prune_partition_4a[AV2_VERT] = 1;
       }
       if (pc_tree->partitioning == PARTITION_HORZ_3 &&
           !node_uses_vert(pc_tree->horizontal3[cur_region_type][1]) &&
           !node_uses_vert(pc_tree->horizontal3[cur_region_type][2])) {
         // Prune if best partition is horizontal H, but middle two
         // subpartitions did not further split in vertical direction.
-        part_search_state->prune_partition_4a[VERT] = 1;
+        part_search_state->prune_partition_4a[AV2_VERT] = 1;
       }
     }
     if (part_sf->prune_part_4_horz_or_vert &&
         pc_tree->partitioning == PARTITION_HORZ &&
-        part_search_state->partition_rect_allowed[VERT] &&
+        part_search_state->partition_rect_allowed[AV2_VERT] &&
         (!frame_is_intra_only(cm) ||
          (!node_uses_vert(pc_tree->horizontal[cur_region_type][0]) &&
           !node_uses_vert(pc_tree->horizontal[cur_region_type][1])))) {
-      part_search_state->prune_partition_4a[VERT] = 1;
+      part_search_state->prune_partition_4a[AV2_VERT] = 1;
     }
   }
 
   // Prune VERT_4B with speed features
-  if (part_search_state->partition_4b_allowed[VERT] &&
+  if (part_search_state->partition_4b_allowed[AV2_VERT] &&
       forced_partition != PARTITION_VERT_4B) {
     if (part_sf->prune_ext_part_with_part_none &&
         pc_tree->partitioning == PARTITION_NONE) {
       // Prune if the best partition does not split
-      part_search_state->prune_partition_4b[VERT] = 1;
+      part_search_state->prune_partition_4b[AV2_VERT] = 1;
     }
     if (part_sf->prune_ext_part_with_part_rect) {
       // Prune if the best partition is rect but subtrees did not further split
@@ -4872,12 +4872,12 @@ static INLINE void prune_ext_partitions_4way(
       if (pc_tree->partitioning == PARTITION_VERT &&
           !node_uses_vert(pc_tree->vertical[cur_region_type][0]) &&
           !node_uses_vert(pc_tree->vertical[cur_region_type][1])) {
-        part_search_state->prune_partition_4b[VERT] = 1;
+        part_search_state->prune_partition_4b[AV2_VERT] = 1;
       }
       if (pc_tree->partitioning == PARTITION_HORZ &&
           !node_uses_vert(pc_tree->horizontal[cur_region_type][0]) &&
           !node_uses_vert(pc_tree->horizontal[cur_region_type][1])) {
-        part_search_state->prune_partition_4b[VERT] = 1;
+        part_search_state->prune_partition_4b[AV2_VERT] = 1;
       }
     }
     if (part_sf->prune_part_4_with_part_3) {
@@ -4886,38 +4886,38 @@ static INLINE void prune_ext_partitions_4way(
           !node_uses_vert(pc_tree->vertical3[cur_region_type][3])) {
         // Prune if best partition is vertical H, but first and last
         // subpartitions did not further split in vertical direction.
-        part_search_state->prune_partition_4b[VERT] = 1;
+        part_search_state->prune_partition_4b[AV2_VERT] = 1;
       }
       if (pc_tree->partitioning == PARTITION_HORZ_3 &&
           !node_uses_vert(pc_tree->horizontal3[cur_region_type][1]) &&
           !node_uses_vert(pc_tree->horizontal3[cur_region_type][2])) {
         // Prune if best partition is horizontal H, but middle two
         // subpartitions did not further split in vertical direction.
-        part_search_state->prune_partition_4b[VERT] = 1;
+        part_search_state->prune_partition_4b[AV2_VERT] = 1;
       }
     }
     if (part_sf->prune_part_4_horz_or_vert &&
         pc_tree->partitioning == PARTITION_HORZ &&
-        part_search_state->partition_rect_allowed[VERT] &&
+        part_search_state->partition_rect_allowed[AV2_VERT] &&
         (!frame_is_intra_only(cm) ||
          (!node_uses_vert(pc_tree->horizontal[cur_region_type][0]) &&
           !node_uses_vert(pc_tree->horizontal[cur_region_type][1])))) {
-      part_search_state->prune_partition_4b[VERT] = 1;
+      part_search_state->prune_partition_4b[AV2_VERT] = 1;
     }
   }
 
   const bool can_search_horz_4a =
-      part_search_state->partition_4a_allowed[HORZ] &&
-      !part_search_state->prune_partition_4a[HORZ];
+      part_search_state->partition_4a_allowed[AV2_HORZ] &&
+      !part_search_state->prune_partition_4a[AV2_HORZ];
   const bool can_search_horz_4b =
-      part_search_state->partition_4b_allowed[HORZ] &&
-      !part_search_state->prune_partition_4b[HORZ];
+      part_search_state->partition_4b_allowed[AV2_HORZ] &&
+      !part_search_state->prune_partition_4b[AV2_HORZ];
   const bool can_search_vert_4a =
-      part_search_state->partition_4a_allowed[VERT] &&
-      !part_search_state->prune_partition_4a[VERT];
+      part_search_state->partition_4a_allowed[AV2_VERT] &&
+      !part_search_state->prune_partition_4a[AV2_VERT];
   const bool can_search_vert_4b =
-      part_search_state->partition_4b_allowed[VERT] &&
-      !part_search_state->prune_partition_4b[VERT];
+      part_search_state->partition_4b_allowed[AV2_VERT] &&
+      !part_search_state->prune_partition_4b[AV2_VERT];
   const PartitionBlkParams *blk_params = &part_search_state->part_blk_params;
   const int mi_row = blk_params->mi_row, mi_col = blk_params->mi_col,
             bsize = blk_params->bsize;
@@ -4963,8 +4963,8 @@ static void search_partition_horz_4a(
 
   if (is_part_pruned_by_forced_partition(part_search_state,
                                          PARTITION_HORZ_4A) ||
-      !part_search_state->partition_4a_allowed[HORZ] ||
-      part_search_state->prune_partition_4a[HORZ]) {
+      !part_search_state->partition_4a_allowed[AV2_HORZ] ||
+      part_search_state->prune_partition_4a[AV2_HORZ]) {
     return;
   }
 
@@ -5082,8 +5082,8 @@ static void search_partition_horz_4b(
 
   if (is_part_pruned_by_forced_partition(part_search_state,
                                          PARTITION_HORZ_4B) ||
-      !part_search_state->partition_4b_allowed[HORZ] ||
-      part_search_state->prune_partition_4b[HORZ]) {
+      !part_search_state->partition_4b_allowed[AV2_HORZ] ||
+      part_search_state->prune_partition_4b[AV2_HORZ]) {
     return;
   }
 
@@ -5199,8 +5199,8 @@ static void search_partition_vert_4a(
 
   if (is_part_pruned_by_forced_partition(part_search_state,
                                          PARTITION_VERT_4A) ||
-      !part_search_state->partition_4a_allowed[VERT] ||
-      part_search_state->prune_partition_4a[VERT]) {
+      !part_search_state->partition_4a_allowed[AV2_VERT] ||
+      part_search_state->prune_partition_4a[AV2_VERT]) {
     return;
   }
 
@@ -5316,8 +5316,8 @@ static void search_partition_vert_4b(
 
   if (is_part_pruned_by_forced_partition(part_search_state,
                                          PARTITION_VERT_4B) ||
-      !part_search_state->partition_4b_allowed[VERT] ||
-      part_search_state->prune_partition_4b[VERT]) {
+      !part_search_state->partition_4b_allowed[AV2_VERT] ||
+      part_search_state->prune_partition_4b[AV2_VERT]) {
     return;
   }
 
@@ -5433,8 +5433,8 @@ static INLINE void search_partition_horz_3(
   REGION_TYPE cur_region_type = pc_tree->region_type;
 
   if (is_part_pruned_by_forced_partition(part_search_state, PARTITION_HORZ_3) ||
-      !part_search_state->partition_3_allowed[HORZ] ||
-      part_search_state->prune_partition_3[HORZ]) {
+      !part_search_state->partition_3_allowed[AV2_HORZ] ||
+      part_search_state->prune_partition_3[AV2_HORZ]) {
     return;
   }
 
@@ -5555,8 +5555,8 @@ static INLINE void search_partition_vert_3(
   REGION_TYPE cur_region_type = pc_tree->region_type;
 
   if (is_part_pruned_by_forced_partition(part_search_state, PARTITION_VERT_3) ||
-      !part_search_state->partition_3_allowed[VERT] ||
-      part_search_state->prune_partition_3[VERT]) {
+      !part_search_state->partition_3_allowed[AV2_VERT] ||
+      part_search_state->prune_partition_3[AV2_VERT]) {
     return;
   }
 
@@ -5821,10 +5821,10 @@ static INLINE void prune_none_with_rect_results(
     num_sub_parts = SUB_PARTITIONS_SPLIT;
   } else if (cur_best_partition == PARTITION_HORZ) {
     tree = pc_tree->horizontal[pc_tree->region_type];
-    num_sub_parts = NUM_RECT_PARTS;
+    num_sub_parts = AV2_NUM_RECT_PARTS;
   } else if (cur_best_partition == PARTITION_VERT) {
     tree = pc_tree->vertical[pc_tree->region_type];
-    num_sub_parts = NUM_RECT_PARTS;
+    num_sub_parts = AV2_NUM_RECT_PARTS;
   } else {
     assert(0 &&
            "Unexpected best partition type in prune_none_with_rect_results.");
@@ -5993,8 +5993,8 @@ bool av2_rd_pick_partition(AV2_COMP *const cpi, ThreadData *td,
   // Disable rectangular partitions for inner blocks when the current block is
   // forced to only use square partitions.
   if (is_bsize_gt(bsize, cpi->sf.part_sf.use_square_partition_only_threshold)) {
-    part_search_state.partition_rect_allowed[HORZ] &= !blk_params.has_rows;
-    part_search_state.partition_rect_allowed[VERT] &= !blk_params.has_cols;
+    part_search_state.partition_rect_allowed[AV2_HORZ] &= !blk_params.has_rows;
+    part_search_state.partition_rect_allowed[AV2_VERT] &= !blk_params.has_cols;
   }
 
 #ifndef NDEBUG
@@ -6060,12 +6060,12 @@ bool av2_rd_pick_partition(AV2_COMP *const cpi, ThreadData *td,
     sms_tree = sms_data->old_sms;
   }
 
-  int *partition_horz_allowed = &part_search_state.partition_rect_allowed[HORZ];
-  int *partition_vert_allowed = &part_search_state.partition_rect_allowed[VERT];
+  int *partition_horz_allowed = &part_search_state.partition_rect_allowed[AV2_HORZ];
+  int *partition_vert_allowed = &part_search_state.partition_rect_allowed[AV2_VERT];
   if (part_search_state.forced_partition == PARTITION_INVALID &&
       is_bsize_gt(bsize, x->sb_enc.min_partition_size)) {
-    bool *prune_horz = &part_search_state.prune_rect_part[HORZ];
-    bool *prune_vert = &part_search_state.prune_rect_part[VERT];
+    bool *prune_horz = &part_search_state.prune_rect_part[AV2_HORZ];
+    bool *prune_vert = &part_search_state.prune_rect_part[AV2_VERT];
     int do_square_split = true;
     int *sqr_split_ptr = &do_square_split;
     // Pruning: before searching any partition type, using source and simple
@@ -6103,8 +6103,8 @@ BEGIN_PARTITION_SEARCH:
         is_bru_not_active_and_not_on_partial_border(cm, mi_col, mi_row, bsize),
         partition_allowed);
 #if CONFIG_ML_PART_SPLIT
-    part_search_state.prune_rect_part[HORZ] = 0;
-    part_search_state.prune_rect_part[VERT] = 0;
+    part_search_state.prune_rect_part[AV2_HORZ] = 0;
+    part_search_state.prune_rect_part[AV2_VERT] = 0;
     part_search_state.prune_partition_none = 0;
     part_search_state.prune_partition_split = 0;
 #endif  // CONFIG_ML_PART_SPLIT
@@ -6126,8 +6126,8 @@ BEGIN_PARTITION_SEARCH:
     part_search_state.prune_partition_4a[1] |= force_prune_flags[PRUNE_OTHER];
     part_search_state.prune_partition_4b[0] |= force_prune_flags[PRUNE_OTHER];
     part_search_state.prune_partition_4b[1] |= force_prune_flags[PRUNE_OTHER];
-    part_search_state.prune_rect_part[HORZ] |= force_prune_flags[PRUNE_HORZ];
-    part_search_state.prune_rect_part[VERT] |= force_prune_flags[PRUNE_VERT];
+    part_search_state.prune_rect_part[AV2_HORZ] |= force_prune_flags[PRUNE_HORZ];
+    part_search_state.prune_rect_part[AV2_VERT] |= force_prune_flags[PRUNE_VERT];
 
     // Don't want to run ML in the second stage of the forced split. Want the
     // force split to carry out without interference.
@@ -6148,18 +6148,18 @@ BEGIN_PARTITION_SEARCH:
         part_search_state.prune_partition_4b[1] = 1;
       }
       if (ml_result == ML_PART_FORCE_NONE) {
-        part_search_state.prune_rect_part[VERT] = 1;
-        part_search_state.prune_rect_part[HORZ] = 1;
+        part_search_state.prune_rect_part[AV2_VERT] = 1;
+        part_search_state.prune_rect_part[AV2_HORZ] = 1;
       } else if (ml_result == ML_PART_FORCE_SPLIT) {
         part_search_state.prune_partition_none = 1;
         if (is_square_split_eligible(bsize, cm->sb_size)) {
-          part_search_state.prune_rect_part[VERT] = 1;
-          part_search_state.prune_rect_part[HORZ] = 1;
+          part_search_state.prune_rect_part[AV2_VERT] = 1;
+          part_search_state.prune_rect_part[AV2_HORZ] = 1;
         } else {
-          next_force_prune_flags[HORZ][PRUNE_OTHER] = 1;
-          next_force_prune_flags[VERT][PRUNE_OTHER] = 1;
-          next_force_prune_flags[HORZ][PRUNE_HORZ] = 1;
-          next_force_prune_flags[VERT][PRUNE_VERT] = 1;
+          next_force_prune_flags[AV2_HORZ][PRUNE_OTHER] = 1;
+          next_force_prune_flags[AV2_VERT][PRUNE_OTHER] = 1;
+          next_force_prune_flags[AV2_HORZ][PRUNE_HORZ] = 1;
+          next_force_prune_flags[AV2_VERT][PRUNE_VERT] = 1;
         }
       } else {
         if (prune_list[PT_NONE]) {
@@ -6169,8 +6169,8 @@ BEGIN_PARTITION_SEARCH:
           if (is_square_split_eligible(bsize, cm->sb_size)) {
             part_search_state.prune_partition_split = 1;
           } else {
-            next_force_prune_flags[HORZ][PRUNE_VERT] = 1;
-            next_force_prune_flags[VERT][PRUNE_HORZ] = 1;
+            next_force_prune_flags[AV2_HORZ][PRUNE_VERT] = 1;
+            next_force_prune_flags[AV2_VERT][PRUNE_HORZ] = 1;
           }
         }
       }
@@ -6243,8 +6243,8 @@ BEGIN_PARTITION_SEARCH:
       max_depth = AOMMAX(max_depth, depth);
     }
     if (min_depth > 4) {
-      part_search_state.prune_rect_part[HORZ] =
-          part_search_state.prune_rect_part[VERT] = true;
+      part_search_state.prune_rect_part[AV2_HORZ] =
+          part_search_state.prune_rect_part[AV2_VERT] = true;
     }
     (void)max_depth;
   }
@@ -6340,11 +6340,11 @@ BEGIN_PARTITION_SEARCH:
         is_cfl_allowed_for_this_chroma_partition_horz4a);
 
     if (cpi->sf.part_sf.prune_part_4b_with_part_4a) {
-      if (part_search_state.partition_4a_allowed[HORZ] &&
-          !part_search_state.prune_partition_4a[HORZ] &&
+      if (part_search_state.partition_4a_allowed[AV2_HORZ] &&
+          !part_search_state.prune_partition_4a[AV2_HORZ] &&
           part_search_state.found_best_partition &&
           pc_tree->partitioning != PARTITION_HORZ_4A) {
-        part_search_state.prune_partition_4b[HORZ] = true;
+        part_search_state.prune_partition_4b[AV2_HORZ] = true;
       }
     }
 
@@ -6363,11 +6363,11 @@ BEGIN_PARTITION_SEARCH:
         is_cfl_allowed_for_this_chroma_partition_vert4a);
 
     if (cpi->sf.part_sf.prune_part_4b_with_part_4a) {
-      if (part_search_state.partition_4a_allowed[VERT] &&
-          !part_search_state.prune_partition_4a[VERT] &&
+      if (part_search_state.partition_4a_allowed[AV2_VERT] &&
+          !part_search_state.prune_partition_4a[AV2_VERT] &&
           part_search_state.found_best_partition &&
           pc_tree->partitioning != PARTITION_VERT_4A) {
-        part_search_state.prune_partition_4b[VERT] = true;
+        part_search_state.prune_partition_4b[AV2_VERT] = true;
       }
     }
 

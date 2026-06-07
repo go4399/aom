@@ -4109,7 +4109,7 @@ static INLINE int partition_plane_context_helper(int raw_context,
 
 static INLINE int partition_plane_context(const MACROBLOCKD *xd, int mi_row,
                                           int mi_col, BLOCK_SIZE bsize,
-                                          RECT_PART_TYPE rect_type,
+                                          AV2_RECT_PART_TYPE rect_type,
                                           PART_CTX_MODE ctx_mode) {
   const int plane = xd->tree_type == CHROMA_PART;
   const PARTITION_CONTEXT *above_ctx =
@@ -4123,7 +4123,7 @@ static INLINE int partition_plane_context(const MACROBLOCKD *xd, int mi_row,
   const int bsl_w = mi_size_wide_log2[bsize];
   const int bsl_h = mi_size_high_log2[bsize];
   if (ctx_mode == EXT_PART_CTX_MODE || ctx_mode == FOUR_WAY_CTX_MODE) {
-    if (rect_type == HORZ) {
+    if (rect_type == AV2_HORZ) {
       const PARTITION_CONTEXT *left_mid_ctx = left_ctx + bh_mi / 2;
       ctx1 = (*left_ctx >> AOMMAX(bsl_h - 2, 0)) & 1;
       ctx2 = (*left_mid_ctx >> AOMMAX(bsl_h - 2, 0)) & 1;
@@ -4759,16 +4759,16 @@ static INLINE void init_allowed_partitions_for_signaling(
   const int has_cols = (mi_col + hbs_w) < cm->mi_params.mi_cols;
   const bool is_chroma_ref =
       chroma_ref_info ? chroma_ref_info->is_chroma_ref : true;
-  const RECT_PART_TYPE implied_rect_type =
+  const AV2_RECT_PART_TYPE implied_rect_type =
       rect_type_implied_by_bsize(bsize, tree_type);
 
   const int is_horz_size_valid =
-      is_partition_valid(bsize, PARTITION_HORZ) && implied_rect_type != VERT &&
+      is_partition_valid(bsize, PARTITION_HORZ) && implied_rect_type != AV2_VERT &&
       check_is_chroma_size_valid(cm, tree_type, PARTITION_HORZ, bsize, mi_row,
                                  mi_col, ss_x, ss_y, chroma_ref_info);
 
   const int is_vert_size_valid =
-      is_partition_valid(bsize, PARTITION_VERT) && implied_rect_type != HORZ &&
+      is_partition_valid(bsize, PARTITION_VERT) && implied_rect_type != AV2_HORZ &&
       check_is_chroma_size_valid(cm, tree_type, PARTITION_VERT, bsize, mi_row,
                                  mi_col, ss_x, ss_y, chroma_ref_info);
 
@@ -4794,8 +4794,8 @@ static INLINE void init_allowed_partitions_for_signaling(
       is_block_splittable && cm->seq_params.enable_ext_partitions;
 
   partition_allowed[PARTITION_HORZ_3] =
-      ext_partition_allowed && implied_rect_type != VERT &&
-      is_ext_partition_allowed(bsize, HORZ, tree_type) &&
+      ext_partition_allowed && implied_rect_type != AV2_VERT &&
+      is_ext_partition_allowed(bsize, AV2_HORZ, tree_type) &&
       get_partition_subsize(bsize, PARTITION_HORZ_3) != BLOCK_INVALID &&
       is_valid_partition_in_mixed_region(bsize, PARTITION_HORZ_3,
                                          parent_region_type) &&
@@ -4806,8 +4806,8 @@ static INLINE void init_allowed_partitions_for_signaling(
                                     ss_y);
 
   partition_allowed[PARTITION_VERT_3] =
-      ext_partition_allowed && implied_rect_type != HORZ &&
-      is_ext_partition_allowed(bsize, VERT, tree_type) &&
+      ext_partition_allowed && implied_rect_type != AV2_HORZ &&
+      is_ext_partition_allowed(bsize, AV2_VERT, tree_type) &&
       get_partition_subsize(bsize, PARTITION_VERT_3) != BLOCK_INVALID &&
       is_valid_partition_in_mixed_region(bsize, PARTITION_VERT_3,
                                          parent_region_type) &&
@@ -4820,8 +4820,8 @@ static INLINE void init_allowed_partitions_for_signaling(
   const bool uneven_4way_partition_allowed =
       ext_partition_allowed && cm->seq_params.enable_uneven_4way_partitions;
   partition_allowed[PARTITION_HORZ_4A] =
-      uneven_4way_partition_allowed && implied_rect_type != VERT &&
-      is_uneven_4way_partition_allowed(bsize, HORZ, tree_type) &&
+      uneven_4way_partition_allowed && implied_rect_type != AV2_VERT &&
+      is_uneven_4way_partition_allowed(bsize, AV2_HORZ, tree_type) &&
       get_partition_subsize(bsize, PARTITION_HORZ_4A) != BLOCK_INVALID &&
       is_valid_partition_in_mixed_region(bsize, PARTITION_HORZ_4A,
                                          parent_region_type) &&
@@ -4832,8 +4832,8 @@ static INLINE void init_allowed_partitions_for_signaling(
                                     ss_y);
 
   partition_allowed[PARTITION_HORZ_4B] =
-      uneven_4way_partition_allowed && implied_rect_type != VERT &&
-      is_uneven_4way_partition_allowed(bsize, HORZ, tree_type) &&
+      uneven_4way_partition_allowed && implied_rect_type != AV2_VERT &&
+      is_uneven_4way_partition_allowed(bsize, AV2_HORZ, tree_type) &&
       get_partition_subsize(bsize, PARTITION_HORZ_4B) != BLOCK_INVALID &&
       is_valid_partition_in_mixed_region(bsize, PARTITION_HORZ_4B,
                                          parent_region_type) &&
@@ -4844,8 +4844,8 @@ static INLINE void init_allowed_partitions_for_signaling(
                                     ss_y);
 
   partition_allowed[PARTITION_VERT_4A] =
-      uneven_4way_partition_allowed && implied_rect_type != HORZ &&
-      is_uneven_4way_partition_allowed(bsize, VERT, tree_type) &&
+      uneven_4way_partition_allowed && implied_rect_type != AV2_HORZ &&
+      is_uneven_4way_partition_allowed(bsize, AV2_VERT, tree_type) &&
       get_partition_subsize(bsize, PARTITION_VERT_4A) != BLOCK_INVALID &&
       is_valid_partition_in_mixed_region(bsize, PARTITION_VERT_4A,
                                          parent_region_type) &&
@@ -4856,8 +4856,8 @@ static INLINE void init_allowed_partitions_for_signaling(
                                     ss_y);
 
   partition_allowed[PARTITION_VERT_4B] =
-      uneven_4way_partition_allowed && implied_rect_type != HORZ &&
-      is_uneven_4way_partition_allowed(bsize, VERT, tree_type) &&
+      uneven_4way_partition_allowed && implied_rect_type != AV2_HORZ &&
+      is_uneven_4way_partition_allowed(bsize, AV2_VERT, tree_type) &&
       get_partition_subsize(bsize, PARTITION_VERT_4B) != BLOCK_INVALID &&
       is_valid_partition_in_mixed_region(bsize, PARTITION_VERT_4B,
                                          parent_region_type) &&
@@ -4938,7 +4938,7 @@ static INLINE bool is_do_split_implied(const bool *partition_allowed,
   return false;
 }
 
-static INLINE RECT_PART_TYPE
+static INLINE AV2_RECT_PART_TYPE
 only_allowed_rect_type(const bool *partition_allowed) {
   const bool horz_allowed = partition_allowed[PARTITION_HORZ] ||
                             partition_allowed[PARTITION_HORZ_3] ||
@@ -4949,28 +4949,28 @@ only_allowed_rect_type(const bool *partition_allowed) {
                             partition_allowed[PARTITION_VERT_4A] ||
                             partition_allowed[PARTITION_VERT_4B];
   assert(horz_allowed || vert_allowed);
-  if (horz_allowed && vert_allowed) return RECT_INVALID;
+  if (horz_allowed && vert_allowed) return AV2_RECT_INVALID;
   if (horz_allowed) {
     assert(!vert_allowed);
-    return HORZ;
+    return AV2_HORZ;
   }
   assert(vert_allowed);
   assert(!horz_allowed);
-  return VERT;
+  return AV2_VERT;
 }
 
 static INLINE bool is_do_ext_partition_implied(const bool *partition_allowed,
-                                               const RECT_PART_TYPE rect_type,
+                                               const AV2_RECT_PART_TYPE rect_type,
                                                bool *implied_do_ext) {
   bool non_ext_allowed;
   bool ext_allowed;
-  if (rect_type == HORZ) {
+  if (rect_type == AV2_HORZ) {
     non_ext_allowed = partition_allowed[PARTITION_HORZ];
     ext_allowed = partition_allowed[PARTITION_HORZ_3] ||
                   partition_allowed[PARTITION_HORZ_4A] ||
                   partition_allowed[PARTITION_HORZ_4B];
   } else {
-    assert(rect_type == VERT);
+    assert(rect_type == AV2_VERT);
     non_ext_allowed = partition_allowed[PARTITION_VERT];
     ext_allowed = partition_allowed[PARTITION_VERT_3] ||
                   partition_allowed[PARTITION_VERT_4A] ||
@@ -4989,16 +4989,16 @@ static INLINE bool is_do_ext_partition_implied(const bool *partition_allowed,
 }
 
 static INLINE bool is_do_uneven_4way_partition_implied(
-    const bool *partition_allowed, const RECT_PART_TYPE rect_type,
+    const bool *partition_allowed, const AV2_RECT_PART_TYPE rect_type,
     bool *implied_do_uneven_4way) {
   bool part_3_allowed;
   bool part_uneven_4way_allowed;
-  if (rect_type == HORZ) {
+  if (rect_type == AV2_HORZ) {
     part_3_allowed = partition_allowed[PARTITION_HORZ_3];
     part_uneven_4way_allowed = partition_allowed[PARTITION_HORZ_4A] ||
                                partition_allowed[PARTITION_HORZ_4B];
   } else {
-    assert(rect_type == VERT);
+    assert(rect_type == AV2_VERT);
     part_3_allowed = partition_allowed[PARTITION_VERT_3];
     part_uneven_4way_allowed = partition_allowed[PARTITION_VERT_4A] ||
                                partition_allowed[PARTITION_VERT_4B];

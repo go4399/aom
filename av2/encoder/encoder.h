@@ -1464,12 +1464,12 @@ typedef struct FRAME_COUNTS {
   unsigned int do_square_split[PARTITION_STRUCTURE_NUM][SQUARE_SPLIT_CONTEXTS]
                               [2];
   unsigned int rect_type[PARTITION_STRUCTURE_NUM][PARTITION_CONTEXTS][2];
-  unsigned int do_ext_partition[PARTITION_STRUCTURE_NUM][NUM_RECT_PARTS]
+  unsigned int do_ext_partition[PARTITION_STRUCTURE_NUM][AV2_NUM_RECT_PARTS]
                                [PARTITION_CONTEXTS][2];
-  unsigned int do_uneven_4way_partition[PARTITION_STRUCTURE_NUM][NUM_RECT_PARTS]
+  unsigned int do_uneven_4way_partition[PARTITION_STRUCTURE_NUM][AV2_NUM_RECT_PARTS]
                                        [PARTITION_CONTEXTS][2];
   unsigned int uneven_4way_partition_type[PARTITION_STRUCTURE_NUM]
-                                         [NUM_RECT_PARTS][PARTITION_CONTEXTS]
+                                         [AV2_NUM_RECT_PARTS][PARTITION_CONTEXTS]
                                          [NUM_UNEVEN_4WAY_PARTS];
   unsigned int txb_skip[TOKEN_CDF_Q_CTXS][TX_SIZES][TXB_SKIP_CONTEXTS][2];
   unsigned int v_txb_skip[TOKEN_CDF_Q_CTXS][V_TXB_SKIP_CONTEXTS][2];

@@ -870,41 +870,41 @@ static INLINE bool is_ext_partition_allowed_at_bsize(BLOCK_SIZE bsize,
 /*!\brief Checks whether extended partition is allowed for current bsize and
  * rect_type. */
 static INLINE bool is_ext_partition_allowed(BLOCK_SIZE bsize,
-                                            RECT_PART_TYPE rect_type,
+                                            AV2_RECT_PART_TYPE rect_type,
                                             TREE_TYPE tree_type) {
   if (!is_ext_partition_allowed_at_bsize(bsize, tree_type)) {
     return false;
   }
   // If 16x8 block performs HORZ_3 split, we'll get a block size 16x2, which is
   // invalid. So, extended partitions are disabled. Same goes for tall blocks.
-  if ((bsize == BLOCK_16X8 && rect_type == HORZ) ||
-      (bsize == BLOCK_8X16 && rect_type == VERT)) {
+  if ((bsize == BLOCK_16X8 && rect_type == AV2_HORZ) ||
+      (bsize == BLOCK_8X16 && rect_type == AV2_VERT)) {
     return false;
   }
   // If a 32x16 luma block performs HORZ_3 split, we'll get luma block size of
   // 32x4, which implies chroma block size of 16x2, which is invalid. So,
   // extended partitions are disabled. Same goes for tall blocks.
   if (tree_type == CHROMA_PART &&
-      ((bsize == BLOCK_32X16 && rect_type == HORZ) ||
-       (bsize == BLOCK_16X32 && rect_type == VERT))) {
+      ((bsize == BLOCK_32X16 && rect_type == AV2_HORZ) ||
+       (bsize == BLOCK_16X32 && rect_type == AV2_VERT))) {
     return false;
   }
   // If 32x8 block performs HORZ_3 split, we'll get a block size 32x2, which is
   // invalid. So, extended partitions are disabled. Same goes for tall blocks.
-  if ((bsize == BLOCK_32X8 && rect_type == HORZ) ||
-      (bsize == BLOCK_8X32 && rect_type == VERT)) {
+  if ((bsize == BLOCK_32X8 && rect_type == AV2_HORZ) ||
+      (bsize == BLOCK_8X32 && rect_type == AV2_VERT)) {
     return false;
   }
   // If a 64x16 luma block performs HORZ_3 split, we'll get luma block size of
   // 64x4, which invalid. So, extended partitions are disabled. Same goes for
   // tall blocks.
-  if ((bsize == BLOCK_64X16 && rect_type == HORZ) ||
-      (bsize == BLOCK_16X64 && rect_type == VERT)) {
+  if ((bsize == BLOCK_64X16 && rect_type == AV2_HORZ) ||
+      (bsize == BLOCK_16X64 && rect_type == AV2_VERT)) {
     return false;
   }
-  assert(IMPLIES(rect_type == HORZ,
+  assert(IMPLIES(rect_type == AV2_HORZ,
                  subsize_lookup[PARTITION_HORZ_3][bsize] != BLOCK_INVALID));
-  assert(IMPLIES(rect_type == VERT,
+  assert(IMPLIES(rect_type == AV2_VERT,
                  subsize_lookup[PARTITION_VERT_3][bsize] != BLOCK_INVALID));
   return true;
 }
@@ -940,7 +940,7 @@ static INLINE bool is_uneven_4way_partition_allowed_at_bsize(
 /*!\brief Checks whether uneven 4-way partition is allowed for current bsize and
  * rect_type. */
 static INLINE bool is_uneven_4way_partition_allowed(BLOCK_SIZE bsize,
-                                                    RECT_PART_TYPE rect_type,
+                                                    AV2_RECT_PART_TYPE rect_type,
                                                     TREE_TYPE tree_type) {
   if (!is_ext_partition_allowed(bsize, rect_type, tree_type)) {
     return false;
@@ -951,11 +951,11 @@ static INLINE bool is_uneven_4way_partition_allowed(BLOCK_SIZE bsize,
   const int bw = block_size_wide[bsize];
   const int bh = block_size_high[bsize];
   assert(bw <= 64 && bh <= 64);
-  if (rect_type == HORZ) {
+  if (rect_type == AV2_HORZ) {
     if (bh == 64) return true;
     if (bh >= 32 && tree_type != CHROMA_PART) return true;
   } else {
-    assert(rect_type == VERT);
+    assert(rect_type == AV2_VERT);
     if (bw == 64) return true;
     if (bw >= 32 && tree_type != CHROMA_PART) return true;
   }
@@ -963,33 +963,33 @@ static INLINE bool is_uneven_4way_partition_allowed(BLOCK_SIZE bsize,
 }
 
 /*!\brief Returns the rect_type that's implied by the bsize. If the rect_type
- * cannot be derived from bsize, returns RECT_INVALID. */
-static INLINE RECT_PART_TYPE rect_type_implied_by_bsize(BLOCK_SIZE bsize,
+ * cannot be derived from bsize, returns AV2_RECT_INVALID. */
+static INLINE AV2_RECT_PART_TYPE rect_type_implied_by_bsize(BLOCK_SIZE bsize,
                                                         TREE_TYPE tree_type) {
   // Handle luma part first
   if (bsize == BLOCK_128X256) {
-    return HORZ;
+    return AV2_HORZ;
   }
   if (bsize == BLOCK_256X128) {
-    return VERT;
+    return AV2_VERT;
   }
   if (bsize == BLOCK_4X8 || bsize == BLOCK_64X128 || bsize == BLOCK_4X16) {
-    return HORZ;
+    return AV2_HORZ;
   }
   if (bsize == BLOCK_8X4 || bsize == BLOCK_128X64 || bsize == BLOCK_16X4) {
-    return VERT;
+    return AV2_VERT;
   }
   // For chroma, we do not allow dimension of 4. If If we have BLOCK_8X16, we
-  // can only do HORZ.
+  // can only do AV2_HORZ.
   if (tree_type == CHROMA_PART) {
     if (bsize == BLOCK_8X16 || bsize == BLOCK_8X32) {
-      return HORZ;
+      return AV2_HORZ;
     }
     if (bsize == BLOCK_16X8 || bsize == BLOCK_32X8) {
-      return VERT;
+      return AV2_VERT;
     }
   }
-  return RECT_INVALID;
+  return AV2_RECT_INVALID;
 }
 
 /*!\brief Returns whether square split is allowed for current bsize. */
@@ -1001,16 +1001,16 @@ static INLINE bool is_square_split_eligible(BLOCK_SIZE bsize,
 
 /*!\brief Returns whether the current partition is horizontal type or vertical
  * type. */
-static INLINE RECT_PART_TYPE get_rect_part_type(PARTITION_TYPE partition) {
+static INLINE AV2_RECT_PART_TYPE get_rect_part_type(PARTITION_TYPE partition) {
   if (partition == PARTITION_HORZ || partition == PARTITION_HORZ_3 ||
       partition == PARTITION_HORZ_4A || partition == PARTITION_HORZ_4B) {
-    return HORZ;
+    return AV2_HORZ;
   } else if (partition == PARTITION_VERT || partition == PARTITION_VERT_3 ||
              partition == PARTITION_VERT_4A || partition == PARTITION_VERT_4B) {
-    return VERT;
+    return AV2_VERT;
   }
   assert(0 && "Rectangular partition expected!");
-  return NUM_RECT_PARTS;
+  return AV2_NUM_RECT_PARTS;
 }
 
 static INLINE int has_second_ref(const MB_MODE_INFO *mbmi) {

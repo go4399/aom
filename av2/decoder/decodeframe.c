@@ -1686,7 +1686,7 @@ static INLINE void decode_block(AV2Decoder *const pbi, ThreadData *const td,
 
 /*!\brief Maps (ext_part, 4way, 4way_type, rect_type) to partition_type. */
 static PARTITION_TYPE
-    rect_part_table[2][2][NUM_UNEVEN_4WAY_PARTS][NUM_RECT_PARTS] = {
+    rect_part_table[2][2][NUM_UNEVEN_4WAY_PARTS][AV2_NUM_RECT_PARTS] = {
       {
           // !do_ext_partition
           {
@@ -1793,15 +1793,15 @@ static PARTITION_TYPE read_partition(const AV2_COMMON *const cm,
     }
   }
 
-  RECT_PART_TYPE rect_type = rect_type_implied_by_bsize(bsize, xd->tree_type);
-  if (rect_type == RECT_INVALID) {
+  AV2_RECT_PART_TYPE rect_type = rect_type_implied_by_bsize(bsize, xd->tree_type);
+  if (rect_type == AV2_RECT_INVALID) {
     rect_type = only_allowed_rect_type(partition_allowed);
   }
-  if (rect_type == RECT_INVALID) {
+  if (rect_type == AV2_RECT_INVALID) {
     const int ctx = partition_plane_context(xd, mi_row, mi_col, bsize, 0,
                                             RECT_TYPE_CTX_MODE);
     rect_type = avm_read_symbol(r, ec_ctx->rect_type_cdf[plane][ctx],
-                                NUM_RECT_PARTS, ACCT_INFO("rect_type"));
+                                AV2_NUM_RECT_PARTS, ACCT_INFO("rect_type"));
   }
 
   bool do_ext_partition = false;

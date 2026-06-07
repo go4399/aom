@@ -2769,16 +2769,16 @@ static INLINE PARTITION_TYPE write_partition(
     return PARTITION_SPLIT;
   }
 
-  RECT_PART_TYPE rect_type = rect_type_implied_by_bsize(bsize, xd->tree_type);
-  if (rect_type == RECT_INVALID) {
+  AV2_RECT_PART_TYPE rect_type = rect_type_implied_by_bsize(bsize, xd->tree_type);
+  if (rect_type == AV2_RECT_INVALID) {
     rect_type = only_allowed_rect_type(partition_allowed);
   }
-  if (rect_type == RECT_INVALID) {
+  if (rect_type == AV2_RECT_INVALID) {
     rect_type = get_rect_part_type(p);
     const int ctx = partition_plane_context(xd, mi_row, mi_col, bsize, 0,
                                             RECT_TYPE_CTX_MODE);
     avm_write_symbol(w, rect_type, ec_ctx->rect_type_cdf[plane][ctx],
-                     NUM_RECT_PARTS);
+                     AV2_NUM_RECT_PARTS);
   } else {
     assert(rect_type == get_rect_part_type(p));
   }

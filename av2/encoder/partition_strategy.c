@@ -965,50 +965,50 @@ void av2_prune_partitions_by_max_min_bsize(
   if (is_gt_max_sq_part) {  // current block size is larger than max size.
     // Disable some partition types to partition down to max allowed size.
     partition_search_state->prune_partition_none = true;
-    partition_search_state->prune_partition_3[HORZ] = true;
-    partition_search_state->prune_partition_3[VERT] = true;
-    partition_search_state->prune_partition_4a[HORZ] = true;
-    partition_search_state->prune_partition_4a[VERT] = true;
-    partition_search_state->prune_partition_4b[HORZ] = true;
-    partition_search_state->prune_partition_4b[VERT] = true;
+    partition_search_state->prune_partition_3[AV2_HORZ] = true;
+    partition_search_state->prune_partition_3[AV2_VERT] = true;
+    partition_search_state->prune_partition_4a[AV2_HORZ] = true;
+    partition_search_state->prune_partition_4a[AV2_VERT] = true;
+    partition_search_state->prune_partition_4b[AV2_HORZ] = true;
+    partition_search_state->prune_partition_4b[AV2_VERT] = true;
     if (partition_search_state->partition_split_allowed) {  // only allow split
-      partition_search_state->prune_rect_part[HORZ] = true;
-      partition_search_state->prune_rect_part[VERT] = true;
+      partition_search_state->prune_rect_part[AV2_HORZ] = true;
+      partition_search_state->prune_rect_part[AV2_VERT] = true;
     } else {  // only allow one of horz or vert
-      assert(partition_search_state->partition_rect_allowed[HORZ] ||
-             partition_search_state->partition_rect_allowed[VERT]);
-      if (partition_search_state->prune_rect_part[HORZ] &&
-          partition_search_state->prune_rect_part[VERT]) {
-        if (partition_search_state->partition_rect_allowed[HORZ]) {
-          partition_search_state->prune_rect_part[HORZ] = false;
+      assert(partition_search_state->partition_rect_allowed[AV2_HORZ] ||
+             partition_search_state->partition_rect_allowed[AV2_VERT]);
+      if (partition_search_state->prune_rect_part[AV2_HORZ] &&
+          partition_search_state->prune_rect_part[AV2_VERT]) {
+        if (partition_search_state->partition_rect_allowed[AV2_HORZ]) {
+          partition_search_state->prune_rect_part[AV2_HORZ] = false;
         }
-        if (partition_search_state->partition_rect_allowed[VERT]) {
-          partition_search_state->prune_rect_part[VERT] = false;
+        if (partition_search_state->partition_rect_allowed[AV2_VERT]) {
+          partition_search_state->prune_rect_part[AV2_VERT] = false;
         }
       }
-      if (partition_search_state->partition_rect_allowed[HORZ] &&
-          partition_search_state->partition_rect_allowed[VERT] &&
-          !partition_search_state->prune_rect_part[HORZ] &&
-          !partition_search_state->prune_rect_part[VERT]) {
-        if (is_wide_block(bsize)) {  // Allow VERT partition only.
-          partition_search_state->prune_rect_part[HORZ] = true;
-        } else {  // Allow HORZ partition only.
+      if (partition_search_state->partition_rect_allowed[AV2_HORZ] &&
+          partition_search_state->partition_rect_allowed[AV2_VERT] &&
+          !partition_search_state->prune_rect_part[AV2_HORZ] &&
+          !partition_search_state->prune_rect_part[AV2_VERT]) {
+        if (is_wide_block(bsize)) {  // Allow AV2_VERT partition only.
+          partition_search_state->prune_rect_part[AV2_HORZ] = true;
+        } else {  // Allow AV2_HORZ partition only.
           assert(is_square_block(bsize) || is_tall_block(bsize));
-          partition_search_state->prune_rect_part[VERT] = true;
+          partition_search_state->prune_rect_part[AV2_VERT] = true;
         }
       }
     }
   } else if (is_le_min_sq_part) {  // current block size is less or equal to min
     // Disallow all 2-way partitions.
-    partition_search_state->prune_rect_part[HORZ] = true;
-    partition_search_state->prune_rect_part[VERT] = true;
+    partition_search_state->prune_rect_part[AV2_HORZ] = true;
+    partition_search_state->prune_rect_part[AV2_VERT] = true;
     // Disallow all H and uneven-4way partitions.
-    partition_search_state->prune_partition_3[HORZ] = true;
-    partition_search_state->prune_partition_3[VERT] = true;
-    partition_search_state->prune_partition_4a[HORZ] = true;
-    partition_search_state->prune_partition_4a[VERT] = true;
-    partition_search_state->prune_partition_4b[HORZ] = true;
-    partition_search_state->prune_partition_4b[VERT] = true;
+    partition_search_state->prune_partition_3[AV2_HORZ] = true;
+    partition_search_state->prune_partition_3[AV2_VERT] = true;
+    partition_search_state->prune_partition_4a[AV2_HORZ] = true;
+    partition_search_state->prune_partition_4a[AV2_VERT] = true;
+    partition_search_state->prune_partition_4b[AV2_HORZ] = true;
+    partition_search_state->prune_partition_4b[AV2_VERT] = true;
   }
 }
 
@@ -1470,8 +1470,8 @@ void av2_gather_erp_rect_features(
   const BLOCK_SIZE h_size = get_partition_subsize(bsize, PARTITION_HORZ);
   const SimpleMotionData *blk_h1 =
       h_size != BLOCK_INVALID
-          ? av2_get_sms_data(cpi, tile_info, x, mi_pos_rect[HORZ][0][0],
-                             mi_pos_rect[HORZ][0][1], h_size
+          ? av2_get_sms_data(cpi, tile_info, x, mi_pos_rect[AV2_HORZ][0][0],
+                             mi_pos_rect[AV2_HORZ][0][1], h_size
 #if CONFIG_ML_PART_SPLIT
                              ,
                              NULL, false
@@ -1481,8 +1481,8 @@ void av2_gather_erp_rect_features(
           : NULL;
   const SimpleMotionData *blk_h2 =
       h_size != BLOCK_INVALID
-          ? av2_get_sms_data(cpi, tile_info, x, mi_pos_rect[HORZ][1][0],
-                             mi_pos_rect[HORZ][1][1], h_size
+          ? av2_get_sms_data(cpi, tile_info, x, mi_pos_rect[AV2_HORZ][1][0],
+                             mi_pos_rect[AV2_HORZ][1][1], h_size
 #if CONFIG_ML_PART_SPLIT
                              ,
                              NULL, false
@@ -1494,8 +1494,8 @@ void av2_gather_erp_rect_features(
   const BLOCK_SIZE v_size = get_partition_subsize(bsize, PARTITION_VERT);
   const SimpleMotionData *blk_v1 =
       v_size != BLOCK_INVALID
-          ? av2_get_sms_data(cpi, tile_info, x, mi_pos_rect[VERT][0][0],
-                             mi_pos_rect[VERT][0][1], v_size
+          ? av2_get_sms_data(cpi, tile_info, x, mi_pos_rect[AV2_VERT][0][0],
+                             mi_pos_rect[AV2_VERT][0][1], v_size
 #if CONFIG_ML_PART_SPLIT
                              ,
                              NULL, false
@@ -1505,8 +1505,8 @@ void av2_gather_erp_rect_features(
           : NULL;
   const SimpleMotionData *blk_v2 =
       v_size != BLOCK_INVALID
-          ? av2_get_sms_data(cpi, tile_info, x, mi_pos_rect[VERT][1][0],
-                             mi_pos_rect[VERT][1][1], v_size
+          ? av2_get_sms_data(cpi, tile_info, x, mi_pos_rect[AV2_VERT][1][0],
+                             mi_pos_rect[AV2_VERT][1][1], v_size
 #if CONFIG_ML_PART_SPLIT
                              ,
                              NULL, false

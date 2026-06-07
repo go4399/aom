@@ -111,7 +111,7 @@ typedef struct PartitionSearchState {
   // Parameters related to partition block size.
   PartitionBlkParams part_blk_params;
 
-  // Win flags for HORZ and VERT partition evaluations.
+  // Win flags for AV2_HORZ and AV2_VERT partition evaluations.
   RD_RECT_PART_WIN_INFO split_part_rect_win[SUB_PARTITIONS_SPLIT];
 
   // RD cost for the current block of given partition type.
@@ -132,30 +132,30 @@ typedef struct PartitionSearchState {
   // RD costs for rectangular partitions.
   // rect_part_rd[0][i] is the RD cost of ith partition index of PARTITION_HORZ.
   // rect_part_rd[1][i] is the RD cost of ith partition index of PARTITION_VERT.
-  int64_t rect_part_rd[NUM_RECT_PARTS][SUB_PARTITIONS_RECT];
+  int64_t rect_part_rd[AV2_NUM_RECT_PARTS][SUB_PARTITIONS_RECT];
 
   // Flags to prune/skip particular partition size evaluation.
   int terminate_partition_search;
   int partition_none_allowed;
-  int partition_rect_allowed[NUM_RECT_PARTS];
+  int partition_rect_allowed[AV2_NUM_RECT_PARTS];
   int do_rectangular_split;
   int partition_split_allowed;
   bool prune_partition_none;
 #if CONFIG_ML_PART_SPLIT
   bool prune_partition_split;
 #endif  // CONFIG_ML_PART_SPLIT
-  bool partition_3_allowed[NUM_RECT_PARTS];
-  bool prune_partition_3[NUM_RECT_PARTS];
-  bool partition_4a_allowed[NUM_RECT_PARTS];
-  bool partition_4b_allowed[NUM_RECT_PARTS];
-  bool prune_partition_4a[NUM_RECT_PARTS];
-  bool prune_partition_4b[NUM_RECT_PARTS];
+  bool partition_3_allowed[AV2_NUM_RECT_PARTS];
+  bool prune_partition_3[AV2_NUM_RECT_PARTS];
+  bool partition_4a_allowed[AV2_NUM_RECT_PARTS];
+  bool partition_4b_allowed[AV2_NUM_RECT_PARTS];
+  bool prune_partition_4a[AV2_NUM_RECT_PARTS];
+  bool prune_partition_4b[AV2_NUM_RECT_PARTS];
   PARTITION_TYPE forced_partition;
   // Pointer to an array that traces out the current best partition boundary.
   // Used by prune_part_h_with_partition_boundary and
   // prune_part_4_with_partition_boundary.
   bool *partition_boundaries;
-  bool prune_rect_part[NUM_RECT_PARTS];
+  bool prune_rect_part[AV2_NUM_RECT_PARTS];
   int is_block_splittable;
 
   // Chroma subsampling in x and y directions.

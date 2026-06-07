@@ -66,11 +66,8 @@ enum {
   NUM_AB_PARTS
 } UENUM1BYTE(AB_PART_TYPE);
 
-#ifndef RECT_PART_TYPE_DEFINED
-#define RECT_PART_TYPE_DEFINED
 // Rectangular partition types.
 enum { HORZ = 0, VERT, NUM_RECT_PARTS } UENUM1BYTE(RECT_PART_TYPE);
-#endif
 
 // Structure to keep win flags for HORZ and VERT partition evaluations.
 typedef struct {

@@ -8233,16 +8233,16 @@ void av2_rd_pick_inter_mode_sb(struct AV2_COMP *cpi,
         }
       }
     } else {
-      for (RECT_PART_TYPE rect_type = HORZ; rect_type < NUM_RECT_PARTS;
+      for (AV2_RECT_PART_TYPE rect_type = AV2_HORZ; rect_type < AV2_NUM_RECT_PARTS;
            rect_type++) {
-        const int mi_pos_rect[NUM_RECT_PARTS][SUB_PARTITIONS_RECT][2] = {
+        const int mi_pos_rect[AV2_NUM_RECT_PARTS][SUB_PARTITIONS_RECT][2] = {
           { { xd->mi_row, xd->mi_col },
             { xd->mi_row + mi_size_high[bsize] / 2, xd->mi_col } },
           { { xd->mi_row, xd->mi_col },
             { xd->mi_row, xd->mi_col + mi_size_wide[bsize] / 2 } }
         };
         const PARTITION_TYPE part =
-            (rect_type == HORZ) ? PARTITION_HORZ : PARTITION_VERT;
+            (rect_type == AV2_HORZ) ? PARTITION_HORZ : PARTITION_VERT;
         const BLOCK_SIZE subsize = get_partition_subsize(bsize, part);
         if (subsize == BLOCK_INVALID) {
           continue;

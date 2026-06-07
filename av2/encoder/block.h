@@ -881,10 +881,10 @@ typedef struct {
   /*! Cost for sending rectangular type token. */
   int rect_type_cost[PARTITION_STRUCTURE_NUM][PARTITION_CONTEXTS][2];
   /*! Cost for sending do_ext_partition token. */
-  int do_ext_partition_cost[PARTITION_STRUCTURE_NUM][NUM_RECT_PARTS]
+  int do_ext_partition_cost[PARTITION_STRUCTURE_NUM][AV2_NUM_RECT_PARTS]
                            [PARTITION_CONTEXTS][2];
   /*! Cost for sending do_uneven_4way_partition token. */
-  int do_uneven_4way_partition_cost[PARTITION_STRUCTURE_NUM][NUM_RECT_PARTS]
+  int do_uneven_4way_partition_cost[PARTITION_STRUCTURE_NUM][AV2_NUM_RECT_PARTS]
                                    [PARTITION_CONTEXTS][2];
   /**@}*/
 
