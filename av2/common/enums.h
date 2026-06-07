@@ -14,9 +14,7 @@
 #define AOM_AV2_COMMON_ENUMS_H_
 
 #include "av2/common/common.h"
-#ifndef AV2_CONVOLVE_SUBPEL_REDIRECT
-#define AV2_CONVOLVE_SUBPEL_REDIRECT 1
-#endif
+
 // =============================================================================
 // AV2 Unified Enums & Constants
 // =============================================================================

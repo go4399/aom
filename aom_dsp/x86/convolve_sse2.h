@@ -14,11 +14,7 @@
 
 #include "config/aom_scale_rtcd.h"
 
-#ifdef AV2_CONVOLVE_SUBPEL_REDIRECT
-#define av1_get_interp_filter_subpel_kernel av2_get_interp_filter_subpel_kernel
-const int16_t *av2_get_interp_filter_subpel_kernel(
-    const InterpFilterParams *const filter_params, const int subpel);
-#endif
+
 
 // Note:
 //  This header file should be put below any x86 intrinsics head file

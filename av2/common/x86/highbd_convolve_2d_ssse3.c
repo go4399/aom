@@ -20,6 +20,18 @@
 #include "aom_dsp/x86/convolve_sse2.h"
 #include "av2/common/convolve.h"
 
+static inline void av2_prepare_coeffs(
+    const InterpFilterParams *const filter_params, const int subpel_q4,
+    __m128i *const coeffs /* [4] */) {
+  const int16_t *filter = av2_get_interp_filter_subpel_kernel(
+      filter_params, subpel_q4 & SUBPEL_MASK);
+  const __m128i coeff = _mm_loadu_si128((__m128i *)filter);
+  coeffs[0] = _mm_shuffle_epi32(coeff, 0x00);
+  coeffs[1] = _mm_shuffle_epi32(coeff, 0x55);
+  coeffs[2] = _mm_shuffle_epi32(coeff, 0xaa);
+  coeffs[3] = _mm_shuffle_epi32(coeff, 0xff);
+}
+
 void av2_highbd_convolve_2d_sr_ssse3(
     const uint16_t *src, int src_stride, uint16_t *dst, int dst_stride, int w,
     int h, const InterpFilterParams *filter_params_x,
@@ -55,8 +67,8 @@ void av2_highbd_convolve_2d_sr_ssse3(
       _mm_set1_epi16(bd == 10 ? 1023 : (bd == 12 ? 4095 : 255));
   const __m128i zero = _mm_setzero_si128();
 
-  prepare_coeffs(filter_params_x, subpel_x_qn, coeffs_x);
-  prepare_coeffs(filter_params_y, subpel_y_qn, coeffs_y);
+  av2_prepare_coeffs(filter_params_x, subpel_x_qn, coeffs_x);
+  av2_prepare_coeffs(filter_params_y, subpel_y_qn, coeffs_y);
 
   for (j = 0; j < w; j += 8) {
     /* Horizontal filter */
