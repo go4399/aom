@@ -9,6 +9,8 @@ cmbuild
 TAGS
 .av2-integration/
 build/
+build_av2/
+build_av1only/
 scratch/
 check_includes.py
 compare_repos.py
