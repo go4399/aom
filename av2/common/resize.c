@@ -17,7 +17,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "aom_dsp/aom_dsp_common.h"
 #include "aom_ports/mem.h"
@@ -26,8 +26,8 @@
 #include "av2/common/resize.h"
 // #include "common/lanczos_resample.h"
 
-#include "config/avm_dsp_rtcd.h"
-#include "config/avm_scale_rtcd.h"
+#include "config/av2_dsp_rtcd.h"
+#include "config/aom_scale_rtcd.h"
 
 // Filters for interpolation (0.5-band) - note this also filters integer pels.
 static const InterpKernel filteredinterp_filters500[(1 << RS_SUBPEL_BITS)] = {

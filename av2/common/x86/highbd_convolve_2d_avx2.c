@@ -13,7 +13,7 @@
 #include <immintrin.h>
 #include <assert.h>
 
-#include "config/avm_dsp_rtcd.h"
+#include "config/av2_dsp_rtcd.h"
 
 #include "av2/common/x86/av2_convolve_avx2.h"
 #include "aom_dsp/x86/synonyms.h"

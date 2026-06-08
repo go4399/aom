@@ -10,7 +10,7 @@
  * aomedia.org/license/patent-license/.
  */
 
-#include "config/avm_dsp_rtcd.h"
+#include "config/av2_dsp_rtcd.h"
 #include "av2/common/av2_common_int.h"
 #include "av2/encoder/banding_detection.h"
 #include "aom_mem/aom_mem.h"

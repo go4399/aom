@@ -13,7 +13,7 @@
 #ifndef AVM_AV2_ENCODER_ERP_MODELS_H_
 #define AVM_AV2_ENCODER_ERP_MODELS_H_
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 #include "av2/encoder/ml.h"
 
 #define NUM_HIDDEN_LAYERS_BLOCK_8X16 1

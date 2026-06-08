@@ -9,7 +9,7 @@
  * source code in the PATENTS file, you can obtain it at
  * aomedia.org/license/patent-license/.
  */
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #define RTCD_C
 #include "config/av2_rtcd.h"

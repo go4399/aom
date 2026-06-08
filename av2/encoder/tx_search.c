@@ -10,7 +10,7 @@
  * aomedia.org/license/patent-license/.
  */
 
-#include "config/avm_dsp_rtcd.h"
+#include "config/av2_dsp_rtcd.h"
 #include "av2/common/blockd.h"
 #include "av2/common/cfl.h"
 #include "av2/common/reconintra.h"

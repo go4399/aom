@@ -16,7 +16,7 @@
 #include "aom_ports/system_state.h"
 #include "av2/encoder/extend.h"
 #include "av2/encoder/rdopt.h"
-#include "config/avm_scale_rtcd.h"
+#include "config/aom_scale_rtcd.h"
 
 static const double kBaselineVmaf = 97.42773;
 

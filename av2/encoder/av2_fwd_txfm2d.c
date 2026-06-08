@@ -12,7 +12,7 @@
 
 #include <assert.h>
 
-#include "config/avm_dsp_rtcd.h"
+#include "config/av2_dsp_rtcd.h"
 #include "config/av2_rtcd.h"
 
 #include "aom_dsp/txfm_common.h"

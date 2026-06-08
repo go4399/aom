@@ -18,7 +18,7 @@
 #include "av2/common/blockd.h"
 #include "av2/common/convolve.h"
 #include "av2/common/filter.h"
-#include "config/avm_dsp_rtcd.h"
+#include "config/av2_dsp_rtcd.h"
 #include "config/av1_rtcd.h"
 #include "av2/common/reconinter.h"
 #include "av2/common/warped_motion.h"

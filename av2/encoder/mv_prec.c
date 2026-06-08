@@ -10,7 +10,7 @@
  * aomedia.org/license/patent-license/.
  */
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "aom_ports/system_state.h"
 

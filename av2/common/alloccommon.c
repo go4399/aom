@@ -11,7 +11,7 @@
  * aomedia.org/license/patent-license/.
  */
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "aom_mem/aom_mem.h"
 

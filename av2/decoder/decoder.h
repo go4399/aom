@@ -14,7 +14,7 @@
 #define AVM_AV2_DECODER_DECODER_H_
 
 #include "aom/aom_frame_buffer.h"
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "aom/aom_codec.h"
 #include "aom_dsp/bitreader.h"

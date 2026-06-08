@@ -14,7 +14,7 @@
 #define AVM_AV2_COMMON_RESTORATION_H_
 
 #include "aom_ports/mem.h"
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "av2/common/blockd.h"
 #include "av2/common/enums.h"

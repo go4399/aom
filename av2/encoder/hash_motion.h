@@ -13,7 +13,7 @@
 #ifndef AVM_AV2_ENCODER_HASH_MOTION_H_
 #define AVM_AV2_ENCODER_HASH_MOTION_H_
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "aom/aom_integer.h"
 #include "aom_scale/yv12config.h"

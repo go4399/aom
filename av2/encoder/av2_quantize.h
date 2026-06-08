@@ -13,7 +13,7 @@
 #ifndef AVM_AV2_ENCODER_AV2_QUANTIZE_H_
 #define AVM_AV2_ENCODER_AV2_QUANTIZE_H_
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "av2/common/enums.h"
 #include "av2/common/quant_common.h"

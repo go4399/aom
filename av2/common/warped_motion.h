@@ -20,7 +20,7 @@
 #include <assert.h>
 #include <stdbool.h>
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "aom_ports/mem.h"
 #include "aom_dsp/aom_dsp_common.h"

@@ -14,8 +14,8 @@
 #define AVM_AV2_ENCODER_ENCODER_UTILS_H_
 
 #include "av2/encoder/avm_compatibility_dsp.h"
-#include "config/avm_dsp_rtcd.h"
-#include "config/avm_scale_rtcd.h"
+#include "config/av2_dsp_rtcd.h"
+#include "config/aom_scale_rtcd.h"
 
 #include "av2/encoder/encoder.h"
 #include "av2/encoder/encodetxb.h"

@@ -17,7 +17,7 @@
 #include <math.h>
 #include <assert.h>
 
-#include "config/avm_dsp_rtcd.h"
+#include "config/av2_dsp_rtcd.h"
 
 #include "av2/encoder/global_motion.h"
 

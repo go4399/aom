@@ -13,7 +13,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "config/avm_dsp_rtcd.h"
+#include "config/av2_dsp_rtcd.h"
 #include "config/av2_rtcd.h"
 
 #include "av2/common/cdef.h"

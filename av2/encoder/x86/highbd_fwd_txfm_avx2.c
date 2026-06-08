@@ -12,7 +12,7 @@
 #include <assert.h>
 #include <immintrin.h> /*AVX2*/
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 #include "config/av2_rtcd.h"
 #include "av2/common/av2_txfm.h"
 #include "aom_dsp/txfm_common.h"

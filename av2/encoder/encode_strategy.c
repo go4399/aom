@@ -13,8 +13,8 @@
 #include <stdint.h>
 
 #include "av2/encoder/ratectrl.h"
-#include "config/avm_config.h"
-#include "config/avm_scale_rtcd.h"
+#include "config/aom_config.h"
+#include "config/aom_scale_rtcd.h"
 
 #include "aom/aom_codec.h"
 #include "aom/aom_encoder.h"
