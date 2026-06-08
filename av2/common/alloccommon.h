@@ -15,7 +15,7 @@
 
 #define INVALID_IDX -1  // Invalid buffer index.
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #ifdef __cplusplus
 extern "C" {

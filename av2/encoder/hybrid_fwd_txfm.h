@@ -13,7 +13,7 @@
 #ifndef AVM_AV2_ENCODER_HYBRID_FWD_TXFM_H_
 #define AVM_AV2_ENCODER_HYBRID_FWD_TXFM_H_
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -19,7 +19,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "aom/aomcx.h"
 

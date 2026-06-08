@@ -13,7 +13,7 @@
 #ifndef AVM_AV2_COMMON_ENTROPY_H_
 #define AVM_AV2_COMMON_ENTROPY_H_
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "aom/aom_integer.h"
 #include "aom_dsp/prob.h"

@@ -13,7 +13,7 @@
 #ifndef AVM_AV2_DECODER_DETOKENIZE_H_
 #define AVM_AV2_DECODER_DETOKENIZE_H_
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "av2/common/scan.h"
 #include "av2/decoder/decoder.h"

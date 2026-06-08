@@ -14,7 +14,7 @@
 
 #include "av2/encoder/context_tree.h"
 #include "av2/encoder/encodeframe_utils.h"
-#include "config/avm_dsp_rtcd.h"
+#include "config/av2_dsp_rtcd.h"
 
 #include "aom_ports/system_state.h"
 

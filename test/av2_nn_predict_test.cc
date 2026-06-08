@@ -18,7 +18,7 @@
 #include "aom_ports/aom_timer.h"
 #include "av2/encoder/ml.h"
 #include "config/aom_config.h"
-#include "config/avm_dsp_rtcd.h"
+#include "config/av2_dsp_rtcd.h"
 #include "config/av2_rtcd.h"
 #include "test/util.h"
 #include "test/register_state_check.h"

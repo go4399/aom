@@ -13,9 +13,9 @@
 #include <stdint.h>
 #include <float.h>
 
-#include "config/avm_config.h"
-#include "config/avm_dsp_rtcd.h"
-#include "config/avm_scale_rtcd.h"
+#include "config/aom_config.h"
+#include "config/av2_dsp_rtcd.h"
+#include "config/aom_scale_rtcd.h"
 
 #include "aom/aom_codec.h"
 #include "aom_ports/system_state.h"

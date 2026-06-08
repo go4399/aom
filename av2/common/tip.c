@@ -11,8 +11,8 @@
  */
 
 #include "av2/common/tip.h"
-#include "config/avm_scale_rtcd.h"
-#include "config/avm_dsp_rtcd.h"
+#include "config/aom_scale_rtcd.h"
+#include "config/av2_dsp_rtcd.h"
 #include "av2/common/reconinter.h"
 
 // Percentage threshold of number of blocks with available motion

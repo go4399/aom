@@ -12,7 +12,7 @@
 
 #include <math.h>
 
-#include "config/avm_dsp_rtcd.h"
+#include "config/av2_dsp_rtcd.h"
 #include "config/av2_rtcd.h"
 #define avm_highbd_quantize_b_adaptive avm_highbd_quantize_b_adaptive_c
 #define avm_highbd_quantize_b_32x32_adaptive \

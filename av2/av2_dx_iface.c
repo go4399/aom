@@ -16,8 +16,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "config/avm_config.h"
-#include "config/avm_version.h"
+#include "config/aom_config.h"
+#include "config/aom_version.h"
 
 #include "aom/internal/aom_codec_internal.h"
 #include "aom/internal/aom_image_internal.h"

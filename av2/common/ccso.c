@@ -14,7 +14,7 @@
 #include <math.h>
 #include <string.h>
 
-#include "config/avm_scale_rtcd.h"
+#include "config/aom_scale_rtcd.h"
 
 #include "aom/aom_integer.h"
 #include "av2/common/ccso.h"

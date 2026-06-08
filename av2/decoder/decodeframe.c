@@ -21,9 +21,9 @@
 #include "av2/common/enums.h"
 #include "av2/common/filter.h"
 #include "av2/common/scan.h"
-#include "config/avm_config.h"
-#include "config/avm_dsp_rtcd.h"
-#include "config/avm_scale_rtcd.h"
+#include "config/aom_config.h"
+#include "config/av2_dsp_rtcd.h"
+#include "config/aom_scale_rtcd.h"
 #include "config/av2_rtcd.h"
 #include "av2/common/level.h"
 

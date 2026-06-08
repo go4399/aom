@@ -12,9 +12,9 @@
 
 #include <assert.h>
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 #include "av2/common/banding_metadata.h"
-#include "config/avm_scale_rtcd.h"
+#include "config/aom_scale_rtcd.h"
 
 #include "aom/aom_codec.h"
 #include "aom_dsp/bitreader_buffer.h"

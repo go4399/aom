@@ -17,7 +17,7 @@
 #include <assert.h>
 #include <stdbool.h>
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 #include "config/av2_rtcd.h"
 
 #include "aom/internal/aom_codec_internal.h"

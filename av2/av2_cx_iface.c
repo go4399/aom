@@ -16,8 +16,8 @@
 #include <string.h>
 
 #include "aom_mem/aom_mem.h"
-#include "config/avm_config.h"
-#include "config/avm_version.h"
+#include "config/aom_config.h"
+#include "config/aom_version.h"
 
 #include "aom_ports/aom_once.h"
 #include "aom_ports/mem_ops.h"

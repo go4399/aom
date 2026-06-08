@@ -15,7 +15,7 @@
 #include <vector>
 #include "aom_ports/aom_timer.h"
 #include "config/av2_rtcd.h"
-#include "config/avm_dsp_rtcd.h"
+#include "config/av2_dsp_rtcd.h"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"
 #include "test/acm_random.h"

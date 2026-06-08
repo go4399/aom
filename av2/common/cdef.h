@@ -17,7 +17,7 @@
 #define CDEF_PRI_STRENGTHS 16
 #define CDEF_SEC_STRENGTHS 4
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "aom/aom_integer.h"
 #include "aom_ports/mem.h"

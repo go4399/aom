@@ -18,7 +18,7 @@
 #include "av2/encoder/encoder.h"
 #include "av2/encoder/rdopt_utils.h"
 #include "aom_ports/system_state.h"
-#include "config/avm_dsp_rtcd.h"
+#include "config/av2_dsp_rtcd.h"
 
 #ifdef __cplusplus
 extern "C" {

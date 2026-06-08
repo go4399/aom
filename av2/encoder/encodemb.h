@@ -13,7 +13,7 @@
 #ifndef AVM_AV2_ENCODER_ENCODEMB_H_
 #define AVM_AV2_ENCODER_ENCODEMB_H_
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "av2/common/av2_common_int.h"
 #include "av2/common/txb_common.h"

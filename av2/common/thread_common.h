@@ -13,7 +13,7 @@
 #ifndef AVM_AV2_COMMON_THREAD_COMMON_H_
 #define AVM_AV2_COMMON_THREAD_COMMON_H_
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "av2/common/av2_loopfilter.h"
 #include "av2/common/cdef.h"

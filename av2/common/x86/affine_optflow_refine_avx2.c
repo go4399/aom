@@ -12,7 +12,7 @@
 
 #include <immintrin.h>
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "av2/common/reconinter.h"
 

@@ -13,7 +13,7 @@
 #ifndef AVM_AV2_COMMON_IDCT_H_
 #define AVM_AV2_COMMON_IDCT_H_
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 #include "config/av2_rtcd.h"
 
 #include "av2/common/blockd.h"

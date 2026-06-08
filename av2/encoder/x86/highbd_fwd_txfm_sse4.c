@@ -13,7 +13,7 @@
 #include <smmintrin.h> /* SSE4.1 */
 
 #include "av2/common/common_data.h"
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 #include "config/av2_rtcd.h"
 
 #include "av2/common/av2_txfm.h"

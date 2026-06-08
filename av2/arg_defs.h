@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 #include "common/args_helper.h"
 #if CONFIG_WEBM_IO
 #include "common/webmenc.h"

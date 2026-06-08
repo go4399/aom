@@ -19,8 +19,8 @@
 
 #include "av2/common/av2_common_int.h"
 #include "av2/common/bru.h"
-#include "config/avm_config.h"
-#include "config/avm_dsp_rtcd.h"
+#include "config/aom_config.h"
+#include "config/av2_dsp_rtcd.h"
 
 #if CONFIG_DENOISE
 #include "aom_dsp/grain_table.h"

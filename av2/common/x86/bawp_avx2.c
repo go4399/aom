@@ -12,7 +12,7 @@
 
 #include <immintrin.h>
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 #include "config/av2_rtcd.h"
 
 void av2_make_bawp_block_avx2(uint16_t *dst, int dst_stride, int16_t alpha,

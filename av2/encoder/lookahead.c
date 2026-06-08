@@ -12,7 +12,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "aom_scale/yv12config.h"
 #include "av2/common/common.h"

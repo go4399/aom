@@ -13,7 +13,7 @@
 #ifndef AVM_AV2_COMMON_AV2_LOOPFILTER_H_
 #define AVM_AV2_COMMON_AV2_LOOPFILTER_H_
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "aom_ports/mem.h"
 #include "av2/common/blockd.h"

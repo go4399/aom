@@ -17,7 +17,7 @@
 extern "C" {
 #endif
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 #include "av2/common/enums.h"
 
 struct AV2Common;

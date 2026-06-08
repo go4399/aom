@@ -14,8 +14,8 @@
 #include <math.h>
 #include <stdio.h>
 
-#include "config/avm_config.h"
-#include "config/avm_dsp_rtcd.h"
+#include "config/aom_config.h"
+#include "config/av2_dsp_rtcd.h"
 
 #include "aom_dsp/aom_dsp_common.h"
 #include "aom_mem/aom_mem.h"

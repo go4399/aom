@@ -13,7 +13,7 @@
 #ifndef AVM_AV2_COMMON_HR_CODING_H_
 #define AVM_AV2_COMMON_HR_CODING_H_
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "aom_dsp/bitreader.h"
 #include "aom_dsp/bitwriter.h"

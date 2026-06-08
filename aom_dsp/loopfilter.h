@@ -13,7 +13,7 @@
 #define AVM_AVM_DSP_LOOPFILTER_H_
 #include <stdlib.h>
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 #include "aom_ports/mem.h"
 
 #define DF_8_THRESH 3

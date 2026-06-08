@@ -12,7 +12,7 @@
 #include <immintrin.h>
 #include <string.h>
 
-#include "config/avm_dsp_rtcd.h"
+#include "config/av2_dsp_rtcd.h"
 
 #include "aom_dsp/x86/av2_convolve.h"
 #include "aom_dsp/x86/convolve_avx2.h"

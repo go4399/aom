@@ -12,7 +12,7 @@
 
 #include <assert.h>
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 #include "aom_dsp/bitreader_buffer.h"
 #include "av2/common/common.h"
 #include "av2/common/obu_util.h"

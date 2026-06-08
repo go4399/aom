@@ -12,7 +12,7 @@
 
 #include "av2/common/annexA.h"
 #include "aom/internal/aom_codec_internal.h"
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 #include "av2/common/av2_common_int.h"
 #include "av2/common/blockd.h"
 #include "av2/common/enums.h"

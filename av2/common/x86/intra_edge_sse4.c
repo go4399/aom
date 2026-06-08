@@ -13,7 +13,7 @@
 #include <assert.h>
 #include <smmintrin.h>
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 #include "config/av2_rtcd.h"
 
 void av2_filter_intra_edge_high_sse4_1(uint16_t *p, int sz, int strength) {

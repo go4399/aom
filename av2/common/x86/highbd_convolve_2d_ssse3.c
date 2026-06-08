@@ -13,7 +13,7 @@
 #include <tmmintrin.h>
 #include <assert.h>
 
-#include "config/avm_dsp_rtcd.h"
+#include "config/av2_dsp_rtcd.h"
 
 #include "aom_dsp/aom_dsp_common.h"
 #include "aom_dsp/aom_filter.h"

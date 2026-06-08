@@ -13,7 +13,7 @@
 #ifndef AVM_AV2_ENCODER_CONTEXT_TREE_H_
 #define AVM_AV2_ENCODER_CONTEXT_TREE_H_
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "av2/common/blockd.h"
 #include "av2/encoder/block.h"

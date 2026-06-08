@@ -15,7 +15,7 @@
 #include <limits.h>
 #include <math.h>
 
-#include "config/avm_scale_rtcd.h"
+#include "config/aom_scale_rtcd.h"
 #include "config/av2_rtcd.h"
 
 #include "aom_dsp/aom_dsp_common.h"

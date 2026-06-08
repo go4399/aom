@@ -13,7 +13,7 @@
 #ifndef AVM_AV2_COMMON_ENTROPY_INITS_MODES_H_
 #define AVM_AV2_COMMON_ENTROPY_INITS_MODES_H_
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "av2/common/entropymode.h"
 

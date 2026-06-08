@@ -12,7 +12,7 @@
 
 #include <immintrin.h>
 
-#include "config/avm_dsp_rtcd.h"
+#include "config/av2_dsp_rtcd.h"
 #include "aom_dsp/x86/av2_intrapred_x86.h"
 #include "aom_dsp/x86/lpf_common_sse2.h"
 #include "aom_dsp/x86/synonyms.h"

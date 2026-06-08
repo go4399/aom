@@ -17,7 +17,7 @@
 #define CCSO_PROC_BLK_LOG2 5
 
 #include <float.h>
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 #include "aom/aom_integer.h"
 #include "aom_ports/mem.h"
 #include "av2/common/av2_common_int.h"

@@ -13,7 +13,7 @@
 #include <math.h>
 #include <limits.h>
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "av2/common/alloccommon.h"
 #include "av2/common/av2_common_int.h"

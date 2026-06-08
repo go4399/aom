@@ -13,7 +13,7 @@
 #ifndef AVM_AV2_DECODER_DTHREAD_H_
 #define AVM_AV2_DECODER_DTHREAD_H_
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 
 #include "aom_util/aom_thread.h"
 #include "aom/internal/aom_codec_internal.h"

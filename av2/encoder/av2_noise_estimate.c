@@ -14,7 +14,7 @@
 #include <limits.h>
 #include <math.h>
 
-#include "config/avm_dsp_rtcd.h"
+#include "config/av2_dsp_rtcd.h"
 #include "aom_dsp/aom_dsp_common.h"
 #include "aom_scale/yv12config.h"
 #include "aom/aom_integer.h"

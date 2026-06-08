@@ -12,7 +12,7 @@
 #include <assert.h>
 #include <immintrin.h>
 
-#include "config/avm_config.h"
+#include "config/aom_config.h"
 #include "config/av2_rtcd.h"
 #include "aom_dsp/x86/synonyms.h"
 #include "av2/common/idct.h"
