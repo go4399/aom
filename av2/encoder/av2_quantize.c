@@ -602,7 +602,7 @@ static void set_qm_test_params(AV2_COMMON *const cm,
   assert(pic_qm_num > 0);
   quant_params->pic_qm_num = pic_qm_num;
 
-  quant_params->qm_index_bits = avm_ceil_log2(quant_params->pic_qm_num);
+  quant_params->qm_index_bits = aom_ceil_log2(quant_params->pic_qm_num);
   const int num_planes = av2_num_planes(cm);
   for (uint8_t i = 0; i < quant_params->pic_qm_num; i++) {
     quant_params->qm_y[i] = min_qmlevel + rand() % qm_range;

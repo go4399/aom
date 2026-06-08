@@ -29,102 +29,26 @@
 
 #include "av2/av2_iface_common.h"
 
-#define avm_codec_enc_cfg_t aom_codec_enc_cfg_t
-#define avm_codec_pkt_list_decl aom_codec_pkt_list_decl
-#define avm_timing_info_type_t aom_timing_info_type_t
-#define avm_codec_pkt_list_init aom_codec_pkt_list_init
-#define avm_uleb_size_in_bytes aom_uleb_size_in_bytes
 #define AVM_CODEC_USE_PSNR AOM_CODEC_USE_PSNR
 #define AVM_CODEC_USE_STREAM_PSNR 0x10000
 #define AVM_CODEC_USE_PER_FRAME_STATS 0x20000
 #define AVM_CODEC_USE_PER_FRAME_HLS_INFO 0x40000
 #define AVM_CODEC_CX_FRAME_NULL_PKT AOM_CODEC_CX_FRAME_NULL_PKT
 #define AVM_CODEC_CX_FRAME_PKT AOM_CODEC_CX_FRAME_PKT
-#define avm_codec_pkt_list aom_codec_pkt_list
 #define AVM_ENC_NO_SCALE_BORDER AOM_ENC_NO_SCALE_BORDER
-#define aom_codec_err_t aom_codec_err_t
-#define aom_codec_alg_priv_t aom_codec_alg_priv_t
-#define aom_codec_ctx_t aom_codec_ctx_t
-#define aom_image_t aom_image_t
 #define aom_pts_t aom_codec_pts_t
-#define aom_enc_frame_flags_t aom_enc_frame_flags_t
-#define AOM_CODEC_OK AOM_CODEC_OK
-#define aom_codec_iter_t aom_codec_iter_t
-#define aom_codec_dec_cfg_t aom_codec_dec_cfg_t
-#define aom_codec_ctrl_fn_map_t aom_codec_ctrl_fn_map_t
-#define aom_codec_priv_t aom_codec_priv_t
-#define AOM_CODEC_INVALID_PARAM AOM_CODEC_INVALID_PARAM
-#define AOM_CODEC_ERROR AOM_CODEC_ERROR
-#define aom_malloc aom_malloc
-#define aom_free aom_free
 #define AV2E_SET_INTRA_DEFAULT_TX_ONLY AV1E_SET_INTRA_DEFAULT_TX_ONLY
-#define AOM_CODEC_MEM_ERROR AOM_CODEC_MEM_ERROR
-#define aom_calc_highbd_psnr aom_calc_highbd_psnr
-#define aom_obu_type_to_string aom_obu_type_to_string
-#define aom_internal_error aom_internal_error
 
-#define aom_usec_timer aom_usec_timer
-#define aom_usec_timer_start aom_usec_timer_start
-#define aom_usec_timer_mark aom_usec_timer_mark
-#define aom_usec_timer_elapsed aom_usec_timer_elapsed
-#define aom_codec_pkt_list_add aom_codec_pkt_list_add
-#define aom_codec_pkt_list_get aom_codec_pkt_list_get
-#define AOM_KF_AUTO AOM_KF_AUTO
-#define aom_calloc aom_calloc
-#define aom_once aom_once
-#define AOM_CBR AOM_CBR
 #define aom_codec_control_type_AVME_SET_ARNR_STRENGTH int
 #define aom_codec_control_type_AVME_SET_TUNING int
 #define aom_codec_control_type_AVME_SET_QP int
 #define aom_codec_control_type_AVME_SET_MAX_INTRA_BITRATE_PCT int
 #define aom_codec_control_type_AVME_SET_MAX_INTER_BITRATE_PCT int
-#define AOM_RC_ONE_PASS AOM_RC_ONE_PASS
-#define AOM_CONTENT_SCREEN AOM_CONTENT_SCREEN
-#define AOM_Q AOM_Q
-#define aom_fixed_buf_t aom_fixed_buf_t
-#define AOM_VBR AOM_VBR
-#define AOM_TIMING_EQUAL AOM_TIMING_EQUAL
-#define AOM_TIMING_DEC_MODEL AOM_TIMING_DEC_MODEL
 
-#define AOM_CICP_TC_BT_709 AOM_CICP_TC_BT_709
-#define AOM_CICP_TC_HLG AOM_CICP_TC_HLG
-#define AOM_CICP_MC_IDENTITY AOM_CICP_MC_IDENTITY
-#define AOM_CICP_MC_YCGCO_RO AOM_CICP_MC_YCGCO_RO
-#define AOM_TUNE_VMAF_WITH_PREPROCESSING AOM_TUNE_VMAF_WITH_PREPROCESSING
-#define AOM_TUNE_VMAF_NEG_MAX_GAIN AOM_TUNE_VMAF_NEG_MAX_GAIN
-#define AOM_TUNE_SSIM AOM_TUNE_SSIM
-#define AOM_TUNE_PSNR AOM_TUNE_PSNR
 
-#define AOM_IMG_FMT_YV12 AOM_IMG_FMT_YV12
-#define AOM_IMG_FMT_I420 AOM_IMG_FMT_I420
-#define AOM_IMG_FMT_YV1216 AOM_IMG_FMT_YV1216
-#define AOM_IMG_FMT_I42016 AOM_IMG_FMT_I42016
-#define AOM_IMG_FMT_I444 AOM_IMG_FMT_I444
-#define AOM_IMG_FMT_I44416 AOM_IMG_FMT_I44416
-#define AOM_IMG_FMT_I422 AOM_IMG_FMT_I422
-#define AOM_IMG_FMT_I42216 AOM_IMG_FMT_I42216
 
-#define aom_tune_content aom_tune_content
-#define aom_color_primaries_t aom_color_primaries_t
-#define aom_transfer_characteristics_t aom_transfer_characteristics_t
-#define aom_matrix_coefficients_t aom_matrix_coefficients_t
-#define aom_chroma_sample_position_t aom_chroma_sample_position_t
-#define aom_superblock_size_t aom_superblock_size_t
-#define av2_opfl_refine_type av2_opfl_refine_type
 
-#define AOM_TIMING_UNSPECIFIED AOM_TIMING_UNSPECIFIED
-#define AOM_BITS_8 AOM_BITS_8
-#define AOM_BITS_10 AOM_BITS_10
-#define AOM_CICP_CP_UNSPECIFIED AOM_CICP_CP_UNSPECIFIED
-#define AOM_CICP_TC_UNSPECIFIED AOM_CICP_TC_UNSPECIFIED
-#define AOM_CICP_MC_UNSPECIFIED AOM_CICP_MC_UNSPECIFIED
-#define AOM_CSP_UNKNOWN AOM_CSP_UNKNOWN
-#define aom_tune_metric aom_tune_metric
-#define aom_bit_depth_t aom_bit_depth_t
-#define AOM_SUPERBLOCK_SIZE_DYNAMIC AOM_SUPERBLOCK_SIZE_DYNAMIC
-#define AOM_SUPERBLOCK_SIZE_64X64 AOM_SUPERBLOCK_SIZE_64X64
 #define AVM_KF_DISABLED AOM_KF_DISABLED
-#define AOM_CICP_CP_EBU_3213 AOM_CICP_CP_EBU_3213
 #define CONFIG_SHARP_SETTINGS 0
 
 #define aom_codec_control_type_AVME_SET_CPUUSED int
@@ -382,12 +306,9 @@ typedef struct {
 #define avm_codec_frame_flags_t aom_codec_frame_flags_t
 #define AVM_FRAME_HAS_FILM_GRAIN_PARAMS FRAMEFLAGS_HAS_FILM_GRAIN_PARAMS
 #define aom_pts_t aom_codec_pts_t
-#define avm_codec_cx_pkt_t aom_codec_cx_pkt_t
 #define av2_ref_frame_t av1_ref_frame_t
 #define avm_img_alloc aom_img_alloc
 #define avm_img_free aom_img_free
-#define avm_codec_pkt_list aom_codec_pkt_list
-#define aom_codec_iface_t aom_codec_iface_t
 
 #define avm_arg_match_helper arg_match_helper
 #define avm_arg_parse_uint_helper arg_parse_uint_helper
@@ -489,7 +410,7 @@ struct av2_extracfg {
   unsigned int num_tg;
   unsigned int mtu_size;
 
-  avm_timing_info_type_t timing_info_type;
+  aom_timing_info_type_t timing_info_type;
   unsigned int frame_parallel_decoding_mode;
   unsigned int enable_chroma_deltaq;
   AQ_MODE aq_mode;
@@ -975,7 +896,7 @@ static struct av2_extracfg default_extra_cfg = {
 
 struct avm_codec_alg_priv {
   aom_codec_priv_t base;
-  avm_codec_enc_cfg_t cfg;
+  aom_codec_enc_cfg_t cfg;
   struct av2_extracfg extra_cfg;
   avm_rational64_t timestamp_ratio;
   aom_pts_t pts_offset;
@@ -989,7 +910,7 @@ struct avm_codec_alg_priv {
   int pending_frame_count;
   aom_image_t preview_img;
   aom_enc_frame_flags_t next_frame_flags;
-  avm_codec_pkt_list_decl(256) pkt_list;
+  aom_codec_pkt_list_decl(256) pkt_list;
   unsigned int fixed_kf_cntr;
   // BufferPool that holds all reference frames.
   BufferPool *buffer_pool;
@@ -1054,7 +975,7 @@ static aom_codec_err_t update_error_state(
   } while (0)
 
 static aom_codec_err_t validate_config(aom_codec_alg_priv_t *ctx,
-                                       const avm_codec_enc_cfg_t *cfg,
+                                       const aom_codec_enc_cfg_t *cfg,
                                        const struct av2_extracfg *extra_cfg) {
   RANGE_CHECK(cfg, g_w, 1, 65535);  // 16 bits available
   RANGE_CHECK(cfg, g_h, 1, 65535);  // 16 bits available
@@ -1355,7 +1276,7 @@ static double get_modeled_qp_offset(int qp, int level, int bit_depth,
 // parameters in the configure file will not overwrite the parameters in
 // extra_cfg.
 static aom_codec_err_t set_encoder_config(AV2EncoderConfig *oxcf,
-                                          avm_codec_enc_cfg_t *cfg,
+                                          aom_codec_enc_cfg_t *cfg,
                                           struct av2_extracfg *extra_cfg,
                                           int update_config) {
   if (cfg->encoder_cfg.init_by_cfg_file && !update_config) {
@@ -1921,7 +1842,7 @@ static aom_codec_err_t set_encoder_config(AV2EncoderConfig *oxcf,
 }
 
 static aom_codec_err_t encoder_set_config(aom_codec_alg_priv_t *ctx,
-                                          const avm_codec_enc_cfg_t *cfg) {
+                                          const aom_codec_enc_cfg_t *cfg) {
   InitialDimensions *const initial_dimensions = &ctx->cpi->initial_dimensions;
   aom_codec_err_t res;
   int force_key = 0;
@@ -2969,7 +2890,7 @@ static aom_codec_err_t create_stats_buffer(FIRSTPASS_STATS **frame_stats_buffer,
 
 static aom_codec_err_t create_context_and_bufferpool(
     AV2_COMP **p_cpi, BufferPool **p_buffer_pool, AV2EncoderConfig *oxcf,
-    struct avm_codec_pkt_list *pkt_list_head, FIRSTPASS_STATS *frame_stats_buf,
+    struct aom_codec_pkt_list *pkt_list_head, FIRSTPASS_STATS *frame_stats_buf,
     COMPRESSOR_STAGE stage, int num_lap_buffers, int lap_lag_in_frames,
     STATS_BUFFER_CTX *stats_buf_context) {
   aom_codec_err_t res = AOM_CODEC_OK;
@@ -3392,7 +3313,7 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
     DISABLE_SETJMP(ctx->cpi);
   }
 
-  avm_codec_pkt_list_init(&ctx->pkt_list);
+  aom_codec_pkt_list_init(&ctx->pkt_list);
 
   volatile aom_enc_frame_flags_t flags = enc_flags;
 
@@ -3632,7 +3553,7 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
         if (ready_for_next_tu && mlayer_id == 0) {
           const uint32_t obu_payload_size = 0;
           const size_t length_field_size =
-              avm_uleb_size_in_bytes(obu_payload_size);
+              aom_uleb_size_in_bytes(obu_payload_size);
 
           uint8_t obu_header[2];
           const uint32_t obu_header_size = av2_write_obu_header(
@@ -3740,7 +3661,7 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
     }
     if (is_frame_visible) {
       // Add the frame packet to the list of returned packets.
-      avm_codec_cx_pkt_t pkt;
+      aom_codec_cx_pkt_t pkt;
 
       // decrement frames_left counter
       cpi->frames_left = AOMMAX(0, cpi->frames_left - 1);
@@ -3775,7 +3696,7 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
   return res;
 }
 
-static const avm_codec_cx_pkt_t *encoder_get_cxdata(aom_codec_alg_priv_t *ctx,
+static const aom_codec_cx_pkt_t *encoder_get_cxdata(aom_codec_alg_priv_t *ctx,
                                                     aom_codec_iter_t *iter) {
   return aom_codec_pkt_list_get(&ctx->pkt_list.head, iter);
 }
@@ -5161,7 +5082,7 @@ aom_codec_iface_t avm_codec_av2_cx_algo_temp = {
   {
       // NOLINT
       1,                                 // 1 cfg
-      (const void *)encoder_usage_cfg,   // avm_codec_enc_cfg_t
+      (const void *)encoder_usage_cfg,   // aom_codec_enc_cfg_t
       encoder_encode,                    // avm_codec_encode_fn_t
       (const void *)encoder_get_cxdata,  // avm_codec_get_cx_data_fn_t
       (const void *)encoder_set_config,  // avm_codec_enc_config_set_fn_t

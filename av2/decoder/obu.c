@@ -37,7 +37,7 @@ static uint32_t read_temporal_delimiter_obu() { return 0; }
 // Returns a boolean that indicates success.
 static int read_bitstream_level(AV2_LEVEL *seq_level_idx,
                                 struct aom_read_bit_buffer *rb) {
-  *seq_level_idx = avm_rb_read_literal(rb, LEVEL_BITS);
+  *seq_level_idx = aom_rb_read_literal(rb, LEVEL_BITS);
   if (!is_valid_seq_level_idx(*seq_level_idx)) return 0;
   return 1;
 }
@@ -55,7 +55,7 @@ static void av2_read_tlayer_dependency_info(SequenceHeader *const seq,
            ref_tlayer_id--) {
         if (multi_tlayer_flag > 0 || curr_mlayer_id == 0) {
           seq->tlayer_dependency_map[curr_mlayer_id][curr_tlayer_id]
-                                    [ref_tlayer_id] = avm_rb_read_bit(rb);
+                                    [ref_tlayer_id] = aom_rb_read_bit(rb);
         } else {
           seq->tlayer_dependency_map[curr_mlayer_id][curr_tlayer_id]
                                     [ref_tlayer_id] =
@@ -74,7 +74,7 @@ static void av2_read_mlayer_dependency_info(SequenceHeader *const seq,
     for (int ref_mlayer_id = curr_mlayer_id; ref_mlayer_id >= 0;
          ref_mlayer_id--) {
       seq->mlayer_dependency_map[curr_mlayer_id][ref_mlayer_id] =
-          avm_rb_read_bit(rb);
+          aom_rb_read_bit(rb);
     }
   }
 }
@@ -145,9 +145,9 @@ void av2_read_color_info(int *color_description_idc, int *color_primaries,
   }
   switch (*color_description_idc) {
     case AV2_COLOR_DESC_IDC_EXPLICIT:  // 0
-      *color_primaries = avm_rb_read_literal(rb, 8);
-      *transfer_characteristics = avm_rb_read_literal(rb, 8);
-      *matrix_coefficients = avm_rb_read_literal(rb, 8);
+      *color_primaries = aom_rb_read_literal(rb, 8);
+      *transfer_characteristics = aom_rb_read_literal(rb, 8);
+      *matrix_coefficients = aom_rb_read_literal(rb, 8);
       break;
     case AV2_COLOR_DESC_IDC_BT709SDR:                  // 1
       *color_primaries = AOM_CICP_CP_BT_709;           // 1
@@ -182,7 +182,7 @@ void av2_read_color_info(int *color_description_idc, int *color_primaries,
       *matrix_coefficients = AOM_CICP_MC_UNSPECIFIED;
       break;
   }
-  *full_range_flag = avm_rb_read_bit(rb);
+  *full_range_flag = aom_rb_read_bit(rb);
 }
 
 // Helper function to store xlayer context
@@ -436,7 +436,7 @@ static uint32_t read_multi_stream_decoder_operation_obu(
   }
 
   const int num_streams =
-      avm_rb_read_literal(rb, 3) + 2;  // read number of streams
+      aom_rb_read_literal(rb, 3) + 2;  // read number of streams
   if (num_streams > AV2_MAX_NUM_STREAMS) {
     aom_internal_error(
         &cm->error, AOM_CODEC_UNSUP_BITSTREAM,
@@ -445,39 +445,39 @@ static uint32_t read_multi_stream_decoder_operation_obu(
   cm->num_streams = num_streams;
 
   pbi->common.msdo_params.multistream_profile_idc =
-      avm_rb_read_literal(rb, PROFILE_BITS);  // read profile of multistream
+      aom_rb_read_literal(rb, PROFILE_BITS);  // read profile of multistream
 
   pbi->common.msdo_params.multistream_level_idx =
-      avm_rb_read_literal(rb, LEVEL_BITS);  // read level of multistream
+      aom_rb_read_literal(rb, LEVEL_BITS);  // read level of multistream
 
   pbi->common.msdo_params.multistream_tier_idx =
-      avm_rb_read_bit(rb);  // read tier of multistream
+      aom_rb_read_bit(rb);  // read tier of multistream
 
   const int multistream_even_allocation_flag =
-      avm_rb_read_bit(rb);  // read multistream_even_allocation_flag
+      aom_rb_read_bit(rb);  // read multistream_even_allocation_flag
 
   if (!multistream_even_allocation_flag) {
     const int multistream_large_picture_idc =
-        avm_rb_read_literal(rb, 3);  // read multistream_large_picture_idc
+        aom_rb_read_literal(rb, 3);  // read multistream_large_picture_idc
     (void)multistream_large_picture_idc;
   }
 
   for (int i = 0; i < num_streams; i++) {
-    cm->stream_ids[i] = avm_rb_read_literal(rb, XLAYER_BITS);  // read stream ID
+    cm->stream_ids[i] = aom_rb_read_literal(rb, XLAYER_BITS);  // read stream ID
     const int substream_profile_idc =
-        avm_rb_read_literal(rb, PROFILE_BITS);  // read profile of multistream
+        aom_rb_read_literal(rb, PROFILE_BITS);  // read profile of multistream
     (void)substream_profile_idc;
 
     const int substream_level_idx =
-        avm_rb_read_literal(rb, LEVEL_BITS);  // read level of multistream
+        aom_rb_read_literal(rb, LEVEL_BITS);  // read level of multistream
     (void)substream_level_idx;
 
     const int substream_tier_idx =
-        avm_rb_read_bit(rb);  // read tier of multistream
+        aom_rb_read_bit(rb);  // read tier of multistream
     (void)substream_tier_idx;
   }
 
-  cm->msdo_params.msdo_doh_constraint_flag = avm_rb_read_bit(rb);
+  cm->msdo_params.msdo_doh_constraint_flag = aom_rb_read_bit(rb);
 
   // Check if configuration changed
   MsdoConfig new_config;
@@ -535,7 +535,7 @@ static uint32_t read_sequence_header_obu(AV2Decoder *pbi, int xlayer_id,
 
   // Use an element in the pbi->seq_list array to store the information as we
   // decode. At the end, if no errors have occurred, cm->seq_params is updated.
-  uint32_t seq_header_id = avm_rb_read_uvlc(rb);
+  uint32_t seq_header_id = aom_rb_read_uvlc(rb);
   if (seq_header_id >= MAX_SEQ_NUM) {
     cm->error.error_code = AOM_CODEC_UNSUP_BITSTREAM;
     return 0;
@@ -552,14 +552,14 @@ static uint32_t read_sequence_header_obu(AV2Decoder *pbi, int xlayer_id,
     return 0;
   }
 
-  seq_params->single_picture_header_flag = avm_rb_read_bit(rb);
+  seq_params->single_picture_header_flag = aom_rb_read_bit(rb);
   if (!read_bitstream_level(&seq_params->seq_max_level_idx, rb)) {
     cm->error.error_code = AOM_CODEC_UNSUP_BITSTREAM;
     return 0;
   }
   if (seq_params->seq_max_level_idx >= SEQ_LEVEL_4_0 &&
       !seq_params->single_picture_header_flag)
-    seq_params->seq_tier = avm_rb_read_bit(rb);
+    seq_params->seq_tier = aom_rb_read_bit(rb);
   else
     seq_params->seq_tier = 0;
   av2_read_chroma_format_bitdepth(rb, seq_params, &cm->error);
@@ -571,18 +571,18 @@ static uint32_t read_sequence_header_obu(AV2Decoder *pbi, int xlayer_id,
     seq_params->seq_max_mlayer_cnt = 1;
     seq_params->monotonic_output_order_flag = 1;
   } else {
-    int seq_lcr_id = avm_rb_read_literal(rb, 3);
+    int seq_lcr_id = aom_rb_read_literal(rb, 3);
     if (seq_lcr_id > MAX_NUM_SEQ_LCR_ID) {
       aom_internal_error(&cm->error, AOM_CODEC_UNSUP_BITSTREAM,
                          "Unsupported LCR id in the Sequence Header.\n");
     }
     seq_params->seq_lcr_id = seq_lcr_id;
-    seq_params->still_picture = avm_rb_read_bit(rb);
-    seq_params->max_tlayer_id = avm_rb_read_literal(rb, TLAYER_BITS);
-    seq_params->max_mlayer_id = avm_rb_read_literal(rb, MLAYER_BITS);
+    seq_params->still_picture = aom_rb_read_bit(rb);
+    seq_params->max_tlayer_id = aom_rb_read_literal(rb, TLAYER_BITS);
+    seq_params->max_mlayer_id = aom_rb_read_literal(rb, MLAYER_BITS);
     if (seq_params->max_mlayer_id > 0) {
-      int n = avm_ceil_log2(seq_params->max_mlayer_id + 1);
-      int seq_max_mlayer_cnt_minus_1 = avm_rb_read_literal(rb, n);
+      int n = aom_ceil_log2(seq_params->max_mlayer_id + 1);
+      int seq_max_mlayer_cnt_minus_1 = aom_rb_read_literal(rb, n);
       if (seq_max_mlayer_cnt_minus_1 > seq_params->max_mlayer_id) {
         aom_internal_error(
             &cm->error, AOM_CODEC_UNSUP_BITSTREAM,
@@ -593,13 +593,13 @@ static uint32_t read_sequence_header_obu(AV2Decoder *pbi, int xlayer_id,
     } else {
       seq_params->seq_max_mlayer_cnt = 1;
     }
-    seq_params->monotonic_output_order_flag = avm_rb_read_bit(rb);
+    seq_params->monotonic_output_order_flag = aom_rb_read_bit(rb);
   }
 
-  const int num_bits_width = avm_rb_read_literal(rb, 4) + 1;
-  const int num_bits_height = avm_rb_read_literal(rb, 4) + 1;
-  const int max_frame_width = avm_rb_read_literal(rb, num_bits_width) + 1;
-  const int max_frame_height = avm_rb_read_literal(rb, num_bits_height) + 1;
+  const int num_bits_width = aom_rb_read_literal(rb, 4) + 1;
+  const int num_bits_height = aom_rb_read_literal(rb, 4) + 1;
+  const int max_frame_width = aom_rb_read_literal(rb, num_bits_width) + 1;
+  const int max_frame_height = aom_rb_read_literal(rb, num_bits_height) + 1;
 
   seq_params->num_bits_width = num_bits_width;
   seq_params->num_bits_height = num_bits_height;
@@ -613,21 +613,21 @@ static uint32_t read_sequence_header_obu(AV2Decoder *pbi, int xlayer_id,
     seq_params->decoder_model_info_present_flag = 0;
     seq_params->display_model_info_present_flag = 0;
   } else {
-    seq_params->seq_max_display_model_info_present_flag = avm_rb_read_bit(rb);
+    seq_params->seq_max_display_model_info_present_flag = aom_rb_read_bit(rb);
     seq_params->seq_max_initial_display_delay_minus_1 =
         BUFFER_POOL_MAX_SIZE - 1;
     if (seq_params->seq_max_display_model_info_present_flag)
       seq_params->seq_max_initial_display_delay_minus_1 =
-          avm_rb_read_literal(rb, 4);
-    seq_params->decoder_model_info_present_flag = avm_rb_read_bit(rb);
+          aom_rb_read_literal(rb, 4);
+    seq_params->decoder_model_info_present_flag = aom_rb_read_bit(rb);
     if (seq_params->decoder_model_info_present_flag) {
       seq_params->decoder_model_info.num_units_in_decoding_tick =
-          avm_rb_read_unsigned_literal(rb, 32);
-      seq_params->seq_max_decoder_model_present_flag = avm_rb_read_bit(rb);
+          aom_rb_read_unsigned_literal(rb, 32);
+      seq_params->seq_max_decoder_model_present_flag = aom_rb_read_bit(rb);
       if (seq_params->seq_max_decoder_model_present_flag) {
-        seq_params->seq_max_decoder_buffer_delay = avm_rb_read_uvlc(rb);
-        seq_params->seq_max_encoder_buffer_delay = avm_rb_read_uvlc(rb);
-        seq_params->seq_max_low_delay_mode_flag = avm_rb_read_bit(rb);
+        seq_params->seq_max_decoder_buffer_delay = aom_rb_read_uvlc(rb);
+        seq_params->seq_max_encoder_buffer_delay = aom_rb_read_uvlc(rb);
+        seq_params->seq_max_low_delay_mode_flag = aom_rb_read_bit(rb);
       } else {
         seq_params->seq_max_decoder_buffer_delay = 70000;
         seq_params->seq_max_encoder_buffer_delay = 20000;
@@ -666,7 +666,7 @@ static uint32_t read_sequence_header_obu(AV2Decoder *pbi, int xlayer_id,
   // mlayer dependency description
   seq_params->mlayer_dependency_present_flag = 0;
   if (seq_params->max_mlayer_id > 0) {
-    seq_params->mlayer_dependency_present_flag = avm_rb_read_bit(rb);
+    seq_params->mlayer_dependency_present_flag = aom_rb_read_bit(rb);
     if (seq_params->mlayer_dependency_present_flag) {
       av2_read_mlayer_dependency_info(seq_params, rb);
     }
@@ -676,11 +676,11 @@ static uint32_t read_sequence_header_obu(AV2Decoder *pbi, int xlayer_id,
   seq_params->tlayer_dependency_present_flag = 0;
   seq_params->multi_tlayer_dependency_map_present_flag = 0;
   if (seq_params->max_tlayer_id > 0) {
-    seq_params->tlayer_dependency_present_flag = avm_rb_read_bit(rb);
+    seq_params->tlayer_dependency_present_flag = aom_rb_read_bit(rb);
     if (seq_params->tlayer_dependency_present_flag) {
       if (seq_params->max_mlayer_id > 0) {
         seq_params->multi_tlayer_dependency_map_present_flag =
-            avm_rb_read_bit(rb);
+            aom_rb_read_bit(rb);
       }
       av2_read_tlayer_dependency_info(seq_params, rb);
     }
@@ -694,10 +694,10 @@ static uint32_t read_sequence_header_obu(AV2Decoder *pbi, int xlayer_id,
 
   av2_read_sequence_header(rb, seq_params);
 
-  seq_params->film_grain_params_present = avm_rb_read_bit(rb);
+  seq_params->film_grain_params_present = aom_rb_read_bit(rb);
 
   size_t bits_before_ext = rb->bit_offset - saved_bit_offset;
-  seq_params->seq_extension_present_flag = avm_rb_read_bit(rb);
+  seq_params->seq_extension_present_flag = aom_rb_read_bit(rb);
   if (seq_params->seq_extension_present_flag) {
     // Extension data bits = total - bits_read_before_extension -1 (ext flag) -
     // trailing bits
@@ -732,7 +732,7 @@ static uint32_t read_multi_frame_header_obu(AV2Decoder *pbi,
   }
 
   size_t bits_before_ext = rb->bit_offset - saved_bit_offset;
-  cm->mfh_params[cur_mfh_id].mfh_extension_present_flag = avm_rb_read_bit(rb);
+  cm->mfh_params[cur_mfh_id].mfh_extension_present_flag = aom_rb_read_bit(rb);
   if (cm->mfh_params[cur_mfh_id].mfh_extension_present_flag) {
     // Extension data bits = total - bits_read_before_extension -1 (ext flag) -
     // trailing bits
@@ -787,7 +787,7 @@ static uint32_t read_tilegroup_obu(AV2Decoder *pbi,
       // cm->error.error_code is already set.
       return 0;
     }
-    header_size = (int32_t)avm_rb_bytes_read(rb);
+    header_size = (int32_t)aom_rb_bytes_read(rb);
   } else {
     if (av2_check_byte_alignment(cm, rb)) return 0;
     data += header_size;
@@ -819,14 +819,14 @@ static void alloc_read_metadata(AV2Decoder *const pbi,
                                 aom_metadata_insert_flags_t insert_flag) {
   AV2_COMMON *const cm = &pbi->common;
   if (!pbi->metadata) {
-    pbi->metadata = avm_img_metadata_array_alloc(0);
+    pbi->metadata = aom_img_metadata_array_alloc(0);
     if (!pbi->metadata) {
       aom_internal_error(&cm->error, AOM_CODEC_MEM_ERROR,
                          "Failed to allocate metadata array");
     }
   }
   aom_metadata_t *metadata =
-      avm_img_metadata_alloc(metadata_type, data, sz, insert_flag);
+      aom_img_metadata_alloc(metadata_type, data, sz, insert_flag);
   if (!metadata) {
     aom_internal_error(&cm->error, AOM_CODEC_MEM_ERROR,
                        "Error allocating metadata");
@@ -968,45 +968,45 @@ static void read_metadata_banding_hints_from_rb(
   avm_banding_hints_metadata_t *md = &pbi->band_metadata;
   memset(md, 0, sizeof(*md));
 
-  md->coding_banding_present_flag = avm_rb_read_bit(rb);
-  md->source_banding_present_flag = avm_rb_read_bit(rb);
+  md->coding_banding_present_flag = aom_rb_read_bit(rb);
+  md->source_banding_present_flag = aom_rb_read_bit(rb);
 
   if (md->coding_banding_present_flag) {
-    md->banding_hints_flag = avm_rb_read_bit(rb);
+    md->banding_hints_flag = aom_rb_read_bit(rb);
 
     if (md->banding_hints_flag) {
-      md->three_color_components = avm_rb_read_bit(rb);
+      md->three_color_components = aom_rb_read_bit(rb);
       const int num_components = md->three_color_components ? 3 : 1;
 
       for (int plane = 0; plane < num_components; plane++) {
-        md->banding_in_component_present_flag[plane] = avm_rb_read_bit(rb);
+        md->banding_in_component_present_flag[plane] = aom_rb_read_bit(rb);
         if (md->banding_in_component_present_flag[plane]) {
-          md->max_band_width_minus4[plane] = avm_rb_read_literal(rb, 6);
-          md->max_band_step_minus1[plane] = avm_rb_read_literal(rb, 4);
+          md->max_band_width_minus4[plane] = aom_rb_read_literal(rb, 6);
+          md->max_band_step_minus1[plane] = aom_rb_read_literal(rb, 4);
         }
       }
 
-      md->band_units_information_present_flag = avm_rb_read_bit(rb);
+      md->band_units_information_present_flag = aom_rb_read_bit(rb);
       if (md->band_units_information_present_flag) {
-        md->num_band_units_rows_minus_1 = avm_rb_read_literal(rb, 5);
-        md->num_band_units_cols_minus_1 = avm_rb_read_literal(rb, 5);
-        md->varying_size_band_units_flag = avm_rb_read_bit(rb);
+        md->num_band_units_rows_minus_1 = aom_rb_read_literal(rb, 5);
+        md->num_band_units_cols_minus_1 = aom_rb_read_literal(rb, 5);
+        md->varying_size_band_units_flag = aom_rb_read_bit(rb);
 
         if (md->varying_size_band_units_flag) {
-          md->band_block_in_luma_samples = avm_rb_read_literal(rb, 3);
+          md->band_block_in_luma_samples = aom_rb_read_literal(rb, 3);
 
           for (int r = 0; r <= md->num_band_units_rows_minus_1; r++) {
-            md->vert_size_in_band_blocks_minus1[r] = avm_rb_read_literal(rb, 5);
+            md->vert_size_in_band_blocks_minus1[r] = aom_rb_read_literal(rb, 5);
           }
 
           for (int c = 0; c <= md->num_band_units_cols_minus_1; c++) {
-            md->horz_size_in_band_blocks_minus1[c] = avm_rb_read_literal(rb, 5);
+            md->horz_size_in_band_blocks_minus1[c] = aom_rb_read_literal(rb, 5);
           }
         }
 
         for (int r = 0; r <= md->num_band_units_rows_minus_1; r++) {
           for (int c = 0; c <= md->num_band_units_cols_minus_1; c++) {
-            md->banding_in_band_unit_present_flag[r][c] = avm_rb_read_bit(rb);
+            md->banding_in_band_unit_present_flag[r][c] = aom_rb_read_bit(rb);
           }
         }
       }
@@ -1061,10 +1061,10 @@ static void read_metadata_scan_type(AV2Decoder *const pbi,
                                     struct aom_read_bit_buffer *rb) {
   AV2_COMMON *const cm = &pbi->common;
   cm->pic_struct_metadata_params.mps_pic_struct_type =
-      avm_rb_read_literal(rb, 5);
+      aom_rb_read_literal(rb, 5);
   cm->pic_struct_metadata_params.mps_source_scan_type_idc =
-      avm_rb_read_literal(rb, 2);
-  cm->pic_struct_metadata_params.mps_duplicate_flag = avm_rb_read_bit(rb);
+      aom_rb_read_literal(rb, 2);
+  cm->pic_struct_metadata_params.mps_duplicate_flag = aom_rb_read_bit(rb);
 
   uint8_t payload[1];
   payload[0] = (cm->pic_struct_metadata_params.mps_pic_struct_type << 3) |
@@ -1091,11 +1091,11 @@ static void read_metadata_temporal_point_info(AV2Decoder *const pbi,
 static int read_metadata_frame_hash(AV2Decoder *const pbi,
                                     struct aom_read_bit_buffer *rb) {
   AV2_COMMON *const cm = &pbi->common;
-  const unsigned hash_type = avm_rb_read_literal(rb, 4);
-  const unsigned per_plane = avm_rb_read_bit(rb);
-  const unsigned has_grain = avm_rb_read_bit(rb);
-  const unsigned is_monochrome = avm_rb_read_bit(rb);
-  avm_rb_read_literal(rb, 1);  // reserved
+  const unsigned hash_type = aom_rb_read_literal(rb, 4);
+  const unsigned per_plane = aom_rb_read_bit(rb);
+  const unsigned has_grain = aom_rb_read_bit(rb);
+  const unsigned is_monochrome = aom_rb_read_bit(rb);
+  aom_rb_read_literal(rb, 1);  // reserved
 
   // If hash_type is reserved for future use, ignore the entire OBU
   if (hash_type) return -1;
@@ -1112,11 +1112,11 @@ static int read_metadata_frame_hash(AV2Decoder *const pbi,
     for (int i = 0; i < num_planes; ++i) {
       PlaneHash *plane = &frame_hash->plane[i];
       for (size_t j = 0; j < 16; ++j)
-        plane->md5[j] = avm_rb_read_literal(rb, 8);
+        plane->md5[j] = aom_rb_read_literal(rb, 8);
     }
   } else {
     PlaneHash *plane = &frame_hash->plane[0];
-    for (size_t i = 0; i < 16; ++i) plane->md5[i] = avm_rb_read_literal(rb, 8);
+    for (size_t i = 0; i < 16; ++i) plane->md5[i] = aom_rb_read_literal(rb, 8);
   }
   frame_hash->is_present = 1;
 
@@ -1124,35 +1124,35 @@ static int read_metadata_frame_hash(AV2Decoder *const pbi,
 }
 
 static void read_metadata_timecode(struct aom_read_bit_buffer *rb) {
-  avm_rb_read_literal(rb, 5);  // counting_type f(5)
+  aom_rb_read_literal(rb, 5);  // counting_type f(5)
   const int full_timestamp_flag =
-      avm_rb_read_bit(rb);     // full_timestamp_flag f(1)
-  avm_rb_read_bit(rb);         // discontinuity_flag (f1)
-  avm_rb_read_bit(rb);         // cnt_dropped_flag f(1)
-  avm_rb_read_literal(rb, 9);  // n_frames f(9)
+      aom_rb_read_bit(rb);     // full_timestamp_flag f(1)
+  aom_rb_read_bit(rb);         // discontinuity_flag (f1)
+  aom_rb_read_bit(rb);         // cnt_dropped_flag f(1)
+  aom_rb_read_literal(rb, 9);  // n_frames f(9)
   if (full_timestamp_flag) {
-    avm_rb_read_literal(rb, 6);  // seconds_value f(6)
-    avm_rb_read_literal(rb, 6);  // minutes_value f(6)
-    avm_rb_read_literal(rb, 5);  // hours_value f(5)
+    aom_rb_read_literal(rb, 6);  // seconds_value f(6)
+    aom_rb_read_literal(rb, 6);  // minutes_value f(6)
+    aom_rb_read_literal(rb, 5);  // hours_value f(5)
   } else {
-    const int seconds_flag = avm_rb_read_bit(rb);  // seconds_flag f(1)
+    const int seconds_flag = aom_rb_read_bit(rb);  // seconds_flag f(1)
     if (seconds_flag) {
-      avm_rb_read_literal(rb, 6);                    // seconds_value f(6)
-      const int minutes_flag = avm_rb_read_bit(rb);  // minutes_flag f(1)
+      aom_rb_read_literal(rb, 6);                    // seconds_value f(6)
+      const int minutes_flag = aom_rb_read_bit(rb);  // minutes_flag f(1)
       if (minutes_flag) {
-        avm_rb_read_literal(rb, 6);                  // minutes_value f(6)
-        const int hours_flag = avm_rb_read_bit(rb);  // hours_flag f(1)
+        aom_rb_read_literal(rb, 6);                  // minutes_value f(6)
+        const int hours_flag = aom_rb_read_bit(rb);  // hours_flag f(1)
         if (hours_flag) {
-          avm_rb_read_literal(rb, 5);  // hours_value f(5)
+          aom_rb_read_literal(rb, 5);  // hours_value f(5)
         }
       }
     }
   }
   // time_offset_length f(5)
-  const int time_offset_length = avm_rb_read_literal(rb, 5);
+  const int time_offset_length = aom_rb_read_literal(rb, 5);
   if (time_offset_length) {
     // time_offset_value f(time_offset_length)
-    avm_rb_read_literal(rb, time_offset_length);
+    aom_rb_read_literal(rb, time_offset_length);
   }
 }
 
@@ -1182,7 +1182,7 @@ static void skip_remaining_mu_payload_bits(struct aom_read_bit_buffer *rb,
     size_t remaining_bits = total_payload_bits - parsed_payload_bits;
     while (remaining_bits > 0) {
       const int chunk = (remaining_bits > 31) ? 31 : (int)remaining_bits;
-      avm_rb_read_literal(rb, chunk);
+      aom_rb_read_literal(rb, chunk);
       remaining_bits -= chunk;
     }
   }
@@ -1280,7 +1280,7 @@ static size_t read_metadata_obsp(AV2Decoder *pbi, const uint8_t *data,
   struct aom_read_bit_buffer rb;
   av2_init_read_bit_buffer(pbi, &rb, data, data + sz);
 
-  metadata_base->is_suffix = avm_rb_read_literal(&rb, 1);
+  metadata_base->is_suffix = aom_rb_read_literal(&rb, 1);
 
   // Validate suffix bit if requested
   if (expected_suffix >= 0 && metadata_base->is_suffix != expected_suffix) {
@@ -1289,11 +1289,11 @@ static size_t read_metadata_obsp(AV2Decoder *pbi, const uint8_t *data,
   }
 
   metadata_base->necessity_idc =
-      (avm_metadata_necessity_t)avm_rb_read_literal(&rb, 2);
+      (avm_metadata_necessity_t)aom_rb_read_literal(&rb, 2);
   metadata_base->application_id =
-      (avm_metadata_application_id_t)avm_rb_read_literal(&rb, 5);
+      (avm_metadata_application_id_t)aom_rb_read_literal(&rb, 5);
 
-  const size_t bytes_read = avm_rb_bytes_read(&rb);
+  const size_t bytes_read = aom_rb_bytes_read(&rb);
   assert(bytes_read == 1);
 
   size_t count_length;
@@ -1332,10 +1332,10 @@ static size_t read_metadata_unit_header(AV2Decoder *pbi, const uint8_t *data,
   struct aom_read_bit_buffer rb;
   av2_init_read_bit_buffer(pbi, &rb, data + bytes_read, data + sz);
 
-  const size_t muh_header_size = avm_rb_read_literal(&rb, 7);
-  metadata->cancel_flag = avm_rb_read_literal(&rb, 1);
-  assert(avm_rb_bytes_read(&rb) == 1);
-  bytes_read += avm_rb_bytes_read(&rb);
+  const size_t muh_header_size = aom_rb_read_literal(&rb, 7);
+  metadata->cancel_flag = aom_rb_read_literal(&rb, 1);
+  assert(aom_rb_bytes_read(&rb) == 1);
+  bytes_read += aom_rb_bytes_read(&rb);
 
   const size_t total_size = bytes_read + muh_header_size;
   if (total_size > sz) {
@@ -1356,33 +1356,33 @@ static size_t read_metadata_unit_header(AV2Decoder *pbi, const uint8_t *data,
 
     av2_init_read_bit_buffer(pbi, &rb, data + bytes_read, data + total_size);
 
-    metadata->layer_idc = (avm_metadata_layer_t)avm_rb_read_literal(&rb, 3);
+    metadata->layer_idc = (avm_metadata_layer_t)aom_rb_read_literal(&rb, 3);
     metadata->persistence_idc =
-        (avm_metadata_persistence_t)avm_rb_read_literal(&rb, 3);
-    metadata->priority = avm_rb_read_literal(&rb, 8);
-    avm_rb_read_literal(&rb, 2);  // reserved bits
+        (avm_metadata_persistence_t)aom_rb_read_literal(&rb, 3);
+    metadata->priority = aom_rb_read_literal(&rb, 8);
+    aom_rb_read_literal(&rb, 2);  // reserved bits
 
-    assert(avm_rb_bytes_read(&rb) == 2);
+    assert(aom_rb_bytes_read(&rb) == 2);
 
     if (metadata->layer_idc == AVM_LAYER_VALUES) {
       if (obu_header->obu_xlayer_id == 31) {
-        metadata->xlayer_map = avm_rb_read_unsigned_literal(&rb, 32);
+        metadata->xlayer_map = aom_rb_read_unsigned_literal(&rb, 32);
         if ((metadata->xlayer_map & (1u << 31)) != 0) {
           cm->error.error_code = AOM_CODEC_CORRUPT_FRAME;
           return 0;
         }
         for (int n = 0; n < 31; n++) {
           if (metadata->xlayer_map & (1u << n)) {
-            metadata->mlayer_map[n] = avm_rb_read_unsigned_literal(&rb, 8);
+            metadata->mlayer_map[n] = aom_rb_read_unsigned_literal(&rb, 8);
           }
         }
       } else {
         metadata->mlayer_map[obu_header->obu_xlayer_id] =
-            avm_rb_read_unsigned_literal(&rb, 8);
+            aom_rb_read_unsigned_literal(&rb, 8);
       }
     }
 
-    bytes_read += avm_rb_bytes_read(&rb);
+    bytes_read += aom_rb_bytes_read(&rb);
   }
 
   assert(bytes_read <= total_size);
@@ -1444,7 +1444,7 @@ static size_t read_metadata_short(AV2Decoder *pbi, const uint8_t *data,
   struct aom_read_bit_buffer rb;
   av2_init_read_bit_buffer(pbi, &rb, data, data + sz);
 
-  uint8_t metadata_is_suffix = avm_rb_read_bit(&rb);
+  uint8_t metadata_is_suffix = aom_rb_read_bit(&rb);
 
   // Validate suffix bit if requested
   if (expected_suffix >= 0 && metadata_is_suffix != expected_suffix) {
@@ -1452,9 +1452,9 @@ static size_t read_metadata_short(AV2Decoder *pbi, const uint8_t *data,
     return 0;
   }
 
-  uint8_t muh_layer_idc = avm_rb_read_literal(&rb, 3);
-  uint8_t muh_cancel_flag = avm_rb_read_bit(&rb);
-  uint8_t muh_persistence_idc = avm_rb_read_literal(&rb, 3);
+  uint8_t muh_layer_idc = aom_rb_read_literal(&rb, 3);
+  uint8_t muh_cancel_flag = aom_rb_read_bit(&rb);
+  uint8_t muh_persistence_idc = aom_rb_read_literal(&rb, 3);
   if (aom_uleb_decode(
           data + 1,  // read type from the position data + 1
           sz - 1,    // one less bytes available due to extra parameters

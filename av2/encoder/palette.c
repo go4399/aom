@@ -66,13 +66,13 @@ static int delta_encode_cost(const int *colors, int num, int bit_depth,
     assert(delta >= min_val);
     if (delta > max_delta) max_delta = delta;
   }
-  int bits_per_delta = AOMMAX(avm_ceil_log2(max_delta + 1 - min_val), min_bits);
+  int bits_per_delta = AOMMAX(aom_ceil_log2(max_delta + 1 - min_val), min_bits);
   assert(bits_per_delta <= bit_depth);
   int range = (1 << bit_depth) - colors[0] - min_val;
   for (int i = 0; i < num - 1; ++i) {
     bits_cost += bits_per_delta;
     range -= deltas[i];
-    bits_per_delta = AOMMIN(bits_per_delta, avm_ceil_log2(range));
+    bits_per_delta = AOMMIN(bits_per_delta, aom_ceil_log2(range));
   }
   return bits_cost;
 }

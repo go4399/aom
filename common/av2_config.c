@@ -54,7 +54,7 @@
   } while (0)
 
 // Helper macros for setting/restoring the error handler data in
-// avm_read_bit_buffer.
+// aom_read_bit_buffer.
 #define AV2C_PUSH_ERROR_HANDLER_DATA(new_data)                \
   void *original_error_handler_data = NULL;                   \
   do {                                                        \
@@ -103,9 +103,9 @@ static void bitreader_error_handler(void *data) {
 static int get_bitdepth(int bitdepth_lut_idx) {
   int bitdepth = -1;
   switch (bitdepth_lut_idx) {
-    case AVM_BITDEPTH_0: bitdepth = AOM_BITS_10; break;
-    case AVM_BITDEPTH_1: bitdepth = AOM_BITS_8; break;
-    case AVM_BITDEPTH_2: bitdepth = AOM_BITS_12; break;
+    case AV2_BITDEPTH_0: bitdepth = AOM_BITS_10; break;
+    case AV2_BITDEPTH_1: bitdepth = AOM_BITS_8; break;
+    case AV2_BITDEPTH_2: bitdepth = AOM_BITS_12; break;
     default: break;
   }
   return bitdepth;
@@ -192,7 +192,7 @@ static int parse_sequence_header(const uint8_t *const buffer, size_t length,
     AV2C_READ_BITS_OR_RETURN_ERROR(max_tlayer_id, TLAYER_BITS);
     AV2C_READ_BITS_OR_RETURN_ERROR(max_mlayer_id, MLAYER_BITS);
     if (max_mlayer_id > 0) {
-      int n = avm_ceil_log2(max_mlayer_id + 1);
+      int n = aom_ceil_log2(max_mlayer_id + 1);
       AV2C_READ_BITS_OR_RETURN_ERROR(seq_max_mlayer_cnt_minus_1, n);
     }
     AV2C_READ_BIT_OR_RETURN_ERROR(monotonic_output_order_flag);

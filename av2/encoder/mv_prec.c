@@ -210,7 +210,7 @@ static INLINE int get_vq_mvd_rate(nmv_context *mvctx, const MV mv_diff,
     assert(
         IMPLIES(skip_coding_col_bit, scaled_mv_diff.col == maximum_pair_index));
     if (!skip_coding_col_bit) {
-      // avm_write_literal(w, scaled_mv_diff.col > maximum_pair_index, 1);
+      // aom_write_literal(w, scaled_mv_diff.col > maximum_pair_index, 1);
       int context_index = shell_class < NUM_CTX_COL_MV_INDEX
                               ? shell_class
                               : NUM_CTX_COL_MV_INDEX - 1;

@@ -177,7 +177,7 @@ static INLINE int64_t pixel_diff_dist(const AV2_COMMON *cm, const MACROBLOCK *x,
     if (((intptr_t)diff & 15) != 0) {
       sse = aom_sum_squares_2d_i16_c(diff, diff_stride, visible_cols, visible_rows);
     } else {
-      sse = avm_sum_squares_2d_i16(diff, diff_stride, visible_cols, visible_rows);
+      sse = aom_sum_squares_2d_i16(diff, diff_stride, visible_cols, visible_rows);
     }
   } else {
     sse = 0;
@@ -212,7 +212,7 @@ static INLINE int64_t pixel_diff_stats(
   if (((intptr_t)diff & 15) != 0) {
     sse = aom_sum_sse_2d_i16_c(diff, diff_stride, visible_cols, visible_rows, &sum);
   } else {
-    sse = avm_sum_sse_2d_i16(diff, diff_stride, visible_cols, visible_rows, &sum);
+    sse = aom_sum_sse_2d_i16(diff, diff_stride, visible_cols, visible_rows, &sum);
   }
   if (visible_cols > 0 && visible_rows > 0) {
     aom_clear_system_state();

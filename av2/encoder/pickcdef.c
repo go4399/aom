@@ -264,7 +264,7 @@ static uint64_t compute_cdef_dist_highbd(void *dst, int dstride, uint16_t *src,
   for (bi = 0; bi < cdef_count; bi++) {
     by = dlist[bi].by;
     bx = dlist[bi].bx;
-    sum += avm_mse_wxh_16bit_highbd(
+    sum += aom_mse_wxh_16bit_highbd(
         &dst_buff[(by << height_log2) * dstride + (bx << width_log2)], dstride,
         &src[bi << (height_log2 + width_log2)], src_stride, width, height);
   }

@@ -208,8 +208,8 @@ int av2_get_active_map(AV2_COMP *cpi, unsigned char *new_map_16x16, int rows,
 
 void av2_initialize_enc(void) {
   av2_rtcd();
-  avm_dsp_rtcd();
-  avm_scale_rtcd();
+  aom_dsp_rtcd();
+  aom_scale_rtcd();
   av2_init_intra_predictors();
   av2_init_me_luts();
   av2_rc_init_minq_luts();
@@ -736,7 +736,7 @@ void av2_init_seq_coding_tools(AV2_COMP *cpi, SequenceHeader *seq,
       seq->ref_frames = AOMMIN(seq->ref_frames, max_dpb);
     }
   }
-  seq->ref_frames_log2 = avm_ceil_log2(seq->ref_frames);
+  seq->ref_frames_log2 = aom_ceil_log2(seq->ref_frames);
 }
 
 static void set_content_interpreation_params(struct AV2_COMP *cpi,
@@ -1528,9 +1528,9 @@ static INLINE void init_tip_ref_frame(AV2_COMMON *const cm) {
 }
 
 static INLINE void free_tip_ref_frame(AV2_COMMON *const cm) {
-  avm_free_frame_buffer(&cm->tip_ref.tip_frame->buf);
+  aom_free_frame_buffer(&cm->tip_ref.tip_frame->buf);
   aom_free(cm->tip_ref.tip_frame);
-  avm_free_frame_buffer(&cm->tip_ref.tmp_tip_frame->buf);
+  aom_free_frame_buffer(&cm->tip_ref.tmp_tip_frame->buf);
   aom_free(cm->tip_ref.tmp_tip_frame);
 }
 
@@ -1971,7 +1971,7 @@ void av2_remove_compressor(AV2_COMP *cpi) {
   TplParams *const tpl_data = &cpi->tpl_data;
   for (int frame = 0; frame < MAX_LAG_BUFFERS; ++frame) {
     aom_free(tpl_data->tpl_stats_pool[frame]);
-    avm_free_frame_buffer(&tpl_data->tpl_rec_pool[frame]);
+    aom_free_frame_buffer(&tpl_data->tpl_rec_pool[frame]);
   }
 
   if (cpi->compressor_stage != LAP_STAGE) {
@@ -2029,7 +2029,7 @@ void av2_remove_compressor(AV2_COMP *cpi) {
 }
 
 static void generate_psnr_packet(AV2_COMP *cpi) {
-  struct avm_codec_cx_pkt pkt;
+  struct aom_codec_cx_pkt pkt;
   int i;
   PSNR_STATS psnr;
   const uint32_t in_bit_depth = cpi->oxcf.input_cfg.input_bit_depth;
@@ -2055,7 +2055,7 @@ static void generate_psnr_packet(AV2_COMP *cpi) {
     }
   }
 
-  pkt.kind = AVM_CODEC_PSNR_PKT;
+  pkt.kind = AOM_CODEC_PSNR_PKT;
   aom_codec_pkt_list_add(cpi->output_pkt_list, &pkt);
 }
 
@@ -2071,7 +2071,7 @@ int av2_copy_reference_enc(AV2_COMP *cpi, int idx, YV12_BUFFER_CONFIG *sd) {
   const int num_planes = av2_num_planes(cm);
   YV12_BUFFER_CONFIG *cfg = get_ref_frame(cm, idx);
   if (cfg) {
-    avm_yv12_copy_frame(cfg, sd, num_planes);
+    aom_yv12_copy_frame(cfg, sd, num_planes);
     return 0;
   } else {
     return -1;
@@ -2083,7 +2083,7 @@ int av2_set_reference_enc(AV2_COMP *cpi, int idx, YV12_BUFFER_CONFIG *sd) {
   const int num_planes = av2_num_planes(cm);
   YV12_BUFFER_CONFIG *cfg = get_ref_frame(cm, idx);
   if (cfg) {
-    avm_yv12_copy_frame(sd, cfg, num_planes);
+    aom_yv12_copy_frame(sd, cfg, num_planes);
     return 0;
   } else {
     return -1;
@@ -4064,7 +4064,7 @@ static INLINE int finalize_tip_mode(AV2_COMP *cpi, uint8_t *dest, size_t *size,
       loop_filter_tip_frame(cm, &td->mb.e_mbd, 0, av2_num_planes(cm));
       aom_extend_frame_borders(&cm->tip_ref.tip_frame->buf, av2_num_planes(cm));
     }
-    avm_yv12_copy_frame(&cm->tip_ref.tip_frame->buf, &cm->cur_frame->buf,
+    aom_yv12_copy_frame(&cm->tip_ref.tip_frame->buf, &cm->cur_frame->buf,
                         num_planes);
 
     cm->lf.apply_deblocking_filter[0] = 0;
@@ -5285,7 +5285,7 @@ static int apply_denoise_2d(AV2_COMP *cpi, YV12_BUFFER_CONFIG *sd,
                             int64_t time_stamp, int64_t end_time) {
   AV2_COMMON *const cm = &cpi->common;
   if (!cpi->denoise_and_model) {
-    cpi->denoise_and_model = avm_denoise_and_model_alloc(
+    cpi->denoise_and_model = aom_denoise_and_model_alloc(
         cm->seq_params.bit_depth, block_size, noise_level);
     if (!cpi->denoise_and_model) {
       aom_internal_error(&cm->error, AOM_CODEC_MEM_ERROR,
@@ -5547,7 +5547,7 @@ aom_codec_err_t av2_copy_new_frame_enc(AV2_COMMON *cm,
     aom_internal_error(&cm->error, AOM_CODEC_ERROR,
                        "Incorrect buffer dimensions");
   else
-    avm_yv12_copy_frame(new_frame, sd, num_planes);
+    aom_yv12_copy_frame(new_frame, sd, num_planes);
 
   return cm->error.error_code;
 }
@@ -5604,7 +5604,7 @@ int av2_convert_sect5obus_to_annexb(uint8_t *buffer, size_t *frame_size) {
 
     // calculate the length of size of the obu header plus payload
     length_of_obu_size =
-        avm_uleb_size_in_bytes((uint64_t)(obu_header_size + obu_payload_size));
+        aom_uleb_size_in_bytes((uint64_t)(obu_header_size + obu_payload_size));
 
     // move the rest of data to new location
     memmove(buff_ptr + length_of_obu_size + obu_header_size,
@@ -5674,7 +5674,7 @@ aom_fixed_buf_t *av2_get_global_headers(AV2_COMP *cpi) {
   const uint32_t obu_header_size =
       av2_write_obu_header(OBU_SEQUENCE_HEADER, 0, 0, &obu_header[0]);
   const uint32_t obu_size = obu_header_size + sequence_header_size;
-  const size_t size_field_size = avm_uleb_size_in_bytes(obu_size);
+  const size_t size_field_size = aom_uleb_size_in_bytes(obu_size);
   const size_t payload_offset = size_field_size + obu_header_size;
 
   if (payload_offset + sequence_header_size > sizeof(header_buf)) return NULL;

@@ -103,10 +103,10 @@ static void write_exp_golomb(aom_writer *w, int level, int k) {
   assert(length > k);
 
   const int L = length - 1 - k;
-  avm_write_literal(w, (1 << L) - 1, L);
-  avm_write_literal(w, 0, 1);
+  aom_write_literal(w, (1 << L) - 1, L);
+  aom_write_literal(w, 0, 1);
   const int mask = (1 << (length - 1)) - 1;
-  avm_write_literal(w, x & mask, length - 1);
+  aom_write_literal(w, x & mask, length - 1);
 }
 
 /*!\brief Encode an input integer value using Truncated-Rice coding and write
@@ -139,13 +139,13 @@ static void write_truncated_rice(aom_writer *w, int level, int m, int k,
   int q = level >> m;
 
   if (q >= cmax) {
-    avm_write_literal(w, (1 << cmax) - 1, cmax);
+    aom_write_literal(w, (1 << cmax) - 1, cmax);
     write_exp_golomb(w, level - (cmax << m), k);
   } else {
     const int mask = (1 << m) - 1;
-    avm_write_literal(w, (1 << q) - 1, q);
-    avm_write_literal(w, 0, 1);
-    avm_write_literal(w, level & mask, m);
+    aom_write_literal(w, (1 << q) - 1, q);
+    aom_write_literal(w, 0, 1);
+    aom_write_literal(w, level & mask, m);
   }
 }
 
@@ -655,19 +655,19 @@ static INLINE void code_eob(MACROBLOCK *const x, aom_writer *w, int plane,
       avm_write_symbol(w, eob_pt_low, ec_ctx->eob_flag_cdf256[pl_ctx],
                        EOB_MAX_SYMS - 3);
       if (eob_pt_low == EOB_PT_INDEX_COUNT - 1)
-        avm_write_literal(w, eob_pt - 1 - eob_pt_low, 1);
+        aom_write_literal(w, eob_pt - 1 - eob_pt_low, 1);
       break;
     case 5:
       avm_write_symbol(w, eob_pt_low, ec_ctx->eob_flag_cdf512[pl_ctx],
                        EOB_MAX_SYMS - 3);
       if (eob_pt_low == EOB_PT_INDEX_COUNT - 1)
-        avm_write_literal(w, eob_pt - 1 - eob_pt_low, 2);
+        aom_write_literal(w, eob_pt - 1 - eob_pt_low, 2);
       break;
     default:
       avm_write_symbol(w, eob_pt_low, ec_ctx->eob_flag_cdf1024[pl_ctx],
                        EOB_MAX_SYMS - 3);
       if (eob_pt_low == EOB_PT_INDEX_COUNT - 1)
-        avm_write_literal(w, eob_pt - 1 - eob_pt_low, 2);
+        aom_write_literal(w, eob_pt - 1 - eob_pt_low, 2);
       break;
   }
   const int eob_offset_bits = av2_eob_offset_bits[eob_pt];
@@ -677,7 +677,7 @@ static INLINE void code_eob(MACROBLOCK *const x, aom_writer *w, int plane,
     avm_write_symbol(w, bit, ec_ctx->eob_extra_cdf, 2);
     // Zero out top bit; write (eob_offset_bits - 1) lsb bits.
     eob_extra &= (1 << (eob_offset_bits - 1)) - 1;
-    avm_write_literal(w, eob_extra, eob_offset_bits - 1);
+    aom_write_literal(w, eob_extra, eob_offset_bits - 1);
   }
 }
 
@@ -1173,7 +1173,7 @@ void av2_write_coeffs_txb(const AV2_COMMON *const cm, MACROBLOCK *const x,
         const int tmp_sign_idx = pos;
         if (plane == AOM_PLANE_U) xd->tmp_sign[tmp_sign_idx] = (sign ? 2 : 1);
         if (plane == AOM_PLANE_V) {
-          avm_write_literal(w, sign, 1);
+          aom_write_literal(w, sign, 1);
         } else {
           if (plane == AOM_PLANE_Y) {
             avm_write_symbol(
@@ -1181,11 +1181,11 @@ void av2_write_coeffs_txb(const AV2_COMMON *const cm, MACROBLOCK *const x,
                 ec_ctx->dc_sign_cdf[plane_type][is_hidden ? 1 : 0][dc_sign_ctx],
                 2);
           } else {
-            avm_write_literal(w, sign, 1);
+            aom_write_literal(w, sign, 1);
           }
         }
       } else {
-        avm_write_bit(w, sign);
+        aom_write_bit(w, sign);
       }
       if (is_hidden && c == 0) {
         int q_index = level >> 1;

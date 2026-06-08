@@ -51,8 +51,8 @@ int beginningFrameFlag[MAX_NUMBER_CONTEXTS][MAX_DIMS_CONTEXT3]
 
 static void initialize_dec(void) {
   av2_rtcd();
-  avm_dsp_rtcd();
-  avm_scale_rtcd();
+  aom_dsp_rtcd();
+  aom_scale_rtcd();
   av2_init_intra_predictors();
   av2_init_stxfm_kernels();
 }
@@ -146,11 +146,11 @@ static INLINE void dec_init_tip_ref_frame(AV2_COMMON *const cm) {
 }
 
 static INLINE void dec_free_tip_ref_frame(AV2_COMMON *const cm) {
-  avm_free_frame_buffer(&cm->tip_ref.tip_frame->buf);
+  aom_free_frame_buffer(&cm->tip_ref.tip_frame->buf);
   aom_free(cm->tip_ref.tip_frame);
   cm->tip_ref.tip_frame = NULL;
 
-  avm_free_frame_buffer(&cm->tip_ref.tmp_tip_frame->buf);
+  aom_free_frame_buffer(&cm->tip_ref.tmp_tip_frame->buf);
   aom_free(cm->tip_ref.tmp_tip_frame);
   cm->tip_ref.tmp_tip_frame = NULL;
 }
@@ -445,7 +445,7 @@ void av2_decoder_remove(AV2Decoder *pbi) {
 #endif
   av2_free_mc_tmp_buf(&pbi->td);
   av2_free_opfl_tmp_bufs(&pbi->td);
-  avm_img_metadata_array_free(pbi->metadata);
+  aom_img_metadata_array_free(pbi->metadata);
 
 #if CONFIG_PARAKIT_COLLECT_DATA
   for (int f = 0; f < MAX_NUM_CTX_GROUPS; f++) {
@@ -508,7 +508,7 @@ aom_codec_err_t av2_copy_reference_dec(AV2Decoder *pbi, int idx,
     aom_internal_error(&cm->error, AOM_CODEC_ERROR,
                        "Incorrect buffer dimensions");
   else
-    avm_yv12_copy_frame(cfg, sd, num_planes);
+    aom_yv12_copy_frame(cfg, sd, num_planes);
 
   return cm->error.error_code;
 }
@@ -541,7 +541,7 @@ aom_codec_err_t av2_set_reference_dec(AV2_COMMON *cm, int idx,
                          "Incorrect buffer dimensions");
     } else {
       // Overwrite the reference frame buffer.
-      avm_yv12_copy_frame(sd, ref_buf, num_planes);
+      aom_yv12_copy_frame(sd, ref_buf, num_planes);
     }
   } else {
     if (!equal_dimensions_and_border(ref_buf, sd)) {
@@ -573,7 +573,7 @@ aom_codec_err_t av2_copy_new_frame_dec(AV2_COMMON *cm,
     aom_internal_error(&cm->error, AOM_CODEC_ERROR,
                        "Incorrect buffer dimensions");
   else
-    avm_yv12_copy_frame(new_frame, sd, num_planes);
+    aom_yv12_copy_frame(new_frame, sd, num_planes);
 
   return cm->error.error_code;
 }

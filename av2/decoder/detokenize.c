@@ -36,7 +36,7 @@ static int decode_color_map_tokens(Av2ColorMapParam *param, aom_reader *r) {
       plane_block_width < 64 && plane_block_height < 64;
   int direction;
   if (transverse_allowed) {
-    direction = avm_read_bit(r, ACCT_INFO());
+    direction = aom_read_bit(r, ACCT_INFO());
   } else {
     direction = 0;
   }
@@ -48,7 +48,7 @@ static int decode_color_map_tokens(Av2ColorMapParam *param, aom_reader *r) {
   for (int ax2 = 0; ax2 < axis2_limit; ax2++) {
     const int ctx = ax2 == 0 ? 3 : prev_identity_row_flag;
     int identity_row_flag =
-        avm_read_symbol(r, identity_row_cdf[ctx], 3, ACCT_INFO());
+        aom_read_symbol(r, identity_row_cdf[ctx], 3, ACCT_INFO());
 
     // Copying previous line cannot be done on the first line of a block.
     if (identity_row_flag == 2 && ax2 == 0) {
@@ -83,7 +83,7 @@ static int decode_color_map_tokens(Av2ColorMapParam *param, aom_reader *r) {
       } else {
         const int color_ctx = av2_get_palette_color_index_context(
             color_map, plane_block_width, y, x, color_order, NULL);
-        const int color_idx = avm_read_symbol(
+        const int color_idx = aom_read_symbol(
             r, color_map_cdf[num_colors - PALETTE_MIN_SIZE][color_ctx],
             num_colors, ACCT_INFO());
         assert(color_idx >= 0 && color_idx < num_colors);

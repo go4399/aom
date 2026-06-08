@@ -37,10 +37,10 @@ uint32_t av2_read_buffer_removal_timing_obu(struct AV2Decoder *pbi,
   BufferRemovalTimingInfo *const brt_info = &cm->brt_info;
 
   // br_ops_id
-  brt_info->br_ops_dependent_flag = avm_rb_read_bit(rb);
+  brt_info->br_ops_dependent_flag = aom_rb_read_bit(rb);
   if (brt_info->br_ops_dependent_flag) {
-    brt_info->br_ops_id = avm_rb_read_literal(rb, 4);
-    brt_info->br_ops_cnt[brt_info->br_ops_id] = avm_rb_read_literal(rb, 3);
+    brt_info->br_ops_id = aom_rb_read_literal(rb, 4);
+    brt_info->br_ops_cnt[brt_info->br_ops_id] = aom_rb_read_literal(rb, 3);
     // Find the corresponding OPS in pbi->ops_list where
     // ops_id == br_ops_id.
     // It is a requirement of bitstream conformance that if a buffer removal
@@ -74,7 +74,7 @@ uint32_t av2_read_buffer_removal_timing_obu(struct AV2Decoder *pbi,
     // decoder model
     for (int i = 0; i < brt_info->br_ops_cnt[brt_info->br_ops_id]; i++) {
       brt_info->br_decoder_model_present_op_flag[brt_info->br_ops_id][i] =
-          avm_rb_read_bit(rb);
+          aom_rb_read_bit(rb);
       if (brt_info->br_decoder_model_present_op_flag[brt_info->br_ops_id][i])
         brt_info->br_time_op[brt_info->br_ops_id][i] =
             avm_rb_read_rice_golomb(rb, 4);

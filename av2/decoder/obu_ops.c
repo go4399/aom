@@ -25,13 +25,13 @@ static void read_ops_mlayer_info(int xLId,
                                  struct aom_read_bit_buffer *rb) {
   // mlayer map
   ops_mlayer_info->ops_mlayer_map[xLId] =
-      avm_rb_read_literal(rb, MAX_NUM_MLAYERS);
+      aom_rb_read_literal(rb, MAX_NUM_MLAYERS);
   int mCount = 0;
   for (int j = 0; j < MAX_NUM_MLAYERS; j++) {
     if ((ops_mlayer_info->ops_mlayer_map[xLId] & (1 << j))) {
       // tlayer map
       ops_mlayer_info->ops_tlayer_map[xLId][j] =
-          avm_rb_read_literal(rb, MAX_NUM_TLAYERS);
+          aom_rb_read_literal(rb, MAX_NUM_TLAYERS);
       int tCount = 0;
       for (int k = 0; k < MAX_NUM_TLAYERS; k++) {
         if ((ops_mlayer_info->ops_tlayer_map[xLId][j] & (1 << k))) {
@@ -58,11 +58,11 @@ static void read_ops_decoder_model_info(
     struct OpsDecoderModelInfo *ops_decoder_model_info,
     struct aom_read_bit_buffer *rb) {
   ops_decoder_model_info->ops_decoder_buffer_delay =
-      avm_rb_read_uvlc(rb);  // decoder delay
+      aom_rb_read_uvlc(rb);  // decoder delay
   ops_decoder_model_info->ops_encoder_buffer_delay =
-      avm_rb_read_uvlc(rb);  // encoder delay
+      aom_rb_read_uvlc(rb);  // encoder delay
   ops_decoder_model_info->ops_low_delay_mode_flag =
-      avm_rb_read_bit(rb);  // low-delay mode flag
+      aom_rb_read_bit(rb);  // low-delay mode flag
 }
 
 uint32_t av2_read_operating_point_set_obu(struct AV2Decoder *pbi,
@@ -70,9 +70,9 @@ uint32_t av2_read_operating_point_set_obu(struct AV2Decoder *pbi,
                                           struct aom_read_bit_buffer *rb) {
   const uint32_t saved_bit_offset = rb->bit_offset;
 
-  int ops_reset_flag = avm_rb_read_bit(rb);
-  const int ops_id = avm_rb_read_literal(rb, OPS_ID_BITS);
-  const int ops_cnt = avm_rb_read_literal(rb, OPS_COUNT_BITS);
+  int ops_reset_flag = aom_rb_read_bit(rb);
+  const int ops_id = aom_rb_read_literal(rb, OPS_ID_BITS);
+  const int ops_cnt = aom_rb_read_literal(rb, OPS_COUNT_BITS);
 
   // Apply reset semantics before writing to any slot (spec
   // #ops_general_semantics):
@@ -106,14 +106,14 @@ uint32_t av2_read_operating_point_set_obu(struct AV2Decoder *pbi,
   ops->ops_cnt = ops_cnt;
 
   if (ops->ops_cnt > 0) {
-    ops->ops_priority = avm_rb_read_literal(rb, 4);
-    ops->ops_intent = avm_rb_read_literal(rb, 7);
-    ops->ops_intent_present_flag = avm_rb_read_bit(rb);
-    ops->ops_ptl_present_flag = avm_rb_read_bit(rb);
-    ops->ops_color_info_present_flag = avm_rb_read_bit(rb);
+    ops->ops_priority = aom_rb_read_literal(rb, 4);
+    ops->ops_intent = aom_rb_read_literal(rb, 7);
+    ops->ops_intent_present_flag = aom_rb_read_bit(rb);
+    ops->ops_ptl_present_flag = aom_rb_read_bit(rb);
+    ops->ops_color_info_present_flag = aom_rb_read_bit(rb);
 
     if (obu_xlayer_id == GLOBAL_XLAYER_ID) {
-      ops->ops_mlayer_info_idc = avm_rb_read_literal(rb, 2);
+      ops->ops_mlayer_info_idc = aom_rb_read_literal(rb, 2);
       if (ops->ops_mlayer_info_idc >= 3) {
         aom_internal_error(
             &pbi->common.error, AOM_CODEC_UNSUP_BITSTREAM,
@@ -121,7 +121,7 @@ uint32_t av2_read_operating_point_set_obu(struct AV2Decoder *pbi,
       }
     } else {
       ops->ops_mlayer_info_idc = 1;
-      (void)avm_rb_read_literal(rb, 2);  // ops_reserved_2bits
+      (void)aom_rb_read_literal(rb, 2);  // ops_reserved_2bits
     }
 
     for (int i = 0; i < ops->ops_cnt; i++) {
@@ -139,22 +139,22 @@ uint32_t av2_read_operating_point_set_obu(struct AV2Decoder *pbi,
       const uint32_t op_start_bit_offset = rb->bit_offset;
 
       if (ops->ops_intent_present_flag)
-        op->ops_intent_op = avm_rb_read_literal(rb, 7);
+        op->ops_intent_op = aom_rb_read_literal(rb, 7);
 
       if (ops->ops_ptl_present_flag) {
         if (obu_xlayer_id == GLOBAL_XLAYER_ID) {
-          op->ops_config_idc = avm_rb_read_literal(rb, MULTI_SEQ_CONFIG_BITS);
-          op->ops_aggregate_level_idx = avm_rb_read_literal(rb, LEVEL_BITS);
-          op->ops_max_tier_flag = avm_rb_read_bit(rb);
-          op->ops_max_interop = avm_rb_read_literal(rb, INTEROP_BITS);
+          op->ops_config_idc = aom_rb_read_literal(rb, MULTI_SEQ_CONFIG_BITS);
+          op->ops_aggregate_level_idx = aom_rb_read_literal(rb, LEVEL_BITS);
+          op->ops_max_tier_flag = aom_rb_read_bit(rb);
+          op->ops_max_interop = aom_rb_read_literal(rb, INTEROP_BITS);
         } else {
           op->ops_seq_profile_idc[obu_xlayer_id] =
-              avm_rb_read_literal(rb, PROFILE_BITS);
+              aom_rb_read_literal(rb, PROFILE_BITS);
           op->ops_level_idx[obu_xlayer_id] =
-              avm_rb_read_literal(rb, LEVEL_BITS);
-          op->ops_tier_flag[obu_xlayer_id] = avm_rb_read_bit(rb);
-          op->ops_mlayer_count[obu_xlayer_id] = avm_rb_read_literal(rb, 3);
-          (void)avm_rb_read_literal(rb, 2);  // ops_ptl_reserved_2bits
+              aom_rb_read_literal(rb, LEVEL_BITS);
+          op->ops_tier_flag[obu_xlayer_id] = aom_rb_read_bit(rb);
+          op->ops_mlayer_count[obu_xlayer_id] = aom_rb_read_literal(rb, 3);
+          (void)aom_rb_read_literal(rb, 2);  // ops_ptl_reserved_2bits
         }
       }
       if (ops->ops_color_info_present_flag) {
@@ -166,20 +166,20 @@ uint32_t av2_read_operating_point_set_obu(struct AV2Decoder *pbi,
         op->color_info.ops_matrix_coefficients = AOM_CICP_MC_UNSPECIFIED;
         op->color_info.ops_full_range_flag = 0;
       }
-      op->ops_decoder_model_info_for_this_op_present_flag = avm_rb_read_bit(rb);
+      op->ops_decoder_model_info_for_this_op_present_flag = aom_rb_read_bit(rb);
       if (op->ops_decoder_model_info_for_this_op_present_flag) {
         read_ops_decoder_model_info(&op->decoder_model_info, rb);
       }
-      int ops_initial_display_delay_present_flag = avm_rb_read_bit(rb);
+      int ops_initial_display_delay_present_flag = aom_rb_read_bit(rb);
       if (ops_initial_display_delay_present_flag) {
-        int ops_initial_display_delay_minus_1 = avm_rb_read_literal(rb, 4);
+        int ops_initial_display_delay_minus_1 = aom_rb_read_literal(rb, 4);
         op->ops_initial_display_delay = ops_initial_display_delay_minus_1 + 1;
       } else {
         op->ops_initial_display_delay = BUFFER_POOL_MAX_SIZE;
       }
 
       if (obu_xlayer_id == GLOBAL_XLAYER_ID) {
-        op->ops_xlayer_map = avm_rb_read_literal(rb, MAX_NUM_XLAYERS - 1);
+        op->ops_xlayer_map = aom_rb_read_literal(rb, MAX_NUM_XLAYERS - 1);
         int k = 0;
         for (int j = 0; j < MAX_NUM_XLAYERS - 1; j++) {
           if ((op->ops_xlayer_map & (1 << j))) {
@@ -188,23 +188,23 @@ uint32_t av2_read_operating_point_set_obu(struct AV2Decoder *pbi,
 
             if (ops->ops_ptl_present_flag) {
               op->ops_seq_profile_idc[j] =
-                  avm_rb_read_literal(rb, PROFILE_BITS);
-              op->ops_level_idx[j] = avm_rb_read_literal(rb, LEVEL_BITS);
-              op->ops_tier_flag[j] = avm_rb_read_bit(rb);
-              op->ops_mlayer_count[j] = avm_rb_read_literal(rb, 3);
-              (void)avm_rb_read_literal(rb, 2);  // ops_ptl_reserved_2bits
+                  aom_rb_read_literal(rb, PROFILE_BITS);
+              op->ops_level_idx[j] = aom_rb_read_literal(rb, LEVEL_BITS);
+              op->ops_tier_flag[j] = aom_rb_read_bit(rb);
+              op->ops_mlayer_count[j] = aom_rb_read_literal(rb, 3);
+              (void)aom_rb_read_literal(rb, 2);  // ops_ptl_reserved_2bits
             }
             // The ops_mlayer_indo_idc = 0, specifies that mlayer information
             // syntax structure is not present in the current OPS.
             if (ops->ops_mlayer_info_idc == 1) {
               read_ops_mlayer_info(j, &op->mlayer_info, rb);
             } else if (ops->ops_mlayer_info_idc == 2) {
-              op->ops_mlayer_explicit_info_flag[j] = avm_rb_read_bit(rb);
+              op->ops_mlayer_explicit_info_flag[j] = aom_rb_read_bit(rb);
               if (op->ops_mlayer_explicit_info_flag[j]) {
                 read_ops_mlayer_info(j, &op->mlayer_info, rb);
               } else {
-                op->ops_embedded_ops_id[j] = avm_rb_read_literal(rb, 4);
-                op->ops_embedded_op_index[j] = avm_rb_read_literal(rb, 3);
+                op->ops_embedded_ops_id[j] = aom_rb_read_literal(rb, 4);
+                op->ops_embedded_op_index[j] = aom_rb_read_literal(rb, 3);
                 if (op->ops_embedded_op_index[j] > 6) {
                   aom_internal_error(
                       &pbi->common.error, AOM_CODEC_UNSUP_BITSTREAM,
@@ -273,7 +273,7 @@ uint32_t av2_read_operating_point_set_obu(struct AV2Decoder *pbi,
     }
   }
   size_t bits_before_ext = rb->bit_offset - saved_bit_offset;
-  ops->ops_extension_present_flag = avm_rb_read_bit(rb);
+  ops->ops_extension_present_flag = aom_rb_read_bit(rb);
   if (ops->ops_extension_present_flag) {
     // Extension data bits = total - bits_read_before_extension -1 (ext flag) -
     // trailing bits

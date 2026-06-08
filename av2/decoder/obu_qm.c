@@ -61,7 +61,7 @@ static void read_qm_data(AV2Decoder *pbi, int obu_tlayer_id, int obu_mlayer_id,
   qmset->qm_tlayer_id = obu_tlayer_id;
   qmset->qm_mlayer_id = obu_mlayer_id;
   qmset->quantizer_matrix_num_planes = num_planes;
-  const bool qm_is_predefined_flag = (bool)avm_rb_read_bit(rb);
+  const bool qm_is_predefined_flag = (bool)aom_rb_read_bit(rb);
   if (qm_is_predefined_flag) {
     // Set default index to level = qm_id
     qmset->is_user_defined_qm = false;
@@ -79,7 +79,7 @@ static void read_qm_data(AV2Decoder *pbi, int obu_tlayer_id, int obu_mlayer_id,
 
     for (int c = 0; c < num_planes; c++) {
       if (c > 0) {
-        const bool qm_copy_from_previous_plane = avm_rb_read_bit(rb);
+        const bool qm_copy_from_previous_plane = aom_rb_read_bit(rb);
 
         if (qm_copy_from_previous_plane) {
           memcpy(qmset->quantizer_matrix[t][c],
@@ -90,9 +90,9 @@ static void read_qm_data(AV2Decoder *pbi, int obu_tlayer_id, int obu_mlayer_id,
       }
       bool qm_8x8_is_symmetric = false;
       if (tsize == TX_8X8) {
-        qm_8x8_is_symmetric = avm_rb_read_bit(rb);
+        qm_8x8_is_symmetric = aom_rb_read_bit(rb);
       } else if (tsize == TX_4X8) {
-        const bool qm_4x8_is_transpose_of_8x4 = avm_rb_read_bit(rb);
+        const bool qm_4x8_is_transpose_of_8x4 = aom_rb_read_bit(rb);
 
         if (qm_4x8_is_transpose_of_8x4) {
           for (int i = 0; i < height; i++) {
@@ -162,7 +162,7 @@ uint32_t read_qm_obu(AV2Decoder *pbi, int obu_tlayer_id, int obu_mlayer_id,
                      struct aom_read_bit_buffer *rb) {
   // multiple qms in one obu with id
   const uint32_t saved_bit_offset = rb->bit_offset;
-  int qm_bit_map = avm_rb_read_literal(rb, NUM_CUSTOM_QMS);
+  int qm_bit_map = aom_rb_read_literal(rb, NUM_CUSTOM_QMS);
   if (*acc_qm_id_bitmap & (uint32_t)qm_bit_map) {
     aom_internal_error(&pbi->common.error, AOM_CODEC_INVALID_PARAM,
                        "qm_bit_map(%d) overlaps the accumulated qm_bit_map(%d)",
@@ -170,7 +170,7 @@ uint32_t read_qm_obu(AV2Decoder *pbi, int obu_tlayer_id, int obu_mlayer_id,
   } else {
     *acc_qm_id_bitmap |= qm_bit_map;
   }
-  bool qm_chroma_info_present_flag = avm_rb_read_bit(rb);
+  bool qm_chroma_info_present_flag = aom_rb_read_bit(rb);
   const int num_planes = (qm_chroma_info_present_flag ? 3 : 1);
   if (qm_bit_map == 0) {
     *qm_bit_map_zero_signalled = 1;

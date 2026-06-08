@@ -98,12 +98,12 @@ static INLINE void fill_residue_outside_frame(
     // Fill the remaining parts of the block with the average value
     const int right_pixels = tx_cols - visible_tx_cols;
     for (int i = 0; i < tx_rows; ++i) {
-      avm_memset_int16(diff + i * diff_stride + visible_tx_cols, avg,
-                       right_pixels);
+      aom_memset16((uint16_t *)(diff + i * diff_stride + visible_tx_cols),
+                   (uint16_t)(avg), right_pixels);
     }
 
     for (int i = visible_tx_rows; i < tx_rows; ++i) {
-      avm_memset_int16(diff + i * diff_stride, avg, visible_tx_cols);
+      aom_memset16((uint16_t *)(diff + i * diff_stride), (uint16_t)(avg), visible_tx_cols);
     }
   } else if (htx_tab[tx_type] == IDTX_1D) {
     if (visible_tx_rows < tx_rows) {
@@ -137,8 +137,8 @@ static INLINE void fill_residue_outside_frame(
                               visible_tx_rows, out);
 
       for (int i = 0; i < visible_tx_rows; ++i) {
-        avm_memset_int16(diff + i * diff_stride + visible_tx_cols, out[i],
-                         right_pixels);
+        aom_memset16((uint16_t *)(diff + i * diff_stride + visible_tx_cols),
+                     (uint16_t)(out[i]), right_pixels);
       }
     }
 

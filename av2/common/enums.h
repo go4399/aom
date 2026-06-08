@@ -447,10 +447,10 @@ enum {
 #define AV2_MAX_NUM_STREAMS 32
 
 enum {
-  AVM_BITDEPTH_0 = 0,        /**< 10 bits */
-  AVM_BITDEPTH_1 = 1,        /**< 8 bits */
-  AVM_BITDEPTH_2 = 2,        /**< 12 bits */
-  AVM_NUM_SUPPORTED_BITDEPTH /**<number of supported bitdepth>*/
+  AV2_BITDEPTH_0 = 0,        /**< 10 bits */
+  AV2_BITDEPTH_1 = 1,        /**< 8 bits */
+  AV2_BITDEPTH_2 = 2,        /**< 12 bits */
+  AV2_NUM_SUPPORTED_BITDEPTH /**<number of supported bitdepth>*/
 };
 #define FIXED_QP_OFFSET_COUNT 6
 
@@ -1196,95 +1196,9 @@ typedef enum {
 struct dist_wtd_comp_params;
 typedef struct dist_wtd_comp_params DIST_WTD_COMP_PARAMS;
 #include "aom_dsp/variance.h"
-#define avm_compute_global_motion aom_compute_global_motion
-#define avm_count_signed_primitive_refsubexpfin \
-  aom_count_signed_primitive_refsubexpfin
-#define avm_count_primitive_quniform wb_count_primitive_quniform
-typedef aom_variance_fn_t avm_variance_fn_t;
-
 typedef uint16_t av2_tx_type;
 
-/* aom_highbd_{8,10,12}_mse* and aom_get_mb_ss are RTCD dispatch symbols (their
- * dispatch names are declared as function pointers by the generated
- * config/aom_dsp_rtcd.h). To stay self-contained without colliding with that
- * header, declare and alias the _c implementations directly. */
-#ifdef __cplusplus
-extern "C" {
-#endif
-extern unsigned int aom_highbd_8_mse8x8_c(const uint8_t *src_ptr,
-                                          int src_stride,
-                                          const uint8_t *ref_ptr,
-                                          int ref_stride, unsigned int *sse);
-extern unsigned int aom_highbd_8_mse16x8_c(const uint8_t *src_ptr,
-                                           int src_stride,
-                                           const uint8_t *ref_ptr,
-                                           int ref_stride, unsigned int *sse);
-extern unsigned int aom_highbd_8_mse8x16_c(const uint8_t *src_ptr,
-                                           int src_stride,
-                                           const uint8_t *ref_ptr,
-                                           int ref_stride, unsigned int *sse);
-extern unsigned int aom_highbd_8_mse16x16_c(const uint8_t *src_ptr,
-                                            int src_stride,
-                                            const uint8_t *ref_ptr,
-                                            int ref_stride, unsigned int *sse);
-
-#define avm_highbd_8_mse8x8 aom_highbd_8_mse8x8_c
-#define avm_highbd_8_mse16x8 aom_highbd_8_mse16x8_c
-#define avm_highbd_8_mse8x16 aom_highbd_8_mse8x16_c
-#define avm_highbd_8_mse16x16 aom_highbd_8_mse16x16_c
-
-extern unsigned int aom_highbd_10_mse8x8_c(const uint8_t *src_ptr,
-                                           int src_stride,
-                                           const uint8_t *ref_ptr,
-                                           int ref_stride, unsigned int *sse);
-extern unsigned int aom_highbd_10_mse16x8_c(const uint8_t *src_ptr,
-                                            int src_stride,
-                                            const uint8_t *ref_ptr,
-                                            int ref_stride, unsigned int *sse);
-extern unsigned int aom_highbd_10_mse8x16_c(const uint8_t *src_ptr,
-                                            int src_stride,
-                                            const uint8_t *ref_ptr,
-                                            int ref_stride, unsigned int *sse);
-extern unsigned int aom_highbd_10_mse16x16_c(const uint8_t *src_ptr,
-                                             int src_stride,
-                                             const uint8_t *ref_ptr,
-                                             int ref_stride, unsigned int *sse);
-
-#define avm_highbd_10_mse8x8 aom_highbd_10_mse8x8_c
-#define avm_highbd_10_mse16x8 aom_highbd_10_mse16x8_c
-#define avm_highbd_10_mse8x16 aom_highbd_10_mse8x16_c
-#define avm_highbd_10_mse16x16 aom_highbd_10_mse16x16_c
-
-extern unsigned int aom_highbd_12_mse8x8_c(const uint8_t *src_ptr,
-                                           int src_stride,
-                                           const uint8_t *ref_ptr,
-                                           int ref_stride, unsigned int *sse);
-extern unsigned int aom_highbd_12_mse16x8_c(const uint8_t *src_ptr,
-                                            int src_stride,
-                                            const uint8_t *ref_ptr,
-                                            int ref_stride, unsigned int *sse);
-extern unsigned int aom_highbd_12_mse8x16_c(const uint8_t *src_ptr,
-                                            int src_stride,
-                                            const uint8_t *ref_ptr,
-                                            int ref_stride, unsigned int *sse);
-extern unsigned int aom_highbd_12_mse16x16_c(const uint8_t *src_ptr,
-                                             int src_stride,
-                                             const uint8_t *ref_ptr,
-                                             int ref_stride, unsigned int *sse);
-
-#define avm_highbd_12_mse8x8 aom_highbd_12_mse8x8_c
-#define avm_highbd_12_mse16x8 aom_highbd_12_mse16x8_c
-#define avm_highbd_12_mse8x16 aom_highbd_12_mse8x16_c
-#define avm_highbd_12_mse16x16 aom_highbd_12_mse16x16_c
-
-extern unsigned int aom_get_mb_ss_c(const int16_t *src);
-#ifdef __cplusplus
-}
-#endif
-#define avm_get_mb_ss aom_get_mb_ss_c
-
 #include "aom_dsp/noise_model.h"
-#define avm_denoise_and_model_alloc aom_denoise_and_model_alloc
 static INLINE int avm_denoise_and_model_run(struct aom_denoise_and_model_t *ctx,
                                             const YV12_BUFFER_CONFIG *sd,
                                             aom_film_grain_t *film_grain) {
@@ -1347,14 +1261,6 @@ static INLINE unsigned int avm_highbd_sad16x16(const uint16_t *src,
   return aom_highbd_sad16x16_c(CONVERT_TO_BYTEPTR(src), src_stride,
                                CONVERT_TO_BYTEPTR(ref), ref_stride);
 }
-#define avm_free_frame_buffer aom_free_frame_buffer
-#define avm_denoise_and_model_free aom_denoise_and_model_free
-#define avm_img_metadata_array_free aom_img_metadata_array_free
-#define avm_dsp_rtcd aom_dsp_rtcd
-#define avm_scale_rtcd aom_scale_rtcd
-#define avm_yv12_partial_coloc_copy_y aom_yv12_partial_coloc_copy_y
-#define avm_yv12_partial_coloc_copy_u aom_yv12_partial_coloc_copy_u
-#define avm_yv12_partial_coloc_copy_v aom_yv12_partial_coloc_copy_v
 
 struct yv12_buffer_config;
 #ifdef __cplusplus
@@ -1376,14 +1282,7 @@ extern void aom_yv12_partial_coloc_copy_v(
 }
 #endif
 
-#define avm_free aom_free
-#define avm_malloc aom_malloc
-#define avm_convolve_copy aom_convolve_copy
-
 #include "av2/common/convolve.h"
-
-#define avm_extend_frame_borders aom_extend_frame_borders
-#define avm_denoise_and_model_t aom_denoise_and_model_t
 
 #ifdef __cplusplus
 extern "C" {
@@ -1518,19 +1417,7 @@ static INLINE void avm_highbd_blend_a64_mask(
       w, h, subw, subh, bd);
 }
 
-#define avm_reader aom_reader
-#define avm_read_literal aom_read_literal
-#define avm_read_symbol aom_read_symbol
-#define avm_read_bit aom_read_bit
-#define avm_ceil_log2 aom_ceil_log2
 #define ACCT_INFO(a, ...) a
-
-#define avm_rb_read_bit aom_rb_read_bit
-#define avm_rb_read_literal aom_rb_read_literal
-#define avm_rb_read_unsigned_literal aom_rb_read_unsigned_literal
-#define avm_reader aom_reader
-#define avm_read_bit_buffer aom_read_bit_buffer
-#define avm_rb_error_handler aom_rb_error_handler
 
 static INLINE int avm_rb_read_inv_signed_literal(struct aom_read_bit_buffer *rb,
                                                  int bits) {
@@ -1599,9 +1486,6 @@ static INLINE uint16_t avm_read_primitive_quniform(aom_reader *r, uint16_t n,
   return (v << 1) - m + aom_read_bit(r, NULL);
 }
 
-#define avm_writer aom_writer
-#define avm_write_bit aom_write_bit
-#define avm_write_literal aom_write_literal
 
 #ifndef symb_to_part_defined
 #define symb_to_part_defined
@@ -1672,14 +1556,7 @@ static INLINE int64_t avm_count_4part_wref(int ref_symb, int symb,
 }
 #endif
 
-#define avm_merge_corrupted_flag aom_merge_corrupted_flag
-#define AVM_DEC_BORDER_IN_PIXELS AOM_DEC_BORDER_IN_PIXELS
-#define avm_yv12_copy_frame aom_yv12_copy_frame
-#define AVM_NUM_SUPPORTED_BITDEPTH 3
-#define avm_rb_read_uvlc aom_rb_read_uvlc
-#define avm_rb_read_signed_primitive_refsubexpfin \
-  aom_rb_read_signed_primitive_refsubexpfin
-#define avm_rb_bytes_read aom_rb_bytes_read
+
 
 static INLINE int avm_realloc_frame_buffer(YV12_BUFFER_CONFIG *ybf, int width,
                                            int height, int ss_x, int ss_y,
@@ -1700,8 +1577,6 @@ static INLINE int avm_alloc_frame_buffer(YV12_BUFFER_CONFIG *ybf, int width,
                                 1, border, byte_alignment,
                                 alloc_pyramid, 0);
 }
-#define avm_remove_metadata_from_frame_buffer \
-  aom_remove_metadata_from_frame_buffer
 
 static INLINE int avm_read_4part_(aom_reader *r, aom_cdf_prob *cdf,
                                   int nsymb_bits) {
@@ -1733,8 +1608,6 @@ static INLINE uint16_t avm_rb_read_primitive_ref_quniform(
   }
 }
 
-#define avm_img_metadata_array_alloc aom_img_metadata_array_alloc
-#define avm_img_metadata_alloc aom_img_metadata_alloc
 
 static INLINE int32_t avm_rb_read_svlc(struct aom_read_bit_buffer *rb) {
   const uint32_t value = aom_rb_read_uvlc(rb);
@@ -1769,12 +1642,6 @@ static INLINE uint64_t aom_rb_read_uleb(struct aom_read_bit_buffer *rb) {
   return value;
 }
 
-#define avm_ext_highbd_warp_affine av2_ext_highbd_warp_affine
-
-/* Note: av2_ext_highbd_warp_affine is declared (as an RTCD function pointer)
- * by the generated av2_rtcd.h; do not also declare it as a plain function
- * prototype here, or the two declarations conflict. */
-
 #define FILTER_UNUSED -1
 
 #ifdef __cplusplus
@@ -1791,7 +1658,6 @@ extern void aom_highbd_convolve_copy_c(const uint16_t *src,
        ? aom_highbd_convolve_copy_c(src, src_stride, dst, dst_stride, w, \
                                     h)                                   \
        : aom_highbd_convolve_copy(src, src_stride, dst, dst_stride, w, h))
-#define avm_mse_wxh_16bit_highbd aom_mse_wxh_16bit_highbd
 
 static INLINE uint64_t avm_sum_squares_i32(const int32_t *src, uint32_t n) {
   uint64_t sum = 0;
@@ -1804,8 +1670,6 @@ static INLINE uint64_t avm_sum_squares_i32(const int32_t *src, uint32_t n) {
   (((x) + (((x) < 0 ? -(y) : (y)) >> 1)) / (y))
 
 #include "aom_mem/aom_mem.h"
-#define avm_memset_int16(dest, val, count) \
-  aom_memset16((uint16_t *)(dest), (uint16_t)(val), (count))
 
 #ifdef __cplusplus
 extern "C" {
@@ -1822,19 +1686,7 @@ extern void avm_highbd_subtract_block_horz(
 }
 #endif
 
-#define avm_codec_pkt_list_decl aom_codec_pkt_list_decl
-#define avm_codec_pkt_list_init aom_codec_pkt_list_init
-#define avm_codec_pkt_list aom_codec_pkt_list
-#define avm_codec_pkt_list_add aom_codec_pkt_list_add
-#define avm_codec_pkt_list_get aom_codec_pkt_list_get
-#define avm_codec_cx_pkt_t aom_codec_cx_pkt_t
-#define avm_codec_cx_pkt aom_codec_cx_pkt
-#define AVM_CODEC_PSNR_PKT AOM_CODEC_PSNR_PKT
-#define AVM_CODEC_STATS_PKT AOM_CODEC_STATS_PKT
 #define INTERP_EVAL_INVALID -1
-
-#define avm_sum_squares_2d_i16 aom_sum_squares_2d_i16
-#define avm_sum_sse_2d_i16 aom_sum_sse_2d_i16
 
 struct yv12_buffer_config;
 #ifdef __cplusplus

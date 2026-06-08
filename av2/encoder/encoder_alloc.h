@@ -214,7 +214,7 @@ static INLINE void dealloc_compressor_data(AV2_COMP *cpi) {
   av2_free_txb_buf(cpi);
   av2_free_context_buffers(cm);
 
-  avm_free_frame_buffer(&cpi->last_frame_uf);
+  aom_free_frame_buffer(&cpi->last_frame_uf);
   av2_free_restoration_buffers(cm);
   free_gdf_buffers(&cm->gdf_info);
   const int use_cdef = cpi->oxcf.tool_cfg.enable_cdef;
@@ -224,10 +224,10 @@ static INLINE void dealloc_compressor_data(AV2_COMP *cpi) {
     av2_free_cdef_buffers(cm, &cdef_worker /* dummy */, &cdef_sync /* dummy */,
                           1);
   }
-  avm_free_frame_buffer(&cpi->trial_frame_rst);
-  avm_free_frame_buffer(&cpi->scaled_source);
-  avm_free_frame_buffer(&cpi->scaled_last_source);
-  avm_free_frame_buffer(&cpi->alt_ref_buffer);
+  aom_free_frame_buffer(&cpi->trial_frame_rst);
+  aom_free_frame_buffer(&cpi->scaled_source);
+  aom_free_frame_buffer(&cpi->scaled_last_source);
+  aom_free_frame_buffer(&cpi->alt_ref_buffer);
   av2_lookahead_destroy(cpi->lookahead);
 
   free_token_info(token_info);
@@ -257,7 +257,7 @@ static INLINE void dealloc_compressor_data(AV2_COMP *cpi) {
 
 #if CONFIG_DENOISE
   if (cpi->denoise_and_model) {
-    avm_denoise_and_model_free(cpi->denoise_and_model);
+    aom_denoise_and_model_free(cpi->denoise_and_model);
     cpi->denoise_and_model = NULL;
   }
 #endif
