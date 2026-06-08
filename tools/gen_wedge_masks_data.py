@@ -459,7 +459,7 @@ HEADER_BANNER = """\
 //
 // To regenerate after upstream changes to reconinter.c (wedge codebooks,
 // master tables, BLOCK_SIZE enum, ii_weights1d, etc.) run:
-//   python3 source/libaom/tools/gen_wedge_masks_data.py \\
+//   python3 source/libaom/tools/gen_wedge_masks_data.py
 //       --output source/libaom/av1/common/wedge_masks_data.inc
 """
 
