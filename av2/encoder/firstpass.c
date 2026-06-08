@@ -58,9 +58,9 @@
 #define NCOUNT_INTRA_FACTOR 3
 
 static INLINE void output_stats(FIRSTPASS_STATS *stats,
-                                struct avm_codec_pkt_list *pktlist) {
-  struct avm_codec_cx_pkt pkt;
-  pkt.kind = AVM_CODEC_STATS_PKT;
+                                struct aom_codec_pkt_list *pktlist) {
+  struct aom_codec_cx_pkt pkt;
+  pkt.kind = AOM_CODEC_STATS_PKT;
   pkt.data.twopass_stats.buf = stats;
   pkt.data.twopass_stats.sz = sizeof(FIRSTPASS_STATS);
   if (pktlist != NULL) aom_codec_pkt_list_add(pktlist, &pkt);
@@ -145,31 +145,31 @@ void av2_end_first_pass(AV2_COMP *cpi) {
     output_stats(cpi->twopass.stats_buf_ctx->total_stats, cpi->output_pkt_list);
 }
 
-static avm_variance_fn_t highbd_get_block_variance_fn(BLOCK_SIZE bsize,
+static aom_variance_fn_t highbd_get_block_variance_fn(BLOCK_SIZE bsize,
                                                       int bd) {
   switch (bd) {
     default:
       switch (bsize) {
-        case BLOCK_8X8: return avm_highbd_8_mse8x8;
-        case BLOCK_16X8: return avm_highbd_8_mse16x8;
-        case BLOCK_8X16: return avm_highbd_8_mse8x16;
-        default: return avm_highbd_8_mse16x16;
+        case BLOCK_8X8: return aom_highbd_8_mse8x8_c;
+        case BLOCK_16X8: return aom_highbd_8_mse16x8_c;
+        case BLOCK_8X16: return aom_highbd_8_mse8x16_c;
+        default: return aom_highbd_8_mse16x16_c;
       }
       break;
     case 10:
       switch (bsize) {
-        case BLOCK_8X8: return avm_highbd_10_mse8x8;
-        case BLOCK_16X8: return avm_highbd_10_mse16x8;
-        case BLOCK_8X16: return avm_highbd_10_mse8x16;
-        default: return avm_highbd_10_mse16x16;
+        case BLOCK_8X8: return aom_highbd_10_mse8x8_c;
+        case BLOCK_16X8: return aom_highbd_10_mse16x8_c;
+        case BLOCK_8X16: return aom_highbd_10_mse8x16_c;
+        default: return aom_highbd_10_mse16x16_c;
       }
       break;
     case 12:
       switch (bsize) {
-        case BLOCK_8X8: return avm_highbd_12_mse8x8;
-        case BLOCK_16X8: return avm_highbd_12_mse16x8;
-        case BLOCK_8X16: return avm_highbd_12_mse8x16;
-        default: return avm_highbd_12_mse16x16;
+        case BLOCK_8X8: return aom_highbd_12_mse8x8_c;
+        case BLOCK_16X8: return aom_highbd_12_mse16x8_c;
+        case BLOCK_8X16: return aom_highbd_12_mse8x16_c;
+        default: return aom_highbd_12_mse16x16_c;
       }
       break;
   }
@@ -180,7 +180,7 @@ static unsigned int highbd_get_prediction_error(BLOCK_SIZE bsize,
                                                 const struct buf_2d *ref,
                                                 int bd) {
   unsigned int sse;
-  const avm_variance_fn_t fn = highbd_get_block_variance_fn(bsize, bd);
+  const aom_variance_fn_t fn = highbd_get_block_variance_fn(bsize, bd);
   fn(CONVERT_TO_BYTEPTR(src->buf), src->stride, CONVERT_TO_BYTEPTR(ref->buf),
      ref->stride, &sse);
   return sse;
@@ -371,7 +371,7 @@ static int firstpass_intra_prediction(
       use_dc_pred ? (bsize >= fp_block_size ? TX_16X16 : TX_8X8) : TX_4X4;
 
   av2_encode_intra_block_plane(cpi, x, bsize, 0, DRY_RUN_NORMAL, 0);
-  int this_intra_error = avm_get_mb_ss(x->plane[0].src_diff);
+  int this_intra_error = aom_get_mb_ss_c(x->plane[0].src_diff);
   switch (seq_params->bit_depth) {
     case AOM_BITS_8: break;
     case AOM_BITS_10: this_intra_error >>= 4; break;

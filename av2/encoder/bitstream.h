@@ -34,7 +34,7 @@ extern "C" {
 #define avm_wb_write_inv_signed_literal aom_wb_write_inv_signed_literal
 #define avm_wb_write_unsigned_literal aom_wb_write_unsigned_literal
 #define avm_uleb_encode aom_uleb_encode
-#define avm_uleb_size_in_bytes aom_uleb_size_in_bytes
+#define aom_uleb_size_in_bytes aom_uleb_size_in_bytes
 #define avm_wb_is_byte_aligned aom_wb_is_byte_aligned
 #define avm_wb_write_uleb avm_wb_write_uleb
 #define avm_img_alloc aom_img_alloc

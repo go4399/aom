@@ -803,12 +803,12 @@ aom_codec_err_t flush_remaining_frames(struct AV2Decoder *pbi,
 static INLINE int av2_read_uniform(aom_reader *r, int n) {
   const int l = get_unsigned_bits(n);
   const int m = (1 << l) - n;
-  const int v = avm_read_literal(r, l - 1, ACCT_INFO("v"));
+  const int v = aom_read_literal(r, l - 1, ACCT_INFO("v"));
   assert(l != 0);
   if (v < m)
     return v;
   else
-    return (v << 1) - m + avm_read_literal(r, 1, ACCT_INFO());
+    return (v << 1) - m + aom_read_literal(r, 1, ACCT_INFO());
 }
 
 typedef void (*palette_visitor_fn_t)(MACROBLOCKD *const xd, int plane,

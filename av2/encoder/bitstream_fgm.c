@@ -207,9 +207,9 @@ int write_fgm_obu(AV2_COMP *cpi, struct film_grain_model *fgm,
         }
         // ceillog2
         int bitsIncr =
-            AOMMAX(1, maxScal == -1 ? 0 : avm_ceil_log2(maxIncr + 1));
+            AOMMAX(1, maxScal == -1 ? 0 : aom_ceil_log2(maxIncr + 1));
         int bitsScal =
-            AOMMAX(5, maxScal == -1 ? 0 : avm_ceil_log2(maxScal + 1));
+            AOMMAX(5, maxScal == -1 ? 0 : aom_ceil_log2(maxScal + 1));
         avm_wb_write_literal(&wb, bitsIncr - 1, 3);
         avm_wb_write_literal(&wb, bitsScal - 5, 2);
         for (int i = 0; i < fgm->fgm_points[c]; i++) {
@@ -248,7 +248,7 @@ int write_fgm_obu(AV2_COMP *cpi, struct film_grain_model *fgm,
       }
       maxAr = AOMMAX(maxAr + 1, -minAr);
       // ceillog2
-      int bitsArY = AOMMAX(5, avm_ceil_log2(maxAr) + 1);
+      int bitsArY = AOMMAX(5, aom_ceil_log2(maxAr) + 1);
       avm_wb_write_literal(&wb, bitsArY - 5, 2);
       int midPointY = 1 << (bitsArY - 1);
       for (int i = 0; i < num_pos_luma; i++)
@@ -263,7 +263,7 @@ int write_fgm_obu(AV2_COMP *cpi, struct film_grain_model *fgm,
       }
       maxAr = AOMMAX(maxAr + 1, -minAr);
       // ceillog2
-      int bitsArCb = AOMMAX(5, avm_ceil_log2(maxAr) + 1);
+      int bitsArCb = AOMMAX(5, aom_ceil_log2(maxAr) + 1);
       avm_wb_write_literal(&wb, bitsArCb - 5, 2);
       int midPointCb = 1 << (bitsArCb - 1);
       for (int i = 0; i < num_pos_chroma; i++)
@@ -279,7 +279,7 @@ int write_fgm_obu(AV2_COMP *cpi, struct film_grain_model *fgm,
       }
       maxAr = AOMMAX(maxAr + 1, -minAr);
       // ceillog2
-      int bitsArCr = AOMMAX(5, avm_ceil_log2(maxAr) + 1);
+      int bitsArCr = AOMMAX(5, aom_ceil_log2(maxAr) + 1);
       avm_wb_write_literal(&wb, bitsArCr - 5, 2);
       int midPointCr = 1 << (bitsArCr - 1);
       for (int i = 0; i < num_pos_chroma; i++)

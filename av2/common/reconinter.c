@@ -573,7 +573,7 @@ static INLINE void init_wedge_masks() {
     for (w = 0; w < wtypes; ++w) {
       for (int k = 0; k < MAX_WEDGE_BOUNDARY_TYPES; k++) {
         all_mask = get_wedge_allmask_inplace(w, k, 0, bsize);
-        avm_convolve_copy(all_mask, MASK_MASTER_STRIDE, dst_all,
+        aom_convolve_copy(all_mask, MASK_MASTER_STRIDE, dst_all,
                           bw /* dst_stride */, bw, bh);
         wedge_params->all_masks[0][w][k] = dst_all;
         get_wedge_tmvp_decision(dst_all, bw, bw, bh, dst_tmvp_decision, bw);
@@ -582,7 +582,7 @@ static INLINE void init_wedge_masks() {
         dst_all += bw * bh;
 
         all_mask = get_wedge_allmask_inplace(w, k, 1, bsize);
-        avm_convolve_copy(all_mask, MASK_MASTER_STRIDE, dst_all,
+        aom_convolve_copy(all_mask, MASK_MASTER_STRIDE, dst_all,
                           bw /* dst_stride */, bw, bh);
         wedge_params->all_masks[1][w][k] = dst_all;
         get_wedge_tmvp_decision(dst_all, bw, bw, bh, dst_tmvp_decision, bw);

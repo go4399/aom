@@ -118,10 +118,10 @@ static INLINE void read_ci_color_info(struct ContentInterpretation *ci_params,
 static INLINE void av2_read_sample_aspect_ratio_information(
     struct ContentInterpretation *ci_params, struct aom_read_bit_buffer *rb) {
   SarInfo *sar_info = &ci_params->sar_info;
-  sar_info->sar_aspect_ratio_idc = avm_rb_read_literal(rb, 8);
+  sar_info->sar_aspect_ratio_idc = aom_rb_read_literal(rb, 8);
   if (sar_info->sar_aspect_ratio_idc == AVM_SAR_IDC_255) {
-    sar_info->sar_width = avm_rb_read_uvlc(rb);
-    sar_info->sar_height = avm_rb_read_uvlc(rb);
+    sar_info->sar_width = aom_rb_read_uvlc(rb);
+    sar_info->sar_height = aom_rb_read_uvlc(rb);
   }
 }
 
@@ -152,12 +152,12 @@ uint32_t av2_read_content_interpretation_obu(struct AV2Decoder *pbi,
   // Parse CI OBU into a temp structure
   ContentInterpretation ci_temp;
   av2_init_ci_params(&ci_temp);
-  ci_temp.ci_scan_type_idc = avm_rb_read_literal(rb, 2);
-  ci_temp.ci_color_description_present_flag = avm_rb_read_bit(rb);
-  ci_temp.ci_chroma_sample_position_present_flag = avm_rb_read_bit(rb);
-  ci_temp.ci_aspect_ratio_info_present_flag = avm_rb_read_bit(rb);
-  ci_temp.ci_timing_info_present_flag = avm_rb_read_bit(rb);
-  (void)avm_rb_read_literal(rb, 2);  // ci_reserved_2bit
+  ci_temp.ci_scan_type_idc = aom_rb_read_literal(rb, 2);
+  ci_temp.ci_color_description_present_flag = aom_rb_read_bit(rb);
+  ci_temp.ci_chroma_sample_position_present_flag = aom_rb_read_bit(rb);
+  ci_temp.ci_aspect_ratio_info_present_flag = aom_rb_read_bit(rb);
+  ci_temp.ci_timing_info_present_flag = aom_rb_read_bit(rb);
+  (void)aom_rb_read_literal(rb, 2);  // ci_reserved_2bit
 
   if (ci_temp.ci_color_description_present_flag) {
     read_ci_color_info(&ci_temp, rb);
@@ -170,9 +170,9 @@ uint32_t av2_read_content_interpretation_obu(struct AV2Decoder *pbi,
   }
 
   if (ci_temp.ci_chroma_sample_position_present_flag) {
-    ci_temp.ci_chroma_sample_position[0] = avm_rb_read_uvlc(rb);
+    ci_temp.ci_chroma_sample_position[0] = aom_rb_read_uvlc(rb);
     if (ci_temp.ci_scan_type_idc != 1)
-      ci_temp.ci_chroma_sample_position[1] = avm_rb_read_uvlc(rb);
+      ci_temp.ci_chroma_sample_position[1] = aom_rb_read_uvlc(rb);
     else
       ci_temp.ci_chroma_sample_position[1] =
           ci_temp.ci_chroma_sample_position[0];
@@ -193,7 +193,7 @@ uint32_t av2_read_content_interpretation_obu(struct AV2Decoder *pbi,
     av2_read_timing_info_header(&ci_temp.timing_info, &cm->error, rb);
 
   size_t bits_before_ext = rb->bit_offset - saved_bit_offset;
-  ci_temp.ci_extension_present_flag = avm_rb_read_bit(rb);
+  ci_temp.ci_extension_present_flag = aom_rb_read_bit(rb);
   if (ci_temp.ci_extension_present_flag) {
     // Extension data bits = total - bits_read_before_extension -1 (ext flag)
     // - trailing bits

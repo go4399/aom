@@ -181,10 +181,10 @@ static INLINE int avm_wb_count_primitive_refsubexpfin(uint16_t n, uint16_t k,
 }
 
 #define AVMSIGN AOMSIGN
-#define avm_write_literal aom_write_literal
+#define aom_write_literal aom_write_literal
 #define avm_write_symbol aom_write_symbol
-#define avm_write_bit aom_write_bit
-#define avm_writer aom_writer
+#define aom_write_bit aom_write_bit
+#define aom_writer aom_writer
 
 #ifndef avm_write_primitive_quniform_defined
 #define avm_write_primitive_quniform_defined
@@ -2656,7 +2656,7 @@ typedef struct AV2_COMP {
    * Pointer to internal utility functions that manipulate avm_codec_* data
    * structures.
    */
-  struct avm_codec_pkt_list *output_pkt_list;
+  struct aom_codec_pkt_list *output_pkt_list;
 
   /*!
    * speed is passed as a per-frame parameter into the encoder.
@@ -2893,7 +2893,7 @@ typedef struct AV2_COMP {
    * Pointer to structure holding the denoised image buffers and the helper
    * noise models.
    */
-  struct avm_denoise_and_model_t *denoise_and_model;
+  struct aom_denoise_and_model_t *denoise_and_model;
 #endif
 
   /*!

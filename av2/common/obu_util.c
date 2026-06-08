@@ -16,8 +16,8 @@
 #include "aom_dsp/bitreader_buffer.h"
 #include "av2/common/enums.h"
 
-#define avm_rb_read_bit aom_rb_read_bit
-#define avm_rb_read_literal aom_rb_read_literal
+#define aom_rb_read_bit aom_rb_read_bit
+#define aom_rb_read_literal aom_rb_read_literal
 
 // If read_obu_size() returns AOM_CODEC_OK, it is guaranteed that
 // *length_field_size <= bytes_available.
@@ -47,17 +47,17 @@ static aom_codec_err_t read_obu_header(struct aom_read_bit_buffer *rb,
   if (bit_buffer_byte_length < 1) return AOM_CODEC_CORRUPT_FRAME;
   header->size = 1;
 
-  header->obu_header_extension_flag = avm_rb_read_bit(rb);
-  header->type = (OBU_TYPE)avm_rb_read_literal(rb, 5);  // obu_type
+  header->obu_header_extension_flag = aom_rb_read_bit(rb);
+  header->type = (OBU_TYPE)aom_rb_read_literal(rb, 5);  // obu_type
 
-  header->obu_tlayer_id = avm_rb_read_literal(rb, TLAYER_BITS);
+  header->obu_tlayer_id = aom_rb_read_literal(rb, TLAYER_BITS);
 
   if (header->obu_header_extension_flag) {
     if (bit_buffer_byte_length == 1) return AOM_CODEC_CORRUPT_FRAME;
     header->size += 1;
 
-    header->obu_mlayer_id = avm_rb_read_literal(rb, MLAYER_BITS);
-    header->obu_xlayer_id = avm_rb_read_literal(rb, XLAYER_BITS);
+    header->obu_mlayer_id = aom_rb_read_literal(rb, MLAYER_BITS);
+    header->obu_xlayer_id = aom_rb_read_literal(rb, XLAYER_BITS);
   } else {
     header->obu_mlayer_id = 0;
     if (header->type == OBU_MULTI_STREAM_DECODER_OPERATION ||

@@ -42,29 +42,29 @@ static int gm_get_params_cost(const WarpedMotionParams *gm,
   switch (gm->wmtype) {
     case AFFINE:
     case ROTZOOM:
-      params_cost += avm_count_signed_primitive_refsubexpfin(
+      params_cost += aom_count_signed_primitive_refsubexpfin(
           GM_ALPHA_MAX + 1, SUBEXPFIN_K,
           (ref_gm->wmmat[2] >> GM_ALPHA_PREC_DIFF) - (1 << GM_ALPHA_PREC_BITS),
           (gm->wmmat[2] >> GM_ALPHA_PREC_DIFF) - (1 << GM_ALPHA_PREC_BITS));
-      params_cost += avm_count_signed_primitive_refsubexpfin(
+      params_cost += aom_count_signed_primitive_refsubexpfin(
           GM_ALPHA_MAX + 1, SUBEXPFIN_K,
           (ref_gm->wmmat[3] >> GM_ALPHA_PREC_DIFF),
           (gm->wmmat[3] >> GM_ALPHA_PREC_DIFF));
       if (gm->wmtype >= AFFINE) {
-        params_cost += avm_count_signed_primitive_refsubexpfin(
+        params_cost += aom_count_signed_primitive_refsubexpfin(
             GM_ALPHA_MAX + 1, SUBEXPFIN_K,
             (ref_gm->wmmat[4] >> GM_ALPHA_PREC_DIFF),
             (gm->wmmat[4] >> GM_ALPHA_PREC_DIFF));
-        params_cost += avm_count_signed_primitive_refsubexpfin(
+        params_cost += aom_count_signed_primitive_refsubexpfin(
             GM_ALPHA_MAX + 1, SUBEXPFIN_K,
             (ref_gm->wmmat[5] >> GM_ALPHA_PREC_DIFF) -
                 (1 << GM_ALPHA_PREC_BITS),
             (gm->wmmat[5] >> GM_ALPHA_PREC_DIFF) - (1 << GM_ALPHA_PREC_BITS));
       }
-      params_cost += avm_count_signed_primitive_refsubexpfin(
+      params_cost += aom_count_signed_primitive_refsubexpfin(
           trans_max + 1, SUBEXPFIN_K, (ref_gm->wmmat[0] >> trans_prec_diff),
           (gm->wmmat[0] >> trans_prec_diff));
-      params_cost += avm_count_signed_primitive_refsubexpfin(
+      params_cost += aom_count_signed_primitive_refsubexpfin(
           trans_max + 1, SUBEXPFIN_K, (ref_gm->wmmat[1] >> trans_prec_diff),
           (gm->wmmat[1] >> trans_prec_diff));
       AVM_FALLTHROUGH_INTENDED;
@@ -105,7 +105,7 @@ static INLINE void compute_global_motion_for_ref_frame(
   double best_erroradv = erroradv_tr;
   for (TransformationType model = FIRST_GLOBAL_TRANS_TYPE;
        model <= LAST_GLOBAL_TRANS_TYPE; ++model) {
-    if (!avm_compute_global_motion(model, cpi->source, ref_buf[frame],
+    if (!aom_compute_global_motion(model, cpi->source, ref_buf[frame],
                                    bit_depth, global_motion_method,
                                    downsample_level, motion_models,
                                    RANSAC_NUM_MOTIONS, &mem_alloc_failed)) {
@@ -374,7 +374,7 @@ static INLINE void pick_base_gm_params(AV2_COMP *cpi) {
   {
     int this_num_models = 0;
     int this_cost =
-        avm_count_primitive_quniform(num_total_refs + 1, num_total_refs)
+        wb_count_primitive_quniform(num_total_refs + 1, num_total_refs)
         << AV2_PROB_COST_SHIFT;
     uint8_t this_enable_models = 0;
 
@@ -435,8 +435,8 @@ static INLINE void pick_base_gm_params(AV2_COMP *cpi) {
 
       int this_num_models = 0;
       int this_cost =
-          (avm_count_primitive_quniform(num_total_refs + 1, our_ref) +
-           avm_count_primitive_quniform(their_num_refs, their_ref))
+          (wb_count_primitive_quniform(num_total_refs + 1, our_ref) +
+           wb_count_primitive_quniform(their_num_refs, their_ref))
           << AV2_PROB_COST_SHIFT;
       uint8_t this_enable_models = 0;
 

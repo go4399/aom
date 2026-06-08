@@ -34,123 +34,37 @@
 #include "av2/common/obu_util.h"
 #include "av2/common/gdf.h"
 
-#define aom_codec_dec_cfg_t aom_codec_dec_cfg_t
-#define avm_codec_pkt_list_decl aom_codec_pkt_list_decl
-#define avm_timing_info_type_t aom_timing_info_type_t
-#define avm_codec_pkt_list_init aom_codec_pkt_list_init
-#define avm_uleb_size_in_bytes aom_uleb_size_in_bytes
 #define AVM_CODEC_USE_PSNR AOM_CODEC_USE_PSNR
 #define AVM_CODEC_USE_STREAM_PSNR 0x10000
 #define AVM_CODEC_USE_PER_FRAME_STATS 0x20000
 #define AVM_CODEC_USE_PER_FRAME_HLS_INFO 0x40000
 #define AVM_CODEC_CX_FRAME_NULL_PKT AOM_CODEC_CX_FRAME_NULL_PKT
 #define AVM_CODEC_CX_FRAME_PKT AOM_CODEC_CX_FRAME_PKT
-#define avm_codec_pkt_list aom_codec_pkt_list
 #define AVM_ENC_NO_SCALE_BORDER AOM_ENC_NO_SCALE_BORDER
-#define aom_codec_err_t aom_codec_err_t
-#define aom_codec_alg_priv_t aom_codec_alg_priv_t
-#define aom_codec_ctx_t aom_codec_ctx_t
-#define aom_image_t aom_image_t
 #define aom_pts_t aom_codec_pts_t
-#define aom_enc_frame_flags_t aom_enc_frame_flags_t
-#define AOM_CODEC_OK AOM_CODEC_OK
-#define aom_codec_iter_t aom_codec_iter_t
-#define aom_codec_dec_cfg_t aom_codec_dec_cfg_t
-#define aom_codec_ctrl_fn_map_t aom_codec_ctrl_fn_map_t
-#define aom_codec_priv_t aom_codec_priv_t
-#define aom_codec_iface_t aom_codec_iface_t
-#define AOM_CODEC_INVALID_PARAM AOM_CODEC_INVALID_PARAM
-#define AOM_CODEC_ERROR AOM_CODEC_ERROR
-#define aom_malloc aom_malloc
-#define aom_free aom_free
-#define aom_calloc aom_calloc
-#define aom_once aom_once
-#define AOM_CBR AOM_CBR
-#define AOM_RC_ONE_PASS AOM_RC_ONE_PASS
-#define AOM_CONTENT_SCREEN AOM_CONTENT_SCREEN
-#define AOM_Q AOM_Q
-#define aom_fixed_buf_t aom_fixed_buf_t
-#define AOM_VBR AOM_VBR
-#define AOM_TIMING_EQUAL AOM_TIMING_EQUAL
-#define AOM_TIMING_DEC_MODEL AOM_TIMING_DEC_MODEL
-#define AOM_CICP_TC_BT_709 AOM_CICP_TC_BT_709
-#define AOM_CICP_TC_HLG AOM_CICP_TC_HLG
-#define AOM_CICP_MC_IDENTITY AOM_CICP_MC_IDENTITY
-#define AOM_CICP_MC_YCGCO_RO AOM_CICP_MC_YCGCO_RO
-#define AOM_TUNE_VMAF_WITH_PREPROCESSING AOM_TUNE_VMAF_WITH_PREPROCESSING
-#define AOM_TUNE_VMAF_NEG_MAX_GAIN AOM_TUNE_VMAF_NEG_MAX_GAIN
-#define AOM_TUNE_SSIM AOM_TUNE_SSIM
-#define AOM_TUNE_PSNR AOM_TUNE_PSNR
-#define AOM_IMG_FMT_YV12 AOM_IMG_FMT_YV12
-#define AOM_IMG_FMT_I420 AOM_IMG_FMT_I420
-#define AOM_IMG_FMT_YV1216 AOM_IMG_FMT_YV1216
-#define AOM_IMG_FMT_I42016 AOM_IMG_FMT_I42016
-#define AOM_IMG_FMT_I444 AOM_IMG_FMT_I444
-#define AOM_IMG_FMT_I44416 AOM_IMG_FMT_I44416
-#define AOM_IMG_FMT_I422 AOM_IMG_FMT_I422
-#define AOM_IMG_FMT_I42216 AOM_IMG_FMT_I42216
-#define aom_tune_content aom_tune_content
-#define aom_color_primaries_t aom_color_primaries_t
-#define aom_transfer_characteristics_t aom_transfer_characteristics_t
-#define aom_matrix_coefficients_t aom_matrix_coefficients_t
-#define aom_chroma_sample_position_t aom_chroma_sample_position_t
-#define aom_superblock_size_t aom_superblock_size_t
-#define av2_opfl_refine_type av2_opfl_refine_type
-#define AOM_TIMING_UNSPECIFIED AOM_TIMING_UNSPECIFIED
-#define AOM_BITS_8 AOM_BITS_8
-#define AOM_BITS_10 AOM_BITS_10
-#define AOM_CICP_CP_UNSPECIFIED AOM_CICP_CP_UNSPECIFIED
-#define AOM_CICP_TC_UNSPECIFIED AOM_CICP_TC_UNSPECIFIED
-#define AOM_CICP_MC_UNSPECIFIED AOM_CICP_MC_UNSPECIFIED
-#define AOM_CSP_UNKNOWN AOM_CSP_UNKNOWN
-#define AOM_SUPERBLOCK_SIZE_DYNAMIC AOM_SUPERBLOCK_SIZE_DYNAMIC
-#define AOM_SUPERBLOCK_SIZE_64X64 AOM_SUPERBLOCK_SIZE_64X64
 #define AVM_KF_DISABLED AOM_KF_DISABLED
-#define AOM_CICP_CP_EBU_3213 AOM_CICP_CP_EBU_3213
 #define CONFIG_SHARP_SETTINGS 0
-#define aom_tune_metric aom_tune_metric
-#define aom_bit_depth_t aom_bit_depth_t
 
 #define avm_inspect_cb aom_inspect_cb
 #define avm_codec_stream_info_t aom_codec_stream_info_t
-#define avm_rb_read_uvlc aom_rb_read_uvlc
-#define avm_rb_read_bit aom_rb_read_bit
-#define avm_rb_read_literal aom_rb_read_literal
-#define avm_ceil_log2 aom_ceil_log2
 #define avm_get_worker_interface aom_get_worker_interface
 #define avm_img_free aom_img_free
 #define avm_img_alloc aom_img_alloc
-#define aom_get_frame_buffer_cb_fn_t aom_get_frame_buffer_cb_fn_t
-#define aom_release_frame_buffer_cb_fn_t aom_release_frame_buffer_cb_fn_t
 
 #define avm_screen_content_tools_info aom_screen_content_tools_info
 #define avm_still_picture_info aom_still_picture_info
 #define av2_s_frame_info aom_s_frame_info
-#define aom_img_fmt_t aom_img_fmt_t
-#define AOM_SUPERBLOCK_SIZE_256X256 AOM_SUPERBLOCK_SIZE_256X256
-#define AOM_SUPERBLOCK_SIZE_128X128 AOM_SUPERBLOCK_SIZE_128X128
-#define AOM_CODEC_INCAPABLE AOM_CODEC_INCAPABLE
-#define aom_codec_frame_buffer_t aom_codec_frame_buffer_t
-#define aom_film_grain_t aom_film_grain_t
 #define avm_img_add_metadata aom_img_add_metadata
 #define avm_img_remove_metadata aom_img_remove_metadata
-#define AOM_MIF_ANY_FRAME AOM_MIF_ANY_FRAME
-#define AOM_CODEC_CORRUPT_FRAME AOM_CODEC_CORRUPT_FRAME
-#define AOM_CODEC_MEM_ERROR AOM_CODEC_MEM_ERROR
 #define FRAMEFLAGS_HAS_FILM_GRAIN_PARAMS (1 << 7)
 
 #define av2_ref_frame_t av1_ref_frame_t
 #define AVM_FRAME_HAS_FILM_GRAIN_PARAMS FRAMEFLAGS_HAS_FILM_GRAIN_PARAMS
 #define avm_tile_info aom_tile_info
 #define is_single_picture_header_flag is_reduced_still_picture_hdr
-#define aom_read_bit_buffer aom_read_bit_buffer
 #define avm_img_alloc_with_cb aom_img_alloc_with_cb
-#define aom_memalign aom_memalign
-#define aom_internal_error aom_internal_error
-#define aom_internal_error_info aom_internal_error_info
 
 #define av2_s_frame_info aom_s_frame_info
-#define avm_read_literal aom_read_literal
 #define ACCT_INFO(x) x
 int av2_get_bitdepth_from_index(uint32_t bitdepth_lut_idx);
 
@@ -321,7 +235,7 @@ static aom_codec_err_t parse_bitdepth(struct aom_read_bit_buffer *rb,
                                       BITSTREAM_PROFILE profile,
                                       aom_bit_depth_t *bit_depth) {
   (void)profile;
-  const uint32_t bitdepth_lut_idx = avm_rb_read_uvlc(rb);
+  const uint32_t bitdepth_lut_idx = aom_rb_read_uvlc(rb);
   const int bitdepth = av2_get_bitdepth_from_index(bitdepth_lut_idx);
   if (bitdepth < 0)
     return AOM_CODEC_UNSUP_BITSTREAM;
@@ -332,7 +246,7 @@ static aom_codec_err_t parse_bitdepth(struct aom_read_bit_buffer *rb,
 
 static aom_codec_err_t parse_chroma_format_bitdepth(
     struct aom_read_bit_buffer *rb, BITSTREAM_PROFILE profile) {
-  const uint32_t chroma_format_idc = avm_rb_read_uvlc(rb);
+  const uint32_t chroma_format_idc = aom_rb_read_uvlc(rb);
 
   aom_bit_depth_t bit_depth;
   aom_codec_err_t err = parse_bitdepth(rb, profile, &bit_depth);
@@ -392,41 +306,41 @@ static aom_codec_err_t decoder_peek_si_internal(const uint8_t *data,
       struct aom_read_bit_buffer rb = { data, data + payload_size, 0, NULL,
                                         NULL };
 
-      avm_rb_read_uvlc(&rb);  // seq_header_id
+      aom_rb_read_uvlc(&rb);  // seq_header_id
 
       BITSTREAM_PROFILE profile = av2_read_profile(&rb);  // profile
-      single_picture_header_flag = avm_rb_read_bit(&rb);
+      single_picture_header_flag = aom_rb_read_bit(&rb);
       int seq_level_idx =
-          avm_rb_read_literal(&rb, LEVEL_BITS);  // seq_level_idx
+          aom_rb_read_literal(&rb, LEVEL_BITS);  // seq_level_idx
       if (seq_level_idx >= SEQ_LEVEL_4_0 && !single_picture_header_flag)
-        avm_rb_read_bit(&rb);  // seq_tier_flag
+        aom_rb_read_bit(&rb);  // seq_tier_flag
       status = parse_chroma_format_bitdepth(&rb, profile);
       if (status != AOM_CODEC_OK) return status;
       if (!single_picture_header_flag) {
-        avm_rb_read_literal(&rb, 3);  // seq_lcr_id
-        avm_rb_read_bit(&rb);         // still_picture
-        avm_rb_read_literal(&rb, TLAYER_BITS);
-        int max_mlayer_id = avm_rb_read_literal(&rb, MLAYER_BITS);
+        aom_rb_read_literal(&rb, 3);  // seq_lcr_id
+        aom_rb_read_bit(&rb);         // still_picture
+        aom_rb_read_literal(&rb, TLAYER_BITS);
+        int max_mlayer_id = aom_rb_read_literal(&rb, MLAYER_BITS);
         if (max_mlayer_id > 0) {
-          int n = avm_ceil_log2(max_mlayer_id + 1);
-          avm_rb_read_literal(&rb, n);
+          int n = aom_ceil_log2(max_mlayer_id + 1);
+          aom_rb_read_literal(&rb, n);
         }
-        avm_rb_read_bit(&rb);  // monotonic_output_order_flag
+        aom_rb_read_bit(&rb);  // monotonic_output_order_flag
       }
 
-      int num_bits_width = avm_rb_read_literal(&rb, 4) + 1;
-      int num_bits_height = avm_rb_read_literal(&rb, 4) + 1;
-      int max_frame_width = avm_rb_read_literal(&rb, num_bits_width) + 1;
-      int max_frame_height = avm_rb_read_literal(&rb, num_bits_height) + 1;
+      int num_bits_width = aom_rb_read_literal(&rb, 4) + 1;
+      int num_bits_height = aom_rb_read_literal(&rb, 4) + 1;
+      int max_frame_width = aom_rb_read_literal(&rb, num_bits_width) + 1;
+      int max_frame_height = aom_rb_read_literal(&rb, num_bits_height) + 1;
       si->w = max_frame_width;
       si->h = max_frame_height;
 
-      bool conf_win_flag = avm_rb_read_bit(&rb);
+      bool conf_win_flag = aom_rb_read_bit(&rb);
       if (conf_win_flag) {
-        si->conf_win_left_offset = avm_rb_read_uvlc(&rb);
-        si->conf_win_right_offset = avm_rb_read_uvlc(&rb);
-        si->conf_win_top_offset = avm_rb_read_uvlc(&rb);
-        si->conf_win_bottom_offset = avm_rb_read_uvlc(&rb);
+        si->conf_win_left_offset = aom_rb_read_uvlc(&rb);
+        si->conf_win_right_offset = aom_rb_read_uvlc(&rb);
+        si->conf_win_top_offset = aom_rb_read_uvlc(&rb);
+        si->conf_win_bottom_offset = aom_rb_read_uvlc(&rb);
       }
 
       got_sequence_header = 1;
@@ -439,16 +353,16 @@ static aom_codec_err_t decoder_peek_si_internal(const uint8_t *data,
       if (data_sz < 1) return AOM_CODEC_CORRUPT_FRAME;
       struct aom_read_bit_buffer rb = { data, data + payload_size, 0, NULL,
                                         NULL };
-      int first_tile_group_in_frame = avm_rb_read_bit(&rb);
+      int first_tile_group_in_frame = aom_rb_read_bit(&rb);
       if (!first_tile_group_in_frame) {
-        avm_rb_read_bit(&rb);  // send_uncompressed_header_flag
+        aom_rb_read_bit(&rb);  // send_uncompressed_header_flag
       }
-      uint32_t mfh_id = avm_rb_read_uvlc(&rb);
+      uint32_t mfh_id = aom_rb_read_uvlc(&rb);
       if (mfh_id == 0) {
-        uint32_t seq_header_id_in_frame_header = avm_rb_read_uvlc(&rb);
+        uint32_t seq_header_id_in_frame_header = aom_rb_read_uvlc(&rb);
         (void)seq_header_id_in_frame_header;
       }
-      FRAME_TYPE frame_type = avm_rb_read_bit(&rb) ? INTER_FRAME : INTRA_FRAME;
+      FRAME_TYPE frame_type = aom_rb_read_bit(&rb) ? INTER_FRAME : INTRA_FRAME;
       if (frame_type == INTRA_ONLY_FRAME) {
         intra_only_flag = 1;
       }
@@ -889,15 +803,15 @@ static size_t check_frame_unit_data(struct AV2Decoder *pbi, const uint8_t *data,
       struct aom_read_bit_buffer rb = { data_read + bytes_read,
                                         data_read + bytes_read + payload_size,
                                         0, &failed, bitreader_set_failed };
-      uint32_t sh_id = avm_rb_read_uvlc(&rb);  // seq_header_id
+      uint32_t sh_id = aom_rb_read_uvlc(&rb);  // seq_header_id
       if (sh_id < MAX_SEQ_NUM) {
         BITSTREAM_PROFILE profile = av2_read_profile(&rb);
-        int sph = avm_rb_read_bit(&rb);  // single_picture_header_flag
-        int level = avm_rb_read_literal(&rb, LEVEL_BITS);
-        if (level >= SEQ_LEVEL_4_0 && !sph) avm_rb_read_bit(&rb);  // seq_tier
+        int sph = aom_rb_read_bit(&rb);  // single_picture_header_flag
+        int level = aom_rb_read_literal(&rb, LEVEL_BITS);
+        if (level >= SEQ_LEVEL_4_0 && !sph) aom_rb_read_bit(&rb);  // seq_tier
         if (parse_chroma_format_bitdepth(&rb, profile) != AOM_CODEC_OK)
           return 0;
-        int lcr_id = sph ? LCR_ID_UNSPECIFIED : avm_rb_read_literal(&rb, 3);
+        int lcr_id = sph ? LCR_ID_UNSPECIFIED : aom_rb_read_literal(&rb, 3);
         prescan_sh_lcr[obu_header.obu_xlayer_id][sh_id] = lcr_id;
       }
       if (failed) return 0;
@@ -909,8 +823,8 @@ static size_t check_frame_unit_data(struct AV2Decoder *pbi, const uint8_t *data,
       struct aom_read_bit_buffer rb = { data_read + bytes_read,
                                         data_read + bytes_read + payload_size,
                                         0, &failed, bitreader_set_failed };
-      uint32_t mfh_sh = avm_rb_read_uvlc(&rb);          // mfh_seq_header_id
-      uint32_t mfh_id_minus_1 = avm_rb_read_uvlc(&rb);  // mfh_id_minus_1
+      uint32_t mfh_sh = aom_rb_read_uvlc(&rb);          // mfh_seq_header_id
+      uint32_t mfh_id_minus_1 = aom_rb_read_uvlc(&rb);  // mfh_id_minus_1
       if (mfh_id_minus_1 < MAX_MFH_NUM - 1 && mfh_sh < MAX_SEQ_NUM)
         prescan_mfh_sh[mfh_id_minus_1 + 1] = mfh_sh;
       if (failed) return 0;
@@ -924,11 +838,11 @@ static size_t check_frame_unit_data(struct AV2Decoder *pbi, const uint8_t *data,
                                         0, &failed, bitreader_set_failed };
       if (obu_header.obu_xlayer_id == GLOBAL_XLAYER_ID) {
         int lcr_id =
-            avm_rb_read_literal(&rb, 3);  // lcr_global_config_record_id
+            aom_rb_read_literal(&rb, 3);  // lcr_global_config_record_id
         if (lcr_id < MAX_NUM_LCR) prescan_new_glcr[lcr_id] = true;
       } else {
-        int g_id = avm_rb_read_literal(&rb, 3);  // lcr_global_id
-        int l_id = avm_rb_read_literal(&rb, 3);  // lcr_local_id
+        int g_id = aom_rb_read_literal(&rb, 3);  // lcr_global_id
+        int l_id = aom_rb_read_literal(&rb, 3);  // lcr_local_id
         if (l_id < MAX_NUM_LCR)
           prescan_new_local_lcr[obu_header.obu_xlayer_id][l_id] = g_id;
       }
@@ -943,11 +857,11 @@ static size_t check_frame_unit_data(struct AV2Decoder *pbi, const uint8_t *data,
       struct aom_read_bit_buffer rb = { data_read + bytes_read,
                                         data_read + bytes_read + payload_size,
                                         0, &failed, bitreader_set_failed };
-      avm_rb_read_bit(&rb);                     // is_first_tile_group
-      uint32_t mfh_id = avm_rb_read_uvlc(&rb);  // cur_mfh_id (0 = no MFH)
+      aom_rb_read_bit(&rb);                     // is_first_tile_group
+      uint32_t mfh_id = aom_rb_read_uvlc(&rb);  // cur_mfh_id (0 = no MFH)
       uint32_t sh_id = UINT32_MAX;
       if (mfh_id == 0) {
-        sh_id = avm_rb_read_uvlc(&rb);  // seq_header_id_in_frame_header
+        sh_id = aom_rb_read_uvlc(&rb);  // seq_header_id_in_frame_header
       } else if (mfh_id < MAX_MFH_NUM) {
         sh_id = prescan_mfh_sh[mfh_id] >= 0
                     ? (uint32_t)prescan_mfh_sh[mfh_id]
@@ -2235,7 +2149,7 @@ aom_codec_iface_t avm_codec_av2_dx_algo_temp = {
   {
       // NOLINT
       0,
-      NULL,  // avm_codec_enc_cfg_t
+      NULL,  // aom_codec_enc_cfg_t
       NULL,  // avm_codec_encode_fn_t
       NULL,  // avm_codec_get_cx_data_fn_t
       NULL,  // avm_codec_enc_config_set_fn_t

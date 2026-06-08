@@ -338,7 +338,7 @@ static double find_best_frame_unsharp_amount(const AV2_COMP *const cpi,
     }
   }
 
-  avm_free_frame_buffer(&sharpened);
+  aom_free_frame_buffer(&sharpened);
   return unsharp_amount;
 }
 
@@ -366,7 +366,7 @@ void av2_vmaf_neg_preprocessing(AV2_COMP *const cpi,
 
   gaussian_blur(bit_depth, source, &blurred);
   unsharp(cpi, source, &blurred, source, best_frame_unsharp_amount);
-  avm_free_frame_buffer(&blurred);
+  aom_free_frame_buffer(&blurred);
   aom_clear_system_state();
 }
 
@@ -390,7 +390,7 @@ void av2_vmaf_frame_preprocessing(AV2_COMP *const cpi,
 
   av2_copy_and_extend_frame(source, &source_extended);
   gaussian_blur(bit_depth, &source_extended, &blurred);
-  avm_free_frame_buffer(&source_extended);
+  aom_free_frame_buffer(&source_extended);
 
   const GF_GROUP *const gf_group = &cpi->gf_group;
   const int layer_depth =
@@ -405,7 +405,7 @@ void av2_vmaf_frame_preprocessing(AV2_COMP *const cpi,
       best_frame_unsharp_amount;
 
   unsharp(cpi, source, &blurred, source, best_frame_unsharp_amount);
-  avm_free_frame_buffer(&blurred);
+  aom_free_frame_buffer(&blurred);
   aom_clear_system_state();
 }
 
@@ -429,7 +429,7 @@ void av2_vmaf_blk_preprocessing(AV2_COMP *const cpi,
 
   av2_copy_and_extend_frame(source, &source_extended);
   gaussian_blur(bit_depth, &source_extended, &blurred);
-  avm_free_frame_buffer(&source_extended);
+  aom_free_frame_buffer(&source_extended);
 
   const GF_GROUP *const gf_group = &cpi->gf_group;
   const int layer_depth =
@@ -522,9 +522,9 @@ void av2_vmaf_blk_preprocessing(AV2_COMP *const cpi,
     }
   }
 
-  avm_free_frame_buffer(&source_block);
-  avm_free_frame_buffer(&blurred_block);
-  avm_free_frame_buffer(&blurred);
+  aom_free_frame_buffer(&source_block);
+  aom_free_frame_buffer(&blurred_block);
+  aom_free_frame_buffer(&blurred);
   aom_free(best_unsharp_amounts);
   aom_clear_system_state();
 }
@@ -570,7 +570,7 @@ void av2_set_mb_vmaf_rdmult_scaling(AV2_COMP *cpi) {
                          cpi->source->subsampling_x, cpi->source->subsampling_y,
                          cpi->oxcf.border_in_pixels,
                          cm->features.byte_alignment, false);
-  avm_yv12_copy_frame(&resized_source, &recon, 1);
+  aom_yv12_copy_frame(&resized_source, &recon, 1);
 
   VmafContext *vmaf_context;
   const bool cal_vmaf_neg =
@@ -636,8 +636,8 @@ void av2_set_mb_vmaf_rdmult_scaling(AV2_COMP *cpi) {
     }
   }
 
-  avm_free_frame_buffer(&resized_source);
-  avm_free_frame_buffer(&blurred);
+  aom_free_frame_buffer(&resized_source);
+  aom_free_frame_buffer(&blurred);
   avm_close_vmaf_context(vmaf_context);
   aom_free(sses);
   aom_clear_system_state();
@@ -737,9 +737,9 @@ static double calc_vmaf_motion_score(const AV2_COMP *const cpi,
               scale_factor;
   }
 
-  avm_free_frame_buffer(&blurred_cur);
-  avm_free_frame_buffer(&blurred_last);
-  avm_free_frame_buffer(&blurred_next);
+  aom_free_frame_buffer(&blurred_cur);
+  aom_free_frame_buffer(&blurred_last);
+  aom_free_frame_buffer(&blurred_next);
 
   return AOMMIN(motion1, motion2);
 }
@@ -926,10 +926,10 @@ static double find_best_frame_unsharp_amount_neg(
         unsharp_amount_start, -step_size, max_loop_count, max_filter_amount);
   }
 
-  avm_free_frame_buffer(&recon_sharpened);
-  avm_free_frame_buffer(&src_sharpened);
-  avm_free_frame_buffer(&recon_blurred);
-  avm_free_frame_buffer(&src_blurred);
+  aom_free_frame_buffer(&recon_sharpened);
+  aom_free_frame_buffer(&src_sharpened);
+  aom_free_frame_buffer(&recon_blurred);
+  aom_free_frame_buffer(&src_blurred);
   aom_free(mvs);
   return unsharp_amount;
 }

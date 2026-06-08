@@ -79,7 +79,7 @@ static void read_film_grain_model(struct film_grain_model *fgm, int chroma_idc,
   int fgmNumChannels = monochrome ? 1 : 3;
 
   if (fgmNumChannels > 1) {
-    fgm->fgm_scale_from_channel0_flag = avm_rb_read_bit(rb);
+    fgm->fgm_scale_from_channel0_flag = aom_rb_read_bit(rb);
   } else {
     fgm->fgm_scale_from_channel0_flag = 0;
   }
@@ -87,7 +87,7 @@ static void read_film_grain_model(struct film_grain_model *fgm, int chroma_idc,
   int fgmNumScalingChannels =
       fgm->fgm_scale_from_channel0_flag ? 1 : fgmNumChannels;
   for (int c = 0; c < fgmNumScalingChannels; c++) {
-    fgm->fgm_points[c] = avm_rb_read_literal(rb, 4);  // max 14
+    fgm->fgm_points[c] = aom_rb_read_literal(rb, 4);  // max 14
     if (fgm->fgm_points[c] > 14) {
       aom_internal_error(error_info, AOM_CODEC_UNSUP_BITSTREAM,
                          "Number of points for film grain %s scaling "
@@ -97,12 +97,12 @@ static void read_film_grain_model(struct film_grain_model *fgm, int chroma_idc,
                                   : "cr");
     }
     if (fgm->fgm_points[c]) {
-      int point_value_increment_bits_minus1 = avm_rb_read_literal(rb, 3);
-      int point_scaling_bits_minus5 = avm_rb_read_literal(rb, 2);
+      int point_value_increment_bits_minus1 = aom_rb_read_literal(rb, 3);
+      int point_scaling_bits_minus5 = aom_rb_read_literal(rb, 2);
       int bitsIncr = point_value_increment_bits_minus1 + 1;
       int bitsScal = point_scaling_bits_minus5 + 5;
       for (int i = 0; i < fgm->fgm_points[c]; i++) {
-        int fgm_value_increment = avm_rb_read_literal(rb, bitsIncr);
+        int fgm_value_increment = aom_rb_read_literal(rb, bitsIncr);
         if (i == 0)
           fgm->fgm_scaling_points[c][i][0] = fgm_value_increment;
         else
@@ -118,7 +118,7 @@ static void read_film_grain_model(struct film_grain_model *fgm, int chroma_idc,
                              : c == 1 ? "cb"
                                       : "cr");
         }
-        fgm->fgm_scaling_points[c][i][1] = avm_rb_read_literal(rb, bitsScal);
+        fgm->fgm_scaling_points[c][i][1] = aom_rb_read_literal(rb, bitsScal);
       }
     }
   }
@@ -133,66 +133,66 @@ static void read_film_grain_model(struct film_grain_model *fgm, int chroma_idc,
                        "In YCbCr 4:2:0, film grain shall be applied "
                        "to both chroma components or neither.");
   }
-  fgm->scaling_shift = avm_rb_read_literal(rb, 2) + 8;  // 8 + value
+  fgm->scaling_shift = aom_rb_read_literal(rb, 2) + 8;  // 8 + value
 
   // AR coefficients
   // Only sent if the corresponsing scaling function has
   // more than 0 points
 
-  fgm->ar_coeff_lag = avm_rb_read_literal(rb, 2);
+  fgm->ar_coeff_lag = aom_rb_read_literal(rb, 2);
 
   int num_pos_luma = 2 * fgm->ar_coeff_lag * (fgm->ar_coeff_lag + 1);
   int num_pos_chroma = num_pos_luma;
 
   if (fgm->fgm_points[0]) {
     ++num_pos_chroma;
-    int bits_per_ar_coeff_y_minus5 = avm_rb_read_literal(rb, 2);
+    int bits_per_ar_coeff_y_minus5 = aom_rb_read_literal(rb, 2);
     int BitsArY = bits_per_ar_coeff_y_minus5 + 5;
     int midPointY = 1 << (BitsArY - 1);
     for (int i = 0; i < num_pos_luma; i++)
-      fgm->ar_coeffs_y[i] = avm_rb_read_literal(rb, BitsArY) - midPointY;
+      fgm->ar_coeffs_y[i] = aom_rb_read_literal(rb, BitsArY) - midPointY;
   }
 
   if (fgm->fgm_points[1] || fgm->fgm_scale_from_channel0_flag) {
-    int bits_per_ar_coeff_cb_minus5 = avm_rb_read_literal(rb, 2);
+    int bits_per_ar_coeff_cb_minus5 = aom_rb_read_literal(rb, 2);
     int BitsArCb = bits_per_ar_coeff_cb_minus5 + 5;
     int midPointCb = 1 << (BitsArCb - 1);
     for (int i = 0; i < num_pos_chroma; i++)
-      fgm->ar_coeffs_cb[i] = avm_rb_read_literal(rb, BitsArCb) - midPointCb;
+      fgm->ar_coeffs_cb[i] = aom_rb_read_literal(rb, BitsArCb) - midPointCb;
   }
 
   if (fgm->fgm_points[2] || fgm->fgm_scale_from_channel0_flag) {
-    int bits_per_ar_coeff_cr_minus5 = avm_rb_read_literal(rb, 2);
+    int bits_per_ar_coeff_cr_minus5 = aom_rb_read_literal(rb, 2);
     int BitsArCr = bits_per_ar_coeff_cr_minus5 + 5;
     int midPointCr = 1 << (BitsArCr - 1);
     for (int i = 0; i < num_pos_chroma; i++)
-      fgm->ar_coeffs_cr[i] = avm_rb_read_literal(rb, BitsArCr) - midPointCr;
+      fgm->ar_coeffs_cr[i] = aom_rb_read_literal(rb, BitsArCr) - midPointCr;
   }
 
-  fgm->ar_coeff_shift = avm_rb_read_literal(rb, 2) + 6;  // 6 + value
+  fgm->ar_coeff_shift = aom_rb_read_literal(rb, 2) + 6;  // 6 + value
 
-  fgm->grain_scale_shift = avm_rb_read_literal(rb, 2);
+  fgm->grain_scale_shift = aom_rb_read_literal(rb, 2);
   if (fgm->fgm_points[1] > 0) {
-    fgm->cb_mult = avm_rb_read_literal(rb, 8);
-    fgm->cb_luma_mult = avm_rb_read_literal(rb, 8);
-    fgm->cb_offset = avm_rb_read_literal(rb, 9);
+    fgm->cb_mult = aom_rb_read_literal(rb, 8);
+    fgm->cb_luma_mult = aom_rb_read_literal(rb, 8);
+    fgm->cb_offset = aom_rb_read_literal(rb, 9);
   }
   if (fgm->fgm_points[2] > 0) {
-    fgm->cr_mult = avm_rb_read_literal(rb, 8);
-    fgm->cr_luma_mult = avm_rb_read_literal(rb, 8);
-    fgm->cr_offset = avm_rb_read_literal(rb, 9);
+    fgm->cr_mult = aom_rb_read_literal(rb, 8);
+    fgm->cr_luma_mult = aom_rb_read_literal(rb, 8);
+    fgm->cr_offset = aom_rb_read_literal(rb, 9);
   }
 
-  fgm->overlap_flag = avm_rb_read_bit(rb);
+  fgm->overlap_flag = aom_rb_read_bit(rb);
 
-  fgm->clip_to_restricted_range = avm_rb_read_bit(rb);
+  fgm->clip_to_restricted_range = aom_rb_read_bit(rb);
 
   if (fgm->clip_to_restricted_range)
-    fgm->mc_identity = avm_rb_read_bit(rb);
+    fgm->mc_identity = aom_rb_read_bit(rb);
   else
     fgm->mc_identity = 0;
 
-  fgm->block_size = avm_rb_read_bit(rb);
+  fgm->block_size = aom_rb_read_bit(rb);
 }
 
 // acc_fgm_id_bitmap is an in/out parameter. The caller should set
@@ -203,7 +203,7 @@ uint32_t read_fgm_obu(AV2Decoder *pbi, const int obu_tlayer_id,
                       const int obu_mlayer_id, uint32_t *acc_fgm_id_bitmap,
                       struct aom_read_bit_buffer *rb) {
   const uint32_t saved_bit_offset = rb->bit_offset;
-  int fgm_bit_map = avm_rb_read_literal(rb, MAX_FGM_NUM);
+  int fgm_bit_map = aom_rb_read_literal(rb, MAX_FGM_NUM);
   if (*acc_fgm_id_bitmap & (uint32_t)fgm_bit_map) {
     aom_internal_error(
         &pbi->common.error, AOM_CODEC_INVALID_PARAM,
@@ -212,7 +212,7 @@ uint32_t read_fgm_obu(AV2Decoder *pbi, const int obu_tlayer_id,
   } else {
     *acc_fgm_id_bitmap |= fgm_bit_map;
   }
-  int fgm_chroma_idc = avm_rb_read_uvlc(rb);
+  int fgm_chroma_idc = aom_rb_read_uvlc(rb);
   if (fgm_chroma_idc >= NUM_CHROMA_FORMATS) {
     aom_internal_error(&pbi->common.error, AOM_CODEC_UNSUP_BITSTREAM,
                        "Invalid fgm_chroma_idc [%d].", fgm_chroma_idc);

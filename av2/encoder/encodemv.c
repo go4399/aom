@@ -62,7 +62,7 @@ static void write_truncated_unary(aom_writer *w, nmv_context *mvctx,
   for (int bit_idx = 0; bit_idx < max_idx_bits; ++bit_idx) {
     aom_cdf_prob *cdf = mvctx->shell_offset_class2_cdf;
     if (bit_idx)
-      avm_write_literal(w, coded_value != bit_idx, 1);
+      aom_write_literal(w, coded_value != bit_idx, 1);
     else
       avm_write_symbol(w, coded_value != bit_idx, cdf, 2);
     if (coded_value == bit_idx) break;
@@ -244,7 +244,7 @@ void av2_encode_mv(AV2_COMP *cpi, MV mv, aom_writer *w, nmv_context *mvctx,
     assert(
         IMPLIES(skip_coding_col_bit, scaled_mv_diff.col == maximum_pair_index));
     if (!skip_coding_col_bit) {
-      // avm_write_literal(w, scaled_mv_diff.col > maximum_pair_index, 1);
+      // aom_write_literal(w, scaled_mv_diff.col > maximum_pair_index, 1);
       int context_index = shell_class < NUM_CTX_COL_MV_INDEX
                               ? shell_class
                               : NUM_CTX_COL_MV_INDEX - 1;
@@ -341,7 +341,7 @@ void av2_update_mv_stats(nmv_context *mvctx, const MV mv_diff,
     assert(
         IMPLIES(skip_coding_col_bit, scaled_mv_diff.col == maximum_pair_index));
     if (!skip_coding_col_bit) {
-      // avm_write_literal(w, scaled_mv_diff.col > maximum_pair_index, 1);
+      // aom_write_literal(w, scaled_mv_diff.col > maximum_pair_index, 1);
       int context_index = shell_class < NUM_CTX_COL_MV_INDEX
                               ? shell_class
                               : NUM_CTX_COL_MV_INDEX - 1;

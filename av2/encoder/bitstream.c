@@ -80,10 +80,10 @@ static INLINE void write_uniform(aom_writer *w, int n, int v) {
   const int m = (1 << l) - n;
   if (l == 0) return;
   if (v < m) {
-    avm_write_literal(w, v, l - 1);
+    aom_write_literal(w, v, l - 1);
   } else {
-    avm_write_literal(w, m + ((v - m) >> 1), l - 1);
-    avm_write_literal(w, (v - m) & 1, 1);
+    aom_write_literal(w, m + ((v - m) >> 1), l - 1);
+    aom_write_literal(w, (v - m) & 1, 1);
   }
 }
 
@@ -562,11 +562,11 @@ static INLINE void write_delta_qindex(const MACROBLOCKD *xd, int delta_qindex,
   if (!smallval) {
     rem_bits = get_msb(abs - DELTA_Q_SMALL_MINUS_2);
     thr = (1 << rem_bits) + DELTA_Q_SMALL_MINUS_2;
-    avm_write_literal(w, rem_bits - 1, 3);
-    avm_write_literal(w, abs - thr, rem_bits);
+    aom_write_literal(w, rem_bits - 1, 3);
+    aom_write_literal(w, abs - thr, rem_bits);
   }
   if (abs > 0) {
-    avm_write_bit(w, sign);
+    aom_write_bit(w, sign);
   }
 }
 
@@ -579,7 +579,7 @@ static INLINE void pack_map_tokens(const MACROBLOCKD *xd, aom_writer *w,
   const TokenExtra *p = *tp;
   const int direction = (direction_allowed) ? p->direction : 0;
   if (direction_allowed) {
-    avm_write_bit(w, p->direction);
+    aom_write_bit(w, p->direction);
   }
   const int ax1_limit = direction ? rows : cols;
   const int ax2_limit = direction ? cols : rows;
@@ -918,7 +918,7 @@ static INLINE void write_intra_dip_mode_info(const AV2_COMMON *cm,
       int n_modes = av2_intra_dip_modes(bsize);
       int has_transpose = av2_intra_dip_has_transpose(bsize);
       if (has_transpose) {
-        avm_write_literal(w, (mbmi->intra_dip_mode >> 4) & 1, 1);
+        aom_write_literal(w, (mbmi->intra_dip_mode >> 4) & 1, 1);
       }
       aom_cdf_prob *mode_cdf = xd->tile_ctx->intra_dip_mode_n6_cdf;
       avm_write_symbol(w, mbmi->intra_dip_mode & 15, mode_cdf, n_modes);
@@ -968,7 +968,7 @@ static INLINE void delta_encode_palette_colors(const int *colors, int num,
                                                aom_writer *w) {
   if (num <= 0) return;
   assert(colors[0] < (1 << bit_depth));
-  avm_write_literal(w, colors[0], bit_depth);
+  aom_write_literal(w, colors[0], bit_depth);
   if (num == 1) return;
   int max_delta = 0;
   int deltas[PALETTE_MAX_SIZE];
@@ -981,14 +981,14 @@ static INLINE void delta_encode_palette_colors(const int *colors, int num,
     if (delta > max_delta) max_delta = delta;
   }
   const int min_bits = bit_depth - 3;
-  int bits = AOMMAX(avm_ceil_log2(max_delta + 1 - min_val), min_bits);
+  int bits = AOMMAX(aom_ceil_log2(max_delta + 1 - min_val), min_bits);
   assert(bits <= bit_depth);
   int range = (1 << bit_depth) - colors[0] - min_val;
-  avm_write_literal(w, bits - min_bits, 2);
+  aom_write_literal(w, bits - min_bits, 2);
   for (int i = 0; i < num - 1; ++i) {
-    avm_write_literal(w, deltas[i] - min_val, bits);
+    aom_write_literal(w, deltas[i] - min_val, bits);
     range -= deltas[i];
-    bits = AOMMIN(bits, avm_ceil_log2(range));
+    bits = AOMMIN(bits, aom_ceil_log2(range));
   }
 }
 
@@ -1009,7 +1009,7 @@ static INLINE void write_palette_colors_y(const MACROBLOCKD *const xd,
   int n_in_cache = 0;
   for (int i = 0; i < n_cache && n_in_cache < n; ++i) {
     const int found = cache_color_found[i];
-    avm_write_bit(w, found);
+    aom_write_bit(w, found);
     n_in_cache += found;
   }
   assert(n_in_cache + n_out_cache == n);
@@ -1514,7 +1514,7 @@ static INLINE void write_intra_luma_mode(MACROBLOCKD *const xd, aom_writer *w) {
                        ec_ctx->y_mode_idx_offset_cdf[context],
                        LUMA_INTRA_MODE_OFFSET_COUNT);
   } else {
-    avm_write_literal(
+    aom_write_literal(
         w,
         mode_idx - FIRST_MODE_COUNT - (mode_set_index - 1) * SECOND_MODE_COUNT,
         4);
@@ -1542,7 +1542,7 @@ static INLINE void write_intra_uv_mode(MACROBLOCKD *const xd,
   avm_write_symbol(w, mode_set_low, ec_ctx->uv_mode_cdf[context],
                    CHROMA_INTRA_MODE_INDEX_COUNT);
   if (mode_set_low == (CHROMA_INTRA_MODE_INDEX_COUNT - 1))
-    avm_write_literal(w, uv_mode_idx - mode_set_low, 3);
+    aom_write_literal(w, uv_mode_idx - mode_set_low, 3);
 }
 
 static INLINE void write_intra_prediction_modes(AV2_COMP *cpi, int is_keyframe,
@@ -2086,7 +2086,7 @@ static INLINE void pack_inter_mode_mvs(AV2_COMP *cpi, aom_writer *w) {
           }
           if (this_mvd_comp) {
             const int sign = this_mvd_comp < 0;
-            avm_write_literal(w, sign, 1);
+            aom_write_literal(w, sign, 1);
           }
         }
       }
@@ -2158,10 +2158,10 @@ static INLINE void pack_inter_mode_mvs(AV2_COMP *cpi, aom_writer *w) {
         if (mbmi->interinter_comp.type == COMPOUND_WEDGE) {
           assert(is_interinter_compound_used(COMPOUND_WEDGE, bsize));
           write_wedge_mode(w, ec_ctx, bsize, mbmi->interinter_comp.wedge_index);
-          avm_write_bit(w, mbmi->interinter_comp.wedge_sign);
+          aom_write_bit(w, mbmi->interinter_comp.wedge_sign);
         } else {
           assert(mbmi->interinter_comp.type == COMPOUND_DIFFWTD);
-          avm_write_literal(w, mbmi->interinter_comp.mask_type,
+          aom_write_literal(w, mbmi->interinter_comp.mask_type,
                             MAX_DIFFWTD_MASK_BITS);
         }
       }
@@ -2180,7 +2180,7 @@ static void write_intrabc_drl_idx(int max_ref_bv_num, const MB_MODE_INFO *mbmi,
   assert(mbmi->intrabc_drl_idx < max_ref_bv_num);
   (void)mbmi_ext_frame;
   for (int idx = 0; idx < max_ref_bv_num - 1; ++idx) {
-    avm_write_bit(w, mbmi->intrabc_drl_idx != idx);
+    aom_write_bit(w, mbmi->intrabc_drl_idx != idx);
 
     if (mbmi->intrabc_drl_idx == idx) break;
   }
@@ -2225,10 +2225,10 @@ static INLINE void write_intrabc_info(
                                             mbmi->pb_mv_precision));
       assert(is_this_mv_precision_compliant(diff, mbmi->pb_mv_precision));
       if (diff.row) {
-        avm_write_literal(w, diff.row < 0, 1);
+        aom_write_literal(w, diff.row < 0, 1);
       }
       if (diff.col) {
-        avm_write_literal(w, diff.col < 0, 1);
+        aom_write_literal(w, diff.col < 0, 1);
       }
     }
 
@@ -2811,7 +2811,7 @@ static INLINE PARTITION_TYPE write_partition(
       const UNEVEN_4WAY_PART_TYPE uneven_4way_type =
           (p == PARTITION_HORZ_4A || p == PARTITION_VERT_4A) ? UNEVEN_4A
                                                              : UNEVEN_4B;
-      avm_write_bit(w, uneven_4way_type);
+      aom_write_bit(w, uneven_4way_type);
     }
   }
   return p;
@@ -3281,7 +3281,7 @@ static INLINE void encode_restoration_mode(AV2_COMMON *cm,
             if (rsi->temporal_pred_flag && num_ref_frames > 1)
               avm_wb_write_literal(
                   wb, rsi->rst_ref_pic_idx,
-                  avm_ceil_log2(num_ref_frames));  // write_lr_reference_idx
+                  aom_ceil_log2(num_ref_frames));  // write_lr_reference_idx
           }
           if (!rsi->temporal_pred_flag) {
             if (rsi->frame_filters_on && max_num_classes(p) > 1) {
@@ -3364,7 +3364,7 @@ static int check_and_write_merge_info(
                              wiener_class_id, ref_for_class);
   const int exact_match = (is_equal >= 0);
   (void)xd;
-  avm_write_bit(wb, exact_match);
+  aom_write_bit(wb, exact_match);
   if (!exact_match) {
     ref_for_class[wiener_class_id] =
         wienerns_info->bank_ref_for_class[wiener_class_id];
@@ -3375,7 +3375,7 @@ static int check_and_write_merge_info(
   int match = 0;
   for (int k = 0; k < bank->bank_size_for_class[wiener_class_id] - 1; ++k) {
     match = (k == ref);
-    avm_write_literal(wb, match, 1);
+    aom_write_literal(wb, match, 1);
     if (match) break;
   }
   assert(IMPLIES(
@@ -3916,7 +3916,7 @@ static INLINE void encode_ccso(const AV2_COMMON *cm,
             cm->ccso_info.sb_reuse_ccso[plane]) {
           if (num_ref_frames > 1) {
             avm_wb_write_literal(wb, cm->ccso_info.ccso_ref_idx[plane],
-                                 avm_ceil_log2(num_ref_frames));
+                                 aom_ceil_log2(num_ref_frames));
           } else {
             if (cm->ref_frames_info.num_restricted_ref == 0)
               assert(cm->ccso_info.ccso_ref_idx[plane] == 0);
@@ -4107,7 +4107,7 @@ static INLINE void encode_bru_active_info(AV2_COMP *cpi,
           wb, cm->bru.update_ref_idx,
           // Note that num_total_refs may not include
           //  restricted references  at the encoder side,
-          avm_ceil_log2(
+          aom_ceil_log2(
               cm->ref_frames_info.num_valid_refs_with_restricted_ref));
       avm_wb_write_bit(wb, cm->bru.frame_inactive_flag);
       if (!cm->immediate_output_picture) {
@@ -4430,9 +4430,9 @@ static INLINE void write_seq_chroma_format(
 int av2_get_index_from_bitdepth(int bit_depth) {
   int bitdepth_lut_idx = -1;
   switch (bit_depth) {
-    case AOM_BITS_10: bitdepth_lut_idx = AVM_BITDEPTH_0; break;
-    case AOM_BITS_8: bitdepth_lut_idx = AVM_BITDEPTH_1; break;
-    case AOM_BITS_12: bitdepth_lut_idx = AVM_BITDEPTH_2; break;
+    case AOM_BITS_10: bitdepth_lut_idx = AV2_BITDEPTH_0; break;
+    case AOM_BITS_8: bitdepth_lut_idx = AV2_BITDEPTH_1; break;
+    case AOM_BITS_12: bitdepth_lut_idx = AV2_BITDEPTH_2; break;
     default: break;
   }
   return bitdepth_lut_idx;
@@ -5940,7 +5940,7 @@ int av2_write_uleb_obu_size(size_t obu_header_size, size_t obu_payload_size,
 
 static size_t obu_memmove(size_t obu_header_size, size_t obu_payload_size,
                           uint8_t *data) {
-  const size_t length_field_size = avm_uleb_size_in_bytes(obu_payload_size);
+  const size_t length_field_size = aom_uleb_size_in_bytes(obu_payload_size);
   const size_t move_dst_offset = length_field_size + obu_header_size;
   const size_t move_src_offset = obu_header_size;
   const size_t move_size = obu_payload_size;
@@ -6021,7 +6021,7 @@ uint32_t av2_write_sequence_header_obu(const SequenceHeader *seq_params,
     avm_wb_write_literal(&wb, seq_params->max_tlayer_id, TLAYER_BITS);
     avm_wb_write_literal(&wb, seq_params->max_mlayer_id, MLAYER_BITS);
     if (seq_params->max_mlayer_id > 0) {
-      int n = avm_ceil_log2(seq_params->max_mlayer_id + 1);
+      int n = aom_ceil_log2(seq_params->max_mlayer_id + 1);
       avm_wb_write_literal(&wb, seq_params->seq_max_mlayer_cnt - 1, n);
     }
     avm_wb_write_bit(&wb, seq_params->monotonic_output_order_flag);
@@ -6656,7 +6656,7 @@ static size_t write_scan_type_metadata(AV2_COMP *const cpi, uint8_t *dst,
       &wb, cm->pic_struct_metadata_params.mps_source_scan_type_idc, 2);
   avm_wb_write_bit(&wb, cm->pic_struct_metadata_params.mps_duplicate_flag);
   aom_metadata_t *metadata =
-      avm_img_metadata_alloc(OBU_METADATA_TYPE_SCAN_TYPE, payload,
+      aom_img_metadata_alloc(OBU_METADATA_TYPE_SCAN_TYPE, payload,
                              avm_wb_bytes_written(&wb), AOM_MIF_ANY_FRAME);
   if (!metadata) {
     aom_internal_error(&cpi->common.error, AOM_CODEC_MEM_ERROR,
@@ -6709,7 +6709,7 @@ static size_t write_temporal_point_info_metadata(AV2_COMP *const cpi,
   // Calculate actual payload size in bytes
   size_t payload_size = avm_wb_bytes_written(&wb);
   aom_metadata_t *metadata =
-      avm_img_metadata_alloc(OBU_METADATA_TYPE_TEMPORAL_POINT_INFO, payload,
+      aom_img_metadata_alloc(OBU_METADATA_TYPE_TEMPORAL_POINT_INFO, payload,
                              payload_size, AOM_MIF_ANY_FRAME);
   if (!metadata) {
     aom_internal_error(&cpi->common.error, AOM_CODEC_MEM_ERROR,
@@ -6777,7 +6777,7 @@ static size_t av2_write_frame_hash_metadata(
   }
 
   aom_metadata_t *metadata =
-      avm_img_metadata_alloc(OBU_METADATA_TYPE_DECODED_FRAME_HASH, payload,
+      aom_img_metadata_alloc(OBU_METADATA_TYPE_DECODED_FRAME_HASH, payload,
                              avm_wb_bytes_written(&wb), AOM_MIF_ANY_FRAME);
   if (!metadata) {
     aom_internal_error(&cpi->common.error, AOM_CODEC_MEM_ERROR,
@@ -6843,7 +6843,7 @@ size_t av2_write_banding_hints_metadata(
   }
 
   aom_metadata_t *metadata =
-      avm_img_metadata_alloc(OBU_METADATA_TYPE_BANDING_HINTS, payload,
+      aom_img_metadata_alloc(OBU_METADATA_TYPE_BANDING_HINTS, payload,
                              payload_size, AOM_MIF_ANY_FRAME);
   if (!metadata) {
     aom_internal_error(&cm->error, AOM_CODEC_MEM_ERROR,
@@ -6922,7 +6922,7 @@ size_t av2_write_metadata_user_data_unregistered(AV2_COMP *const cpi,
   }
 
   aom_metadata_t *metadata =
-      avm_img_metadata_alloc(OBU_METADATA_TYPE_USER_DATA_UNREGISTERED, payload,
+      aom_img_metadata_alloc(OBU_METADATA_TYPE_USER_DATA_UNREGISTERED, payload,
                              payload_size, AOM_MIF_ANY_FRAME);
   if (!metadata) {
     aom_internal_error(&cpi->common.error, AOM_CODEC_MEM_ERROR,

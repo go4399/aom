@@ -37,7 +37,7 @@ void av2_lookahead_destroy(struct lookahead_ctx *ctx) {
     if (ctx->buf) {
       int i;
 
-      for (i = 0; i < ctx->max_sz; i++) avm_free_frame_buffer(&ctx->buf[i].img);
+      for (i = 0; i < ctx->max_sz; i++) aom_free_frame_buffer(&ctx->buf[i].img);
       free(ctx->buf);
     }
     free(ctx);
@@ -75,7 +75,7 @@ struct lookahead_ctx *av2_lookahead_init(
     ctx->buf = calloc(depth, sizeof(*ctx->buf));
     if (!ctx->buf) goto fail;
     for (int i = 0; i < depth; i++) {
-      avm_free_frame_buffer(&ctx->buf[i].img);
+      aom_free_frame_buffer(&ctx->buf[i].img);
       if (aom_realloc_frame_buffer(&ctx->buf[i].img, width, height,
                                    subsampling_x, subsampling_y,
                                    1, border_in_pixels,
@@ -129,7 +129,7 @@ int av2_lookahead_push(struct lookahead_ctx *ctx, const YV12_BUFFER_CONFIG *src,
                                subsampling_y, 1,
                                AOM_BORDER_IN_PIXELS, 0, alloc_pyramid, 0))
       return 1;
-    avm_free_frame_buffer(&buf->img);
+    aom_free_frame_buffer(&buf->img);
     buf->img = new_img;
   } else if (new_dimensions) {
     buf->img.y_crop_width = src->y_crop_width;
@@ -145,7 +145,7 @@ int av2_lookahead_push(struct lookahead_ctx *ctx, const YV12_BUFFER_CONFIG *src,
   buf->ts_start = ts_start;
   buf->ts_end = ts_end;
   buf->flags = flags;
-  avm_remove_metadata_from_frame_buffer(&buf->img);
+  aom_remove_metadata_from_frame_buffer(&buf->img);
   aom_copy_metadata_to_frame_buffer(&buf->img, src->metadata);
   buf->disp_order_hint = disp_order_hint;
   return 0;

@@ -417,7 +417,7 @@ static INLINE int get_vq_col_mvd_cost(const MvCosts *mv_costs,
     int remainder = col - max_trunc_unary_value;
     int remainder_max_value = max_coded_value - max_trunc_unary_value;
     int length =
-        avm_count_primitive_quniform(remainder_max_value + 1, remainder);
+        wb_count_primitive_quniform(remainder_max_value + 1, remainder);
     cost += av2_cost_literal(length);
   }
   return cost;
