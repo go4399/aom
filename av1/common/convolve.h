@@ -17,6 +17,8 @@
 extern "C" {
 #endif
 
+#ifndef CONVOLVE_PARAMS_DEFINED
+#define CONVOLVE_PARAMS_DEFINED
 typedef uint16_t CONV_BUF_TYPE;
 typedef struct ConvolveParams {
   int do_average;
@@ -35,6 +37,7 @@ typedef struct WienerConvolveParams {
   int round_0;
   int round_1;
 } WienerConvolveParams;
+#endif
 
 #define ROUND0_BITS 3
 #define COMPOUND_ROUND1_BITS 7

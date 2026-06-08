@@ -20,13 +20,77 @@
 #include "aom/aom_integer.h"
 #include "aom_dsp/aom_filter.h"
 #include "aom_ports/mem.h"
-#include "av2/common/enums.h"
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "av1/common/filter.h"
+#define MAX_FILTER_TAP 12
+
+#ifndef INTERP_FILTER_DEFINED
+#define INTERP_FILTER_DEFINED
+typedef enum ATTRIBUTE_PACKED {
+  EIGHTTAP_REGULAR,
+  EIGHTTAP_SMOOTH,
+  MULTITAP_SHARP,
+  BILINEAR,
+  // Encoder side only filters
+  MULTITAP_SHARP2,
+
+  INTERP_FILTERS_ALL,
+  SWITCHABLE_FILTERS = BILINEAR,
+  SWITCHABLE = SWITCHABLE_FILTERS + 1, /* the last switchable one */
+  EXTRA_FILTERS = INTERP_FILTERS_ALL - SWITCHABLE_FILTERS,
+  INTERP_INVALID = 0xff,
+} InterpFilter;
+
+typedef struct InterpFilterParams {
+  const int16_t *filter_ptr;
+  uint16_t taps;
+  InterpFilter interp_filter;
+} InterpFilterParams;
+#endif
+#include "av2/common/enums.h"
+
+#ifndef SUBPEL_SEARCH_TYPE_DEFINED
+#define SUBPEL_SEARCH_TYPE_DEFINED
+enum {
+  USE_2_TAPS_ORIG = 0,  // This is used in temporal filtering.
+  USE_2_TAPS,
+  USE_4_TAPS,
+  USE_8_TAPS,
+} UENUM1BYTE(SUBPEL_SEARCH_TYPE);
+#endif
+
+#ifndef INTERP_EVAL_PLANE_DEFINED
+#define INTERP_EVAL_PLANE_DEFINED
+enum {
+  INTERP_EVAL_LUMA_EVAL_CHROMA = 0,
+  INTERP_SKIP_LUMA_EVAL_CHROMA,
+  INTERP_EVAL_LUMA_SKIP_CHROMA,  // Valid only when skip_model_rd_uv speed
+                                 // feature is enabled
+  INTERP_SKIP_LUMA_SKIP_CHROMA,
+} UENUM1BYTE(INTERP_EVAL_PLANE);
+#endif
+
+#ifndef INTERP_PRED_TYPE_DEFINED
+#define INTERP_PRED_TYPE_DEFINED
+enum {
+  INTERP_HORZ_NEQ_VERT_NEQ = 0,
+  INTERP_HORZ_EQ_VERT_NEQ,
+  INTERP_HORZ_NEQ_VERT_EQ,
+  INTERP_HORZ_EQ_VERT_EQ,
+  INTERP_PRED_TYPE_ALL,
+} UENUM1BYTE(INTERP_PRED_TYPE);
+#endif
+
+
+#define LOG_SWITCHABLE_FILTERS 2
+#define SWITCHABLE_FILTER_CONTEXTS ((SWITCHABLE_FILTERS + 1) * 4)
+#define INTER_FILTER_COMP_OFFSET (SWITCHABLE_FILTERS + 1)
+#define INTER_FILTER_DIR_OFFSET ((SWITCHABLE_FILTERS + 1) * 2)
+
 
 static INLINE InterpFilter av2_unswitchable_filter(InterpFilter filter) {
   return filter == SWITCHABLE ? EIGHTTAP_REGULAR : filter;
@@ -192,6 +256,8 @@ static INLINE const int16_t *av2_get_interp_filter_subpel_kernel(
     const InterpFilterParams *const filter_params, const int subpel) {
   return filter_params->filter_ptr + filter_params->taps * subpel;
 }
+
+#define av1_get_interp_filter_subpel_kernel av2_get_interp_filter_subpel_kernel
 
 static INLINE const InterpFilterParams *av2_get_filter(int subpel_search) {
   assert(subpel_search >= USE_2_TAPS);

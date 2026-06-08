@@ -1380,7 +1380,7 @@ extern void aom_yv12_partial_coloc_copy_v(
 #define avm_malloc aom_malloc
 #define avm_convolve_copy aom_convolve_copy
 
-#include "av1/common/convolve.h"
+#include "av2/common/convolve.h"
 
 #define avm_extend_frame_borders aom_extend_frame_borders
 #define avm_denoise_and_model_t aom_denoise_and_model_t

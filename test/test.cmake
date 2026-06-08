@@ -346,10 +346,7 @@ if(NOT BUILD_SHARED_LIBS)
                   "${AOM_ROOT}/test/av2_encoder_parms_get_to_decoder.cc")
     endif()
 
-    foreach(av2_test_src ${AV2_UNIT_TEST_SOURCES})
-      set_property(SOURCE "${av2_test_src}" APPEND PROPERTY
-                   COMPILE_DEFINITIONS "CONFIG_AV2_TU=1")
-    endforeach()
+
 
     list(APPEND AOM_UNIT_TEST_COMMON_SOURCES
                 "${AOM_ROOT}/test/av2_common_int_test.cc"

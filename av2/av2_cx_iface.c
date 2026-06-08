@@ -1953,6 +1953,8 @@ static aom_codec_err_t encoder_set_config(aom_codec_alg_priv_t *ctx,
   if (res == AOM_CODEC_OK) {
     ctx->cfg = *cfg;
     set_encoder_config(&ctx->oxcf, &ctx->cfg, &ctx->extra_cfg, 0);
+    fprintf(stderr, "DEBUG: encoder_set_config: cfg->g_bit_depth = %d, ctx->oxcf.tool_cfg.bit_depth = %d\n",
+            cfg->g_bit_depth, ctx->oxcf.tool_cfg.bit_depth);
     // On profile change, request a key frame
     force_key |=
         ctx->cpi->common.seq_params.seq_profile_idc != ctx->oxcf.profile;
@@ -3021,6 +3023,8 @@ static aom_codec_err_t encoder_init(aom_codec_ctx_t *ctx) {
           (int64_t)priv->cfg.g_timebase.num * TICKS_PER_SEC;
       reduce_ratio(&priv->timestamp_ratio);
       set_encoder_config(&priv->oxcf, &priv->cfg, &priv->extra_cfg, 0);
+      fprintf(stderr, "DEBUG: encoder_init: priv->cfg.g_bit_depth = %d, priv->oxcf.tool_cfg.bit_depth = %d\n",
+              priv->cfg.g_bit_depth, priv->oxcf.tool_cfg.bit_depth);
       if (priv->oxcf.rc_cfg.mode != AOM_CBR && priv->oxcf.mode == GOOD) {
         // Enable look ahead - enabled for AOM_Q, AOM_CQ, AOM_VBR
         *num_lap_buffers = priv->cfg.g_lag_in_frames;

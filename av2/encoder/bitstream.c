@@ -35,6 +35,7 @@
 
 #include "common/md5_utils.h"
 #include "common/rawenc.h"
+#undef aom_img_upshift
 
 #include "av2/common/cdef.h"
 #include "av2/common/ccso.h"

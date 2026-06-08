@@ -168,18 +168,6 @@ if(CONFIG_AV2)
     endif()
   endif()
 
-  # These AV2 SIMD sources live under aom_dsp/ but are AV2 translation units:
-  # they pull in av2/common headers that require the extended AV2 enums from
-  # av1/common/enums.h. Mark them with the per-TU discriminator so they select
-  # the AV2 enum branch (AV1/shared aom_dsp sources stay on the AV1 branch).
-  foreach(av2_dsp_src "${AOM_ROOT}/aom_dsp/x86/av2_loopfilter_sse4.c"
-                      "${AOM_ROOT}/aom_dsp/x86/av2_highbd_convolve_ssse3.c"
-                      "${AOM_ROOT}/aom_dsp/x86/av2_highbd_convolve_avx2.c"
-                      "${AOM_ROOT}/aom_dsp/x86/av2_intrapred_avx2.c"
-                      "${AOM_ROOT}/aom_dsp/x86/av2_sad_highbd_avx2.c")
-    set_property(SOURCE "${av2_dsp_src}" APPEND PROPERTY
-                 COMPILE_DEFINITIONS "CONFIG_AV2_TU=1")
-  endforeach()
 endif()
 
 if(CONFIG_AV1_DECODER)

@@ -19,7 +19,27 @@
 extern "C" {
 #endif
 
-#include "av1/common/convolve.h"
+#ifndef CONVOLVE_PARAMS_DEFINED
+#define CONVOLVE_PARAMS_DEFINED
+typedef uint16_t CONV_BUF_TYPE;
+typedef struct ConvolveParams {
+  int do_average;
+  CONV_BUF_TYPE *dst;
+  int dst_stride;
+  int round_0;
+  int round_1;
+  int plane;
+  int is_compound;
+  int use_dist_wtd_comp_avg;
+  int fwd_offset;
+  int bck_offset;
+} ConvolveParams;
+
+typedef struct WienerConvolveParams {
+  int round_0;
+  int round_1;
+} WienerConvolveParams;
+#endif
 
 #define NONSEP_ROW_ID 0
 #define NONSEP_COL_ID 1

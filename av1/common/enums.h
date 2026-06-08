@@ -12,9 +12,6 @@
 #ifndef AOM_AV1_COMMON_ENUMS_H_
 #define AOM_AV1_COMMON_ENUMS_H_
 
-#if defined(CONFIG_AV2_TU) && CONFIG_AV2_TU
-#include "av2/common/enums.h"
-#else
 #include "config/aom_config.h"
 
 #include "aom/aom_codec.h"
@@ -651,5 +648,4 @@ enum {
 }  // extern "C"
 #endif
 
-#endif  // defined(CONFIG_AV2_TU) && CONFIG_AV2_TU
 #endif  // AOM_AV1_COMMON_ENUMS_H_

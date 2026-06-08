@@ -27,6 +27,8 @@ extern "C" {
 
 #define MAX_FILTER_TAP 12
 
+#ifndef INTERP_FILTER_DEFINED
+#define INTERP_FILTER_DEFINED
 typedef enum ATTRIBUTE_PACKED {
   EIGHTTAP_REGULAR,
   EIGHTTAP_SMOOTH,
@@ -42,13 +44,18 @@ typedef enum ATTRIBUTE_PACKED {
   INTERP_INVALID = 0xff,
 } InterpFilter;
 
+#ifndef SUBPEL_SEARCH_TYPE_DEFINED
+#define SUBPEL_SEARCH_TYPE_DEFINED
 enum {
   USE_2_TAPS_ORIG = 0,  // This is used in temporal filtering.
   USE_2_TAPS,
   USE_4_TAPS,
   USE_8_TAPS,
 } UENUM1BYTE(SUBPEL_SEARCH_TYPE);
+#endif
 
+#ifndef INTERP_EVAL_PLANE_DEFINED
+#define INTERP_EVAL_PLANE_DEFINED
 enum {
   INTERP_EVAL_LUMA_EVAL_CHROMA = 0,
   INTERP_SKIP_LUMA_EVAL_CHROMA,
@@ -56,7 +63,10 @@ enum {
                                  // feature is enabled
   INTERP_SKIP_LUMA_SKIP_CHROMA,
 } UENUM1BYTE(INTERP_EVAL_PLANE);
+#endif
 
+#ifndef INTERP_PRED_TYPE_DEFINED
+#define INTERP_PRED_TYPE_DEFINED
 enum {
   INTERP_HORZ_NEQ_VERT_NEQ = 0,
   INTERP_HORZ_EQ_VERT_NEQ,
@@ -64,6 +74,7 @@ enum {
   INTERP_HORZ_EQ_VERT_EQ,
   INTERP_PRED_TYPE_ALL,
 } UENUM1BYTE(INTERP_PRED_TYPE);
+#endif
 // Pack two InterpFilter's into a uint32_t: since there are at most 10 filters,
 // we can use 16 bits for each and have more than enough space. This reduces
 // argument passing and unifies the operation of setting a (pair of) filters.
@@ -108,6 +119,7 @@ typedef struct InterpFilterParams {
   uint16_t taps;
   InterpFilter interp_filter;
 } InterpFilterParams;
+#endif
 
 DECLARE_ALIGNED(256, static const InterpKernel,
                 av1_bilinear_filters[SUBPEL_SHIFTS]) = {
