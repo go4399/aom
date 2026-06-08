@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_DECODER_DECODETXB_H_
-#define AVM_AV2_DECODER_DECODETXB_H_
+#ifndef AV2_AV2_DECODER_DECODETXB_H_
+#define AV2_AV2_DECODER_DECODETXB_H_
 
 #include "av2/common/enums.h"
 
@@ -48,4 +48,4 @@ uint8_t av2_read_coeffs_txb_skip(const struct AV2Common *const cm,
                                  const int blk_col, const int plane,
                                  const TX_SIZE tx_size);
 
-#endif  // AVM_AV2_DECODER_DECODETXB_H_
+#endif  // AV2_AV2_DECODER_DECODETXB_H_

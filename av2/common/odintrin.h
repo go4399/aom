@@ -12,8 +12,8 @@
 
 /* clang-format off */
 
-#ifndef AVM_AV2_COMMON_ODINTRIN_H_
-#define AVM_AV2_COMMON_ODINTRIN_H_
+#ifndef AV2_AV2_COMMON_ODINTRIN_H_
+#define AV2_AV2_COMMON_ODINTRIN_H_
 
 #include <stdlib.h>
 #include <string.h>
@@ -29,12 +29,12 @@ extern "C" {
 
 #define OD_DIVU_DMAX (1024)
 
-extern uint32_t AVM_OD_DIVU_SMALL_CONSTS[OD_DIVU_DMAX][2];
+extern uint32_t AV2_OD_DIVU_SMALL_CONSTS[OD_DIVU_DMAX][2];
 
 /*Translate unsigned division by small divisors into multiplications.*/
 #define OD_DIVU_SMALL(_x, _d)                                     \
-  ((uint32_t)((AVM_OD_DIVU_SMALL_CONSTS[(_d)-1][0] * (uint64_t)(_x) + \
-               AVM_OD_DIVU_SMALL_CONSTS[(_d)-1][1]) >>                \
+  ((uint32_t)((AV2_OD_DIVU_SMALL_CONSTS[(_d)-1][0] * (uint64_t)(_x) + \
+               AV2_OD_DIVU_SMALL_CONSTS[(_d)-1][1]) >>                \
               32) >>                                              \
    (OD_ILOG_NZ(_d) - 1))
 
@@ -81,4 +81,4 @@ extern uint32_t AVM_OD_DIVU_SMALL_CONSTS[OD_DIVU_DMAX][2];
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_ODINTRIN_H_
+#endif  // AV2_AV2_COMMON_ODINTRIN_H_

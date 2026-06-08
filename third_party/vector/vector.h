@@ -56,91 +56,91 @@ typedef struct Iterator {
 /***** METHODS *****/
 
 /* Constructor */
-int avm_vector_setup(Vector *vector, size_t capacity, size_t element_size);
+int av2_vector_setup(Vector *vector, size_t capacity, size_t element_size);
 
 /* Copy Constructor */
-int avm_vector_copy(Vector *destination, Vector *source);
+int av2_vector_copy(Vector *destination, Vector *source);
 
 /* Copy Assignment */
-int avm_vector_copy_assign(Vector *destination, Vector *source);
+int av2_vector_copy_assign(Vector *destination, Vector *source);
 
 /* Move Constructor */
-int avm_vector_move(Vector *destination, Vector *source);
+int av2_vector_move(Vector *destination, Vector *source);
 
 /* Move Assignment */
-int avm_vector_move_assign(Vector *destination, Vector *source);
+int av2_vector_move_assign(Vector *destination, Vector *source);
 
-int avm_vector_swap(Vector *destination, Vector *source);
+int av2_vector_swap(Vector *destination, Vector *source);
 
 /* Destructor */
-int avm_vector_destroy(Vector *vector);
+int av2_vector_destroy(Vector *vector);
 
 /* Insertion */
-int avm_vector_push_back(Vector *vector, void *element);
-int avm_vector_push_front(Vector *vector, void *element);
-int avm_vector_insert(Vector *vector, size_t index, void *element);
-int avm_vector_assign(Vector *vector, size_t index, void *element);
+int av2_vector_push_back(Vector *vector, void *element);
+int av2_vector_push_front(Vector *vector, void *element);
+int av2_vector_insert(Vector *vector, size_t index, void *element);
+int av2_vector_assign(Vector *vector, size_t index, void *element);
 
 /* Deletion */
-int avm_vector_pop_back(Vector *vector);
-int avm_vector_pop_front(Vector *vector);
-int avm_vector_erase(Vector *vector, size_t index);
-int avm_vector_clear(Vector *vector);
+int av2_vector_pop_back(Vector *vector);
+int av2_vector_pop_front(Vector *vector);
+int av2_vector_erase(Vector *vector, size_t index);
+int av2_vector_clear(Vector *vector);
 
 /* Lookup */
-void *avm_vector_get(Vector *vector, size_t index);
-const void *avm_vector_const_get(const Vector *vector, size_t index);
-void *avm_vector_front(Vector *vector);
-void *avm_vector_back(Vector *vector);
-#define VECTOR_GET_AS(type, avm_vector_pointer, index) \
-  *((type *)avm_vector_get((avm_vector_pointer), (index)))
+void *av2_vector_get(Vector *vector, size_t index);
+const void *av2_vector_const_get(const Vector *vector, size_t index);
+void *av2_vector_front(Vector *vector);
+void *av2_vector_back(Vector *vector);
+#define VECTOR_GET_AS(type, av2_vector_pointer, index) \
+  *((type *)av2_vector_get((av2_vector_pointer), (index)))
 
 /* Information */
-bool avm_vector_is_initialized(const Vector *vector);
-size_t avm_vector_byte_size(const Vector *vector);
-size_t avm_vector_free_space(const Vector *vector);
-bool avm_vector_is_empty(const Vector *vector);
+bool av2_vector_is_initialized(const Vector *vector);
+size_t av2_vector_byte_size(const Vector *vector);
+size_t av2_vector_free_space(const Vector *vector);
+bool av2_vector_is_empty(const Vector *vector);
 
 /* Memory management */
-int avm_vector_resize(Vector *vector, size_t new_size);
-int avm_vector_reserve(Vector *vector, size_t minimum_capacity);
-int avm_vector_shrink_to_fit(Vector *vector);
+int av2_vector_resize(Vector *vector, size_t new_size);
+int av2_vector_reserve(Vector *vector, size_t minimum_capacity);
+int av2_vector_shrink_to_fit(Vector *vector);
 
 /* Iterators */
-Iterator avm_vector_begin(Vector *vector);
-Iterator avm_vector_end(Vector *vector);
-Iterator avm_vector_iterator(Vector *vector, size_t index);
+Iterator av2_vector_begin(Vector *vector);
+Iterator av2_vector_end(Vector *vector);
+Iterator av2_vector_iterator(Vector *vector, size_t index);
 
-void *avm_iterator_get(Iterator *iterator);
-#define ITERATOR_GET_AS(type, iterator) *((type *)avm_iterator_get((iterator)))
+void *av2_iterator_get(Iterator *iterator);
+#define ITERATOR_GET_AS(type, iterator) *((type *)av2_iterator_get((iterator)))
 
-int avm_iterator_erase(Vector *vector, Iterator *iterator);
+int av2_iterator_erase(Vector *vector, Iterator *iterator);
 
-void avm_iterator_increment(Iterator *iterator);
-void avm_iterator_decrement(Iterator *iterator);
+void av2_iterator_increment(Iterator *iterator);
+void av2_iterator_decrement(Iterator *iterator);
 
-void *avm_iterator_next(Iterator *iterator);
-void *avm_iterator_previous(Iterator *iterator);
+void *av2_iterator_next(Iterator *iterator);
+void *av2_iterator_previous(Iterator *iterator);
 
-bool avm_iterator_equals(Iterator *first, Iterator *second);
-bool avm_iterator_is_before(Iterator *first, Iterator *second);
-bool avm_iterator_is_after(Iterator *first, Iterator *second);
+bool av2_iterator_equals(Iterator *first, Iterator *second);
+bool av2_iterator_is_before(Iterator *first, Iterator *second);
+bool av2_iterator_is_after(Iterator *first, Iterator *second);
 
-size_t avm_iterator_index(Vector *vector, Iterator *iterator);
+size_t av2_iterator_index(Vector *vector, Iterator *iterator);
 
-#define VECTOR_FOR_EACH(avm_vector_pointer, iterator_name)               \
-  for (Iterator(iterator_name) = avm_vector_begin((avm_vector_pointer)), \
-      end = avm_vector_end((avm_vector_pointer));                        \
-       !avm_iterator_equals(&(iterator_name), &end);                     \
-       avm_iterator_increment(&(iterator_name)))
+#define VECTOR_FOR_EACH(av2_vector_pointer, iterator_name)               \
+  for (Iterator(iterator_name) = av2_vector_begin((av2_vector_pointer)), \
+      end = av2_vector_end((av2_vector_pointer));                        \
+       !av2_iterator_equals(&(iterator_name), &end);                     \
+       av2_iterator_increment(&(iterator_name)))
 
 // Standard AOM compatibility mappings
-#define aom_vector_setup avm_vector_setup
-#define aom_vector_destroy avm_vector_destroy
-#define aom_vector_push_back avm_vector_push_back
-#define aom_vector_byte_size avm_vector_byte_size
-#define aom_vector_begin avm_vector_begin
-#define aom_iterator_get avm_iterator_get
-#define aom_iterator_increment avm_iterator_increment
+#define aom_vector_setup av2_vector_setup
+#define aom_vector_destroy av2_vector_destroy
+#define aom_vector_push_back av2_vector_push_back
+#define aom_vector_byte_size av2_vector_byte_size
+#define aom_vector_begin av2_vector_begin
+#define aom_iterator_get av2_iterator_get
+#define aom_iterator_increment av2_iterator_increment
 
 #endif /* VECTOR_H */

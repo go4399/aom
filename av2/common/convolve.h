@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_CONVOLVE_H_
-#define AVM_AV2_COMMON_CONVOLVE_H_
+#ifndef AV2_AV2_COMMON_CONVOLVE_H_
+#define AV2_AV2_COMMON_CONVOLVE_H_
 #include <string.h>
 #include "av2/common/filter.h"
 
@@ -228,4 +228,4 @@ void calc_gradient_in_various_directions_c(int16_t *feature_line_buffers[],
                                            int col_end, int feature_length,
                                            int buffer_col);
 
-#endif  // AVM_AV2_COMMON_CONVOLVE_H_
+#endif  // AV2_AV2_COMMON_CONVOLVE_H_

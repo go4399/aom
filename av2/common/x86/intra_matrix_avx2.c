@@ -133,7 +133,7 @@ void resample_output_avx2(uint16_t *dst, int dst_stride,
                           const uint16_t *above_row, const uint16_t *left_col,
                           uint16_t *ml_output, int bw_log2, int bh_log2,
                           int transpose) {
-  // AVM_SIMD_CONV_FN_W_FN
+  // AV2_SIMD_CONV_FN_W_FN
   typedef void (*resample_vert_fn)(uint16_t *dst, const uint16_t *p0_row,
                                    const uint16_t *p1_row, const int w0,
                                    const int w1, const int upy_log2);

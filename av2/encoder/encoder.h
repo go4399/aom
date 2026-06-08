@@ -13,8 +13,8 @@
 /*!\file
  * \brief Declares top-level encoder structures and functions.
  */
-#ifndef AVM_AV2_ENCODER_ENCODER_H_
-#define AVM_AV2_ENCODER_ENCODER_H_
+#ifndef AV2_AV2_ENCODER_ENCODER_H_
+#define AV2_AV2_ENCODER_ENCODER_H_
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -73,15 +73,15 @@ extern "C" {
 #include "aom_dsp/bitwriter_buffer.h"
 #include "aom_dsp/recenter.h"
 
-#define avm_wb_write_literal aom_wb_write_literal
-#define avm_wb_write_bit aom_wb_write_bit
-#define avm_wb_overwrite_literal aom_wb_overwrite_literal
-#define avm_wb_overwrite_bit aom_wb_overwrite_bit
-#define avm_write_bit_buffer aom_write_bit_buffer
+#define av2_wb_write_literal aom_wb_write_literal
+#define av2_wb_write_bit aom_wb_write_bit
+#define av2_wb_overwrite_literal aom_wb_overwrite_literal
+#define av2_wb_overwrite_bit aom_wb_overwrite_bit
+#define av2_write_bit_buffer aom_write_bit_buffer
 
-#ifndef avm_wb_write_primitive_quniform_defined
-#define avm_wb_write_primitive_quniform_defined
-static INLINE void avm_wb_write_primitive_quniform(
+#ifndef av2_wb_write_primitive_quniform_defined
+#define av2_wb_write_primitive_quniform_defined
+static INLINE void av2_wb_write_primitive_quniform(
     struct aom_write_bit_buffer *wb, uint16_t n, uint16_t v) {
   if (n <= 1) return;
   assert(v < n);
@@ -105,7 +105,7 @@ static INLINE void wb_write_primitive_subexpfin(struct aom_write_bit_buffer *wb,
     int b = (i ? k + i - 1 : k);
     int a = (1 << b);
     if (n <= mk + 3 * a) {
-      avm_wb_write_primitive_quniform(wb, n - mk, v - mk);
+      av2_wb_write_primitive_quniform(wb, n - mk, v - mk);
       break;
     } else {
       int t = (v >= mk + a);
@@ -121,7 +121,7 @@ static INLINE void wb_write_primitive_subexpfin(struct aom_write_bit_buffer *wb,
   }
 }
 
-static INLINE void avm_wb_write_primitive_refsubexpfin(
+static INLINE void av2_wb_write_primitive_refsubexpfin(
     struct aom_write_bit_buffer *wb, uint16_t n, uint16_t k, uint16_t ref,
     uint16_t v) {
   assert(ref < n);
@@ -129,13 +129,13 @@ static INLINE void avm_wb_write_primitive_refsubexpfin(
   wb_write_primitive_subexpfin(wb, n, k, recenter_finite_nonneg(n, ref, v));
 }
 
-static INLINE void avm_wb_write_signed_primitive_refsubexpfin(
+static INLINE void av2_wb_write_signed_primitive_refsubexpfin(
     struct aom_write_bit_buffer *wb, uint16_t n, uint16_t k, int16_t ref,
     int16_t v) {
   assert(n > 0);
   const uint16_t offset = n - 1;
   const uint16_t scaled_n = (n << 1) - 1;
-  avm_wb_write_primitive_refsubexpfin(wb, scaled_n, k, ref + offset,
+  av2_wb_write_primitive_refsubexpfin(wb, scaled_n, k, ref + offset,
                                       v + offset);
 }
 
@@ -173,7 +173,7 @@ static INLINE int wb_count_primitive_subexpfin(uint16_t n, uint16_t k,
   return bits;
 }
 
-static INLINE int avm_wb_count_primitive_refsubexpfin(uint16_t n, uint16_t k,
+static INLINE int av2_wb_count_primitive_refsubexpfin(uint16_t n, uint16_t k,
                                                       int16_t ref, int16_t v) {
   assert(ref < n);
   assert(v < n);
@@ -182,13 +182,13 @@ static INLINE int avm_wb_count_primitive_refsubexpfin(uint16_t n, uint16_t k,
 
 #define AVMSIGN AOMSIGN
 #define aom_write_literal aom_write_literal
-#define avm_write_symbol aom_write_symbol
+#define av2_write_symbol aom_write_symbol
 #define aom_write_bit aom_write_bit
 #define aom_writer aom_writer
 
-#ifndef avm_write_primitive_quniform_defined
-#define avm_write_primitive_quniform_defined
-static INLINE void avm_write_primitive_quniform(aom_writer *w, uint16_t n,
+#ifndef av2_write_primitive_quniform_defined
+#define av2_write_primitive_quniform_defined
+static INLINE void av2_write_primitive_quniform(aom_writer *w, uint16_t n,
                                                 uint16_t v) {
   if (n <= 1) return;
   const int l = get_unsigned_bits(n - 1);
@@ -210,10 +210,10 @@ static INLINE void avm_write_primitive_quniform(aom_writer *w, uint16_t n,
 
 // Rational number with an int64 numerator
 // This structure holds a fractional value
-typedef struct avm_rational64 {
+typedef struct av2_rational64 {
   int64_t num;       // fraction numerator
   int den;           // fraction denominator
-} avm_rational64_t;  // alias for struct avm_rational
+} av2_rational64_t;  // alias for struct av2_rational
 
 enum {
   NORMAL = 0,
@@ -223,7 +223,7 @@ enum {
   ONEFOUR = 4,
   ONEEIGHT = 5,
   ONETWO = 6
-} UENUM1BYTE(AVM_SCALING);
+} UENUM1BYTE(AV2_SCALING);
 
 enum {
   // Good Quality Fast Encoding. The encoder balances quality with the amount of
@@ -750,7 +750,7 @@ typedef struct {
 
 typedef struct {
   // Timing info for each frame.
-  avm_timing_info_t timing_info;
+  av2_timing_info_t timing_info;
   // Indicates the number of time units of a decoding clock.
   uint32_t num_units_in_decoding_tick;
   // Indicates if decoder model information is present in the coded sequence
@@ -1407,7 +1407,7 @@ typedef struct FRAME_COUNTS {
   // TODO(urvang, alican): The below are placeholder counters for missing CDF
   // entries for memory optimization code. These are not currently incremented
   // at the encoder to be able to train CDF entries with
-  // "avm_entropy_optimizers", these counters will need be incremented properly.
+  // "av2_entropy_optimizers", these counters will need be incremented properly.
   unsigned int delta_q_cnts[AV2_CDF_SIZE(DELTA_Q_PROBS + 1)];   // placeholder
   unsigned int stx_cnts[2][TX_SIZES][AV2_CDF_SIZE(STX_TYPES)];  // placeholder
   unsigned int stx_set_cnts[AV2_CDF_SIZE(IST_SET_SIZE)];        // placeholder
@@ -2000,7 +2000,7 @@ typedef struct PartitionStats {
 #endif
 
 #if CONFIG_COLLECT_COMPONENT_TIMING
-#include "aom_ports/avm_timer.h"
+#include "aom_ports/av2_timer.h"
 // Adjust the following to add new components.
 enum {
   encode_frame_to_data_rate_time,
@@ -2653,7 +2653,7 @@ typedef struct AV2_COMP {
   double framerate;
 
   /*!
-   * Pointer to internal utility functions that manipulate avm_codec_* data
+   * Pointer to internal utility functions that manipulate av2_codec_* data
    * structures.
    */
   struct aom_codec_pkt_list *output_pkt_list;
@@ -3159,7 +3159,7 @@ typedef struct AV2_COMP {
   /*!
    * Banding hints metadata for the current frame
    */
-  avm_banding_hints_metadata_t band_metadata;
+  av2_banding_hints_metadata_t band_metadata;
   /*!
    * Flag indicating if banding metadata is available for the current frame
    */
@@ -3298,7 +3298,7 @@ int av2_receive_raw_frame(AV2_COMP *cpi, aom_enc_frame_flags_t frame_flags,
 int av2_get_compressed_data(AV2_COMP *cpi, unsigned int *frame_flags,
                             size_t *size, uint8_t *dest, int64_t *time_stamp,
                             int64_t *time_end, int flush,
-                            const avm_rational64_t *timebase);
+                            const av2_rational64_t *timebase);
 
 /*!\brief Run 1-pass/2-pass encoding
  *
@@ -3337,7 +3337,7 @@ int av2_get_active_map(AV2_COMP *cpi, unsigned char *map, int rows, int cols);
 
 int av2_set_internal_size(AV2EncoderConfig *const oxcf,
                           ResizePendingParams *resize_pending_params,
-                          AVM_SCALING horiz_mode, AVM_SCALING vert_mode);
+                          AV2_SCALING horiz_mode, AV2_SCALING vert_mode);
 
 int av2_get_quantizer(struct AV2_COMP *cpi);
 
@@ -3365,12 +3365,12 @@ void av2_set_screen_content_options(struct AV2_COMP *cpi,
 #define TICKS_PER_SEC 10000000LL
 
 static INLINE int64_t
-timebase_units_to_ticks(const avm_rational64_t *timestamp_ratio, int64_t n) {
+timebase_units_to_ticks(const av2_rational64_t *timestamp_ratio, int64_t n) {
   return n * timestamp_ratio->num / timestamp_ratio->den;
 }
 
 static INLINE int64_t
-ticks_to_timebase_units(const avm_rational64_t *timestamp_ratio, int64_t n) {
+ticks_to_timebase_units(const av2_rational64_t *timestamp_ratio, int64_t n) {
   int64_t round = timestamp_ratio->num / 2;
   if (round > 0) --round;
   return (n * timestamp_ratio->den + round) / timestamp_ratio->num;
@@ -3755,4 +3755,4 @@ static INLINE bool av2_is_shown_keyframe(const AV2_COMP *cpi,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_ENCODER_H_
+#endif  // AV2_AV2_ENCODER_ENCODER_H_

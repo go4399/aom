@@ -1081,7 +1081,7 @@ static int denoise_and_encode(AV2_COMP *const cpi, uint8_t *const dest,
 int av2_encode_strategy(AV2_COMP *const cpi, size_t *const size,
                         uint8_t *const dest, unsigned int *frame_flags,
                         int64_t *const time_stamp, int64_t *const time_end,
-                        const avm_rational64_t *const timestamp_ratio,
+                        const av2_rational64_t *const timestamp_ratio,
                         int flush) {
   AV2EncoderConfig *const oxcf = &cpi->oxcf;
   AV2_COMMON *const cm = &cpi->common;

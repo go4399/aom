@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_DECODER_DECODER_H_
-#define AVM_AV2_DECODER_DECODER_H_
+#ifndef AV2_AV2_DECODER_DECODER_H_
+#define AV2_AV2_DECODER_DECODER_H_
 
 #include "aom/aom_frame_buffer.h"
 #include "config/aom_config.h"
@@ -246,13 +246,13 @@ typedef struct {
 } SubGOPStatsDec;
 
 #if CONFIG_COLLECT_COMPONENT_TIMING
-#include "aom_ports/avm_timer.h"
+#include "aom_ports/av2_timer.h"
 // Adjust the following to add new components.
 enum {
   av2_decode_frame_headers_and_setup_time,
   av2_read_tilegroup_header_time,
   av2_decode_tg_tiles_and_wrapup_time,
-  avm_decode_frame_from_obus_time,
+  av2_decode_frame_from_obus_time,
   kTimingComponents,
 } UENUM1BYTE(TIMING_COMPONENT);
 
@@ -262,8 +262,8 @@ static INLINE char const *get_component_name(int index) {
       return "av2_decode_frame_headers_and_setup_time";
     case av2_decode_tg_tiles_and_wrapup_time:
       return "av2_decode_tg_tiles_and_wrapup_time";
-    case avm_decode_frame_from_obus_time:
-      return "avm_decode_frame_from_obus_time";
+    case av2_decode_frame_from_obus_time:
+      return "av2_decode_frame_from_obus_time";
 
     default: assert(0);
   }
@@ -368,7 +368,7 @@ typedef struct AV2Decoder {
   // temporal unit.
   //
   // Note: The saved buffers are released at the start of the next time the
-  // application calls avm_codec_decode().
+  // application calls av2_codec_decode().
   int output_all_layers;
   RefCntBuffer
       *output_frames[(REF_FRAMES + 1) *
@@ -399,11 +399,11 @@ typedef struct AV2Decoder {
 #endif
 #if CONFIG_INSPECTION
   // Inspection callback at the end of each frame.
-  avm_inspect_cb inspect_cb;
+  av2_inspect_cb inspect_cb;
   // Inspection callback at the end of each superblock.
-  avm_inspect_cb inspect_sb_cb;
+  av2_inspect_cb inspect_sb_cb;
   // Inspection callback when a TIP frame is output.
-  avm_inspect_cb inspect_tip_cb;
+  av2_inspect_cb inspect_tip_cb;
   void *inspect_ctx;
 #endif
   // Selected operating point set id
@@ -540,7 +540,7 @@ typedef struct AV2Decoder {
    */
   int last_decoded_xlayer_id;
   /*!
-   * Indicates if the current data chunk being decoded in avm_codec_decode()
+   * Indicates if the current data chunk being decoded in av2_codec_decode()
    * contains the first VCL OBU of the temporal unit. A VCL OBU is any OBU
    * that carries coded picture data (CLK, OLK, tile groups, SEF, TIP,
    * BRIDGE_FRAME, SWITCH, RAS_FRAME). This flag is 1 when the first VCL OBU
@@ -702,7 +702,7 @@ typedef struct AV2Decoder {
   /*!
    * Banding hints metadata for the current frame
    */
-  avm_banding_hints_metadata_t band_metadata;
+  av2_banding_hints_metadata_t band_metadata;
   /*!
    * Flag indicating if banding metadata is available for the current frame
    */
@@ -861,4 +861,4 @@ static INLINE char const *get_frame_type_enum(int type) {
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_DECODER_DECODER_H_
+#endif  // AV2_AV2_DECODER_DECODER_H_

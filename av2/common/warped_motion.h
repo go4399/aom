@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_WARPED_MOTION_H_
-#define AVM_AV2_COMMON_WARPED_MOTION_H_
+#ifndef AV2_AV2_COMMON_WARPED_MOTION_H_
+#define AV2_AV2_COMMON_WARPED_MOTION_H_
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -349,4 +349,4 @@ int get_model_from_corner_mvs(WarpedMotionParams *derive_model, int *pts,
                               const struct scale_factors *sf
 
 );
-#endif  // AVM_AV2_COMMON_WARPED_MOTION_H_
+#endif  // AV2_AV2_COMMON_WARPED_MOTION_H_

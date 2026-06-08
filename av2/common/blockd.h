@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_BLOCKD_H_
-#define AVM_AV2_COMMON_BLOCKD_H_
+#ifndef AV2_AV2_COMMON_BLOCKD_H_
+#define AV2_AV2_COMMON_BLOCKD_H_
 
 #include "config/aom_config.h"
 
@@ -3517,4 +3517,4 @@ static INLINE int8_t get_cwp_idx(const MB_MODE_INFO *mbmi) {
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_BLOCKD_H_
+#endif  // AV2_AV2_COMMON_BLOCKD_H_

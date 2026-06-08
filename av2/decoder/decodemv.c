@@ -1829,7 +1829,7 @@ static void read_tu_quasi_uniform(aom_reader *r, nmv_context *ctx,
   }
   if (max_coded_value > max_trunc_unary_value && col == max_trunc_unary_value) {
     int remainder_max_value = max_coded_value - max_trunc_unary_value;
-    int remainder = avm_read_primitive_quniform(r, remainder_max_value + 1,
+    int remainder = av2_read_primitive_quniform(r, remainder_max_value + 1,
                                                 ACCT_INFO("remainder"));
     col = remainder + max_trunc_unary_value;
   }

@@ -987,7 +987,7 @@ void av2_resize_and_extend_frame_c(const YV12_BUFFER_CONFIG *src,
         const uint16_t *src_ptr = srcs[i];
         uint16_t *dst_ptr = dsts[i];
 
-        avm_highbd_convolve8_c(
+        av2_highbd_convolve8_c(
             src_ptr + (y / factor) * src_h / dst_h * src_stride +
                 (x / factor) * src_w / dst_w,
             src_stride, dst_ptr + (y / factor) * dst_stride + (x / factor),

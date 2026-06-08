@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_GDF_H
-#define AVM_AV2_COMMON_GDF_H
+#ifndef AV2_AV2_COMMON_GDF_H
+#define AV2_AV2_COMMON_GDF_H
 #include "av2/common/av2_common_int.h"
 #include "av2/common/bru.h"
 #ifdef __cplusplus
@@ -141,4 +141,4 @@ void gdf_restore_processing_stripe_leftright_boundary(GdfInfo *gdf, int i_min,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_GDF_H
+#endif  // AV2_AV2_COMMON_GDF_H

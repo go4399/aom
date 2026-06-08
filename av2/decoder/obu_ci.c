@@ -28,69 +28,69 @@
 static int av2_set_sar_info(ContentInterpretation *ci_params) {
   int supported_sample_aspect_ratio = 1;
   switch (ci_params->sar_info.sar_aspect_ratio_idc) {
-    case AVM_SAR_IDC_UNSPECIFIED:
-    case AVM_SAR_IDC_255: break;
-    case AVM_SAR_IDC_1_TO_1:
+    case AV2_SAR_IDC_UNSPECIFIED:
+    case AV2_SAR_IDC_255: break;
+    case AV2_SAR_IDC_1_TO_1:
       ci_params->sar_info.sar_width = 1;
       ci_params->sar_info.sar_height = 1;
       break;
-    case AVM_SAR_IDC_12_TO_11:
+    case AV2_SAR_IDC_12_TO_11:
       ci_params->sar_info.sar_width = 12;
       ci_params->sar_info.sar_height = 11;
       break;
-    case AVM_SAR_IDC_10_TO_11:
+    case AV2_SAR_IDC_10_TO_11:
       ci_params->sar_info.sar_width = 10;
       ci_params->sar_info.sar_height = 11;
       break;
-    case AVM_SAR_IDC_16_TO_11:
+    case AV2_SAR_IDC_16_TO_11:
       ci_params->sar_info.sar_width = 16;
       ci_params->sar_info.sar_height = 11;
       break;
-    case AVM_SAR_IDC_40_TO_33:
+    case AV2_SAR_IDC_40_TO_33:
       ci_params->sar_info.sar_width = 40;
       ci_params->sar_info.sar_height = 33;
       break;
-    case AVM_SAR_IDC_24_TO_11:
+    case AV2_SAR_IDC_24_TO_11:
       ci_params->sar_info.sar_width = 24;
       ci_params->sar_info.sar_height = 11;
       break;
-    case AVM_SAR_IDC_20_TO_11:
+    case AV2_SAR_IDC_20_TO_11:
       ci_params->sar_info.sar_width = 20;
       ci_params->sar_info.sar_height = 11;
       break;
-    case AVM_SAR_IDC_32_TO_11:
+    case AV2_SAR_IDC_32_TO_11:
       ci_params->sar_info.sar_width = 32;
       ci_params->sar_info.sar_height = 11;
       break;
-    case AVM_SAR_IDC_80_TO_33:
+    case AV2_SAR_IDC_80_TO_33:
       ci_params->sar_info.sar_width = 80;
       ci_params->sar_info.sar_height = 33;
       break;
-    case AVM_SAR_IDC_18_TO_11:
+    case AV2_SAR_IDC_18_TO_11:
       ci_params->sar_info.sar_width = 18;
       ci_params->sar_info.sar_height = 11;
       break;
-    case AVM_SAR_IDC_15_TO_11:
+    case AV2_SAR_IDC_15_TO_11:
       ci_params->sar_info.sar_width = 15;
       ci_params->sar_info.sar_height = 11;
       break;
-    case AVM_SAR_IDC_64_TO_33:
+    case AV2_SAR_IDC_64_TO_33:
       ci_params->sar_info.sar_width = 64;
       ci_params->sar_info.sar_height = 33;
       break;
-    case AVM_SAR_IDC_160_TO_99:
+    case AV2_SAR_IDC_160_TO_99:
       ci_params->sar_info.sar_width = 160;
       ci_params->sar_info.sar_height = 99;
       break;
-    case AVM_SAR_IDC_4_TO_3:
+    case AV2_SAR_IDC_4_TO_3:
       ci_params->sar_info.sar_width = 4;
       ci_params->sar_info.sar_height = 3;
       break;
-    case AVM_SAR_IDC_3_TO_2:
+    case AV2_SAR_IDC_3_TO_2:
       ci_params->sar_info.sar_width = 3;
       ci_params->sar_info.sar_height = 2;
       break;
-    case AVM_SAR_IDC_2_TO_1:
+    case AV2_SAR_IDC_2_TO_1:
       ci_params->sar_info.sar_width = 2;
       ci_params->sar_info.sar_height = 1;
       break;
@@ -119,7 +119,7 @@ static INLINE void av2_read_sample_aspect_ratio_information(
     struct ContentInterpretation *ci_params, struct aom_read_bit_buffer *rb) {
   SarInfo *sar_info = &ci_params->sar_info;
   sar_info->sar_aspect_ratio_idc = aom_rb_read_literal(rb, 8);
-  if (sar_info->sar_aspect_ratio_idc == AVM_SAR_IDC_255) {
+  if (sar_info->sar_aspect_ratio_idc == AV2_SAR_IDC_255) {
     sar_info->sar_width = aom_rb_read_uvlc(rb);
     sar_info->sar_height = aom_rb_read_uvlc(rb);
   }

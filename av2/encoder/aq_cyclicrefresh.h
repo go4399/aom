@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_AQ_CYCLICREFRESH_H_
-#define AVM_AV2_ENCODER_AQ_CYCLICREFRESH_H_
+#ifndef AV2_AV2_ENCODER_AQ_CYCLICREFRESH_H_
+#define AV2_AV2_ENCODER_AQ_CYCLICREFRESH_H_
 
 #include "av2/common/blockd.h"
 
@@ -272,4 +272,4 @@ static INLINE int cyclic_refresh_segment_id(int segment_id) {
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_AQ_CYCLICREFRESH_H_
+#endif  // AV2_AV2_ENCODER_AQ_CYCLICREFRESH_H_

@@ -9,8 +9,8 @@
  * source code in the PATENTS file, you can obtain it at
  * aomedia.org/license/patent-license/.
  */
-#ifndef AVM_AV2_ENCODER_PICKCDEF_H_
-#define AVM_AV2_ENCODER_PICKCDEF_H_
+#ifndef AV2_AV2_ENCODER_PICKCDEF_H_
+#define AV2_AV2_ENCODER_PICKCDEF_H_
 
 #include "av2/common/av2_common_int.h"
 #include "av2/common/cdef.h"
@@ -55,4 +55,4 @@ void av2_cdef_search(const YV12_BUFFER_CONFIG *frame,
 #ifdef __cplusplus
 }  // extern "C"
 #endif
-#endif  // AVM_AV2_ENCODER_PICKCDEF_H_
+#endif  // AV2_AV2_ENCODER_PICKCDEF_H_

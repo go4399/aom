@@ -151,7 +151,7 @@ if(CONFIG_AV1_HIGHBITDEPTH)
 endif()
 
 # AV2-specific x86 SIMD sources live under aom_dsp/ but must only be built
-# when the AV2 codec is enabled. These files include config/avm_*.h, which is
+# when the AV2 codec is enabled. These files include config/av2_*.h, which is
 # only generated for AV2 builds, so compiling them in an AV1-only build fails.
 if(CONFIG_AV2)
   list(APPEND AOM_DSP_COMMON_INTRIN_SSE4_1

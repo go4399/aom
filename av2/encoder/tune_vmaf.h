@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_TUNE_VMAF_H_
-#define AVM_AV2_ENCODER_TUNE_VMAF_H_
+#ifndef AV2_AV2_ENCODER_TUNE_VMAF_H_
+#define AV2_AV2_ENCODER_TUNE_VMAF_H_
 
 #include "aom_dsp/vmaf.h"
 #include "aom_scale/yv12config.h"
@@ -62,4 +62,4 @@ int av2_get_vmaf_base_qindex(const struct AV2_COMP *cpi, int current_qindex);
 
 void av2_update_vmaf_curve(struct AV2_COMP *cpi);
 
-#endif  // AVM_AV2_ENCODER_TUNE_VMAF_H_
+#endif  // AV2_AV2_ENCODER_TUNE_VMAF_H_

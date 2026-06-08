@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_ENTROPYMODE_H_
-#define AVM_AV2_COMMON_ENTROPYMODE_H_
+#ifndef AV2_AV2_COMMON_ENTROPYMODE_H_
+#define AV2_AV2_COMMON_ENTROPYMODE_H_
 
 #include "av2/common/entropy.h"
 #include "av2/common/entropymv.h"
@@ -622,4 +622,4 @@ int av2_get_palette_color_index_context(const uint8_t *color_map, int stride,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_ENTROPYMODE_H_
+#endif  // AV2_AV2_COMMON_ENTROPYMODE_H_

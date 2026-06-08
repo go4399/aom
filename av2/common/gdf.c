@@ -9,8 +9,8 @@
  * source code in the PATENTS file, you can obtain it at
  * aomedia.org/license/patent-license/.
  */
-#ifndef AVM_COMMON_GDF_H_
-#define AVM_COMMON_GDF_H_
+#ifndef AV2_COMMON_GDF_H_
+#define AV2_COMMON_GDF_H_
 
 #include "av2/common/gdf.h"
 #include "av2/common/gdf_block.h"
@@ -717,4 +717,4 @@ void gdf_filter_frame(AV2_COMMON *cm) {
   }
 }
 
-#endif  // AVM_COMMON_GDF_H_
+#endif  // AV2_COMMON_GDF_H_

@@ -173,19 +173,19 @@ int write_fgm_obu(AV2_COMP *cpi, struct film_grain_model *fgm,
   AV2_COMMON *cm = &cpi->common;
 
   int fgm_bit_map = 1 << (fgm->fgm_id);
-  avm_wb_write_literal(&wb, fgm_bit_map, MAX_FGM_NUM);
+  av2_wb_write_literal(&wb, fgm_bit_map, MAX_FGM_NUM);
   uint32_t chroma_format_idc = CHROMA_FORMAT_420;
   av2_get_chroma_format_idc(cm->seq_params.subsampling_x,
                             cm->seq_params.subsampling_y,
                             cm->seq_params.monochrome, &chroma_format_idc);
-  avm_wb_write_uvlc(&wb, chroma_format_idc);
+  av2_wb_write_uvlc(&wb, chroma_format_idc);
 
   for (int fgm_pos = 0; fgm_pos < 1; fgm_pos++) {
     // Scaling functions parameters
     int fgmNumChannels = cm->seq_params.monochrome ? 1 : 3;
 
     if (fgmNumChannels > 1) {
-      avm_wb_write_bit(&wb, fgm->fgm_scale_from_channel0_flag);
+      av2_wb_write_bit(&wb, fgm->fgm_scale_from_channel0_flag);
     } else {
       assert(!fgm->fgm_scale_from_channel0_flag);
     }
@@ -194,7 +194,7 @@ int write_fgm_obu(AV2_COMP *cpi, struct film_grain_model *fgm,
         fgm->fgm_scale_from_channel0_flag ? 1 : fgmNumChannels;
 
     for (int c = 0; c < fgmNumScalingChannels; c++) {
-      avm_wb_write_literal(&wb, fgm->fgm_points[c], 4);  // max 14
+      av2_wb_write_literal(&wb, fgm->fgm_points[c], 4);  // max 14
 
       if (fgm->fgm_points[c]) {
         // search for the max
@@ -210,30 +210,30 @@ int write_fgm_obu(AV2_COMP *cpi, struct film_grain_model *fgm,
             AOMMAX(1, maxScal == -1 ? 0 : aom_ceil_log2(maxIncr + 1));
         int bitsScal =
             AOMMAX(5, maxScal == -1 ? 0 : aom_ceil_log2(maxScal + 1));
-        avm_wb_write_literal(&wb, bitsIncr - 1, 3);
-        avm_wb_write_literal(&wb, bitsScal - 5, 2);
+        av2_wb_write_literal(&wb, bitsIncr - 1, 3);
+        av2_wb_write_literal(&wb, bitsScal - 5, 2);
         for (int i = 0; i < fgm->fgm_points[c]; i++) {
           if (i == 0)
-            avm_wb_write_literal(&wb, fgm->fgm_scaling_points[c][i][0],
+            av2_wb_write_literal(&wb, fgm->fgm_scaling_points[c][i][0],
                                  bitsIncr);
           else {
-            avm_wb_write_literal(&wb,
+            av2_wb_write_literal(&wb,
                                  fgm->fgm_scaling_points[c][i][0] -
                                      fgm->fgm_scaling_points[c][i - 1][0],
                                  bitsIncr);
           }
-          avm_wb_write_literal(&wb, fgm->fgm_scaling_points[c][i][1], bitsScal);
+          av2_wb_write_literal(&wb, fgm->fgm_scaling_points[c][i][1], bitsScal);
         }
       }
     }
 
-    avm_wb_write_literal(&wb, fgm->scaling_shift - 8, 2);  // 8 + value
+    av2_wb_write_literal(&wb, fgm->scaling_shift - 8, 2);  // 8 + value
 
     // AR coefficients
     // Only sent if the corresponsing scaling function has
     // more than 0 points
 
-    avm_wb_write_literal(&wb, fgm->ar_coeff_lag, 2);
+    av2_wb_write_literal(&wb, fgm->ar_coeff_lag, 2);
 
     int num_pos_luma = 2 * fgm->ar_coeff_lag * (fgm->ar_coeff_lag + 1);
     int num_pos_chroma = num_pos_luma;
@@ -249,10 +249,10 @@ int write_fgm_obu(AV2_COMP *cpi, struct film_grain_model *fgm,
       maxAr = AOMMAX(maxAr + 1, -minAr);
       // ceillog2
       int bitsArY = AOMMAX(5, aom_ceil_log2(maxAr) + 1);
-      avm_wb_write_literal(&wb, bitsArY - 5, 2);
+      av2_wb_write_literal(&wb, bitsArY - 5, 2);
       int midPointY = 1 << (bitsArY - 1);
       for (int i = 0; i < num_pos_luma; i++)
-        avm_wb_write_literal(&wb, fgm->ar_coeffs_y[i] + midPointY, bitsArY);
+        av2_wb_write_literal(&wb, fgm->ar_coeffs_y[i] + midPointY, bitsArY);
     }
     if (fgm->fgm_points[1] || fgm->fgm_scale_from_channel0_flag) {
       int maxAr = -1;
@@ -264,10 +264,10 @@ int write_fgm_obu(AV2_COMP *cpi, struct film_grain_model *fgm,
       maxAr = AOMMAX(maxAr + 1, -minAr);
       // ceillog2
       int bitsArCb = AOMMAX(5, aom_ceil_log2(maxAr) + 1);
-      avm_wb_write_literal(&wb, bitsArCb - 5, 2);
+      av2_wb_write_literal(&wb, bitsArCb - 5, 2);
       int midPointCb = 1 << (bitsArCb - 1);
       for (int i = 0; i < num_pos_chroma; i++)
-        avm_wb_write_literal(&wb, fgm->ar_coeffs_cb[i] + midPointCb, bitsArCb);
+        av2_wb_write_literal(&wb, fgm->ar_coeffs_cb[i] + midPointCb, bitsArCb);
     }
 
     if (fgm->fgm_points[2] || fgm->fgm_scale_from_channel0_flag) {
@@ -280,35 +280,35 @@ int write_fgm_obu(AV2_COMP *cpi, struct film_grain_model *fgm,
       maxAr = AOMMAX(maxAr + 1, -minAr);
       // ceillog2
       int bitsArCr = AOMMAX(5, aom_ceil_log2(maxAr) + 1);
-      avm_wb_write_literal(&wb, bitsArCr - 5, 2);
+      av2_wb_write_literal(&wb, bitsArCr - 5, 2);
       int midPointCr = 1 << (bitsArCr - 1);
       for (int i = 0; i < num_pos_chroma; i++)
-        avm_wb_write_literal(&wb, fgm->ar_coeffs_cr[i] + midPointCr, bitsArCr);
+        av2_wb_write_literal(&wb, fgm->ar_coeffs_cr[i] + midPointCr, bitsArCr);
     }
 
-    avm_wb_write_literal(&wb, fgm->ar_coeff_shift - 6, 2);  // 8 + value
+    av2_wb_write_literal(&wb, fgm->ar_coeff_shift - 6, 2);  // 8 + value
 
-    avm_wb_write_literal(&wb, fgm->grain_scale_shift, 2);
+    av2_wb_write_literal(&wb, fgm->grain_scale_shift, 2);
     if (fgm->fgm_points[1]) {
-      avm_wb_write_literal(&wb, fgm->cb_mult, 8);
-      avm_wb_write_literal(&wb, fgm->cb_luma_mult, 8);
-      avm_wb_write_literal(&wb, fgm->cb_offset, 9);
+      av2_wb_write_literal(&wb, fgm->cb_mult, 8);
+      av2_wb_write_literal(&wb, fgm->cb_luma_mult, 8);
+      av2_wb_write_literal(&wb, fgm->cb_offset, 9);
     }
     if (fgm->fgm_points[2]) {
-      avm_wb_write_literal(&wb, fgm->cr_mult, 8);
-      avm_wb_write_literal(&wb, fgm->cr_luma_mult, 8);
-      avm_wb_write_literal(&wb, fgm->cr_offset, 9);
+      av2_wb_write_literal(&wb, fgm->cr_mult, 8);
+      av2_wb_write_literal(&wb, fgm->cr_luma_mult, 8);
+      av2_wb_write_literal(&wb, fgm->cr_offset, 9);
     }
 
-    avm_wb_write_bit(&wb, fgm->overlap_flag);
+    av2_wb_write_bit(&wb, fgm->overlap_flag);
 
-    avm_wb_write_bit(&wb, fgm->clip_to_restricted_range);
-    if (fgm->clip_to_restricted_range) avm_wb_write_bit(&wb, fgm->mc_identity);
+    av2_wb_write_bit(&wb, fgm->clip_to_restricted_range);
+    if (fgm->clip_to_restricted_range) av2_wb_write_bit(&wb, fgm->mc_identity);
 
-    avm_wb_write_bit(&wb, fgm->block_size);
+    av2_wb_write_bit(&wb, fgm->block_size);
   }
 
   av2_add_trailing_bits(&wb);
-  size = avm_wb_bytes_written(&wb);
+  size = av2_wb_bytes_written(&wb);
   return size;
 }

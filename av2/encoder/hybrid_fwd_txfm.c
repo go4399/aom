@@ -1128,11 +1128,11 @@ void av2_fwd_stxfm(tran_low_t *coeff, TxfmParam *txfm_param,
           : (st_size_class == 1)
               ? IST_8x8_HEIGHT_RED
               : ((st_size_class == 3) ? IST_ADST_NZ_CNT : IST_8x8_HEIGHT);
-      // SIMD implementation of avm_sum_squares_i32() only supports if n value
+      // SIMD implementation of av2_sum_squares_i32() only supports if n value
       // is multiple of 16. Hence, the n value is ensured to be at least 16
       // since the remaining elements of buf1[] are initialized with zero.
       uint64_t sec_tx_coeff_energy =
-          avm_sum_squares_i32(buf1, ALIGN_POWER_OF_TWO(reduced_height, 4));
+          av2_sum_squares_i32(buf1, ALIGN_POWER_OF_TWO(reduced_height, 4));
       const int bd_shift = 2 * (txfm_param->bd - 8);
       const int rounding = bd_shift > 0 ? 1 << (bd_shift - 1) : 0;
       sec_tx_coeff_energy = (sec_tx_coeff_energy + rounding) >> bd_shift;

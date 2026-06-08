@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_LEVEL_H_
-#define AVM_AV2_ENCODER_LEVEL_H_
+#ifndef AV2_AV2_ENCODER_LEVEL_H_
+#define AV2_AV2_ENCODER_LEVEL_H_
 
 #include "av2/common/av2_common_int.h"
 
@@ -259,4 +259,4 @@ void av2_get_max_tiles_for_level(AV2_LEVEL level_index, int *const max_tiles,
 int av2_get_max_level_ref_frames(const AV2_COMMON *const cm, OBU_TYPE obu_type,
                                  AV2_LEVEL level_index);
 
-#endif  // AVM_AV2_ENCODER_LEVEL_H_
+#endif  // AV2_AV2_ENCODER_LEVEL_H_

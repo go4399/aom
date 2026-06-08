@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_CDEF_BLOCK_H_
-#define AVM_AV2_COMMON_CDEF_BLOCK_H_
+#ifndef AV2_AV2_COMMON_CDEF_BLOCK_H_
+#define AV2_AV2_COMMON_CDEF_BLOCK_H_
 
 #include "av2/common/odintrin.h"
 
@@ -58,4 +58,4 @@ void av2_cdef_filter_fb(uint8_t *dst8, uint16_t *dst16, int dstride,
                         int var[CDEF_NBLOCKS][CDEF_NBLOCKS], int pli,
                         cdef_list *dlist, int cdef_count, int level,
                         int sec_strength, int damping, int coeff_shift);
-#endif  // AVM_AV2_COMMON_CDEF_BLOCK_H_
+#endif  // AV2_AV2_COMMON_CDEF_BLOCK_H_

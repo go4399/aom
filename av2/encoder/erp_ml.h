@@ -8,8 +8,8 @@
  * Media Patent License 1.0 was not distributed with this source code in the
  * PATENTS file, you can obtain it at www.aomedia.org/license/patent.
  */
-#ifndef AVM_AV2_ENCODER_ERP_ML_H_
-#define AVM_AV2_ENCODER_ERP_ML_H_
+#ifndef AV2_AV2_ENCODER_ERP_ML_H_
+#define AV2_AV2_ENCODER_ERP_ML_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,4 +23,4 @@ int av2_erp_prune_rect(BLOCK_SIZE bsize, bool is_hd, const float *features,
 #ifdef __cplusplus
 }
 #endif
-#endif  // AVM_AV2_ENCODER_ERP_ML_H_
+#endif  // AV2_AV2_ENCODER_ERP_ML_H_

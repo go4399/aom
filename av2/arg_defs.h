@@ -9,8 +9,8 @@
  * source code in the PATENTS file, you can obtain it at
  * aomedia.org/license/patent-license/.
  */
-#ifndef AVM_AV2_ARG_DEFS_H_
-#define AVM_AV2_ARG_DEFS_H_
+#ifndef AV2_AV2_ARG_DEFS_H_
+#define AV2_AV2_ARG_DEFS_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -301,4 +301,4 @@ extern const av2_codec_arg_definitions_t g_av2_codec_arg_defs;
 #ifdef __cplusplus
 }
 #endif
-#endif  // AVM_AV2_ARG_DEFS_H_
+#endif  // AV2_AV2_ARG_DEFS_H_

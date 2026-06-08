@@ -155,7 +155,7 @@ int write_qm_data(AV2_COMP *cpi, struct quantization_matrix_set *qm_list,
   const TX_SIZE fund_tsize[3] = { TX_8X8, TX_8X4, TX_4X8 };
 
   const bool qm_is_predefined_flag = !qm_list[qm_pos].is_user_defined_qm;
-  avm_wb_write_bit(wb, qm_is_predefined_flag);
+  av2_wb_write_bit(wb, qm_is_predefined_flag);
   if (qm_is_predefined_flag) {
     return wb->bit_offset - size;
   }
@@ -174,7 +174,7 @@ int write_qm_data(AV2_COMP *cpi, struct quantization_matrix_set *qm_list,
         const bool qm_copy_from_previous_plane =
             qm_matrices_are_equal(prev_mat, mat, width, height);
 
-        avm_wb_write_bit(wb, qm_copy_from_previous_plane);
+        av2_wb_write_bit(wb, qm_copy_from_previous_plane);
         if (qm_copy_from_previous_plane) {
           continue;
         }
@@ -183,7 +183,7 @@ int write_qm_data(AV2_COMP *cpi, struct quantization_matrix_set *qm_list,
       bool qm_8x8_is_symmetric = false;
       if (tsize == TX_8X8) {
         qm_8x8_is_symmetric = qm_matrix_is_symmetric(mat, width, height);
-        avm_wb_write_bit(wb, qm_8x8_is_symmetric);
+        av2_wb_write_bit(wb, qm_8x8_is_symmetric);
       } else if (tsize == TX_4X8) {
         assert(fund_tsize[t - 1] == TX_8X4);
         // const qm_val_t *cand_mat = fund_mat[t - 1][level][c];
@@ -191,7 +191,7 @@ int write_qm_data(AV2_COMP *cpi, struct quantization_matrix_set *qm_list,
         const bool qm_4x8_is_transpose_of_8x4 =
             qm_candidate_is_transpose_of_current_matrix(cand_mat, mat, width,
                                                         height);
-        avm_wb_write_bit(wb, qm_4x8_is_transpose_of_8x4);
+        av2_wb_write_bit(wb, qm_4x8_is_transpose_of_8x4);
         if (qm_4x8_is_transpose_of_8x4) {
           continue;
         }
@@ -246,7 +246,7 @@ int write_qm_data(AV2_COMP *cpi, struct quantization_matrix_set *qm_list,
         } else if (delta > 127) {
           delta -= 256;
         }
-        avm_wb_write_svlc(wb, delta);
+        av2_wb_write_svlc(wb, delta);
         if (symbol_idx == stop_symbol_idx) {
           break;
         }
@@ -266,8 +266,8 @@ uint32_t write_qm_obu(AV2_COMP *cpi, int signalled_obu_pos,
   uint32_t size = 0;
   assert(signalled_obu_pos >= 0);
   int qm_bit_map = cpi->qmobu_list[signalled_obu_pos].qm_bit_map;
-  avm_wb_write_literal(&wb, qm_bit_map, NUM_CUSTOM_QMS);
-  avm_wb_write_bit(
+  av2_wb_write_literal(&wb, qm_bit_map, NUM_CUSTOM_QMS);
+  av2_wb_write_bit(
       &wb, cpi->qmobu_list[signalled_obu_pos].qm_chroma_info_present_flag);
   for (int j = 0; j < NUM_CUSTOM_QMS; j++) {
     if (qm_bit_map & (1 << j)) {
@@ -285,7 +285,7 @@ uint32_t write_qm_obu(AV2_COMP *cpi, int signalled_obu_pos,
   }
 
   av2_add_trailing_bits(&wb);
-  size = avm_wb_bytes_written(&wb);
+  size = av2_wb_bytes_written(&wb);
   return size;
 }
 

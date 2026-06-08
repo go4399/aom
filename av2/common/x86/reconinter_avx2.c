@@ -60,7 +60,7 @@ static INLINE void build_compound_diffwtd_mask_d16_avx2(
   const int mask_base = 38;
   const __m256i _r = _mm256_set1_epi16((1 << shift) >> 1);
   const __m256i y38 = _mm256_set1_epi16(mask_base);
-  const __m256i y64 = _mm256_set1_epi16(AVM_BLEND_A64_MAX_ALPHA);
+  const __m256i y64 = _mm256_set1_epi16(AV2_BLEND_A64_MAX_ALPHA);
   int i = 0;
   if (w == 4) {
     do {
@@ -275,7 +275,7 @@ static INLINE void build_compound_diffwtd_mask_d16_inv_avx2(
   const int mask_base = 38;
   const __m256i _r = _mm256_set1_epi16((1 << shift) >> 1);
   const __m256i y38 = _mm256_set1_epi16(mask_base);
-  const __m256i y64 = _mm256_set1_epi16(AVM_BLEND_A64_MAX_ALPHA);
+  const __m256i y64 = _mm256_set1_epi16(AV2_BLEND_A64_MAX_ALPHA);
   int i = 0;
   if (w == 4) {
     do {
@@ -493,10 +493,10 @@ void av2_build_compound_diffwtd_mask_d16_avx2(
       2 * FILTER_BITS - conv_params->round_0 - conv_params->round_1 + (bd - 8);
   // When rounding constant is added, there is a possibility of overflow.
   // However that much precision is not required. Code should very well work for
-  // other values of DIFF_FACTOR_LOG2 and AVM_BLEND_A64_MAX_ALPHA as well. But
+  // other values of DIFF_FACTOR_LOG2 and AV2_BLEND_A64_MAX_ALPHA as well. But
   // there is a possibility of corner case bugs.
   assert(DIFF_FACTOR_LOG2 == 4);
-  assert(AVM_BLEND_A64_MAX_ALPHA == 64);
+  assert(AV2_BLEND_A64_MAX_ALPHA == 64);
 
   if (mask_type == DIFFWTD_38) {
     build_compound_diffwtd_mask_d16_avx2(mask, src0, src0_stride, src1,
@@ -520,7 +520,7 @@ void av2_build_compound_diffwtd_mask_highbd_avx2(
     assert((w % 16) == 0);
     const __m256i y0 = _mm256_setzero_si256();
     const __m256i yAVM_BLEND_A64_MAX_ALPHA =
-        _mm256_set1_epi16(AVM_BLEND_A64_MAX_ALPHA);
+        _mm256_set1_epi16(AV2_BLEND_A64_MAX_ALPHA);
     const int mask_base = 38;
     const __m256i ymask_base = _mm256_set1_epi16(mask_base);
     if (bd == 8) {

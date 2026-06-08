@@ -9,8 +9,8 @@
  * source code in the PATENTS file, you can obtain it at
  * aomedia.org/license/patent-license/.
  */
-#ifndef AVM_AV2_COMMON_BANDING_DETECTION_H_
-#define AVM_AV2_COMMON_BANDING_DETECTION_H_
+#ifndef AV2_AV2_COMMON_BANDING_DETECTION_H_
+#define AV2_AV2_COMMON_BANDING_DETECTION_H_
 
 #include "aom/aom_integer.h"
 #include "av2/common/av2_common_int.h"
@@ -32,16 +32,16 @@ extern "C" {
  *
  * \return 1 on success, 0 if dimensions or bit depth are unsupported
  */
-int avm_band_detection_init(Av2BandDetectInfo *const dbi, const int frame_width,
+int av2_band_detection_init(Av2BandDetectInfo *const dbi, const int frame_width,
                             const int frame_height, const int bit_depth);
 
 /*!\brief Free banding detection resources
  *
- * Releases all working buffers allocated by avm_band_detection_init
+ * Releases all working buffers allocated by av2_band_detection_init
  *
  * \param[in,out]  dbi          Banding detection information structure
  */
-void avm_band_detection_close(Av2BandDetectInfo *const dbi);
+void av2_band_detection_close(Av2BandDetectInfo *const dbi);
 
 /*!\brief Assess banding via CAMBI
  *
@@ -56,12 +56,12 @@ void avm_band_detection_close(Av2BandDetectInfo *const dbi);
  *
  * \return Nothing is returned. Instead, presence of banding is stored
  */
-void avm_band_detection(const YV12_BUFFER_CONFIG *frame,
+void av2_band_detection(const YV12_BUFFER_CONFIG *frame,
                         const YV12_BUFFER_CONFIG *ref,
                         Av2BandDetectInfo *const dbi, MACROBLOCKD *xd,
-                        avm_banding_hints_metadata_t *band_metadata);
+                        av2_banding_hints_metadata_t *band_metadata);
 
 #ifdef __cplusplus
 }  // extern "C"
 #endif
-#endif  // AVM_AV2_COMMON_BANDING_DETECTION_H_
+#endif  // AV2_AV2_COMMON_BANDING_DETECTION_H_

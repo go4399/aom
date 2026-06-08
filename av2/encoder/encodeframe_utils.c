@@ -1226,10 +1226,10 @@ void av2_set_cost_upd_freq(AV2_COMP *cpi, ThreadData *td,
   switch (cpi->oxcf.cost_upd_freq.coeff) {
     case COST_UPD_TILE:  // Tile level
       if (mi_row != tile_info->mi_row_start) break;
-      AVM_FALLTHROUGH_INTENDED;
+      AV2_FALLTHROUGH_INTENDED;
     case COST_UPD_SBROW:  // SB row level in tile
       if (mi_col != tile_info->mi_col_start) break;
-      AVM_FALLTHROUGH_INTENDED;
+      AV2_FALLTHROUGH_INTENDED;
     case COST_UPD_SB:  // SB level
       if (cpi->sf.inter_sf.disable_sb_level_coeff_cost_upd &&
           mi_col != tile_info->mi_col_start)
@@ -1242,10 +1242,10 @@ void av2_set_cost_upd_freq(AV2_COMP *cpi, ThreadData *td,
   switch (cpi->oxcf.cost_upd_freq.mode) {
     case COST_UPD_TILE:  // Tile level
       if (mi_row != tile_info->mi_row_start) break;
-      AVM_FALLTHROUGH_INTENDED;
+      AV2_FALLTHROUGH_INTENDED;
     case COST_UPD_SBROW:  // SB row level in tile
       if (mi_col != tile_info->mi_col_start) break;
-      AVM_FALLTHROUGH_INTENDED;
+      AV2_FALLTHROUGH_INTENDED;
     case COST_UPD_SB:  // SB level
       av2_fill_mode_rates(cm, &x->mode_costs, xd->tile_ctx);
       break;
@@ -1255,10 +1255,10 @@ void av2_set_cost_upd_freq(AV2_COMP *cpi, ThreadData *td,
     case COST_UPD_OFF: break;
     case COST_UPD_TILE:  // Tile level
       if (mi_row != tile_info->mi_row_start) break;
-      AVM_FALLTHROUGH_INTENDED;
+      AV2_FALLTHROUGH_INTENDED;
     case COST_UPD_SBROW:  // SB row level in tile
       if (mi_col != tile_info->mi_col_start) break;
-      AVM_FALLTHROUGH_INTENDED;
+      AV2_FALLTHROUGH_INTENDED;
     case COST_UPD_SB:  // SB level
       if (cpi->sf.inter_sf.disable_sb_level_mv_cost_upd &&
           mi_col != tile_info->mi_col_start)

@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_X86_AV2_CONVOLVE_AVX2_H_
-#define AVM_AVM_DSP_X86_CONVOLVE_AVX2_H_
+#ifndef AV2_AV2_COMMON_X86_AV2_CONVOLVE_AVX2_H_
+#define AV2_AVM_DSP_X86_CONVOLVE_AVX2_H_
 
 #include "config/aom_config.h"
 #include "aom_dsp/x86/synonyms.h"
@@ -1277,4 +1277,4 @@ static INLINE void av2_highbd_convolve_2d_sr_bilinear_avx2(
   }
 }
 
-#endif  // AVM_AV2_COMMON_X86_AV2_CONVOLVE_AVX2_H_
+#endif  // AV2_AV2_COMMON_X86_AV2_CONVOLVE_AVX2_H_

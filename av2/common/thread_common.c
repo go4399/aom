@@ -366,7 +366,7 @@ static void loop_filter_rows_mt(YV12_BUFFER_CONFIG *frame, AV2_COMMON *cm,
                                 int plane_start, int plane_end,
                                 AVxWorker *workers, int nworkers,
                                 AV2LfSync *lf_sync) {
-  const AVxWorkerInterface *const winterface = avm_get_worker_interface();
+  const AVxWorkerInterface *const winterface = av2_get_worker_interface();
   const int mib_size = cm->mib_size;
   const int mib_size_log2 = cm->mib_size_log2;
   // Number of superblock rows and cols
@@ -636,7 +636,7 @@ static void apply_ccso_filter_mt(AVxWorker *workers, int nworkers,
                                  AV2_COMMON *const cm, MACROBLOCKD *const xd,
                                  uint16_t *ext_rec_y, AV2CcsoSync *ccso_sync) {
   const int num_planes = av2_num_planes(cm);
-  const AVxWorkerInterface *const winterface = avm_get_worker_interface();
+  const AVxWorkerInterface *const winterface = av2_get_worker_interface();
   int num_proc_blk_rows = 0;
   const int num_workers = nworkers;
   const int round_offset = (1 << CCSO_PROC_BLK_LOG2) - 1;
@@ -803,7 +803,7 @@ void av2_setup_tip_frame_mt(AV2_COMMON *cm,
                             int copy_refined_mvs, AVxWorker *const workers,
                             int num_workers, AV2TipSync *const tip_sync,
                             TIPWorkerData *const tip_worker_data) {
-  const AVxWorkerInterface *const winterface = avm_get_worker_interface();
+  const AVxWorkerInterface *const winterface = av2_get_worker_interface();
   const int unit_blk_size =
       (get_unit_bsize_for_tip_frame(
            cm->features.tip_frame_mode, cm->tip_interp_filter,
@@ -1114,7 +1114,7 @@ static void foreach_rest_unit_in_planes_mt(AV2LrStruct *lr_ctxt,
   const int num_tile_cols = cm->tiles.cols;
   const int num_tile_rows = cm->tiles.rows;
 
-  const AVxWorkerInterface *const winterface = avm_get_worker_interface();
+  const AVxWorkerInterface *const winterface = av2_get_worker_interface();
   int num_rows_lr = 0;
 
   for (int plane = 0; plane < num_planes; plane++) {
@@ -1258,7 +1258,7 @@ static INLINE void reset_cdef_job_info(AV2CdefSync *cdef_sync) {
 // Launch all CDEF workers for row multithreading
 static INLINE void launch_cdef_workers(AVxWorker *const workers,
                                        int num_workers) {
-  const AVxWorkerInterface *const winterface = avm_get_worker_interface();
+  const AVxWorkerInterface *const winterface = av2_get_worker_interface();
   for (int i = 0; i < num_workers; ++i) {
     AVxWorker *const worker = &workers[i];
     if (i == num_workers - 1)
@@ -1271,7 +1271,7 @@ static INLINE void launch_cdef_workers(AVxWorker *const workers,
 // Synchronize all CDEF workers for the completion of Cdef frame.
 static INLINE void sync_cdef_workers(AVxWorker *const workers,
                                      AV2_COMMON *const cm, int num_workers) {
-  const AVxWorkerInterface *const winterface = avm_get_worker_interface();
+  const AVxWorkerInterface *const winterface = av2_get_worker_interface();
   int had_error = 0;
 
   // Wait for completion of Cdef frame.

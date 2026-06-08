@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_OPS_SYNTAX_H_
-#define AVM_AV2_ENCODER_OPS_SYNTAX_H_
+#ifndef AV2_AV2_ENCODER_OPS_SYNTAX_H_
+#define AV2_AV2_ENCODER_OPS_SYNTAX_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -30,4 +30,4 @@ uint32_t av2_write_operating_point_set(struct OperatingPointSet *ops,
 }
 #endif
 
-#endif  // AVM_AV2_ENCODER_OPS_SYNTAX_H_
+#endif  // AV2_AV2_ENCODER_OPS_SYNTAX_H_

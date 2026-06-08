@@ -1102,7 +1102,7 @@ typedef uint16_t TXFM_CONTEXT;
 // inter and intra.
 #define INTRA_FRAME_INDEX INTER_REFS_PER_FRAME
 #define NONE_FRAME INVALID_IDX
-#define AVM_REFFRAME_ALL ((1 << INTER_REFS_PER_FRAME) - 1)
+#define AV2_REFFRAME_ALL ((1 << INTER_REFS_PER_FRAME) - 1)
 
 // REF_FRAMES for the cm->ref_frame_map array, 1 scratch frame for the new
 // frame in cm->cur_frame, INTER_REFS_PER_FRAME for scaled references on the
@@ -1199,16 +1199,16 @@ typedef struct dist_wtd_comp_params DIST_WTD_COMP_PARAMS;
 typedef uint16_t av2_tx_type;
 
 #include "aom_dsp/noise_model.h"
-static INLINE int avm_denoise_and_model_run(struct aom_denoise_and_model_t *ctx,
+static INLINE int av2_denoise_and_model_run(struct aom_denoise_and_model_t *ctx,
                                             const YV12_BUFFER_CONFIG *sd,
                                             aom_film_grain_t *film_grain) {
   return aom_denoise_and_model_run(ctx, sd, film_grain, film_grain->block_size);
 }
-#define avm_denoise_and_model_free aom_denoise_and_model_free
+#define av2_denoise_and_model_free aom_denoise_and_model_free
 
 #define AOM_EFLAG_NO_UPD_ALL \
   (AOM_EFLAG_NO_UPD_LAST | AOM_EFLAG_NO_UPD_GF | AOM_EFLAG_NO_UPD_ARF)
-#define AVM_BLEND_A64_MAX_ALPHA AOM_BLEND_A64_MAX_ALPHA
+#define AV2_BLEND_A64_MAX_ALPHA AOM_BLEND_A64_MAX_ALPHA
 #define av2_s_frame_info aom_s_frame_info
 
 /* Declare the _c SAD implementations directly and call them in the wrappers
@@ -1233,28 +1233,28 @@ extern unsigned int aom_highbd_sad16x16_c(const uint8_t *src_ptr,
 }
 #endif
 
-static INLINE unsigned int avm_highbd_sad8x8(const uint16_t *src,
+static INLINE unsigned int av2_highbd_sad8x8(const uint16_t *src,
                                              int src_stride,
                                              const uint16_t *ref,
                                              int ref_stride) {
   return aom_highbd_sad8x8_c(CONVERT_TO_BYTEPTR(src), src_stride,
                              CONVERT_TO_BYTEPTR(ref), ref_stride);
 }
-static INLINE unsigned int avm_highbd_sad16x8(const uint16_t *src,
+static INLINE unsigned int av2_highbd_sad16x8(const uint16_t *src,
                                               int src_stride,
                                               const uint16_t *ref,
                                               int ref_stride) {
   return aom_highbd_sad16x8_c(CONVERT_TO_BYTEPTR(src), src_stride,
                               CONVERT_TO_BYTEPTR(ref), ref_stride);
 }
-static INLINE unsigned int avm_highbd_sad8x16(const uint16_t *src,
+static INLINE unsigned int av2_highbd_sad8x16(const uint16_t *src,
                                               int src_stride,
                                               const uint16_t *ref,
                                               int ref_stride) {
   return aom_highbd_sad8x16_c(CONVERT_TO_BYTEPTR(src), src_stride,
                               CONVERT_TO_BYTEPTR(ref), ref_stride);
 }
-static INLINE unsigned int avm_highbd_sad16x16(const uint16_t *src,
+static INLINE unsigned int av2_highbd_sad16x16(const uint16_t *src,
                                                int src_stride,
                                                const uint16_t *ref,
                                                int ref_stride) {
@@ -1297,7 +1297,7 @@ extern void aom_highbd_quantize_b_c(
 }
 #endif
 
-static INLINE void avm_highbd_quantize_b(
+static INLINE void av2_highbd_quantize_b(
     const tran_low_t *coeff_ptr, intptr_t n_coeffs, const int32_t *zbin_ptr,
     const int32_t *round_ptr, const int32_t *quant_ptr,
     const int32_t *quant_shift_ptr, tran_low_t *qcoeff_ptr,
@@ -1316,7 +1316,7 @@ static INLINE void avm_highbd_quantize_b(
                           iscan);
 }
 
-void avm_highbd_quantize_b_c(const tran_low_t *coeff_ptr, intptr_t n_coeffs,
+void av2_highbd_quantize_b_c(const tran_low_t *coeff_ptr, intptr_t n_coeffs,
                              const int32_t *zbin_ptr, const int32_t *round_ptr,
                              const int32_t *quant_ptr,
                              const int32_t *quant_shift_ptr,
@@ -1334,14 +1334,14 @@ extern int64_t aom_highbd_sse_c(const uint8_t *src, int src_stride,
 #ifdef __cplusplus
 }
 #endif
-static INLINE int64_t avm_highbd_sse(const uint16_t *a, int a_stride,
+static INLINE int64_t av2_highbd_sse(const uint16_t *a, int a_stride,
                                      const uint16_t *b, int b_stride, int width,
                                      int height) {
   return aom_highbd_sse_c(CONVERT_TO_BYTEPTR(a), a_stride, CONVERT_TO_BYTEPTR(b),
                           b_stride, width, height);
 }
 
-static INLINE int64_t avm_highbd_sse_c(const uint16_t *a, int a_stride,
+static INLINE int64_t av2_highbd_sse_c(const uint16_t *a, int a_stride,
                                        const uint16_t *b, int b_stride,
                                        int width, int height) {
   return aom_highbd_sse_c(CONVERT_TO_BYTEPTR(a), a_stride, CONVERT_TO_BYTEPTR(b),
@@ -1360,7 +1360,7 @@ extern void aom_highbd_subtract_block_c(int rows, int cols, int16_t *diff_ptr,
 #ifdef __cplusplus
 }
 #endif
-static INLINE void avm_highbd_subtract_block(
+static INLINE void av2_highbd_subtract_block(
     int rows, int cols, int16_t *diff_ptr, ptrdiff_t diff_stride,
     const uint16_t *src_ptr, ptrdiff_t src_stride, const uint16_t *pred_ptr,
     ptrdiff_t pred_stride, int bd) {
@@ -1388,7 +1388,7 @@ extern void aom_highbd_blend_a64_mask_c(
 }
 #endif
 
-static INLINE void avm_highbd_blend_a64_d16_mask(
+static INLINE void av2_highbd_blend_a64_d16_mask(
     void *dst, uint32_t dst_stride, const void *src0, uint32_t src0_stride,
     const void *src1, uint32_t src1_stride, const uint8_t *mask,
     uint32_t mask_stride, int w, int h, int subw, int subh, void *conv_params,
@@ -1403,7 +1403,7 @@ static INLINE void avm_highbd_blend_a64_d16_mask(
       (ConvolveParams *)conv_params, bd);
 }
 
-static INLINE void avm_highbd_blend_a64_mask(
+static INLINE void av2_highbd_blend_a64_mask(
     void *dst, uint32_t dst_stride, const void *src0, uint32_t src0_stride,
     const void *src1, uint32_t src1_stride, const uint8_t *mask,
     uint32_t mask_stride, int w, int h, int subw, int subh, int bd) {
@@ -1419,7 +1419,7 @@ static INLINE void avm_highbd_blend_a64_mask(
 
 #define ACCT_INFO(a, ...) a
 
-static INLINE int avm_rb_read_inv_signed_literal(struct aom_read_bit_buffer *rb,
+static INLINE int av2_rb_read_inv_signed_literal(struct aom_read_bit_buffer *rb,
                                                  int bits) {
   const int nbits = sizeof(unsigned) * 8 - bits - 1;
   const unsigned value = (unsigned)aom_rb_read_literal(rb, bits + 1) << nbits;
@@ -1427,7 +1427,7 @@ static INLINE int avm_rb_read_inv_signed_literal(struct aom_read_bit_buffer *rb,
 }
 
 static INLINE uint16_t
-avm_rb_read_primitive_quniform(struct aom_read_bit_buffer *rb, uint16_t n) {
+av2_rb_read_primitive_quniform(struct aom_read_bit_buffer *rb, uint16_t n) {
   if (n <= 1) return 0;
   const int l = get_unsigned_bits(n - 1);
   const int m = (1 << l) - n;
@@ -1435,7 +1435,7 @@ avm_rb_read_primitive_quniform(struct aom_read_bit_buffer *rb, uint16_t n) {
   return v < m ? v : (v << 1) - m + aom_rb_read_bit(rb);
 }
 
-static INLINE uint16_t avm_rb_read_primitive_subexpfin(
+static INLINE uint16_t av2_rb_read_primitive_subexpfin(
     struct aom_read_bit_buffer *rb, uint16_t n, uint16_t k) {
   int i = 0;
   int mk = 0;
@@ -1443,7 +1443,7 @@ static INLINE uint16_t avm_rb_read_primitive_subexpfin(
     int b = (i ? k + i - 1 : k);
     int a = (1 << b);
     if (n <= mk + 3 * a) {
-      return avm_rb_read_primitive_quniform(rb, n - mk) + mk;
+      return av2_rb_read_primitive_quniform(rb, n - mk) + mk;
     }
     if (!aom_rb_read_bit(rb)) {
       return aom_rb_read_literal(rb, b) + mk;
@@ -1454,14 +1454,14 @@ static INLINE uint16_t avm_rb_read_primitive_subexpfin(
   return 0;
 }
 
-static INLINE uint16_t avm_rb_read_primitive_refsubexpfin(
+static INLINE uint16_t av2_rb_read_primitive_refsubexpfin(
     struct aom_read_bit_buffer *rb, uint16_t n, uint16_t k, uint16_t ref) {
   assert(ref < n);
   return inv_recenter_finite_nonneg(n, ref,
-                                    avm_rb_read_primitive_subexpfin(rb, n, k));
+                                    av2_rb_read_primitive_subexpfin(rb, n, k));
 }
 
-static INLINE int avm_read_unary(aom_reader *r, int max_nbits,
+static INLINE int av2_read_unary(aom_reader *r, int max_nbits,
                                  const char *acct) {
   (void)acct;
   int ret = 0;
@@ -1475,7 +1475,7 @@ static INLINE int avm_read_unary(aom_reader *r, int max_nbits,
   return ret;
 }
 
-static INLINE uint16_t avm_read_primitive_quniform(aom_reader *r, uint16_t n,
+static INLINE uint16_t av2_read_primitive_quniform(aom_reader *r, uint16_t n,
                                                    const char *acct) {
   (void)acct;
   if (n <= 1) return 0;
@@ -1503,7 +1503,7 @@ static INLINE int symb_to_part(int symb, int nsymb_bits) {
     return 3;
 }
 
-static INLINE void avm_write_4part(aom_writer *w, int symb, aom_cdf_prob *cdf,
+static INLINE void av2_write_4part(aom_writer *w, int symb, aom_cdf_prob *cdf,
                                    int nsymb_bits) {
   assert(nsymb_bits >= 3);
   int part;
@@ -1523,14 +1523,14 @@ static INLINE void avm_write_4part(aom_writer *w, int symb, aom_cdf_prob *cdf,
   aom_write_literal(w, symb - part_offs[part], part_bits[part]);
 }
 
-static INLINE void avm_write_4part_wref(aom_writer *w, int ref_symb, int symb,
+static INLINE void av2_write_4part_wref(aom_writer *w, int ref_symb, int symb,
                                         aom_cdf_prob *cdf, int nsymb_bits) {
   const int recentered_symb =
       recenter_finite_nonneg(1 << nsymb_bits, ref_symb, symb);
-  avm_write_4part(w, recentered_symb, cdf, nsymb_bits);
+  av2_write_4part(w, recentered_symb, cdf, nsymb_bits);
 }
 
-static INLINE int64_t avm_count_4part(int symb, const int *part_cost,
+static INLINE int64_t av2_count_4part(int symb, const int *part_cost,
                                       int nsymb_bits, int scale_shift) {
   assert(nsymb_bits >= 3);
   int part_bits[4] = { (nsymb_bits - 3), (nsymb_bits - 3), (nsymb_bits - 2),
@@ -1547,18 +1547,18 @@ static INLINE int64_t avm_count_4part(int symb, const int *part_cost,
     return part_cost[3] + (part_bits[3] << scale_shift);
 }
 
-static INLINE int64_t avm_count_4part_wref(int ref_symb, int symb,
+static INLINE int64_t av2_count_4part_wref(int ref_symb, int symb,
                                            const int *part_cost, int nsymb_bits,
                                            int scale_shift) {
   const int recentered_symb =
       recenter_finite_nonneg(1 << nsymb_bits, ref_symb, symb);
-  return avm_count_4part(recentered_symb, part_cost, nsymb_bits, scale_shift);
+  return av2_count_4part(recentered_symb, part_cost, nsymb_bits, scale_shift);
 }
 #endif
 
 
 
-static INLINE int avm_realloc_frame_buffer(YV12_BUFFER_CONFIG *ybf, int width,
+static INLINE int av2_realloc_frame_buffer(YV12_BUFFER_CONFIG *ybf, int width,
                                            int height, int ss_x, int ss_y,
                                            int border, int byte_alignment,
                                            aom_codec_frame_buffer_t *fb,
@@ -1569,7 +1569,7 @@ static INLINE int avm_realloc_frame_buffer(YV12_BUFFER_CONFIG *ybf, int width,
                                   fb, cb, cb_priv, alloc_pyramid, 0);
 }
 
-static INLINE int avm_alloc_frame_buffer(YV12_BUFFER_CONFIG *ybf, int width,
+static INLINE int av2_alloc_frame_buffer(YV12_BUFFER_CONFIG *ybf, int width,
                                          int height, int ss_x, int ss_y,
                                          int border, int byte_alignment,
                                          bool alloc_pyramid) {
@@ -1578,7 +1578,7 @@ static INLINE int avm_alloc_frame_buffer(YV12_BUFFER_CONFIG *ybf, int width,
                                 alloc_pyramid, 0);
 }
 
-static INLINE int avm_read_4part_(aom_reader *r, aom_cdf_prob *cdf,
+static INLINE int av2_read_4part_(aom_reader *r, aom_cdf_prob *cdf,
                                   int nsymb_bits) {
   assert(nsymb_bits >= 3);
   int part_bits[4] = { (nsymb_bits - 3), (nsymb_bits - 3), (nsymb_bits - 2),
@@ -1589,18 +1589,18 @@ static INLINE int avm_read_4part_(aom_reader *r, aom_cdf_prob *cdf,
   return aom_read_literal(r, part_bits[part], NULL) + part_offs[part];
 }
 
-static INLINE int avm_read_4part_wref(aom_reader *r, int ref_symb,
+static INLINE int av2_read_4part_wref(aom_reader *r, int ref_symb,
                                       aom_cdf_prob *cdf, int nsymb_bits,
                                       const char *acct) {
   (void)acct;
-  const int symb = avm_read_4part_(r, cdf, nsymb_bits);
+  const int symb = av2_read_4part_(r, cdf, nsymb_bits);
   return inv_recenter_finite_nonneg(1 << nsymb_bits, ref_symb, symb);
 }
 
-static INLINE uint16_t avm_rb_read_primitive_ref_quniform(
+static INLINE uint16_t av2_rb_read_primitive_ref_quniform(
     struct aom_read_bit_buffer *rb, uint16_t n, uint16_t r) {
   if (aom_rb_read_bit(rb)) {
-    int v = avm_rb_read_primitive_quniform(rb, n - 1);
+    int v = av2_rb_read_primitive_quniform(rb, n - 1);
     v += (v >= r);
     return v;
   } else {
@@ -1609,14 +1609,14 @@ static INLINE uint16_t avm_rb_read_primitive_ref_quniform(
 }
 
 
-static INLINE int32_t avm_rb_read_svlc(struct aom_read_bit_buffer *rb) {
+static INLINE int32_t av2_rb_read_svlc(struct aom_read_bit_buffer *rb) {
   const uint32_t value = aom_rb_read_uvlc(rb);
   if (value == UINT32_MAX) return INT32_MIN;
   const int32_t ceil_half = (int32_t)((value + 1) / 2);
   return (value % 2) ? ceil_half : -ceil_half;
 }
 
-static INLINE uint32_t avm_rb_read_rice_golomb(struct aom_read_bit_buffer *rb,
+static INLINE uint32_t av2_rb_read_rice_golomb(struct aom_read_bit_buffer *rb,
                                                int k) {
   assert(k <= 26);
   uint32_t quotient = 0;
@@ -1653,13 +1653,13 @@ extern void aom_highbd_convolve_copy_c(const uint16_t *src,
 #ifdef __cplusplus
 }
 #endif
-#define avm_highbd_convolve_copy(src, src_stride, dst, dst_stride, w, h) \
+#define av2_highbd_convolve_copy(src, src_stride, dst, dst_stride, w, h) \
   ((((intptr_t)(dst) & 15) != 0 || ((dst_stride) & 7) != 0)              \
        ? aom_highbd_convolve_copy_c(src, src_stride, dst, dst_stride, w, \
                                     h)                                   \
        : aom_highbd_convolve_copy(src, src_stride, dst, dst_stride, w, h))
 
-static INLINE uint64_t avm_sum_squares_i32(const int32_t *src, uint32_t n) {
+static INLINE uint64_t av2_sum_squares_i32(const int32_t *src, uint32_t n) {
   uint64_t sum = 0;
   for (uint32_t i = 0; i < n; ++i) {
     sum += (uint64_t)src[i] * src[i];
@@ -1674,11 +1674,11 @@ static INLINE uint64_t avm_sum_squares_i32(const int32_t *src, uint32_t n) {
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern void avm_highbd_subtract_block_vert(
+extern void av2_highbd_subtract_block_vert(
     int rows, int cols, int16_t *diff_ptr, ptrdiff_t diff_stride,
     const uint16_t *src_ptr, ptrdiff_t src_stride, const uint16_t *pred_ptr,
     ptrdiff_t pred_stride, int bd);
-extern void avm_highbd_subtract_block_horz(
+extern void av2_highbd_subtract_block_horz(
     int rows, int cols, int16_t *diff_ptr, ptrdiff_t diff_stride,
     const uint16_t *src_ptr, ptrdiff_t src_stride, const uint16_t *pred_ptr,
     ptrdiff_t pred_stride, int bd);
@@ -1708,7 +1708,7 @@ extern uint64_t aom_highbd_sse_odd_size(const uint8_t *a, int a_stride,
 }
 #endif
 
-static INLINE uint64_t avm_highbd_sse_odd_size(const uint16_t *a, int a_stride,
+static INLINE uint64_t av2_highbd_sse_odd_size(const uint16_t *a, int a_stride,
                                                const uint16_t *b, int b_stride,
                                                int w, int h) {
   // aom_highbd_sse_odd_size() expects tagged byte pointers (it applies
@@ -1718,19 +1718,19 @@ static INLINE uint64_t avm_highbd_sse_odd_size(const uint16_t *a, int a_stride,
                                  CONVERT_TO_BYTEPTR(b), b_stride, w, h);
 }
 
-static INLINE void avm_yv12_copy_y(const struct yv12_buffer_config *src_ybc,
+static INLINE void av2_yv12_copy_y(const struct yv12_buffer_config *src_ybc,
                                    struct yv12_buffer_config *dst_ybc) {
   aom_yv12_copy_y(src_ybc, dst_ybc, 0);
 }
-static INLINE void avm_yv12_copy_u(const struct yv12_buffer_config *src_ybc,
+static INLINE void av2_yv12_copy_u(const struct yv12_buffer_config *src_ybc,
                                    struct yv12_buffer_config *dst_ybc) {
   aom_yv12_copy_u(src_ybc, dst_ybc, 0);
 }
-static INLINE void avm_yv12_copy_v(const struct yv12_buffer_config *src_ybc,
+static INLINE void av2_yv12_copy_v(const struct yv12_buffer_config *src_ybc,
                                    struct yv12_buffer_config *dst_ybc) {
   aom_yv12_copy_v(src_ybc, dst_ybc, 0);
 }
-static INLINE int64_t avm_get_sse_plane(const struct yv12_buffer_config *a,
+static INLINE int64_t av2_get_sse_plane(const struct yv12_buffer_config *a,
                                         const struct yv12_buffer_config *b,
                                         int plane) {
   return aom_get_sse_plane(a, b, plane, 1);
@@ -1744,214 +1744,214 @@ static INLINE int32_t clamp64_to_32(int64_t value) {
 static INLINE void aom_reset_mmx_state_dummy(void) {}
 
 #define aom_highbd_ibp_dc_top_predictor_4x4_c \
-  avm_highbd_ibp_dc_top_predictor_4x4_c
+  av2_highbd_ibp_dc_top_predictor_4x4_c
 #define aom_highbd_ibp_dc_top_predictor_8x8_c \
-  avm_highbd_ibp_dc_top_predictor_8x8_c
+  av2_highbd_ibp_dc_top_predictor_8x8_c
 #define aom_highbd_ibp_dc_top_predictor_16x16_c \
-  avm_highbd_ibp_dc_top_predictor_16x16_c
+  av2_highbd_ibp_dc_top_predictor_16x16_c
 #define aom_highbd_ibp_dc_top_predictor_32x32_c \
-  avm_highbd_ibp_dc_top_predictor_32x32_c
+  av2_highbd_ibp_dc_top_predictor_32x32_c
 #define aom_highbd_ibp_dc_top_predictor_64x64_c \
-  avm_highbd_ibp_dc_top_predictor_64x64_c
+  av2_highbd_ibp_dc_top_predictor_64x64_c
 #define aom_highbd_ibp_dc_top_predictor_4x8_c \
-  avm_highbd_ibp_dc_top_predictor_4x8_c
+  av2_highbd_ibp_dc_top_predictor_4x8_c
 #define aom_highbd_ibp_dc_top_predictor_8x4_c \
-  avm_highbd_ibp_dc_top_predictor_8x4_c
+  av2_highbd_ibp_dc_top_predictor_8x4_c
 #define aom_highbd_ibp_dc_top_predictor_8x16_c \
-  avm_highbd_ibp_dc_top_predictor_8x16_c
+  av2_highbd_ibp_dc_top_predictor_8x16_c
 #define aom_highbd_ibp_dc_top_predictor_16x8_c \
-  avm_highbd_ibp_dc_top_predictor_16x8_c
+  av2_highbd_ibp_dc_top_predictor_16x8_c
 #define aom_highbd_ibp_dc_top_predictor_16x32_c \
-  avm_highbd_ibp_dc_top_predictor_16x32_c
+  av2_highbd_ibp_dc_top_predictor_16x32_c
 #define aom_highbd_ibp_dc_top_predictor_32x16_c \
-  avm_highbd_ibp_dc_top_predictor_32x16_c
+  av2_highbd_ibp_dc_top_predictor_32x16_c
 #define aom_highbd_ibp_dc_top_predictor_32x64_c \
-  avm_highbd_ibp_dc_top_predictor_32x64_c
+  av2_highbd_ibp_dc_top_predictor_32x64_c
 #define aom_highbd_ibp_dc_top_predictor_64x32_c \
-  avm_highbd_ibp_dc_top_predictor_64x32_c
+  av2_highbd_ibp_dc_top_predictor_64x32_c
 #define aom_highbd_ibp_dc_top_predictor_4x16_c \
-  avm_highbd_ibp_dc_top_predictor_4x16_c
+  av2_highbd_ibp_dc_top_predictor_4x16_c
 #define aom_highbd_ibp_dc_top_predictor_16x4_c \
-  avm_highbd_ibp_dc_top_predictor_16x4_c
+  av2_highbd_ibp_dc_top_predictor_16x4_c
 #define aom_highbd_ibp_dc_top_predictor_8x32_c \
-  avm_highbd_ibp_dc_top_predictor_8x32_c
+  av2_highbd_ibp_dc_top_predictor_8x32_c
 #define aom_highbd_ibp_dc_top_predictor_32x8_c \
-  avm_highbd_ibp_dc_top_predictor_32x8_c
+  av2_highbd_ibp_dc_top_predictor_32x8_c
 #define aom_highbd_ibp_dc_top_predictor_16x64_c \
-  avm_highbd_ibp_dc_top_predictor_16x64_c
+  av2_highbd_ibp_dc_top_predictor_16x64_c
 #define aom_highbd_ibp_dc_top_predictor_64x16_c \
-  avm_highbd_ibp_dc_top_predictor_64x16_c
+  av2_highbd_ibp_dc_top_predictor_64x16_c
 #define aom_highbd_ibp_dc_top_predictor_4x32_c \
-  avm_highbd_ibp_dc_top_predictor_4x32_c
+  av2_highbd_ibp_dc_top_predictor_4x32_c
 #define aom_highbd_ibp_dc_top_predictor_32x4_c \
-  avm_highbd_ibp_dc_top_predictor_32x4_c
+  av2_highbd_ibp_dc_top_predictor_32x4_c
 #define aom_highbd_ibp_dc_top_predictor_8x64_c \
-  avm_highbd_ibp_dc_top_predictor_8x64_c
+  av2_highbd_ibp_dc_top_predictor_8x64_c
 #define aom_highbd_ibp_dc_top_predictor_64x8_c \
-  avm_highbd_ibp_dc_top_predictor_64x8_c
+  av2_highbd_ibp_dc_top_predictor_64x8_c
 #define aom_highbd_ibp_dc_top_predictor_4x64_c \
-  avm_highbd_ibp_dc_top_predictor_4x64_c
+  av2_highbd_ibp_dc_top_predictor_4x64_c
 #define aom_highbd_ibp_dc_top_predictor_64x4_c \
-  avm_highbd_ibp_dc_top_predictor_64x4_c
+  av2_highbd_ibp_dc_top_predictor_64x4_c
 
 #define aom_highbd_ibp_dc_left_predictor_4x4_c \
-  avm_highbd_ibp_dc_left_predictor_4x4_c
+  av2_highbd_ibp_dc_left_predictor_4x4_c
 #define aom_highbd_ibp_dc_left_predictor_8x8_c \
-  avm_highbd_ibp_dc_left_predictor_8x8_c
+  av2_highbd_ibp_dc_left_predictor_8x8_c
 #define aom_highbd_ibp_dc_left_predictor_16x16_c \
-  avm_highbd_ibp_dc_left_predictor_16x16_c
+  av2_highbd_ibp_dc_left_predictor_16x16_c
 #define aom_highbd_ibp_dc_left_predictor_32x32_c \
-  avm_highbd_ibp_dc_left_predictor_32x32_c
+  av2_highbd_ibp_dc_left_predictor_32x32_c
 #define aom_highbd_ibp_dc_left_predictor_64x64_c \
-  avm_highbd_ibp_dc_left_predictor_64x64_c
+  av2_highbd_ibp_dc_left_predictor_64x64_c
 #define aom_highbd_ibp_dc_left_predictor_4x8_c \
-  avm_highbd_ibp_dc_left_predictor_4x8_c
+  av2_highbd_ibp_dc_left_predictor_4x8_c
 #define aom_highbd_ibp_dc_left_predictor_8x4_c \
-  avm_highbd_ibp_dc_left_predictor_8x4_c
+  av2_highbd_ibp_dc_left_predictor_8x4_c
 #define aom_highbd_ibp_dc_left_predictor_8x16_c \
-  avm_highbd_ibp_dc_left_predictor_8x16_c
+  av2_highbd_ibp_dc_left_predictor_8x16_c
 #define aom_highbd_ibp_dc_left_predictor_16x8_c \
-  avm_highbd_ibp_dc_left_predictor_16x8_c
+  av2_highbd_ibp_dc_left_predictor_16x8_c
 #define aom_highbd_ibp_dc_left_predictor_16x32_c \
-  avm_highbd_ibp_dc_left_predictor_16x32_c
+  av2_highbd_ibp_dc_left_predictor_16x32_c
 #define aom_highbd_ibp_dc_left_predictor_32x16_c \
-  avm_highbd_ibp_dc_left_predictor_32x16_c
+  av2_highbd_ibp_dc_left_predictor_32x16_c
 #define aom_highbd_ibp_dc_left_predictor_32x64_c \
-  avm_highbd_ibp_dc_left_predictor_32x64_c
+  av2_highbd_ibp_dc_left_predictor_32x64_c
 #define aom_highbd_ibp_dc_left_predictor_64x32_c \
-  avm_highbd_ibp_dc_left_predictor_64x32_c
+  av2_highbd_ibp_dc_left_predictor_64x32_c
 #define aom_highbd_ibp_dc_left_predictor_4x16_c \
-  avm_highbd_ibp_dc_left_predictor_4x16_c
+  av2_highbd_ibp_dc_left_predictor_4x16_c
 #define aom_highbd_ibp_dc_left_predictor_16x4_c \
-  avm_highbd_ibp_dc_left_predictor_16x4_c
+  av2_highbd_ibp_dc_left_predictor_16x4_c
 #define aom_highbd_ibp_dc_left_predictor_8x32_c \
-  avm_highbd_ibp_dc_left_predictor_8x32_c
+  av2_highbd_ibp_dc_left_predictor_8x32_c
 #define aom_highbd_ibp_dc_left_predictor_32x8_c \
-  avm_highbd_ibp_dc_left_predictor_32x8_c
+  av2_highbd_ibp_dc_left_predictor_32x8_c
 #define aom_highbd_ibp_dc_left_predictor_16x64_c \
-  avm_highbd_ibp_dc_left_predictor_16x64_c
+  av2_highbd_ibp_dc_left_predictor_16x64_c
 #define aom_highbd_ibp_dc_left_predictor_64x16_c \
-  avm_highbd_ibp_dc_left_predictor_64x16_c
+  av2_highbd_ibp_dc_left_predictor_64x16_c
 #define aom_highbd_ibp_dc_left_predictor_4x32_c \
-  avm_highbd_ibp_dc_left_predictor_4x32_c
+  av2_highbd_ibp_dc_left_predictor_4x32_c
 #define aom_highbd_ibp_dc_left_predictor_32x4_c \
-  avm_highbd_ibp_dc_left_predictor_32x4_c
+  av2_highbd_ibp_dc_left_predictor_32x4_c
 #define aom_highbd_ibp_dc_left_predictor_8x64_c \
-  avm_highbd_ibp_dc_left_predictor_8x64_c
+  av2_highbd_ibp_dc_left_predictor_8x64_c
 #define aom_highbd_ibp_dc_left_predictor_64x8_c \
-  avm_highbd_ibp_dc_left_predictor_64x8_c
+  av2_highbd_ibp_dc_left_predictor_64x8_c
 #define aom_highbd_ibp_dc_left_predictor_4x64_c \
-  avm_highbd_ibp_dc_left_predictor_4x64_c
+  av2_highbd_ibp_dc_left_predictor_4x64_c
 #define aom_highbd_ibp_dc_left_predictor_64x4_c \
-  avm_highbd_ibp_dc_left_predictor_64x4_c
+  av2_highbd_ibp_dc_left_predictor_64x4_c
 
-#define aom_highbd_ibp_dc_predictor_4x4_c avm_highbd_ibp_dc_predictor_4x4_c
-#define aom_highbd_ibp_dc_predictor_8x8_c avm_highbd_ibp_dc_predictor_8x8_c
-#define aom_highbd_ibp_dc_predictor_16x16_c avm_highbd_ibp_dc_predictor_16x16_c
-#define aom_highbd_ibp_dc_predictor_32x32_c avm_highbd_ibp_dc_predictor_32x32_c
-#define aom_highbd_ibp_dc_predictor_64x64_c avm_highbd_ibp_dc_predictor_64x64_c
-#define aom_highbd_ibp_dc_predictor_4x8_c avm_highbd_ibp_dc_predictor_4x8_c
-#define aom_highbd_ibp_dc_predictor_8x4_c avm_highbd_ibp_dc_predictor_8x4_c
-#define aom_highbd_ibp_dc_predictor_8x16_c avm_highbd_ibp_dc_predictor_8x16_c
-#define aom_highbd_ibp_dc_predictor_16x8_c avm_highbd_ibp_dc_predictor_16x8_c
-#define aom_highbd_ibp_dc_predictor_16x32_c avm_highbd_ibp_dc_predictor_16x32_c
-#define aom_highbd_ibp_dc_predictor_32x16_c avm_highbd_ibp_dc_predictor_32x16_c
-#define aom_highbd_ibp_dc_predictor_32x64_c avm_highbd_ibp_dc_predictor_32x64_c
-#define aom_highbd_ibp_dc_predictor_64x32_c avm_highbd_ibp_dc_predictor_64x32_c
-#define aom_highbd_ibp_dc_predictor_4x16_c avm_highbd_ibp_dc_predictor_4x16_c
-#define aom_highbd_ibp_dc_predictor_16x4_c avm_highbd_ibp_dc_predictor_16x4_c
-#define aom_highbd_ibp_dc_predictor_8x32_c avm_highbd_ibp_dc_predictor_8x32_c
-#define aom_highbd_ibp_dc_predictor_32x8_c avm_highbd_ibp_dc_predictor_32x8_c
-#define aom_highbd_ibp_dc_predictor_16x64_c avm_highbd_ibp_dc_predictor_16x64_c
-#define aom_highbd_ibp_dc_predictor_64x16_c avm_highbd_ibp_dc_predictor_64x16_c
-#define aom_highbd_ibp_dc_predictor_4x32_c avm_highbd_ibp_dc_predictor_4x32_c
-#define aom_highbd_ibp_dc_predictor_32x4_c avm_highbd_ibp_dc_predictor_32x4_c
-#define aom_highbd_ibp_dc_predictor_8x64_c avm_highbd_ibp_dc_predictor_8x64_c
-#define aom_highbd_ibp_dc_predictor_64x8_c avm_highbd_ibp_dc_predictor_64x8_c
-#define aom_highbd_ibp_dc_predictor_4x64_c avm_highbd_ibp_dc_predictor_4x64_c
-#define aom_highbd_ibp_dc_predictor_64x4_c avm_highbd_ibp_dc_predictor_64x4_c
+#define aom_highbd_ibp_dc_predictor_4x4_c av2_highbd_ibp_dc_predictor_4x4_c
+#define aom_highbd_ibp_dc_predictor_8x8_c av2_highbd_ibp_dc_predictor_8x8_c
+#define aom_highbd_ibp_dc_predictor_16x16_c av2_highbd_ibp_dc_predictor_16x16_c
+#define aom_highbd_ibp_dc_predictor_32x32_c av2_highbd_ibp_dc_predictor_32x32_c
+#define aom_highbd_ibp_dc_predictor_64x64_c av2_highbd_ibp_dc_predictor_64x64_c
+#define aom_highbd_ibp_dc_predictor_4x8_c av2_highbd_ibp_dc_predictor_4x8_c
+#define aom_highbd_ibp_dc_predictor_8x4_c av2_highbd_ibp_dc_predictor_8x4_c
+#define aom_highbd_ibp_dc_predictor_8x16_c av2_highbd_ibp_dc_predictor_8x16_c
+#define aom_highbd_ibp_dc_predictor_16x8_c av2_highbd_ibp_dc_predictor_16x8_c
+#define aom_highbd_ibp_dc_predictor_16x32_c av2_highbd_ibp_dc_predictor_16x32_c
+#define aom_highbd_ibp_dc_predictor_32x16_c av2_highbd_ibp_dc_predictor_32x16_c
+#define aom_highbd_ibp_dc_predictor_32x64_c av2_highbd_ibp_dc_predictor_32x64_c
+#define aom_highbd_ibp_dc_predictor_64x32_c av2_highbd_ibp_dc_predictor_64x32_c
+#define aom_highbd_ibp_dc_predictor_4x16_c av2_highbd_ibp_dc_predictor_4x16_c
+#define aom_highbd_ibp_dc_predictor_16x4_c av2_highbd_ibp_dc_predictor_16x4_c
+#define aom_highbd_ibp_dc_predictor_8x32_c av2_highbd_ibp_dc_predictor_8x32_c
+#define aom_highbd_ibp_dc_predictor_32x8_c av2_highbd_ibp_dc_predictor_32x8_c
+#define aom_highbd_ibp_dc_predictor_16x64_c av2_highbd_ibp_dc_predictor_16x64_c
+#define aom_highbd_ibp_dc_predictor_64x16_c av2_highbd_ibp_dc_predictor_64x16_c
+#define aom_highbd_ibp_dc_predictor_4x32_c av2_highbd_ibp_dc_predictor_4x32_c
+#define aom_highbd_ibp_dc_predictor_32x4_c av2_highbd_ibp_dc_predictor_32x4_c
+#define aom_highbd_ibp_dc_predictor_8x64_c av2_highbd_ibp_dc_predictor_8x64_c
+#define aom_highbd_ibp_dc_predictor_64x8_c av2_highbd_ibp_dc_predictor_64x8_c
+#define aom_highbd_ibp_dc_predictor_4x64_c av2_highbd_ibp_dc_predictor_4x64_c
+#define aom_highbd_ibp_dc_predictor_64x4_c av2_highbd_ibp_dc_predictor_64x4_c
 
-#define aom_highbd_dc_128_predictor_4x32_c avm_highbd_dc_128_predictor_4x32_c
-#define aom_highbd_dc_128_predictor_32x4_c avm_highbd_dc_128_predictor_32x4_c
-#define aom_highbd_dc_128_predictor_8x64_c avm_highbd_dc_128_predictor_8x64_c
-#define aom_highbd_dc_128_predictor_64x8_c avm_highbd_dc_128_predictor_64x8_c
-#define aom_highbd_dc_128_predictor_4x64_c avm_highbd_dc_128_predictor_4x64_c
-#define aom_highbd_dc_128_predictor_64x4_c avm_highbd_dc_128_predictor_64x4_c
+#define aom_highbd_dc_128_predictor_4x32_c av2_highbd_dc_128_predictor_4x32_c
+#define aom_highbd_dc_128_predictor_32x4_c av2_highbd_dc_128_predictor_32x4_c
+#define aom_highbd_dc_128_predictor_8x64_c av2_highbd_dc_128_predictor_8x64_c
+#define aom_highbd_dc_128_predictor_64x8_c av2_highbd_dc_128_predictor_64x8_c
+#define aom_highbd_dc_128_predictor_4x64_c av2_highbd_dc_128_predictor_4x64_c
+#define aom_highbd_dc_128_predictor_64x4_c av2_highbd_dc_128_predictor_64x4_c
 
-#define aom_highbd_v_predictor_4x32_c avm_highbd_v_predictor_4x32_c
-#define aom_highbd_v_predictor_32x4_c avm_highbd_v_predictor_32x4_c
-#define aom_highbd_v_predictor_8x64_c avm_highbd_v_predictor_8x64_c
-#define aom_highbd_v_predictor_64x8_c avm_highbd_v_predictor_64x8_c
-#define aom_highbd_v_predictor_4x64_c avm_highbd_v_predictor_4x64_c
-#define aom_highbd_v_predictor_64x4_c avm_highbd_v_predictor_64x4_c
+#define aom_highbd_v_predictor_4x32_c av2_highbd_v_predictor_4x32_c
+#define aom_highbd_v_predictor_32x4_c av2_highbd_v_predictor_32x4_c
+#define aom_highbd_v_predictor_8x64_c av2_highbd_v_predictor_8x64_c
+#define aom_highbd_v_predictor_64x8_c av2_highbd_v_predictor_64x8_c
+#define aom_highbd_v_predictor_4x64_c av2_highbd_v_predictor_4x64_c
+#define aom_highbd_v_predictor_64x4_c av2_highbd_v_predictor_64x4_c
 
-#define aom_highbd_h_predictor_4x32_c avm_highbd_h_predictor_4x32_c
-#define aom_highbd_h_predictor_32x4_c avm_highbd_h_predictor_32x4_c
-#define aom_highbd_h_predictor_8x64_c avm_highbd_h_predictor_8x64_c
-#define aom_highbd_h_predictor_64x8_c avm_highbd_h_predictor_64x8_c
-#define aom_highbd_h_predictor_4x64_c avm_highbd_h_predictor_4x64_c
-#define aom_highbd_h_predictor_64x4_c avm_highbd_h_predictor_64x4_c
+#define aom_highbd_h_predictor_4x32_c av2_highbd_h_predictor_4x32_c
+#define aom_highbd_h_predictor_32x4_c av2_highbd_h_predictor_32x4_c
+#define aom_highbd_h_predictor_8x64_c av2_highbd_h_predictor_8x64_c
+#define aom_highbd_h_predictor_64x8_c av2_highbd_h_predictor_64x8_c
+#define aom_highbd_h_predictor_4x64_c av2_highbd_h_predictor_4x64_c
+#define aom_highbd_h_predictor_64x4_c av2_highbd_h_predictor_64x4_c
 
-#define aom_highbd_smooth_predictor_4x32_c avm_highbd_smooth_predictor_4x32_c
-#define aom_highbd_smooth_predictor_32x4_c avm_highbd_smooth_predictor_32x4_c
-#define aom_highbd_smooth_predictor_8x64_c avm_highbd_smooth_predictor_8x64_c
-#define aom_highbd_smooth_predictor_64x8_c avm_highbd_smooth_predictor_64x8_c
-#define aom_highbd_smooth_predictor_4x64_c avm_highbd_smooth_predictor_4x64_c
-#define aom_highbd_smooth_predictor_64x4_c avm_highbd_smooth_predictor_64x4_c
+#define aom_highbd_smooth_predictor_4x32_c av2_highbd_smooth_predictor_4x32_c
+#define aom_highbd_smooth_predictor_32x4_c av2_highbd_smooth_predictor_32x4_c
+#define aom_highbd_smooth_predictor_8x64_c av2_highbd_smooth_predictor_8x64_c
+#define aom_highbd_smooth_predictor_64x8_c av2_highbd_smooth_predictor_64x8_c
+#define aom_highbd_smooth_predictor_4x64_c av2_highbd_smooth_predictor_4x64_c
+#define aom_highbd_smooth_predictor_64x4_c av2_highbd_smooth_predictor_64x4_c
 
 #define aom_highbd_smooth_v_predictor_4x32_c \
-  avm_highbd_smooth_v_predictor_4x32_c
+  av2_highbd_smooth_v_predictor_4x32_c
 #define aom_highbd_smooth_v_predictor_32x4_c \
-  avm_highbd_smooth_v_predictor_32x4_c
+  av2_highbd_smooth_v_predictor_32x4_c
 #define aom_highbd_smooth_v_predictor_8x64_c \
-  avm_highbd_smooth_v_predictor_8x64_c
+  av2_highbd_smooth_v_predictor_8x64_c
 #define aom_highbd_smooth_v_predictor_64x8_c \
-  avm_highbd_smooth_v_predictor_64x8_c
+  av2_highbd_smooth_v_predictor_64x8_c
 #define aom_highbd_smooth_v_predictor_4x64_c \
-  avm_highbd_smooth_v_predictor_4x64_c
+  av2_highbd_smooth_v_predictor_4x64_c
 #define aom_highbd_smooth_v_predictor_64x4_c \
-  avm_highbd_smooth_v_predictor_64x4_c
+  av2_highbd_smooth_v_predictor_64x4_c
 
 #define aom_highbd_smooth_h_predictor_4x32_c \
-  avm_highbd_smooth_h_predictor_4x32_c
+  av2_highbd_smooth_h_predictor_4x32_c
 #define aom_highbd_smooth_h_predictor_32x4_c \
-  avm_highbd_smooth_h_predictor_32x4_c
+  av2_highbd_smooth_h_predictor_32x4_c
 #define aom_highbd_smooth_h_predictor_8x64_c \
-  avm_highbd_smooth_h_predictor_8x64_c
+  av2_highbd_smooth_h_predictor_8x64_c
 #define aom_highbd_smooth_h_predictor_64x8_c \
-  avm_highbd_smooth_h_predictor_64x8_c
+  av2_highbd_smooth_h_predictor_64x8_c
 #define aom_highbd_smooth_h_predictor_4x64_c \
-  avm_highbd_smooth_h_predictor_4x64_c
+  av2_highbd_smooth_h_predictor_4x64_c
 #define aom_highbd_smooth_h_predictor_64x4_c \
-  avm_highbd_smooth_h_predictor_64x4_c
+  av2_highbd_smooth_h_predictor_64x4_c
 
-#define aom_highbd_paeth_predictor_4x32_c avm_highbd_paeth_predictor_4x32_c
-#define aom_highbd_paeth_predictor_32x4_c avm_highbd_paeth_predictor_32x4_c
-#define aom_highbd_paeth_predictor_8x64_c avm_highbd_paeth_predictor_8x64_c
-#define aom_highbd_paeth_predictor_64x8_c avm_highbd_paeth_predictor_64x8_c
-#define aom_highbd_paeth_predictor_4x64_c avm_highbd_paeth_predictor_4x64_c
-#define aom_highbd_paeth_predictor_64x4_c avm_highbd_paeth_predictor_64x4_c
+#define aom_highbd_paeth_predictor_4x32_c av2_highbd_paeth_predictor_4x32_c
+#define aom_highbd_paeth_predictor_32x4_c av2_highbd_paeth_predictor_32x4_c
+#define aom_highbd_paeth_predictor_8x64_c av2_highbd_paeth_predictor_8x64_c
+#define aom_highbd_paeth_predictor_64x8_c av2_highbd_paeth_predictor_64x8_c
+#define aom_highbd_paeth_predictor_4x64_c av2_highbd_paeth_predictor_4x64_c
+#define aom_highbd_paeth_predictor_64x4_c av2_highbd_paeth_predictor_64x4_c
 
-#define aom_highbd_dc_top_predictor_4x32_c avm_highbd_dc_top_predictor_4x32_c
-#define aom_highbd_dc_top_predictor_32x4_c avm_highbd_dc_top_predictor_32x4_c
-#define aom_highbd_dc_top_predictor_8x64_c avm_highbd_dc_top_predictor_8x64_c
-#define aom_highbd_dc_top_predictor_64x8_c avm_highbd_dc_top_predictor_64x8_c
-#define aom_highbd_dc_top_predictor_4x64_c avm_highbd_dc_top_predictor_4x64_c
-#define aom_highbd_dc_top_predictor_64x4_c avm_highbd_dc_top_predictor_64x4_c
+#define aom_highbd_dc_top_predictor_4x32_c av2_highbd_dc_top_predictor_4x32_c
+#define aom_highbd_dc_top_predictor_32x4_c av2_highbd_dc_top_predictor_32x4_c
+#define aom_highbd_dc_top_predictor_8x64_c av2_highbd_dc_top_predictor_8x64_c
+#define aom_highbd_dc_top_predictor_64x8_c av2_highbd_dc_top_predictor_64x8_c
+#define aom_highbd_dc_top_predictor_4x64_c av2_highbd_dc_top_predictor_4x64_c
+#define aom_highbd_dc_top_predictor_64x4_c av2_highbd_dc_top_predictor_64x4_c
 
-#define aom_highbd_dc_left_predictor_4x32_c avm_highbd_dc_left_predictor_4x32_c
-#define aom_highbd_dc_left_predictor_32x4_c avm_highbd_dc_left_predictor_32x4_c
-#define aom_highbd_dc_left_predictor_8x64_c avm_highbd_dc_left_predictor_8x64_c
-#define aom_highbd_dc_left_predictor_64x8_c avm_highbd_dc_left_predictor_64x8_c
-#define aom_highbd_dc_left_predictor_4x64_c avm_highbd_dc_left_predictor_4x64_c
-#define aom_highbd_dc_left_predictor_64x4_c avm_highbd_dc_left_predictor_64x4_c
+#define aom_highbd_dc_left_predictor_4x32_c av2_highbd_dc_left_predictor_4x32_c
+#define aom_highbd_dc_left_predictor_32x4_c av2_highbd_dc_left_predictor_32x4_c
+#define aom_highbd_dc_left_predictor_8x64_c av2_highbd_dc_left_predictor_8x64_c
+#define aom_highbd_dc_left_predictor_64x8_c av2_highbd_dc_left_predictor_64x8_c
+#define aom_highbd_dc_left_predictor_4x64_c av2_highbd_dc_left_predictor_4x64_c
+#define aom_highbd_dc_left_predictor_64x4_c av2_highbd_dc_left_predictor_64x4_c
 
-#define aom_highbd_dc_predictor_4x32_c avm_highbd_dc_predictor_4x32_c
-#define aom_highbd_dc_predictor_32x4_c avm_highbd_dc_predictor_32x4_c
-#define aom_highbd_dc_predictor_8x64_c avm_highbd_dc_predictor_8x64_c
-#define aom_highbd_dc_predictor_64x8_c avm_highbd_dc_predictor_64x8_c
-#define aom_highbd_dc_predictor_4x64_c avm_highbd_dc_predictor_4x64_c
-#define aom_highbd_dc_predictor_64x4_c avm_highbd_dc_predictor_64x4_c
+#define aom_highbd_dc_predictor_4x32_c av2_highbd_dc_predictor_4x32_c
+#define aom_highbd_dc_predictor_32x4_c av2_highbd_dc_predictor_32x4_c
+#define aom_highbd_dc_predictor_8x64_c av2_highbd_dc_predictor_8x64_c
+#define aom_highbd_dc_predictor_64x8_c av2_highbd_dc_predictor_64x8_c
+#define aom_highbd_dc_predictor_4x64_c av2_highbd_dc_predictor_4x64_c
+#define aom_highbd_dc_predictor_64x4_c av2_highbd_dc_predictor_64x4_c
 
 #define av2_add_film_grain av1_add_film_grain
 

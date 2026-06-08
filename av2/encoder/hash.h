@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_HASH_H_
-#define AVM_AV2_ENCODER_HASH_H_
+#ifndef AV2_AV2_ENCODER_HASH_H_
+#define AV2_AV2_ENCODER_HASH_H_
 
 #include "config/aom_config.h"
 
@@ -45,10 +45,10 @@ typedef struct _CRC32C {
 // init table for software version crc32c
 void av2_crc32c_calculator_init(CRC32C *p_crc32c);
 
-#define AVM_BUFFER_SIZE_FOR_BLOCK_HASH (1 << (2 * (MAX_SB_SIZE_LOG2 - 1)))
+#define AV2_BUFFER_SIZE_FOR_BLOCK_HASH (1 << (2 * (MAX_SB_SIZE_LOG2 - 1)))
 
 #ifdef __cplusplus
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_HASH_H_
+#endif  // AV2_AV2_ENCODER_HASH_H_

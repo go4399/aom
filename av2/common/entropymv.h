@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_ENTROPYMV_H_
-#define AVM_AV2_COMMON_ENTROPYMV_H_
+#ifndef AV2_AV2_COMMON_ENTROPYMV_H_
+#define AV2_AV2_COMMON_ENTROPYMV_H_
 
 #include "config/aom_config.h"
 
@@ -108,4 +108,4 @@ typedef struct {
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_ENTROPYMV_H_
+#endif  // AV2_AV2_COMMON_ENTROPYMV_H_

@@ -1012,7 +1012,7 @@ static unsigned pixel_dist_visible_only(
   }
 
   const MACROBLOCKD *xd = &x->e_mbd;
-  uint64_t sse64 = avm_highbd_sse_odd_size(src, src_stride, dst, dst_stride,
+  uint64_t sse64 = av2_highbd_sse_odd_size(src, src_stride, dst, dst_stride,
                                            visible_cols, visible_rows);
   return (unsigned int)ROUND_POWER_OF_TWO(sse64, (xd->bd - 8) * 2);
 }
@@ -1060,7 +1060,7 @@ static INLINE int64_t dist_block_px_domain(const AV2_COMP *cpi, MACROBLOCK *x,
 
   DECLARE_ALIGNED(16, uint16_t, recon[MAX_TX_SQUARE]);
 
-  avm_highbd_convolve_copy(dst, dst_stride, recon, MAX_TX_SIZE, bsw, bsh);
+  av2_highbd_convolve_copy(dst, dst_stride, recon, MAX_TX_SIZE, bsw, bsh);
 
   const PLANE_TYPE plane_type = get_plane_type(plane);
   av2_tx_type tx_type =
@@ -1120,9 +1120,9 @@ static INLINE int64_t joint_uv_dist_block_px_domain(const AV2_COMP *cpi,
   uint16_t *recon_c1 = aom_memalign(16, MAX_TX_SQUARE * sizeof(uint16_t));
   uint16_t *recon_c2 = aom_memalign(16, MAX_TX_SQUARE * sizeof(uint16_t));
 
-  avm_highbd_convolve_copy(dst_c1, pd_c1->dst.stride, recon_c1, MAX_TX_SIZE,
+  av2_highbd_convolve_copy(dst_c1, pd_c1->dst.stride, recon_c1, MAX_TX_SIZE,
                            bsw, bsh);
-  avm_highbd_convolve_copy(dst_c2, pd_c2->dst.stride, recon_c2, MAX_TX_SIZE,
+  av2_highbd_convolve_copy(dst_c2, pd_c2->dst.stride, recon_c2, MAX_TX_SIZE,
                            bsw, bsh);
 
   CctxType cctx_type = av2_get_cctx_type(xd, blk_row, blk_col);
@@ -2808,9 +2808,9 @@ static void search_cctx_type(const AV2_COMP *cpi, MACROBLOCK *x, int block,
 
     // TODO(kslu) for negative angles, skip av2_xform_quant and reuse previous
     // dqcoeffs
-    uint64_t sse_dqcoeff_c1 = avm_sum_squares_i32(
+    uint64_t sse_dqcoeff_c1 = av2_sum_squares_i32(
         p_c1->dqcoeff + BLOCK_OFFSET(block), (int32_t)max_eob);
-    uint64_t sse_dqcoeff_c2 = avm_sum_squares_i32(
+    uint64_t sse_dqcoeff_c2 = av2_sum_squares_i32(
         p_c2->dqcoeff + BLOCK_OFFSET(block), (int32_t)max_eob);
     if (sse_dqcoeff_c2 > sse_dqcoeff_c1) continue;
 

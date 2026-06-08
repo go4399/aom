@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_DECODER_DECODEFRAME_H_
-#define AVM_AV2_DECODER_DECODEFRAME_H_
+#ifndef AV2_AV2_DECODER_DECODEFRAME_H_
+#define AV2_AV2_DECODER_DECODEFRAME_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -114,7 +114,7 @@ void av2_read_chroma_format_bitdepth(
 
 // Implements the timing_info() function in the spec. Reports errors by calling
 // rb->error_handler() or aom_internal_error().
-void av2_read_timing_info_header(avm_timing_info_t *timing_info,
+void av2_read_timing_info_header(av2_timing_info_t *timing_info,
                                  struct aom_internal_error_info *error,
                                  struct aom_read_bit_buffer *rb);
 
@@ -140,4 +140,4 @@ int get_disp_order_hint_keyobu(SequenceHeader *seq_params, OBU_TYPE obu_type,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_DECODER_DECODEFRAME_H_
+#endif  // AV2_AV2_DECODER_DECODEFRAME_H_

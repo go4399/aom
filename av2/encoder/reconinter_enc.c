@@ -71,8 +71,8 @@ void av2_enc_calc_subpel_params(const MV *const src_mv,
     pos_x += SCALE_EXTRA_OFF;
     pos_y += SCALE_EXTRA_OFF;
 
-    const int top = -AVM_LEFT_TOP_MARGIN_SCALED(ssy);
-    const int left = -AVM_LEFT_TOP_MARGIN_SCALED(ssx);
+    const int top = -AV2_LEFT_TOP_MARGIN_SCALED(ssy);
+    const int left = -AV2_LEFT_TOP_MARGIN_SCALED(ssx);
     const int bottom = (pre_buf->height + AOM_INTERP_EXTEND)
                        << SCALE_SUBPEL_BITS;
     const int right = (pre_buf->width + AOM_INTERP_EXTEND) << SCALE_SUBPEL_BITS;
@@ -329,7 +329,7 @@ static void build_masked_compound_highbd(
   const uint8_t *mask = av2_get_compound_type_mask(comp_data, sb_type);
   // const uint8_t *mask =
   //     av2_get_contiguous_soft_mask(wedge_index, wedge_sign, sb_type);
-  avm_highbd_blend_a64_mask(dst, dst_stride, src0, src0_stride, src1,
+  av2_highbd_blend_a64_mask(dst, dst_stride, src0, src0_stride, src1,
                             src1_stride, mask, block_size_wide[sb_type], w, h,
                             subw, subh, bd);
 }
@@ -356,7 +356,7 @@ static void build_wedge_inter_predictor_from_buf(
         dst, dst_buf->stride, ext_dst0, ext_dst_stride0, ext_dst1,
         ext_dst_stride1, comp_data, mbmi->sb_type[PLANE_TYPE_Y], h, w, xd->bd);
   } else {
-    avm_highbd_convolve_copy(ext_dst0, ext_dst_stride0, dst, dst_buf->stride, w,
+    av2_highbd_convolve_copy(ext_dst0, ext_dst_stride0, dst, dst_buf->stride, w,
                              h);
   }
 }

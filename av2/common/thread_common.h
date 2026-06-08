@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_THREAD_COMMON_H_
-#define AVM_AV2_COMMON_THREAD_COMMON_H_
+#ifndef AV2_AV2_COMMON_THREAD_COMMON_H_
+#define AV2_AV2_COMMON_THREAD_COMMON_H_
 
 #include "config/aom_config.h"
 
@@ -262,4 +262,4 @@ void av2_setup_tip_frame_mt(AV2_COMMON *cm,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_THREAD_COMMON_H_
+#endif  // AV2_AV2_COMMON_THREAD_COMMON_H_

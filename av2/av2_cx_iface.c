@@ -9,7 +9,7 @@
  * source code in the PATENTS file, you can obtain it at
  * aomedia.org/license/patent-license/.
  */
-#define aom_codec_alg_priv avm_codec_alg_priv
+#define aom_codec_alg_priv av2_codec_alg_priv
 
 #include <assert.h>
 #include <stdlib.h>
@@ -29,13 +29,13 @@
 
 #include "av2/av2_iface_common.h"
 
-#define AVM_CODEC_USE_PSNR AOM_CODEC_USE_PSNR
-#define AVM_CODEC_USE_STREAM_PSNR 0x10000
-#define AVM_CODEC_USE_PER_FRAME_STATS 0x20000
-#define AVM_CODEC_USE_PER_FRAME_HLS_INFO 0x40000
-#define AVM_CODEC_CX_FRAME_NULL_PKT AOM_CODEC_CX_FRAME_NULL_PKT
-#define AVM_CODEC_CX_FRAME_PKT AOM_CODEC_CX_FRAME_PKT
-#define AVM_ENC_NO_SCALE_BORDER AOM_ENC_NO_SCALE_BORDER
+#define AV2_CODEC_USE_PSNR AOM_CODEC_USE_PSNR
+#define AV2_CODEC_USE_STREAM_PSNR 0x10000
+#define AV2_CODEC_USE_PER_FRAME_STATS 0x20000
+#define AV2_CODEC_USE_PER_FRAME_HLS_INFO 0x40000
+#define AV2_CODEC_CX_FRAME_NULL_PKT AOM_CODEC_CX_FRAME_NULL_PKT
+#define AV2_CODEC_CX_FRAME_PKT AOM_CODEC_CX_FRAME_PKT
+#define AV2_ENC_NO_SCALE_BORDER AOM_ENC_NO_SCALE_BORDER
 #define aom_pts_t aom_codec_pts_t
 #define AV2E_SET_INTRA_DEFAULT_TX_ONLY AV1E_SET_INTRA_DEFAULT_TX_ONLY
 
@@ -48,7 +48,7 @@
 
 
 
-#define AVM_KF_DISABLED AOM_KF_DISABLED
+#define AV2_KF_DISABLED AOM_KF_DISABLED
 #define CONFIG_SHARP_SETTINGS 0
 
 #define aom_codec_control_type_AVME_SET_CPUUSED int
@@ -58,7 +58,7 @@
 #define aom_codec_control_type_AVME_SET_STATIC_THRESHOLD int
 #define aom_codec_control_type_AVME_SET_ARNR_MAXFRAMES int
 #define aom_codec_control_type_AV2E_SET_USER_DEFINED_QMATRIX \
-  avm_user_defined_qm_t *
+  av2_user_defined_qm_t *
 
 #define AV2E_ENABLE_MOTION_VECTOR_UNIT_TEST AV1E_ENABLE_MOTION_VECTOR_UNIT_TEST
 #define AV2E_ENABLE_SB_MULTIPASS_UNIT_TEST AV1E_ENABLE_SB_MULTIPASS_UNIT_TEST
@@ -176,11 +176,11 @@ typedef struct {
   const uint8_t *qm_8x8[3];
   const uint8_t *qm_8x4[3];
   const uint8_t *qm_4x8[3];
-} avm_user_defined_qm_t;
+} av2_user_defined_qm_t;
 
 typedef struct {
   int buffer_refresh_test[REF_FRAMES];
-} avm_buffer_refresh_test_t;
+} av2_buffer_refresh_test_t;
 
 #define aom_codec_control_type_AV2E_ENABLE_MOTION_VECTOR_UNIT_TEST int
 #define aom_codec_control_type_AV2E_ENABLE_SB_MULTIPASS_UNIT_TEST int
@@ -204,7 +204,7 @@ typedef struct {
 #define aom_codec_control_type_AV2E_SET_ENABLE_ANGLE_DELTA int
 #define aom_codec_control_type_AV2E_SET_ENABLE_BRU int
 #define aom_codec_control_type_AV2E_SET_ENABLE_BUFFER_REFRESH_TEST \
-  avm_buffer_refresh_test_t *
+  av2_buffer_refresh_test_t *
 #define aom_codec_control_type_AV2E_SET_ENABLE_CDEF int
 #define aom_codec_control_type_AV2E_SET_ENABLE_CDF_AVERAGING int
 #define aom_codec_control_type_AV2E_SET_ENABLE_CFL_INTRA int
@@ -290,7 +290,7 @@ typedef struct {
   aom_transfer_characteristics_t
 #define aom_codec_control_type_AV2E_SET_TUNE_CONTENT aom_tune_content
 #define aom_codec_control_type_AV2E_SET_USER_DEFINED_QMATRIX \
-  avm_user_defined_qm_t *
+  av2_user_defined_qm_t *
 #define aom_codec_control_type_AV2E_SET_VBR_CORPUS_COMPLEXITY_LAP int
 #define aom_codec_control_type_AV2E_SET_VMAF_MODEL_PATH const char *
 #define aom_codec_control_type_AV2E_SET_SUBGOP_CONFIG_STR const char *
@@ -301,19 +301,19 @@ typedef struct {
 #define aom_codec_control_type_AV2E_SET_ENABLE_CDF_AVERAGING int
 #define aom_codec_control_type_AV2E_SET_ENABLE_SFRAME int
 
-#define avm_active_map_t aom_active_map_t
-#define avm_scaling_mode_t aom_scaling_mode_t
-#define avm_codec_frame_flags_t aom_codec_frame_flags_t
-#define AVM_FRAME_HAS_FILM_GRAIN_PARAMS FRAMEFLAGS_HAS_FILM_GRAIN_PARAMS
+#define av2_active_map_t aom_active_map_t
+#define av2_scaling_mode_t aom_scaling_mode_t
+#define av2_codec_frame_flags_t aom_codec_frame_flags_t
+#define AV2_FRAME_HAS_FILM_GRAIN_PARAMS FRAMEFLAGS_HAS_FILM_GRAIN_PARAMS
 #define aom_pts_t aom_codec_pts_t
 #define av2_ref_frame_t av1_ref_frame_t
-#define avm_img_alloc aom_img_alloc
-#define avm_img_free aom_img_free
+#define av2_img_alloc aom_img_alloc
+#define av2_img_free aom_img_free
 
-#define avm_arg_match_helper arg_match_helper
-#define avm_arg_parse_uint_helper arg_parse_uint_helper
-#define avm_arg_parse_enum_helper arg_parse_enum_helper
-#define avm_arg_parse_int_helper arg_parse_int_helper
+#define av2_arg_match_helper arg_match_helper
+#define av2_arg_parse_uint_helper arg_parse_uint_helper
+#define av2_arg_parse_enum_helper arg_parse_enum_helper
+#define av2_arg_parse_int_helper arg_parse_int_helper
 
 #include "av2/common/quant_common.h"
 #include "av2/encoder/bitstream.h"
@@ -894,11 +894,11 @@ static struct av2_extracfg default_extra_cfg = {
 };
 // clang-format on
 
-struct avm_codec_alg_priv {
+struct av2_codec_alg_priv {
   aom_codec_priv_t base;
   aom_codec_enc_cfg_t cfg;
   struct av2_extracfg extra_cfg;
-  avm_rational64_t timestamp_ratio;
+  av2_rational64_t timestamp_ratio;
   aom_pts_t pts_offset;
   unsigned char pts_offset_initialized;
   AV2EncoderConfig oxcf;
@@ -935,7 +935,7 @@ static INLINE int gcd(int64_t a, int b) {
   return (int)a;
 }
 
-static INLINE void reduce_ratio(avm_rational64_t *ratio) {
+static INLINE void reduce_ratio(av2_rational64_t *ratio) {
   const int denom = gcd(ratio->num, ratio->den);
   ratio->num /= denom;
   ratio->den /= denom;
@@ -1007,7 +1007,7 @@ static aom_codec_err_t validate_config(aom_codec_alg_priv_t *ctx,
   RANGE_CHECK(cfg, rc_end_usage, AOM_VBR, AOM_Q);
   RANGE_CHECK_HI(cfg, rc_undershoot_pct, 100);
   RANGE_CHECK_HI(cfg, rc_overshoot_pct, 100);
-  RANGE_CHECK(cfg, kf_mode, AVM_KF_DISABLED, AOM_KF_AUTO);
+  RANGE_CHECK(cfg, kf_mode, AV2_KF_DISABLED, AOM_KF_AUTO);
   RANGE_CHECK_HI(cfg, rc_dropframe_thresh, 100);
   RANGE_CHECK(cfg, g_pass, AOM_RC_ONE_PASS, AOM_RC_ONE_PASS);
   RANGE_CHECK_HI(cfg, g_lag_in_frames, MAX_TOTAL_BUFFERS);
@@ -1827,7 +1827,7 @@ static aom_codec_err_t set_encoder_config(AV2EncoderConfig *oxcf,
         extra_cfg->buffer_refresh_multi_layers_test[i];
   }
   oxcf->border_in_pixels =
-      resize_cfg->resize_mode ? AOM_BORDER_IN_PIXELS : AVM_ENC_NO_SCALE_BORDER;
+      resize_cfg->resize_mode ? AOM_BORDER_IN_PIXELS : AV2_ENC_NO_SCALE_BORDER;
   memcpy(oxcf->target_seq_level_idx, extra_cfg->target_seq_level_idx,
          sizeof(oxcf->target_seq_level_idx));
   oxcf->tier_mask = extra_cfg->tier_mask;
@@ -2231,7 +2231,7 @@ static aom_codec_err_t ctrl_set_qm_max(aom_codec_alg_priv_t *ctx,
 
 static aom_codec_err_t ctrl_set_user_defined_qmatrix(aom_codec_alg_priv_t *ctx,
                                                      va_list args) {
-  const avm_user_defined_qm_t *user_defined_qm =
+  const av2_user_defined_qm_t *user_defined_qm =
       CAST(AV2E_SET_USER_DEFINED_QMATRIX, args);
   if (!user_defined_qm) {
     return AOM_CODEC_INVALID_PARAM;
@@ -2822,7 +2822,7 @@ static aom_codec_err_t ctrl_set_enable_explicit_ref_frame_map(
 static aom_codec_err_t ctrl_set_enable_buffer_refresh_test(
     aom_codec_alg_priv_t *ctx, va_list args) {
   struct av2_extracfg extra_cfg = ctx->extra_cfg;
-  avm_buffer_refresh_test_t *const data =
+  av2_buffer_refresh_test_t *const data =
       CAST(AV2E_SET_ENABLE_BUFFER_REFRESH_TEST, args);
   extra_cfg.use_buffer_refresh_multi_layers_test = 1;
   for (int i = 0; i < REF_FRAMES; ++i) {
@@ -3014,15 +3014,15 @@ static aom_codec_err_t encoder_destroy(aom_codec_alg_priv_t *ctx) {
   return AOM_CODEC_OK;
 }
 
-static avm_codec_frame_flags_t get_frame_pkt_flags(const AV2_COMP *cpi,
+static av2_codec_frame_flags_t get_frame_pkt_flags(const AV2_COMP *cpi,
                                                    unsigned int lib_flags) {
-  avm_codec_frame_flags_t flags = lib_flags << 16;
+  av2_codec_frame_flags_t flags = lib_flags << 16;
 
   if (lib_flags & FRAMEFLAGS_KEY) flags |= AOM_FRAME_IS_KEY;
   if (lib_flags & FRAMEFLAGS_INTRAONLY) flags |= AOM_FRAME_IS_INTRAONLY;
   if (lib_flags & FRAMEFLAGS_SWITCH) flags |= AOM_FRAME_IS_SWITCH;
   if (lib_flags & FRAMEFLAGS_HAS_FILM_GRAIN_PARAMS)
-    flags |= AVM_FRAME_HAS_FILM_GRAIN_PARAMS;
+    flags |= AV2_FRAME_HAS_FILM_GRAIN_PARAMS;
   if (cpi->droppable) flags |= AOM_FRAME_IS_DROPPABLE;
 
   return flags;
@@ -3279,7 +3279,7 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
   const size_t kMinCompressedSize = 8192;
   volatile aom_codec_err_t res = AOM_CODEC_OK;
   AV2_COMP *const cpi = ctx->cpi;
-  const avm_rational64_t *const timestamp_ratio = &ctx->timestamp_ratio;
+  const av2_rational64_t *const timestamp_ratio = &ctx->timestamp_ratio;
   volatile aom_pts_t ptsvol = pts;
   // LAP context
   AV2_COMP *cpi_lap = ctx->cpi_lap;
@@ -3348,7 +3348,7 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
 #if CONFIG_TUNE_VMAF
   if (cpi->oxcf.tune_cfg.tuning >= AOM_TUNE_VMAF_WITH_PREPROCESSING &&
       cpi->oxcf.tune_cfg.tuning <= AOM_TUNE_VMAF_NEG_MAX_GAIN) {
-    avm_init_vmaf_model(&cpi->vmaf_info.vmaf_model,
+    av2_init_vmaf_model(&cpi->vmaf_info.vmaf_model,
                         cpi->oxcf.tune_cfg.vmaf_model_path);
   }
 #endif
@@ -3367,16 +3367,16 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
 
   if (res == AOM_CODEC_OK) {
     // Set up internal flags
-    if (ctx->base.init_flags & AVM_CODEC_USE_PSNR) {
+    if (ctx->base.init_flags & AV2_CODEC_USE_PSNR) {
       cpi->b_calculate_psnr = 1;
     }
-    if (ctx->base.init_flags & AVM_CODEC_USE_STREAM_PSNR) {
+    if (ctx->base.init_flags & AV2_CODEC_USE_STREAM_PSNR) {
       cpi->b_calculate_psnr = 2;
     }
-    if (ctx->base.init_flags & AVM_CODEC_USE_PER_FRAME_STATS) {
+    if (ctx->base.init_flags & AV2_CODEC_USE_PER_FRAME_STATS) {
       cpi->print_per_frame_stats = 1;
     }
-    if (ctx->base.init_flags & AVM_CODEC_USE_PER_FRAME_HLS_INFO) {
+    if (ctx->base.init_flags & AV2_CODEC_USE_PER_FRAME_HLS_INFO) {
       cpi->print_per_frame_hls_info = 1;
     }
 
@@ -3394,7 +3394,7 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
       aom_image_t *hbd_img = NULL;
       // May need to allocate larger buffer to use hbd internal.
       if (!(img->fmt & AOM_IMG_FMT_HIGHBITDEPTH)) {
-        hbd_img = avm_img_alloc(NULL, img->fmt | AOM_IMG_FMT_HIGHBITDEPTH,
+        hbd_img = av2_img_alloc(NULL, img->fmt | AOM_IMG_FMT_HIGHBITDEPTH,
                                 img->d_w, img->d_h, 32);
         if (!hbd_img) return AOM_CODEC_MEM_ERROR;
         image2yuvconfig_upshift(hbd_img, img, &sd);
@@ -3439,7 +3439,7 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
                                 src_time_stamp, src_end_time_stamp)) {
         res = update_error_state(ctx, &cpi->common.error);
       }
-      avm_img_free(hbd_img);
+      av2_img_free(hbd_img);
       ctx->next_frame_flags = 0;
     }
 
@@ -3665,8 +3665,8 @@ static aom_codec_err_t encoder_encode(aom_codec_alg_priv_t *ctx,
 
       // decrement frames_left counter
       cpi->frames_left = AOMMAX(0, cpi->frames_left - 1);
-      pkt.kind = is_frame_visible_null ? AVM_CODEC_CX_FRAME_NULL_PKT
-                                       : AVM_CODEC_CX_FRAME_PKT;
+      pkt.kind = is_frame_visible_null ? AV2_CODEC_CX_FRAME_NULL_PKT
+                                       : AV2_CODEC_CX_FRAME_PKT;
       pkt.data.frame.buf = ctx->pending_cx_data;
       pkt.data.frame.sz = ctx->pending_cx_data_sz;
       pkt.data.frame.partition_id = -1;
@@ -3710,7 +3710,7 @@ static aom_codec_err_t ctrl_set_reference(aom_codec_alg_priv_t *ctx,
     YV12_BUFFER_CONFIG sd;
 
     if (!(frame->img.fmt & AOM_IMG_FMT_HIGHBITDEPTH)) {
-      hbd_img = avm_img_alloc(NULL, frame->img.fmt | AOM_IMG_FMT_HIGHBITDEPTH,
+      hbd_img = av2_img_alloc(NULL, frame->img.fmt | AOM_IMG_FMT_HIGHBITDEPTH,
                               frame->img.w, frame->img.h, 32);
       if (!hbd_img) return AOM_CODEC_MEM_ERROR;
       image2yuvconfig_upshift(hbd_img, &frame->img, &sd);
@@ -3718,7 +3718,7 @@ static aom_codec_err_t ctrl_set_reference(aom_codec_alg_priv_t *ctx,
       image2yuvconfig(&frame->img, &sd);
     }
     av2_set_reference_enc(ctx->cpi, frame->idx, &sd);
-    avm_img_free(hbd_img);
+    av2_img_free(hbd_img);
     return AOM_CODEC_OK;
   } else {
     return AOM_CODEC_INVALID_PARAM;
@@ -3835,7 +3835,7 @@ static aom_codec_err_t ctrl_set_roi_map(aom_codec_alg_priv_t *ctx,
 
 static aom_codec_err_t ctrl_set_active_map(aom_codec_alg_priv_t *ctx,
                                            va_list args) {
-  avm_active_map_t *const map = va_arg(args, avm_active_map_t *);
+  av2_active_map_t *const map = va_arg(args, av2_active_map_t *);
 
   if (map) {
     if (!av2_set_active_map(ctx->cpi, map->active_map, (int)map->rows,
@@ -3850,7 +3850,7 @@ static aom_codec_err_t ctrl_set_active_map(aom_codec_alg_priv_t *ctx,
 
 static aom_codec_err_t ctrl_get_active_map(aom_codec_alg_priv_t *ctx,
                                            va_list args) {
-  avm_active_map_t *const map = va_arg(args, avm_active_map_t *);
+  av2_active_map_t *const map = va_arg(args, av2_active_map_t *);
 
   if (map) {
     if (!av2_get_active_map(ctx->cpi, map->active_map, (int)map->rows,
@@ -3865,12 +3865,12 @@ static aom_codec_err_t ctrl_get_active_map(aom_codec_alg_priv_t *ctx,
 
 static aom_codec_err_t ctrl_set_scale_mode(aom_codec_alg_priv_t *ctx,
                                            va_list args) {
-  avm_scaling_mode_t *const mode = va_arg(args, avm_scaling_mode_t *);
+  av2_scaling_mode_t *const mode = va_arg(args, av2_scaling_mode_t *);
 
   if (mode) {
     const int res = av2_set_internal_size(
         &ctx->cpi->oxcf, &ctx->cpi->resize_pending_params,
-        (AVM_SCALING)mode->h_scaling_mode, (AVM_SCALING)mode->v_scaling_mode);
+        (AV2_SCALING)mode->h_scaling_mode, (AV2_SCALING)mode->v_scaling_mode);
     return (res == 0) ? AOM_CODEC_OK : AOM_CODEC_INVALID_PARAM;
   } else {
     return AOM_CODEC_INVALID_PARAM;
@@ -3998,7 +3998,7 @@ static aom_codec_err_t encoder_set_option(aom_codec_alg_priv_t *ctx,
 
   static_assert(
       sizeof(ctx->cpi->common.error.detail) >= ARG_ERR_MSG_MAX_LEN,
-      "The size of the err_msg buffer for avm_arg_match_helper must be "
+      "The size of the err_msg buffer for av2_arg_match_helper must be "
       "at least ARG_ERR_MSG_MAX_LEN");
 
   argv[0] = aom_malloc(len * sizeof(argv[1][0]));
@@ -4006,657 +4006,657 @@ static aom_codec_err_t encoder_set_option(aom_codec_alg_priv_t *ctx,
   struct arg arg;
 
   int match = 1;
-  if (avm_arg_match_helper(&arg,
+  if (av2_arg_match_helper(&arg,
                            &g_av2_codec_arg_defs.enable_keyframe_filtering,
                            argv, err_string)) {
     extra_cfg.enable_keyframe_filtering =
-        avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.min_gf_interval,
+        av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.min_gf_interval,
                                   argv, err_string)) {
-    extra_cfg.min_gf_interval = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.max_gf_interval,
+    extra_cfg.min_gf_interval = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.max_gf_interval,
                                   argv, err_string)) {
-    extra_cfg.max_gf_interval = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.gf_min_pyr_height,
+    extra_cfg.max_gf_interval = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.gf_min_pyr_height,
                                   argv, err_string)) {
-    extra_cfg.gf_min_pyr_height = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.gf_max_pyr_height,
+    extra_cfg.gf_min_pyr_height = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.gf_max_pyr_height,
                                   argv, err_string)) {
-    extra_cfg.gf_max_pyr_height = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.cpu_used_av2,
+    extra_cfg.gf_max_pyr_height = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.cpu_used_av2,
                                   argv, err_string)) {
-    extra_cfg.cpu_used = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.auto_altref, argv,
+    extra_cfg.cpu_used = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.auto_altref, argv,
                                   err_string)) {
-    extra_cfg.enable_auto_alt_ref = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.noise_sens, argv,
+    extra_cfg.enable_auto_alt_ref = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.noise_sens, argv,
                                   err_string)) {
-    extra_cfg.noise_sensitivity = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.sharpness, argv,
+    extra_cfg.noise_sensitivity = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.sharpness, argv,
                                   err_string)) {
-    extra_cfg.sharpness = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.static_thresh,
+    extra_cfg.sharpness = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.static_thresh,
                                   argv, err_string)) {
-    extra_cfg.static_thresh = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.rowmtarg, argv,
+    extra_cfg.static_thresh = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.rowmtarg, argv,
                                   err_string)) {
-    extra_cfg.row_mt = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.tile_cols, argv,
+    extra_cfg.row_mt = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.tile_cols, argv,
                                   err_string)) {
-    extra_cfg.tile_columns = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.tile_rows, argv,
+    extra_cfg.tile_columns = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.tile_rows, argv,
                                   err_string)) {
-    extra_cfg.tile_rows = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_tpl_model,
+    extra_cfg.tile_rows = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_tpl_model,
                                   argv, err_string)) {
-    extra_cfg.enable_tpl_model = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.arnr_maxframes,
+    extra_cfg.enable_tpl_model = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.arnr_maxframes,
                                   argv, err_string)) {
-    extra_cfg.arnr_max_frames = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.arnr_strength,
+    extra_cfg.arnr_max_frames = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.arnr_strength,
                                   argv, err_string)) {
-    extra_cfg.arnr_strength = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.tune_metric, argv,
+    extra_cfg.arnr_strength = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.tune_metric, argv,
                                   err_string)) {
-    extra_cfg.tuning = avm_arg_parse_enum_helper(&arg, err_string);
+    extra_cfg.tuning = av2_arg_parse_enum_helper(&arg, err_string);
 #if CONFIG_TUNE_VMAF
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.vmaf_model_path,
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.vmaf_model_path,
                                   argv, err_string)) {
     extra_cfg.vmaf_model_path = value;
 #endif
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.qp_level, argv,
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.qp_level, argv,
                                   err_string)) {
-    extra_cfg.qp = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.qp = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.max_intra_rate_pct,
                                   argv, err_string)) {
     extra_cfg.rc_max_intra_bitrate_pct =
-        avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+        av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.max_inter_rate_pct,
                                   argv, err_string)) {
     extra_cfg.rc_max_inter_bitrate_pct =
-        avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.gf_cbr_boost_pct,
+        av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.gf_cbr_boost_pct,
                                   argv, err_string)) {
-    extra_cfg.gf_cbr_boost_pct = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.lossless, argv,
+    extra_cfg.gf_cbr_boost_pct = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.lossless, argv,
                                   err_string)) {
-    extra_cfg.lossless = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_deblocking,
+    extra_cfg.lossless = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_deblocking,
                                   argv, err_string)) {
-    extra_cfg.enable_deblocking = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_cdef, argv,
+    extra_cfg.enable_deblocking = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_cdef, argv,
                                   err_string)) {
-    extra_cfg.enable_cdef = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_gdf, argv,
+    extra_cfg.enable_cdef = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_gdf, argv,
                                   err_string)) {
-    extra_cfg.enable_gdf = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_gdf = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.gdf_unit_matches_sb,
                                   argv, err_string)) {
-    extra_cfg.gdf_unit_matches_sb = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.gdf_unit_matches_sb = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_restoration,
                                   argv, err_string)) {
-    extra_cfg.enable_restoration = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_pc_wiener,
+    extra_cfg.enable_restoration = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_pc_wiener,
                                   argv, err_string)) {
-    extra_cfg.enable_pc_wiener = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_pc_wiener = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_wiener_nonsep,
                                   argv, err_string)) {
     extra_cfg.enable_wiener_nonsep =
-        avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_ccso, argv,
+        av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_ccso, argv,
                                   err_string)) {
-    extra_cfg.enable_ccso = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_ccso = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.ccso_unit_matches_sb,
                                   argv, err_string)) {
-    extra_cfg.ccso_unit_matches_sb = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_lf_sub_pu,
+    extra_cfg.ccso_unit_matches_sb = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_lf_sub_pu,
                                   argv, err_string)) {
-    extra_cfg.enable_lf_sub_pu = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_lf_sub_pu = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_band_metadata,
                                   argv, err_string)) {
     extra_cfg.enable_band_metadata =
-        avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.force_video_mode,
+        av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.force_video_mode,
                                   argv, err_string)) {
-    extra_cfg.force_video_mode = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.force_video_mode = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_trellis_quant,
                                   argv, err_string)) {
     extra_cfg.enable_trellis_quant =
-        avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_qm, argv,
+        av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_qm, argv,
                                   err_string)) {
-    extra_cfg.enable_qm = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.qm_max, argv,
+    extra_cfg.enable_qm = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.qm_max, argv,
                                   err_string)) {
-    extra_cfg.qm_max = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.qm_min, argv,
+    extra_cfg.qm_max = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.qm_min, argv,
                                   err_string)) {
-    extra_cfg.qm_min = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.num_tg, argv,
+    extra_cfg.qm_min = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.num_tg, argv,
                                   err_string)) {
-    extra_cfg.num_tg = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.mtu_size, argv,
+    extra_cfg.num_tg = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.mtu_size, argv,
                                   err_string)) {
-    extra_cfg.mtu_size = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.timing_info, argv,
+    extra_cfg.mtu_size = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.timing_info, argv,
                                   err_string)) {
-    extra_cfg.timing_info_type = avm_arg_parse_enum_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.timing_info_type = av2_arg_parse_enum_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.frame_parallel_decoding,
                                   argv, err_string)) {
     extra_cfg.frame_parallel_decoding_mode =
-        avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+        av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_chroma_deltaq,
                                   argv, err_string)) {
     extra_cfg.enable_chroma_deltaq =
-        avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.aq_mode, argv,
+        av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.aq_mode, argv,
                                   err_string)) {
-    extra_cfg.aq_mode = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.deltaq_mode, argv,
+    extra_cfg.aq_mode = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.deltaq_mode, argv,
                                   err_string)) {
-    extra_cfg.deltaq_mode = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.deltaq_mode = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.frame_periodic_boost,
                                   argv, err_string)) {
     extra_cfg.frame_periodic_boost =
-        avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.tune_content,
+        av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.tune_content,
                                   argv, err_string)) {
-    extra_cfg.content = avm_arg_parse_enum_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.content = av2_arg_parse_enum_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.input_color_primaries,
                                   argv, err_string)) {
-    extra_cfg.color_primaries = avm_arg_parse_enum_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(
+    extra_cfg.color_primaries = av2_arg_parse_enum_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(
                  &arg, &g_av2_codec_arg_defs.input_transfer_characteristics,
                  argv, err_string)) {
     extra_cfg.transfer_characteristics =
-        avm_arg_parse_enum_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(
+        av2_arg_parse_enum_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(
                  &arg, &g_av2_codec_arg_defs.input_matrix_coefficients, argv,
                  err_string)) {
-    extra_cfg.matrix_coefficients = avm_arg_parse_enum_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(
+    extra_cfg.matrix_coefficients = av2_arg_parse_enum_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(
                  &arg, &g_av2_codec_arg_defs.input_chroma_sample_position, argv,
                  err_string)) {
     extra_cfg.chroma_sample_position =
-        avm_arg_parse_enum_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.superblock_size,
+        av2_arg_parse_enum_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.superblock_size,
                                   argv, err_string)) {
-    extra_cfg.superblock_size = avm_arg_parse_enum_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.sframe_mode, argv,
+    extra_cfg.superblock_size = av2_arg_parse_enum_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.sframe_mode, argv,
                                   err_string)) {
-    extra_cfg.enable_sframe = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.film_grain_test,
+    extra_cfg.enable_sframe = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.film_grain_test,
                                   argv, err_string)) {
     extra_cfg.film_grain_test_vector =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.film_grain_table,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.film_grain_table,
                                   argv, err_string)) {
     extra_cfg.film_grain_table_filename = value;
-  } else if (avm_arg_match_helper(&arg,
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.film_grain_block_size,
                                   argv, err_string)) {
     extra_cfg.film_grain_block_size =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.cdf_update_mode,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.cdf_update_mode,
                                   argv, err_string)) {
-    extra_cfg.cdf_update_mode = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(
+    extra_cfg.cdf_update_mode = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(
                  &arg, &g_av2_codec_arg_defs.cross_frame_cdf_init_mode, argv,
                  err_string)) {
     extra_cfg.cross_frame_cdf_init_mode =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_rect_partitions,
                                   argv, err_string)) {
     extra_cfg.enable_rect_partitions =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(
                  &arg, &g_av2_codec_arg_defs.enable_uneven_4way_partitions,
                  argv, err_string)) {
     extra_cfg.enable_uneven_4way_partitions =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(
                  &arg,
                  &g_av2_codec_arg_defs.disable_ml_partition_speed_features,
                  argv, err_string)) {
     extra_cfg.disable_ml_partition_speed_features =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.erp_pruning_level,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.erp_pruning_level,
                                   argv, err_string)) {
-    extra_cfg.erp_pruning_level = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.erp_pruning_level = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.use_ml_erp_pruning,
                                   argv, err_string)) {
-    extra_cfg.use_ml_erp_pruning = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.use_ml_erp_pruning = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_ext_partitions,
                                   argv, err_string)) {
     extra_cfg.enable_ext_partitions =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_tx_partition,
                                   argv, err_string)) {
-    extra_cfg.enable_tx_partition = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(
+    extra_cfg.enable_tx_partition = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(
                  &arg, &g_av2_codec_arg_defs.max_partition_aspect_ratio, argv,
                  err_string)) {
     extra_cfg.max_partition_aspect_ratio =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(
                  &arg,
                  &g_av2_codec_arg_defs.disable_ml_transform_speed_features,
                  argv, err_string)) {
     extra_cfg.disable_ml_transform_speed_features =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_sdp, argv,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_sdp, argv,
                                   err_string)) {
-    extra_cfg.enable_sdp = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_sdp = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_extended_sdp,
                                   argv, err_string)) {
-    extra_cfg.enable_extended_sdp = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_mrls, argv,
+    extra_cfg.enable_extended_sdp = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_mrls, argv,
                                   err_string)) {
-    extra_cfg.enable_mrls = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_tip, argv,
+    extra_cfg.enable_mrls = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_tip, argv,
                                   err_string)) {
-    extra_cfg.enable_tip = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_tip = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_tip_refinemv,
                                   argv, err_string)) {
-    extra_cfg.enable_tip_refinemv = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_mv_traj,
+    extra_cfg.enable_tip_refinemv = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_mv_traj,
                                   argv, err_string)) {
-    extra_cfg.enable_mv_traj = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_mv_traj = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_high_motion,
                                   argv, err_string)) {
-    extra_cfg.enable_high_motion = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_bawp, argv,
+    extra_cfg.enable_high_motion = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_bawp, argv,
                                   err_string)) {
-    extra_cfg.enable_bawp = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_cwp, argv,
+    extra_cfg.enable_bawp = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_cwp, argv,
                                   err_string)) {
-    extra_cfg.enable_cwp = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_cwp = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_imp_msk_bld,
                                   argv, err_string)) {
-    extra_cfg.enable_imp_msk_bld = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_fsc, argv,
+    extra_cfg.enable_imp_msk_bld = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_fsc, argv,
                                   err_string)) {
-    extra_cfg.enable_fsc = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_idtx_intra,
+    extra_cfg.enable_fsc = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_idtx_intra,
                                   argv, err_string)) {
-    extra_cfg.enable_idtx_intra = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_ist, argv,
+    extra_cfg.enable_idtx_intra = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_ist, argv,
                                   err_string)) {
-    extra_cfg.enable_ist = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_inter_ist,
+    extra_cfg.enable_ist = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_inter_ist,
                                   argv, err_string)) {
-    extra_cfg.enable_inter_ist = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_inter_ist = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_chroma_dctonly,
                                   argv, err_string)) {
     extra_cfg.enable_chroma_dctonly =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_inter_ddt,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_inter_ddt,
                                   argv, err_string)) {
-    extra_cfg.enable_inter_ddt = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_cctx, argv,
+    extra_cfg.enable_inter_ddt = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_cctx, argv,
                                   err_string)) {
-    extra_cfg.enable_cctx = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_ibp, argv,
+    extra_cfg.enable_cctx = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_ibp, argv,
                                   err_string)) {
-    extra_cfg.enable_ibp = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_ibp = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_adaptive_mvd,
                                   argv, err_string)) {
-    extra_cfg.enable_adaptive_mvd = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_flex_mvres,
+    extra_cfg.enable_adaptive_mvd = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_flex_mvres,
                                   argv, err_string)) {
-    extra_cfg.enable_flex_mvres = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_flex_mvres = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.select_cfl_ds_filter,
                                   argv, err_string)) {
-    extra_cfg.select_cfl_ds_filter = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_joint_mvd,
+    extra_cfg.select_cfl_ds_filter = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_joint_mvd,
                                   argv, err_string)) {
-    extra_cfg.enable_joint_mvd = avm_arg_parse_int_helper(&arg, err_string);
+    extra_cfg.enable_joint_mvd = av2_arg_parse_int_helper(&arg, err_string);
 
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_refinemv,
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_refinemv,
                                   argv, err_string)) {
-    extra_cfg.enable_refinemv = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_refinemv = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_mvd_sign_derive,
                                   argv, err_string)) {
     extra_cfg.enable_mvd_sign_derive =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.min_partition_size,
                                   argv, err_string)) {
-    extra_cfg.min_partition_size = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.min_partition_size = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.max_partition_size,
                                   argv, err_string)) {
-    extra_cfg.max_partition_size = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(
+    extra_cfg.max_partition_size = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(
                  &arg, &g_av2_codec_arg_defs.enable_intra_edge_filter, argv,
                  err_string)) {
     extra_cfg.enable_intra_edge_filter =
-        avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+        av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.reduced_tx_part_set,
                                   argv, err_string)) {
-    extra_cfg.reduced_tx_part_set = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_flip_idtx,
+    extra_cfg.reduced_tx_part_set = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_flip_idtx,
                                   argv, err_string)) {
-    extra_cfg.enable_flip_idtx = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_flip_idtx = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_cropping_window,
                                   argv, err_string)) {
     extra_cfg.enable_cropping_window =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.crop_win_left_offset,
                                   argv, err_string)) {
-    extra_cfg.crop_win_left_offset = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.crop_win_left_offset = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.crop_win_right_offset,
                                   argv, err_string)) {
     extra_cfg.crop_win_right_offset =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.crop_win_top_offset,
                                   argv, err_string)) {
-    extra_cfg.crop_win_top_offset = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.crop_win_top_offset = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.crop_win_bottom_offset,
                                   argv, err_string)) {
     extra_cfg.crop_win_bottom_offset =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.max_reference_frames,
                                   argv, err_string)) {
-    extra_cfg.max_reference_frames = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.max_reference_frames = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.reduced_reference_set,
                                   argv, err_string)) {
     extra_cfg.enable_reduced_reference_set =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.explicit_ref_frame_map,
                                   argv, err_string)) {
     extra_cfg.explicit_ref_frame_map =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(
                  &arg, &g_av2_codec_arg_defs.add_sef_for_hidden_frames, argv,
                  err_string)) {
     extra_cfg.add_sef_for_hidden_frames =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.monotonic_output_order,
                                   argv, err_string)) {
     extra_cfg.monotonic_output_order =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_ref_frame_mvs,
                                   argv, err_string)) {
-    extra_cfg.enable_ref_frame_mvs = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(
+    extra_cfg.enable_ref_frame_mvs = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(
                  &arg, &g_av2_codec_arg_defs.reduced_ref_frame_mvs_mode, argv,
                  err_string)) {
     extra_cfg.reduced_ref_frame_mvs_mode =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_masked_comp,
                                   argv, err_string)) {
-    extra_cfg.enable_masked_comp = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_masked_comp = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_onesided_comp,
                                   argv, err_string)) {
-    extra_cfg.enable_onesided_comp = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_onesided_comp = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_interintra_comp,
                                   argv, err_string)) {
     extra_cfg.enable_interintra_comp =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(
                  &arg, &g_av2_codec_arg_defs.enable_smooth_interintra, argv,
                  err_string)) {
     extra_cfg.enable_smooth_interintra =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_diff_wtd_comp,
                                   argv, err_string)) {
-    extra_cfg.enable_diff_wtd_comp = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_diff_wtd_comp = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_interinter_wedge,
                                   argv, err_string)) {
     extra_cfg.enable_interinter_wedge =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_interintra_wedge,
                                   argv, err_string)) {
     extra_cfg.enable_interintra_wedge =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_global_motion,
                                   argv, err_string)) {
-    extra_cfg.enable_global_motion = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_skip_mode,
+    extra_cfg.enable_global_motion = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_skip_mode,
                                   argv, err_string)) {
-    extra_cfg.enable_skip_mode = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_skip_mode = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_warped_motion,
                                   argv, err_string)) {
-    extra_cfg.enable_warped_motion = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_warped_motion = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_warp_causal,
                                   argv, err_string)) {
-    extra_cfg.enable_warp_causal = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_warp_delta,
+    extra_cfg.enable_warp_causal = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_warp_delta,
                                   argv, err_string)) {
-    extra_cfg.enable_warp_delta = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(
+    extra_cfg.enable_warp_delta = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(
                  &arg, &g_av2_codec_arg_defs.enable_six_param_warp_delta, argv,
                  err_string)) {
     extra_cfg.enable_six_param_warp_delta =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_warp_extend,
                                   argv, err_string)) {
-    extra_cfg.enable_warp_extend = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_intra_dip,
+    extra_cfg.enable_warp_extend = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_intra_dip,
                                   argv, err_string)) {
-    extra_cfg.enable_intra_dip = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_intra_dip = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_smooth_intra,
                                   argv, err_string)) {
-    extra_cfg.enable_smooth_intra = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_smooth_intra = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_paeth_intra,
                                   argv, err_string)) {
-    extra_cfg.enable_paeth_intra = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_cfl_intra,
+    extra_cfg.enable_paeth_intra = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_cfl_intra,
                                   argv, err_string)) {
-    extra_cfg.enable_cfl_intra = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_mhccp,
+    extra_cfg.enable_cfl_intra = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_mhccp,
                                   argv, err_string)) {
-    extra_cfg.enable_mhccp = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_overlay,
+    extra_cfg.enable_mhccp = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_overlay,
                                   argv, err_string)) {
-    extra_cfg.enable_overlay = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_palette,
+    extra_cfg.enable_overlay = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_palette,
                                   argv, err_string)) {
-    extra_cfg.enable_palette = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_intrabc,
+    extra_cfg.enable_palette = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_intrabc,
                                   argv, err_string)) {
-    extra_cfg.enable_intrabc = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_intrabc = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_intrabc_ext,
                                   argv, err_string)) {
-    extra_cfg.enable_intrabc_ext = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_intrabc_ext = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_angle_delta,
                                   argv, err_string)) {
-    extra_cfg.enable_angle_delta = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_angle_delta = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_opfl_refine,
                                   argv, err_string)) {
-    extra_cfg.enable_opfl_refine = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_opfl_refine = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.reduced_tx_type_set,
                                   argv, err_string)) {
-    extra_cfg.reduced_tx_type_set = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.reduced_tx_type_set = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.use_intra_dct_only,
                                   argv, err_string)) {
-    extra_cfg.use_intra_dct_only = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.use_intra_dct_only = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.use_inter_dct_only,
                                   argv, err_string)) {
-    extra_cfg.use_inter_dct_only = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(
+    extra_cfg.use_inter_dct_only = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(
                  &arg, &g_av2_codec_arg_defs.use_intra_default_tx_only, argv,
                  err_string)) {
     extra_cfg.use_intra_default_tx_only =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.quant_b_adapt,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.quant_b_adapt,
                                   argv, err_string)) {
-    extra_cfg.quant_b_adapt = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(
+    extra_cfg.quant_b_adapt = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(
                  &arg, &g_av2_codec_arg_defs.vbr_corpus_complexity_lap, argv,
                  err_string)) {
     extra_cfg.vbr_corpus_complexity_lap =
-        avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.set_tier_mask,
+        av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.set_tier_mask,
                                   argv, err_string)) {
-    extra_cfg.tier_mask = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.set_min_cr, argv,
+    extra_cfg.tier_mask = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.set_min_cr, argv,
                                   err_string)) {
-    extra_cfg.min_cr = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.min_cr = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.coeff_cost_upd_freq,
                                   argv, err_string)) {
-    extra_cfg.coeff_cost_upd_freq = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.coeff_cost_upd_freq = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.mode_cost_upd_freq,
                                   argv, err_string)) {
-    extra_cfg.mode_cost_upd_freq = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.mv_cost_upd_freq,
+    extra_cfg.mode_cost_upd_freq = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.mv_cost_upd_freq,
                                   argv, err_string)) {
-    extra_cfg.mv_cost_upd_freq = avm_arg_parse_uint_helper(&arg, err_string);
+    extra_cfg.mv_cost_upd_freq = av2_arg_parse_uint_helper(&arg, err_string);
   }
 #if CONFIG_DENOISE
-  else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.denoise_noise_level,
+  else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.denoise_noise_level,
                                 argv, err_string)) {
     extra_cfg.noise_level =
-        (float)avm_arg_parse_int_helper(&arg, err_string) / 10.0f;
-  } else if (avm_arg_match_helper(&arg,
+        (float)av2_arg_parse_int_helper(&arg, err_string) / 10.0f;
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.denoise_block_size,
                                   argv, err_string)) {
-    extra_cfg.noise_block_size = avm_arg_parse_uint_helper(&arg, err_string);
+    extra_cfg.noise_block_size = av2_arg_parse_uint_helper(&arg, err_string);
   }
 #endif
-  else if (avm_arg_match_helper(&arg,
+  else if (av2_arg_match_helper(&arg,
                                 &g_av2_codec_arg_defs.target_seq_level_idx,
                                 argv, err_string)) {
-    const int val = avm_arg_parse_int_helper(&arg, err_string);
+    const int val = av2_arg_parse_int_helper(&arg, err_string);
     const int level = val % 100;
     const int operating_point_idx = val / 100;
     if (operating_point_idx >= 0 &&
         operating_point_idx < MAX_NUM_OPERATING_POINTS) {
       extra_cfg.target_seq_level_idx[operating_point_idx] = (AV2_LEVEL)level;
     }
-  } else if (avm_arg_match_helper(
+  } else if (av2_arg_match_helper(
                  &arg, &g_av2_codec_arg_defs.input_chroma_subsampling_x, argv,
                  err_string)) {
     extra_cfg.chroma_subsampling_x =
-        avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(
+        av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(
                  &arg, &g_av2_codec_arg_defs.input_chroma_subsampling_y, argv,
                  err_string)) {
     extra_cfg.chroma_subsampling_y =
-        avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.max_drl_refmvs,
+        av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.max_drl_refmvs,
                                   argv, err_string)) {
-    extra_cfg.max_drl_refmvs = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.max_drl_refbvs,
+    extra_cfg.max_drl_refmvs = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.max_drl_refbvs,
                                   argv, err_string)) {
-    extra_cfg.max_drl_refbvs = avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_refmvbank,
+    extra_cfg.max_drl_refbvs = av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_refmvbank,
                                   argv, err_string)) {
-    extra_cfg.enable_refmvbank = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.enable_refmvbank = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_drl_reorder,
                                   argv, err_string)) {
-    extra_cfg.enable_drl_reorder = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(
+    extra_cfg.enable_drl_reorder = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(
                  &arg, &g_av2_codec_arg_defs.enable_cdef_on_skip_txfm, argv,
                  err_string)) {
     extra_cfg.enable_cdef_on_skip_txfm =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_avg_cdf,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_avg_cdf,
                                   argv, err_string)) {
-    extra_cfg.enable_avg_cdf = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.avg_cdf_type,
+    extra_cfg.enable_avg_cdf = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.avg_cdf_type,
                                   argv, err_string)) {
-    extra_cfg.avg_cdf_type = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+    extra_cfg.avg_cdf_type = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.enable_parity_hiding,
                                   argv, err_string)) {
     extra_cfg.enable_parity_hiding =
-        avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(
+        av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(
                  &arg, &g_av2_codec_arg_defs.enable_short_refresh_frame_flags,
                  argv, err_string)) {
     extra_cfg.enable_short_refresh_frame_flags =
-        avm_arg_parse_uint_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_ext_seg,
+        av2_arg_parse_uint_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_ext_seg,
                                   argv, err_string)) {
-    extra_cfg.enable_ext_seg = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.dpb_size, argv,
+    extra_cfg.enable_ext_seg = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.dpb_size, argv,
                                   err_string)) {
-    extra_cfg.dpb_size = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_bru, argv,
+    extra_cfg.dpb_size = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg, &g_av2_codec_arg_defs.enable_bru, argv,
                                   err_string)) {
-    extra_cfg.enable_bru = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(
+    extra_cfg.enable_bru = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(
                  &arg, &g_av2_codec_arg_defs.disable_loopfilters_across_tiles,
                  argv, err_string)) {
     extra_cfg.disable_loopfilters_across_tiles =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(
                  &arg, &g_av2_codec_arg_defs.scan_type_info_present_flag, argv,
                  err_string)) {
     extra_cfg.scan_type_info_present_flag =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.use_short_metadata,
                                   argv, err_string)) {
-    ctx->cfg.use_short_metadata = avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(
+    ctx->cfg.use_short_metadata = av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(
                  &arg, &g_av2_codec_arg_defs.enable_mfh_obu_signaling, argv,
                  err_string)) {
     extra_cfg.enable_mfh_obu_signaling =
-        avm_arg_parse_int_helper(&arg, err_string);
-  } else if (avm_arg_match_helper(&arg,
+        av2_arg_parse_int_helper(&arg, err_string);
+  } else if (av2_arg_match_helper(&arg,
                                   &g_av2_codec_arg_defs.operating_points_count,
                                   argv, err_string)) {
     extra_cfg.operating_points_count =
-        avm_arg_parse_int_helper(&arg, err_string);
+        av2_arg_parse_int_helper(&arg, err_string);
   } else if (strcmp(name, "passes") == 0 ||
              strcmp(name, "two-pass-output") == 0) {
     // Ignore pass-related options unconditionally set by standard aomenc
@@ -5063,36 +5063,36 @@ static const aom_codec_enc_cfg_t encoder_usage_cfg[] = {
 #ifndef VERSION_STRING
 #define VERSION_STRING
 #endif
-aom_codec_iface_t avm_codec_av2_cx_algo_temp = {
+aom_codec_iface_t av2_codec_av2_cx_algo_temp = {
   "AOMedia Project AV2 Encoder" VERSION_STRING,
   AOM_CODEC_INTERNAL_ABI_VERSION,
   (CONFIG_AV1_HIGHBITDEPTH ? AOM_CODEC_CAP_HIGHBITDEPTH : 0) |
       AOM_CODEC_CAP_ENCODER | AOM_CODEC_CAP_PSNR,  // aom_codec_caps_t
-  encoder_init,                                // avm_codec_init_fn_t
-  encoder_destroy,                             // avm_codec_destroy_fn_t
+  encoder_init,                                // av2_codec_init_fn_t
+  encoder_destroy,                             // av2_codec_destroy_fn_t
   encoder_ctrl_maps,                           // aom_codec_ctrl_fn_map_t
   {
       // NOLINT
-      NULL,  // avm_codec_peek_si_fn_t
-      NULL,  // avm_codec_get_si_fn_t
-      NULL,  // avm_codec_decode_fn_t
-      NULL,  // avm_codec_get_frame_fn_t
-      NULL   // avm_codec_set_fb_fn_t
+      NULL,  // av2_codec_peek_si_fn_t
+      NULL,  // av2_codec_get_si_fn_t
+      NULL,  // av2_codec_decode_fn_t
+      NULL,  // av2_codec_get_frame_fn_t
+      NULL   // av2_codec_set_fb_fn_t
   },
   {
       // NOLINT
       1,                                 // 1 cfg
       (const void *)encoder_usage_cfg,   // aom_codec_enc_cfg_t
-      encoder_encode,                    // avm_codec_encode_fn_t
-      (const void *)encoder_get_cxdata,  // avm_codec_get_cx_data_fn_t
-      (const void *)encoder_set_config,  // avm_codec_enc_config_set_fn_t
+      encoder_encode,                    // av2_codec_encode_fn_t
+      (const void *)encoder_get_cxdata,  // av2_codec_get_cx_data_fn_t
+      (const void *)encoder_set_config,  // av2_codec_enc_config_set_fn_t
       (const void *)
-          encoder_get_global_headers,  // avm_codec_get_global_headers_fn_t
-      encoder_get_preview              // avm_codec_get_preview_frame_fn_t
+          encoder_get_global_headers,  // av2_codec_get_global_headers_fn_t
+      encoder_get_preview              // av2_codec_get_preview_frame_fn_t
   },
-  encoder_set_option  // avm_codec_set_option_fn_t
+  encoder_set_option  // av2_codec_set_option_fn_t
 };
 
-aom_codec_iface_t *avm_codec_av2_cx(void) {
-  return &avm_codec_av2_cx_algo_temp;
+aom_codec_iface_t *av2_codec_av2_cx(void) {
+  return &av2_codec_av2_cx_algo_temp;
 }

@@ -120,7 +120,7 @@ static void read_qm_data(AV2Decoder *pbi, int obu_tlayer_id, int obu_mlayer_id,
         }
 
         if (!coef_repeat_until_end) {
-          const int32_t delta = avm_rb_read_svlc(rb);
+          const int32_t delta = av2_rb_read_svlc(rb);
           // The valid range of quantization matrix coefficients is 1..255.
           // Therefore the valid range of delta values is -254..254. Because of
           // the % 256 operation, the valid range of delta values can be reduced

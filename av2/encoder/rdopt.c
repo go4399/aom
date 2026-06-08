@@ -21,7 +21,7 @@
 #include "aom_dsp/aom_dsp_common.h"
 #include "aom_dsp/blend.h"
 #include "aom_mem/aom_mem.h"
-#include "aom_ports/avm_timer.h"
+#include "aom_ports/av2_timer.h"
 #include "aom_ports/mem.h"
 #include "aom_ports/system_state.h"
 
@@ -4296,9 +4296,9 @@ static void set_cwp_search_mask(const AV2_COMP *const cpi, MACROBLOCK *const x,
   av2_build_inter_predictor_single_buf_y(xd, bsize, 1, p1, stride);
   const struct buf_2d *const src = &x->plane[0].src;
 
-  avm_highbd_subtract_block(bh, bw, residual1, bw, src->buf, src->stride, p1,
+  av2_highbd_subtract_block(bh, bw, residual1, bw, src->buf, src->stride, p1,
                             bw, xd->bd);
-  avm_highbd_subtract_block(bh, bw, diff10, bw, p1, bw, p0, bw, xd->bd);
+  av2_highbd_subtract_block(bh, bw, diff10, bw, p1, bw, p0, bw, xd->bd);
 
   MB_MODE_INFO *const mbmi = xd->mi[0];
 

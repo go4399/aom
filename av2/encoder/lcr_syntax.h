@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_LCR_SYNTAX_H_
-#define AVM_AV2_COMMON_LCR_SYNTAX_H_
+#ifndef AV2_AV2_COMMON_LCR_SYNTAX_H_
+#define AV2_AV2_COMMON_LCR_SYNTAX_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -30,4 +30,4 @@ int av2_write_lcr_local_info(struct LayerConfigurationRecord *lcr_params,
 }
 #endif
 
-#endif  // AVM_AV2_COMMON_LCR_SYNTAX_H_
+#endif  // AV2_AV2_COMMON_LCR_SYNTAX_H_

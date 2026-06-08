@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_ATLAS_SYNTAX_H_
-#define AVM_AV2_ENCODER_ATLAS_SYNTAX_H_
+#ifndef AV2_AV2_ENCODER_ATLAS_SYNTAX_H_
+#define AV2_AV2_ENCODER_ATLAS_SYNTAX_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,4 +27,4 @@ int av2_write_atlas_segment_info(struct AtlasSegmentInfo *atlas_params,
 }
 #endif
 
-#endif  // AVM_AV2_ENCODER_ATLAS_SYNTAX_H_
+#endif  // AV2_AV2_ENCODER_ATLAS_SYNTAX_H_

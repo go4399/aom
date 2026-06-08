@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_DECODER_DETOKENIZE_H_
-#define AVM_AV2_DECODER_DETOKENIZE_H_
+#ifndef AV2_AV2_DECODER_DETOKENIZE_H_
+#define AV2_AV2_DECODER_DETOKENIZE_H_
 
 #include "config/aom_config.h"
 
@@ -27,4 +27,4 @@ void av2_decode_palette_tokens(MACROBLOCKD *const xd, int plane, aom_reader *r);
 #ifdef __cplusplus
 }  // extern "C"
 #endif
-#endif  // AVM_AV2_DECODER_DETOKENIZE_H_
+#endif  // AV2_AV2_DECODER_DETOKENIZE_H_

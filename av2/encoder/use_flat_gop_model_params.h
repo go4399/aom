@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_USE_FLAT_GOP_MODEL_PARAMS_H_
-#define AVM_AV2_ENCODER_USE_FLAT_GOP_MODEL_PARAMS_H_
+#ifndef AV2_AV2_ENCODER_USE_FLAT_GOP_MODEL_PARAMS_H_
+#define AV2_AV2_ENCODER_USE_FLAT_GOP_MODEL_PARAMS_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -231,4 +231,4 @@ static const NN_CONFIG av2_use_flat_gop_nn_config = {
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_USE_FLAT_GOP_MODEL_PARAMS_H_
+#endif  // AV2_AV2_ENCODER_USE_FLAT_GOP_MODEL_PARAMS_H_

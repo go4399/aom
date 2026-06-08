@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_COMMON_DATA_H_
-#define AVM_AV2_COMMON_COMMON_DATA_H_
+#ifndef AV2_AV2_COMMON_COMMON_DATA_H_
+#define AV2_AV2_COMMON_COMMON_DATA_H_
 
 #include <assert.h>
 #include <stdbool.h>
@@ -1013,4 +1013,4 @@ static const int g_ver_tx_type[TX_TYPES] = {
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_COMMON_DATA_H_
+#endif  // AV2_AV2_COMMON_COMMON_DATA_H_

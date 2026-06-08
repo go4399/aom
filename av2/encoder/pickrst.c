@@ -34,7 +34,7 @@
 #include "av2/encoder/encoder.h"
 #include "av2/encoder/picklpf.h"
 #include "av2/encoder/pickrst.h"
-#include "av2/encoder/avm_compatibility_dsp.h"
+#include "av2/encoder/av2_compatibility_dsp.h"
 
 #include "third_party/vector/vector.h"
 
@@ -59,9 +59,9 @@ typedef int64_t (*sse_part_extractor_type)(const YV12_BUFFER_CONFIG *a,
 #define NUM_EXTRACTORS 3
 
 static const sse_part_extractor_type sse_part_extractors[NUM_EXTRACTORS] = {
-  avm_highbd_get_y_sse_part,
-  avm_highbd_get_u_sse_part,
-  avm_highbd_get_v_sse_part,
+  av2_highbd_get_y_sse_part,
+  av2_highbd_get_u_sse_part,
+  av2_highbd_get_v_sse_part,
 };
 
 static int64_t sse_restoration_unit(const RestorationTileLimits *limits,
@@ -276,8 +276,8 @@ static INLINE void rsc_on_tile(void *priv, int idx_base, int tile_row,
 static INLINE void reset_rsc(RestSearchCtxt *rsc) {
   rsc->sse = 0;
   rsc->bits = 0;
-  avm_vector_clear(rsc->unit_stack);
-  avm_vector_clear(rsc->unit_indices);
+  av2_vector_clear(rsc->unit_stack);
+  av2_vector_clear(rsc->unit_indices);
 }
 
 static INLINE void init_rsc(const YV12_BUFFER_CONFIG *src, const AV2_COMMON *cm,
@@ -488,7 +488,7 @@ static int64_t calc_finer_tile_search_error(const RestSearchCtxt *rsc,
     Vector *current_unit_stack = rsc->unit_stack;
     Vector *current_unit_indices = rsc->unit_indices;
     int n = 0;
-    int idx = *(int *)avm_vector_const_get(current_unit_indices, n);
+    int idx = *(int *)av2_vector_const_get(current_unit_indices, n);
     VECTOR_FOR_EACH(current_unit_stack, listed_unit) {
       RstUnitSnapshot *old_unit = (RstUnitSnapshot *)(listed_unit.pointer);
       if (old_unit->rest_unit_idx == idx && !rsc->rusi[idx].bru_unit_skipped) {
@@ -509,7 +509,7 @@ static int64_t calc_finer_tile_search_error(const RestSearchCtxt *rsc,
         err += try_restoration_unit(rsc, &old_unit->limits, tile, rui);
         n++;
         if (n >= (int)current_unit_indices->size) break;
-        idx = *(int *)avm_vector_const_get(current_unit_indices, n);
+        idx = *(int *)av2_vector_const_get(current_unit_indices, n);
       }
     }
   }
@@ -528,12 +528,12 @@ static int64_t reset_unit_stack_dst_buffers(const RestSearchCtxt *rsc,
     Vector *current_unit_stack = rsc->unit_stack;
     Vector *current_unit_indices = rsc->unit_indices;
     const int last_idx =
-        ((RstUnitSnapshot *)avm_vector_back(current_unit_stack))->rest_unit_idx;
+        ((RstUnitSnapshot *)av2_vector_back(current_unit_stack))->rest_unit_idx;
 
     // Will update filters in rui as we go along. Buffer the rui filters here.
     WienerNonsepInfo last_unit_filters = rui->wienerns_info;
     int n = 0;
-    int idx = *(int *)avm_vector_const_get(current_unit_indices, n);
+    int idx = *(int *)av2_vector_const_get(current_unit_indices, n);
     VECTOR_FOR_EACH(current_unit_stack, listed_unit) {
       RstUnitSnapshot *old_unit = (RstUnitSnapshot *)(listed_unit.pointer);
       RestUnitSearchInfo *old_rusi = &rsc->rusi[old_unit->rest_unit_idx];
@@ -563,7 +563,7 @@ static int64_t reset_unit_stack_dst_buffers(const RestSearchCtxt *rsc,
         err += try_restoration_unit(rsc, &old_unit->limits, tile, rui);
         n++;
         if (n >= (int)current_unit_indices->size) break;
-        idx = *(int *)avm_vector_const_get(current_unit_indices, n);
+        idx = *(int *)av2_vector_const_get(current_unit_indices, n);
       }
     }
 #ifndef NDEBUG
@@ -708,7 +708,7 @@ static int64_t count_wienerns_bits(
           (i < nsfilter_params->nsfilter_config.asymmetric ||
            (i >= ncoeffs1 &&
             i - ncoeffs1 < nsfilter_params->nsfilter_config.asymmetric2));
-      bits += avm_count_4part_wref(
+      bits += av2_count_4part_wref(
           ref_wienerns_info_nsfilter[i] -
               wienerns_coeffs[i - beg_feat][WIENERNS_MIN_ID],
           wienerns_info_nsfilter[i] -
@@ -1818,7 +1818,7 @@ int get_merge_begin_index(const RestSearchCtxt *rsc,
                           int wiener_class_id) {
   int begin_idx = -1;
   const int last_idx =
-      ((RstUnitSnapshot *)avm_vector_back(current_unit_stack))->rest_unit_idx;
+      ((RstUnitSnapshot *)av2_vector_back(current_unit_stack))->rest_unit_idx;
   int equal_ref_for_class[WIENERNS_MAX_CLASSES] = { 0 };
   VECTOR_FOR_EACH(current_unit_stack, listed_unit) {
     RstUnitSnapshot *old_unit = (RstUnitSnapshot *)(listed_unit.pointer);
@@ -1848,7 +1848,7 @@ void populate_current_unit_indices(
     Vector *current_unit_stack, Vector *current_unit_indices,
     int wiener_class_id) {
   const int last_idx =
-      ((RstUnitSnapshot *)avm_vector_back(current_unit_stack))->rest_unit_idx;
+      ((RstUnitSnapshot *)av2_vector_back(current_unit_stack))->rest_unit_idx;
   bool has_begun = false;
   VECTOR_FOR_EACH(current_unit_stack, listed_unit) {
     RstUnitSnapshot *old_unit = (RstUnitSnapshot *)(listed_unit.pointer);
@@ -1862,7 +1862,7 @@ void populate_current_unit_indices(
                            nsfilter_params->ncoeffs, wiener_class_id))
       continue;
     int index = old_unit->rest_unit_idx;
-    avm_vector_push_back(current_unit_indices, &index);
+    av2_vector_push_back(current_unit_indices, &index);
   }
 }
 
@@ -1872,7 +1872,7 @@ double set_cand_merge_sse_and_bits(
     Vector *current_unit_stack, WienerNonsepInfo *token_wienerns_info_cand,
     RestorationUnitInfo *rui_merge_cand, int wiener_class_id) {
   const int last_idx =
-      ((RstUnitSnapshot *)avm_vector_back(current_unit_stack))->rest_unit_idx;
+      ((RstUnitSnapshot *)av2_vector_back(current_unit_stack))->rest_unit_idx;
   const int is_uv = (rsc->plane != AOM_PLANE_Y);
   const MACROBLOCK *const x = rsc->x;
   const int bit_depth = rsc->cm->seq_params.bit_depth;
@@ -1978,7 +1978,7 @@ double accumulate_merge_stats(const RestSearchCtxt *rsc,
                               int wiener_class_id) {
   (void)current_unit_indices;
   const int last_idx =
-      ((RstUnitSnapshot *)avm_vector_back(current_unit_stack))->rest_unit_idx;
+      ((RstUnitSnapshot *)av2_vector_back(current_unit_stack))->rest_unit_idx;
   const MACROBLOCK *const x = rsc->x;
   const int bit_depth = rsc->cm->seq_params.bit_depth;
   double cost_nomerge_cand = 0;
@@ -2067,7 +2067,7 @@ static void gather_stats_wienerns(const RestorationTileLimits *limits,
   unit_stats.limits = *limits;
   unit_stats.plane = rsc->plane;
   unit_stats.num_stats_classes = rsc->num_stats_classes;
-  avm_vector_push_back(rsc->wienerns_stats, &unit_stats);
+  av2_vector_push_back(rsc->wienerns_stats, &unit_stats);
   return;
 }
 
@@ -2204,7 +2204,7 @@ static void search_wienerns_visitor(const RestorationTileLimits *limits,
   const WienernsFilterParameters *nsfilter_params = get_wienerns_parameters(
       rsc->cm->quant_params.base_qindex, rsc->plane != AOM_PLANE_Y);
 
-  const RstUnitStats *unit_stats = (const RstUnitStats *)avm_vector_const_get(
+  const RstUnitStats *unit_stats = (const RstUnitStats *)av2_vector_const_get(
       rsc->wienerns_stats, rest_unit_idx_in_rutile);
   assert(unit_stats->ru_idx == rest_unit_idx);
   assert(unit_stats->ru_idx_in_tile + rsc->ru_idx_base ==
@@ -2305,11 +2305,11 @@ static void search_wienerns_visitor(const RestorationTileLimits *limits,
   // Only matters for first unit in stack.
   unit_snapshot.ref_wienerns_bank = rsc->wienerns_bank;
   // If current_unit_stack is empty, we can leave early.
-  if (avm_vector_is_empty(current_unit_stack)) {
+  if (av2_vector_is_empty(current_unit_stack)) {
     if (rtype == RESTORE_WIENER_NONSEP)
       av2_add_to_wienerns_bank(&rsc->wienerns_bank, &rusi->wienerns_info,
                                ALL_WIENERNS_CLASSES);
-    avm_vector_push_back(current_unit_stack, &unit_snapshot);
+    av2_vector_push_back(current_unit_stack, &unit_snapshot);
     if (rusi->best_rtype[RESTORE_WIENER_NONSEP - 1] == RESTORE_WIENER_NONSEP)
       rsc->num_wiener_nonsep++;
     return;
@@ -2331,15 +2331,15 @@ static void search_wienerns_visitor(const RestorationTileLimits *limits,
                                 &rsc->wienerns_bank, nsfilter_params,
                                 ALL_WIENERNS_CLASSES);
     rsc->bits += unit_snapshot.current_bits;
-    avm_vector_push_back(current_unit_stack, &unit_snapshot);
+    av2_vector_push_back(current_unit_stack, &unit_snapshot);
     if (rusi->best_rtype[RESTORE_WIENER_NONSEP - 1] == RESTORE_WIENER_NONSEP)
       rsc->num_wiener_nonsep++;
     return;
   }
   // Push current unit onto stack.
-  avm_vector_push_back(current_unit_stack, &unit_snapshot);
+  av2_vector_push_back(current_unit_stack, &unit_snapshot);
   const int last_idx =
-      ((RstUnitSnapshot *)avm_vector_back(current_unit_stack))->rest_unit_idx;
+      ((RstUnitSnapshot *)av2_vector_back(current_unit_stack))->rest_unit_idx;
 
   double cost_merge = DBL_MAX;
   double cost_nomerge = 0;
@@ -2396,7 +2396,7 @@ static void search_wienerns_visitor(const RestorationTileLimits *limits,
       // Populate current_unit_indices with the indices of RUs using this
       // filter.
       Vector *current_unit_indices = rsc->unit_indices;
-      avm_vector_clear(current_unit_indices);
+      av2_vector_clear(current_unit_indices);
       populate_current_unit_indices(
           rsc, nsfilter_params, &token_wienerns_info_cand, begin_idx_cand,
           current_unit_stack, current_unit_indices, c_id);
@@ -2484,11 +2484,11 @@ static void search_wienerns_visitor(const RestorationTileLimits *limits,
         reset_unit_stack_dst_buffers(rsc, NULL, &rsc->tile_rect,
                                      &rui_merge_best);
       }
-      avm_vector_clear(current_unit_indices);
+      av2_vector_clear(current_unit_indices);
     }
     // Trial end
 
-    RstUnitSnapshot *last_unit = avm_vector_back(current_unit_stack);
+    RstUnitSnapshot *last_unit = av2_vector_back(current_unit_stack);
     RestUnitSearchInfo *last_rusi = &rsc->rusi[last_unit->rest_unit_idx];
     (void)last_rusi;
     if (cost_merge < cost_nomerge && begin_idx[c_id] != -1) {
@@ -2565,19 +2565,19 @@ static void search_wienerns_visitor(const RestorationTileLimits *limits,
       // Copy current unit from the top of the stack.
       // memset(&unit_snapshot, 0, sizeof(unit_snapshot));
       // unit_snapshot = *(RstUnitSnapshot
-      // *)avm_vector_back(current_unit_stack); RESTORE_WIENER_NONSEP units
+      // *)av2_vector_back(current_unit_stack); RESTORE_WIENER_NONSEP units
       // become start of new stack, and RESTORE_NONE units are discarded.
       if (rtype == RESTORE_WIENER_NONSEP) {
         // We may be merging some c_ids but not this one.
         av2_add_to_wienerns_bank(&rsc->wienerns_bank, &rusi->wienerns_info,
                                  c_id);
-        // avm_vector_clear(current_unit_stack);
-        // avm_vector_push_back(current_unit_stack, &unit_snapshot);
+        // av2_vector_clear(current_unit_stack);
+        // av2_vector_push_back(current_unit_stack, &unit_snapshot);
       }
     }
   }
   if (merged_class_count == 0 && rtype != RESTORE_WIENER_NONSEP) {
-    avm_vector_pop_back(current_unit_stack);
+    av2_vector_pop_back(current_unit_stack);
   }
   if (rusi->best_rtype[RESTORE_WIENER_NONSEP - 1] == RESTORE_WIENER_NONSEP)
     rsc->num_wiener_nonsep++;
@@ -2922,7 +2922,7 @@ static void gather_stats_rest_type(RestSearchCtxt *rsc, RestorationType rtype) {
   static const rest_unit_visitor_t funs[RESTORE_TYPES] = {
     NULL, NULL, gather_stats_wienerns, NULL
   };
-  if (rtype == RESTORE_WIENER_NONSEP) avm_vector_clear(rsc->wienerns_stats);
+  if (rtype == RESTORE_WIENER_NONSEP) av2_vector_clear(rsc->wienerns_stats);
 
   if (funs[rtype]) process_by_rutile(rsc, funs[rtype]);
 }
@@ -3078,7 +3078,7 @@ static void weighted_sum_all_stats(const RestSearchCtxt *rsc,
 
   // Get a sample to fill the basic fields of sum_stats;
   const RstUnitStats *sample_stat =
-      avm_vector_begin(rsc->wienerns_stats).pointer;
+      av2_vector_begin(rsc->wienerns_stats).pointer;
   sum_stats->ru_idx = sample_stat->ru_idx;
   sum_stats->plane = sample_stat->plane;
   sum_stats->num_stats_classes = sample_stat->num_stats_classes;
@@ -3130,7 +3130,7 @@ int count_match_indices_bits(int plane, int num_classes, int num_ref_frames,
     const int base = get_group_base(group, group_counts);
     const int n = group == 0 ? c_id + 1 : group_counts[group];
     if (n > 1) {
-      total_bits += avm_wb_count_primitive_refsubexpfin(
+      total_bits += av2_wb_count_primitive_refsubexpfin(
           n, 4, ref - base, match_indices[c_id] - base);
     }
   }
@@ -3501,8 +3501,8 @@ static double optimize_frame_filters_with_rounding(
 
   Vector *current_unit_stack = rsc->unit_stack;
   Vector *current_unit_indices = rsc->unit_indices;
-  avm_vector_clear(current_unit_indices);
-  avm_vector_clear(current_unit_stack);
+  av2_vector_clear(current_unit_indices);
+  av2_vector_clear(current_unit_stack);
 
   WienerNonsepInfoBank tmp_bank = { 0 };
   initialize_bank_with_best_frame_filter_match(rsc, best_filter, &tmp_bank, 1);
@@ -3522,8 +3522,8 @@ static double optimize_frame_filters_with_rounding(
 
     unit_snapshot.rest_unit_idx = stat_slot;
     unit_snapshot.ref_wienerns_bank = tmp_bank;
-    avm_vector_push_back(current_unit_stack, &unit_snapshot);
-    avm_vector_push_back(current_unit_indices, &stat_slot);
+    av2_vector_push_back(current_unit_stack, &unit_snapshot);
+    av2_vector_push_back(current_unit_indices, &stat_slot);
   }
   if (cnt == 0) return -1;
 
@@ -3804,11 +3804,11 @@ void av2_pick_filter_restoration(const YV12_BUFFER_CONFIG *src, AV2_COMP *cpi) {
   x->rdmult = cpi->rd.RDMULT;
 
   Vector unit_stack;
-  avm_vector_setup(&unit_stack,
+  av2_vector_setup(&unit_stack,
                    1,                                // resizable capacity
                    sizeof(struct RstUnitSnapshot));  // element size
   Vector unit_indices;
-  avm_vector_setup(&unit_indices,
+  av2_vector_setup(&unit_indices,
                    1,             // resizable capacity
                    sizeof(int));  // element size
 
@@ -3817,7 +3817,7 @@ void av2_pick_filter_restoration(const YV12_BUFFER_CONFIG *src, AV2_COMP *cpi) {
   const int plane_end = num_planes > 1 ? AOM_PLANE_V : AOM_PLANE_Y;
 
   Vector wienerns_stats;
-  avm_vector_setup(&wienerns_stats,
+  av2_vector_setup(&wienerns_stats,
                    1,                             // resizable capacity
                    sizeof(struct RstUnitStats));  // element size
   rsc.wienerns_stats = &wienerns_stats;
@@ -3890,7 +3890,7 @@ void av2_pick_filter_restoration(const YV12_BUFFER_CONFIG *src, AV2_COMP *cpi) {
       if (plane == 2 && unit_size != cm->rst_info[1].restoration_unit_size) {
         continue;
       }
-      avm_vector_clear(&wienerns_stats);
+      av2_vector_clear(&wienerns_stats);
 
       rsi->restoration_unit_size = unit_size;
 
@@ -4015,7 +4015,7 @@ void av2_pick_filter_restoration(const YV12_BUFFER_CONFIG *src, AV2_COMP *cpi) {
   free(luma_buf);
   free(luma_virtual_buf);
   aom_free(rsc.wienerns_tmpbuf);
-  avm_vector_destroy(&wienerns_stats);
-  avm_vector_destroy(&unit_stack);
-  avm_vector_destroy(&unit_indices);
+  av2_vector_destroy(&wienerns_stats);
+  av2_vector_destroy(&unit_stack);
+  av2_vector_destroy(&unit_indices);
 }

@@ -484,7 +484,7 @@ static void highbd_convolve_2d_facade_single(
       (filter_params_y == NULL) ? 0 : ((filter_params_y->taps > 8) ? 1 : 0);
 
   if (!need_x && !need_y) {
-    avm_highbd_convolve_copy(src, src_stride, dst, dst_stride, w, h);
+    av2_highbd_convolve_copy(src, src_stride, dst, dst_stride, w, h);
   } else if (need_x && !need_y) {
     // TODO(any): need SIMD for > 8 taps filters
     assert(IMPLIES(is_intrabc, filter_params_x != NULL));

@@ -178,7 +178,7 @@ int filt_choice_highbd(uint16_t *s, int pitch, int max_filt_neg,
   return MAX_DBL_FLT_LEN;
 }
 
-void avm_highbd_lpf_horizontal_generic_c(uint16_t *s, int pitch,
+void av2_highbd_lpf_horizontal_generic_c(uint16_t *s, int pitch,
                                          int filt_width_neg, int filt_width_pos,
                                          const uint16_t *q_thresh,
                                          const uint16_t *side_thresh, int bd,
@@ -199,7 +199,7 @@ void avm_highbd_lpf_horizontal_generic_c(uint16_t *s, int pitch,
   }
 }
 
-void avm_highbd_lpf_vertical_generic_c(uint16_t *s, int pitch,
+void av2_highbd_lpf_vertical_generic_c(uint16_t *s, int pitch,
                                        int filt_width_neg, int filt_width_pos,
                                        const uint16_t *q_thresh,
                                        const uint16_t *side_thresh, int bd,

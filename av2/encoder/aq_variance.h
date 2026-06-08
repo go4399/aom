@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_AQ_VARIANCE_H_
-#define AVM_AV2_ENCODER_AQ_VARIANCE_H_
+#ifndef AV2_AV2_ENCODER_AQ_VARIANCE_H_
+#define AV2_AV2_ENCODER_AQ_VARIANCE_H_
 
 #include "av2/encoder/encoder.h"
 
@@ -36,4 +36,4 @@ int av2_block_wavelet_energy_level(const AV2_COMP *cpi, MACROBLOCK *x,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_AQ_VARIANCE_H_
+#endif  // AV2_AV2_ENCODER_AQ_VARIANCE_H_

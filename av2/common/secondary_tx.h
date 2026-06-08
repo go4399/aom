@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_SECONDARY_TX_H_
-#define AVM_AV2_COMMON_SECONDARY_TX_H_
+#ifndef AV2_AV2_COMMON_SECONDARY_TX_H_
+#define AV2_AV2_COMMON_SECONDARY_TX_H_
 
 #include "av2/common/enums.h"
 
@@ -5250,4 +5250,4 @@ static const int16_t
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_SECONDARY_TX_H_
+#endif  // AV2_AV2_COMMON_SECONDARY_TX_H_

@@ -54,8 +54,8 @@ static INLINE int_mv get_ref_mv_for_mv_stats(
 }
 
 static INLINE int get_symbol_cost(const aom_cdf_prob *cdf, int symbol) {
-  const aom_cdf_prob cur_cdf = AVM_ICDF(cdf[symbol]);
-  const aom_cdf_prob prev_cdf = symbol ? AVM_ICDF(cdf[symbol - 1]) : 0;
+  const aom_cdf_prob cur_cdf = AV2_ICDF(cdf[symbol]);
+  const aom_cdf_prob prev_cdf = symbol ? AV2_ICDF(cdf[symbol - 1]) : 0;
   const aom_cdf_prob p15 = AOMMAX(cur_cdf - prev_cdf, EC_MIN_PROB);
 
   return av2_cost_symbol(p15);

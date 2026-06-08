@@ -33,7 +33,7 @@
 #include "av2/encoder/mcomp.h"
 #include "av2/encoder/rdopt.h"
 #include "av2/encoder/reconinter_enc.h"
-#include "av2/encoder/avm_compatibility_dsp.h"
+#include "av2/encoder/av2_compatibility_dsp.h"
 
 #include "aom_dsp/binary_codes_writer.h"
 
@@ -310,8 +310,8 @@ int opfl_refine_fullpel_mv_one_sided(
   dst1 = (uint16_t *)aom_memalign(32, bw * bh * sizeof(uint16_t));
 
   // Obrain Pred as dst0 and Cur as dst1
-  avm_highbd_convolve_copy(pred_ptr, pred->stride, dst0, bw, bw, bh);
-  avm_highbd_convolve_copy(src->buf, src->stride, dst1, bw, bw, bh);
+  av2_highbd_convolve_copy(pred_ptr, pred->stride, dst0, bw, bw, bh);
+  av2_highbd_convolve_copy(src->buf, src->stride, dst1, bw, bw, bh);
 
   int grad_prec_bits;
   int16_t *tmp0 =
@@ -2775,8 +2775,8 @@ int av2_intrabc_hash_search(const AV2_COMP *cpi, const MACROBLOCKD *xd,
   }
 
   Iterator iterator = av2_hash_get_first_iterator(ref_frame_hash, hash_value1);
-  for (int i = 0; i < count; i++, avm_iterator_increment(&iterator)) {
-    block_hash ref_block_hash = *(block_hash *)(avm_iterator_get(&iterator));
+  for (int i = 0; i < count; i++, av2_iterator_increment(&iterator)) {
+    block_hash ref_block_hash = *(block_hash *)(av2_iterator_get(&iterator));
     if (hash_value2 == ref_block_hash.hash_value2) {
       // Make sure the prediction is from valid area.
       const MV dv = { GET_MV_SUBPEL(ref_block_hash.y - y_pos),
@@ -2923,7 +2923,7 @@ int upsampled_pref_error(MACROBLOCKD *xd, const AV2_COMMON *cm,
 
   if (second_pred != NULL) {
     if (mask) {
-      avm_highbd_comp_mask_upsampled_pred(
+      av2_highbd_comp_mask_upsampled_pred(
           xd, cm, mi_row, mi_col, this_mv, pred, second_pred, w, h, subpel_x_q3,
           subpel_y_q3, ref, ref_stride, mask, mask_stride, invert_mask, xd->bd,
           subpel_search_type, is_scaled_ref);
@@ -2932,19 +2932,19 @@ int upsampled_pref_error(MACROBLOCKD *xd, const AV2_COMMON *cm,
         DIST_WTD_COMP_PARAMS jcp_param;
         set_cmp_weight(xd->mi[0], invert_mask, &jcp_param);
 
-        avm_highbd_dist_wtd_comp_avg_upsampled_pred(
+        av2_highbd_dist_wtd_comp_avg_upsampled_pred(
             xd, cm, mi_row, mi_col, this_mv, pred, second_pred, w, h,
             subpel_x_q3, subpel_y_q3, ref, ref_stride, xd->bd, &jcp_param,
             subpel_search_type, is_scaled_ref);
       } else
 
-        avm_highbd_comp_avg_upsampled_pred(xd, cm, mi_row, mi_col, this_mv,
+        av2_highbd_comp_avg_upsampled_pred(xd, cm, mi_row, mi_col, this_mv,
                                            pred, second_pred, w, h, subpel_x_q3,
                                            subpel_y_q3, ref, ref_stride, xd->bd,
                                            subpel_search_type, is_scaled_ref);
     }
   } else {
-    avm_highbd_upsampled_pred(xd, cm, mi_row, mi_col, this_mv, pred, w, h,
+    av2_highbd_upsampled_pred(xd, cm, mi_row, mi_col, this_mv, pred, w, h,
                               subpel_x_q3, subpel_y_q3, ref, ref_stride, xd->bd,
                               subpel_search_type, is_scaled_ref);
   }
@@ -3250,10 +3250,10 @@ static unsigned int setup_center_error(
   if (second_pred != NULL) {
     DECLARE_ALIGNED(16, uint16_t, comp_pred[MAX_SB_SQUARE]);
     if (mask) {
-      avm_highbd_comp_mask_pred(comp_pred, second_pred, w, h, y, y_stride, mask,
+      av2_highbd_comp_mask_pred(comp_pred, second_pred, w, h, y, y_stride, mask,
                                 mask_stride, invert_mask);
     } else {
-      avm_highbd_comp_avg_pred(comp_pred, second_pred, w, h, y, y_stride);
+      av2_highbd_comp_avg_pred(comp_pred, second_pred, w, h, y, y_stride);
     }
     besterr = vfp->vf((const uint8_t *)comp_pred, w, (const uint8_t *)src,
                       src_stride, sse1);

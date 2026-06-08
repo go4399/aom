@@ -79,7 +79,7 @@ sub aom_config($) {
   return (defined $config{$_[0]}) ? $config{$_[0]} : "";
 }
 
-sub avm_config($) {
+sub av2_config($) {
   return aom_config($_[0]);
 }
 

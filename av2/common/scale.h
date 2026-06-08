@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_SCALE_H_
-#define AVM_AV2_COMMON_SCALE_H_
+#ifndef AV2_AV2_COMMON_SCALE_H_
+#define AV2_AV2_COMMON_SCALE_H_
 
 #include "av2/common/convolve.h"
 #include "av2/common/mv.h"
@@ -65,4 +65,4 @@ static INLINE int valid_ref_frame_size(int ref_width, int ref_height,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_SCALE_H_
+#endif  // AV2_AV2_COMMON_SCALE_H_

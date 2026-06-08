@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_AV2_TXFM_H_
-#define AVM_AV2_COMMON_AV2_TXFM_H_
+#ifndef AV2_AV2_COMMON_AV2_TXFM_H_
+#define AV2_AV2_COMMON_AV2_TXFM_H_
 
 #include <assert.h>
 #include <math.h>
@@ -108,4 +108,4 @@ static INLINE uint16_t highbd_clip_pixel_add(uint16_t dest, tran_high_t trans,
 }
 #endif  // __cplusplus
 
-#endif  // AVM_AV2_COMMON_AV2_TXFM_H_
+#endif  // AV2_AV2_COMMON_AV2_TXFM_H_

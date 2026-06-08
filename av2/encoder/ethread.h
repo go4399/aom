@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_ETHREAD_H_
-#define AVM_AV2_ENCODER_ETHREAD_H_
+#ifndef AV2_AV2_ENCODER_ETHREAD_H_
+#define AV2_AV2_ENCODER_ETHREAD_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -74,4 +74,4 @@ void av2_create_workers(AV2_COMP *cpi, int num_workers);
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_ETHREAD_H_
+#endif  // AV2_AV2_ENCODER_ETHREAD_H_

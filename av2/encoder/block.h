@@ -13,8 +13,8 @@
 /*! \file
  * Declares various structs used to encode the current partition block.
  */
-#ifndef AVM_AV2_ENCODER_BLOCK_H_
-#define AVM_AV2_ENCODER_BLOCK_H_
+#ifndef AV2_AV2_ENCODER_BLOCK_H_
+#define AV2_AV2_ENCODER_BLOCK_H_
 
 #include "av2/common/entropymv.h"
 #include "av2/common/entropy.h"
@@ -1740,4 +1740,4 @@ static INLINE int should_reuse_mode(const MACROBLOCK *x, int mode_flag) {
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_BLOCK_H_
+#endif  // AV2_AV2_ENCODER_BLOCK_H_

@@ -457,7 +457,7 @@ void av2_scale_references(AV2_COMP *cpi, const InterpFilter filter,
   MV_REFERENCE_FRAME ref_frame;
 
   for (ref_frame = 0; ref_frame < INTER_REFS_PER_FRAME; ++ref_frame) {
-    // Need to convert from AVM_REFFRAME to index into ref_mask (subtract 1).
+    // Need to convert from AV2_REFFRAME to index into ref_mask (subtract 1).
     if (cm->ref_frame_flags & (1 << ref_frame)) {
       BufferPool *const pool = cm->buffer_pool;
       const YV12_BUFFER_CONFIG *const ref =

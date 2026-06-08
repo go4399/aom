@@ -5,8 +5,8 @@
  * and the Alliance for Open Media Patent License 1.0.
  */
 
-#ifndef AVM_COMPATIBILITY_DSP_H_
-#define AVM_COMPATIBILITY_DSP_H_
+#ifndef AV2_COMPATIBILITY_DSP_H_
+#define AV2_COMPATIBILITY_DSP_H_
 
 #include "aom_dsp/aom_dsp_common.h"
 #include "aom_dsp/recenter.h"
@@ -92,67 +92,67 @@ static inline unsigned int generic_hbd_dist_wtd_sad_avg(
   return sad;
 }
 
-#define avm_highbd_dist_wtd_sad256x256_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad256x256_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 256, 256)
-#define avm_highbd_dist_wtd_sad256x128_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad256x128_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 256, 128)
-#define avm_highbd_dist_wtd_sad128x256_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad128x256_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 128, 256)
-#define avm_highbd_dist_wtd_sad128x128_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad128x128_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 128, 128)
-#define avm_highbd_dist_wtd_sad128x64_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad128x64_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 128, 64)
-#define avm_highbd_dist_wtd_sad64x128_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad64x128_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 64, 128)
-#define avm_highbd_dist_wtd_sad32x16_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad32x16_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 32, 16)
-#define avm_highbd_dist_wtd_sad16x32_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad16x32_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 16, 32)
-#define avm_highbd_dist_wtd_sad64x32_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad64x32_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 64, 32)
-#define avm_highbd_dist_wtd_sad32x64_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad32x64_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 32, 64)
-#define avm_highbd_dist_wtd_sad32x32_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad32x32_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 32, 32)
-#define avm_highbd_dist_wtd_sad64x64_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad64x64_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 64, 64)
-#define avm_highbd_dist_wtd_sad16x16_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad16x16_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 16, 16)
-#define avm_highbd_dist_wtd_sad16x8_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad16x8_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 16, 8)
-#define avm_highbd_dist_wtd_sad8x16_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad8x16_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 8, 16)
-#define avm_highbd_dist_wtd_sad8x8_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad8x8_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 8, 8)
-#define avm_highbd_dist_wtd_sad8x4_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad8x4_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 8, 4)
-#define avm_highbd_dist_wtd_sad4x8_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad4x8_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 4, 8)
-#define avm_highbd_dist_wtd_sad4x4_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad4x4_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 4, 4)
-#define avm_highbd_dist_wtd_sad4x16_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad4x16_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 4, 16)
-#define avm_highbd_dist_wtd_sad16x4_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad16x4_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 16, 4)
-#define avm_highbd_dist_wtd_sad8x32_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad8x32_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 8, 32)
-#define avm_highbd_dist_wtd_sad32x8_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad32x8_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 32, 8)
-#define avm_highbd_dist_wtd_sad16x64_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad16x64_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 16, 64)
-#define avm_highbd_dist_wtd_sad64x16_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad64x16_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 64, 16)
-#define avm_highbd_dist_wtd_sad8x64_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad8x64_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 8, 64)
-#define avm_highbd_dist_wtd_sad64x8_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad64x8_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 64, 8)
-#define avm_highbd_dist_wtd_sad4x64_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad4x64_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 4, 64)
-#define avm_highbd_dist_wtd_sad64x4_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad64x4_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 64, 4)
-#define avm_highbd_dist_wtd_sad4x32_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad4x32_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 4, 32)
-#define avm_highbd_dist_wtd_sad32x4_avg(s, ss, r, rs, sp, jp) \
+#define av2_highbd_dist_wtd_sad32x4_avg(s, ss, r, rs, sp, jp) \
   generic_hbd_dist_wtd_sad_avg(s, ss, r, rs, sp, jp, 32, 4)
 
 static inline unsigned int generic_hbd_masked_sad(
@@ -181,13 +181,13 @@ static inline unsigned int generic_hbd_masked_sad(
 }
 
 // ---------------------------------------------------------------------------------
-// avm_highbd_sad... maps to standard optimized aom_highbd_sad...
+// av2_highbd_sad... maps to standard optimized aom_highbd_sad...
 // ---------------------------------------------------------------------------------
 
 // Standard SAD mappings (defined in standard AOM assembly)
-#define avm_highbd_sad128x128(s, ss, r, rs) \
+#define av2_highbd_sad128x128(s, ss, r, rs) \
   aom_highbd_sad128x128(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
-#define avm_highbd_sad128x128_avg(s, ss, r, rs, sp)                           \
+#define av2_highbd_sad128x128_avg(s, ss, r, rs, sp)                           \
   aom_highbd_sad128x128_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), \
                             rs, CONVERT_TO_BYTEPTR(sp))
 #define HBD_SAD_X4D_WRAPPER(fnname, s, ss, r, rs, sa)                           \
@@ -201,361 +201,361 @@ static inline unsigned int generic_hbd_masked_sad(
     fnname(CONVERT_TO_BYTEPTR(s), ss, r_shifted, rs, sa);                      \
   } while (0)
 
-#define avm_highbd_sad128x128x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad128x128x4d(s, ss, r, rs, sa) \
   HBD_SAD_X4D_WRAPPER(aom_highbd_sad128x128x4d, s, ss, r, rs, sa)
 
-#define avm_highbd_sad128x64(s, ss, r, rs) \
+#define av2_highbd_sad128x64(s, ss, r, rs) \
   aom_highbd_sad128x64(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
-#define avm_highbd_sad128x64_avg(s, ss, r, rs, sp)                           \
+#define av2_highbd_sad128x64_avg(s, ss, r, rs, sp)                           \
   aom_highbd_sad128x64_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), \
                            rs, CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad128x64x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad128x64x4d(s, ss, r, rs, sa) \
   HBD_SAD_X4D_WRAPPER(aom_highbd_sad128x64x4d, s, ss, r, rs, sa)
 
-#define avm_highbd_sad64x128(s, ss, r, rs) \
+#define av2_highbd_sad64x128(s, ss, r, rs) \
   aom_highbd_sad64x128(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
-#define avm_highbd_sad64x128_avg(s, ss, r, rs, sp)                           \
+#define av2_highbd_sad64x128_avg(s, ss, r, rs, sp)                           \
   aom_highbd_sad64x128_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), \
                            rs, CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad64x128x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad64x128x4d(s, ss, r, rs, sa) \
   HBD_SAD_X4D_WRAPPER(aom_highbd_sad64x128x4d, s, ss, r, rs, sa)
 
-#define avm_highbd_sad64x64(s, ss, r, rs) \
+#define av2_highbd_sad64x64(s, ss, r, rs) \
   aom_highbd_sad64x64(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
-#define avm_highbd_sad64x64_avg(s, ss, r, rs, sp)                           \
+#define av2_highbd_sad64x64_avg(s, ss, r, rs, sp)                           \
   aom_highbd_sad64x64_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), \
                            rs, CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad64x64x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad64x64x4d(s, ss, r, rs, sa) \
   HBD_SAD_X4D_WRAPPER(aom_highbd_sad64x64x4d, s, ss, r, rs, sa)
 
-#define avm_highbd_sad64x32(s, ss, r, rs) \
+#define av2_highbd_sad64x32(s, ss, r, rs) \
   aom_highbd_sad64x32(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
-#define avm_highbd_sad64x32_avg(s, ss, r, rs, sp)                           \
+#define av2_highbd_sad64x32_avg(s, ss, r, rs, sp)                           \
   aom_highbd_sad64x32_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), \
                            rs, CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad64x32x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad64x32x4d(s, ss, r, rs, sa) \
   HBD_SAD_X4D_WRAPPER(aom_highbd_sad64x32x4d, s, ss, r, rs, sa)
 
-#define avm_highbd_sad32x64(s, ss, r, rs) \
+#define av2_highbd_sad32x64(s, ss, r, rs) \
   aom_highbd_sad32x64(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
-#define avm_highbd_sad32x64_avg(s, ss, r, rs, sp)                           \
+#define av2_highbd_sad32x64_avg(s, ss, r, rs, sp)                           \
   aom_highbd_sad32x64_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), \
                            rs, CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad32x64x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad32x64x4d(s, ss, r, rs, sa) \
   HBD_SAD_X4D_WRAPPER(aom_highbd_sad32x64x4d, s, ss, r, rs, sa)
 
-#define avm_highbd_sad32x32(s, ss, r, rs) \
+#define av2_highbd_sad32x32(s, ss, r, rs) \
   aom_highbd_sad32x32(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
-#define avm_highbd_sad32x32_avg(s, ss, r, rs, sp)                           \
+#define av2_highbd_sad32x32_avg(s, ss, r, rs, sp)                           \
   aom_highbd_sad32x32_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), \
                            rs, CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad32x32x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad32x32x4d(s, ss, r, rs, sa) \
   HBD_SAD_X4D_WRAPPER(aom_highbd_sad32x32x4d, s, ss, r, rs, sa)
 
-#define avm_highbd_sad32x16(s, ss, r, rs) \
+#define av2_highbd_sad32x16(s, ss, r, rs) \
   aom_highbd_sad32x16(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
-#define avm_highbd_sad32x16_avg(s, ss, r, rs, sp)                           \
+#define av2_highbd_sad32x16_avg(s, ss, r, rs, sp)                           \
   aom_highbd_sad32x16_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), \
                            rs, CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad32x16x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad32x16x4d(s, ss, r, rs, sa) \
   HBD_SAD_X4D_WRAPPER(aom_highbd_sad32x16x4d, s, ss, r, rs, sa)
 
-#define avm_highbd_sad16x32(s, ss, r, rs) \
+#define av2_highbd_sad16x32(s, ss, r, rs) \
   aom_highbd_sad16x32(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
-#define avm_highbd_sad16x32_avg(s, ss, r, rs, sp)                           \
+#define av2_highbd_sad16x32_avg(s, ss, r, rs, sp)                           \
   aom_highbd_sad16x32_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), \
                            rs, CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad16x32x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad16x32x4d(s, ss, r, rs, sa) \
   HBD_SAD_X4D_WRAPPER(aom_highbd_sad16x32x4d, s, ss, r, rs, sa)
 
-#define avm_highbd_sad16x16_avg(s, ss, r, rs, sp)                           \
+#define av2_highbd_sad16x16_avg(s, ss, r, rs, sp)                           \
   aom_highbd_sad16x16_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), \
                            rs, CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad16x16x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad16x16x4d(s, ss, r, rs, sa) \
   HBD_SAD_X4D_WRAPPER(aom_highbd_sad16x16x4d, s, ss, r, rs, sa)
 
-#define avm_highbd_sad16x8_avg(s, ss, r, rs, sp)                               \
+#define av2_highbd_sad16x8_avg(s, ss, r, rs, sp)                               \
   aom_highbd_sad16x8_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs, \
                          CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad16x8x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad16x8x4d(s, ss, r, rs, sa) \
   HBD_SAD_X4D_WRAPPER(aom_highbd_sad16x8x4d, s, ss, r, rs, sa)
 
-#define avm_highbd_sad8x16_avg(s, ss, r, rs, sp)                               \
+#define av2_highbd_sad8x16_avg(s, ss, r, rs, sp)                               \
   aom_highbd_sad8x16_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs, \
                          CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad8x16x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad8x16x4d(s, ss, r, rs, sa) \
   HBD_SAD_X4D_WRAPPER(aom_highbd_sad8x16x4d, s, ss, r, rs, sa)
 
-#define avm_highbd_sad8x8_avg(s, ss, r, rs, sp)                               \
+#define av2_highbd_sad8x8_avg(s, ss, r, rs, sp)                               \
   aom_highbd_sad8x8_avg(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs, \
                         CONVERT_TO_BYTEPTR(sp))
-#define avm_highbd_sad8x8x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad8x8x4d(s, ss, r, rs, sa) \
   HBD_SAD_X4D_WRAPPER(aom_highbd_sad8x8x4d, s, ss, r, rs, sa)
 
-#define avm_highbd_sad8x4(s, ss, r, rs) \
+#define av2_highbd_sad8x4(s, ss, r, rs) \
   aom_highbd_sad8x4(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
-#define avm_highbd_sad8x4_avg(s, ss, r, rs, sp) \
+#define av2_highbd_sad8x4_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 8, 4)
-#define avm_highbd_sad8x4x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad8x4x4d(s, ss, r, rs, sa) \
   HBD_SAD_X4D_WRAPPER(aom_highbd_sad8x4x4d, s, ss, r, rs, sa)
 
-#define avm_highbd_sad4x8(s, ss, r, rs) \
+#define av2_highbd_sad4x8(s, ss, r, rs) \
   aom_highbd_sad4x8(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
-#define avm_highbd_sad4x8_avg(s, ss, r, rs, sp) \
+#define av2_highbd_sad4x8_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 4, 8)
-#define avm_highbd_sad4x8x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad4x8x4d(s, ss, r, rs, sa) \
   HBD_SAD_X4D_WRAPPER(aom_highbd_sad4x8x4d, s, ss, r, rs, sa)
 
-#define avm_highbd_sad4x4(s, ss, r, rs) \
+#define av2_highbd_sad4x4(s, ss, r, rs) \
   aom_highbd_sad4x4(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
-#define avm_highbd_sad4x4_avg(s, ss, r, rs, sp) \
+#define av2_highbd_sad4x4_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 4, 4)
-#define avm_highbd_sad4x4x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad4x4x4d(s, ss, r, rs, sa) \
   HBD_SAD_X4D_WRAPPER(aom_highbd_sad4x4x4d, s, ss, r, rs, sa)
 
-#define avm_highbd_sad4x16(s, ss, r, rs) \
+#define av2_highbd_sad4x16(s, ss, r, rs) \
   aom_highbd_sad4x16(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
-#define avm_highbd_sad4x16_avg(s, ss, r, rs, sp) \
+#define av2_highbd_sad4x16_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 4, 16)
-#define avm_highbd_sad4x16x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad4x16x4d(s, ss, r, rs, sa) \
   HBD_SAD_X4D_WRAPPER(aom_highbd_sad4x16x4d, s, ss, r, rs, sa)
 
-#define avm_highbd_sad16x4(s, ss, r, rs) \
+#define av2_highbd_sad16x4(s, ss, r, rs) \
   aom_highbd_sad16x4(CONVERT_TO_BYTEPTR(s), ss, CONVERT_TO_BYTEPTR(r), rs)
-#define avm_highbd_sad16x4_avg(s, ss, r, rs, sp) \
+#define av2_highbd_sad16x4_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 16, 4)
-#define avm_highbd_sad16x4x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad16x4x4d(s, ss, r, rs, sa) \
   HBD_SAD_X4D_WRAPPER(aom_highbd_sad16x4x4d, s, ss, r, rs, sa)
 
 // Non-standard sizes HBD SAD fallbacks
-#define avm_highbd_sad256x256(s, ss, r, rs) \
+#define av2_highbd_sad256x256(s, ss, r, rs) \
   generic_hbd_sad(s, ss, r, rs, 256, 256)
-#define avm_highbd_sad256x256_avg(s, ss, r, rs, sp) \
+#define av2_highbd_sad256x256_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 256, 256)
-#define avm_highbd_sad256x256x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad256x256x4d(s, ss, r, rs, sa) \
   generic_hbd_sadx4d(s, ss, r, rs, sa, 256, 256)
 
-#define avm_highbd_sad256x128(s, ss, r, rs) \
+#define av2_highbd_sad256x128(s, ss, r, rs) \
   generic_hbd_sad(s, ss, r, rs, 256, 128)
-#define avm_highbd_sad256x128_avg(s, ss, r, rs, sp) \
+#define av2_highbd_sad256x128_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 256, 128)
-#define avm_highbd_sad256x128x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad256x128x4d(s, ss, r, rs, sa) \
   generic_hbd_sadx4d(s, ss, r, rs, sa, 256, 128)
 
-#define avm_highbd_sad128x256(s, ss, r, rs) \
+#define av2_highbd_sad128x256(s, ss, r, rs) \
   generic_hbd_sad(s, ss, r, rs, 128, 256)
-#define avm_highbd_sad128x256_avg(s, ss, r, rs, sp) \
+#define av2_highbd_sad128x256_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 128, 256)
-#define avm_highbd_sad128x256x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad128x256x4d(s, ss, r, rs, sa) \
   generic_hbd_sadx4d(s, ss, r, rs, sa, 128, 256)
 
-#define avm_highbd_sad64x16(s, ss, r, rs) generic_hbd_sad(s, ss, r, rs, 64, 16)
-#define avm_highbd_sad64x16_avg(s, ss, r, rs, sp) \
+#define av2_highbd_sad64x16(s, ss, r, rs) generic_hbd_sad(s, ss, r, rs, 64, 16)
+#define av2_highbd_sad64x16_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 64, 16)
-#define avm_highbd_sad64x16x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad64x16x4d(s, ss, r, rs, sa) \
   generic_hbd_sadx4d(s, ss, r, rs, sa, 64, 16)
 
-#define avm_highbd_sad16x64(s, ss, r, rs) generic_hbd_sad(s, ss, r, rs, 16, 64)
-#define avm_highbd_sad16x64_avg(s, ss, r, rs, sp) \
+#define av2_highbd_sad16x64(s, ss, r, rs) generic_hbd_sad(s, ss, r, rs, 16, 64)
+#define av2_highbd_sad16x64_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 16, 64)
-#define avm_highbd_sad16x64x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad16x64x4d(s, ss, r, rs, sa) \
   generic_hbd_sadx4d(s, ss, r, rs, sa, 16, 64)
 
-#define avm_highbd_sad32x8(s, ss, r, rs) generic_hbd_sad(s, ss, r, rs, 32, 8)
-#define avm_highbd_sad32x8_avg(s, ss, r, rs, sp) \
+#define av2_highbd_sad32x8(s, ss, r, rs) generic_hbd_sad(s, ss, r, rs, 32, 8)
+#define av2_highbd_sad32x8_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 32, 8)
-#define avm_highbd_sad32x8x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad32x8x4d(s, ss, r, rs, sa) \
   generic_hbd_sadx4d(s, ss, r, rs, sa, 32, 8)
 
-#define avm_highbd_sad8x32(s, ss, r, rs) generic_hbd_sad(s, ss, r, rs, 8, 32)
-#define avm_highbd_sad8x32_avg(s, ss, r, rs, sp) \
+#define av2_highbd_sad8x32(s, ss, r, rs) generic_hbd_sad(s, ss, r, rs, 8, 32)
+#define av2_highbd_sad8x32_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 8, 32)
-#define avm_highbd_sad8x32x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad8x32x4d(s, ss, r, rs, sa) \
   generic_hbd_sadx4d(s, ss, r, rs, sa, 8, 32)
 
-#define avm_highbd_sad64x8(s, ss, r, rs) generic_hbd_sad(s, ss, r, rs, 64, 8)
-#define avm_highbd_sad64x8_avg(s, ss, r, rs, sp) \
+#define av2_highbd_sad64x8(s, ss, r, rs) generic_hbd_sad(s, ss, r, rs, 64, 8)
+#define av2_highbd_sad64x8_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 64, 8)
-#define avm_highbd_sad64x8x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad64x8x4d(s, ss, r, rs, sa) \
   generic_hbd_sadx4d(s, ss, r, rs, sa, 64, 8)
 
-#define avm_highbd_sad8x64(s, ss, r, rs) generic_hbd_sad(s, ss, r, rs, 8, 64)
-#define avm_highbd_sad8x64_avg(s, ss, r, rs, sp) \
+#define av2_highbd_sad8x64(s, ss, r, rs) generic_hbd_sad(s, ss, r, rs, 8, 64)
+#define av2_highbd_sad8x64_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 8, 64)
-#define avm_highbd_sad8x64x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad8x64x4d(s, ss, r, rs, sa) \
   generic_hbd_sadx4d(s, ss, r, rs, sa, 8, 64)
 
-#define avm_highbd_sad32x4(s, ss, r, rs) generic_hbd_sad(s, ss, r, rs, 32, 4)
-#define avm_highbd_sad32x4_avg(s, ss, r, rs, sp) \
+#define av2_highbd_sad32x4(s, ss, r, rs) generic_hbd_sad(s, ss, r, rs, 32, 4)
+#define av2_highbd_sad32x4_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 32, 4)
-#define avm_highbd_sad32x4x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad32x4x4d(s, ss, r, rs, sa) \
   generic_hbd_sadx4d(s, ss, r, rs, sa, 32, 4)
 
-#define avm_highbd_sad4x32(s, ss, r, rs) generic_hbd_sad(s, ss, r, rs, 4, 32)
-#define avm_highbd_sad4x32_avg(s, ss, r, rs, sp) \
+#define av2_highbd_sad4x32(s, ss, r, rs) generic_hbd_sad(s, ss, r, rs, 4, 32)
+#define av2_highbd_sad4x32_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 4, 32)
-#define avm_highbd_sad4x32x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad4x32x4d(s, ss, r, rs, sa) \
   generic_hbd_sadx4d(s, ss, r, rs, sa, 4, 32)
 
-#define avm_highbd_sad64x4(s, ss, r, rs) generic_hbd_sad(s, ss, r, rs, 64, 4)
-#define avm_highbd_sad64x4_avg(s, ss, r, rs, sp) \
+#define av2_highbd_sad64x4(s, ss, r, rs) generic_hbd_sad(s, ss, r, rs, 64, 4)
+#define av2_highbd_sad64x4_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 64, 4)
-#define avm_highbd_sad64x4x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad64x4x4d(s, ss, r, rs, sa) \
   generic_hbd_sadx4d(s, ss, r, rs, sa, 64, 4)
 
-#define avm_highbd_sad4x64(s, ss, r, rs) generic_hbd_sad(s, ss, r, rs, 4, 64)
-#define avm_highbd_sad4x64_avg(s, ss, r, rs, sp) \
+#define av2_highbd_sad4x64(s, ss, r, rs) generic_hbd_sad(s, ss, r, rs, 4, 64)
+#define av2_highbd_sad4x64_avg(s, ss, r, rs, sp) \
   generic_hbd_sad_avg(s, ss, r, rs, sp, 4, 64)
-#define avm_highbd_sad4x64x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad4x64x4d(s, ss, r, rs, sa) \
   generic_hbd_sadx4d(s, ss, r, rs, sa, 4, 64)
 
 // Redirect custom skipping SAD functions:
-#define avm_highbd_sad_skip_128x128(s, ss, r, rs) \
-  avm_highbd_sad128x128(s, ss, r, rs)
-#define avm_highbd_sad_skip_128x64(s, ss, r, rs) \
-  avm_highbd_sad128x64(s, ss, r, rs)
-#define avm_highbd_sad_skip_64x128(s, ss, r, rs) \
-  avm_highbd_sad64x128(s, ss, r, rs)
-#define avm_highbd_sad_skip_64x64(s, ss, r, rs) \
-  avm_highbd_sad64x64(s, ss, r, rs)
-#define avm_highbd_sad_skip_64x32(s, ss, r, rs) \
-  avm_highbd_sad64x32(s, ss, r, rs)
-#define avm_highbd_sad_skip_64x16(s, ss, r, rs) \
-  avm_highbd_sad64x16(s, ss, r, rs)
-#define avm_highbd_sad_skip_32x64(s, ss, r, rs) \
-  avm_highbd_sad32x64(s, ss, r, rs)
-#define avm_highbd_sad_skip_32x32(s, ss, r, rs) \
-  avm_highbd_sad32x32(s, ss, r, rs)
-#define avm_highbd_sad_skip_32x16(s, ss, r, rs) \
-  avm_highbd_sad32x16(s, ss, r, rs)
-#define avm_highbd_sad_skip_32x8(s, ss, r, rs) avm_highbd_sad32x8(s, ss, r, rs)
-#define avm_highbd_sad_skip_16x64(s, ss, r, rs) \
-  avm_highbd_sad16x64(s, ss, r, rs)
-#define avm_highbd_sad_skip_16x32(s, ss, r, rs) \
-  avm_highbd_sad16x32(s, ss, r, rs)
-#define avm_highbd_sad_skip_16x16(s, ss, r, rs) \
-  avm_highbd_sad16x16(s, ss, r, rs)
-#define avm_highbd_sad_skip_16x8(s, ss, r, rs) avm_highbd_sad16x8(s, ss, r, rs)
-#define avm_highbd_sad_skip_8x16(s, ss, r, rs) avm_highbd_sad8x16(s, ss, r, rs)
-#define avm_highbd_sad_skip_8x8(s, ss, r, rs) avm_highbd_sad8x8(s, ss, r, rs)
-#define avm_highbd_sad_skip_4x16(s, ss, r, rs) avm_highbd_sad4x16(s, ss, r, rs)
-#define avm_highbd_sad_skip_4x8(s, ss, r, rs) avm_highbd_sad4x8(s, ss, r, rs)
-#define avm_highbd_sad_skip_8x32(s, ss, r, rs) avm_highbd_sad8x32(s, ss, r, rs)
+#define av2_highbd_sad_skip_128x128(s, ss, r, rs) \
+  av2_highbd_sad128x128(s, ss, r, rs)
+#define av2_highbd_sad_skip_128x64(s, ss, r, rs) \
+  av2_highbd_sad128x64(s, ss, r, rs)
+#define av2_highbd_sad_skip_64x128(s, ss, r, rs) \
+  av2_highbd_sad64x128(s, ss, r, rs)
+#define av2_highbd_sad_skip_64x64(s, ss, r, rs) \
+  av2_highbd_sad64x64(s, ss, r, rs)
+#define av2_highbd_sad_skip_64x32(s, ss, r, rs) \
+  av2_highbd_sad64x32(s, ss, r, rs)
+#define av2_highbd_sad_skip_64x16(s, ss, r, rs) \
+  av2_highbd_sad64x16(s, ss, r, rs)
+#define av2_highbd_sad_skip_32x64(s, ss, r, rs) \
+  av2_highbd_sad32x64(s, ss, r, rs)
+#define av2_highbd_sad_skip_32x32(s, ss, r, rs) \
+  av2_highbd_sad32x32(s, ss, r, rs)
+#define av2_highbd_sad_skip_32x16(s, ss, r, rs) \
+  av2_highbd_sad32x16(s, ss, r, rs)
+#define av2_highbd_sad_skip_32x8(s, ss, r, rs) av2_highbd_sad32x8(s, ss, r, rs)
+#define av2_highbd_sad_skip_16x64(s, ss, r, rs) \
+  av2_highbd_sad16x64(s, ss, r, rs)
+#define av2_highbd_sad_skip_16x32(s, ss, r, rs) \
+  av2_highbd_sad16x32(s, ss, r, rs)
+#define av2_highbd_sad_skip_16x16(s, ss, r, rs) \
+  av2_highbd_sad16x16(s, ss, r, rs)
+#define av2_highbd_sad_skip_16x8(s, ss, r, rs) av2_highbd_sad16x8(s, ss, r, rs)
+#define av2_highbd_sad_skip_8x16(s, ss, r, rs) av2_highbd_sad8x16(s, ss, r, rs)
+#define av2_highbd_sad_skip_8x8(s, ss, r, rs) av2_highbd_sad8x8(s, ss, r, rs)
+#define av2_highbd_sad_skip_4x16(s, ss, r, rs) av2_highbd_sad4x16(s, ss, r, rs)
+#define av2_highbd_sad_skip_4x8(s, ss, r, rs) av2_highbd_sad4x8(s, ss, r, rs)
+#define av2_highbd_sad_skip_8x32(s, ss, r, rs) av2_highbd_sad8x32(s, ss, r, rs)
 
-#define avm_highbd_sad_skip_256x256(s, ss, r, rs) \
-  avm_highbd_sad256x256(s, ss, r, rs)
-#define avm_highbd_sad_skip_256x128(s, ss, r, rs) \
-  avm_highbd_sad256x128(s, ss, r, rs)
-#define avm_highbd_sad_skip_128x256(s, ss, r, rs) \
-  avm_highbd_sad128x256(s, ss, r, rs)
-#define avm_highbd_sad_skip_8x64(s, ss, r, rs) avm_highbd_sad8x64(s, ss, r, rs)
-#define avm_highbd_sad_skip_64x8(s, ss, r, rs) avm_highbd_sad64x8(s, ss, r, rs)
-#define avm_highbd_sad_skip_4x64(s, ss, r, rs) avm_highbd_sad4x64(s, ss, r, rs)
-#define avm_highbd_sad_skip_64x4(s, ss, r, rs) avm_highbd_sad64x4(s, ss, r, rs)
-#define avm_highbd_sad_skip_4x32(s, ss, r, rs) avm_highbd_sad4x32(s, ss, r, rs)
-#define avm_highbd_sad_skip_32x4(s, ss, r, rs) avm_highbd_sad32x4(s, ss, r, rs)
+#define av2_highbd_sad_skip_256x256(s, ss, r, rs) \
+  av2_highbd_sad256x256(s, ss, r, rs)
+#define av2_highbd_sad_skip_256x128(s, ss, r, rs) \
+  av2_highbd_sad256x128(s, ss, r, rs)
+#define av2_highbd_sad_skip_128x256(s, ss, r, rs) \
+  av2_highbd_sad128x256(s, ss, r, rs)
+#define av2_highbd_sad_skip_8x64(s, ss, r, rs) av2_highbd_sad8x64(s, ss, r, rs)
+#define av2_highbd_sad_skip_64x8(s, ss, r, rs) av2_highbd_sad64x8(s, ss, r, rs)
+#define av2_highbd_sad_skip_4x64(s, ss, r, rs) av2_highbd_sad4x64(s, ss, r, rs)
+#define av2_highbd_sad_skip_64x4(s, ss, r, rs) av2_highbd_sad64x4(s, ss, r, rs)
+#define av2_highbd_sad_skip_4x32(s, ss, r, rs) av2_highbd_sad4x32(s, ss, r, rs)
+#define av2_highbd_sad_skip_32x4(s, ss, r, rs) av2_highbd_sad32x4(s, ss, r, rs)
 
-#define avm_highbd_sad_skip_256x256x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad256x256x4d(s, ss, r, rs, sa)
-#define avm_highbd_sad_skip_256x128x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad256x128x4d(s, ss, r, rs, sa)
-#define avm_highbd_sad_skip_128x256x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad128x256x4d(s, ss, r, rs, sa)
-#define avm_highbd_sad_skip_128x128x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad128x128x4d(s, ss, r, rs, sa)
-#define avm_highbd_sad_skip_128x64x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad128x64x4d(s, ss, r, rs, sa)
-#define avm_highbd_sad_skip_64x128x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad64x128x4d(s, ss, r, rs, sa)
-#define avm_highbd_sad_skip_64x64x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad64x64x4d(s, ss, r, rs, sa)
-#define avm_highbd_sad_skip_64x32x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad64x32x4d(s, ss, r, rs, sa)
-#define avm_highbd_sad_skip_64x16x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad64x16x4d(s, ss, r, rs, sa)
-#define avm_highbd_sad_skip_32x64x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad32x64x4d(s, ss, r, rs, sa)
-#define avm_highbd_sad_skip_32x32x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad32x32x4d(s, ss, r, rs, sa)
-#define avm_highbd_sad_skip_32x16x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad32x16x4d(s, ss, r, rs, sa)
-#define avm_highbd_sad_skip_32x8x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad32x8x4d(s, ss, r, rs, sa)
-#define avm_highbd_sad_skip_16x64x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad16x64x4d(s, ss, r, rs, sa)
-#define avm_highbd_sad_skip_16x32x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad16x32x4d(s, ss, r, rs, sa)
-#define avm_highbd_sad_skip_16x16x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad16x16x4d(s, ss, r, rs, sa)
-#define avm_highbd_sad_skip_16x8x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad16x8x4d(s, ss, r, rs, sa)
-#define avm_highbd_sad_skip_8x16x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad8x16x4d(s, ss, r, rs, sa)
-#define avm_highbd_sad_skip_8x8x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad8x8x4d(s, ss, r, rs, sa)
-#define avm_highbd_sad_skip_4x16x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad4x16x4d(s, ss, r, rs, sa)
-#define avm_highbd_sad_skip_4x8x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad4x8x4d(s, ss, r, rs, sa)
-#define avm_highbd_sad_skip_8x32x4d(s, ss, r, rs, sa) \
-  avm_highbd_sad8x32x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_256x256x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad256x256x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_256x128x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad256x128x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_128x256x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad128x256x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_128x128x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad128x128x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_128x64x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad128x64x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_64x128x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad64x128x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_64x64x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad64x64x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_64x32x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad64x32x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_64x16x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad64x16x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_32x64x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad32x64x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_32x32x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad32x32x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_32x16x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad32x16x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_32x8x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad32x8x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_16x64x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad16x64x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_16x32x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad16x32x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_16x16x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad16x16x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_16x8x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad16x8x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_8x16x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad8x16x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_8x8x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad8x8x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_4x16x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad4x16x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_4x8x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad4x8x4d(s, ss, r, rs, sa)
+#define av2_highbd_sad_skip_8x32x4d(s, ss, r, rs, sa) \
+  av2_highbd_sad8x32x4d(s, ss, r, rs, sa)
 
-#define avm_highbd_sad_skip_8x64x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad_skip_8x64x4d(s, ss, r, rs, sa) \
   generic_hbd_sadx4d(s, ss, r, rs, sa, 8, 64)
-#define avm_highbd_sad_skip_64x8x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad_skip_64x8x4d(s, ss, r, rs, sa) \
   generic_hbd_sadx4d(s, ss, r, rs, sa, 64, 8)
-#define avm_highbd_sad_skip_4x64x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad_skip_4x64x4d(s, ss, r, rs, sa) \
   generic_hbd_sadx4d(s, ss, r, rs, sa, 4, 64)
-#define avm_highbd_sad_skip_64x4x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad_skip_64x4x4d(s, ss, r, rs, sa) \
   generic_hbd_sadx4d(s, ss, r, rs, sa, 64, 4)
-#define avm_highbd_sad_skip_4x32x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad_skip_4x32x4d(s, ss, r, rs, sa) \
   generic_hbd_sadx4d(s, ss, r, rs, sa, 4, 32)
-#define avm_highbd_sad_skip_32x4x4d(s, ss, r, rs, sa) \
+#define av2_highbd_sad_skip_32x4x4d(s, ss, r, rs, sa) \
   generic_hbd_sadx4d(s, ss, r, rs, sa, 32, 4)
 
 // Redirect custom AVM highbit-depth masked SAD functions to standard AOM:
 // 1. Standard sizes map directly to standard optimized assembly.
-#define avm_highbd_masked_sad128x128 aom_highbd_masked_sad128x128
-#define avm_highbd_masked_sad128x64 aom_highbd_masked_sad128x64
-#define avm_highbd_masked_sad64x128 aom_highbd_masked_sad64x128
-#define avm_highbd_masked_sad64x64 aom_highbd_masked_sad64x64
-#define avm_highbd_masked_sad64x32 aom_highbd_masked_sad64x32
-#define avm_highbd_masked_sad32x64 aom_highbd_masked_sad32x64
-#define avm_highbd_masked_sad32x32 aom_highbd_masked_sad32x32
-#define avm_highbd_masked_sad32x16 aom_highbd_masked_sad32x16
-#define avm_highbd_masked_sad16x32 aom_highbd_masked_sad16x32
-#define avm_highbd_masked_sad16x16 aom_highbd_masked_sad16x16
-#define avm_highbd_masked_sad16x8 aom_highbd_masked_sad16x8
-#define avm_highbd_masked_sad8x16 aom_highbd_masked_sad8x16
-#define avm_highbd_masked_sad8x8 aom_highbd_masked_sad8x8
-#define avm_highbd_masked_sad8x4 aom_highbd_masked_sad8x4
-#define avm_highbd_masked_sad4x8 aom_highbd_masked_sad4x8
-#define avm_highbd_masked_sad4x4 aom_highbd_masked_sad4x4
-#define avm_highbd_masked_sad4x16 aom_highbd_masked_sad4x16
-#define avm_highbd_masked_sad16x4 aom_highbd_masked_sad16x4
-#define avm_highbd_masked_sad8x32 aom_highbd_masked_sad8x32
-#define avm_highbd_masked_sad32x8 aom_highbd_masked_sad32x8
-#define avm_highbd_masked_sad16x64 aom_highbd_masked_sad16x64
-#define avm_highbd_masked_sad64x16 aom_highbd_masked_sad64x16
+#define av2_highbd_masked_sad128x128 aom_highbd_masked_sad128x128
+#define av2_highbd_masked_sad128x64 aom_highbd_masked_sad128x64
+#define av2_highbd_masked_sad64x128 aom_highbd_masked_sad64x128
+#define av2_highbd_masked_sad64x64 aom_highbd_masked_sad64x64
+#define av2_highbd_masked_sad64x32 aom_highbd_masked_sad64x32
+#define av2_highbd_masked_sad32x64 aom_highbd_masked_sad32x64
+#define av2_highbd_masked_sad32x32 aom_highbd_masked_sad32x32
+#define av2_highbd_masked_sad32x16 aom_highbd_masked_sad32x16
+#define av2_highbd_masked_sad16x32 aom_highbd_masked_sad16x32
+#define av2_highbd_masked_sad16x16 aom_highbd_masked_sad16x16
+#define av2_highbd_masked_sad16x8 aom_highbd_masked_sad16x8
+#define av2_highbd_masked_sad8x16 aom_highbd_masked_sad8x16
+#define av2_highbd_masked_sad8x8 aom_highbd_masked_sad8x8
+#define av2_highbd_masked_sad8x4 aom_highbd_masked_sad8x4
+#define av2_highbd_masked_sad4x8 aom_highbd_masked_sad4x8
+#define av2_highbd_masked_sad4x4 aom_highbd_masked_sad4x4
+#define av2_highbd_masked_sad4x16 aom_highbd_masked_sad4x16
+#define av2_highbd_masked_sad16x4 aom_highbd_masked_sad16x4
+#define av2_highbd_masked_sad8x32 aom_highbd_masked_sad8x32
+#define av2_highbd_masked_sad32x8 aom_highbd_masked_sad32x8
+#define av2_highbd_masked_sad16x64 aom_highbd_masked_sad16x64
+#define av2_highbd_masked_sad64x16 aom_highbd_masked_sad64x16
 
 // 2. Non-standard / large / narrow sizes fallback to C implementations.
-#define avm_highbd_masked_sad256x256(s, ss, r, rs, sp, m, ms, iv) \
+#define av2_highbd_masked_sad256x256(s, ss, r, rs, sp, m, ms, iv) \
   generic_hbd_masked_sad(s, ss, r, rs, sp, m, ms, iv, 256, 256)
-#define avm_highbd_masked_sad256x128(s, ss, r, rs, sp, m, ms, iv) \
+#define av2_highbd_masked_sad256x128(s, ss, r, rs, sp, m, ms, iv) \
   generic_hbd_masked_sad(s, ss, r, rs, sp, m, ms, iv, 256, 128)
-#define avm_highbd_masked_sad128x256(s, ss, r, rs, sp, m, ms, iv) \
+#define av2_highbd_masked_sad128x256(s, ss, r, rs, sp, m, ms, iv) \
   generic_hbd_masked_sad(s, ss, r, rs, sp, m, ms, iv, 128, 256)
-#define avm_highbd_masked_sad8x64(s, ss, r, rs, sp, m, ms, iv) \
+#define av2_highbd_masked_sad8x64(s, ss, r, rs, sp, m, ms, iv) \
   generic_hbd_masked_sad(s, ss, r, rs, sp, m, ms, iv, 8, 64)
-#define avm_highbd_masked_sad64x8(s, ss, r, rs, sp, m, ms, iv) \
+#define av2_highbd_masked_sad64x8(s, ss, r, rs, sp, m, ms, iv) \
   generic_hbd_masked_sad(s, ss, r, rs, sp, m, ms, iv, 64, 8)
-#define avm_highbd_masked_sad4x64(s, ss, r, rs, sp, m, ms, iv) \
+#define av2_highbd_masked_sad4x64(s, ss, r, rs, sp, m, ms, iv) \
   generic_hbd_masked_sad(s, ss, r, rs, sp, m, ms, iv, 4, 64)
-#define avm_highbd_masked_sad64x4(s, ss, r, rs, sp, m, ms, iv) \
+#define av2_highbd_masked_sad64x4(s, ss, r, rs, sp, m, ms, iv) \
   generic_hbd_masked_sad(s, ss, r, rs, sp, m, ms, iv, 64, 4)
-#define avm_highbd_masked_sad4x32(s, ss, r, rs, sp, m, ms, iv) \
+#define av2_highbd_masked_sad4x32(s, ss, r, rs, sp, m, ms, iv) \
   generic_hbd_masked_sad(s, ss, r, rs, sp, m, ms, iv, 4, 32)
-#define avm_highbd_masked_sad32x4(s, ss, r, rs, sp, m, ms, iv) \
+#define av2_highbd_masked_sad32x4(s, ss, r, rs, sp, m, ms, iv) \
   generic_hbd_masked_sad(s, ss, r, rs, sp, m, ms, iv, 32, 4)
 
 // ---------------------------------------------------------------------------------
@@ -744,9 +744,9 @@ DEFINE_ALL_BD_DIST_WTD_COMPATIBILITY(4, 16)
 // ---------------------------------------------------------------------------------
 // Highbd get sse part function mappings
 // ---------------------------------------------------------------------------------
-#define avm_highbd_get_y_sse_part aom_highbd_get_y_sse_part
-#define avm_highbd_get_u_sse_part aom_highbd_get_u_sse_part
-#define avm_highbd_get_v_sse_part aom_highbd_get_v_sse_part
+#define av2_highbd_get_y_sse_part aom_highbd_get_y_sse_part
+#define av2_highbd_get_u_sse_part aom_highbd_get_u_sse_part
+#define av2_highbd_get_v_sse_part aom_highbd_get_v_sse_part
 
 // ---------------------------------------------------------------------------------
 // 4-part symbol count cost functions
@@ -767,7 +767,7 @@ static INLINE int symb_to_part(int symb, int nsymb_bits) {
     return 3;
 }
 
-static INLINE int64_t avm_count_4part(int symb, const int *part_cost,
+static INLINE int64_t av2_count_4part(int symb, const int *part_cost,
                                       int nsymb_bits, int scale_shift) {
   assert(nsymb_bits >= 3);
   int part_bits[4] = { (nsymb_bits - 3), (nsymb_bits - 3), (nsymb_bits - 2),
@@ -784,12 +784,12 @@ static INLINE int64_t avm_count_4part(int symb, const int *part_cost,
     return part_cost[3] + (part_bits[3] << scale_shift);
 }
 
-static INLINE int64_t avm_count_4part_wref(int ref_symb, int symb,
+static INLINE int64_t av2_count_4part_wref(int ref_symb, int symb,
                                            const int *part_cost, int nsymb_bits,
                                            int scale_shift) {
   const int recentered_symb =
       recenter_finite_nonneg(1 << nsymb_bits, ref_symb, symb);
-  return avm_count_4part(recentered_symb, part_cost, nsymb_bits, scale_shift);
+  return av2_count_4part(recentered_symb, part_cost, nsymb_bits, scale_shift);
 }
 #endif
 
@@ -864,4 +864,4 @@ static INLINE int linsolve_spd_quantize(int n, const double *A, double *R,
   return 1;
 }
 
-#endif  // AVM_COMPATIBILITY_DSP_H_
+#endif  // AV2_COMPATIBILITY_DSP_H_

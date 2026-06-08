@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_TOKENIZE_H_
-#define AVM_AV2_ENCODER_TOKENIZE_H_
+#ifndef AV2_AV2_ENCODER_TOKENIZE_H_
+#define AV2_AV2_ENCODER_TOKENIZE_H_
 
 #include "av2/common/entropy.h"
 #include "av2/encoder/block.h"
@@ -146,4 +146,4 @@ static INLINE void free_token_info(TokenInfo *token_info) {
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_TOKENIZE_H_
+#endif  // AV2_AV2_ENCODER_TOKENIZE_H_

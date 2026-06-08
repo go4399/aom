@@ -37,21 +37,21 @@ typedef void highbd_filter8_1dfunction(const uint16_t *src_ptr,
       if (((filter[0] | filter[1] | filter[6] | filter[7]) == 0) &&        \
           (filter[2] | filter[5])) {                                       \
         while (w >= 16) {                                                  \
-          avm_highbd_filter_block1d16_##dir##4_##avg##opt(                 \
+          av2_highbd_filter_block1d16_##dir##4_##avg##opt(                 \
               src_start, src_stride, dst, dst_stride, h, filter, bd);      \
           src += 16;                                                       \
           dst += 16;                                                       \
           w -= 16;                                                         \
         }                                                                  \
         while (w >= 8) {                                                   \
-          avm_highbd_filter_block1d8_##dir##4_##avg##opt(                  \
+          av2_highbd_filter_block1d8_##dir##4_##avg##opt(                  \
               src_start, src_stride, dst, dst_stride, h, filter, bd);      \
           src += 8;                                                        \
           dst += 8;                                                        \
           w -= 8;                                                          \
         }                                                                  \
         while (w >= 4) {                                                   \
-          avm_highbd_filter_block1d4_##dir##4_##avg##opt(                  \
+          av2_highbd_filter_block1d4_##dir##4_##avg##opt(                  \
               src_start, src_stride, dst, dst_stride, h, filter, bd);      \
           src += 4;                                                        \
           dst += 4;                                                        \
@@ -59,21 +59,21 @@ typedef void highbd_filter8_1dfunction(const uint16_t *src_ptr,
         }                                                                  \
       } else if (filter[0] | filter[1] | filter[2]) {                      \
         while (w >= 16) {                                                  \
-          avm_highbd_filter_block1d16_##dir##8_##avg##opt(                 \
+          av2_highbd_filter_block1d16_##dir##8_##avg##opt(                 \
               src_start, src_stride, dst, dst_stride, h, filter, bd);      \
           src += 16;                                                       \
           dst += 16;                                                       \
           w -= 16;                                                         \
         }                                                                  \
         while (w >= 8) {                                                   \
-          avm_highbd_filter_block1d8_##dir##8_##avg##opt(                  \
+          av2_highbd_filter_block1d8_##dir##8_##avg##opt(                  \
               src_start, src_stride, dst, dst_stride, h, filter, bd);      \
           src += 8;                                                        \
           dst += 8;                                                        \
           w -= 8;                                                          \
         }                                                                  \
         while (w >= 4) {                                                   \
-          avm_highbd_filter_block1d4_##dir##8_##avg##opt(                  \
+          av2_highbd_filter_block1d4_##dir##8_##avg##opt(                  \
               src_start, src_stride, dst, dst_stride, h, filter, bd);      \
           src += 4;                                                        \
           dst += 4;                                                        \
@@ -81,21 +81,21 @@ typedef void highbd_filter8_1dfunction(const uint16_t *src_ptr,
         }                                                                  \
       } else {                                                             \
         while (w >= 16) {                                                  \
-          avm_highbd_filter_block1d16_##dir##2_##avg##opt(                 \
+          av2_highbd_filter_block1d16_##dir##2_##avg##opt(                 \
               src, src_stride, dst, dst_stride, h, filter, bd);            \
           src += 16;                                                       \
           dst += 16;                                                       \
           w -= 16;                                                         \
         }                                                                  \
         while (w >= 8) {                                                   \
-          avm_highbd_filter_block1d8_##dir##2_##avg##opt(                  \
+          av2_highbd_filter_block1d8_##dir##2_##avg##opt(                  \
               src, src_stride, dst, dst_stride, h, filter, bd);            \
           src += 8;                                                        \
           dst += 8;                                                        \
           w -= 8;                                                          \
         }                                                                  \
         while (w >= 4) {                                                   \
-          avm_highbd_filter_block1d4_##dir##2_##avg##opt(                  \
+          av2_highbd_filter_block1d4_##dir##2_##avg##opt(                  \
               src, src_stride, dst, dst_stride, h, filter, bd);            \
           src += 4;                                                        \
           dst += 4;                                                        \

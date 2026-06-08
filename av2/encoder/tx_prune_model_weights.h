@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_TX_PRUNE_MODEL_WEIGHTS_H_
-#define AVM_AV2_ENCODER_TX_PRUNE_MODEL_WEIGHTS_H_
+#ifndef AV2_AV2_ENCODER_TX_PRUNE_MODEL_WEIGHTS_H_
+#define AV2_AV2_ENCODER_TX_PRUNE_MODEL_WEIGHTS_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -2391,4 +2391,4 @@ static const NN_CONFIG *av2_tx_type_nnconfig_map_ver[] = {
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_TX_PRUNE_MODEL_WEIGHTS_H_
+#endif  // AV2_AV2_ENCODER_TX_PRUNE_MODEL_WEIGHTS_H_

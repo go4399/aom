@@ -359,7 +359,7 @@ static void convolve_layer_mt(const float **input, int in_width, int in_height,
                               const CNN_LAYER_CONFIG *layer_config,
                               const CNN_THREAD_DATA *thread_data,
                               float **output, int out_stride) {
-  const AVxWorkerInterface *const winterface = avm_get_worker_interface();
+  const AVxWorkerInterface *const winterface = av2_get_worker_interface();
   const int num_workers = thread_data->num_workers;
 
   CONVOLVE_OPS convolve_ops[CNN_MAX_THREADS];

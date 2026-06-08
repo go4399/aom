@@ -879,14 +879,14 @@ void av2_filter_block_plane_vert(AV2_COMMON *const cm,
         if (!skip_deblock_lossless &&
             (params->filter_length_neg || params->filter_length_pos)) {
           if (!(is_lossless_prev_block || is_lossless_current_block)) {
-            avm_highbd_lpf_vertical_generic(
+            av2_highbd_lpf_vertical_generic(
                 p, dst_stride, params->filter_length_neg,
                 params->filter_length_pos, &params->q_threshold,
                 &params->side_threshold, bit_depth, is_lossless_prev_block,
                 is_lossless_current_block);
 
           } else {
-            avm_highbd_lpf_vertical_generic_c(
+            av2_highbd_lpf_vertical_generic_c(
                 p, dst_stride, params->filter_length_neg,
                 params->filter_length_pos, &params->q_threshold,
                 &params->side_threshold, bit_depth, is_lossless_prev_block,
@@ -976,13 +976,13 @@ void av2_filter_block_plane_horz(AV2_COMMON *const cm,
         if (!skip_deblock_lossless &&
             (params->filter_length_neg || params->filter_length_pos)) {
           if (!(is_lossless_current_block || is_lossless_prev_block)) {
-            avm_highbd_lpf_horizontal_generic(
+            av2_highbd_lpf_horizontal_generic(
                 p, dst_stride, params->filter_length_neg,
                 params->filter_length_pos, &params->q_threshold,
                 &params->side_threshold, bit_depth, is_lossless_prev_block,
                 is_lossless_current_block);
           } else {
-            avm_highbd_lpf_horizontal_generic_c(
+            av2_highbd_lpf_horizontal_generic_c(
                 p, dst_stride, params->filter_length_neg,
                 params->filter_length_pos, &params->q_threshold,
                 &params->side_threshold, bit_depth, is_lossless_prev_block,
@@ -1183,7 +1183,7 @@ INLINE void loop_filter_tip_plane(AV2_COMMON *cm, const int plane,
         set_tip_filter_length(cm, plane, subsampling_x, subsampling_y, sub_bw,
                               VERT_EDGE, i, &filter_length_neg,
                               &filter_length_pos);
-        avm_highbd_lpf_vertical_generic(p, dst_stride, filter_length_neg,
+        av2_highbd_lpf_vertical_generic(p, dst_stride, filter_length_neg,
                                         filter_length_pos, &q_vert, &side_vert,
                                         bit_depth, 0, 0);
       }
@@ -1208,7 +1208,7 @@ INLINE void loop_filter_tip_plane(AV2_COMMON *cm, const int plane,
         set_tip_filter_length(cm, plane, subsampling_x, subsampling_y, sub_bh,
                               HORZ_EDGE, j, &filter_length_neg,
                               &filter_length_pos);
-        avm_highbd_lpf_horizontal_generic(p, dst_stride, filter_length_neg,
+        av2_highbd_lpf_horizontal_generic(p, dst_stride, filter_length_neg,
                                           filter_length_pos, &q_horz,
                                           &side_horz, bit_depth, 0, 0);
       }

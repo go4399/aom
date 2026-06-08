@@ -50,7 +50,7 @@ typedef struct ContentInterpretationci {
 
   ColorInfoci color_info;
   SarInfoci sar_info;
-  avm_timing_info_t timing_info;
+  av2_timing_info_t timing_info;
   bool ci_from_leading;
 } ContentInterpretationci;
 
@@ -59,13 +59,13 @@ void av2_write_color_info(const struct ContentInterpretation *ci_params,
   const ContentInterpretationci *params =
       (const ContentInterpretationci *)ci_params;
   const ColorInfoci *col_info = &params->color_info;
-  avm_wb_write_rice_golomb(wb, col_info->color_description_idc, 2);
+  av2_wb_write_rice_golomb(wb, col_info->color_description_idc, 2);
   if (col_info->color_description_idc == 0) {
-    avm_wb_write_literal(wb, col_info->color_primaries, 8);
-    avm_wb_write_literal(wb, col_info->transfer_characteristics, 8);
-    avm_wb_write_literal(wb, col_info->matrix_coefficients, 8);
+    av2_wb_write_literal(wb, col_info->color_primaries, 8);
+    av2_wb_write_literal(wb, col_info->transfer_characteristics, 8);
+    av2_wb_write_literal(wb, col_info->matrix_coefficients, 8);
   }
-  avm_wb_write_bit(wb, col_info->full_range_flag);
+  av2_wb_write_bit(wb, col_info->full_range_flag);
 }
 
 void av2_write_sar_info(const struct ContentInterpretation *ci_params,
@@ -73,10 +73,10 @@ void av2_write_sar_info(const struct ContentInterpretation *ci_params,
   const ContentInterpretationci *params =
       (const ContentInterpretationci *)ci_params;
   const SarInfoci *sar_info = &params->sar_info;
-  avm_wb_write_literal(wb, sar_info->sar_aspect_ratio_idc, 8);
-  if (sar_info->sar_aspect_ratio_idc == AVM_SAR_IDC_255) {
-    avm_wb_write_uvlc(wb, sar_info->sar_width);
-    avm_wb_write_uvlc(wb, sar_info->sar_height);
+  av2_wb_write_literal(wb, sar_info->sar_aspect_ratio_idc, 8);
+  if (sar_info->sar_aspect_ratio_idc == AV2_SAR_IDC_255) {
+    av2_wb_write_uvlc(wb, sar_info->sar_width);
+    av2_wb_write_uvlc(wb, sar_info->sar_height);
   }
 }
 
@@ -84,21 +84,21 @@ int av2_write_ci_info(const struct ContentInterpretation *ci_params,
                       struct aom_write_bit_buffer *wb) {
   const ContentInterpretationci *params =
       (const ContentInterpretationci *)ci_params;
-  avm_wb_write_literal(wb, params->ci_scan_type_idc, 2);
-  avm_wb_write_bit(wb, params->ci_color_description_present_flag);
-  avm_wb_write_bit(wb, params->ci_chroma_sample_position_present_flag);
-  avm_wb_write_bit(wb, params->ci_aspect_ratio_info_present_flag);
-  avm_wb_write_bit(wb, params->ci_timing_info_present_flag);
-  avm_wb_write_literal(wb, 0, 2);
+  av2_wb_write_literal(wb, params->ci_scan_type_idc, 2);
+  av2_wb_write_bit(wb, params->ci_color_description_present_flag);
+  av2_wb_write_bit(wb, params->ci_chroma_sample_position_present_flag);
+  av2_wb_write_bit(wb, params->ci_aspect_ratio_info_present_flag);
+  av2_wb_write_bit(wb, params->ci_timing_info_present_flag);
+  av2_wb_write_literal(wb, 0, 2);
 
   if (params->ci_color_description_present_flag) {
     av2_write_color_info(ci_params, wb);
   }
 
   if (params->ci_chroma_sample_position_present_flag) {
-    avm_wb_write_uvlc(wb, params->ci_chroma_sample_position[0]);
+    av2_wb_write_uvlc(wb, params->ci_chroma_sample_position[0]);
     if (params->ci_scan_type_idc != 1) {
-      avm_wb_write_uvlc(wb, params->ci_chroma_sample_position[1]);
+      av2_wb_write_uvlc(wb, params->ci_chroma_sample_position[1]);
     }
   }
   if (params->ci_aspect_ratio_info_present_flag) {
@@ -119,8 +119,8 @@ uint32_t av2_write_content_interpretation_obu(
 
   av2_write_ci_info(ci_params, &wb);
 
-  avm_wb_write_bit(&wb, params->ci_extension_present_flag);
+  av2_wb_write_bit(&wb, params->ci_extension_present_flag);
   assert(!params->ci_extension_present_flag);
   av2_add_trailing_bits(&wb);
-  return avm_wb_bytes_written(&wb);
+  return av2_wb_bytes_written(&wb);
 }

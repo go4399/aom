@@ -176,7 +176,7 @@ void av2_subtract_block(const MACROBLOCKD *xd, int rows, int cols,
                         int blk_col, int blk_row, int frame_width,
                         int frame_height, TX_TYPE tx_type) {
   assert(rows >= 4 && cols >= 4);
-  avm_highbd_subtract_block(rows, cols, diff, diff_stride, src, src_stride,
+  av2_highbd_subtract_block(rows, cols, diff, diff_stride, src, src_stride,
                             pred, pred_stride, xd->bd);
   int visible_tx_cols, visible_tx_rows;
   const int is_border_block = get_visible_dimensions(
@@ -213,11 +213,11 @@ void av2_subtract_block_dpcm(const MACROBLOCKD *xd, int rows, int cols,
       av2_subtract_block_horz(xd, rows, cols, diff, diff_stride, src,
                               src_stride, pred, pred_stride);
     } else {
-      avm_highbd_subtract_block(rows, cols, diff, diff_stride, src, src_stride,
+      av2_highbd_subtract_block(rows, cols, diff, diff_stride, src, src_stride,
                                 pred, pred_stride, xd->bd);
     }
   } else {
-    avm_highbd_subtract_block(rows, cols, diff, diff_stride, src, src_stride,
+    av2_highbd_subtract_block(rows, cols, diff, diff_stride, src, src_stride,
                               pred, pred_stride, xd->bd);
   }
   int visible_tx_cols, visible_tx_rows;
@@ -236,7 +236,7 @@ void av2_subtract_block_vert(const MACROBLOCKD *xd, int rows, int cols,
                              const uint16_t *src, ptrdiff_t src_stride,
                              const uint16_t *pred, ptrdiff_t pred_stride) {
   assert(rows >= 4 && cols >= 4);
-  avm_highbd_subtract_block_vert(rows, cols, diff, diff_stride, src, src_stride,
+  av2_highbd_subtract_block_vert(rows, cols, diff, diff_stride, src, src_stride,
                                  pred, pred_stride, xd->bd);
 }
 
@@ -246,7 +246,7 @@ void av2_subtract_block_horz(const MACROBLOCKD *xd, int rows, int cols,
                              const uint16_t *src, ptrdiff_t src_stride,
                              const uint16_t *pred, ptrdiff_t pred_stride) {
   assert(rows >= 4 && cols >= 4);
-  avm_highbd_subtract_block_horz(rows, cols, diff, diff_stride, src, src_stride,
+  av2_highbd_subtract_block_horz(rows, cols, diff, diff_stride, src, src_stride,
                                  pred, pred_stride, xd->bd);
 }
 

@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_DWT_H_
-#define AVM_AV2_ENCODER_DWT_H_
+#ifndef AV2_AV2_ENCODER_DWT_H_
+#define AV2_AV2_ENCODER_DWT_H_
 
 #include "av2/common/common.h"
 #include "av2/common/enums.h"
@@ -21,4 +21,4 @@
 void av2_fdwt8x8_uint8_input_c(uint16_t *input, tran_low_t *output, int stride);
 int av2_haar_ac_sad_8x8_uint8_input(uint16_t *input, int stride);
 
-#endif  // AVM_AV2_ENCODER_DWT_H_
+#endif  // AV2_AV2_ENCODER_DWT_H_

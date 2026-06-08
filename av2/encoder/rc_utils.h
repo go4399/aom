@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_RC_UTILS_H_
-#define AVM_AV2_ENCODER_RC_UTILS_H_
+#ifndef AV2_AV2_ENCODER_RC_UTILS_H_
+#define AV2_AV2_ENCODER_RC_UTILS_H_
 
 #include "av2/encoder/encoder.h"
 #include "aom_dsp/psnr.h"
@@ -382,4 +382,4 @@ static INLINE void recode_loop_update_q(
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_RC_UTILS_H_
+#endif  // AV2_AV2_ENCODER_RC_UTILS_H_

@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_ENCODEMB_H_
-#define AVM_AV2_ENCODER_ENCODEMB_H_
+#ifndef AV2_AV2_ENCODER_ENCODEMB_H_
+#define AV2_AV2_ENCODER_ENCODEMB_H_
 
 #include "config/aom_config.h"
 
@@ -221,4 +221,4 @@ static const uint16_t dc_coeff_scale[TX_SIZES_ALL_AV2] = {
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_ENCODEMB_H_
+#endif  // AV2_AV2_ENCODER_ENCODEMB_H_

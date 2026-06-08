@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_RECONINTER_ENC_H_
-#define AVM_AV2_ENCODER_RECONINTER_ENC_H_
+#ifndef AV2_AV2_ENCODER_RECONINTER_ENC_H_
+#define AV2_AV2_ENCODER_RECONINTER_ENC_H_
 
 #include "aom/aom_integer.h"
 #include "av2/common/av2_common_int.h"
@@ -79,7 +79,7 @@ void aom_highbd_comp_mask_upsampled_pred(
     int ref_stride, const uint8_t *mask, int mask_stride, int invert_mask,
     int bd, int subpel_search);
 
-static inline void avm_highbd_comp_mask_pred(uint16_t *dst,
+static inline void av2_highbd_comp_mask_pred(uint16_t *dst,
                                              const uint16_t *pred, int width,
                                              int height, const uint16_t *ref,
                                              int ref_stride,
@@ -90,7 +90,7 @@ static inline void avm_highbd_comp_mask_pred(uint16_t *dst,
                             mask_stride, invert_mask);
 }
 
-static inline void avm_highbd_comp_avg_pred(uint16_t *dst, const uint16_t *pred,
+static inline void av2_highbd_comp_avg_pred(uint16_t *dst, const uint16_t *pred,
                                             int width, int height,
                                             const uint16_t *ref,
                                             int ref_stride) {
@@ -101,7 +101,7 @@ static inline void avm_highbd_comp_avg_pred(uint16_t *dst, const uint16_t *pred,
 #include "aom_ports/mem.h"
 
 // Inline wrappers for AV2 HBD compatibility
-static inline void avm_highbd_upsampled_pred(
+static inline void av2_highbd_upsampled_pred(
     MACROBLOCKD *xd, const AV2_COMMON *const cm, int mi_row, int mi_col,
     const MV *const mv, uint16_t *comp_pred, int width, int height,
     int subpel_x_q3, int subpel_y_q3, const uint16_t *ref, int ref_stride,
@@ -114,7 +114,7 @@ static inline void avm_highbd_upsampled_pred(
                             ref_stride, bd, subpel_search);
 }
 
-static inline void avm_highbd_comp_avg_upsampled_pred(
+static inline void av2_highbd_comp_avg_upsampled_pred(
     MACROBLOCKD *xd, const AV2_COMMON *const cm, int mi_row, int mi_col,
     const MV *const mv, uint16_t *comp_pred, const uint16_t *pred, int width,
     int height, int subpel_x_q3, int subpel_y_q3, const uint16_t *ref,
@@ -127,7 +127,7 @@ static inline void avm_highbd_comp_avg_upsampled_pred(
       subpel_y_q3, CONVERT_TO_BYTEPTR(ref), ref_stride, bd, subpel_search);
 }
 
-static inline void avm_highbd_comp_mask_upsampled_pred(
+static inline void av2_highbd_comp_mask_upsampled_pred(
     MACROBLOCKD *xd, const AV2_COMMON *const cm, int mi_row, int mi_col,
     const MV *const mv, uint16_t *comp_pred, const uint16_t *pred, int width,
     int height, int subpel_x_q3, int subpel_y_q3, const uint16_t *ref,
@@ -142,7 +142,7 @@ static inline void avm_highbd_comp_mask_upsampled_pred(
       invert_mask, bd, subpel_search);
 }
 
-static inline void avm_highbd_dist_wtd_comp_avg_upsampled_pred(
+static inline void av2_highbd_dist_wtd_comp_avg_upsampled_pred(
     MACROBLOCKD *xd, const AV2_COMMON *const cm, int mi_row, int mi_col,
     const MV *const mv, uint16_t *comp_pred, const uint16_t *pred, int width,
     int height, int subpel_x_q3, int subpel_y_q3, const uint16_t *ref,
@@ -171,4 +171,4 @@ static inline void avm_highbd_dist_wtd_comp_avg_upsampled_pred(
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_RECONINTER_ENC_H_
+#endif  // AV2_AV2_ENCODER_RECONINTER_ENC_H_

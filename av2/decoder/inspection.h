@@ -9,8 +9,8 @@
  * source code in the PATENTS file, you can obtain it at
  * aomedia.org/license/patent-license/.
  */
-#ifndef AVM_AV2_DECODER_INSPECTION_H_
-#define AVM_AV2_DECODER_INSPECTION_H_
+#ifndef AV2_AV2_DECODER_INSPECTION_H_
+#define AV2_AV2_DECODER_INSPECTION_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -22,8 +22,8 @@ extern "C" {
 #include "av2/decoder/accounting.h"
 #endif
 
-#ifndef AVM_AVM_AVMDX_H_
-typedef void (*avm_inspect_cb)(void *decoder, void *data);
+#ifndef AV2_AVM_AVMDX_H_
+typedef void (*av2_inspect_cb)(void *decoder, void *data);
 #endif
 
 typedef struct insp_mv insp_mv;
@@ -132,4 +132,4 @@ int ifd_inspect(insp_frame_data *fd, void *decoder, int skip_not_transform);
 #ifdef __cplusplus
 }  // extern "C"
 #endif  // __cplusplus
-#endif  // AVM_AV2_DECODER_INSPECTION_H_
+#endif  // AV2_AV2_DECODER_INSPECTION_H_

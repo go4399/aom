@@ -9,8 +9,8 @@
  * source code in the PATENTS file, you can obtain it at
  * aomedia.org/license/patent-license/.
  */
-#ifndef AVM_AV2_ENCODER_GRAIN_TEST_VECTORS_H_
-#define AVM_AV2_ENCODER_GRAIN_TEST_VECTORS_H_
+#ifndef AV2_AV2_ENCODER_GRAIN_TEST_VECTORS_H_
+#define AV2_AV2_ENCODER_GRAIN_TEST_VECTORS_H_
 
 /* Test vectors for emulation of different film grain types.
  * Note that bit depth would be derived from the bitstream and
@@ -763,4 +763,4 @@ static aom_film_grain_t film_grain_test_vectors[16] = {
     ,
     0 },
 };
-#endif  // AVM_AV2_ENCODER_GRAIN_TEST_VECTORS_H_
+#endif  // AV2_AV2_ENCODER_GRAIN_TEST_VECTORS_H_

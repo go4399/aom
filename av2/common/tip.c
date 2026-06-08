@@ -331,44 +331,44 @@ void av2_enc_setup_tip_motion_field(AV2_COMMON *cm) {
   av2_setup_tip_motion_field(cm);
 }
 
-MAKE_BFP_SAD_WRAPPER_COMMON(avm_highbd_sad8x8)
-MAKE_BFP_SAD_WRAPPER_COMMON(avm_highbd_sad16x8)
-MAKE_BFP_SAD_WRAPPER_COMMON(avm_highbd_sad8x16)
-MAKE_BFP_SAD_WRAPPER_COMMON(avm_highbd_sad16x16)
+MAKE_BFP_SAD_WRAPPER_COMMON(av2_highbd_sad8x8)
+MAKE_BFP_SAD_WRAPPER_COMMON(av2_highbd_sad16x8)
+MAKE_BFP_SAD_WRAPPER_COMMON(av2_highbd_sad8x16)
+MAKE_BFP_SAD_WRAPPER_COMMON(av2_highbd_sad16x16)
 
 unsigned int get_highbd_sad(const uint16_t *src_ptr, int source_stride,
                             const uint16_t *ref_ptr, int ref_stride, int bd,
                             int bw, int bh) {
   if (bd == 8) {
     if (bw == 8 && bh == 8)
-      return avm_highbd_sad8x8_8(src_ptr, source_stride, ref_ptr, ref_stride);
+      return av2_highbd_sad8x8_8(src_ptr, source_stride, ref_ptr, ref_stride);
     else if (bw == 16 && bh == 8)
-      return avm_highbd_sad16x8_8(src_ptr, source_stride, ref_ptr, ref_stride);
+      return av2_highbd_sad16x8_8(src_ptr, source_stride, ref_ptr, ref_stride);
     else if (bw == 8 && bh == 16)
-      return avm_highbd_sad8x16_8(src_ptr, source_stride, ref_ptr, ref_stride);
+      return av2_highbd_sad8x16_8(src_ptr, source_stride, ref_ptr, ref_stride);
     else if (bw == 16 && bh == 16)
-      return avm_highbd_sad16x16_8(src_ptr, source_stride, ref_ptr, ref_stride);
+      return av2_highbd_sad16x16_8(src_ptr, source_stride, ref_ptr, ref_stride);
     else if (bw == 12 && bh == 12)
-      return avm_highbd_sad12x12(src_ptr, source_stride, ref_ptr, ref_stride);
+      return av2_highbd_sad12x12(src_ptr, source_stride, ref_ptr, ref_stride);
     else if (bw == 20 && bh == 12)
-      return avm_highbd_sad20x12(src_ptr, source_stride, ref_ptr, ref_stride);
+      return av2_highbd_sad20x12(src_ptr, source_stride, ref_ptr, ref_stride);
     else if (bw == 12 && bh == 20)
-      return avm_highbd_sad12x20(src_ptr, source_stride, ref_ptr, ref_stride);
+      return av2_highbd_sad12x20(src_ptr, source_stride, ref_ptr, ref_stride);
     else if (bw == 20 && bh == 20)
-      return avm_highbd_sad20x20(src_ptr, source_stride, ref_ptr, ref_stride);
+      return av2_highbd_sad20x20(src_ptr, source_stride, ref_ptr, ref_stride);
     else {
       assert(0);
       return 0;
     }
   } else if (bd == 10) {
     if (bw == 8 && bh == 8)
-      return avm_highbd_sad8x8_10(src_ptr, source_stride, ref_ptr, ref_stride);
+      return av2_highbd_sad8x8_10(src_ptr, source_stride, ref_ptr, ref_stride);
     else if (bw == 16 && bh == 8)
-      return avm_highbd_sad16x8_10(src_ptr, source_stride, ref_ptr, ref_stride);
+      return av2_highbd_sad16x8_10(src_ptr, source_stride, ref_ptr, ref_stride);
     else if (bw == 8 && bh == 16)
-      return avm_highbd_sad8x16_10(src_ptr, source_stride, ref_ptr, ref_stride);
+      return av2_highbd_sad8x16_10(src_ptr, source_stride, ref_ptr, ref_stride);
     else if (bw == 16 && bh == 16)
-      return avm_highbd_sad16x16_10(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad16x16_10(src_ptr, source_stride, ref_ptr,
                                     ref_stride);
     else {
       assert(0);
@@ -376,13 +376,13 @@ unsigned int get_highbd_sad(const uint16_t *src_ptr, int source_stride,
     }
   } else if (bd == 12) {
     if (bw == 8 && bh == 8)
-      return avm_highbd_sad8x8_12(src_ptr, source_stride, ref_ptr, ref_stride);
+      return av2_highbd_sad8x8_12(src_ptr, source_stride, ref_ptr, ref_stride);
     else if (bw == 16 && bh == 8)
-      return avm_highbd_sad16x8_12(src_ptr, source_stride, ref_ptr, ref_stride);
+      return av2_highbd_sad16x8_12(src_ptr, source_stride, ref_ptr, ref_stride);
     else if (bw == 8 && bh == 16)
-      return avm_highbd_sad8x16_12(src_ptr, source_stride, ref_ptr, ref_stride);
+      return av2_highbd_sad8x16_12(src_ptr, source_stride, ref_ptr, ref_stride);
     else if (bw == 16 && bh == 16)
-      return avm_highbd_sad16x16_12(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad16x16_12(src_ptr, source_stride, ref_ptr,
                                     ref_stride);
     else {
       assert(0);

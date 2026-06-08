@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_CNN_H_
-#define AVM_AV2_COMMON_CNN_H_
+#ifndef AV2_AV2_COMMON_CNN_H_
+#define AV2_AV2_COMMON_CNN_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -185,4 +185,4 @@ void av2_cnn_predict_img_highbd(uint16_t **dgd, int width, int height,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_CNN_H_
+#endif  // AV2_AV2_COMMON_CNN_H_

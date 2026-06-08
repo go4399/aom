@@ -9,8 +9,8 @@
  * source code in the PATENTS file, you can obtain it at
  * aomedia.org/license/patent-license/.
  */
-#ifndef AVM_COMMON_AV2_CONFIG_H_
-#define AVM_COMMON_AV2_CONFIG_H_
+#ifndef AV2_COMMON_AV2_CONFIG_H_
+#define AV2_COMMON_AV2_CONFIG_H_
 
 #include "aom/aom_integer.h"
 
@@ -108,4 +108,4 @@ int write_av2config(const Av2Config *config, size_t capacity,
 } /* extern "C" */
 #endif
 
-#endif  // AVM_COMMON_AV2_CONFIG_H_
+#endif  // AV2_COMMON_AV2_CONFIG_H_

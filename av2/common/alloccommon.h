@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_ALLOCCOMMON_H_
-#define AVM_AV2_COMMON_ALLOCCOMMON_H_
+#ifndef AV2_AV2_COMMON_ALLOCCOMMON_H_
+#define AV2_AV2_COMMON_ALLOCCOMMON_H_
 
 #define INVALID_IDX -1  // Invalid buffer index.
 
@@ -62,4 +62,4 @@ int av2_get_MBs(int width, int height);
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_ALLOCCOMMON_H_
+#endif  // AV2_AV2_COMMON_ALLOCCOMMON_H_

@@ -9,8 +9,8 @@
  * PATENTS file, you can obtain it at www.aomedia.org/license/patent.
  */
 
-#ifndef AVM_AV2_COMMON_INTRA_MATRIX_H_
-#define AVM_AV2_COMMON_INTRA_MATRIX_H_
+#ifndef AV2_AV2_COMMON_INTRA_MATRIX_H_
+#define AV2_AV2_COMMON_INTRA_MATRIX_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,4 +32,4 @@ void av2_intra_matrix_pred(const uint16_t *input, int mode, uint16_t *output,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_INTRA_MATRIX_H
+#endif  // AV2_AV2_COMMON_INTRA_MATRIX_H

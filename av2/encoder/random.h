@@ -9,8 +9,8 @@
  * PATENTS file, you can obtain it at www.aomedia.org/license/patent.
  */
 
-#ifndef AVM_AV2_ENCODER_RANDOM_H_
-#define AVM_AV2_ENCODER_RANDOM_H_
+#ifndef AV2_AV2_ENCODER_RANDOM_H_
+#define AV2_AV2_ENCODER_RANDOM_H_
 
 #include <stdint.h>
 
@@ -82,4 +82,4 @@ static INLINE void lcg_pick(int n, int k, int *out, unsigned int *seed) {
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_RANDOM_H_
+#endif  // AV2_AV2_ENCODER_RANDOM_H_

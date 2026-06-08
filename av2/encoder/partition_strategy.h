@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_PARTITION_STRATEGY_H_
-#define AVM_AV2_ENCODER_PARTITION_STRATEGY_H_
+#ifndef AV2_AV2_ENCODER_PARTITION_STRATEGY_H_
+#define AV2_AV2_ENCODER_PARTITION_STRATEGY_H_
 
 #include "av2/encoder/block.h"
 #include "av2/encoder/encodeframe.h"
@@ -266,4 +266,4 @@ static INLINE int use_auto_max_partition(const AV2_COMP *const cpi,
              KFFLT_OVERLAY_UPDATE &&
          cpi->gf_group.update_type[cpi->gf_group.index] != INTNL_OVERLAY_UPDATE;
 }
-#endif  // AVM_AV2_ENCODER_PARTITION_STRATEGY_H_
+#endif  // AV2_AV2_ENCODER_PARTITION_STRATEGY_H_

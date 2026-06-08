@@ -9,8 +9,8 @@
  * source code in the PATENTS file, you can obtain it at
  * aomedia.org/license/patent-license/.
  */
-#ifndef AVM_AV2_COMMON_MVREF_COMMON_H_
-#define AVM_AV2_COMMON_MVREF_COMMON_H_
+#ifndef AV2_AV2_COMMON_MVREF_COMMON_H_
+#define AV2_AV2_COMMON_MVREF_COMMON_H_
 
 #include "av2/common/av2_common_int.h"
 #include "av2/common/blockd.h"
@@ -1314,4 +1314,4 @@ static INLINE void derive_non_tip_mode_smvp_from_tip(const AV2_COMMON *cm,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_MVREF_COMMON_H_
+#endif  // AV2_AV2_COMMON_MVREF_COMMON_H_

@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_RECONINTRA_H_
-#define AVM_AV2_COMMON_RECONINTRA_H_
+#ifndef AV2_AV2_COMMON_RECONINTRA_H_
+#define AV2_AV2_COMMON_RECONINTRA_H_
 
 #include <stdlib.h>
 #include <math.h>
@@ -310,4 +310,4 @@ void av2_build_intra_predictors_high_default(
 #ifdef __cplusplus
 }  // extern "C"
 #endif
-#endif  // AVM_AV2_COMMON_RECONINTRA_H_
+#endif  // AV2_AV2_COMMON_RECONINTRA_H_

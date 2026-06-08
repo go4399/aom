@@ -35,7 +35,7 @@ void av2_build_compound_diffwtd_mask_d16_neon(
   const CONV_BUF_TYPE *src0_1, *src1_1;
   const int16x8_t dup_round = vdupq_n_s16((int16_t)(-round));
   const uint8x8_t dup_38 = vdup_n_u8(38);
-  const uint8x8_t dup_64 = vdup_n_u8(AVM_BLEND_A64_MAX_ALPHA);
+  const uint8x8_t dup_64 = vdup_n_u8(AV2_BLEND_A64_MAX_ALPHA);
   if (mask_type == DIFFWTD_38) {
     diff_select = vdup_n_u8(255);
   } else {

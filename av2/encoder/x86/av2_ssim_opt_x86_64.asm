@@ -11,7 +11,7 @@
 
 ;
 
-%include "avm_ports/x86_abi_support.asm"
+%include "av2_ports/x86_abi_support.asm"
 
 ; tabulate_ssim - sums sum_s,sum_r,sum_sq_s,sum_sq_r, sum_sxr
 %macro TABULATE_SSIM 0

@@ -15,8 +15,8 @@
  *
  * This includes rdcost estimations, histogram based pruning, etc.
  */
-#ifndef AVM_AV2_ENCODER_INTRA_MODE_SEARCH_UTILS_H_
-#define AVM_AV2_ENCODER_INTRA_MODE_SEARCH_UTILS_H_
+#ifndef AV2_AV2_ENCODER_INTRA_MODE_SEARCH_UTILS_H_
+#define AV2_AV2_ENCODER_INTRA_MODE_SEARCH_UTILS_H_
 
 #include "av2/common/pred_common.h"
 #include "av2/common/reconintra.h"
@@ -369,4 +369,4 @@ static INLINE int model_intra_yrd_and_prune(const AV2_COMP *const cpi,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_INTRA_MODE_SEARCH_UTILS_H_
+#endif  // AV2_AV2_ENCODER_INTRA_MODE_SEARCH_UTILS_H_

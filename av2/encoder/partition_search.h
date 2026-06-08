@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_PARTITION_SEARCH_H_
-#define AVM_AV2_ENCODER_PARTITION_SEARCH_H_
+#ifndef AV2_AV2_ENCODER_PARTITION_SEARCH_H_
+#define AV2_AV2_ENCODER_PARTITION_SEARCH_H_
 
 #include "av2/encoder/block.h"
 #include "av2/encoder/encoder.h"
@@ -55,4 +55,4 @@ void setup_block_rdmult(const AV2_COMP *const cpi, MACROBLOCK *const x,
                         int mi_row, int mi_col, BLOCK_SIZE bsize,
                         AQ_MODE aq_mode, MB_MODE_INFO *mbmi);
 
-#endif  // AVM_AV2_ENCODER_PARTITION_SEARCH_H_
+#endif  // AV2_AV2_ENCODER_PARTITION_SEARCH_H_

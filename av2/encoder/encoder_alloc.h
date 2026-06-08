@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_ENCODER_ALLOC_H_
-#define AVM_AV2_ENCODER_ENCODER_ALLOC_H_
+#ifndef AV2_AV2_ENCODER_ENCODER_ALLOC_H_
+#define AV2_AV2_ENCODER_ENCODER_ALLOC_H_
 
 #include "av2/encoder/encoder.h"
 #include "av2/encoder/encodetxb.h"
@@ -173,7 +173,7 @@ static INLINE void dealloc_compressor_data(AV2_COMP *cpi) {
 #if CONFIG_TUNE_VMAF
   aom_free(cpi->vmaf_info.rdmult_scaling_factors);
   cpi->vmaf_info.rdmult_scaling_factors = NULL;
-  avm_close_vmaf_model(cpi->vmaf_info.vmaf_model);
+  av2_close_vmaf_model(cpi->vmaf_info.vmaf_model);
 #endif
   BruInfo *bru_info = &cpi->common.bru;
   aom_free(bru_info->active_mode_map);
@@ -305,7 +305,7 @@ static INLINE void alloc_altref_frame_buffer(AV2_COMP *cpi) {
   const AV2EncoderConfig *oxcf = &cpi->oxcf;
 
   // TODO(agrange) Check if ARF is enabled and skip allocation if not.
-  if (avm_realloc_frame_buffer(
+  if (av2_realloc_frame_buffer(
           &cpi->alt_ref_buffer, oxcf->frm_dim_cfg.width,
           oxcf->frm_dim_cfg.height, seq_params->subsampling_x,
           seq_params->subsampling_y, cpi->oxcf.border_in_pixels,
@@ -318,29 +318,29 @@ static INLINE void alloc_util_frame_buffers(AV2_COMP *cpi) {
   AV2_COMMON *const cm = &cpi->common;
   const SequenceHeader *const seq_params = &cm->seq_params;
   const int byte_alignment = cm->features.byte_alignment;
-  if (avm_realloc_frame_buffer(
+  if (av2_realloc_frame_buffer(
           &cpi->last_frame_uf, cm->width, cm->height, seq_params->subsampling_x,
           seq_params->subsampling_y, cpi->oxcf.border_in_pixels, byte_alignment,
           NULL, NULL, NULL, false))
     aom_internal_error(&cm->error, AOM_CODEC_MEM_ERROR,
                        "Failed to allocate last frame buffer");
 
-  if (avm_realloc_frame_buffer(&cpi->trial_frame_rst, cm->width, cm->height,
+  if (av2_realloc_frame_buffer(&cpi->trial_frame_rst, cm->width, cm->height,
                                seq_params->subsampling_x,
                                seq_params->subsampling_y,
-                               AVM_RESTORATION_FRAME_BORDER, byte_alignment,
+                               AV2_RESTORATION_FRAME_BORDER, byte_alignment,
                                NULL, NULL, NULL, false))
     aom_internal_error(&cm->error, AOM_CODEC_MEM_ERROR,
                        "Failed to allocate trial restored frame buffer");
 
-  if (avm_realloc_frame_buffer(
+  if (av2_realloc_frame_buffer(
           &cpi->scaled_source, cm->width, cm->height, seq_params->subsampling_x,
           seq_params->subsampling_y, cpi->oxcf.border_in_pixels, byte_alignment,
           NULL, NULL, NULL, cpi->alloc_pyramid))
     aom_internal_error(&cm->error, AOM_CODEC_MEM_ERROR,
                        "Failed to allocate scaled source buffer");
 
-  if (avm_realloc_frame_buffer(&cpi->scaled_last_source, cm->width, cm->height,
+  if (av2_realloc_frame_buffer(&cpi->scaled_last_source, cm->width, cm->height,
                                seq_params->subsampling_x,
                                seq_params->subsampling_y,
                                cpi->oxcf.border_in_pixels, byte_alignment, NULL,
@@ -361,7 +361,7 @@ static INLINE YV12_BUFFER_CONFIG *realloc_and_scale_source(AV2_COMP *cpi,
     return cpi->unscaled_source;
   }
 
-  if (avm_realloc_frame_buffer(
+  if (av2_realloc_frame_buffer(
           &cpi->scaled_source, scaled_width, scaled_height,
           cm->seq_params.subsampling_x, cm->seq_params.subsampling_y,
           AOM_BORDER_IN_PIXELS, cm->features.byte_alignment, NULL, NULL, NULL,
@@ -380,4 +380,4 @@ static INLINE YV12_BUFFER_CONFIG *realloc_and_scale_source(AV2_COMP *cpi,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_ENCODER_ALLOC_H_
+#endif  // AV2_AV2_ENCODER_ENCODER_ALLOC_H_

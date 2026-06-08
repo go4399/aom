@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_FILTER_H_
-#define AVM_AV2_COMMON_FILTER_H_
+#ifndef AV2_AV2_COMMON_FILTER_H_
+#define AV2_AV2_COMMON_FILTER_H_
 
 #include <assert.h>
 
@@ -294,4 +294,4 @@ static INLINE int av2_get_filter_tap(
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_FILTER_H_
+#endif  // AV2_AV2_COMMON_FILTER_H_

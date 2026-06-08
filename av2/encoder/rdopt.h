@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_RDOPT_H_
-#define AVM_AV2_ENCODER_RDOPT_H_
+#ifndef AV2_AV2_ENCODER_RDOPT_H_
+#define AV2_AV2_ENCODER_RDOPT_H_
 
 #include <stdbool.h>
 
@@ -401,4 +401,4 @@ int get_drl_cost(int max_drl_bits, const MB_MODE_INFO *mbmi,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_RDOPT_H_
+#endif  // AV2_AV2_ENCODER_RDOPT_H_

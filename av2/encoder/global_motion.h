@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_GLOBAL_MOTION_H_
-#define AVM_AV2_ENCODER_GLOBAL_MOTION_H_
+#ifndef AV2_AV2_ENCODER_GLOBAL_MOTION_H_
+#define AV2_AV2_ENCODER_GLOBAL_MOTION_H_
 
 #include "aom/aom_integer.h"
 #include "aom_dsp/flow_estimation/flow_estimation.h"
@@ -133,4 +133,4 @@ void av2_compute_feature_segmentation_map(uint8_t *segment_map, int width,
 #ifdef __cplusplus
 }  // extern "C"
 #endif
-#endif  // AVM_AV2_ENCODER_GLOBAL_MOTION_H_
+#endif  // AV2_AV2_ENCODER_GLOBAL_MOTION_H_

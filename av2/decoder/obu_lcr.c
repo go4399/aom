@@ -57,7 +57,7 @@ static void read_lcr_seq_profile_tier_level_info(
 static int read_lcr_xlayer_color_info(struct LCRXLayerInfo *xlayer_info,
                                       struct aom_read_bit_buffer *rb) {
   struct XLayerColorInfo *xlayer = &xlayer_info->xlayer_col_params;
-  xlayer->layer_color_description_idc = avm_rb_read_rice_golomb(rb, 2);
+  xlayer->layer_color_description_idc = av2_rb_read_rice_golomb(rb, 2);
   if (xlayer->layer_color_description_idc == AV2_COLOR_DESC_IDC_EXPLICIT) {
     xlayer->layer_color_primaries = aom_rb_read_literal(rb, 8);
     xlayer->layer_transfer_characteristics = aom_rb_read_literal(rb, 8);

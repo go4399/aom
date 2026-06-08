@@ -582,7 +582,7 @@ double cambi_score(Av2BandDetectInfo *dbi, int frame_width, int frame_height) {
                                  dbi->pixels_in_window);
 }
 
-double avm_compute_cambi(const YV12_BUFFER_CONFIG *frame,
+double av2_compute_cambi(const YV12_BUFFER_CONFIG *frame,
                          Av2BandDetectInfo *dbi, MACROBLOCKD *xd) {
   av2_setup_dst_planes(xd->plane, frame, 0, 0, 0, 1, NULL);
   struct buf_2d pre_buf = xd->plane[0].dst;
@@ -627,7 +627,7 @@ void set_tvi_per_contrast(Av2BandDetectInfo *const dbi, int bitdepth) {
   }
 }
 
-int avm_band_detection_init(Av2BandDetectInfo *const dbi, const int frame_width,
+int av2_band_detection_init(Av2BandDetectInfo *const dbi, const int frame_width,
                             const int frame_height, const int bit_depth) {
   if (frame_width < CAMBI_MIN_WIDTH || frame_height > CAMBI_MAX_WIDTH ||
       !(bit_depth == 8 || bit_depth == 10)) {
@@ -665,7 +665,7 @@ int avm_band_detection_init(Av2BandDetectInfo *const dbi, const int frame_width,
   return dbi->do_band_detection;
 }
 
-void avm_band_detection_close(Av2BandDetectInfo *const dbi) {
+void av2_band_detection_close(Av2BandDetectInfo *const dbi) {
   if (!dbi->do_band_detection) {
     return;
   }
@@ -696,12 +696,12 @@ void avm_band_detection_close(Av2BandDetectInfo *const dbi) {
  *
  * \return Nothing is returned. Instead, presence of banding is stored
  */
-void avm_band_detection(const YV12_BUFFER_CONFIG *frame,
+void av2_band_detection(const YV12_BUFFER_CONFIG *frame,
                         const YV12_BUFFER_CONFIG *ref,
                         Av2BandDetectInfo *const dbi, MACROBLOCKD *xd,
-                        avm_banding_hints_metadata_t *band_metadata) {
-  const double cambi_ref = avm_compute_cambi(ref, dbi, xd);
-  const double cambi_enc = avm_compute_cambi(frame, dbi, xd);
+                        av2_banding_hints_metadata_t *band_metadata) {
+  const double cambi_ref = av2_compute_cambi(ref, dbi, xd);
+  const double cambi_enc = av2_compute_cambi(frame, dbi, xd);
 
   const int bit_depth = xd->bd;
   const double diff_threshold =
@@ -714,7 +714,7 @@ void avm_band_detection(const YV12_BUFFER_CONFIG *frame,
 
   // Initialize and populate the band metadata structure
   if (band_metadata) {
-    memset(band_metadata, 0, sizeof(avm_banding_hints_metadata_t));
+    memset(band_metadata, 0, sizeof(av2_banding_hints_metadata_t));
     band_metadata->coding_banding_present_flag = dbi->band_detected;
     band_metadata->source_banding_present_flag = (cambi_ref > src_threshold);
     // For now, set banding_hints_flag to 0 (no detailed hints)

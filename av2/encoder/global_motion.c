@@ -23,7 +23,7 @@
 
 #include "av2/common/convolve.h"
 #include "av2/common/warped_motion.h"
-#include "av2/encoder/avm_compatibility_dsp.h"
+#include "av2/encoder/av2_compatibility_dsp.h"
 
 #include "av2/encoder/segmentation.h"
 
@@ -69,15 +69,15 @@ static void force_wmtype(WarpedMotionParams *wm, TransformationType wmtype) {
     case IDENTITY:
       wm->wmmat[0] = 0;
       wm->wmmat[1] = 0;
-      AVM_FALLTHROUGH_INTENDED;
+      AV2_FALLTHROUGH_INTENDED;
     case TRANSLATION:
       wm->wmmat[2] = 1 << WARPEDMODEL_PREC_BITS;
       wm->wmmat[3] = 0;
-      AVM_FALLTHROUGH_INTENDED;
+      AV2_FALLTHROUGH_INTENDED;
     case ROTZOOM:
       wm->wmmat[4] = -wm->wmmat[3];
       wm->wmmat[5] = wm->wmmat[2];
-      AVM_FALLTHROUGH_INTENDED;
+      AV2_FALLTHROUGH_INTENDED;
     case AFFINE: wm->wmmat[6] = wm->wmmat[7] = 0; break;
     default: assert(0);
   }
@@ -126,7 +126,7 @@ static int64_t highbd_segmented_frame_error(
       patch_h = AOMMIN(error_bsize_h, p_height - i);
 
       if (patch_w == WARP_ERROR_BLOCK && patch_h == WARP_ERROR_BLOCK) {
-        sum_error += avm_highbd_sad32x32(ref + j + i * ref_stride, ref_stride,
+        sum_error += av2_highbd_sad32x32(ref + j + i * ref_stride, ref_stride,
                                          dst + j + i * dst_stride, dst_stride);
       } else {
         sum_error += generic_sad_highbd(ref + j + i * ref_stride, ref_stride,
@@ -174,7 +174,7 @@ static int64_t highbd_warp_error(WarpedMotionParams *wm,
                             0, NULL);
 
       if (warp_w == WARP_ERROR_BLOCK && warp_h == WARP_ERROR_BLOCK) {
-        gm_sumerr += avm_highbd_sad32x32(tmp, WARP_ERROR_BLOCK,
+        gm_sumerr += av2_highbd_sad32x32(tmp, WARP_ERROR_BLOCK,
                                          dst + j + i * dst_stride, dst_stride);
       } else {
         gm_sumerr +=

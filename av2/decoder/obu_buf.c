@@ -77,10 +77,10 @@ uint32_t av2_read_buffer_removal_timing_obu(struct AV2Decoder *pbi,
           aom_rb_read_bit(rb);
       if (brt_info->br_decoder_model_present_op_flag[brt_info->br_ops_id][i])
         brt_info->br_time_op[brt_info->br_ops_id][i] =
-            avm_rb_read_rice_golomb(rb, 4);
+            av2_rb_read_rice_golomb(rb, 4);
     }
   } else {
-    brt_info->br_time = avm_rb_read_rice_golomb(rb, 4);
+    brt_info->br_time = av2_rb_read_rice_golomb(rb, 4);
   }
   if (av2_check_trailing_bits(pbi, rb) != 0) {
     // cm->error.error_code is already set.

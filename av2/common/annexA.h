@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_ANNEXA_H_
-#define AVM_AV2_COMMON_ANNEXA_H_
+#ifndef AV2_AV2_COMMON_ANNEXA_H_
+#define AV2_AV2_COMMON_ANNEXA_H_
 
 /*!\file
  * \brief Provides the profile related functions
@@ -52,4 +52,4 @@ int get_profile_scaling_factor(int seq_profile_idc);
 #ifdef __cplusplus
 }  // extern "C"
 #endif
-#endif  // AVM_AV2_COMMON_TIMING_H_
+#endif  // AV2_AV2_COMMON_TIMING_H_

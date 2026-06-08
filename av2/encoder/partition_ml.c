@@ -10,7 +10,7 @@
  * aomedia.org/license/patent-license/.
  */
 
-#include "aom_ports/avm_timer.h"
+#include "aom_ports/av2_timer.h"
 #include "av2/encoder/encodeframe_utils.h"
 #include "av2/encoder/partition_ml.h"
 

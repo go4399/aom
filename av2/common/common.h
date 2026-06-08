@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_COMMON_H_
-#define AVM_AV2_COMMON_COMMON_H_
+#ifndef AV2_AV2_COMMON_COMMON_H_
+#define AV2_AV2_COMMON_COMMON_H_
 
 #ifndef AV2_CDF_SIZE
 #define AV2_CDF_SIZE(x) ((x) + 4)
@@ -23,13 +23,13 @@
 #define AV2_MAX_WEDGE_TYPES 68
 #endif
 
-#define AVM_PARA2(a, b, c) ((a) + 2), ((b) + 3), ((c) + 4)
-#define AVM_PARA3(a, b, c) ((a) + 2), ((b) + 3), ((c) + 4)
-#define AVM_PARA4(a, b, c) ((a) + 3), ((b) + 4), ((c) + 5)
-#define AVM_PARA5(a, b, c) ((a) + 3), ((b) + 4), ((c) + 5)
-#define AVM_PARA6(a, b, c) ((a) + 3), ((b) + 4), ((c) + 5)
-#define AVM_PARA7(a, b, c) ((a) + 3), ((b) + 4), ((c) + 5)
-#define AVM_PARA8(a, b, c) ((a) + 3), ((b) + 4), ((c) + 5)
+#define AV2_PARA2(a, b, c) ((a) + 2), ((b) + 3), ((c) + 4)
+#define AV2_PARA3(a, b, c) ((a) + 2), ((b) + 3), ((c) + 4)
+#define AV2_PARA4(a, b, c) ((a) + 3), ((b) + 4), ((c) + 5)
+#define AV2_PARA5(a, b, c) ((a) + 3), ((b) + 4), ((c) + 5)
+#define AV2_PARA6(a, b, c) ((a) + 3), ((b) + 4), ((c) + 5)
+#define AV2_PARA7(a, b, c) ((a) + 3), ((b) + 4), ((c) + 5)
+#define AV2_PARA8(a, b, c) ((a) + 3), ((b) + 4), ((c) + 5)
 
 #ifndef CDF_PROB_TOP
 #define CDF_PROB_BITS 15
@@ -39,26 +39,26 @@
 #ifndef AOM_ICDF
 #define AOM_ICDF(x) (CDF_PROB_TOP - (x))
 #endif
-#ifndef AVM_ICDF
-#define AVM_ICDF AOM_ICDF
+#ifndef AV2_ICDF
+#define AV2_ICDF AOM_ICDF
 #endif
 
-#define AVM_CDF2(a0) AVM_ICDF(a0), AVM_ICDF(CDF_PROB_TOP), 0
-#define AVM_CDF3(a0, a1) AVM_ICDF(a0), AVM_ICDF(a1), AVM_ICDF(CDF_PROB_TOP), 0
-#define AVM_CDF4(a0, a1, a2) \
-  AVM_ICDF(a0), AVM_ICDF(a1), AVM_ICDF(a2), AVM_ICDF(CDF_PROB_TOP), 0
-#define AVM_CDF5(a0, a1, a2, a3)                          \
-  AVM_ICDF(a0), AVM_ICDF(a1), AVM_ICDF(a2), AVM_ICDF(a3), \
-      AVM_ICDF(CDF_PROB_TOP), 0
-#define AVM_CDF6(a0, a1, a2, a3, a4)                                    \
-  AVM_ICDF(a0), AVM_ICDF(a1), AVM_ICDF(a2), AVM_ICDF(a3), AVM_ICDF(a4), \
-      AVM_ICDF(CDF_PROB_TOP), 0
-#define AVM_CDF7(a0, a1, a2, a3, a4, a5)                                \
-  AVM_ICDF(a0), AVM_ICDF(a1), AVM_ICDF(a2), AVM_ICDF(a3), AVM_ICDF(a4), \
-      AVM_ICDF(a5), AVM_ICDF(CDF_PROB_TOP), 0
-#define AVM_CDF8(a0, a1, a2, a3, a4, a5, a6)                            \
-  AVM_ICDF(a0), AVM_ICDF(a1), AVM_ICDF(a2), AVM_ICDF(a3), AVM_ICDF(a4), \
-      AVM_ICDF(a5), AVM_ICDF(a6), AVM_ICDF(CDF_PROB_TOP), 0
+#define AV2_CDF2(a0) AV2_ICDF(a0), AV2_ICDF(CDF_PROB_TOP), 0
+#define AV2_CDF3(a0, a1) AV2_ICDF(a0), AV2_ICDF(a1), AV2_ICDF(CDF_PROB_TOP), 0
+#define AV2_CDF4(a0, a1, a2) \
+  AV2_ICDF(a0), AV2_ICDF(a1), AV2_ICDF(a2), AV2_ICDF(CDF_PROB_TOP), 0
+#define AV2_CDF5(a0, a1, a2, a3)                          \
+  AV2_ICDF(a0), AV2_ICDF(a1), AV2_ICDF(a2), AV2_ICDF(a3), \
+      AV2_ICDF(CDF_PROB_TOP), 0
+#define AV2_CDF6(a0, a1, a2, a3, a4)                                    \
+  AV2_ICDF(a0), AV2_ICDF(a1), AV2_ICDF(a2), AV2_ICDF(a3), AV2_ICDF(a4), \
+      AV2_ICDF(CDF_PROB_TOP), 0
+#define AV2_CDF7(a0, a1, a2, a3, a4, a5)                                \
+  AV2_ICDF(a0), AV2_ICDF(a1), AV2_ICDF(a2), AV2_ICDF(a3), AV2_ICDF(a4), \
+      AV2_ICDF(a5), AV2_ICDF(CDF_PROB_TOP), 0
+#define AV2_CDF8(a0, a1, a2, a3, a4, a5, a6)                            \
+  AV2_ICDF(a0), AV2_ICDF(a1), AV2_ICDF(a2), AV2_ICDF(a3), AV2_ICDF(a4), \
+      AV2_ICDF(a5), AV2_ICDF(a6), AV2_ICDF(CDF_PROB_TOP), 0
 
 /* Interface header for common constant data structures and lookup tables */
 
@@ -112,4 +112,4 @@ static INLINE int get_unsigned_bits(unsigned int num_values) {
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_COMMON_H_
+#endif  // AV2_AV2_COMMON_COMMON_H_

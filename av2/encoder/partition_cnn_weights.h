@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_PARTITION_CNN_WEIGHTS_H_
-#define AVM_AV2_ENCODER_PARTITION_CNN_WEIGHTS_H_
+#ifndef AV2_AV2_ENCODER_PARTITION_CNN_WEIGHTS_H_
+#define AV2_AV2_ENCODER_PARTITION_CNN_WEIGHTS_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -2137,4 +2137,4 @@ static const int quad_to_linear_3[64] = {
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_PARTITION_CNN_WEIGHTS_H_
+#endif  // AV2_AV2_ENCODER_PARTITION_CNN_WEIGHTS_H_

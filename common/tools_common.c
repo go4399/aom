@@ -151,7 +151,7 @@ struct CodecInfo {
 static const struct CodecInfo aom_encoders[] = {
   { &aom_codec_av1_cx, "av1", AV1_FOURCC },
 #if CONFIG_AV2_ENCODER
-  { &avm_codec_av2_cx, "av2", AV2_FOURCC },
+  { &av2_codec_av2_cx, "av2", AV2_FOURCC },
 #endif
 };
 
@@ -198,7 +198,7 @@ const char *get_short_name_by_aom_encoder(aom_codec_iface_t *iface) {
 static const struct CodecInfo aom_decoders[] = {
   { &aom_codec_av1_dx, "av1", AV1_FOURCC },
 #if CONFIG_AV2_DECODER
-  { &avm_codec_av2_dx, "av2", AV2_FOURCC },
+  { &av2_codec_av2_dx, "av2", AV2_FOURCC },
 #endif
 };
 

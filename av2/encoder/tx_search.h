@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_TRANSFORM_SEARCH_H_
-#define AVM_AV2_ENCODER_TRANSFORM_SEARCH_H_
+#ifndef AV2_AV2_ENCODER_TRANSFORM_SEARCH_H_
+#define AV2_AV2_ENCODER_TRANSFORM_SEARCH_H_
 
 #include "av2/encoder/encoder.h"
 
@@ -309,4 +309,4 @@ int av2_txfm_search(const AV2_COMP *cpi, MACROBLOCK *x, BLOCK_SIZE bsize,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_TRANSFORM_SEARCH_H_
+#endif  // AV2_AV2_ENCODER_TRANSFORM_SEARCH_H_

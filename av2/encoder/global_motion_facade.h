@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_GLOBAL_MOTION_FACADE_H_
-#define AVM_AV2_ENCODER_GLOBAL_MOTION_FACADE_H_
+#ifndef AV2_AV2_ENCODER_GLOBAL_MOTION_FACADE_H_
+#define AV2_AV2_ENCODER_GLOBAL_MOTION_FACADE_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,4 +31,4 @@ void av2_compute_global_motion_facade(struct AV2_COMP *cpi);
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_GLOBAL_MOTION_FACADE_H_
+#endif  // AV2_AV2_ENCODER_GLOBAL_MOTION_FACADE_H_

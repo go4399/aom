@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_MV_PREC_H_
-#define AVM_AV2_ENCODER_MV_PREC_H_
+#ifndef AV2_AV2_ENCODER_MV_PREC_H_
+#define AV2_AV2_ENCODER_MV_PREC_H_
 
 #include "av2/encoder/encoder.h"
 #include "av2/encoder/speed_features.h"
@@ -38,4 +38,4 @@ static INLINE void av2_set_high_precision_mv(AV2_COMP *cpi,
 
 void av2_pick_and_set_high_precision_mv(AV2_COMP *cpi, int qindex);
 
-#endif  // AVM_AV2_ENCODER_MV_PREC_H_
+#endif  // AV2_AV2_ENCODER_MV_PREC_H_

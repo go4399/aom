@@ -85,21 +85,21 @@ void av2_set_buffer_removal_timing_params(AV2_COMP *const cpi) {
 
 int av2_write_brt_info(const BufferRemovalTimingInfo *brt_info,
                        struct aom_write_bit_buffer *wb) {
-  avm_wb_write_bit(wb, brt_info->br_ops_dependent_flag);
+  av2_wb_write_bit(wb, brt_info->br_ops_dependent_flag);
   if (brt_info->br_ops_dependent_flag) {
-    avm_wb_write_literal(wb, brt_info->br_ops_id, 4);
-    avm_wb_write_literal(wb, brt_info->br_ops_cnt[brt_info->br_ops_id], 3);
+    av2_wb_write_literal(wb, brt_info->br_ops_id, 4);
+    av2_wb_write_literal(wb, brt_info->br_ops_cnt[brt_info->br_ops_id], 3);
     for (int i = 0; i < brt_info->br_ops_cnt[brt_info->br_ops_id]; i++) {
-      avm_wb_write_bit(
+      av2_wb_write_bit(
           wb,
           brt_info->br_decoder_model_present_op_flag[brt_info->br_ops_id][i]);
       if (brt_info->br_decoder_model_present_op_flag[brt_info->br_ops_id][i]) {
-        avm_wb_write_rice_golomb(
+        av2_wb_write_rice_golomb(
             wb, brt_info->br_time_op[brt_info->br_ops_id][i], 4);
       }
     }
   } else {
-    avm_wb_write_rice_golomb(wb, brt_info->br_time, 4);
+    av2_wb_write_rice_golomb(wb, brt_info->br_time, 4);
   }
   return 0;
 }
@@ -111,5 +111,5 @@ uint32_t av2_write_buffer_removal_timing_obu(
   av2_write_brt_info(brt_info, &wb);
 
   av2_add_trailing_bits(&wb);
-  return avm_wb_bytes_written(&wb);
+  return av2_wb_bytes_written(&wb);
 }

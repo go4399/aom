@@ -242,7 +242,7 @@ static int64_t pick_wedge(const AV2_COMP *const cpi, const MACROBLOCK *const x,
 
   DECLARE_ALIGNED(32, int16_t, residual0[MAX_SB_SQUARE]);  // src - pred0
 
-  avm_highbd_subtract_block(bh, bw, residual0, bw, src->buf, src->stride, p0,
+  av2_highbd_subtract_block(bh, bw, residual0, bw, src->buf, src->stride, p0,
                             bw, xd->bd);
   int16_t *ds = residual0;
 
@@ -423,9 +423,9 @@ static int64_t pick_interintra_wedge(const AV2_COMP *const cpi,
   DECLARE_ALIGNED(32, int16_t, residual1[MAX_SB_SQUARE]);  // src - pred1
   DECLARE_ALIGNED(32, int16_t, diff10[MAX_SB_SQUARE]);     // pred1 - pred0
 
-  avm_highbd_subtract_block(bh, bw, residual1, bw, src->buf, src->stride, p1,
+  av2_highbd_subtract_block(bh, bw, residual1, bw, src->buf, src->stride, p1,
                             bw, xd->bd);
-  avm_highbd_subtract_block(bh, bw, diff10, bw, p1, bw, p0, bw, xd->bd);
+  av2_highbd_subtract_block(bh, bw, diff10, bw, p1, bw, p0, bw, xd->bd);
 
   int8_t wedge_index = -1;
   int8_t boundary_index = -1;
@@ -449,9 +449,9 @@ static INLINE void get_inter_predictor_masked_compound_y(
   av2_build_inter_predictor_single_buf_y(xd, bsize, 1, pred1, stride);
   const struct buf_2d *const src = &x->plane[0].src;
 
-  avm_highbd_subtract_block(bh, bw, residual1, bw, src->buf, src->stride, pred1,
+  av2_highbd_subtract_block(bh, bw, residual1, bw, src->buf, src->stride, pred1,
                             bw, xd->bd);
-  avm_highbd_subtract_block(bh, bw, diff10, bw, pred1, bw, pred0, bw, xd->bd);
+  av2_highbd_subtract_block(bh, bw, diff10, bw, pred1, bw, pred0, bw, xd->bd);
 }
 
 // Computes the rd cost for the given interintra mode and updates the best

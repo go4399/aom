@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_X86_CFL_SIMD_H_
-#define AVM_AV2_COMMON_X86_CFL_SIMD_H_
+#ifndef AV2_AV2_COMMON_X86_CFL_SIMD_H_
+#define AV2_AV2_COMMON_X86_CFL_SIMD_H_
 
 #include "av2/common/blockd.h"
 
@@ -191,4 +191,4 @@ void av2_cfl_predict_hbd_16x16_ssse3(const int16_t *pred_buf_q3, uint16_t *dst,
                                      int dst_stride, int alpha_q3, int bd);
 void av2_cfl_predict_hbd_16x32_ssse3(const int16_t *pred_buf_q3, uint16_t *dst,
                                      int dst_stride, int alpha_q3, int bd);
-#endif  // AVM_AV2_COMMON_X86_CFL_SIMD_H_
+#endif  // AV2_AV2_COMMON_X86_CFL_SIMD_H_

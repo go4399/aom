@@ -107,7 +107,7 @@ void setup_tpl_buffers(AV2_COMMON *const cm, TplParams *const tpl_data,
         aom_calloc(tpl_data->tpl_stats_buffer[frame].width *
                        tpl_data->tpl_stats_buffer[frame].height,
                    sizeof(*tpl_data->tpl_stats_buffer[frame].tpl_stats_ptr)));
-    if (avm_alloc_frame_buffer(
+    if (av2_alloc_frame_buffer(
             &tpl_data->tpl_rec_pool[frame], cm->width, cm->height,
             cm->seq_params.subsampling_x, cm->seq_params.subsampling_y,
             tpl_data->border_in_pixels, cm->features.byte_alignment, false))
@@ -137,7 +137,7 @@ static INLINE void tpl_subtract_block(const MACROBLOCKD *xd, int rows, int cols,
                                       const uint16_t *pred,
                                       ptrdiff_t pred_stride) {
   assert(rows >= 4 && cols >= 4);
-  avm_highbd_subtract_block(rows, cols, diff, diff_stride, src, src_stride,
+  av2_highbd_subtract_block(rows, cols, diff, diff_stride, src, src_stride,
                             pred, pred_stride, xd->bd);
 }
 

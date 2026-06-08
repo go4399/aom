@@ -130,12 +130,12 @@ static int _vector_reallocate(Vector *vector, size_t new_capacity) {
     if (memcpy_s(vector->data,
                              new_capacity_in_bytes,
                              old,
-                             avm_vector_byte_size(vector)) != 0) {
+                             av2_vector_byte_size(vector)) != 0) {
         return VECTOR_ERROR;
     }
 /* clang-format on */
 #else
-  memcpy(vector->data, old, avm_vector_byte_size(vector));
+  memcpy(vector->data, old, av2_vector_byte_size(vector));
 #endif
 
   vector->capacity = new_capacity;
@@ -156,7 +156,7 @@ static void _vector_swap(size_t *first, size_t *second) {
   *second = temp;
 }
 
-int avm_vector_setup(Vector *vector, size_t capacity, size_t element_size) {
+int av2_vector_setup(Vector *vector, size_t capacity, size_t element_size) {
   assert(vector != NULL);
 
   if (vector == NULL) return VECTOR_ERROR;
@@ -169,16 +169,16 @@ int avm_vector_setup(Vector *vector, size_t capacity, size_t element_size) {
   return vector->data == NULL ? VECTOR_ERROR : VECTOR_SUCCESS;
 }
 
-int avm_vector_copy(Vector *destination, Vector *source) {
+int av2_vector_copy(Vector *destination, Vector *source) {
   assert(destination != NULL);
   assert(source != NULL);
-  assert(avm_vector_is_initialized(source));
-  assert(!avm_vector_is_initialized(destination));
+  assert(av2_vector_is_initialized(source));
+  assert(!av2_vector_is_initialized(destination));
 
   if (destination == NULL) return VECTOR_ERROR;
   if (source == NULL) return VECTOR_ERROR;
-  if (avm_vector_is_initialized(destination)) return VECTOR_ERROR;
-  if (!avm_vector_is_initialized(source)) return VECTOR_ERROR;
+  if (av2_vector_is_initialized(destination)) return VECTOR_ERROR;
+  if (!av2_vector_is_initialized(source)) return VECTOR_ERROR;
 
   /* Copy ALL the data */
   destination->size = source->size;
@@ -189,28 +189,28 @@ int avm_vector_copy(Vector *destination, Vector *source) {
   destination->data = malloc(destination->capacity * source->element_size);
   if (destination->data == NULL) return VECTOR_ERROR;
 
-  memcpy(destination->data, source->data, avm_vector_byte_size(source));
+  memcpy(destination->data, source->data, av2_vector_byte_size(source));
 
   return VECTOR_SUCCESS;
 }
 
-int avm_vector_copy_assign(Vector *destination, Vector *source) {
+int av2_vector_copy_assign(Vector *destination, Vector *source) {
   assert(destination != NULL);
   assert(source != NULL);
-  assert(avm_vector_is_initialized(source));
-  assert(avm_vector_is_initialized(destination));
+  assert(av2_vector_is_initialized(source));
+  assert(av2_vector_is_initialized(destination));
 
   if (destination == NULL) return VECTOR_ERROR;
   if (source == NULL) return VECTOR_ERROR;
-  if (!avm_vector_is_initialized(destination)) return VECTOR_ERROR;
-  if (!avm_vector_is_initialized(source)) return VECTOR_ERROR;
+  if (!av2_vector_is_initialized(destination)) return VECTOR_ERROR;
+  if (!av2_vector_is_initialized(source)) return VECTOR_ERROR;
 
-  avm_vector_destroy(destination);
+  av2_vector_destroy(destination);
 
-  return avm_vector_copy(destination, source);
+  return av2_vector_copy(destination, source);
 }
 
-int avm_vector_move(Vector *destination, Vector *source) {
+int av2_vector_move(Vector *destination, Vector *source) {
   assert(destination != NULL);
   assert(source != NULL);
 
@@ -223,23 +223,23 @@ int avm_vector_move(Vector *destination, Vector *source) {
   return VECTOR_SUCCESS;
 }
 
-int avm_vector_move_assign(Vector *destination, Vector *source) {
-  avm_vector_swap(destination, source);
-  return avm_vector_destroy(source);
+int av2_vector_move_assign(Vector *destination, Vector *source) {
+  av2_vector_swap(destination, source);
+  return av2_vector_destroy(source);
 }
 
-int avm_vector_swap(Vector *destination, Vector *source) {
+int av2_vector_swap(Vector *destination, Vector *source) {
   void *temp;
 
   assert(destination != NULL);
   assert(source != NULL);
-  assert(avm_vector_is_initialized(source));
-  assert(avm_vector_is_initialized(destination));
+  assert(av2_vector_is_initialized(source));
+  assert(av2_vector_is_initialized(destination));
 
   if (destination == NULL) return VECTOR_ERROR;
   if (source == NULL) return VECTOR_ERROR;
-  if (!avm_vector_is_initialized(destination)) return VECTOR_ERROR;
-  if (!avm_vector_is_initialized(source)) return VECTOR_ERROR;
+  if (!av2_vector_is_initialized(destination)) return VECTOR_ERROR;
+  if (!av2_vector_is_initialized(source)) return VECTOR_ERROR;
 
   _vector_swap(&destination->size, &source->size);
   _vector_swap(&destination->capacity, &source->capacity);
@@ -252,7 +252,7 @@ int avm_vector_swap(Vector *destination, Vector *source) {
   return VECTOR_SUCCESS;
 }
 
-int avm_vector_destroy(Vector *vector) {
+int av2_vector_destroy(Vector *vector) {
   assert(vector != NULL);
 
   if (vector == NULL) return VECTOR_ERROR;
@@ -264,7 +264,7 @@ int avm_vector_destroy(Vector *vector) {
 }
 
 /* Insertion */
-int avm_vector_push_back(Vector *vector, void *element) {
+int av2_vector_push_back(Vector *vector, void *element) {
   assert(vector != NULL);
   assert(element != NULL);
 
@@ -281,11 +281,11 @@ int avm_vector_push_back(Vector *vector, void *element) {
   return VECTOR_SUCCESS;
 }
 
-int avm_vector_push_front(Vector *vector, void *element) {
-  return avm_vector_insert(vector, 0, element);
+int av2_vector_push_front(Vector *vector, void *element) {
+  return av2_vector_insert(vector, 0, element);
 }
 
-int avm_vector_insert(Vector *vector, size_t index, void *element) {
+int av2_vector_insert(Vector *vector, size_t index, void *element) {
   void *offset;
 
   assert(vector != NULL);
@@ -316,7 +316,7 @@ int avm_vector_insert(Vector *vector, size_t index, void *element) {
   return VECTOR_SUCCESS;
 }
 
-int avm_vector_assign(Vector *vector, size_t index, void *element) {
+int av2_vector_assign(Vector *vector, size_t index, void *element) {
   assert(vector != NULL);
   assert(element != NULL);
   assert(index < vector->size);
@@ -332,7 +332,7 @@ int avm_vector_assign(Vector *vector, size_t index, void *element) {
 }
 
 /* Deletion */
-int avm_vector_pop_back(Vector *vector) {
+int av2_vector_pop_back(Vector *vector) {
   assert(vector != NULL);
   assert(vector->size > 0);
 
@@ -350,9 +350,9 @@ int avm_vector_pop_back(Vector *vector) {
   return VECTOR_SUCCESS;
 }
 
-int avm_vector_pop_front(Vector *vector) { return avm_vector_erase(vector, 0); }
+int av2_vector_pop_front(Vector *vector) { return av2_vector_erase(vector, 0); }
 
-int avm_vector_erase(Vector *vector, size_t index) {
+int av2_vector_erase(Vector *vector, size_t index) {
   assert(vector != NULL);
   assert(index < vector->size);
 
@@ -372,10 +372,10 @@ int avm_vector_erase(Vector *vector, size_t index) {
   return VECTOR_SUCCESS;
 }
 
-int avm_vector_clear(Vector *vector) { return avm_vector_resize(vector, 0); }
+int av2_vector_clear(Vector *vector) { return av2_vector_resize(vector, 0); }
 
 /* Lookup */
-void *avm_vector_get(Vector *vector, size_t index) {
+void *av2_vector_get(Vector *vector, size_t index) {
   assert(vector != NULL);
   assert(index < vector->size);
 
@@ -386,7 +386,7 @@ void *avm_vector_get(Vector *vector, size_t index) {
   return _vector_offset(vector, index);
 }
 
-const void *avm_vector_const_get(const Vector *vector, size_t index) {
+const void *av2_vector_const_get(const Vector *vector, size_t index) {
   assert(vector != NULL);
   assert(index < vector->size);
 
@@ -397,30 +397,30 @@ const void *avm_vector_const_get(const Vector *vector, size_t index) {
   return _vector_const_offset(vector, index);
 }
 
-void *avm_vector_front(Vector *vector) { return avm_vector_get(vector, 0); }
+void *av2_vector_front(Vector *vector) { return av2_vector_get(vector, 0); }
 
-void *avm_vector_back(Vector *vector) {
-  return avm_vector_get(vector, vector->size - 1);
+void *av2_vector_back(Vector *vector) {
+  return av2_vector_get(vector, vector->size - 1);
 }
 
 /* Information */
 
-bool avm_vector_is_initialized(const Vector *vector) {
+bool av2_vector_is_initialized(const Vector *vector) {
   return vector->data != NULL;
 }
 
-size_t avm_vector_byte_size(const Vector *vector) {
+size_t av2_vector_byte_size(const Vector *vector) {
   return vector->size * vector->element_size;
 }
 
-size_t avm_vector_free_space(const Vector *vector) {
+size_t av2_vector_free_space(const Vector *vector) {
   return vector->capacity - vector->size;
 }
 
-bool avm_vector_is_empty(const Vector *vector) { return vector->size == 0; }
+bool av2_vector_is_empty(const Vector *vector) { return vector->size == 0; }
 
 /* Memory management */
-int avm_vector_resize(Vector *vector, size_t new_size) {
+int av2_vector_resize(Vector *vector, size_t new_size) {
   if (new_size <= vector->capacity * VECTOR_SHRINK_THRESHOLD) {
     vector->size = new_size;
     if (_vector_reallocate(vector, new_size * VECTOR_GROWTH_FACTOR) == -1) {
@@ -437,7 +437,7 @@ int avm_vector_resize(Vector *vector, size_t new_size) {
   return VECTOR_SUCCESS;
 }
 
-int avm_vector_reserve(Vector *vector, size_t minimum_capacity) {
+int av2_vector_reserve(Vector *vector, size_t minimum_capacity) {
   if (minimum_capacity > vector->capacity) {
     if (_vector_reallocate(vector, minimum_capacity) == VECTOR_ERROR) {
       return VECTOR_ERROR;
@@ -447,20 +447,20 @@ int avm_vector_reserve(Vector *vector, size_t minimum_capacity) {
   return VECTOR_SUCCESS;
 }
 
-int avm_vector_shrink_to_fit(Vector *vector) {
+int av2_vector_shrink_to_fit(Vector *vector) {
   return _vector_reallocate(vector, vector->size);
 }
 
 /* Iterators */
-Iterator avm_vector_begin(Vector *vector) {
-  return avm_vector_iterator(vector, 0);
+Iterator av2_vector_begin(Vector *vector) {
+  return av2_vector_iterator(vector, 0);
 }
 
-Iterator avm_vector_end(Vector *vector) {
-  return avm_vector_iterator(vector, vector->size);
+Iterator av2_vector_end(Vector *vector) {
+  return av2_vector_iterator(vector, vector->size);
 }
 
-Iterator avm_vector_iterator(Vector *vector, size_t index) {
+Iterator av2_vector_iterator(Vector *vector, size_t index) {
   Iterator iterator = { NULL, 0 };
 
   assert(vector != NULL);
@@ -476,64 +476,64 @@ Iterator avm_vector_iterator(Vector *vector, size_t index) {
   return iterator;
 }
 
-void *avm_iterator_get(Iterator *iterator) { return iterator->pointer; }
+void *av2_iterator_get(Iterator *iterator) { return iterator->pointer; }
 
-int avm_iterator_erase(Vector *vector, Iterator *iterator) {
-  size_t index = avm_iterator_index(vector, iterator);
+int av2_iterator_erase(Vector *vector, Iterator *iterator) {
+  size_t index = av2_iterator_index(vector, iterator);
 
-  if (avm_vector_erase(vector, index) == VECTOR_ERROR) {
+  if (av2_vector_erase(vector, index) == VECTOR_ERROR) {
     return VECTOR_ERROR;
   }
 
-  *iterator = avm_vector_iterator(vector, index);
+  *iterator = av2_vector_iterator(vector, index);
 
   return VECTOR_SUCCESS;
 }
 
-void avm_iterator_increment(Iterator *iterator) {
+void av2_iterator_increment(Iterator *iterator) {
   assert(iterator != NULL);
   // iterator->pointer += iterator->element_size;
   iterator->pointer =
       (unsigned char *)iterator->pointer + iterator->element_size;
 }
 
-void avm_iterator_decrement(Iterator *iterator) {
+void av2_iterator_decrement(Iterator *iterator) {
   assert(iterator != NULL);
   // iterator->pointer -= iterator->element_size;
   iterator->pointer =
       (unsigned char *)iterator->pointer - iterator->element_size;
 }
 
-void *avm_iterator_next(Iterator *iterator) {
+void *av2_iterator_next(Iterator *iterator) {
   void *current = iterator->pointer;
-  avm_iterator_increment(iterator);
+  av2_iterator_increment(iterator);
 
   return current;
 }
 
-void *avm_iterator_previous(Iterator *iterator) {
+void *av2_iterator_previous(Iterator *iterator) {
   void *current = iterator->pointer;
-  avm_iterator_decrement(iterator);
+  av2_iterator_decrement(iterator);
 
   return current;
 }
 
-bool avm_iterator_equals(Iterator *first, Iterator *second) {
+bool av2_iterator_equals(Iterator *first, Iterator *second) {
   assert(first->element_size == second->element_size);
   return first->pointer == second->pointer;
 }
 
-bool avm_iterator_is_before(Iterator *first, Iterator *second) {
+bool av2_iterator_is_before(Iterator *first, Iterator *second) {
   assert(first->element_size == second->element_size);
   return first->pointer < second->pointer;
 }
 
-bool avm_iterator_is_after(Iterator *first, Iterator *second) {
+bool av2_iterator_is_after(Iterator *first, Iterator *second) {
   assert(first->element_size == second->element_size);
   return first->pointer > second->pointer;
 }
 
-size_t avm_iterator_index(Vector *vector, Iterator *iterator) {
+size_t av2_iterator_index(Vector *vector, Iterator *iterator) {
   assert(vector != NULL);
   assert(iterator != NULL);
   // return (iterator->pointer - vector->data) / vector->element_size;

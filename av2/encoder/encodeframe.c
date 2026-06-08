@@ -25,7 +25,7 @@
 #include "aom_dsp/binary_codes_writer.h"
 #include "aom_dsp/psnr.h"
 #include "aom_ports/mem.h"
-#include "aom_ports/avm_timer.h"
+#include "aom_ports/av2_timer.h"
 #include "aom_ports/system_state.h"
 
 #if CONFIG_MISMATCH_DEBUG
@@ -1899,11 +1899,11 @@ static INLINE void decide_tip_setting_and_setup_tip_frame(AV2_COMP *cpi) {
         fflush(stderr);
         int64_t this_sse = aom_highbd_get_y_sse(cpi->source, tip_frame_buf);
         this_sse +=
-            avm_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->u_buffer), cpi->source->uv_stride,
+            av2_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->u_buffer), cpi->source->uv_stride,
                            CONVERT_TO_SHORTPTR(tip_frame_buf->u_buffer), tip_frame_buf->uv_stride,
                            cpi->source->uv_width, cpi->source->uv_height);
         this_sse +=
-            avm_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->v_buffer), cpi->source->uv_stride,
+            av2_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->v_buffer), cpi->source->uv_stride,
                            CONVERT_TO_SHORTPTR(tip_frame_buf->v_buffer), tip_frame_buf->uv_stride,
                            cpi->source->uv_width, cpi->source->uv_height);
         if (this_sse < best_sse) {

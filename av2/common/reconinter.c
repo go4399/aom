@@ -430,8 +430,8 @@ static INLINE void diffwtd_mask_d16(uint8_t *mask, int which_inverse,
     for (j = 0; j < w; ++j) {
       diff = abs(src0[i * src0_stride + j] - src1[i * src1_stride + j]);
       diff = ROUND_POWER_OF_TWO(diff, round);
-      m = clamp(mask_base + (diff / DIFF_FACTOR), 0, AVM_BLEND_A64_MAX_ALPHA);
-      mask[i * w + j] = which_inverse ? AVM_BLEND_A64_MAX_ALPHA - m : m;
+      m = clamp(mask_base + (diff / DIFF_FACTOR), 0, AV2_BLEND_A64_MAX_ALPHA);
+      mask[i * w + j] = which_inverse ? AV2_BLEND_A64_MAX_ALPHA - m : m;
     }
   }
 }
@@ -464,8 +464,8 @@ static AOM_FORCE_INLINE void diffwtd_mask_highbd(
         for (int j = 0; j < w; ++j) {
           int diff = abs((int)src0[j] - (int)src1[j]) / DIFF_FACTOR;
           unsigned int m = negative_to_zero(mask_base + diff);
-          m = AOMMIN(m, AVM_BLEND_A64_MAX_ALPHA);
-          mask[j] = AVM_BLEND_A64_MAX_ALPHA - m;
+          m = AOMMIN(m, AV2_BLEND_A64_MAX_ALPHA);
+          mask[j] = AV2_BLEND_A64_MAX_ALPHA - m;
         }
         src0 += src0_stride;
         src1 += src1_stride;
@@ -476,7 +476,7 @@ static AOM_FORCE_INLINE void diffwtd_mask_highbd(
         for (int j = 0; j < w; ++j) {
           int diff = abs((int)src0[j] - (int)src1[j]) / DIFF_FACTOR;
           unsigned int m = negative_to_zero(mask_base + diff);
-          m = AOMMIN(m, AVM_BLEND_A64_MAX_ALPHA);
+          m = AOMMIN(m, AV2_BLEND_A64_MAX_ALPHA);
           mask[j] = m;
         }
         src0 += src0_stride;
@@ -492,8 +492,8 @@ static AOM_FORCE_INLINE void diffwtd_mask_highbd(
           int diff =
               (abs((int)src0[j] - (int)src1[j]) >> bd_shift) / DIFF_FACTOR;
           unsigned int m = negative_to_zero(mask_base + diff);
-          m = AOMMIN(m, AVM_BLEND_A64_MAX_ALPHA);
-          mask[j] = AVM_BLEND_A64_MAX_ALPHA - m;
+          m = AOMMIN(m, AV2_BLEND_A64_MAX_ALPHA);
+          mask[j] = AV2_BLEND_A64_MAX_ALPHA - m;
         }
         src0 += src0_stride;
         src1 += src1_stride;
@@ -505,7 +505,7 @@ static AOM_FORCE_INLINE void diffwtd_mask_highbd(
           int diff =
               (abs((int)src0[j] - (int)src1[j]) >> bd_shift) / DIFF_FACTOR;
           unsigned int m = negative_to_zero(mask_base + diff);
-          m = AOMMIN(m, AVM_BLEND_A64_MAX_ALPHA);
+          m = AOMMIN(m, AV2_BLEND_A64_MAX_ALPHA);
           mask[j] = m;
         }
         src0 += src0_stride;
@@ -668,42 +668,42 @@ static INLINE void init_smooth_interintra_masks() {
   }
 }
 
-MAKE_BFP_SAD_WRAPPER_COMMON(avm_highbd_sad8x8_ds)
-MAKE_BFP_SAD_WRAPPER_COMMON(avm_highbd_sad16x8_ds)
-MAKE_BFP_SAD_WRAPPER_COMMON(avm_highbd_sad8x16_ds)
-MAKE_BFP_SAD_WRAPPER_COMMON(avm_highbd_sad16x16_ds)
-MAKE_BFP_SAD_WRAPPER_COMMON(avm_highbd_sad12x12_ds)
-MAKE_BFP_SAD_WRAPPER_COMMON(avm_highbd_sad20x12_ds)
-MAKE_BFP_SAD_WRAPPER_COMMON(avm_highbd_sad12x20_ds)
-MAKE_BFP_SAD_WRAPPER_COMMON(avm_highbd_sad20x20_ds)
+MAKE_BFP_SAD_WRAPPER_COMMON(av2_highbd_sad8x8_ds)
+MAKE_BFP_SAD_WRAPPER_COMMON(av2_highbd_sad16x8_ds)
+MAKE_BFP_SAD_WRAPPER_COMMON(av2_highbd_sad8x16_ds)
+MAKE_BFP_SAD_WRAPPER_COMMON(av2_highbd_sad16x16_ds)
+MAKE_BFP_SAD_WRAPPER_COMMON(av2_highbd_sad12x12_ds)
+MAKE_BFP_SAD_WRAPPER_COMMON(av2_highbd_sad20x12_ds)
+MAKE_BFP_SAD_WRAPPER_COMMON(av2_highbd_sad12x20_ds)
+MAKE_BFP_SAD_WRAPPER_COMMON(av2_highbd_sad20x20_ds)
 
 unsigned int get_highbd_sad_ds(const uint16_t *src_ptr, int source_stride,
                                const uint16_t *ref_ptr, int ref_stride, int bd,
                                int bw, int bh) {
   if (bd == 8) {
     if (bw == 16 && bh == 8)
-      return avm_highbd_sad16x8_ds_8(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad16x8_ds_8(src_ptr, source_stride, ref_ptr,
                                      ref_stride);
     else if (bw == 16 && bh == 16)
-      return avm_highbd_sad16x16_ds_8(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad16x16_ds_8(src_ptr, source_stride, ref_ptr,
                                       ref_stride);
     else if (bw == 8 && bh == 8)
-      return avm_highbd_sad8x8_ds_8(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad8x8_ds_8(src_ptr, source_stride, ref_ptr,
                                     ref_stride);
     else if (bw == 8 && bh == 16)
-      return avm_highbd_sad8x16_ds_8(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad8x16_ds_8(src_ptr, source_stride, ref_ptr,
                                      ref_stride);
     else if (bw == 12 && bh == 12)
-      return avm_highbd_sad12x12_ds_8(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad12x12_ds_8(src_ptr, source_stride, ref_ptr,
                                       ref_stride);
     else if (bw == 20 && bh == 12)
-      return avm_highbd_sad20x12_ds_8(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad20x12_ds_8(src_ptr, source_stride, ref_ptr,
                                       ref_stride);
     else if (bw == 12 && bh == 20)
-      return avm_highbd_sad12x20_ds_8(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad12x20_ds_8(src_ptr, source_stride, ref_ptr,
                                       ref_stride);
     else if (bw == 20 && bh == 20)
-      return avm_highbd_sad20x20_ds_8(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad20x20_ds_8(src_ptr, source_stride, ref_ptr,
                                       ref_stride);
     else {
       assert(0);
@@ -711,28 +711,28 @@ unsigned int get_highbd_sad_ds(const uint16_t *src_ptr, int source_stride,
     }
   } else if (bd == 10) {
     if (bw == 16 && bh == 8)
-      return avm_highbd_sad16x8_ds_10(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad16x8_ds_10(src_ptr, source_stride, ref_ptr,
                                       ref_stride);
     else if (bw == 16 && bh == 16)
-      return avm_highbd_sad16x16_ds_10(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad16x16_ds_10(src_ptr, source_stride, ref_ptr,
                                        ref_stride);
     else if (bw == 8 && bh == 8)
-      return avm_highbd_sad8x8_ds_10(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad8x8_ds_10(src_ptr, source_stride, ref_ptr,
                                      ref_stride);
     else if (bw == 8 && bh == 16)
-      return avm_highbd_sad8x16_ds_10(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad8x16_ds_10(src_ptr, source_stride, ref_ptr,
                                       ref_stride);
     else if (bw == 12 && bh == 12)
-      return avm_highbd_sad12x12_ds_10(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad12x12_ds_10(src_ptr, source_stride, ref_ptr,
                                        ref_stride);
     else if (bw == 20 && bh == 12)
-      return avm_highbd_sad20x12_ds_10(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad20x12_ds_10(src_ptr, source_stride, ref_ptr,
                                        ref_stride);
     else if (bw == 12 && bh == 20)
-      return avm_highbd_sad12x20_ds_10(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad12x20_ds_10(src_ptr, source_stride, ref_ptr,
                                        ref_stride);
     else if (bw == 20 && bh == 20)
-      return avm_highbd_sad20x20_ds_10(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad20x20_ds_10(src_ptr, source_stride, ref_ptr,
                                        ref_stride);
     else {
       assert(0);
@@ -740,28 +740,28 @@ unsigned int get_highbd_sad_ds(const uint16_t *src_ptr, int source_stride,
     }
   } else if (bd == 12) {
     if (bw == 16 && bh == 8)
-      return avm_highbd_sad16x8_ds_12(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad16x8_ds_12(src_ptr, source_stride, ref_ptr,
                                       ref_stride);
     else if (bw == 16 && bh == 16)
-      return avm_highbd_sad16x16_ds_12(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad16x16_ds_12(src_ptr, source_stride, ref_ptr,
                                        ref_stride);
     else if (bw == 8 && bh == 8)
-      return avm_highbd_sad8x8_ds_12(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad8x8_ds_12(src_ptr, source_stride, ref_ptr,
                                      ref_stride);
     else if (bw == 8 && bh == 16)
-      return avm_highbd_sad8x16_ds_12(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad8x16_ds_12(src_ptr, source_stride, ref_ptr,
                                       ref_stride);
     else if (bw == 12 && bh == 12)
-      return avm_highbd_sad12x12_ds_12(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad12x12_ds_12(src_ptr, source_stride, ref_ptr,
                                        ref_stride);
     else if (bw == 20 && bh == 12)
-      return avm_highbd_sad20x12_ds_12(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad20x12_ds_12(src_ptr, source_stride, ref_ptr,
                                        ref_stride);
     else if (bw == 12 && bh == 20)
-      return avm_highbd_sad12x20_ds_12(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad12x20_ds_12(src_ptr, source_stride, ref_ptr,
                                        ref_stride);
     else if (bw == 20 && bh == 20)
-      return avm_highbd_sad20x20_ds_12(src_ptr, source_stride, ref_ptr,
+      return av2_highbd_sad20x20_ds_12(src_ptr, source_stride, ref_ptr,
                                        ref_stride);
     else {
       assert(0);
@@ -1295,7 +1295,7 @@ static INLINE void build_masked_compound_no_round(
                       : inter_pred_params->subsampling_x;
   const uint8_t *mask = av2_get_compound_type_mask(comp_data, sb_type);
   const int mask_stride = block_size_wide[sb_type];
-  avm_highbd_blend_a64_d16_mask(dst, dst_stride, src0, src0_stride, src1,
+  av2_highbd_blend_a64_d16_mask(dst, dst_stride, src0, src0_stride, src1,
                                 src1_stride, mask, mask_stride, w, h, ssx, ssy,
                                 &inter_pred_params->conv_params,
                                 inter_pred_params->bit_depth);
@@ -1320,11 +1320,11 @@ static void handle_edge_cases(uint8_t *mask, int mask_stride, int block_width,
           (x >= 0 && x < frame_width && y >= 0 && y < frame_height);
 
       if (p0_available && !p1_available) {
-        mask[j] = AVM_BLEND_A64_MAX_ALPHA - DEFAULT_IMP_MSK_WT;
+        mask[j] = AV2_BLEND_A64_MAX_ALPHA - DEFAULT_IMP_MSK_WT;
       } else if (!p0_available && p1_available) {
         mask[j] = DEFAULT_IMP_MSK_WT;
       } else if (comp_data->type == COMPOUND_AVERAGE) {
-        mask[j] = AVM_BLEND_A64_MAX_ALPHA >> 1;
+        mask[j] = AV2_BLEND_A64_MAX_ALPHA >> 1;
       }
     }
     mask += mask_stride;
@@ -1367,7 +1367,7 @@ static void handle_general_cases(uint8_t *mask, int mask_stride,
 
   // Initialize the mask block
   for (int idy = 0; idy < block_height; ++idy)
-    memset(mask + mask_stride * idy, AVM_BLEND_A64_MAX_ALPHA >> 1, block_width);
+    memset(mask + mask_stride * idy, AV2_BLEND_A64_MAX_ALPHA >> 1, block_width);
 
   int line_start = (p1_x_start == 0) ? p1_x_end : 0;
   int line_end = (p1_x_start == 0) ? block_width : p1_x_start;
@@ -1391,7 +1391,7 @@ static void handle_general_cases(uint8_t *mask, int mask_stride,
   if (mem_width > 0) {
     for (int idy = row_start; idy < row_end; ++idy) {
       memset(mask + mask_stride * idy + line_start,
-             AVM_BLEND_A64_MAX_ALPHA - DEFAULT_IMP_MSK_WT, mem_width);
+             AV2_BLEND_A64_MAX_ALPHA - DEFAULT_IMP_MSK_WT, mem_width);
     }
   }
 
@@ -1402,7 +1402,7 @@ static void handle_general_cases(uint8_t *mask, int mask_stride,
     for (int idy = 0; idy < block_height; ++idy) {
       int value = DEFAULT_IMP_MSK_WT;
       if (idy >= p1_y_start && idy < p1_y_end)
-        value = AVM_BLEND_A64_MAX_ALPHA >> 1;
+        value = AV2_BLEND_A64_MAX_ALPHA >> 1;
       memset(mask + mask_stride * idy + start_idx, value, len);
     }
   }
@@ -1412,9 +1412,9 @@ static void handle_general_cases(uint8_t *mask, int mask_stride,
   len = end_idx - start_idx;
   if (len > 0) {
     for (int idy = 0; idy < block_height; ++idy) {
-      int value = AVM_BLEND_A64_MAX_ALPHA - DEFAULT_IMP_MSK_WT;
+      int value = AV2_BLEND_A64_MAX_ALPHA - DEFAULT_IMP_MSK_WT;
       if (idy >= p0_y_start && idy < p0_y_end)
-        value = AVM_BLEND_A64_MAX_ALPHA >> 1;
+        value = AV2_BLEND_A64_MAX_ALPHA >> 1;
       memset(mask + mask_stride * idy + start_idx, value, len);
     }
   }
@@ -2182,7 +2182,7 @@ static void build_inter_predictors_sub8x8(
 }
 
 // TODO(any): make a simd function for this.
-static inline void avm_memset16_optimized(uint16_t *dst, uint16_t value,
+static inline void av2_memset16_optimized(uint16_t *dst, uint16_t value,
                                           int count) {
   while (count >= 8) {
     dst[0] = value;
@@ -2234,11 +2234,11 @@ INLINE void highbd_build_mc_border(const uint16_t *src, int src_stride,
 
     copy = b_w - left - right;
 
-    if (left) avm_memset16_optimized(dst, ref_row[0], left);
+    if (left) av2_memset16_optimized(dst, ref_row[0], left);
 
     if (copy) memcpy(dst + left, ref_row + x + left, copy * sizeof(uint16_t));
 
-    if (right) avm_memset16_optimized(dst + left + copy, ref_row[w - 1], right);
+    if (right) av2_memset16_optimized(dst + left + copy, ref_row[w - 1], right);
 
     dst += dst_stride;
     ++y;
@@ -2337,10 +2337,10 @@ void refinemv_highbd_pad_mc_border_c(const uint16_t *src, int src_stride,
 
   do {
     if (left)
-      avm_memset16_optimized(dst, ref_row[ref_area->pad_block.x0], left);
+      av2_memset16_optimized(dst, ref_row[ref_area->pad_block.x0], left);
     if (copy) memcpy(dst + left, ref_row + x0 + left, copy * sizeof(uint16_t));
     if (right)
-      avm_memset16_optimized(dst + left + copy,
+      av2_memset16_optimized(dst + left + copy,
                              ref_row[ref_area->pad_block.x1 - 1], right);
 
     dst += dst_stride;
@@ -2467,8 +2467,8 @@ void dec_calc_subpel_params(const MV *const src_mv,
     pos_x += SCALE_EXTRA_OFF;
     pos_y += SCALE_EXTRA_OFF;
 
-    const int top = -AVM_LEFT_TOP_MARGIN_SCALED(ssy);
-    const int left = -AVM_LEFT_TOP_MARGIN_SCALED(ssx);
+    const int top = -AV2_LEFT_TOP_MARGIN_SCALED(ssy);
+    const int left = -AV2_LEFT_TOP_MARGIN_SCALED(ssx);
     const int bottom = (pre_buf->height + AOM_INTERP_EXTEND)
                        << SCALE_SUBPEL_BITS;
     const int right = (pre_buf->width + AOM_INTERP_EXTEND) << SCALE_SUBPEL_BITS;
@@ -3838,7 +3838,7 @@ static INLINE void combine_interintra_highbd(
 
       const int subh = 2 * mi_size_high[bsize] == bh;
       const int subw = 2 * mi_size_wide[bsize] == bw;
-      avm_highbd_blend_a64_mask(comppred8, compstride, intrapred8, intrastride,
+      av2_highbd_blend_a64_mask(comppred8, compstride, intrapred8, intrastride,
                                 interpred8, interstride, mask,
                                 block_size_wide[bsize], bw, bh, subw, subh, bd);
     }
@@ -3847,7 +3847,7 @@ static INLINE void combine_interintra_highbd(
 
   uint8_t mask[MAX_SB_SQUARE];
   build_smooth_interintra_mask(mask, bw, plane_bsize, mode);
-  avm_highbd_blend_a64_mask(comppred8, compstride, intrapred8, intrastride,
+  av2_highbd_blend_a64_mask(comppred8, compstride, intrapred8, intrastride,
                             interpred8, interstride, mask, bw, bw, bh, 0, 0,
                             bd);
 }

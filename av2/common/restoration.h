@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_RESTORATION_H_
-#define AVM_AV2_COMMON_RESTORATION_H_
+#ifndef AV2_AV2_COMMON_RESTORATION_H_
+#define AV2_AV2_COMMON_RESTORATION_H_
 
 #include "aom_ports/mem.h"
 #include "config/aom_config.h"
@@ -30,7 +30,7 @@ extern "C" {
 /*!\cond */
 
 // Border for Loop restoration buffer
-#define AVM_RESTORATION_FRAME_BORDER 32
+#define AV2_RESTORATION_FRAME_BORDER 32
 #define CLIP(x, lo, hi) ((x) < (lo) ? (lo) : (x) > (hi) ? (hi) : (x))
 
 #define RESTORATION_PROC_UNIT_SIZE 64
@@ -650,4 +650,4 @@ static INLINE int get_ru_index_for_tile_start(const RestorationInfo *rsi,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_RESTORATION_H_
+#endif  // AV2_AV2_COMMON_RESTORATION_H_

@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_AV2_NOISE_ESTIMATE_H_
-#define AVM_AV2_ENCODER_AV2_NOISE_ESTIMATE_H_
+#ifndef AV2_AV2_ENCODER_AV2_NOISE_ESTIMATE_H_
+#define AV2_AV2_ENCODER_AV2_NOISE_ESTIMATE_H_
 
 #include "av2/encoder/block.h"
 #include "aom_scale/yv12config.h"
@@ -48,4 +48,4 @@ void av2_update_noise_estimate(struct AV2_COMP *const cpi);
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_AV2_NOISE_ESTIMATE_H_
+#endif  // AV2_AV2_ENCODER_AV2_NOISE_ESTIMATE_H_

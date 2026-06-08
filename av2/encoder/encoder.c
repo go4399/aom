@@ -31,7 +31,7 @@
 #if CONFIG_INTERNAL_STATS
 #include "aom_dsp/ssim.h"
 #endif
-#include "aom_ports/avm_timer.h"
+#include "aom_ports/av2_timer.h"
 #include "aom_ports/mem.h"
 #include "aom_ports/system_state.h"
 #include "aom_scale/aom_scale.h"
@@ -109,7 +109,7 @@ FILE *yuv_rec_file;
 #define FILE_NAME_LEN 100
 #endif
 
-static INLINE void Scale2Ratio(AVM_SCALING mode, int *hr, int *hs) {
+static INLINE void Scale2Ratio(AV2_SCALING mode, int *hr, int *hs) {
   switch (mode) {
     case NORMAL:
       *hr = 1;
@@ -749,7 +749,7 @@ static void set_content_interpreation_params(struct AV2_COMP *cpi,
 
   // Scan type information
   cpi->scan_type_info_present_flag = oxcf->tool_cfg.scan_type_info_present_flag;
-  ci_params->ci_scan_type_idc = AVM_SCAN_TYPE_UNSPECIFIED;
+  ci_params->ci_scan_type_idc = AV2_SCAN_TYPE_UNSPECIFIED;
 
   // Set color info
   ci_params->color_info.color_primaries = color_cfg->color_primaries;
@@ -829,56 +829,56 @@ static void set_content_interpreation_params(struct AV2_COMP *cpi,
   }
 
   // SAR information
-  ci_params->sar_info.sar_aspect_ratio_idc = AVM_SAR_IDC_UNSPECIFIED;
+  ci_params->sar_info.sar_aspect_ratio_idc = AV2_SAR_IDC_UNSPECIFIED;
   ci_params->sar_info.sar_width = 0;
   ci_params->sar_info.sar_height = 0;
   if (ci_params->sar_info.sar_width == 1 && ci_params->sar_info.sar_height == 1)
-    ci_params->sar_info.sar_aspect_ratio_idc = AVM_SAR_IDC_1_TO_1;
+    ci_params->sar_info.sar_aspect_ratio_idc = AV2_SAR_IDC_1_TO_1;
   else if (ci_params->sar_info.sar_width == 12 &&
            ci_params->sar_info.sar_height == 11)
-    ci_params->sar_info.sar_aspect_ratio_idc = AVM_SAR_IDC_12_TO_11;
+    ci_params->sar_info.sar_aspect_ratio_idc = AV2_SAR_IDC_12_TO_11;
   else if (ci_params->sar_info.sar_width == 10 &&
            ci_params->sar_info.sar_height == 11)
-    ci_params->sar_info.sar_aspect_ratio_idc = AVM_SAR_IDC_10_TO_11;
+    ci_params->sar_info.sar_aspect_ratio_idc = AV2_SAR_IDC_10_TO_11;
   else if (ci_params->sar_info.sar_width == 16 &&
            ci_params->sar_info.sar_height == 11)
-    ci_params->sar_info.sar_aspect_ratio_idc = AVM_SAR_IDC_16_TO_11;
+    ci_params->sar_info.sar_aspect_ratio_idc = AV2_SAR_IDC_16_TO_11;
   else if (ci_params->sar_info.sar_width == 40 &&
            ci_params->sar_info.sar_height == 33)
-    ci_params->sar_info.sar_aspect_ratio_idc = AVM_SAR_IDC_40_TO_33;
+    ci_params->sar_info.sar_aspect_ratio_idc = AV2_SAR_IDC_40_TO_33;
   else if (ci_params->sar_info.sar_width == 24 &&
            ci_params->sar_info.sar_height == 11)
-    ci_params->sar_info.sar_aspect_ratio_idc = AVM_SAR_IDC_24_TO_11;
+    ci_params->sar_info.sar_aspect_ratio_idc = AV2_SAR_IDC_24_TO_11;
   else if (ci_params->sar_info.sar_width == 20 &&
            ci_params->sar_info.sar_height == 11)
-    ci_params->sar_info.sar_aspect_ratio_idc = AVM_SAR_IDC_20_TO_11;
+    ci_params->sar_info.sar_aspect_ratio_idc = AV2_SAR_IDC_20_TO_11;
   else if (ci_params->sar_info.sar_width == 32 &&
            ci_params->sar_info.sar_height == 11)
-    ci_params->sar_info.sar_aspect_ratio_idc = AVM_SAR_IDC_32_TO_11;
+    ci_params->sar_info.sar_aspect_ratio_idc = AV2_SAR_IDC_32_TO_11;
   else if (ci_params->sar_info.sar_width == 80 &&
            ci_params->sar_info.sar_height == 33)
-    ci_params->sar_info.sar_aspect_ratio_idc = AVM_SAR_IDC_80_TO_33;
+    ci_params->sar_info.sar_aspect_ratio_idc = AV2_SAR_IDC_80_TO_33;
   else if (ci_params->sar_info.sar_width == 18 &&
            ci_params->sar_info.sar_height == 11)
-    ci_params->sar_info.sar_aspect_ratio_idc = AVM_SAR_IDC_18_TO_11;
+    ci_params->sar_info.sar_aspect_ratio_idc = AV2_SAR_IDC_18_TO_11;
   else if (ci_params->sar_info.sar_width == 15 &&
            ci_params->sar_info.sar_height == 11)
-    ci_params->sar_info.sar_aspect_ratio_idc = AVM_SAR_IDC_15_TO_11;
+    ci_params->sar_info.sar_aspect_ratio_idc = AV2_SAR_IDC_15_TO_11;
   else if (ci_params->sar_info.sar_width == 64 &&
            ci_params->sar_info.sar_height == 33)
-    ci_params->sar_info.sar_aspect_ratio_idc = AVM_SAR_IDC_64_TO_33;
+    ci_params->sar_info.sar_aspect_ratio_idc = AV2_SAR_IDC_64_TO_33;
   else if (ci_params->sar_info.sar_width == 160 &&
            ci_params->sar_info.sar_height == 99)
-    ci_params->sar_info.sar_aspect_ratio_idc = AVM_SAR_IDC_160_TO_99;
+    ci_params->sar_info.sar_aspect_ratio_idc = AV2_SAR_IDC_160_TO_99;
   else if (ci_params->sar_info.sar_width == 4 &&
            ci_params->sar_info.sar_height == 3)
-    ci_params->sar_info.sar_aspect_ratio_idc = AVM_SAR_IDC_4_TO_3;
+    ci_params->sar_info.sar_aspect_ratio_idc = AV2_SAR_IDC_4_TO_3;
   else if (ci_params->sar_info.sar_width == 3 &&
            ci_params->sar_info.sar_height == 2)
-    ci_params->sar_info.sar_aspect_ratio_idc = AVM_SAR_IDC_3_TO_2;
+    ci_params->sar_info.sar_aspect_ratio_idc = AV2_SAR_IDC_3_TO_2;
   else if (ci_params->sar_info.sar_width == 2 &&
            ci_params->sar_info.sar_height == 1)
-    ci_params->sar_info.sar_aspect_ratio_idc = AVM_SAR_IDC_2_TO_1;
+    ci_params->sar_info.sar_aspect_ratio_idc = AV2_SAR_IDC_2_TO_1;
   ci_params->ci_aspect_ratio_info_present_flag = 0;
 
   // timing information
@@ -1088,9 +1088,9 @@ static void init_config(struct AV2_COMP *cpi, AV2EncoderConfig *oxcf) {
   // Single thread case: use counts in common.
   cpi->td.counts = &cpi->counts;
 
-  cm->pic_struct_metadata_params.mps_pic_struct_type = AVM_PIC_FRAME;
+  cm->pic_struct_metadata_params.mps_pic_struct_type = AV2_PIC_FRAME;
   cm->pic_struct_metadata_params.mps_source_scan_type_idc =
-      AVM_SCAN_TYPE_PROGRESSIVE;
+      AV2_SCAN_TYPE_PROGRESSIVE;
   cm->pic_struct_metadata_params.mps_duplicate_flag = 0;
 
   // Set init SVC parameters.
@@ -1118,7 +1118,7 @@ static void init_config(struct AV2_COMP *cpi, AV2EncoderConfig *oxcf) {
   av2_noise_estimate_init(&cpi->noise_estimate, cm->width, cm->height);
 }
 
-int avm_strcmp(const char *a, const char *b) {
+int av2_strcmp(const char *a, const char *b) {
   if (a == NULL && b == NULL) return 0;
   if (a == NULL && b != NULL) return -1;
   if (a != NULL && b == NULL) return 1;
@@ -1463,7 +1463,7 @@ void av2_change_config(struct AV2_COMP *cpi, const AV2EncoderConfig *oxcf) {
   cpi->write_brt_obu = 0;
 
   bool subgop_config_changed = false;
-  if (avm_strcmp(cpi->subgop_config_path, oxcf->subgop_config_path)) {
+  if (av2_strcmp(cpi->subgop_config_path, oxcf->subgop_config_path)) {
     aom_free(cpi->subgop_config_path);
     cpi->subgop_config_path = NULL;
     if (oxcf->subgop_config_path != NULL) {
@@ -1474,7 +1474,7 @@ void av2_change_config(struct AV2_COMP *cpi, const AV2EncoderConfig *oxcf) {
     }
     subgop_config_changed = true;
   }
-  if (avm_strcmp(cpi->subgop_config_str, oxcf->subgop_config_str)) {
+  if (av2_strcmp(cpi->subgop_config_str, oxcf->subgop_config_str)) {
     aom_free(cpi->subgop_config_str);
     cpi->subgop_config_str = NULL;
     if (oxcf->subgop_config_str != NULL) {
@@ -1688,7 +1688,7 @@ AV2_COMP *av2_create_compressor(AV2EncoderConfig *oxcf, BufferPool *const pool,
       CHECK_MEM_ERROR(
           cm, cpi->td.mb.intrabc_hash_info.hash_value_buffer[x][y],
           (uint32_t *)aom_malloc(
-              AVM_BUFFER_SIZE_FOR_BLOCK_HASH *
+              AV2_BUFFER_SIZE_FOR_BLOCK_HASH *
               sizeof(*cpi->td.mb.intrabc_hash_info.hash_value_buffer[0][0])));
 
   cpi->td.mb.intrabc_hash_info.g_crc_initialized = 0;
@@ -1789,7 +1789,7 @@ static INLINE void terminate_worker_data(AV2_COMP *cpi) {
   MultiThreadInfo *const mt_info = &cpi->mt_info;
   for (int t = mt_info->num_workers - 1; t >= 0; --t) {
     AVxWorker *const worker = &mt_info->workers[t];
-    avm_get_worker_interface()->end(worker);
+    av2_get_worker_interface()->end(worker);
   }
 }
 
@@ -1873,7 +1873,7 @@ void av2_remove_compressor(AV2_COMP *cpi) {
 
       if (cpi->b_calculate_psnr) {
         const double total_psnr =
-            avm_sse_to_psnr((double)cpi->total_samples[0], peak,
+            av2_sse_to_psnr((double)cpi->total_samples[0], peak,
                             (double)cpi->total_sq_error[0]);
         const double total_ssim =
             100 * pow(cpi->summed_quality / cpi->summed_weights, 8.0);
@@ -1905,7 +1905,7 @@ void av2_remove_compressor(AV2_COMP *cpi) {
 
         if (cpi->b_calculate_consistency) {
           double consistency =
-              avm_sse_to_psnr((double)cpi->total_samples[0], peak,
+              av2_sse_to_psnr((double)cpi->total_samples[0], peak,
                               (double)cpi->total_inconsistency);
 
           SNPRINT(headings, "\tConsist\tWstCons");
@@ -1929,7 +1929,7 @@ void av2_remove_compressor(AV2_COMP *cpi) {
         if (in_bit_depth < bit_depth) {
           const double peak_hbd = (double)((1 << bit_depth) - 1);
           const double total_psnr_hbd =
-              avm_sse_to_psnr((double)cpi->total_samples[1], peak_hbd,
+              av2_sse_to_psnr((double)cpi->total_samples[1], peak_hbd,
                               (double)cpi->total_sq_error[1]);
           SNPRINT(headings,
                   "\t AVGPsnrH GLBPsnrH AVPsnrPH GLPsnrPH"
@@ -2091,7 +2091,7 @@ int av2_set_reference_enc(AV2_COMP *cpi, int idx, YV12_BUFFER_CONFIG *sd) {
 }
 
 #ifdef OUTPUT_YUV_REC
-void avm_write_one_yuv_frame(AV2_COMMON *cm, YV12_BUFFER_CONFIG *s) {
+void av2_write_one_yuv_frame(AV2_COMMON *cm, YV12_BUFFER_CONFIG *s) {
   uint16_t *src = CONVERT_TO_SHORTPTR(s->y_buffer);
   int h = cm->height;
   if (yuv_rec_file == NULL) return;
@@ -2576,7 +2576,7 @@ static void setup_tip_frame_size(AV2_COMP *cpi) {
   AV2_COMMON *const cm = &cpi->common;
   RefCntBuffer *tip_frame = cm->tip_ref.tip_frame;
   // Reset the frame pointers to the current frame size.
-  if (avm_realloc_frame_buffer(
+  if (av2_realloc_frame_buffer(
           &tip_frame->buf, cm->width, cm->height, cm->seq_params.subsampling_x,
           cm->seq_params.subsampling_y, cpi->oxcf.border_in_pixels,
           cm->features.byte_alignment, NULL, NULL, NULL, false)) {
@@ -2587,7 +2587,7 @@ static void setup_tip_frame_size(AV2_COMP *cpi) {
   tip_frame->frame_type = INTER_FRAME;
 
   tip_frame = cm->tip_ref.tmp_tip_frame;
-  if (avm_realloc_frame_buffer(
+  if (av2_realloc_frame_buffer(
           &tip_frame->buf, cm->width, cm->height, cm->seq_params.subsampling_x,
           cm->seq_params.subsampling_y, cpi->oxcf.border_in_pixels,
           cm->features.byte_alignment, NULL, NULL, NULL, false)) {
@@ -2638,7 +2638,7 @@ void av2_set_frame_size(AV2_COMP *cpi, int width, int height) {
   }
 
   // Reset the frame pointers to the current frame size.
-  if (avm_realloc_frame_buffer(
+  if (av2_realloc_frame_buffer(
           &cm->cur_frame->buf, cm->width, cm->height, seq_params->subsampling_x,
           seq_params->subsampling_y, cpi->oxcf.border_in_pixels,
           cm->features.byte_alignment, NULL, NULL, NULL, cpi->alloc_pyramid))
@@ -3015,20 +3015,20 @@ void gdf_optimize_frame(AV2_COMP *cpi, AV2_COMMON *cm) {
  *
  * \ingroup high_level_algo
  */
-static void avm_band_search(AV2_COMP *cpi, AV2_COMMON *cm, MACROBLOCKD *xd) {
+static void av2_band_search(AV2_COMP *cpi, AV2_COMMON *cm, MACROBLOCKD *xd) {
   Av2BandDetectInfo *const dbi = &cm->band_info;
   int bit_depth = xd->bd;
   int frame_width = xd->plane[0].dst.width;
   int frame_height = xd->plane[0].dst.height;
-  if (avm_band_detection_init(dbi, frame_width, frame_height, bit_depth)) {
-    avm_band_detection(&cm->cur_frame->buf, cpi->source, dbi, xd,
+  if (av2_band_detection_init(dbi, frame_width, frame_height, bit_depth)) {
+    av2_band_detection(&cm->cur_frame->buf, cpi->source, dbi, xd,
                        &cpi->band_metadata);
 
     cpi->band_metadata_present =
         (cpi->band_metadata.coding_banding_present_flag ||
          cpi->band_metadata.source_banding_present_flag);
 
-    avm_band_detection_close(dbi);
+    av2_band_detection_close(dbi);
   }
 }
 
@@ -3868,11 +3868,11 @@ static INLINE int compute_tip_direct_output_mode_RD(AV2_COMP *cpi,
     };
     int64_t best_sse = aom_highbd_get_y_sse(cpi->source, tip_frame_buf);
     best_sse +=
-        avm_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->u_buffer), cpi->source->uv_stride,
+        av2_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->u_buffer), cpi->source->uv_stride,
                        CONVERT_TO_SHORTPTR(tip_frame_buf->u_buffer), tip_frame_buf->uv_stride,
                        cpi->source->uv_width, cpi->source->uv_height);
     best_sse +=
-        avm_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->v_buffer), cpi->source->uv_stride,
+        av2_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->v_buffer), cpi->source->uv_stride,
                        CONVERT_TO_SHORTPTR(tip_frame_buf->v_buffer), tip_frame_buf->uv_stride,
                        cpi->source->uv_width, cpi->source->uv_height);
     int_mv ref_mv;
@@ -3902,11 +3902,11 @@ static INLINE int compute_tip_direct_output_mode_RD(AV2_COMP *cpi,
 
         int64_t this_sse = aom_highbd_get_y_sse(cpi->source, tip_frame_buf);
         this_sse +=
-            avm_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->u_buffer), cpi->source->uv_stride,
+            av2_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->u_buffer), cpi->source->uv_stride,
                            CONVERT_TO_SHORTPTR(tip_frame_buf->u_buffer), tip_frame_buf->uv_stride,
                            cpi->source->uv_width, cpi->source->uv_height);
         this_sse +=
-            avm_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->v_buffer), cpi->source->uv_stride,
+            av2_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->v_buffer), cpi->source->uv_stride,
                            CONVERT_TO_SHORTPTR(tip_frame_buf->v_buffer), tip_frame_buf->uv_stride,
                            cpi->source->uv_width, cpi->source->uv_height);
 
@@ -3940,12 +3940,12 @@ static INLINE int compute_tip_direct_output_mode_RD(AV2_COMP *cpi,
 
       int64_t this_sse = aom_highbd_get_y_sse(cpi->source, tip_frame_buf);
       this_sse +=
-          avm_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->u_buffer), cpi->source->uv_stride,
+          av2_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->u_buffer), cpi->source->uv_stride,
                          CONVERT_TO_SHORTPTR(tip_frame_buf->u_buffer), tip_frame_buf->uv_stride,
                          cpi->source->uv_width, cpi->source->uv_height);
 
       this_sse +=
-          avm_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->v_buffer), cpi->source->uv_stride,
+          av2_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->v_buffer), cpi->source->uv_stride,
                          CONVERT_TO_SHORTPTR(tip_frame_buf->v_buffer), tip_frame_buf->uv_stride,
                          cpi->source->uv_width, cpi->source->uv_height);
 
@@ -3987,11 +3987,11 @@ static INLINE int finalize_tip_mode(AV2_COMP *cpi, uint8_t *dest, size_t *size,
     tip_as_ref_rate = *rate;
   } else {
     tip_as_ref_sse = aom_highbd_get_y_sse(cpi->source, &cm->cur_frame->buf);
-    tip_as_ref_sse += avm_highbd_sse(
+    tip_as_ref_sse += av2_highbd_sse(
         CONVERT_TO_SHORTPTR(cpi->source->u_buffer), cpi->source->uv_stride,
         CONVERT_TO_SHORTPTR(cm->cur_frame->buf.u_buffer), cm->cur_frame->buf.uv_stride,
         cpi->source->uv_width, cpi->source->uv_height);
-    tip_as_ref_sse += avm_highbd_sse(
+    tip_as_ref_sse += av2_highbd_sse(
         CONVERT_TO_SHORTPTR(cpi->source->v_buffer), cpi->source->uv_stride,
         CONVERT_TO_SHORTPTR(cm->cur_frame->buf.v_buffer), cm->cur_frame->buf.uv_stride,
         cpi->source->uv_width, cpi->source->uv_height);
@@ -4253,15 +4253,15 @@ static int encode_with_recode_loop_and_filter(AV2_COMP *cpi, size_t *size,
                                     &tip_as_output_rate, largest_tile_id);
 
   // TODO(debargha): Fix mv search range on encoder side
-  // avm_extend_frame_inner_borders(&cm->cur_frame->buf, av2_num_planes(cm));
+  // av2_extend_frame_inner_borders(&cm->cur_frame->buf, av2_num_planes(cm));
   aom_extend_frame_borders(&cm->cur_frame->buf, av2_num_planes(cm));
 
 #ifdef OUTPUT_YUV_REC
-  avm_write_one_yuv_frame(cm, &cm->cur_frame->buf);
+  av2_write_one_yuv_frame(cm, &cm->cur_frame->buf);
 #endif
 
   MACROBLOCKD *xd = &cpi->td.mb.e_mbd;
-  if (cm->seq_params.enable_band_metadata) avm_band_search(cpi, cm, xd);
+  if (cm->seq_params.enable_band_metadata) av2_band_search(cpi, cm, xd);
 
   // For primary_ref_frame and derived_primary_ref_frame, if one of them is
   // PRIMARY_REF_NONE, the other one is also PRIMARY_REF_NONE.
@@ -4464,11 +4464,11 @@ static int encode_with_recode_loop_and_filter(AV2_COMP *cpi, size_t *size,
   if (sse != NULL) {
     int64_t tip_as_ref_sse =
         aom_highbd_get_y_sse(cpi->source, &cm->cur_frame->buf);
-    tip_as_ref_sse += avm_highbd_sse(
+    tip_as_ref_sse += av2_highbd_sse(
         CONVERT_TO_SHORTPTR(cpi->source->u_buffer), cpi->source->uv_stride,
         CONVERT_TO_SHORTPTR(cm->cur_frame->buf.u_buffer), cm->cur_frame->buf.uv_stride,
         cpi->source->uv_width, cpi->source->uv_height);
-    tip_as_ref_sse += avm_highbd_sse(
+    tip_as_ref_sse += av2_highbd_sse(
         CONVERT_TO_SHORTPTR(cpi->source->v_buffer), cpi->source->uv_stride,
         CONVERT_TO_SHORTPTR(cm->cur_frame->buf.v_buffer), cm->cur_frame->buf.uv_stride,
         cpi->source->uv_width, cpi->source->uv_height);
@@ -5173,7 +5173,7 @@ int av2_encode(AV2_COMP *const cpi, uint8_t *const dest,
     assert(cpi->oxcf.max_threads <= 1 &&
            "bitstream debug tool does not support multithreading");
     bitstream_queue_record_write();
-    avm_bitstream_queue_set_frame_write(
+    av2_bitstream_queue_set_frame_write(
         (int)(derive_output_order_idx(cm, cm->cur_frame) * 2 +
               cm->immediate_output_picture));
 #endif  // CONFIG_BITSTREAM_DEBUG
@@ -5302,7 +5302,7 @@ static int apply_denoise_2d(AV2_COMP *cpi, YV12_BUFFER_CONFIG *sd,
     }
     memset(cpi->film_grain_table, 0, sizeof(*cpi->film_grain_table));
   }
-  if (avm_denoise_and_model_run(cpi->denoise_and_model, sd,
+  if (av2_denoise_and_model_run(cpi->denoise_and_model, sd,
                                 &cm->film_grain_params)) {
     if (cm->film_grain_params.apply_grain) {
       cm->film_grain_params.block_size =
@@ -5417,7 +5417,7 @@ static void compute_internal_stats(AV2_COMP *cpi, int frame_bytes) {
       cpi->total_sq_error[0] += psnr.sse[0];
       cpi->total_samples[0] += psnr.samples[0];
       frame_ssim2 =
-          avm_highbd_calc_ssim(orig, recon, &weight, bit_depth, in_bit_depth);
+          av2_highbd_calc_ssim(orig, recon, &weight, bit_depth, in_bit_depth);
 
       cpi->worst_ssim = AOMMIN(cpi->worst_ssim, frame_ssim2);
       cpi->summed_quality += frame_ssim2 * weight;
@@ -5433,9 +5433,9 @@ static void compute_internal_stats(AV2_COMP *cpi, int frame_bytes) {
     }
 
     frame_all =
-        avm_calc_fastssim(orig, recon, &y, &u, &v, bit_depth, in_bit_depth);
+        av2_calc_fastssim(orig, recon, &y, &u, &v, bit_depth, in_bit_depth);
     adjust_image_stat(y, u, v, frame_all, &cpi->fastssim);
-    frame_all = avm_psnrhvs(orig, recon, &y, &u, &v, bit_depth, in_bit_depth);
+    frame_all = av2_psnrhvs(orig, recon, &y, &u, &v, bit_depth, in_bit_depth);
     adjust_image_stat(y, u, v, frame_all, &cpi->psnrhvs);
   }
 }
@@ -5444,7 +5444,7 @@ static void compute_internal_stats(AV2_COMP *cpi, int frame_bytes) {
 int av2_get_compressed_data(AV2_COMP *cpi, unsigned int *frame_flags,
                             size_t *size, uint8_t *dest, int64_t *time_stamp,
                             int64_t *time_end, int flush,
-                            const avm_rational64_t *timestamp_ratio) {
+                            const av2_rational64_t *timestamp_ratio) {
   const AV2EncoderConfig *const oxcf = &cpi->oxcf;
   AV2_COMMON *const cm = &cpi->common;
   cm->cur_mfh_id = oxcf->tool_cfg.enable_mfh_obu_signaling ? 1 : 0;
@@ -5554,7 +5554,7 @@ aom_codec_err_t av2_copy_new_frame_enc(AV2_COMMON *cm,
 
 int av2_set_internal_size(AV2EncoderConfig *const oxcf,
                           ResizePendingParams *resize_pending_params,
-                          AVM_SCALING horiz_mode, AVM_SCALING vert_mode) {
+                          AV2_SCALING horiz_mode, AV2_SCALING vert_mode) {
   int hr = 0, hs = 0, vr = 0, vs = 0;
 
   if (horiz_mode > ONETWO || vert_mode > ONETWO) return -1;
@@ -5614,7 +5614,7 @@ int av2_convert_sect5obus_to_annexb(uint8_t *buffer, size_t *frame_size) {
     // write the new obu size
     const uint64_t obu_size = obu_header_size + obu_payload_size;
     size_t coded_obu_size;
-    if (avm_uleb_encode(obu_size, sizeof(obu_size), buff_ptr,
+    if (av2_uleb_encode(obu_size, sizeof(obu_size), buff_ptr,
                         &coded_obu_size) != 0) {
       return AOM_CODEC_ERROR;
     }
@@ -5642,7 +5642,7 @@ void av2_apply_encoding_flags(AV2_COMP *cpi, aom_enc_frame_flags_t flags) {
   ExternalFlags *const ext_flags = &cpi->ext_flags;
   ExtRefreshFrameFlagsInfo *const ext_refresh_frame_flags =
       &ext_flags->refresh_frame;
-  ext_flags->ref_frame_flags = AVM_REFFRAME_ALL;
+  ext_flags->ref_frame_flags = AV2_REFFRAME_ALL;
 
   if (flags & AOM_EFLAG_NO_UPD_ALL) {
     ext_refresh_frame_flags->all_ref_frames = 0;
@@ -5682,7 +5682,7 @@ aom_fixed_buf_t *av2_get_global_headers(AV2_COMP *cpi) {
   memcpy(&header_buf[size_field_size], &obu_header[0], obu_header_size);
 
   size_t coded_size_field_size = 0;
-  if (avm_uleb_encode(obu_size, size_field_size, &header_buf[0],
+  if (av2_uleb_encode(obu_size, size_field_size, &header_buf[0],
                       &coded_size_field_size) != 0) {
     return NULL;
   }

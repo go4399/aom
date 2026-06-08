@@ -9,8 +9,8 @@
  * PATENTS file, you can obtain it at www.aomedia.org/license/patent.
  */
 
-#ifndef AVM_AV2_TFLITE_MODELS_OP_REGISTRATIONS_H_
-#define AVM_AV2_TFLITE_MODELS_OP_REGISTRATIONS_H_
+#ifndef AV2_AV2_TFLITE_MODELS_OP_REGISTRATIONS_H_
+#define AV2_AV2_TFLITE_MODELS_OP_REGISTRATIONS_H_
 
 #include <assert.h>
 
@@ -44,4 +44,4 @@
 // Returns super-set of TF-lite ops required by CNN models for all QPs.
 void RegisterSelectedOpsAllQps(::tflite::MutableOpResolver *resolver);
 
-#endif  // AVM_AV2_TFLITE_MODELS_OP_REGISTRATIONS_H_
+#endif  // AV2_AV2_TFLITE_MODELS_OP_REGISTRATIONS_H_

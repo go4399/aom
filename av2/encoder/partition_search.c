@@ -13,7 +13,7 @@
 #include "aom/aom_codec.h"
 #include "aom_ports/system_state.h"
 #include "av2/common/bru.h"
-#include "aom_ports/avm_timer.h"
+#include "aom_ports/av2_timer.h"
 
 #include "av2/common/av2_common_int.h"
 #include "av2/common/blockd.h"

@@ -41,7 +41,7 @@ typedef uint16_t aom_cdf_prob;
   This function converts from one representation to the other (and is its own
   inverse).*/
 #define AOM_ICDF(x) (CDF_PROB_TOP - (x))
-#define AVM_ICDF AOM_ICDF
+#define AV2_ICDF AOM_ICDF
 
 
 #define AOM_CDF2(a0) AOM_ICDF(a0), AOM_ICDF(CDF_PROB_TOP), 0

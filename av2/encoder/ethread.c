@@ -466,7 +466,7 @@ static int enc_worker_hook(void *arg1, void *unused) {
 
 static INLINE void create_enc_workers(AV2_COMP *cpi, int num_workers) {
   AV2_COMMON *const cm = &cpi->common;
-  const AVxWorkerInterface *const winterface = avm_get_worker_interface();
+  const AVxWorkerInterface *const winterface = av2_get_worker_interface();
   MultiThreadInfo *const mt_info = &cpi->mt_info;
   int sb_mi_size = av2_get_sb_mi_size(cm);
 
@@ -510,7 +510,7 @@ static INLINE void create_enc_workers(AV2_COMP *cpi, int num_workers) {
           CHECK_MEM_ERROR(
               cm, thread_data->td->hash_value_buffer[x][y],
               (uint32_t *)aom_malloc(
-                  AVM_BUFFER_SIZE_FOR_BLOCK_HASH *
+                  AV2_BUFFER_SIZE_FOR_BLOCK_HASH *
                   sizeof(*thread_data->td->hash_value_buffer[0][0])));
 
       // Allocate frame counters in thread data.
@@ -582,7 +582,7 @@ static INLINE void create_enc_workers(AV2_COMP *cpi, int num_workers) {
 void av2_create_workers(AV2_COMP *cpi, int num_workers) {
   AV2_COMMON *const cm = &cpi->common;
   MultiThreadInfo *const mt_info = &cpi->mt_info;
-  const AVxWorkerInterface *const winterface = avm_get_worker_interface();
+  const AVxWorkerInterface *const winterface = av2_get_worker_interface();
 
   CHECK_MEM_ERROR(cm, mt_info->workers,
                   aom_malloc(num_workers * sizeof(*mt_info->workers)));
@@ -612,7 +612,7 @@ void av2_create_workers(AV2_COMP *cpi, int num_workers) {
 
 static INLINE void fp_create_enc_workers(AV2_COMP *cpi, int num_workers) {
   AV2_COMMON *const cm = &cpi->common;
-  const AVxWorkerInterface *const winterface = avm_get_worker_interface();
+  const AVxWorkerInterface *const winterface = av2_get_worker_interface();
   MultiThreadInfo *const mt_info = &cpi->mt_info;
 
   assert(mt_info->workers != NULL);
@@ -657,7 +657,7 @@ static INLINE void fp_create_enc_workers(AV2_COMP *cpi, int num_workers) {
 
 static INLINE void launch_enc_workers(MultiThreadInfo *const mt_info,
                                       int num_workers) {
-  const AVxWorkerInterface *const winterface = avm_get_worker_interface();
+  const AVxWorkerInterface *const winterface = av2_get_worker_interface();
   // Encode a frame
   for (int i = num_workers - 1; i >= 0; i--) {
     AVxWorker *const worker = &mt_info->workers[i];
@@ -675,7 +675,7 @@ static INLINE void launch_enc_workers(MultiThreadInfo *const mt_info,
 
 static INLINE void sync_enc_workers(MultiThreadInfo *const mt_info,
                                     AV2_COMMON *const cm, int num_workers) {
-  const AVxWorkerInterface *const winterface = avm_get_worker_interface();
+  const AVxWorkerInterface *const winterface = av2_get_worker_interface();
   int had_error = 0;
 
   // Encoding ends.
@@ -741,7 +741,7 @@ static INLINE void prepare_enc_workers(AV2_COMP *cpi, AVxWorkerHook hook,
         for (int y = 0; y < 2; y++) {
           memcpy(thread_data->td->hash_value_buffer[x][y],
                  cpi->td.mb.intrabc_hash_info.hash_value_buffer[x][y],
-                 AVM_BUFFER_SIZE_FOR_BLOCK_HASH *
+                 AV2_BUFFER_SIZE_FOR_BLOCK_HASH *
                      sizeof(*thread_data->td->hash_value_buffer[0][0]));
           thread_data->td->mb.intrabc_hash_info.hash_value_buffer[x][y] =
               thread_data->td->hash_value_buffer[x][y];

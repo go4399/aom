@@ -67,7 +67,7 @@ static int gm_get_params_cost(const WarpedMotionParams *gm,
       params_cost += aom_count_signed_primitive_refsubexpfin(
           trans_max + 1, SUBEXPFIN_K, (ref_gm->wmmat[1] >> trans_prec_diff),
           (gm->wmmat[1] >> trans_prec_diff));
-      AVM_FALLTHROUGH_INTENDED;
+      AV2_FALLTHROUGH_INTENDED;
     case IDENTITY: break;
     default: assert(0);
   }

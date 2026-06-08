@@ -14,11 +14,11 @@
 
 #include "config/av2_dsp_rtcd.h"
 #include "config/av2_rtcd.h"
-#define avm_highbd_quantize_b_adaptive avm_highbd_quantize_b_adaptive_c
-#define avm_highbd_quantize_b_32x32_adaptive \
-  avm_highbd_quantize_b_32x32_adaptive_c
-#define avm_highbd_quantize_b_64x64_adaptive \
-  avm_highbd_quantize_b_64x64_adaptive_c
+#define av2_highbd_quantize_b_adaptive av2_highbd_quantize_b_adaptive_c
+#define av2_highbd_quantize_b_32x32_adaptive \
+  av2_highbd_quantize_b_32x32_adaptive_c
+#define av2_highbd_quantize_b_64x64_adaptive \
+  av2_highbd_quantize_b_64x64_adaptive_c
 
 #include "aom_dsp/quantize.h"
 #include "aom_mem/aom_mem.h"
@@ -35,7 +35,7 @@
 #include "av2/encoder/rd.h"
 
 // Forward declarations for functions defined inside av2_quantize_helper.c
-void avm_highbd_quantize_b_adaptive_helper_c(
+void av2_highbd_quantize_b_adaptive_helper_c(
     const tran_low_t *coeff_ptr, intptr_t n_coeffs, const int32_t *zbin_ptr,
     const int32_t *round_ptr, const int32_t *quant_ptr,
     const int32_t *quant_shift_ptr, tran_low_t *qcoeff_ptr,
@@ -43,7 +43,7 @@ void avm_highbd_quantize_b_adaptive_helper_c(
     const int16_t *scan, const int16_t *iscan, const qm_val_t *qm_ptr,
     const qm_val_t *iqm_ptr, const int log_scale);
 
-void avm_highbd_quantize_b_helper_c(
+void av2_highbd_quantize_b_helper_c(
     const tran_low_t *coeff_ptr, intptr_t n_coeffs, const int32_t *zbin_ptr,
     const int32_t *round_ptr, const int32_t *quant_ptr,
     const int32_t *quant_shift_ptr, tran_low_t *qcoeff_ptr,
@@ -51,28 +51,28 @@ void avm_highbd_quantize_b_helper_c(
     const int16_t *scan, const int16_t *iscan, const qm_val_t *qm_ptr,
     const qm_val_t *iqm_ptr, const int log_scale);
 
-void avm_highbd_quantize_b_adaptive_c(
+void av2_highbd_quantize_b_adaptive_c(
     const tran_low_t *coeff_ptr, intptr_t n_coeffs, const int32_t *zbin_ptr,
     const int32_t *round_ptr, const int32_t *quant_ptr,
     const int32_t *quant_shift_ptr, tran_low_t *qcoeff_ptr,
     tran_low_t *dqcoeff_ptr, const int32_t *dequant_ptr, uint16_t *eob_ptr,
     const int16_t *scan, const int16_t *iscan);
 
-void avm_highbd_quantize_b_32x32_adaptive_c(
+void av2_highbd_quantize_b_32x32_adaptive_c(
     const tran_low_t *coeff_ptr, intptr_t n_coeffs, const int32_t *zbin_ptr,
     const int32_t *round_ptr, const int32_t *quant_ptr,
     const int32_t *quant_shift_ptr, tran_low_t *qcoeff_ptr,
     tran_low_t *dqcoeff_ptr, const int32_t *dequant_ptr, uint16_t *eob_ptr,
     const int16_t *scan, const int16_t *iscan);
 
-void avm_highbd_quantize_b_64x64_adaptive_c(
+void av2_highbd_quantize_b_64x64_adaptive_c(
     const tran_low_t *coeff_ptr, intptr_t n_coeffs, const int32_t *zbin_ptr,
     const int32_t *round_ptr, const int32_t *quant_ptr,
     const int32_t *quant_shift_ptr, tran_low_t *qcoeff_ptr,
     tran_low_t *dqcoeff_ptr, const int32_t *dequant_ptr, uint16_t *eob_ptr,
     const int16_t *scan, const int16_t *iscan);
 
-void avm_highbd_quantize_b_c(const tran_low_t *coeff_ptr, intptr_t n_coeffs,
+void av2_highbd_quantize_b_c(const tran_low_t *coeff_ptr, intptr_t n_coeffs,
                              const int32_t *zbin_ptr, const int32_t *round_ptr,
                              const int32_t *quant_ptr,
                              const int32_t *quant_shift_ptr,
@@ -208,26 +208,26 @@ void av2_highbd_quantize_b_facade(const tran_low_t *coeff_ptr,
   const qm_val_t *iqm_ptr = qparam->iqmatrix;
   if (qparam->use_quant_b_adapt) {
     if (qm_ptr != NULL && iqm_ptr != NULL) {
-      avm_highbd_quantize_b_adaptive_helper_c(
+      av2_highbd_quantize_b_adaptive_helper_c(
           coeff_ptr, n_coeffs, p->zbin_QTX, p->round_QTX, p->quant_QTX,
           p->quant_shift_QTX, qcoeff_ptr, dqcoeff_ptr, p->dequant_QTX, eob_ptr,
           sc->scan, sc->iscan, qm_ptr, iqm_ptr, qparam->log_scale);
     } else {
       switch (qparam->log_scale) {
         case 0:
-          avm_highbd_quantize_b_adaptive(
+          av2_highbd_quantize_b_adaptive(
               coeff_ptr, n_coeffs, p->zbin_QTX, p->round_QTX, p->quant_QTX,
               p->quant_shift_QTX, qcoeff_ptr, dqcoeff_ptr, p->dequant_QTX,
               eob_ptr, sc->scan, sc->iscan);
           break;
         case 1:
-          avm_highbd_quantize_b_32x32_adaptive(
+          av2_highbd_quantize_b_32x32_adaptive(
               coeff_ptr, n_coeffs, p->zbin_QTX, p->round_QTX, p->quant_QTX,
               p->quant_shift_QTX, qcoeff_ptr, dqcoeff_ptr, p->dequant_QTX,
               eob_ptr, sc->scan, sc->iscan);
           break;
         case 2:
-          avm_highbd_quantize_b_64x64_adaptive(
+          av2_highbd_quantize_b_64x64_adaptive(
               coeff_ptr, n_coeffs, p->zbin_QTX, p->round_QTX, p->quant_QTX,
               p->quant_shift_QTX, qcoeff_ptr, dqcoeff_ptr, p->dequant_QTX,
               eob_ptr, sc->scan, sc->iscan);
@@ -237,12 +237,12 @@ void av2_highbd_quantize_b_facade(const tran_low_t *coeff_ptr,
     }
   } else {
     if (qm_ptr != NULL && iqm_ptr != NULL) {
-      avm_highbd_quantize_b_helper_c(
+      av2_highbd_quantize_b_helper_c(
           coeff_ptr, n_coeffs, p->zbin_QTX, p->round_QTX, p->quant_QTX,
           p->quant_shift_QTX, qcoeff_ptr, dqcoeff_ptr, p->dequant_QTX, eob_ptr,
           sc->scan, sc->iscan, qm_ptr, iqm_ptr, qparam->log_scale);
     } else {
-      avm_highbd_quantize_b(coeff_ptr, n_coeffs, p->zbin_QTX, p->round_QTX,
+      av2_highbd_quantize_b(coeff_ptr, n_coeffs, p->zbin_QTX, p->round_QTX,
                             p->quant_QTX, p->quant_shift_QTX, qcoeff_ptr,
                             dqcoeff_ptr, p->dequant_QTX, eob_ptr, sc->scan,
                             sc->iscan, qparam->log_scale);

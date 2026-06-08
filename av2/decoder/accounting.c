@@ -27,17 +27,17 @@ static int accounting_hash(AccountingSymbolInfo *acct_info) {
      here. */
   while (*ustr) val += *ustr++;
 
-  for (int i = 0; i < AVM_ACCOUNTING_MAX_TAGS; i++) {
+  for (int i = 0; i < AV2_ACCOUNTING_MAX_TAGS; i++) {
     if (acct_info->tags[i] == NULL) break;
     ustr = (const unsigned char *)acct_info->tags[i];
     while (*ustr) val += *ustr++;
   }
   val += acct_info->c_line;
-  return val % AVM_ACCOUNTING_HASH_SIZE;
+  return val % AV2_ACCOUNTING_HASH_SIZE;
 }
 
 int tags_equal(AccountingSymbolInfo *a, AccountingSymbolInfo *b) {
-  for (int i = 0; i < AVM_ACCOUNTING_MAX_TAGS; i++) {
+  for (int i = 0; i < AV2_ACCOUNTING_MAX_TAGS; i++) {
     if (a->tags[i] == NULL && b->tags[i] != NULL) return 0;
     if (a->tags[i] != NULL && b->tags[i] == NULL) return 0;
     if (a->tags[i] != b->tags[i]) {
@@ -50,7 +50,7 @@ int tags_equal(AccountingSymbolInfo *a, AccountingSymbolInfo *b) {
 }
 
 /* Dictionary lookup based on an open-addressing hash table. */
-int avm_accounting_dictionary_lookup(Accounting *accounting,
+int av2_accounting_dictionary_lookup(Accounting *accounting,
                                      AccountingSymbolInfo *acct_info) {
   int hash;
   AccountingDictionary *dictionary;
@@ -66,7 +66,7 @@ int avm_accounting_dictionary_lookup(Accounting *accounting,
       return accounting->hash_dictionary[hash];
     }
     hash++;
-    if (hash == AVM_ACCOUNTING_HASH_SIZE) hash = 0;
+    if (hash == AV2_ACCOUNTING_HASH_SIZE) hash = 0;
   }
   /* No match found. */
   assert(dictionary->num_strs + 1 < MAX_SYMBOL_TYPES);
@@ -77,19 +77,19 @@ int avm_accounting_dictionary_lookup(Accounting *accounting,
   return dictionary->num_strs - 1;
 }
 
-void avm_accounting_init(Accounting *accounting) {
+void av2_accounting_init(Accounting *accounting) {
   int i;
   accounting->num_syms_allocated = 1000;
   accounting->syms.syms =
       malloc(sizeof(AccountingSymbol) * accounting->num_syms_allocated);
   accounting->syms.dictionary.num_strs = 0;
-  assert(AVM_ACCOUNTING_HASH_SIZE > 2 * MAX_SYMBOL_TYPES);
-  for (i = 0; i < AVM_ACCOUNTING_HASH_SIZE; i++)
+  assert(AV2_ACCOUNTING_HASH_SIZE > 2 * MAX_SYMBOL_TYPES);
+  for (i = 0; i < AV2_ACCOUNTING_HASH_SIZE; i++)
     accounting->hash_dictionary[i] = -1;
-  avm_accounting_reset(accounting);
+  av2_accounting_reset(accounting);
 }
 
-void avm_accounting_reset(Accounting *accounting) {
+void av2_accounting_reset(Accounting *accounting) {
   accounting->syms.num_syms = 0;
   accounting->syms.num_binary_syms = 0;
   accounting->syms.num_multi_syms = 0;
@@ -103,18 +103,18 @@ void avm_accounting_reset(Accounting *accounting) {
   accounting->last_tell_frac = 0;
 }
 
-void avm_accounting_clear(Accounting *accounting) {
+void av2_accounting_clear(Accounting *accounting) {
   free(accounting->syms.syms);
 }
 
-void avm_accounting_set_context(Accounting *accounting, int16_t x, int16_t y,
+void av2_accounting_set_context(Accounting *accounting, int16_t x, int16_t y,
                                 TREE_TYPE tree_type) {
   accounting->context.x = x;
   accounting->context.y = y;
   accounting->context.tree_type = tree_type;
 }
 
-void avm_accounting_record(Accounting *accounting, int value,
+void av2_accounting_record(Accounting *accounting, int value,
                            SYMBOL_CODING_MODE coding_mode,
                            AccountingSymbolInfo acct_info, uint64_t bits) {
   AccountingSymbol sym;
@@ -122,7 +122,7 @@ void avm_accounting_record(Accounting *accounting, int value,
   sym.value = value;
   sym.coding_mode = coding_mode;
   sym.bits = bits;
-  sym.id = avm_accounting_dictionary_lookup(accounting, &acct_info);
+  sym.id = av2_accounting_dictionary_lookup(accounting, &acct_info);
   assert(sym.id <= 255);
   if (accounting->syms.num_syms == accounting->num_syms_allocated) {
     accounting->num_syms_allocated *= 2;
@@ -134,7 +134,7 @@ void avm_accounting_record(Accounting *accounting, int value,
   accounting->syms.syms[accounting->syms.num_syms++] = sym;
 }
 
-void avm_accounting_dump(Accounting *accounting) {
+void av2_accounting_dump(Accounting *accounting) {
   int i;
   AccountingSymbol *sym;
   printf("\n----- Number of recorded syntax elements = %d -----\n",
@@ -147,11 +147,11 @@ void avm_accounting_dump(Accounting *accounting) {
     printf("%s x: %d, y: %d, tree: %d, bits: %f value: %d\n",
            accounting->syms.dictionary.acct_infos[sym->id].c_func,
            sym->context.x, sym->context.y, sym->context.tree_type,
-           (double)sym->bits / (double)(1 << AVM_ACCT_BITRES), 1);
+           (double)sym->bits / (double)(1 << AV2_ACCT_BITRES), 1);
   }
 }
 
-AccountingSymbolInfo avm_accounting_make_info(
+AccountingSymbolInfo av2_accounting_make_info(
     const char *c_func, const char *c_file, int c_line, const char *tag0,
     const char *tag1, const char *tag2, const char *tag3) {
   AccountingSymbolInfo info = {

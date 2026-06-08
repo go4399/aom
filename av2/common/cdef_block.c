@@ -268,7 +268,7 @@ static INLINE int adjust_strength(int strength, int32_t var) {
  * av2_cdef_find_dir_dual() for the adjacent 8x8 blocks and av2_cdef_find_dir()
  * for the remaining 8x8 block.
  */
-static inline void avm_av2_cdef_find_dir(const uint16_t *in, cdef_list *dlist,
+static inline void av2_av2_cdef_find_dir(const uint16_t *in, cdef_list *dlist,
                                          int var[CDEF_NBLOCKS][CDEF_NBLOCKS],
                                          int cdef_count, int coeff_shift,
                                          int dir[CDEF_NBLOCKS][CDEF_NBLOCKS]) {
@@ -338,7 +338,7 @@ void av2_cdef_filter_fb(uint8_t *dst8, uint16_t *dst16, int dstride,
 
   if (pli == 0) {
     if (!dirinit || !*dirinit) {
-      avm_av2_cdef_find_dir(in, dlist, var, cdef_count, coeff_shift, dir);
+      av2_av2_cdef_find_dir(in, dlist, var, cdef_count, coeff_shift, dir);
       if (dirinit) *dirinit = 1;
     }
   }

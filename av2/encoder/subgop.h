@@ -10,7 +10,7 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_SUBGOP_H_
+#ifndef AV2_AV2_ENCODER_SUBGOP_H_
 
 #include "av2/encoder/encoder.h"
 
@@ -46,4 +46,4 @@ const SubGOPCfg *av2_find_subgop_config_exact(
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_SUBGOP_H_
+#endif  // AV2_AV2_ENCODER_SUBGOP_H_

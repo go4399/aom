@@ -15,9 +15,9 @@
 
 #include "aom_ports/aom_timer.h"
 
-#define avm_usec_timer aom_usec_timer
-#define avm_usec_timer_start aom_usec_timer_start
-#define avm_usec_timer_mark aom_usec_timer_mark
-#define avm_usec_timer_elapsed aom_usec_timer_elapsed
+#define av2_usec_timer aom_usec_timer
+#define av2_usec_timer_start aom_usec_timer_start
+#define av2_usec_timer_mark aom_usec_timer_mark
+#define av2_usec_timer_elapsed aom_usec_timer_elapsed
 
 #endif  // AOM_AOM_PORTS_AVM_TIMER_H_

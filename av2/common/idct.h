@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_IDCT_H_
-#define AVM_AV2_COMMON_IDCT_H_
+#ifndef AV2_AV2_COMMON_IDCT_H_
+#define AV2_AV2_COMMON_IDCT_H_
 
 #include "config/aom_config.h"
 #include "config/av2_rtcd.h"
@@ -55,4 +55,4 @@ void av2_inv_stxfm(tran_low_t *coeff, TxfmParam *txfm_param);
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_IDCT_H_
+#endif  // AV2_AV2_COMMON_IDCT_H_

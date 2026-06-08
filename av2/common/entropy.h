@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_ENTROPY_H_
-#define AVM_AV2_COMMON_ENTROPY_H_
+#ifndef AV2_AV2_COMMON_ENTROPY_H_
+#define AV2_AV2_COMMON_ENTROPY_H_
 
 #include "config/aom_config.h"
 
@@ -181,4 +181,4 @@ static INLINE int get_eob_plane_ctx(int plane, int is_inter) {
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_ENTROPY_H_
+#endif  // AV2_AV2_COMMON_ENTROPY_H_

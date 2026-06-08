@@ -76,12 +76,12 @@ int64_t av2_max_level_bitrate(BITSTREAM_PROFILE seq_profile, int seq_level_idx,
   return bitrate * 1000;
 }
 
-void av2_set_avm_dec_model_info(avm_dec_model_info_t *decoder_model) {
+void av2_set_avm_dec_model_info(av2_dec_model_info_t *decoder_model) {
   decoder_model->encoder_decoder_buffer_delay_length = 16;
   decoder_model->buffer_removal_time_length = 10;
 }
 
-void av2_set_dec_model_op_parameters(avm_dec_model_op_parameters_t *op_params) {
+void av2_set_dec_model_op_parameters(av2_dec_model_op_parameters_t *op_params) {
   op_params->decoder_model_param_present_flag = 1;
   op_params->decoder_buffer_delay = 90000 >> 1;  //  0.5 s
   op_params->encoder_buffer_delay = 90000 >> 1;  //  0.5 s
@@ -91,7 +91,7 @@ void av2_set_dec_model_op_parameters(avm_dec_model_op_parameters_t *op_params) {
 }
 
 void av2_set_resource_availability_parameters(
-    avm_dec_model_op_parameters_t *op_params) {
+    av2_dec_model_op_parameters_t *op_params) {
   op_params->decoder_model_param_present_flag = 0;
   op_params->decoder_buffer_delay =
       70000;  // Resource availability mode default

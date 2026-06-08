@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_BITSTREAM_H_
-#define AVM_AV2_ENCODER_BITSTREAM_H_
+#ifndef AV2_AV2_ENCODER_BITSTREAM_H_
+#define AV2_AV2_ENCODER_BITSTREAM_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,24 +23,24 @@ extern "C" {
 #include "av2/common/obu_util.h"
 #include "av2/common/timing.h"
 
-#define avm_wb_write_literal aom_wb_write_literal
-#define avm_wb_write_bit aom_wb_write_bit
-#define avm_wb_overwrite_literal aom_wb_overwrite_literal
-#define avm_wb_overwrite_bit aom_wb_overwrite_bit
-#define avm_write_bit_buffer aom_write_bit_buffer
-#define avm_wb_write_uvlc aom_wb_write_uvlc
-#define avm_wb_bytes_written aom_wb_bytes_written
+#define av2_wb_write_literal aom_wb_write_literal
+#define av2_wb_write_bit aom_wb_write_bit
+#define av2_wb_overwrite_literal aom_wb_overwrite_literal
+#define av2_wb_overwrite_bit aom_wb_overwrite_bit
+#define av2_write_bit_buffer aom_write_bit_buffer
+#define av2_wb_write_uvlc aom_wb_write_uvlc
+#define av2_wb_bytes_written aom_wb_bytes_written
 
-#define avm_wb_write_inv_signed_literal aom_wb_write_inv_signed_literal
-#define avm_wb_write_unsigned_literal aom_wb_write_unsigned_literal
-#define avm_uleb_encode aom_uleb_encode
+#define av2_wb_write_inv_signed_literal aom_wb_write_inv_signed_literal
+#define av2_wb_write_unsigned_literal aom_wb_write_unsigned_literal
+#define av2_uleb_encode aom_uleb_encode
 #define aom_uleb_size_in_bytes aom_uleb_size_in_bytes
-#define avm_wb_is_byte_aligned aom_wb_is_byte_aligned
-#define avm_wb_write_uleb avm_wb_write_uleb
-#define avm_img_alloc aom_img_alloc
-#define avm_img_free aom_img_free
+#define av2_wb_is_byte_aligned aom_wb_is_byte_aligned
+#define av2_wb_write_uleb av2_wb_write_uleb
+#define av2_img_alloc aom_img_alloc
+#define av2_img_free aom_img_free
 
-static INLINE void avm_wb_write_uleb(struct aom_write_bit_buffer *wb,
+static INLINE void av2_wb_write_uleb(struct aom_write_bit_buffer *wb,
                                      uint32_t value) {
   do {
     uint8_t byte = value & 0x7f;
@@ -50,10 +50,10 @@ static INLINE void avm_wb_write_uleb(struct aom_write_bit_buffer *wb,
   } while (value != 0);
 }
 
-#define AVM_MIF_KEY_FRAME AOM_MIF_KEY_FRAME
-#define AVM_MIF_NON_KEY_FRAME AOM_MIF_NON_KEY_FRAME
+#define AV2_MIF_KEY_FRAME AOM_MIF_KEY_FRAME
+#define AV2_MIF_NON_KEY_FRAME AOM_MIF_NON_KEY_FRAME
 
-static INLINE void avm_wb_write_rice_golomb(struct aom_write_bit_buffer *wb,
+static INLINE void av2_wb_write_rice_golomb(struct aom_write_bit_buffer *wb,
                                             uint32_t data, int k) {
   assert(k <= 26);
   uint32_t quotient = data >> k;
@@ -67,7 +67,7 @@ static INLINE void avm_wb_write_rice_golomb(struct aom_write_bit_buffer *wb,
   aom_wb_write_literal(wb, remainder, k);
 }
 
-static INLINE void avm_wb_write_svlc(struct aom_write_bit_buffer *wb,
+static INLINE void av2_wb_write_svlc(struct aom_write_bit_buffer *wb,
                                      int32_t value) {
   uint32_t uvlc;
   if (value > 0) {
@@ -77,9 +77,9 @@ static INLINE void avm_wb_write_svlc(struct aom_write_bit_buffer *wb,
   }
   aom_wb_write_uvlc(wb, uvlc);
 }
-#ifndef avm_write_primitive_quniform_defined
-#define avm_write_primitive_quniform_defined
-static INLINE void avm_write_primitive_quniform(aom_writer *w, uint16_t n,
+#ifndef av2_write_primitive_quniform_defined
+#define av2_write_primitive_quniform_defined
+static INLINE void av2_write_primitive_quniform(aom_writer *w, uint16_t n,
                                                 uint16_t v) {
   if (n <= 1) return;
   const int l = get_msb(n - 1) + 1;
@@ -93,9 +93,9 @@ static INLINE void avm_write_primitive_quniform(aom_writer *w, uint16_t n,
 }
 #endif
 
-#ifndef avm_wb_write_primitive_quniform_defined
-#define avm_wb_write_primitive_quniform_defined
-static INLINE void avm_wb_write_primitive_quniform(
+#ifndef av2_wb_write_primitive_quniform_defined
+#define av2_wb_write_primitive_quniform_defined
+static INLINE void av2_wb_write_primitive_quniform(
     struct aom_write_bit_buffer *wb, uint16_t n, uint16_t v) {
   if (n <= 1) return;
   assert(v < n);
@@ -110,13 +110,13 @@ static INLINE void avm_wb_write_primitive_quniform(
 }
 #endif
 
-static INLINE void avm_wb_write_primitive_ref_quniform(
+static INLINE void av2_wb_write_primitive_ref_quniform(
     struct aom_write_bit_buffer *wb, uint16_t n, uint16_t r, uint16_t v) {
   if (v == r) {
     aom_wb_write_bit(wb, 0);
   } else {
     aom_wb_write_bit(wb, 1);
-    avm_wb_write_primitive_quniform(wb, n - 1, v - (v > r));
+    av2_wb_write_primitive_quniform(wb, n - 1, v - (v > r));
   }
 }
 
@@ -213,7 +213,7 @@ void av2_write_tx_type(const AV2_COMMON *const cm, const MACROBLOCKD *xd,
 void av2_write_cctx_type(const AV2_COMMON *const cm, const MACROBLOCKD *xd,
                          CctxType cctx_type, TX_SIZE tx_size, aom_writer *w);
 
-void av2_write_timing_info_header(const avm_timing_info_t *const timing_info,
+void av2_write_timing_info_header(const av2_timing_info_t *const timing_info,
                                   struct aom_write_bit_buffer *wb);
 uint32_t av2_write_content_interpretation_obu(
     const struct ContentInterpretation *ci_params, uint8_t *const dst);
@@ -222,4 +222,4 @@ uint32_t av2_write_content_interpretation_obu(
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_BITSTREAM_H_
+#endif  // AV2_AV2_ENCODER_BITSTREAM_H_

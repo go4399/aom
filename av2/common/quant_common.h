@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_QUANT_COMMON_H_
-#define AVM_AV2_COMMON_QUANT_COMMON_H_
+#ifndef AV2_AV2_COMMON_QUANT_COMMON_H_
+#define AV2_AV2_COMMON_QUANT_COMMON_H_
 
 #include <stdbool.h>
 #include "aom/aom_codec.h"
@@ -149,4 +149,4 @@ extern const qm_val_t predefined_wt_matrix_ref[NUM_QM_LEVELS - 1][2]
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_QUANT_COMMON_H_
+#endif  // AV2_AV2_COMMON_QUANT_COMMON_H_

@@ -9,8 +9,8 @@
  * source code in the PATENTS file, you can obtain it at
  * aomedia.org/license/patent-license/.
  */
-#ifndef AVM_AV2_COMMON_CDEF_H_
-#define AVM_AV2_COMMON_CDEF_H_
+#ifndef AV2_AV2_COMMON_CDEF_H_
+#define AV2_AV2_COMMON_CDEF_H_
 
 #define CDEF_STRENGTH_BITS 6
 
@@ -73,17 +73,17 @@ static INLINE int constrain(int diff, int threshold, int damping) {
 
 #if defined(__clang__) && defined(__has_attribute)
 #if __has_attribute(no_sanitize)
-#define AVM_NO_UNSIGNED_OVERFLOW_CHECK \
+#define AV2_NO_UNSIGNED_OVERFLOW_CHECK \
   __attribute__((                      \
       no_sanitize("unsigned-integer-overflow", "unsigned-shift-base")))
 #endif
 #endif
 
-#ifndef AVM_NO_UNSIGNED_OVERFLOW_CHECK
-#define AVM_NO_UNSIGNED_OVERFLOW_CHECK
+#ifndef AV2_NO_UNSIGNED_OVERFLOW_CHECK
+#define AV2_NO_UNSIGNED_OVERFLOW_CHECK
 #endif
 
-AVM_NO_UNSIGNED_OVERFLOW_CHECK static INLINE int av2_get_cdef_transmitted_index(
+AV2_NO_UNSIGNED_OVERFLOW_CHECK static INLINE int av2_get_cdef_transmitted_index(
     int mi_row, int mi_col) {
   // Find index of this CDEF unit in this superblock.
   const int index_mask = (UINT32_MAX << (32 - CDEF_SB_SHIFT)) >>
@@ -95,7 +95,7 @@ AVM_NO_UNSIGNED_OVERFLOW_CHECK static INLINE int av2_get_cdef_transmitted_index(
   return CDEF_IN_SB_STRIDE * cdef_unit_row_in_sb + cdef_unit_col_in_sb;
 }
 
-#undef AVM_NO_UNSIGNED_OVERFLOW_CHECK
+#undef AV2_NO_UNSIGNED_OVERFLOW_CHECK
 
 #ifdef __cplusplus
 extern "C" {
@@ -193,4 +193,4 @@ void av2_cdef_init_fb_row(AV2_COMMON *const cm, MACROBLOCKD *const xd,
 #ifdef __cplusplus
 }  // extern "C"
 #endif
-#endif  // AVM_AV2_COMMON_CDEF_H_
+#endif  // AV2_AV2_COMMON_CDEF_H_

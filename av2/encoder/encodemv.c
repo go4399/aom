@@ -64,7 +64,7 @@ static void write_truncated_unary(aom_writer *w, nmv_context *mvctx,
     if (bit_idx)
       aom_write_literal(w, coded_value != bit_idx, 1);
     else
-      avm_write_symbol(w, coded_value != bit_idx, cdf, 2);
+      av2_write_symbol(w, coded_value != bit_idx, cdf, 2);
     if (coded_value == bit_idx) break;
   }
 }
@@ -80,14 +80,14 @@ static void write_tu_quasi_uniform(aom_writer *w, nmv_context *mvctx,
     int context_index =
         (bit_idx < max_num_of_ctx ? bit_idx : max_num_of_ctx - 1);
     assert(context_index < max_num_of_ctx);
-    avm_write_symbol(w, coded_col != bit_idx,
+    av2_write_symbol(w, coded_col != bit_idx,
                      mvctx->col_mv_greater_flags_cdf[context_index], 2);
     if (coded_col == bit_idx) break;
   }
   if (max_coded_value > max_trunc_unary_value && col >= max_trunc_unary_value) {
     int remainder = col - max_trunc_unary_value;
     int remainder_max_value = max_coded_value - max_trunc_unary_value;
-    avm_write_primitive_quniform(w, remainder_max_value + 1, remainder);
+    av2_write_primitive_quniform(w, remainder_max_value + 1, remainder);
   }
 }
 
@@ -95,7 +95,7 @@ static void av2_encode_vq_amvd(AV2_COMP *cpi, MV mv, aom_writer *w,
                                nmv_context *mvctx, const MV mv_diff) {
   const MV_JOINT_TYPE j = av2_get_mv_joint(&mv_diff);
   assert(j < MV_JOINTS - 1);
-  avm_write_symbol(w, j, mvctx->amvd_joints_cdf, MV_JOINTS);
+  av2_write_symbol(w, j, mvctx->amvd_joints_cdf, MV_JOINTS);
 
   const MV mv_diff_index = { get_index_from_amvd_mvd(mv_diff.row),
                              get_index_from_amvd_mvd(mv_diff.col) };
@@ -109,7 +109,7 @@ static void av2_encode_vq_amvd(AV2_COMP *cpi, MV mv, aom_writer *w,
     assert(mag <= MAX_AMVD_INDEX);
     assert(mag > 0);
     assert(mv_diff.row == get_mvd_from_amvd_index(mv_diff_index.row));
-    avm_write_symbol(w, mag - 1, mvctx->comps[0].amvd_indices_cdf,
+    av2_write_symbol(w, mag - 1, mvctx->comps[0].amvd_indices_cdf,
                      MAX_AMVD_INDEX);
   }
 
@@ -119,7 +119,7 @@ static void av2_encode_vq_amvd(AV2_COMP *cpi, MV mv, aom_writer *w,
     assert(mag <= MAX_AMVD_INDEX);
     assert(mag > 0);
     assert(mv_diff.col == get_mvd_from_amvd_index(mv_diff_index.col));
-    avm_write_symbol(w, mag - 1, mvctx->comps[1].amvd_indices_cdf,
+    av2_write_symbol(w, mag - 1, mvctx->comps[1].amvd_indices_cdf,
                      MAX_AMVD_INDEX);
   }
 
@@ -183,23 +183,23 @@ void av2_encode_mv(AV2_COMP *cpi, MV mv, aom_writer *w, nmv_context *mvctx,
   int num_mv_class_0, num_mv_class_1;
   split_num_shell_class(num_mv_class, &num_mv_class_0, &num_mv_class_1);
   if (shell_class < num_mv_class_0) {
-    avm_write_symbol(w, 0, mvctx->joint_shell_set_cdf, 2);
-    avm_write_symbol(w, shell_class,
+    av2_write_symbol(w, 0, mvctx->joint_shell_set_cdf, 2);
+    av2_write_symbol(w, shell_class,
                      mvctx->joint_shell_class_cdf_0[pb_mv_precision],
                      num_mv_class_0);
   } else {
-    avm_write_symbol(w, 1, mvctx->joint_shell_set_cdf, 2);
+    av2_write_symbol(w, 1, mvctx->joint_shell_set_cdf, 2);
     if (pb_mv_precision == MV_PRECISION_ONE_EIGHTH_PEL) {
       const int map_shell_class = get_map_shell_class(shell_class);
-      avm_write_symbol(w, map_shell_class - num_mv_class_0,
+      av2_write_symbol(w, map_shell_class - num_mv_class_0,
                        mvctx->joint_shell_class_cdf_1[pb_mv_precision],
                        num_mv_class_1 - 1);
       if (shell_class >= MAX_NUM_SHELL_CLASS - 2) {
-        avm_write_symbol(w, shell_class == MAX_NUM_SHELL_CLASS - 1,
+        av2_write_symbol(w, shell_class == MAX_NUM_SHELL_CLASS - 1,
                          mvctx->joint_shell_last_two_classes_cdf, 2);
       }
     } else {
-      avm_write_symbol(w, shell_class - num_mv_class_0,
+      av2_write_symbol(w, shell_class - num_mv_class_0,
                        mvctx->joint_shell_class_cdf_1[pb_mv_precision],
                        num_mv_class_1);
     }
@@ -208,7 +208,7 @@ void av2_encode_mv(AV2_COMP *cpi, MV mv, aom_writer *w, nmv_context *mvctx,
 
   if (shell_class < 2) {
     assert(shell_cls_offset == 0 || shell_cls_offset == 1);
-    avm_write_symbol(w, shell_cls_offset,
+    av2_write_symbol(w, shell_cls_offset,
                      mvctx->shell_offset_low_class_cdf[shell_class], 2);
   } else if (shell_class == 2) {
     int max_coded_value = 3;
@@ -219,7 +219,7 @@ void av2_encode_mv(AV2_COMP *cpi, MV mv, aom_writer *w, nmv_context *mvctx,
     const int num_of_bits_for_this_offset =
         (shell_class == 0) ? 1 : shell_class;
     for (int i = 0; i < num_of_bits_for_this_offset; ++i) {
-      avm_write_symbol(w, (shell_cls_offset >> i) & 1,
+      av2_write_symbol(w, (shell_cls_offset >> i) & 1,
                        mvctx->shell_offset_other_class_cdf[0][i], 2);
     }
   }
@@ -249,7 +249,7 @@ void av2_encode_mv(AV2_COMP *cpi, MV mv, aom_writer *w, nmv_context *mvctx,
                               ? shell_class
                               : NUM_CTX_COL_MV_INDEX - 1;
       assert(context_index < NUM_CTX_COL_MV_INDEX);
-      avm_write_symbol(w, scaled_mv_diff.col > maximum_pair_index,
+      av2_write_symbol(w, scaled_mv_diff.col > maximum_pair_index,
                        mvctx->col_mv_index_cdf[context_index], 2);
     }
   }

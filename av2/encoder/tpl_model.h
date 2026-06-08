@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_TPL_MODEL_H_
-#define AVM_AV2_ENCODER_TPL_MODEL_H_
+#ifndef AV2_AV2_ENCODER_TPL_MODEL_H_
+#define AV2_AV2_ENCODER_TPL_MODEL_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -233,4 +233,4 @@ void av2_mc_flow_dispenser_row(struct AV2_COMP *cpi, MACROBLOCK *x, int mi_row,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_TPL_MODEL_H_
+#endif  // AV2_AV2_ENCODER_TPL_MODEL_H_

@@ -22,7 +22,7 @@
 #include "aom_mem/aom_mem.h"
 #include "aom_ports/system_state.h"
 #include "aom_ports/aom_once.h"
-#include "aom_ports/avm_timer.h"
+#include "aom_ports/av2_timer.h"
 #include "aom_scale/aom_scale.h"
 #include "aom_util/aom_thread.h"
 #if CONFIG_MISMATCH_DEBUG
@@ -252,14 +252,14 @@ AV2Decoder *av2_decoder_create(BufferPool *const pool) {
 
 #if CONFIG_ACCOUNTING
   pbi->acct_enabled = 1;
-  avm_accounting_init(&pbi->accounting);
+  av2_accounting_init(&pbi->accounting);
 #endif
 
   dec_init_tip_ref_frame(cm);
 
   cm->error.setjmp = 0;
 
-  avm_get_worker_interface()->init(&pbi->lf_worker);
+  av2_get_worker_interface()->init(&pbi->lf_worker);
   pbi->lf_worker.thread_name = "avm lf worker";
 
   // Initialize the Content Interpretation parameters
@@ -340,7 +340,7 @@ AV2Decoder *av2_decoder_create(BufferPool *const pool) {
                   (d2 * num_idx3 * AV2_CDF_SIZE(cdf_stride)) +
                   (d3 * AV2_CDF_SIZE(cdf_stride)) + sym;
               if (sym < num_sym)
-                fprintf(fData, "%d", (int)AVM_ICDF(*(prob_ptr + offset)));
+                fprintf(fData, "%d", (int)AV2_ICDF(*(prob_ptr + offset)));
               else
                 fprintf(fData, "%d", (int)*(prob_ptr + offset));
               if (sym < AV2_CDF_SIZE(num_sym - 1)) {
@@ -393,7 +393,7 @@ void av2_decoder_remove(AV2Decoder *pbi) {
 
   if (!pbi) return;
 
-  avm_get_worker_interface()->end(&pbi->lf_worker);
+  av2_get_worker_interface()->end(&pbi->lf_worker);
   aom_free(pbi->lf_worker.data1);
 
   if (pbi->thread_data) {
@@ -408,7 +408,7 @@ void av2_decoder_remove(AV2Decoder *pbi) {
 
   for (i = 0; i < pbi->num_workers; ++i) {
     AVxWorker *const worker = &pbi->tile_workers[i];
-    avm_get_worker_interface()->end(worker);
+    av2_get_worker_interface()->end(worker);
   }
 #if CONFIG_MULTITHREAD
   if (pbi->row_mt_mutex_ != NULL) {
@@ -441,7 +441,7 @@ void av2_decoder_remove(AV2Decoder *pbi) {
   free_bru_info(&pbi->common);
   av2_dec_free_cb_buf(pbi);
 #if CONFIG_ACCOUNTING
-  avm_accounting_clear(&pbi->accounting);
+  av2_accounting_clear(&pbi->accounting);
 #endif
   av2_free_mc_tmp_buf(&pbi->td);
   av2_free_opfl_tmp_bufs(&pbi->td);
@@ -664,7 +664,7 @@ int av2_output_frame_buffers(AV2Decoder *pbi, int ref_idx) {
           &pbi->output_frames[pbi->num_output_frames++], output_candidate);
       output_candidate->frame_output_done = 1;
 #if CONFIG_BITSTREAM_DEBUG
-      avm_bitstream_queue_set_frame_read(
+      av2_bitstream_queue_set_frame_read(
           derive_output_order_idx(cm, output_candidate) * 2 + 1);
 #endif  // CONFIG_BITSTREAM_DEBUG
 #if CONFIG_MISMATCH_DEBUG
@@ -683,7 +683,7 @@ int av2_output_frame_buffers(AV2Decoder *pbi, int ref_idx) {
 
 #if CONFIG_BITSTREAM_DEBUG
   if (trigger_frame->order_hint != cm->cur_frame->order_hint) {
-    avm_bitstream_queue_set_frame_read(
+    av2_bitstream_queue_set_frame_read(
         derive_output_order_idx(cm, trigger_frame) * 2 + 1);
   }
 #endif  // CONFIG_BITSTREAM_DEBUG
@@ -714,7 +714,7 @@ int av2_output_frame_buffers(AV2Decoder *pbi, int ref_idx) {
         cm->ref_frame_map[i]->frame_output_done = 1;
         successive_output++;
 #if CONFIG_BITSTREAM_DEBUG
-        avm_bitstream_queue_set_frame_read(
+        av2_bitstream_queue_set_frame_read(
             derive_output_order_idx(cm, cm->ref_frame_map[i]) * 2 + 1);
 #endif  // CONFIG_BITSTREAM_DEBUG
 #if CONFIG_MISMATCH_DEBUG
@@ -843,7 +843,7 @@ int av2_receive_compressed_data(AV2Decoder *pbi, size_t size,
   // setjmp(). Therefore, this function must reset the 'setjmp' field to 0
   // before it returns.
   if (setjmp(cm->error.jmp)) {
-    const AVxWorkerInterface *const winterface = avm_get_worker_interface();
+    const AVxWorkerInterface *const winterface = av2_get_worker_interface();
     int i;
 
     cm->error.setjmp = 0;
@@ -863,7 +863,7 @@ int av2_receive_compressed_data(AV2Decoder *pbi, size_t size,
   cm->error.setjmp = 1;
 
   int frame_decoded =
-      avm_decode_frame_from_obus(pbi, source, source + size, psource);
+      av2_decode_frame_from_obus(pbi, source, source + size, psource);
 #if CONFIG_INSPECTION
   if (cm->features.tip_frame_mode == TIP_FRAME_AS_OUTPUT) {
     if (pbi->inspect_tip_cb != NULL) {

@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_AV2_QUANTIZE_H_
-#define AVM_AV2_ENCODER_AV2_QUANTIZE_H_
+#ifndef AV2_AV2_ENCODER_AV2_QUANTIZE_H_
+#define AV2_AV2_ENCODER_AV2_QUANTIZE_H_
 
 #include "config/aom_config.h"
 
@@ -155,4 +155,4 @@ void av2_highbd_quantize_dc_facade(const tran_low_t *coeff_ptr,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_AV2_QUANTIZE_H_
+#endif  // AV2_AV2_ENCODER_AV2_QUANTIZE_H_

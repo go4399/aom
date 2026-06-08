@@ -29,10 +29,10 @@
 
 /* clang-format off */
 
-#define AVM_WIENERNS_COEFF(p, b, m, k) \
+#define AV2_WIENERNS_COEFF(p, b, m, k) \
   { (b) + (p) - 6, (m) * (1 << ((p) - 6)), k }
 
-#define AVM_MAKE_WIENERNS_SC_SYM_CONFIG(prec, config, coeff, subset_cfg)       \
+#define AV2_MAKE_WIENERNS_SC_SYM_CONFIG(prec, config, coeff, subset_cfg)       \
   { { (prec), sizeof(config) / sizeof(config[0]) - 1, 0, (config), NULL, 0, 1, \
       0, 0 },                                                                  \
     sizeof(coeff) / sizeof(coeff[0]),                                          \
@@ -40,7 +40,7 @@
     sizeof(subset_cfg) / sizeof(subset_cfg[0]),                                \
     (subset_cfg) }
 
-#define AVM_MAKE_WIENERNS_SC_SYMASYM_CONFIG2(prec, config, config2, coeff,    \
+#define AV2_MAKE_WIENERNS_SC_SYMASYM_CONFIG2(prec, config, config2, coeff,    \
                                              subset_cfg)                      \
   { { (prec), sizeof(config) / sizeof(config[0]) - 1,                         \
       sizeof(config2) / sizeof(config2[0]) - 1, (config), (config2), 0, 1, 0, \
@@ -66,22 +66,22 @@
       { -3, -3, 14 }, { 3, -3, 15 }, { -3, 3, 15 }
 
 const int wienerns_coeff_large_y[][WIENERNS_COEFCFG_LEN] = {
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 5, -12, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 5, -12, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 4, -7, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 4, -7, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 4, -8, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 4, -8, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 3, -4, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 3, -4, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 3, -4, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 3, -4, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 3, -4, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 3, -4, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 3, -4, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 3, -4, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 3, -4, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 3, -4, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 5, -12, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 5, -12, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 4, -7, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 4, -7, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 4, -8, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 4, -8, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 3, -4, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 3, -4, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 3, -4, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 3, -4, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 3, -4, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 3, -4, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 3, -4, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 3, -4, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 3, -4, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_Y, 3, -4, 0),
 };
 // Choose LARGEC or LARGEX
 const int wienerns_simd_large_config_y[][3] = { LUMA_SHAPE_SYM_LARGEC_16,
@@ -97,24 +97,24 @@ const int wienerns_subsetcfg_large_y[][WIENERNS_TAPS_MAX] = {
 
 #define WIENERNS_PREC_BITS_UV 7
 const int wienerns_coeff_uv[][WIENERNS_COEFCFG_LEN] = {
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 5, -12, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 5, -12, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 4, -7, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 4, -7, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 4, -8, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 4, -8, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 4, -8, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 4, -8, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 4, -8, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 4, -8, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 3, -4, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 3, -4, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 3, -4, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 3, -4, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 3, -4, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 3, -4, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 3, -4, 0),
-  AVM_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 3, -4, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 5, -12, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 5, -12, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 4, -7, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 4, -7, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 4, -8, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 4, -8, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 4, -8, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 4, -8, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 4, -8, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 4, -8, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 3, -4, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 3, -4, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 3, -4, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 3, -4, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 3, -4, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 3, -4, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 3, -4, 0),
+  AV2_WIENERNS_COEFF(WIENERNS_PREC_BITS_UV, 3, -4, 0),
 };
 
 // NOTE: All the wienerns_simd_config_... configurations are what the SIMD code
@@ -163,12 +163,12 @@ const int wienerns_subsetcfg_uv[][WIENERNS_TAPS_MAX] = {
 };
 
 const WienernsFilterParameters wienerns_filter_y =
-    AVM_MAKE_WIENERNS_SC_SYM_CONFIG(
+    AV2_MAKE_WIENERNS_SC_SYM_CONFIG(
         WIENERNS_PREC_BITS_Y, wienerns_simd_large_config_y,
         wienerns_coeff_large_y, wienerns_subsetcfg_large_y);
 
 const WienernsFilterParameters wienerns_filter_uv =
-    AVM_MAKE_WIENERNS_SC_SYMASYM_CONFIG2(
+    AV2_MAKE_WIENERNS_SC_SYMASYM_CONFIG2(
         WIENERNS_PREC_BITS_UV, wienerns_simd_config_uv_from_uv,
         wienerns_simd_config_uv_from_y, wienerns_coeff_uv,
         wienerns_subsetcfg_uv);
@@ -2211,9 +2211,9 @@ void av2_loop_restoration_filter_frame_init(AV2LrStruct *lr_ctxt,
   lr_ctxt->tiles = &cm->tiles;
   const int frame_width = frame->widths[0];
   const int frame_height = frame->heights[0];
-  if (avm_realloc_frame_buffer(
+  if (av2_realloc_frame_buffer(
           lr_ctxt->dst, frame_width, frame_height, seq_params->subsampling_x,
-          seq_params->subsampling_y, AVM_RESTORATION_FRAME_BORDER,
+          seq_params->subsampling_y, AV2_RESTORATION_FRAME_BORDER,
           cm->features.byte_alignment, NULL, NULL, NULL, false) < 0)
     aom_internal_error(&cm->error, AOM_CODEC_MEM_ERROR,
                        "Failed to allocate restoration dst buffer");

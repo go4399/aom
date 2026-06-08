@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_GOP_STRUCTURE_H_
-#define AVM_AV2_ENCODER_GOP_STRUCTURE_H_
+#ifndef AV2_AV2_ENCODER_GOP_STRUCTURE_H_
+#define AV2_AV2_ENCODER_GOP_STRUCTURE_H_
 
 #include "av2/common/av2_common_int.h"
 #include "av2/encoder/ratectrl.h"
@@ -91,4 +91,4 @@ int av2_calc_arf_boost(const TWO_PASS *twopass, const RATE_CONTROL *rc,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_GOP_STRUCTURE_H_
+#endif  // AV2_AV2_ENCODER_GOP_STRUCTURE_H_

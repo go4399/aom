@@ -862,7 +862,7 @@ static INLINE void set_erp_speed_features_framesize_dependent(AV2_COMP *cpi) {
   const int is_720p_or_lesser = AOMMIN(cm->width, cm->height) <= 720;
 
   switch (erp_pruning_level) {
-    case 6: AVM_FALLTHROUGH_INTENDED;
+    case 6: AV2_FALLTHROUGH_INTENDED;
     case 5:
       if (is_1080p_or_larger) {
         sf->part_sf.partition_search_breakout_dist_thr = (1 << 22) + (1 << 21);
@@ -889,11 +889,11 @@ static INLINE void set_erp_speed_features_framesize_dependent(AV2_COMP *cpi) {
       sf->part_sf.prune_split_ml_level_inter =
           sf->part_sf.prune_none_with_ml ? -1 : 0;
 #endif  // CONFIG_ML_PART_SPLIT
-      AVM_FALLTHROUGH_INTENDED;
-    case 4: AVM_FALLTHROUGH_INTENDED;
-    case 3: AVM_FALLTHROUGH_INTENDED;
-    case 2: AVM_FALLTHROUGH_INTENDED;
-    case 1: AVM_FALLTHROUGH_INTENDED;
+      AV2_FALLTHROUGH_INTENDED;
+    case 4: AV2_FALLTHROUGH_INTENDED;
+    case 3: AV2_FALLTHROUGH_INTENDED;
+    case 2: AV2_FALLTHROUGH_INTENDED;
+    case 1: AV2_FALLTHROUGH_INTENDED;
     case 0: break;
     default: assert(0 && "Invalid ERP pruning level.");
   }
@@ -955,7 +955,7 @@ static INLINE void set_erp_speed_features(AV2_COMP *cpi) {
       sf->part_sf.ext_recur_depth_level = 2;
       sf->part_sf.simple_motion_search_split = 1;
       sf->part_sf.simple_motion_search_early_term_none = 1;
-      AVM_FALLTHROUGH_INTENDED;
+      AV2_FALLTHROUGH_INTENDED;
     case 5:
       sf->part_sf.prune_part_h_with_partition_boundary = true;
       sf->part_sf.adaptive_partition_search_order = true;
@@ -967,25 +967,25 @@ static INLINE void set_erp_speed_features(AV2_COMP *cpi) {
       // the loss.
       // sf->part_sf.end_part_search_after_consec_failures = 1;
       sf->part_sf.prune_part_4b_with_part_4a = 1;
-      AVM_FALLTHROUGH_INTENDED;
+      AV2_FALLTHROUGH_INTENDED;
     case 4:
       sf->part_sf.prune_ext_part_with_part_rect = 1;
       sf->part_sf.prune_part_4_horz_or_vert = 1;
       sf->part_sf.prune_part_4_with_part_3 = 1;
-      AVM_FALLTHROUGH_INTENDED;
+      AV2_FALLTHROUGH_INTENDED;
     case 3:
       sf->part_sf.prune_ext_part_with_part_none = 1;
-      AVM_FALLTHROUGH_INTENDED;
+      AV2_FALLTHROUGH_INTENDED;
     case 2:
       sf->inter_sf.prune_ref_frames = (boosted || (allow_screen_content_tools))
                                           ? 0
                                           : (is_boosted_arf2_bwd_type ? 1 : 2);
-      AVM_FALLTHROUGH_INTENDED;
+      AV2_FALLTHROUGH_INTENDED;
     case 1:
       sf->inter_sf.reuse_erp_mode_flag =
           (REUSE_PARTITION_MODE_FLAG | REUSE_INTERFRAME_FLAG);
       sf->part_sf.prune_rect_with_none_rd = 1;
-      AVM_FALLTHROUGH_INTENDED;
+      AV2_FALLTHROUGH_INTENDED;
     case 0: break;
     default: assert(0 && "Invalid ERP pruning level.");
   }
@@ -1185,18 +1185,18 @@ static INLINE void set_erp_speed_features_qindex_dependent(AV2_COMP *cpi) {
   const int qindex_thresh3 = 135 + qindex_offset;
 
   switch (erp_pruning_level) {
-    case 6: AVM_FALLTHROUGH_INTENDED;
+    case 6: AV2_FALLTHROUGH_INTENDED;
     case 5:
       if (is_1080p_or_larger &&
           cm->quant_params.base_qindex <= qindex_thresh2 &&
           !frame_is_intra_only(cm)) {
         sf->part_sf.two_pass_partition_search = 1;
       }
-      AVM_FALLTHROUGH_INTENDED;
-    case 4: AVM_FALLTHROUGH_INTENDED;
-    case 3: AVM_FALLTHROUGH_INTENDED;
-    case 2: AVM_FALLTHROUGH_INTENDED;
-    case 1: AVM_FALLTHROUGH_INTENDED;
+      AV2_FALLTHROUGH_INTENDED;
+    case 4: AV2_FALLTHROUGH_INTENDED;
+    case 3: AV2_FALLTHROUGH_INTENDED;
+    case 2: AV2_FALLTHROUGH_INTENDED;
+    case 1: AV2_FALLTHROUGH_INTENDED;
     case 0: break;
     default: assert(0 && "Invalid ERP pruning level.");
   }

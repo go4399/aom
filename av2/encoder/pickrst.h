@@ -9,8 +9,8 @@
  * source code in the PATENTS file, you can obtain it at
  * aomedia.org/license/patent-license/.
  */
-#ifndef AVM_AV2_ENCODER_PICKRST_H_
-#define AVM_AV2_ENCODER_PICKRST_H_
+#ifndef AV2_AV2_ENCODER_PICKRST_H_
+#define AV2_AV2_ENCODER_PICKRST_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -106,4 +106,4 @@ void av2_pick_filter_restoration(const YV12_BUFFER_CONFIG *sd, AV2_COMP *cpi);
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_PICKRST_H_
+#endif  // AV2_AV2_ENCODER_PICKRST_H_

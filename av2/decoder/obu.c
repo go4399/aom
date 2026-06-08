@@ -137,7 +137,7 @@ void av2_read_color_info(int *color_description_idc, int *color_primaries,
   // inclusive. Values larger than 5 are reserved for future use by AOMedia and
   // should be ignored by decoders conforming to this version of this
   // specification.
-  *color_description_idc = avm_rb_read_rice_golomb(rb, 2);
+  *color_description_idc = av2_rb_read_rice_golomb(rb, 2);
   if (*color_description_idc > 127) {
     ((void (*)(void *, aom_codec_err_t, const char *))rb->error_handler)(
         rb->error_handler_data, AOM_CODEC_UNSUP_BITSTREAM,
@@ -947,7 +947,7 @@ static size_t read_metadata_banding_hints(AV2Decoder *const pbi,
   }
 
   // Decode the banding hints metadata payload
-  if (avm_decode_banding_hints_metadata(data, sz, &pbi->band_metadata) == 0) {
+  if (av2_decode_banding_hints_metadata(data, sz, &pbi->band_metadata) == 0) {
     // Successfully decoded
     pbi->band_metadata_present = 1;
   } else {
@@ -965,7 +965,7 @@ static size_t read_metadata_banding_hints(AV2Decoder *const pbi,
 // Helper function to read banding hints from a bit buffer (short metadata path)
 static void read_metadata_banding_hints_from_rb(
     AV2Decoder *const pbi, struct aom_read_bit_buffer *rb) {
-  avm_banding_hints_metadata_t *md = &pbi->band_metadata;
+  av2_banding_hints_metadata_t *md = &pbi->band_metadata;
   memset(md, 0, sizeof(*md));
 
   md->coding_banding_present_flag = aom_rb_read_bit(rb);
@@ -1018,7 +1018,7 @@ static void read_metadata_banding_hints_from_rb(
   // Re-encode to raw payload and store in metadata array
   uint8_t payload_buf[256];
   size_t payload_size = sizeof(payload_buf);
-  if (avm_encode_banding_hints_metadata(md, payload_buf, &payload_size) == 0) {
+  if (av2_encode_banding_hints_metadata(md, payload_buf, &payload_size) == 0) {
     alloc_read_metadata(pbi, OBU_METADATA_TYPE_BANDING_HINTS, payload_buf,
                         payload_size, AOM_MIF_ANY_FRAME);
   }
@@ -1289,9 +1289,9 @@ static size_t read_metadata_obsp(AV2Decoder *pbi, const uint8_t *data,
   }
 
   metadata_base->necessity_idc =
-      (avm_metadata_necessity_t)aom_rb_read_literal(&rb, 2);
+      (av2_metadata_necessity_t)aom_rb_read_literal(&rb, 2);
   metadata_base->application_id =
-      (avm_metadata_application_id_t)aom_rb_read_literal(&rb, 5);
+      (av2_metadata_application_id_t)aom_rb_read_literal(&rb, 5);
 
   const size_t bytes_read = aom_rb_bytes_read(&rb);
   assert(bytes_read == 1);
@@ -1356,15 +1356,15 @@ static size_t read_metadata_unit_header(AV2Decoder *pbi, const uint8_t *data,
 
     av2_init_read_bit_buffer(pbi, &rb, data + bytes_read, data + total_size);
 
-    metadata->layer_idc = (avm_metadata_layer_t)aom_rb_read_literal(&rb, 3);
+    metadata->layer_idc = (av2_metadata_layer_t)aom_rb_read_literal(&rb, 3);
     metadata->persistence_idc =
-        (avm_metadata_persistence_t)aom_rb_read_literal(&rb, 3);
+        (av2_metadata_persistence_t)aom_rb_read_literal(&rb, 3);
     metadata->priority = aom_rb_read_literal(&rb, 8);
     aom_rb_read_literal(&rb, 2);  // reserved bits
 
     assert(aom_rb_bytes_read(&rb) == 2);
 
-    if (metadata->layer_idc == AVM_LAYER_VALUES) {
+    if (metadata->layer_idc == AV2_LAYER_VALUES) {
       if (obu_header->obu_xlayer_id == 31) {
         metadata->xlayer_map = aom_rb_read_unsigned_literal(&rb, 32);
         if ((metadata->xlayer_map & (1u << 31)) != 0) {
@@ -2247,13 +2247,13 @@ static const int default_op_index = 0;
 // are consistent with the OBU-level filtering already applied by Annex F.
 // When the retention map is not ready (no OPS selected, SBE disabled, or map
 // not yet built), the decoder decodes all layers in the bitstream.
-static void avm_set_current_operating_point(struct AV2Decoder *pbi,
+static void av2_set_current_operating_point(struct AV2Decoder *pbi,
                                             int xlayer_id) {
   struct DecOperatingPointParams *dec_op_params = &pbi->dec_op_params;
 
   // If the Annex F retention map is ready, derive num_mlayers and num_tlayers
   // from it so that the decoder layer counts match the OBU filter exactly.
-  // This ensures avm_set_current_operating_point and the SBE are always
+  // This ensures av2_set_current_operating_point and the SBE are always
   // consistent and share the same source of truth.
   if (pbi->sbe_state.retention_map_ready && pbi->sbe_state.extraction_enabled) {
     int xid = xlayer_id;
@@ -2354,11 +2354,11 @@ static void avm_set_current_operating_point(struct AV2Decoder *pbi,
 // On success, sets *p_data_end and returns a boolean that indicates whether
 // the decoding of the current frame is finished. On failure, sets
 // cm->error.error_code and returns -1.
-int avm_decode_frame_from_obus(struct AV2Decoder *pbi, const uint8_t *data,
+int av2_decode_frame_from_obus(struct AV2Decoder *pbi, const uint8_t *data,
                                const uint8_t *data_end,
                                const uint8_t **p_data_end) {
 #if CONFIG_COLLECT_COMPONENT_TIMING
-  start_timing(pbi, avm_decode_frame_from_obus_time);
+  start_timing(pbi, av2_decode_frame_from_obus_time);
 #endif
   AV2_COMMON *const cm = &pbi->common;
   int frame_decoding_finished = 0;
@@ -2499,7 +2499,7 @@ int avm_decode_frame_from_obus(struct AV2Decoder *pbi, const uint8_t *data,
       break;
     }
 
-    aom_codec_err_t status = avm_read_obu_header_and_size(
+    aom_codec_err_t status = av2_read_obu_header_and_size(
         data, bytes_available, &obu_header, &payload_size, &bytes_read);
 
     if (status != AOM_CODEC_OK) {
@@ -2507,7 +2507,7 @@ int avm_decode_frame_from_obus(struct AV2Decoder *pbi, const uint8_t *data,
       return -1;
     }
 
-    // Note: avm_read_obu_header_and_size() takes care of checking that this
+    // Note: av2_read_obu_header_and_size() takes care of checking that this
     // doesn't cause 'data' to advance past 'data_end'.
     data += bytes_read;
 
@@ -2771,7 +2771,7 @@ int avm_decode_frame_from_obus(struct AV2Decoder *pbi, const uint8_t *data,
       case OBU_OPERATING_POINT_SET:
         decoded_payload_size =
             av2_read_operating_point_set_obu(pbi, cm->xlayer_id, &rb);
-        avm_set_current_operating_point(pbi, cm->xlayer_id);
+        av2_set_current_operating_point(pbi, cm->xlayer_id);
         if (cm->error.error_code != AOM_CODEC_OK) return -1;
         if (pbi->sbe_state.extraction_enabled) {
           if (cm->xlayer_id == GLOBAL_XLAYER_ID) {
@@ -3081,7 +3081,7 @@ int avm_decode_frame_from_obus(struct AV2Decoder *pbi, const uint8_t *data,
     size_t decoded_payload_size = 0;
     size_t bytes_read = 0;
     const size_t bytes_available = data_end - data;
-    aom_codec_err_t status = avm_read_obu_header_and_size(
+    aom_codec_err_t status = av2_read_obu_header_and_size(
         data, bytes_available, &obu_header, &payload_size, &bytes_read);
 
     if (status != AOM_CODEC_OK) {
@@ -3093,7 +3093,7 @@ int avm_decode_frame_from_obus(struct AV2Decoder *pbi, const uint8_t *data,
     if (!(is_metadata_obu(obu_header.type) || (obu_header.type == OBU_PADDING)))
       break;
 
-    // Note: avm_read_obu_header_and_size() takes care of checking that this
+    // Note: av2_read_obu_header_and_size() takes care of checking that this
     // doesn't cause 'data' to advance past 'data_end'.
     data += bytes_read;
 
@@ -3167,7 +3167,7 @@ int avm_decode_frame_from_obus(struct AV2Decoder *pbi, const uint8_t *data,
   *p_data_end = data;
 
 #if CONFIG_COLLECT_COMPONENT_TIMING
-  end_timing(pbi, avm_decode_frame_from_obus_time);
+  end_timing(pbi, av2_decode_frame_from_obus_time);
 
   // Print out timing information.
   int i;

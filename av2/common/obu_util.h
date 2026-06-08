@@ -9,8 +9,8 @@
  * source code in the PATENTS file, you can obtain it at
  * aomedia.org/license/patent-license/.
  */
-#ifndef AVM_AV2_COMMON_OBU_UTIL_H_
-#define AVM_AV2_COMMON_OBU_UTIL_H_
+#ifndef AV2_AV2_COMMON_OBU_UTIL_H_
+#define AV2_AV2_COMMON_OBU_UTIL_H_
 
 #include "aom/aom_codec.h"
 #include "av2/common/enums.h"
@@ -29,9 +29,9 @@ typedef struct {
   int obu_xlayer_id;
 } ObuHeader;
 
-// If avm_read_obu_header_and_size() returns AOM_CODEC_OK, it is guaranteed
+// If av2_read_obu_header_and_size() returns AOM_CODEC_OK, it is guaranteed
 // that *bytes_read <= bytes_available.
-aom_codec_err_t avm_read_obu_header_and_size(const uint8_t *data,
+aom_codec_err_t av2_read_obu_header_and_size(const uint8_t *data,
                                              size_t bytes_available,
                                              ObuHeader *obu_header,
                                              size_t *const payload_size,
@@ -74,4 +74,4 @@ static INLINE int av2_obu_type_is_valid(OBU_TYPE type) {
   return type >= OBU_SEQUENCE_HEADER && type < NUM_OBU_TYPES;
 }
 
-#endif  // AVM_AV2_COMMON_OBU_UTIL_H_
+#endif  // AV2_AV2_COMMON_OBU_UTIL_H_

@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_RESIZE_H_
-#define AVM_AV2_COMMON_RESIZE_H_
+#ifndef AV2_AV2_COMMON_RESIZE_H_
+#define AV2_AV2_COMMON_RESIZE_H_
 
 #include <stdio.h>
 #include "aom/aom_integer.h"
@@ -88,4 +88,4 @@ extern const int16_t av2_resize_filter_normative[1 << RS_SUBPEL_BITS]
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_RESIZE_H_
+#endif  // AV2_AV2_COMMON_RESIZE_H_

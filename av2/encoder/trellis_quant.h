@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_TRELLIS_QUANT_H_
-#define AVM_AV2_ENCODER_TRELLIS_QUANT_H_
+#ifndef AV2_AV2_ENCODER_TRELLIS_QUANT_H_
+#define AV2_AV2_ENCODER_TRELLIS_QUANT_H_
 
 #include "config/aom_config.h"
 
@@ -234,4 +234,4 @@ int av2_trellis_quant(const struct AV2_COMP *cpi, MACROBLOCK *x, int plane,
 }
 #endif
 
-#endif  // AVM_AV2_ENCODER_TRELLIS_QUANT_H_
+#endif  // AV2_AV2_ENCODER_TRELLIS_QUANT_H_

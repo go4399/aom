@@ -203,93 +203,93 @@ typedef enum aom_metadata_insert_flags {
 typedef struct aom_metadata_array aom_metadata_array_t;
 
 #if CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
-typedef enum avm_metadata_necessity {
-  AVM_NECESSITY_UNDEFINED = 0,
-  AVM_NECESSITY_NECESSARY = 1,
-  AVM_NECESSITY_ADVISORY = 2,
-  AVM_NECESSITY_MIXED = 3,
-} avm_metadata_necessity_t;
+typedef enum av2_metadata_necessity {
+  AV2_NECESSITY_UNDEFINED = 0,
+  AV2_NECESSITY_NECESSARY = 1,
+  AV2_NECESSITY_ADVISORY = 2,
+  AV2_NECESSITY_MIXED = 3,
+} av2_metadata_necessity_t;
 
-typedef enum avm_metadata_application_id {
-  AVM_APPID_UNDEFINED = 0,
-  AVM_APPID_MOBILE_OR_TV = 1,
-  AVM_APPID_MOBILE = 2,
-  AVM_APPID_TV = 3,
-  AVM_APPID_HMD = 4,
-  AVM_APPID_WEARABLE = 5,
-} avm_metadata_application_id_t;
+typedef enum av2_metadata_application_id {
+  AV2_APPID_UNDEFINED = 0,
+  AV2_APPID_MOBILE_OR_TV = 1,
+  AV2_APPID_MOBILE = 2,
+  AV2_APPID_TV = 3,
+  AV2_APPID_HMD = 4,
+  AV2_APPID_WEARABLE = 5,
+} av2_metadata_application_id_t;
 
-typedef enum avm_metadata_persistence {
-  AVM_GLOBAL_PERSISTENCE = 0,
-  AVM_BASIC_PERSISTENCE = 1,
-  AVM_NO_PERSISTENCE = 2,
-  AVM_ENHANCED_PERSISTENCE = 3,
-} avm_metadata_persistence_t;
+typedef enum av2_metadata_persistence {
+  AV2_GLOBAL_PERSISTENCE = 0,
+  AV2_BASIC_PERSISTENCE = 1,
+  AV2_NO_PERSISTENCE = 2,
+  AV2_ENHANCED_PERSISTENCE = 3,
+} av2_metadata_persistence_t;
 
-typedef enum avm_metadata_layer {
-  AVM_LAYER_UNSPECIFIED = 0,
-  AVM_LAYER_GLOBAL = 1,
-  AVM_LAYER_CURRENT = 2,
-  AVM_LAYER_VALUES = 3,
-} avm_metadata_layer_t;
+typedef enum av2_metadata_layer {
+  AV2_LAYER_UNSPECIFIED = 0,
+  AV2_LAYER_GLOBAL = 1,
+  AV2_LAYER_CURRENT = 2,
+  AV2_LAYER_VALUES = 3,
+} av2_metadata_layer_t;
 #endif
 
 #if CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
-typedef enum avm_pic_scan_type_t {
-  AVM_SCAN_TYPE_UNSPECIFIED = 0,
-  AVM_SCAN_TYPE_PROGRESSIVE = 1,
-  AVM_SCAN_TYPE_INTERLACE = 2,
-  AVM_SCAN_TYPE_INTERLACE_COMPLEMENTARY = 3,
-  AVM_NUM_SCAN_TYPES = 4,
-} avm_pic_scan_type_t;
+typedef enum av2_pic_scan_type_t {
+  AV2_SCAN_TYPE_UNSPECIFIED = 0,
+  AV2_SCAN_TYPE_PROGRESSIVE = 1,
+  AV2_SCAN_TYPE_INTERLACE = 2,
+  AV2_SCAN_TYPE_INTERLACE_COMPLEMENTARY = 3,
+  AV2_NUM_SCAN_TYPES = 4,
+} av2_pic_scan_type_t;
 
-typedef enum avm_pic_struct_type_t {
-  AVM_PIC_FRAME = 0,
-  AVM_PIC_TOP_FIELD = 1,
-  AVM_PIC_BOTTOM_FIELD = 2,
-  AVM_PIC_TOP_BOTTOM_FIELD = 3,
-  AVM_PIC_BOTTOM_TOP_FIELD = 4,
-  AVM_PIC_TOP_BOTTOM_TOP_FIELD = 5,
-  AVM_PIC_BOTTOM_TOP_BOTTOM_FIELD = 6,
-  AVM_PIC_FRAME_DOUBLING = 7,
-  AVM_PIC_FRAME_TRIPLING = 8,
-  AVM_PIC_TOP_PREV_BOTTOM_FIELD = 9,
-  AVM_PIC_BOTTOM_PREV_TOP_FIELD = 10,
-  AVM_PIC_TOP_NEXT_TOP_FIELD = 11,
-  AVM_PIC_BOTTOM_NEXT_TOP_FIELD = 12,
-  AVM_NUM_PIC_STRUCT_TYPE = 13,
-} avm_pic_struct_type_t;
+typedef enum av2_pic_struct_type_t {
+  AV2_PIC_FRAME = 0,
+  AV2_PIC_TOP_FIELD = 1,
+  AV2_PIC_BOTTOM_FIELD = 2,
+  AV2_PIC_TOP_BOTTOM_FIELD = 3,
+  AV2_PIC_BOTTOM_TOP_FIELD = 4,
+  AV2_PIC_TOP_BOTTOM_TOP_FIELD = 5,
+  AV2_PIC_BOTTOM_TOP_BOTTOM_FIELD = 6,
+  AV2_PIC_FRAME_DOUBLING = 7,
+  AV2_PIC_FRAME_TRIPLING = 8,
+  AV2_PIC_TOP_PREV_BOTTOM_FIELD = 9,
+  AV2_PIC_BOTTOM_PREV_TOP_FIELD = 10,
+  AV2_PIC_TOP_NEXT_TOP_FIELD = 11,
+  AV2_PIC_BOTTOM_NEXT_TOP_FIELD = 12,
+  AV2_NUM_PIC_STRUCT_TYPE = 13,
+} av2_pic_struct_type_t;
 
-typedef struct avm_metadata_pic_struct_t {
-  avm_pic_struct_type_t mps_pic_struct_type;
-  avm_pic_scan_type_t mps_source_scan_type_idc;
+typedef struct av2_metadata_pic_struct_t {
+  av2_pic_struct_type_t mps_pic_struct_type;
+  av2_pic_scan_type_t mps_source_scan_type_idc;
   int mps_duplicate_flag;
-} avm_metadata_pic_struct_t;
+} av2_metadata_pic_struct_t;
 
-typedef struct avm_metadata_temporal_point_info_t {
+typedef struct av2_metadata_temporal_point_info_t {
   uint32_t mtpi_frame_presentation_time;
-} avm_metadata_temporal_point_info_t;
+} av2_metadata_temporal_point_info_t;
 
-typedef enum avm_sample_aspect_ratio {
-  AVM_SAR_IDC_UNSPECIFIED = 0,
-  AVM_SAR_IDC_1_TO_1 = 1,
-  AVM_SAR_IDC_12_TO_11 = 2,
-  AVM_SAR_IDC_10_TO_11 = 3,
-  AVM_SAR_IDC_16_TO_11 = 4,
-  AVM_SAR_IDC_40_TO_33 = 5,
-  AVM_SAR_IDC_24_TO_11 = 6,
-  AVM_SAR_IDC_20_TO_11 = 7,
-  AVM_SAR_IDC_32_TO_11 = 8,
-  AVM_SAR_IDC_80_TO_33 = 9,
-  AVM_SAR_IDC_18_TO_11 = 10,
-  AVM_SAR_IDC_15_TO_11 = 11,
-  AVM_SAR_IDC_64_TO_33 = 12,
-  AVM_SAR_IDC_160_TO_99 = 13,
-  AVM_SAR_IDC_4_TO_3 = 14,
-  AVM_SAR_IDC_3_TO_2 = 15,
-  AVM_SAR_IDC_2_TO_1 = 16,
-  AVM_SAR_IDC_255 = 255
-} avm_sample_aspect_ratio_t;
+typedef enum av2_sample_aspect_ratio {
+  AV2_SAR_IDC_UNSPECIFIED = 0,
+  AV2_SAR_IDC_1_TO_1 = 1,
+  AV2_SAR_IDC_12_TO_11 = 2,
+  AV2_SAR_IDC_10_TO_11 = 3,
+  AV2_SAR_IDC_16_TO_11 = 4,
+  AV2_SAR_IDC_40_TO_33 = 5,
+  AV2_SAR_IDC_24_TO_11 = 6,
+  AV2_SAR_IDC_20_TO_11 = 7,
+  AV2_SAR_IDC_32_TO_11 = 8,
+  AV2_SAR_IDC_80_TO_33 = 9,
+  AV2_SAR_IDC_18_TO_11 = 10,
+  AV2_SAR_IDC_15_TO_11 = 11,
+  AV2_SAR_IDC_64_TO_33 = 12,
+  AV2_SAR_IDC_160_TO_99 = 13,
+  AV2_SAR_IDC_4_TO_3 = 14,
+  AV2_SAR_IDC_3_TO_2 = 15,
+  AV2_SAR_IDC_2_TO_1 = 16,
+  AV2_SAR_IDC_255 = 255
+} av2_sample_aspect_ratio_t;
 #endif
 
 /*!\brief Metadata payload. */
@@ -300,12 +300,12 @@ typedef struct aom_metadata {
   aom_metadata_insert_flags_t insert_flag; /**< Metadata insertion flag */
   uint8_t is_suffix;
 #if CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
-  avm_metadata_necessity_t necessity_idc;
-  avm_metadata_application_id_t application_id;
+  av2_metadata_necessity_t necessity_idc;
+  av2_metadata_application_id_t application_id;
   uint8_t cancel_flag;
   uint8_t priority;
-  avm_metadata_persistence_t persistence_idc;
-  avm_metadata_layer_t layer_idc;
+  av2_metadata_persistence_t persistence_idc;
+  av2_metadata_layer_t layer_idc;
   uint32_t xlayer_map;
   uint8_t mlayer_map[31];
 #endif

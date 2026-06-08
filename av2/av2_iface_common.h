@@ -9,8 +9,8 @@
  * source code in the PATENTS file, you can obtain it at
  * aomedia.org/license/patent-license/.
  */
-#ifndef AVM_AV2_AV2_IFACE_COMMON_H_
-#define AVM_AV2_AV2_IFACE_COMMON_H_
+#ifndef AV2_AV2_AV2_IFACE_COMMON_H_
+#define AV2_AV2_AV2_IFACE_COMMON_H_
 
 #include <assert.h>
 
@@ -45,7 +45,7 @@ typedef struct {
 
 static void yuvconfig2image(aom_image_t *img, const YV12_BUFFER_CONFIG *yv12,
                             void *user_priv) {
-  /* avm_img_wrap() doesn't allow specifying independent strides for
+  /* av2_img_wrap() doesn't allow specifying independent strides for
    * the Y, U, and V planes, nor other alignment adjustments that
    * might be representable by a YV12_BUFFER_CONFIG, so we just
    * initialize all the fields.
@@ -246,4 +246,4 @@ static void image2yuvconfig_upshift(aom_image_t *hbd_img,
   image2yuvconfig(hbd_img, yv12);
   yv12->metadata = img->metadata;
 }
-#endif  // AVM_AV2_AV2_IFACE_COMMON_H_
+#endif  // AV2_AV2_AV2_IFACE_COMMON_H_

@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_CDEF_BLOCK_SIMD_H_
-#define AVM_AV2_COMMON_CDEF_BLOCK_SIMD_H_
+#ifndef AV2_AV2_COMMON_CDEF_BLOCK_SIMD_H_
+#define AV2_AV2_COMMON_CDEF_BLOCK_SIMD_H_
 
 #include "config/av2_rtcd.h"
 
@@ -688,4 +688,4 @@ void SIMD_FUNC(av2_cdef_copy_rect8_16bit_to_16bit)(uint16_t *const dst,
   }
 }
 
-#endif  // AVM_AV2_COMMON_CDEF_BLOCK_SIMD_H_
+#endif  // AV2_AV2_COMMON_CDEF_BLOCK_SIMD_H_

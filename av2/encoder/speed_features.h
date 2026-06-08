@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_SPEED_FEATURES_H_
-#define AVM_AV2_ENCODER_SPEED_FEATURES_H_
+#ifndef AV2_AV2_ENCODER_SPEED_FEATURES_H_
+#define AV2_AV2_ENCODER_SPEED_FEATURES_H_
 
 #include "av2/common/enums.h"
 #include "av2/encoder/enc_enums.h"
@@ -1016,4 +1016,4 @@ void av2_set_speed_features_qindex_dependent(struct AV2_COMP *cpi, int speed);
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_SPEED_FEATURES_H_
+#endif  // AV2_AV2_ENCODER_SPEED_FEATURES_H_

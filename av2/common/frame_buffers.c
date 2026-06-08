@@ -17,8 +17,8 @@
 #include "aom/aom_frame_buffer.h"
 #include "av2/common/enums.h"
 
-#define AVM_MAXIMUM_REF_BUFFERS AOM_MAXIMUM_REF_BUFFERS
-#define AVM_MAXIMUM_WORK_BUFFERS AOM_MAXIMUM_WORK_BUFFERS
+#define AV2_MAXIMUM_REF_BUFFERS AOM_MAXIMUM_REF_BUFFERS
+#define AV2_MAXIMUM_WORK_BUFFERS AOM_MAXIMUM_WORK_BUFFERS
 
 int av2_alloc_internal_frame_buffers(InternalFrameBufferList *list) {
   assert(list != NULL);
@@ -29,8 +29,8 @@ int av2_alloc_internal_frame_buffers(InternalFrameBufferList *list) {
   // frame buffers is (total references numbers + current frame) * 2 + working
   // buffers for multh-threads
   list->num_internal_frame_buffers =
-      (AVM_MAXIMUM_REF_BUFFERS + 1) * 2 * AV2_MAX_NUM_STREAMS +
-      AVM_MAXIMUM_WORK_BUFFERS;
+      (AV2_MAXIMUM_REF_BUFFERS + 1) * 2 * AV2_MAX_NUM_STREAMS +
+      AV2_MAXIMUM_WORK_BUFFERS;
   list->int_fb = (InternalFrameBuffer *)aom_calloc(
       list->num_internal_frame_buffers, sizeof(*list->int_fb));
   if (list->int_fb == NULL) {

@@ -80,7 +80,7 @@ void av2_hash_table_clear_all(hash_table *p_hash_table) {
   }
   for (int i = 0; i < kMaxAddr; i++) {
     if (p_hash_table->p_lookup_table[i] != NULL) {
-      avm_vector_destroy(p_hash_table->p_lookup_table[i]);
+      av2_vector_destroy(p_hash_table->p_lookup_table[i]);
       aom_free(p_hash_table->p_lookup_table[i]);
       p_hash_table->p_lookup_table[i] = NULL;
     }
@@ -110,12 +110,12 @@ static void hash_table_add_to_table(hash_table *p_hash_table,
   if (p_hash_table->p_lookup_table[hash_value] == NULL) {
     p_hash_table->p_lookup_table[hash_value] =
         aom_malloc(sizeof(p_hash_table->p_lookup_table[0][0]));
-    avm_vector_setup(p_hash_table->p_lookup_table[hash_value], 10,
+    av2_vector_setup(p_hash_table->p_lookup_table[hash_value], 10,
                      sizeof(curr_block_hash[0]));
-    avm_vector_push_back(p_hash_table->p_lookup_table[hash_value],
+    av2_vector_push_back(p_hash_table->p_lookup_table[hash_value],
                          curr_block_hash);
   } else {
-    avm_vector_push_back(p_hash_table->p_lookup_table[hash_value],
+    av2_vector_push_back(p_hash_table->p_lookup_table[hash_value],
                          curr_block_hash);
   }
 }
@@ -132,7 +132,7 @@ int32_t av2_hash_table_count(const hash_table *p_hash_table,
 Iterator av2_hash_get_first_iterator(hash_table *p_hash_table,
                                      uint32_t hash_value) {
   assert(av2_hash_table_count(p_hash_table, hash_value) > 0);
-  return avm_vector_begin(p_hash_table->p_lookup_table[hash_value]);
+  return av2_vector_begin(p_hash_table->p_lookup_table[hash_value]);
 }
 
 void av2_generate_block_2x2_hash_value(IntraBCHashInfo *intrabc_hash_info,
@@ -327,7 +327,7 @@ void av2_get_block_hash_value(IntraBCHashInfo *intrabc_hash_info,
       int pos = (y_pos >> 1) * sub_block_in_width + (x_pos >> 1);
       get_pixels_in_1D_short_array_by_block_2x2(y_src + y_pos * stride + x_pos,
                                                 stride, pixel_to_hash);
-      assert(pos < AVM_BUFFER_SIZE_FOR_BLOCK_HASH);
+      assert(pos < AV2_BUFFER_SIZE_FOR_BLOCK_HASH);
       buf_1[0][pos] = av2_get_crc_value(calc_1, (uint8_t *)pixel_to_hash,
                                         sizeof(pixel_to_hash));
       buf_2[0][pos] = av2_get_crc_value(calc_2, (uint8_t *)pixel_to_hash,
@@ -352,10 +352,10 @@ void av2_get_block_hash_value(IntraBCHashInfo *intrabc_hash_info,
       for (int x_pos = 0; x_pos < sub_block_in_width; x_pos++) {
         int srcPos = (y_pos << 1) * src_sub_block_in_width + (x_pos << 1);
 
-        assert(srcPos + 1 < AVM_BUFFER_SIZE_FOR_BLOCK_HASH);
+        assert(srcPos + 1 < AV2_BUFFER_SIZE_FOR_BLOCK_HASH);
         assert(srcPos + src_sub_block_in_width + 1 <
-               AVM_BUFFER_SIZE_FOR_BLOCK_HASH);
-        assert(dst_pos < AVM_BUFFER_SIZE_FOR_BLOCK_HASH);
+               AV2_BUFFER_SIZE_FOR_BLOCK_HASH);
+        assert(dst_pos < AV2_BUFFER_SIZE_FOR_BLOCK_HASH);
         to_hash[0] = buf_1[src_idx][srcPos];
         to_hash[1] = buf_1[src_idx][srcPos + 1];
         to_hash[2] = buf_1[src_idx][srcPos + src_sub_block_in_width];

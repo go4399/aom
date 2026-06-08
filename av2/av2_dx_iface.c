@@ -10,7 +10,7 @@
  * aomedia.org/license/patent-license/.
  */
 
-#define aom_codec_alg_priv avm_codec_alg_priv
+#define aom_codec_alg_priv av2_codec_alg_priv
 
 #include <stdbool.h>
 #include <stdlib.h>
@@ -34,35 +34,35 @@
 #include "av2/common/obu_util.h"
 #include "av2/common/gdf.h"
 
-#define AVM_CODEC_USE_PSNR AOM_CODEC_USE_PSNR
-#define AVM_CODEC_USE_STREAM_PSNR 0x10000
-#define AVM_CODEC_USE_PER_FRAME_STATS 0x20000
-#define AVM_CODEC_USE_PER_FRAME_HLS_INFO 0x40000
-#define AVM_CODEC_CX_FRAME_NULL_PKT AOM_CODEC_CX_FRAME_NULL_PKT
-#define AVM_CODEC_CX_FRAME_PKT AOM_CODEC_CX_FRAME_PKT
-#define AVM_ENC_NO_SCALE_BORDER AOM_ENC_NO_SCALE_BORDER
+#define AV2_CODEC_USE_PSNR AOM_CODEC_USE_PSNR
+#define AV2_CODEC_USE_STREAM_PSNR 0x10000
+#define AV2_CODEC_USE_PER_FRAME_STATS 0x20000
+#define AV2_CODEC_USE_PER_FRAME_HLS_INFO 0x40000
+#define AV2_CODEC_CX_FRAME_NULL_PKT AOM_CODEC_CX_FRAME_NULL_PKT
+#define AV2_CODEC_CX_FRAME_PKT AOM_CODEC_CX_FRAME_PKT
+#define AV2_ENC_NO_SCALE_BORDER AOM_ENC_NO_SCALE_BORDER
 #define aom_pts_t aom_codec_pts_t
-#define AVM_KF_DISABLED AOM_KF_DISABLED
+#define AV2_KF_DISABLED AOM_KF_DISABLED
 #define CONFIG_SHARP_SETTINGS 0
 
-#define avm_inspect_cb aom_inspect_cb
-#define avm_codec_stream_info_t aom_codec_stream_info_t
-#define avm_get_worker_interface aom_get_worker_interface
-#define avm_img_free aom_img_free
-#define avm_img_alloc aom_img_alloc
+#define av2_inspect_cb aom_inspect_cb
+#define av2_codec_stream_info_t aom_codec_stream_info_t
+#define av2_get_worker_interface aom_get_worker_interface
+#define av2_img_free aom_img_free
+#define av2_img_alloc aom_img_alloc
 
-#define avm_screen_content_tools_info aom_screen_content_tools_info
-#define avm_still_picture_info aom_still_picture_info
+#define av2_screen_content_tools_info aom_screen_content_tools_info
+#define av2_still_picture_info aom_still_picture_info
 #define av2_s_frame_info aom_s_frame_info
-#define avm_img_add_metadata aom_img_add_metadata
-#define avm_img_remove_metadata aom_img_remove_metadata
+#define av2_img_add_metadata aom_img_add_metadata
+#define av2_img_remove_metadata aom_img_remove_metadata
 #define FRAMEFLAGS_HAS_FILM_GRAIN_PARAMS (1 << 7)
 
 #define av2_ref_frame_t av1_ref_frame_t
-#define AVM_FRAME_HAS_FILM_GRAIN_PARAMS FRAMEFLAGS_HAS_FILM_GRAIN_PARAMS
-#define avm_tile_info aom_tile_info
+#define AV2_FRAME_HAS_FILM_GRAIN_PARAMS FRAMEFLAGS_HAS_FILM_GRAIN_PARAMS
+#define av2_tile_info aom_tile_info
 #define is_single_picture_header_flag is_reduced_still_picture_hdr
-#define avm_img_alloc_with_cb aom_img_alloc_with_cb
+#define av2_img_alloc_with_cb aom_img_alloc_with_cb
 
 #define av2_s_frame_info aom_s_frame_info
 #define ACCT_INFO(x) x
@@ -84,10 +84,10 @@ int av2_get_bitdepth_from_index(uint32_t bitdepth_lut_idx);
 
 #include "av2/av2_iface_common.h"
 
-struct avm_codec_alg_priv {
+struct av2_codec_alg_priv {
   aom_codec_priv_t base;
   aom_codec_dec_cfg_t cfg;
-  avm_codec_stream_info_t si;
+  av2_codec_stream_info_t si;
   aom_image_t img;
   int flushed;
   int invert_tile_order;
@@ -126,11 +126,11 @@ struct avm_codec_alg_priv {
   unsigned int enable_subgop_stats;
 #if CONFIG_INSPECTION
   // Inspection callback when a regular frame finishes decoding.
-  avm_inspect_cb inspect_cb;
+  av2_inspect_cb inspect_cb;
   // Inspection callback when a superblock finishes decoding.
-  avm_inspect_cb inspect_sb_cb;
+  av2_inspect_cb inspect_sb_cb;
   // Inspection callback when a TIP frame is output.
-  avm_inspect_cb inspect_tip_cb;
+  av2_inspect_cb inspect_tip_cb;
   void *inspect_ctx;
 #endif
 };
@@ -184,7 +184,7 @@ static aom_codec_err_t decoder_destroy(aom_codec_alg_priv_t *ctx) {
   if (ctx->frame_worker != NULL) {
     AVxWorker *const worker = ctx->frame_worker;
     FrameWorkerData *const frame_worker_data = (FrameWorkerData *)worker->data1;
-    avm_get_worker_interface()->end(worker);
+    av2_get_worker_interface()->end(worker);
     aom_free(frame_worker_data->pbi->common.tpl_mvs);
     aom_free(frame_worker_data->pbi->common.tpl_mvs_rows);
     frame_worker_data->pbi->common.tpl_mvs = NULL;
@@ -223,8 +223,8 @@ static aom_codec_err_t decoder_destroy(aom_codec_alg_priv_t *ctx) {
 
   aom_free(ctx->frame_worker);
   aom_free(ctx->buffer_pool);
-  avm_img_free(&ctx->img);
-  avm_img_free(&ctx->image_with_grain);
+  av2_img_free(&ctx->img);
+  av2_img_free(&ctx->image_with_grain);
   aom_free(ctx);
   return AOM_CODEC_OK;
 }
@@ -261,7 +261,7 @@ static aom_codec_err_t parse_chroma_format_bitdepth(
 
 static aom_codec_err_t decoder_peek_si_internal(const uint8_t *data,
                                                 size_t data_sz,
-                                                avm_codec_stream_info_t *si,
+                                                av2_codec_stream_info_t *si,
                                                 int *is_intra_only) {
   int intra_only_flag = 0;
   int got_sequence_header = 0;
@@ -278,7 +278,7 @@ static aom_codec_err_t decoder_peek_si_internal(const uint8_t *data,
   size_t payload_size = 0;
   size_t bytes_read = 0;
   uint8_t single_picture_header_flag = 0;
-  aom_codec_err_t status = avm_read_obu_header_and_size(
+  aom_codec_err_t status = av2_read_obu_header_and_size(
       data, data_sz, &obu_header, &payload_size, &bytes_read);
   if (status != AOM_CODEC_OK) return status;
 
@@ -290,7 +290,7 @@ static aom_codec_err_t decoder_peek_si_internal(const uint8_t *data,
     data += bytes_read + payload_size;
     data_sz -= bytes_read + payload_size;
 
-    status = avm_read_obu_header_and_size(data, data_sz, &obu_header,
+    status = av2_read_obu_header_and_size(data, data_sz, &obu_header,
                                           &payload_size, &bytes_read);
     if (status != AOM_CODEC_OK) return status;
   }
@@ -371,7 +371,7 @@ static aom_codec_err_t decoder_peek_si_internal(const uint8_t *data,
     data += payload_size;
     data_sz -= payload_size;
     if (data_sz == 0) break;  // exit if we're out of OBUs
-    status = avm_read_obu_header_and_size(data, data_sz, &obu_header,
+    status = av2_read_obu_header_and_size(data, data_sz, &obu_header,
                                           &payload_size, &bytes_read);
     if (status != AOM_CODEC_OK) return status;
   }
@@ -381,12 +381,12 @@ static aom_codec_err_t decoder_peek_si_internal(const uint8_t *data,
 }
 
 static aom_codec_err_t decoder_peek_si(const uint8_t *data, size_t data_sz,
-                                       avm_codec_stream_info_t *si) {
+                                       av2_codec_stream_info_t *si) {
   return decoder_peek_si_internal(data, data_sz, si, NULL);
 }
 
 static aom_codec_err_t decoder_get_si(aom_codec_alg_priv_t *ctx,
-                                      avm_codec_stream_info_t *si) {
+                                      av2_codec_stream_info_t *si) {
   memcpy(si, &ctx->si, sizeof(*si));
 
   return AOM_CODEC_OK;
@@ -452,7 +452,7 @@ static int frame_worker_hook(void *arg1, void *arg2) {
 }
 
 static aom_codec_err_t init_decoder(aom_codec_alg_priv_t *ctx) {
-  const AVxWorkerInterface *const winterface = avm_get_worker_interface();
+  const AVxWorkerInterface *const winterface = av2_get_worker_interface();
 
   ctx->last_show_frame = NULL;
   ctx->need_resync = 1;
@@ -564,7 +564,7 @@ static INLINE void check_resync(aom_codec_alg_priv_t *const ctx,
 static aom_codec_err_t decode_one(aom_codec_alg_priv_t *ctx,
                                   const uint8_t **data, size_t data_sz,
                                   void *user_priv) {
-  const AVxWorkerInterface *const winterface = avm_get_worker_interface();
+  const AVxWorkerInterface *const winterface = av2_get_worker_interface();
 
   // Determine the stream parameters. Note that we rely on peek_si to
   // validate that we have a buffer that does not wrap around the top
@@ -708,7 +708,7 @@ static size_t check_frame_unit_data(struct AV2Decoder *pbi, const uint8_t *data,
   while (bytes_available > 0) {
     size_t payload_size = 0;
     size_t bytes_read = 0;
-    res = avm_read_obu_header_and_size(data_read, bytes_available, &obu_header,
+    res = av2_read_obu_header_and_size(data_read, bytes_available, &obu_header,
                                        &payload_size, &bytes_read);
 
     if (res != AOM_CODEC_OK) return 0;
@@ -1044,7 +1044,7 @@ static aom_codec_err_t decoder_decode(aom_codec_alg_priv_t *ctx,
   FrameWorkerData *const frame_worker_data = (FrameWorkerData *)worker->data1;
 #endif  // !CONFIG_INSPECTION
 
-  // When this function (avm_codec_decode()) is invoked at the encoder as a test
+  // When this function (av2_codec_decode()) is invoked at the encoder as a test
   // decoder, the input to this function (data) may contain more than one
   // frame_unit(for example, doh16,8,4,3,2,1). Therefore, "data" is analyzed and
   // loop with while() to make the test decoder in the encoder works same as a
@@ -1192,14 +1192,14 @@ static aom_image_t *add_grain_if_needed(aom_codec_alg_priv_t *ctx,
   AllocCbParam param;
   param.pool = pool;
   param.fb = fb;
-  if (!avm_img_alloc_with_cb(grain_img, img->fmt, w_even, h_even, 16,
+  if (!av2_img_alloc_with_cb(grain_img, img->fmt, w_even, h_even, 16,
                              AllocWithGetFrameBufferCb, &param)) {
     return NULL;
   }
 
   grain_img->user_priv = img->user_priv;
   grain_img->fb_priv = fb->priv;
-  avm_img_remove_metadata(grain_img);
+  av2_img_remove_metadata(grain_img);
   grain_img->metadata = img->metadata;
   grain_img->tlayer_id = img->tlayer_id;
   grain_img->mlayer_id = img->mlayer_id;
@@ -1235,13 +1235,13 @@ static void copy_frame_hash_metadata_to_img(
   if (output_frame_buf->raw_frame_hash.is_present) {
     FrameHash *raw = &output_frame_buf->raw_frame_hash;
     const int sz = 1 + (raw->per_plane ? num_planes * 16 : 16);
-    avm_img_add_metadata(img, OBU_METADATA_TYPE_DECODED_FRAME_HASH,
+    av2_img_add_metadata(img, OBU_METADATA_TYPE_DECODED_FRAME_HASH,
                          (uint8_t *)raw, sz, AOM_MIF_ANY_FRAME);
   }
   if (output_frame_buf->grain_frame_hash.is_present) {
     FrameHash *grain = &output_frame_buf->grain_frame_hash;
     const int sz = 1 + (grain->per_plane ? num_planes * 16 : 16);
-    avm_img_add_metadata(img, OBU_METADATA_TYPE_DECODED_FRAME_HASH,
+    av2_img_add_metadata(img, OBU_METADATA_TYPE_DECODED_FRAME_HASH,
                          (uint8_t *)grain, sz, AOM_MIF_ANY_FRAME);
   }
 }
@@ -1260,7 +1260,7 @@ static aom_image_t *decoder_get_frame_(aom_codec_alg_priv_t *ctx,
   uintptr_t *index = (uintptr_t *)iter;
 
   if (ctx->frame_worker != NULL) {
-    const AVxWorkerInterface *const winterface = avm_get_worker_interface();
+    const AVxWorkerInterface *const winterface = av2_get_worker_interface();
     AVxWorker *const worker = ctx->frame_worker;
     FrameWorkerData *const frame_worker_data = (FrameWorkerData *)worker->data1;
     AV2Decoder *const pbi = frame_worker_data->pbi;
@@ -1278,7 +1278,7 @@ static aom_image_t *decoder_get_frame_(aom_codec_alg_priv_t *ctx,
         RefCntBuffer *const output_frame_buf = pbi->output_frames[*index];
         ctx->last_show_frame = output_frame_buf;
         if (ctx->need_resync) return NULL;
-        avm_img_remove_metadata(&ctx->img);
+        av2_img_remove_metadata(&ctx->img);
         yuvconfig2image(&ctx->img, sd, frame_worker_data->user_priv);
         move_decoder_metadata_to_img(pbi, &ctx->img);
         copy_frame_hash_metadata_to_img(&ctx->img, output_frame_buf);
@@ -1350,7 +1350,7 @@ static aom_codec_err_t ctrl_set_reference(aom_codec_alg_priv_t *ctx,
     FrameWorkerData *const frame_worker_data = (FrameWorkerData *)worker->data1;
     if (!(frame->img.fmt & AOM_IMG_FMT_HIGHBITDEPTH)) {
       if (frame->use_external_ref) return AOM_CODEC_INVALID_PARAM;
-      hbd_img = avm_img_alloc(NULL, frame->img.fmt | AOM_IMG_FMT_HIGHBITDEPTH,
+      hbd_img = av2_img_alloc(NULL, frame->img.fmt | AOM_IMG_FMT_HIGHBITDEPTH,
                               frame->img.w, frame->img.h, 32);
       if (!hbd_img) return AOM_CODEC_MEM_ERROR;
       image2yuvconfig_upshift(hbd_img, &frame->img, &sd);
@@ -1360,7 +1360,7 @@ static aom_codec_err_t ctrl_set_reference(aom_codec_alg_priv_t *ctx,
     aom_codec_err_t res =
         av2_set_reference_dec(&frame_worker_data->pbi->common, frame->idx,
                               frame->use_external_ref, &sd);
-    avm_img_free(hbd_img);
+    av2_img_free(hbd_img);
     return res;
   } else {
     return AOM_CODEC_INVALID_PARAM;
@@ -1535,14 +1535,14 @@ static aom_codec_err_t ctrl_get_frame_flags(aom_codec_alg_priv_t *ctx,
     case S_FRAME: *arg |= AOM_FRAME_IS_SWITCH; break;
   }
   if (apply_grain) {
-    *arg |= AVM_FRAME_HAS_FILM_GRAIN_PARAMS;
+    *arg |= AV2_FRAME_HAS_FILM_GRAIN_PARAMS;
   }
   return AOM_CODEC_OK;
 }
 
 static aom_codec_err_t ctrl_get_tile_info(aom_codec_alg_priv_t *ctx,
                                           va_list args) {
-  avm_tile_info *const tile_info = va_arg(args, avm_tile_info *);
+  av2_tile_info *const tile_info = va_arg(args, av2_tile_info *);
 
   if (tile_info) {
     if (ctx->frame_worker) {
@@ -1584,8 +1584,8 @@ static aom_codec_err_t ctrl_get_tile_info(aom_codec_alg_priv_t *ctx,
 
 static aom_codec_err_t ctrl_get_screen_content_tools_info(
     aom_codec_alg_priv_t *ctx, va_list args) {
-  avm_screen_content_tools_info *const sc_info =
-      va_arg(args, avm_screen_content_tools_info *);
+  av2_screen_content_tools_info *const sc_info =
+      va_arg(args, av2_screen_content_tools_info *);
   if (sc_info) {
     if (ctx->frame_worker) {
       AVxWorker *const worker = ctx->frame_worker;
@@ -1607,8 +1607,8 @@ static aom_codec_err_t ctrl_get_screen_content_tools_info(
 
 static aom_codec_err_t ctrl_get_still_picture(aom_codec_alg_priv_t *ctx,
                                               va_list args) {
-  avm_still_picture_info *const still_picture_info =
-      va_arg(args, avm_still_picture_info *);
+  av2_still_picture_info *const still_picture_info =
+      va_arg(args, av2_still_picture_info *);
   if (still_picture_info) {
     if (ctx->frame_worker) {
       AVxWorker *const worker = ctx->frame_worker;
@@ -2050,7 +2050,7 @@ static aom_codec_err_t ctrl_set_inspection_callback(aom_codec_alg_priv_t *ctx,
   (void)args;
   return AOM_CODEC_INCAPABLE;
 #else
-  avm_inspect_init *init = va_arg(args, avm_inspect_init *);
+  av2_inspect_init *init = va_arg(args, av2_inspect_init *);
   ctx->inspect_cb = init->inspect_cb;
   ctx->inspect_sb_cb = init->inspect_sb_cb;
   ctx->inspect_tip_cb = init->inspect_tip_cb;
@@ -2130,35 +2130,35 @@ static aom_codec_ctrl_fn_map_t decoder_ctrl_maps[] = {
 #ifndef VERSION_STRING
 #define VERSION_STRING
 #endif
-aom_codec_iface_t avm_codec_av2_dx_algo_temp = {
+aom_codec_iface_t av2_codec_av2_dx_algo_temp = {
   "AOMedia Project AV2 Decoder" VERSION_STRING,
   AOM_CODEC_INTERNAL_ABI_VERSION,
   AOM_CODEC_CAP_DECODER |
       AOM_CODEC_CAP_EXTERNAL_FRAME_BUFFER,  // aom_codec_caps_t
-  decoder_init,                             // avm_codec_init_fn_t
-  decoder_destroy,                          // avm_codec_destroy_fn_t
+  decoder_init,                             // av2_codec_init_fn_t
+  decoder_destroy,                          // av2_codec_destroy_fn_t
   decoder_ctrl_maps,                        // aom_codec_ctrl_fn_map_t
   {
       // NOLINT
-      decoder_peek_si,    // avm_codec_peek_si_fn_t
-      decoder_get_si,     // avm_codec_get_si_fn_t
-      decoder_decode,     // avm_codec_decode_fn_t
-      decoder_get_frame,  // avm_codec_get_frame_fn_t
-      decoder_set_fb_fn,  // avm_codec_set_fb_fn_t
+      decoder_peek_si,    // av2_codec_peek_si_fn_t
+      decoder_get_si,     // av2_codec_get_si_fn_t
+      decoder_decode,     // av2_codec_decode_fn_t
+      decoder_get_frame,  // av2_codec_get_frame_fn_t
+      decoder_set_fb_fn,  // av2_codec_set_fb_fn_t
   },
   {
       // NOLINT
       0,
       NULL,  // aom_codec_enc_cfg_t
-      NULL,  // avm_codec_encode_fn_t
-      NULL,  // avm_codec_get_cx_data_fn_t
-      NULL,  // avm_codec_enc_config_set_fn_t
-      NULL,  // avm_codec_get_global_headers_fn_t
-      NULL   // avm_codec_get_preview_frame_fn_t
+      NULL,  // av2_codec_encode_fn_t
+      NULL,  // av2_codec_get_cx_data_fn_t
+      NULL,  // av2_codec_enc_config_set_fn_t
+      NULL,  // av2_codec_get_global_headers_fn_t
+      NULL   // av2_codec_get_preview_frame_fn_t
   },
-  NULL  // avm_codec_set_option_fn_t
+  NULL  // av2_codec_set_option_fn_t
 };
 
-const aom_codec_iface_t *avm_codec_av2_dx(void) {
-  return &avm_codec_av2_dx_algo_temp;
+const aom_codec_iface_t *av2_codec_av2_dx(void) {
+  return &av2_codec_av2_dx_algo_temp;
 }

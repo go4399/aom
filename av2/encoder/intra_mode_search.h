@@ -13,8 +13,8 @@
 /*!\file
  * \brief Declares high level functions to search through intra modes.
  */
-#ifndef AVM_AV2_ENCODER_INTRA_MODE_SEARCH_H_
-#define AVM_AV2_ENCODER_INTRA_MODE_SEARCH_H_
+#ifndef AV2_AV2_ENCODER_INTRA_MODE_SEARCH_H_
+#define AV2_AV2_ENCODER_INTRA_MODE_SEARCH_H_
 
 #include "av2/encoder/encoder.h"
 
@@ -355,4 +355,4 @@ int prune_intra_y_mode(int64_t this_model_rd, int64_t *best_model_rd,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_INTRA_MODE_SEARCH_H_
+#endif  // AV2_AV2_ENCODER_INTRA_MODE_SEARCH_H_

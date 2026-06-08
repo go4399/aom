@@ -83,7 +83,7 @@
 #define AV2C_READ_RICE_GOLOMB_OR_RETURN_ERROR(field, k)     \
   uint32_t field = 0;                                       \
   do {                                                      \
-    field = avm_rb_read_rice_golomb(reader, k);             \
+    field = av2_rb_read_rice_golomb(reader, k);             \
     if (result == -1) {                                     \
       fprintf(stderr,                                       \
               "av2c: Error reading rice-golomb for " #field \
@@ -330,8 +330,8 @@ static int parse_content_intrepretation_obu(const uint8_t *const buffer,
       config->ci_chroma_sample_position_1 = ci_chroma_sample_position_0;
     }
   } else {
-    config->chroma_sample_position = 0;       // AVM_CSP_UNSPECIFIED
-    config->ci_chroma_sample_position_1 = 0;  // AVM_CSP_UNSPECIFIED
+    config->chroma_sample_position = 0;       // AV2_CSP_UNSPECIFIED
+    config->ci_chroma_sample_position_1 = 0;  // AV2_CSP_UNSPECIFIED
   }
 
   // Parse sample aspect ratio if present
@@ -339,7 +339,7 @@ static int parse_content_intrepretation_obu(const uint8_t *const buffer,
     AV2C_READ_UVLC_BITS_OR_RETURN_ERROR(sar_aspect_ratio_idc);
     config->ci_sar_aspect_ratio_idc = sar_aspect_ratio_idc;
 
-    if (sar_aspect_ratio_idc == 255) {  // AVM_SAR_IDC_255
+    if (sar_aspect_ratio_idc == 255) {  // AV2_SAR_IDC_255
       AV2C_READ_UVLC_BITS_OR_RETURN_ERROR(sar_width);
       config->ci_sar_width = sar_width;
 
@@ -369,7 +369,7 @@ int get_av2config_from_obu(const uint8_t *buffer, size_t length,
 
   size_t sequence_header_length = 0;
   size_t obu_header_length = 0;
-  if (avm_read_obu_header_and_size(buffer, length, &obu_header,
+  if (av2_read_obu_header_and_size(buffer, length, &obu_header,
                                    &sequence_header_length,
                                    &obu_header_length) != AOM_CODEC_OK ||
       obu_header.type != OBU_SEQUENCE_HEADER ||
@@ -388,7 +388,7 @@ int get_av2config_from_obu(const uint8_t *buffer, size_t length,
     memset(&obu_header, 0, sizeof(obu_header));
     size_t ci_header_length = 0;
     obu_header_length = 0;
-    if (avm_read_obu_header_and_size(buffer, length, &obu_header,
+    if (av2_read_obu_header_and_size(buffer, length, &obu_header,
                                      &ci_header_length,
                                      &obu_header_length) == AOM_CODEC_OK &&
         obu_header.type != OBU_CONTENT_INTERPRETATION &&

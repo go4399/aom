@@ -679,121 +679,121 @@ static INLINE void highbd_dc_predictor_rect(uint16_t *dst, ptrdiff_t stride,
 
 #undef HIGHBD_DC_SHIFT2
 
-void avm_highbd_dc_predictor_4x8_c(uint16_t *dst, ptrdiff_t stride,
+void av2_highbd_dc_predictor_4x8_c(uint16_t *dst, ptrdiff_t stride,
                                    const uint16_t *above, const uint16_t *left,
                                    int bd) {
   highbd_dc_predictor_rect(dst, stride, 4, 8, above, left, bd);
 }
 
-void avm_highbd_dc_predictor_8x4_c(uint16_t *dst, ptrdiff_t stride,
+void av2_highbd_dc_predictor_8x4_c(uint16_t *dst, ptrdiff_t stride,
                                    const uint16_t *above, const uint16_t *left,
                                    int bd) {
   highbd_dc_predictor_rect(dst, stride, 8, 4, above, left, bd);
 }
 
-void avm_highbd_dc_predictor_4x16_c(uint16_t *dst, ptrdiff_t stride,
+void av2_highbd_dc_predictor_4x16_c(uint16_t *dst, ptrdiff_t stride,
                                     const uint16_t *above, const uint16_t *left,
                                     int bd) {
   highbd_dc_predictor_rect(dst, stride, 4, 16, above, left, bd);
 }
 
-void avm_highbd_dc_predictor_16x4_c(uint16_t *dst, ptrdiff_t stride,
+void av2_highbd_dc_predictor_16x4_c(uint16_t *dst, ptrdiff_t stride,
                                     const uint16_t *above, const uint16_t *left,
                                     int bd) {
   highbd_dc_predictor_rect(dst, stride, 16, 4, above, left, bd);
 }
 
-void avm_highbd_dc_predictor_8x16_c(uint16_t *dst, ptrdiff_t stride,
+void av2_highbd_dc_predictor_8x16_c(uint16_t *dst, ptrdiff_t stride,
                                     const uint16_t *above, const uint16_t *left,
                                     int bd) {
   highbd_dc_predictor_rect(dst, stride, 8, 16, above, left, bd);
 }
 
-void avm_highbd_dc_predictor_16x8_c(uint16_t *dst, ptrdiff_t stride,
+void av2_highbd_dc_predictor_16x8_c(uint16_t *dst, ptrdiff_t stride,
                                     const uint16_t *above, const uint16_t *left,
                                     int bd) {
   highbd_dc_predictor_rect(dst, stride, 16, 8, above, left, bd);
 }
 
-void avm_highbd_dc_predictor_8x32_c(uint16_t *dst, ptrdiff_t stride,
+void av2_highbd_dc_predictor_8x32_c(uint16_t *dst, ptrdiff_t stride,
                                     const uint16_t *above, const uint16_t *left,
                                     int bd) {
   highbd_dc_predictor_rect(dst, stride, 8, 32, above, left, bd);
 }
 
-void avm_highbd_dc_predictor_32x8_c(uint16_t *dst, ptrdiff_t stride,
+void av2_highbd_dc_predictor_32x8_c(uint16_t *dst, ptrdiff_t stride,
                                     const uint16_t *above, const uint16_t *left,
                                     int bd) {
   highbd_dc_predictor_rect(dst, stride, 32, 8, above, left, bd);
 }
 
-void avm_highbd_dc_predictor_16x32_c(uint16_t *dst, ptrdiff_t stride,
+void av2_highbd_dc_predictor_16x32_c(uint16_t *dst, ptrdiff_t stride,
                                      const uint16_t *above,
                                      const uint16_t *left, int bd) {
   highbd_dc_predictor_rect(dst, stride, 16, 32, above, left, bd);
 }
 
-void avm_highbd_dc_predictor_32x16_c(uint16_t *dst, ptrdiff_t stride,
+void av2_highbd_dc_predictor_32x16_c(uint16_t *dst, ptrdiff_t stride,
                                      const uint16_t *above,
                                      const uint16_t *left, int bd) {
   highbd_dc_predictor_rect(dst, stride, 32, 16, above, left, bd);
 }
 
-void avm_highbd_dc_predictor_16x64_c(uint16_t *dst, ptrdiff_t stride,
+void av2_highbd_dc_predictor_16x64_c(uint16_t *dst, ptrdiff_t stride,
                                      const uint16_t *above,
                                      const uint16_t *left, int bd) {
   highbd_dc_predictor_rect(dst, stride, 16, 64, above, left, bd);
 }
 
-void avm_highbd_dc_predictor_64x16_c(uint16_t *dst, ptrdiff_t stride,
+void av2_highbd_dc_predictor_64x16_c(uint16_t *dst, ptrdiff_t stride,
                                      const uint16_t *above,
                                      const uint16_t *left, int bd) {
   highbd_dc_predictor_rect(dst, stride, 64, 16, above, left, bd);
 }
 
-void avm_highbd_dc_predictor_32x64_c(uint16_t *dst, ptrdiff_t stride,
+void av2_highbd_dc_predictor_32x64_c(uint16_t *dst, ptrdiff_t stride,
                                      const uint16_t *above,
                                      const uint16_t *left, int bd) {
   highbd_dc_predictor_rect(dst, stride, 32, 64, above, left, bd);
 }
 
-void avm_highbd_dc_predictor_64x32_c(uint16_t *dst, ptrdiff_t stride,
+void av2_highbd_dc_predictor_64x32_c(uint16_t *dst, ptrdiff_t stride,
                                      const uint16_t *above,
                                      const uint16_t *left, int bd) {
   highbd_dc_predictor_rect(dst, stride, 64, 32, above, left, bd);
 }
 
-void avm_highbd_dc_predictor_4x32_c(uint16_t *dst, ptrdiff_t stride,
+void av2_highbd_dc_predictor_4x32_c(uint16_t *dst, ptrdiff_t stride,
                                     const uint16_t *above, const uint16_t *left,
                                     int bd) {
   highbd_dc_predictor_rect(dst, stride, 4, 32, above, left, bd);
 }
 
-void avm_highbd_dc_predictor_32x4_c(uint16_t *dst, ptrdiff_t stride,
+void av2_highbd_dc_predictor_32x4_c(uint16_t *dst, ptrdiff_t stride,
                                     const uint16_t *above, const uint16_t *left,
                                     int bd) {
   highbd_dc_predictor_rect(dst, stride, 32, 4, above, left, bd);
 }
 
-void avm_highbd_dc_predictor_8x64_c(uint16_t *dst, ptrdiff_t stride,
+void av2_highbd_dc_predictor_8x64_c(uint16_t *dst, ptrdiff_t stride,
                                     const uint16_t *above, const uint16_t *left,
                                     int bd) {
   highbd_dc_predictor_rect(dst, stride, 8, 64, above, left, bd);
 }
 
-void avm_highbd_dc_predictor_64x8_c(uint16_t *dst, ptrdiff_t stride,
+void av2_highbd_dc_predictor_64x8_c(uint16_t *dst, ptrdiff_t stride,
                                     const uint16_t *above, const uint16_t *left,
                                     int bd) {
   highbd_dc_predictor_rect(dst, stride, 64, 8, above, left, bd);
 }
 
-void avm_highbd_dc_predictor_4x64_c(uint16_t *dst, ptrdiff_t stride,
+void av2_highbd_dc_predictor_4x64_c(uint16_t *dst, ptrdiff_t stride,
                                     const uint16_t *above, const uint16_t *left,
                                     int bd) {
   highbd_dc_predictor_rect(dst, stride, 4, 64, above, left, bd);
 }
 
-void avm_highbd_dc_predictor_64x4_c(uint16_t *dst, ptrdiff_t stride,
+void av2_highbd_dc_predictor_64x4_c(uint16_t *dst, ptrdiff_t stride,
                                     const uint16_t *above, const uint16_t *left,
                                     int bd) {
   highbd_dc_predictor_rect(dst, stride, 64, 4, above, left, bd);
@@ -803,14 +803,14 @@ void avm_highbd_dc_predictor_64x4_c(uint16_t *dst, ptrdiff_t stride,
 // can be unified and accessed as a pointer array. Note that the boundary
 // above and left are not necessarily used all the time.
 #define intra_pred_sized(type, width, height)                  \
-  void avm_##type##_predictor_##width##x##height##_c(          \
+  void av2_##type##_predictor_##width##x##height##_c(          \
       uint8_t *dst, ptrdiff_t stride, const uint8_t *above,    \
       const uint8_t *left) {                                   \
     type##_predictor(dst, stride, width, height, above, left); \
   }
 
 #define intra_pred_highbd_sized(type, width, height)                        \
-  void avm_highbd_##type##_predictor_##width##x##height##_c(                \
+  void av2_highbd_##type##_predictor_##width##x##height##_c(                \
       uint16_t *dst, ptrdiff_t stride, const uint16_t *above,               \
       const uint16_t *left, int bd) {                                       \
     highbd_##type##_predictor(dst, stride, width, height, above, left, bd); \

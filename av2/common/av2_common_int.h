@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_AV2_COMMON_INT_H_
-#define AVM_AV2_COMMON_AV2_COMMON_INT_H_
+#ifndef AV2_AV2_COMMON_AV2_COMMON_INT_H_
+#define AV2_AV2_COMMON_AV2_COMMON_INT_H_
 
 #include "aom/aom_integer.h"
 #include <assert.h>
@@ -22,7 +22,7 @@
 
 #include "aom/internal/aom_codec_internal.h"
 #include "aom_util/aom_thread.h"
-#define avm_get_worker_interface aom_get_worker_interface
+#define av2_get_worker_interface aom_get_worker_interface
 #include "av2/common/alloccommon.h"
 #include "av2/common/av2_loopfilter.h"
 #include "av2/common/blockd.h"
@@ -48,14 +48,14 @@ extern "C" {
 
 #if defined(__clang__) && defined(__has_warning)
 #if __has_feature(cxx_attributes) && __has_warning("-Wimplicit-fallthrough")
-#define AVM_FALLTHROUGH_INTENDED [[clang::fallthrough]]  // NOLINT
+#define AV2_FALLTHROUGH_INTENDED [[clang::fallthrough]]  // NOLINT
 #endif
 #elif defined(__GNUC__) && __GNUC__ >= 7
-#define AVM_FALLTHROUGH_INTENDED __attribute__((fallthrough))  // NOLINT
+#define AV2_FALLTHROUGH_INTENDED __attribute__((fallthrough))  // NOLINT
 #endif
 
-#ifndef AVM_FALLTHROUGH_INTENDED
-#define AVM_FALLTHROUGH_INTENDED \
+#ifndef AV2_FALLTHROUGH_INTENDED
+#define AV2_FALLTHROUGH_INTENDED \
   do {                           \
   } while (0)
 #endif
@@ -1035,7 +1035,7 @@ typedef struct sar_info {
 
 // Specifies the params related to the content in the sequence
 typedef struct ContentInterpretation {
-  avm_pic_scan_type_t ci_scan_type_idc;
+  av2_pic_scan_type_t ci_scan_type_idc;
   int ci_color_description_present_flag;
   int ci_chroma_sample_position_present_flag;
   int ci_aspect_ratio_info_present_flag;
@@ -1045,7 +1045,7 @@ typedef struct ContentInterpretation {
 
   ColorInfo color_info;
   SarInfo sar_info;
-  avm_timing_info_t timing_info;
+  av2_timing_info_t timing_info;
   // ci_from_leading[i]==1 indicates it is signalled in the leading temporal
   // unit
   bool ci_from_leading;
@@ -1238,7 +1238,7 @@ typedef struct SequenceHeader {
   int operating_points_cnt_minus_1;
   int operating_point_idc[MAX_NUM_OPERATING_POINTS];
   uint8_t decoder_model_info_present_flag;
-  avm_dec_model_info_t decoder_model_info;
+  av2_dec_model_info_t decoder_model_info;
   uint8_t display_model_info_present_flag;
 
   // Layer dependency structure descriptors
@@ -1265,7 +1265,7 @@ typedef struct SequenceHeader {
   // IMPORTANT: the op_params member must be at the end of the struct so that
   // are_seq_headers_consistent() can be implemented with a memcmp() call.
   // TODO(urvang): We probably don't need the +1 here.
-  avm_dec_model_op_parameters_t op_params[MAX_NUM_OPERATING_POINTS + 1];
+  av2_dec_model_op_parameters_t op_params[MAX_NUM_OPERATING_POINTS + 1];
 } SequenceHeader;
 
 typedef struct {
@@ -2986,12 +2986,12 @@ typedef struct AV2Common {
   /*!
    * Pic struct parameters.
    */
-  avm_metadata_pic_struct_t pic_struct_metadata_params;
+  av2_metadata_pic_struct_t pic_struct_metadata_params;
 
   /*!
    * Temporal point info
    */
-  avm_metadata_temporal_point_info_t temporal_point_info_metadata;
+  av2_metadata_temporal_point_info_t temporal_point_info_metadata;
 
   /*!
    * Order hint of the last encountered OLK
@@ -6126,7 +6126,7 @@ static INLINE void av2_initialize_ci_params(ContentInterpretation *ci_params) {
   ci_params->color_info.matrix_coefficients = AOM_CICP_MC_UNSPECIFIED;
   ci_params->color_info.transfer_characteristics = AOM_CICP_TC_UNSPECIFIED;
   ci_params->color_info.full_range_flag = 0;
-  ci_params->ci_scan_type_idc = AVM_SCAN_TYPE_UNSPECIFIED;
+  ci_params->ci_scan_type_idc = AV2_SCAN_TYPE_UNSPECIFIED;
   ci_params->ci_color_description_present_flag = 0;
   ci_params->ci_chroma_sample_position_present_flag = 0;
   ci_params->ci_aspect_ratio_info_present_flag = 0;
@@ -6178,4 +6178,4 @@ static INLINE bool av2_skip_reference_buffer_update(
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_AV2_COMMON_INT_H_
+#endif  // AV2_AV2_COMMON_AV2_COMMON_INT_H_

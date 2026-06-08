@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_RDOPT_UTILS_H_
-#define AVM_AV2_ENCODER_RDOPT_UTILS_H_
+#ifndef AV2_AV2_ENCODER_RDOPT_UTILS_H_
+#define AV2_AV2_ENCODER_RDOPT_UTILS_H_
 
 #include "aom/aom_integer.h"
 #include "av2/encoder/block.h"
@@ -506,4 +506,4 @@ unsigned int av2_high_get_sby_perpixel_variance(const struct AV2_COMP *cpi,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_RDOPT_UTILS_H_
+#endif  // AV2_AV2_ENCODER_RDOPT_UTILS_H_

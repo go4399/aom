@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_CFL_H_
-#define AVM_AV2_COMMON_CFL_H_
+#ifndef AV2_AV2_COMMON_CFL_H_
+#define AV2_AV2_COMMON_CFL_H_
 
 #include "av2/common/av2_common_int.h"
 #include "av2/common/blockd.h"
@@ -674,4 +674,4 @@ void av2_cfl_subtract_average_4x16_c(const uint16_t *src, int16_t *dst);
     return pred[tx_size % TX_SIZES_ALL_AV2];                                  \
   }
 
-#endif  // AVM_AV2_COMMON_CFL_H_
+#endif  // AV2_AV2_COMMON_CFL_H_

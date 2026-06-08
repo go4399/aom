@@ -17,7 +17,7 @@
 #include "aom_dsp/blend.h"
 #include "av2/common/blockd.h"
 
-#define AVM_BLEND_A64_MAX_ALPHA AOM_BLEND_A64_MAX_ALPHA
+#define AV2_BLEND_A64_MAX_ALPHA AOM_BLEND_A64_MAX_ALPHA
 
 void av2_build_compound_diffwtd_mask_d16_sse4_1(
     uint8_t *mask, DIFFWTD_MASK_TYPE mask_type, const CONV_BUF_TYPE *src0,
@@ -29,18 +29,18 @@ void av2_build_compound_diffwtd_mask_d16_sse4_1(
       2 * FILTER_BITS - conv_params->round_0 - conv_params->round_1 + (bd - 8);
   const __m128i round_const = _mm_set1_epi16((1 << round) >> 1);
   const __m128i mask_base_16 = _mm_set1_epi16(mask_base);
-  const __m128i clip_diff = _mm_set1_epi16(AVM_BLEND_A64_MAX_ALPHA);
+  const __m128i clip_diff = _mm_set1_epi16(AV2_BLEND_A64_MAX_ALPHA);
   const __m128i add_const =
-      _mm_set1_epi16((which_inverse ? AVM_BLEND_A64_MAX_ALPHA : 0));
+      _mm_set1_epi16((which_inverse ? AV2_BLEND_A64_MAX_ALPHA : 0));
   const __m128i add_sign = _mm_set1_epi16((which_inverse ? -1 : 1));
 
   int i, j;
   // When rounding constant is added, there is a possibility of overflow.
   // However that much precision is not required. Code should very well work for
-  // other values of DIFF_FACTOR_LOG2 and AVM_BLEND_A64_MAX_ALPHA as well. But
+  // other values of DIFF_FACTOR_LOG2 and AV2_BLEND_A64_MAX_ALPHA as well. But
   // there is a possibility of corner case bugs.
   assert(DIFF_FACTOR_LOG2 == 4);
-  assert(AVM_BLEND_A64_MAX_ALPHA == 64);
+  assert(AV2_BLEND_A64_MAX_ALPHA == 64);
   for (i = 0; i < h; ++i) {
     for (j = 0; j < w; j += 8) {
       const __m128i data_src0 =

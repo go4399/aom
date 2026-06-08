@@ -410,7 +410,7 @@ static AOM_FORCE_INLINE void sad12x4(const uint16_t *src_ptr, int src_stride,
   highbd_sad12x4_core_avx2(s, r, sad_acc);
 }
 
-static AOM_FORCE_INLINE unsigned int avm_highbd_sad16xN_avx2(
+static AOM_FORCE_INLINE unsigned int av2_highbd_sad16xN_avx2(
     int N, const uint16_t *src_ptr, int src_stride, const uint16_t *ref_ptr,
     int ref_stride) {
   int i;
@@ -423,7 +423,7 @@ static AOM_FORCE_INLINE unsigned int avm_highbd_sad16xN_avx2(
   return (unsigned int)get_sad_from_mm256_epi32(&sad);
 }
 
-static AOM_FORCE_INLINE unsigned int avm_highbd_sad16xN_2rows_avx2(
+static AOM_FORCE_INLINE unsigned int av2_highbd_sad16xN_2rows_avx2(
     int N, const uint16_t *src_ptr, int src_stride, const uint16_t *ref_ptr,
     int ref_stride) {
   __m256i sad = _mm256_setzero_si256();
@@ -435,7 +435,7 @@ static AOM_FORCE_INLINE unsigned int avm_highbd_sad16xN_2rows_avx2(
   return (unsigned int)get_sad_from_mm256_epi32(&sad);
 }
 
-static AOM_FORCE_INLINE unsigned int avm_highbd_sad16xN_ds_avx2(
+static AOM_FORCE_INLINE unsigned int av2_highbd_sad16xN_ds_avx2(
     int N, const uint16_t *src_ptr, int src_stride, const uint16_t *ref_ptr,
     int ref_stride) {
   int i;
@@ -448,7 +448,7 @@ static AOM_FORCE_INLINE unsigned int avm_highbd_sad16xN_ds_avx2(
   return (unsigned int)get_sad_from_mm256_epi32(&sad);
 }
 
-static AOM_FORCE_INLINE unsigned int avm_highbd_sad8xN_ds_avx2(
+static AOM_FORCE_INLINE unsigned int av2_highbd_sad8xN_ds_avx2(
     int N, const uint16_t *src_ptr, int src_stride, const uint16_t *ref_ptr,
     int ref_stride) {
   int i;
@@ -461,7 +461,7 @@ static AOM_FORCE_INLINE unsigned int avm_highbd_sad8xN_ds_avx2(
   return (unsigned int)get_sad_from_mm256_epi32(&sad);
 }
 
-static AOM_FORCE_INLINE unsigned int avm_highbd_sad20xN_ds_avx2(
+static AOM_FORCE_INLINE unsigned int av2_highbd_sad20xN_ds_avx2(
     int N, const uint16_t *src_ptr, int src_stride, const uint16_t *ref_ptr,
     int ref_stride) {
   int i;
@@ -474,7 +474,7 @@ static AOM_FORCE_INLINE unsigned int avm_highbd_sad20xN_ds_avx2(
   return (unsigned int)get_sad_from_mm256_epi32(&sad);
 }
 
-static AOM_FORCE_INLINE unsigned int avm_highbd_sad12xN_ds_avx2(
+static AOM_FORCE_INLINE unsigned int av2_highbd_sad12xN_ds_avx2(
     int N, const uint16_t *src_ptr, int src_stride, const uint16_t *ref_ptr,
     int ref_stride) {
   int i;
@@ -487,7 +487,7 @@ static AOM_FORCE_INLINE unsigned int avm_highbd_sad12xN_ds_avx2(
   return (unsigned int)get_sad_from_mm256_epi32(&sad);
 }
 
-static AOM_FORCE_INLINE unsigned int avm_highbd_sad20xN_avx2(
+static AOM_FORCE_INLINE unsigned int av2_highbd_sad20xN_avx2(
     int N, const uint16_t *src_ptr, int src_stride, const uint16_t *ref_ptr,
     int ref_stride) {
   int i;
@@ -500,7 +500,7 @@ static AOM_FORCE_INLINE unsigned int avm_highbd_sad20xN_avx2(
   return (unsigned int)get_sad_from_mm256_epi32(&sad);
 }
 
-static AOM_FORCE_INLINE unsigned int avm_highbd_sad12xN_avx2(
+static AOM_FORCE_INLINE unsigned int av2_highbd_sad12xN_avx2(
     int N, const uint16_t *src_ptr, int src_stride, const uint16_t *ref_ptr,
     int ref_stride) {
   int i;
@@ -595,7 +595,7 @@ static AOM_FORCE_INLINE void sad32x4_4d(__m256i *s, const uint16_t *ref_ptr,
   }
 }
 
-static AOM_FORCE_INLINE unsigned int avm_highbd_sad32xN_avx2(
+static AOM_FORCE_INLINE unsigned int av2_highbd_sad32xN_avx2(
     int N, const uint16_t *src, int src_stride, const uint16_t *ref,
     int ref_stride) {
   __m256i sad = _mm256_setzero_si256();
@@ -610,7 +610,7 @@ static AOM_FORCE_INLINE unsigned int avm_highbd_sad32xN_avx2(
   return get_sad_from_mm256_epi32(&sad);
 }
 
-static AOM_FORCE_INLINE unsigned int avm_highbd_sad32xN_2rows_avx2(
+static AOM_FORCE_INLINE unsigned int av2_highbd_sad32xN_2rows_avx2(
     int N, const uint16_t *src, int src_stride, const uint16_t *ref,
     int ref_stride) {
   __m256i sad = _mm256_setzero_si256();
@@ -672,7 +672,7 @@ static AOM_FORCE_INLINE void sad64x2_4d(__m256i *s, const uint16_t *ref_ptr,
   }
 }
 
-static AOM_FORCE_INLINE unsigned int avm_highbd_sad64xN_avx2(
+static AOM_FORCE_INLINE unsigned int av2_highbd_sad64xN_avx2(
     int N, const uint16_t *src, int src_stride, const uint16_t *ref,
     int ref_stride) {
   __m256i sad = _mm256_setzero_si256();
@@ -741,7 +741,7 @@ MAKE_SAD_WX1(256);
 MAKE_SAD_WX1_4D(128);
 MAKE_SAD_WX1_4D(256);
 
-static AOM_FORCE_INLINE unsigned int avm_highbd_sad128xN_avx2(
+static AOM_FORCE_INLINE unsigned int av2_highbd_sad128xN_avx2(
     int N, const uint16_t *src, int src_stride, const uint16_t *ref,
     int ref_stride) {
   __m256i sad = _mm256_setzero_si256();
@@ -755,7 +755,7 @@ static AOM_FORCE_INLINE unsigned int avm_highbd_sad128xN_avx2(
   return get_sad_from_mm256_epi32(&sad);
 }
 
-static AOM_FORCE_INLINE unsigned int avm_highbd_sad256xN_avx2(
+static AOM_FORCE_INLINE unsigned int av2_highbd_sad256xN_avx2(
     int N, const uint16_t *src, int src_stride, const uint16_t *ref,
     int ref_stride) {
   __m256i sad = _mm256_setzero_si256();
@@ -770,33 +770,33 @@ static AOM_FORCE_INLINE unsigned int avm_highbd_sad256xN_avx2(
 }
 
 #define highbd_sadMxN_avx2(m, n)                                            \
-  unsigned int avm_highbd_sad##m##x##n##_avx2(                              \
+  unsigned int av2_highbd_sad##m##x##n##_avx2(                              \
       const uint16_t *src, int src_stride, const uint16_t *ref,             \
       int ref_stride) {                                                     \
-    return avm_highbd_sad##m##xN_avx2(n, src, src_stride, ref, ref_stride); \
+    return av2_highbd_sad##m##xN_avx2(n, src, src_stride, ref, ref_stride); \
   }
 
 #define highbd_sadMxN_ds_avx2(m, n)                                            \
-  unsigned int avm_highbd_sad##m##x##n##_ds_avx2(                              \
+  unsigned int av2_highbd_sad##m##x##n##_ds_avx2(                              \
       const uint16_t *src, int src_stride, const uint16_t *ref,                \
       int ref_stride) {                                                        \
-    return avm_highbd_sad##m##xN_ds_avx2(n, src, src_stride, ref, ref_stride); \
+    return av2_highbd_sad##m##xN_ds_avx2(n, src, src_stride, ref, ref_stride); \
   }
 
 #define highbd_sad_skip_MxN_avx2(m, n)                                       \
-  unsigned int avm_highbd_sad_skip_##m##x##n##_avx2(                         \
+  unsigned int av2_highbd_sad_skip_##m##x##n##_avx2(                         \
       const uint16_t *src, int src_stride, const uint16_t *ref,              \
       int ref_stride) {                                                      \
-    return 2 * avm_highbd_sad##m##xN_avx2((n / 2), src, 2 * src_stride, ref, \
+    return 2 * av2_highbd_sad##m##xN_avx2((n / 2), src, 2 * src_stride, ref, \
                                           2 * ref_stride);                   \
   }
 
 // Handle height 4 cases where only 2 rows are processed
 #define highbd_sad_skip_MxN_2rows_avx2(m, n)                                  \
-  unsigned int avm_highbd_sad_skip_##m##x##n##_avx2(                          \
+  unsigned int av2_highbd_sad_skip_##m##x##n##_avx2(                          \
       const uint16_t *src, int src_stride, const uint16_t *ref,               \
       int ref_stride) {                                                       \
-    return 2 * avm_highbd_sad##m##xN_2rows_avx2((n / 2), src, 2 * src_stride, \
+    return 2 * av2_highbd_sad##m##xN_2rows_avx2((n / 2), src, 2 * src_stride, \
                                                 ref, 2 * ref_stride);         \
   }
 
@@ -866,7 +866,7 @@ highbd_sad_skip_MxN_avx2(128, 256);
 highbd_sad_skip_MxN_avx2(256, 128);
 highbd_sad_skip_MxN_avx2(256, 256);
 
-unsigned int avm_highbd_sad16x4_avg_avx2(const uint16_t *src, int src_stride,
+unsigned int av2_highbd_sad16x4_avg_avx2(const uint16_t *src, int src_stride,
                                          const uint16_t *ref, int ref_stride,
                                          const uint16_t *second_pred) {
   __m256i sad = _mm256_setzero_si256();
@@ -875,7 +875,7 @@ unsigned int avm_highbd_sad16x4_avg_avx2(const uint16_t *src, int src_stride,
   return get_sad_from_mm256_epi32(&sad);
 }
 
-unsigned int avm_highbd_sad16x8_avg_avx2(const uint16_t *src, int src_stride,
+unsigned int av2_highbd_sad16x8_avg_avx2(const uint16_t *src, int src_stride,
                                          const uint16_t *ref, int ref_stride,
                                          const uint16_t *second_pred) {
   __m256i sad = _mm256_setzero_si256();
@@ -890,49 +890,49 @@ unsigned int avm_highbd_sad16x8_avg_avx2(const uint16_t *src, int src_stride,
   return get_sad_from_mm256_epi32(&sad);
 }
 
-unsigned int avm_highbd_sad16x16_avg_avx2(const uint16_t *src, int src_stride,
+unsigned int av2_highbd_sad16x16_avg_avx2(const uint16_t *src, int src_stride,
                                           const uint16_t *ref, int ref_stride,
                                           const uint16_t *second_pred) {
   const int left_shift = 3;
-  uint32_t sum = avm_highbd_sad16x8_avg_avx2(src, src_stride, ref, ref_stride,
+  uint32_t sum = av2_highbd_sad16x8_avg_avx2(src, src_stride, ref, ref_stride,
                                              second_pred);
   src += src_stride << left_shift;
   ref += ref_stride << left_shift;
   second_pred += 16 << left_shift;
-  sum += avm_highbd_sad16x8_avg_avx2(src, src_stride, ref, ref_stride,
+  sum += av2_highbd_sad16x8_avg_avx2(src, src_stride, ref, ref_stride,
                                      second_pred);
   return sum;
 }
 
-unsigned int avm_highbd_sad16x32_avg_avx2(const uint16_t *src, int src_stride,
+unsigned int av2_highbd_sad16x32_avg_avx2(const uint16_t *src, int src_stride,
                                           const uint16_t *ref, int ref_stride,
                                           const uint16_t *second_pred) {
   const int left_shift = 4;
-  uint32_t sum = avm_highbd_sad16x16_avg_avx2(src, src_stride, ref, ref_stride,
+  uint32_t sum = av2_highbd_sad16x16_avg_avx2(src, src_stride, ref, ref_stride,
                                               second_pred);
   src += src_stride << left_shift;
   ref += ref_stride << left_shift;
   second_pred += 16 << left_shift;
-  sum += avm_highbd_sad16x16_avg_avx2(src, src_stride, ref, ref_stride,
+  sum += av2_highbd_sad16x16_avg_avx2(src, src_stride, ref, ref_stride,
                                       second_pred);
   return sum;
 }
 
-unsigned int avm_highbd_sad16x64_avg_avx2(const uint16_t *src, int src_stride,
+unsigned int av2_highbd_sad16x64_avg_avx2(const uint16_t *src, int src_stride,
                                           const uint16_t *ref, int ref_stride,
                                           const uint16_t *second_pred) {
   const int left_shift = 5;
-  uint32_t sum = avm_highbd_sad16x32_avg_avx2(src, src_stride, ref, ref_stride,
+  uint32_t sum = av2_highbd_sad16x32_avg_avx2(src, src_stride, ref, ref_stride,
                                               second_pred);
   src += src_stride << left_shift;
   ref += ref_stride << left_shift;
   second_pred += 16 << left_shift;
-  sum += avm_highbd_sad16x32_avg_avx2(src, src_stride, ref, ref_stride,
+  sum += av2_highbd_sad16x32_avg_avx2(src, src_stride, ref, ref_stride,
                                       second_pred);
   return sum;
 }
 
-unsigned int avm_highbd_sad32x8_avg_avx2(const uint16_t *src, int src_stride,
+unsigned int av2_highbd_sad32x8_avg_avx2(const uint16_t *src, int src_stride,
                                          const uint16_t *ref, int ref_stride,
                                          const uint16_t *second_pred) {
   __m256i sad = _mm256_setzero_si256();
@@ -949,7 +949,7 @@ unsigned int avm_highbd_sad32x8_avg_avx2(const uint16_t *src, int src_stride,
   return get_sad_from_mm256_epi32(&sad);
 }
 
-unsigned int avm_highbd_sad32x16_avg_avx2(const uint16_t *src, int src_stride,
+unsigned int av2_highbd_sad32x16_avg_avx2(const uint16_t *src, int src_stride,
                                           const uint16_t *ref, int ref_stride,
                                           const uint16_t *second_pred) {
   __m256i sad = _mm256_setzero_si256();
@@ -966,35 +966,35 @@ unsigned int avm_highbd_sad32x16_avg_avx2(const uint16_t *src, int src_stride,
   return get_sad_from_mm256_epi32(&sad);
 }
 
-unsigned int avm_highbd_sad32x32_avg_avx2(const uint16_t *src, int src_stride,
+unsigned int av2_highbd_sad32x32_avg_avx2(const uint16_t *src, int src_stride,
                                           const uint16_t *ref, int ref_stride,
                                           const uint16_t *second_pred) {
   const int left_shift = 4;
-  uint32_t sum = avm_highbd_sad32x16_avg_avx2(src, src_stride, ref, ref_stride,
+  uint32_t sum = av2_highbd_sad32x16_avg_avx2(src, src_stride, ref, ref_stride,
                                               second_pred);
   src += src_stride << left_shift;
   ref += ref_stride << left_shift;
   second_pred += 32 << left_shift;
-  sum += avm_highbd_sad32x16_avg_avx2(src, src_stride, ref, ref_stride,
+  sum += av2_highbd_sad32x16_avg_avx2(src, src_stride, ref, ref_stride,
                                       second_pred);
   return sum;
 }
 
-unsigned int avm_highbd_sad32x64_avg_avx2(const uint16_t *src, int src_stride,
+unsigned int av2_highbd_sad32x64_avg_avx2(const uint16_t *src, int src_stride,
                                           const uint16_t *ref, int ref_stride,
                                           const uint16_t *second_pred) {
   const int left_shift = 5;
-  uint32_t sum = avm_highbd_sad32x32_avg_avx2(src, src_stride, ref, ref_stride,
+  uint32_t sum = av2_highbd_sad32x32_avg_avx2(src, src_stride, ref, ref_stride,
                                               second_pred);
   src += src_stride << left_shift;
   ref += ref_stride << left_shift;
   second_pred += 32 << left_shift;
-  sum += avm_highbd_sad32x32_avg_avx2(src, src_stride, ref, ref_stride,
+  sum += av2_highbd_sad32x32_avg_avx2(src, src_stride, ref, ref_stride,
                                       second_pred);
   return sum;
 }
 
-unsigned int avm_highbd_sad64x16_avg_avx2(const uint16_t *src, int src_stride,
+unsigned int av2_highbd_sad64x16_avg_avx2(const uint16_t *src, int src_stride,
                                           const uint16_t *ref, int ref_stride,
                                           const uint16_t *second_pred) {
   __m256i sad = _mm256_setzero_si256();
@@ -1011,7 +1011,7 @@ unsigned int avm_highbd_sad64x16_avg_avx2(const uint16_t *src, int src_stride,
   return get_sad_from_mm256_epi32(&sad);
 }
 
-unsigned int avm_highbd_sad64x32_avg_avx2(const uint16_t *src, int src_stride,
+unsigned int av2_highbd_sad64x32_avg_avx2(const uint16_t *src, int src_stride,
                                           const uint16_t *ref, int ref_stride,
                                           const uint16_t *second_pred) {
   __m256i sad = _mm256_setzero_si256();
@@ -1028,35 +1028,35 @@ unsigned int avm_highbd_sad64x32_avg_avx2(const uint16_t *src, int src_stride,
   return get_sad_from_mm256_epi32(&sad);
 }
 
-unsigned int avm_highbd_sad64x64_avg_avx2(const uint16_t *src, int src_stride,
+unsigned int av2_highbd_sad64x64_avg_avx2(const uint16_t *src, int src_stride,
                                           const uint16_t *ref, int ref_stride,
                                           const uint16_t *second_pred) {
   const int left_shift = 5;
-  uint32_t sum = avm_highbd_sad64x32_avg_avx2(src, src_stride, ref, ref_stride,
+  uint32_t sum = av2_highbd_sad64x32_avg_avx2(src, src_stride, ref, ref_stride,
                                               second_pred);
   src += src_stride << left_shift;
   ref += ref_stride << left_shift;
   second_pred += 64 << left_shift;
-  sum += avm_highbd_sad64x32_avg_avx2(src, src_stride, ref, ref_stride,
+  sum += av2_highbd_sad64x32_avg_avx2(src, src_stride, ref, ref_stride,
                                       second_pred);
   return sum;
 }
 
-unsigned int avm_highbd_sad64x128_avg_avx2(const uint16_t *src, int src_stride,
+unsigned int av2_highbd_sad64x128_avg_avx2(const uint16_t *src, int src_stride,
                                            const uint16_t *ref, int ref_stride,
                                            const uint16_t *second_pred) {
   const int left_shift = 6;
-  uint32_t sum = avm_highbd_sad64x64_avg_avx2(src, src_stride, ref, ref_stride,
+  uint32_t sum = av2_highbd_sad64x64_avg_avx2(src, src_stride, ref, ref_stride,
                                               second_pred);
   src += src_stride << left_shift;
   ref += ref_stride << left_shift;
   second_pred += 64 << left_shift;
-  sum += avm_highbd_sad64x64_avg_avx2(src, src_stride, ref, ref_stride,
+  sum += av2_highbd_sad64x64_avg_avx2(src, src_stride, ref, ref_stride,
                                       second_pred);
   return sum;
 }
 
-unsigned int avm_highbd_sad128x64_avg_avx2(const uint16_t *src, int src_stride,
+unsigned int av2_highbd_sad128x64_avg_avx2(const uint16_t *src, int src_stride,
                                            const uint16_t *ref, int ref_stride,
                                            const uint16_t *second_pred) {
   __m256i sad = _mm256_setzero_si256();
@@ -1071,39 +1071,39 @@ unsigned int avm_highbd_sad128x64_avg_avx2(const uint16_t *src, int src_stride,
   return get_sad_from_mm256_epi32(&sad);
 }
 
-unsigned int avm_highbd_sad128x128_avg_avx2(const uint16_t *src, int src_stride,
+unsigned int av2_highbd_sad128x128_avg_avx2(const uint16_t *src, int src_stride,
                                             const uint16_t *ref, int ref_stride,
                                             const uint16_t *second_pred) {
   unsigned int sum;
   const int left_shift = 6;
 
-  sum = avm_highbd_sad128x64_avg_avx2(src, src_stride, ref, ref_stride,
+  sum = av2_highbd_sad128x64_avg_avx2(src, src_stride, ref, ref_stride,
                                       second_pred);
   src += src_stride << left_shift;
   ref += ref_stride << left_shift;
   second_pred += 128 << left_shift;
-  sum += avm_highbd_sad128x64_avg_avx2(src, src_stride, ref, ref_stride,
+  sum += av2_highbd_sad128x64_avg_avx2(src, src_stride, ref, ref_stride,
                                        second_pred);
   return sum;
 }
 
-unsigned int avm_highbd_sad128x256_avg_avx2(const uint16_t *src, int src_stride,
+unsigned int av2_highbd_sad128x256_avg_avx2(const uint16_t *src, int src_stride,
                                             const uint16_t *ref, int ref_stride,
                                             const uint16_t *second_pred) {
   unsigned int sum;
   const int left_shift = 7;
 
-  sum = avm_highbd_sad128x128_avg_avx2(src, src_stride, ref, ref_stride,
+  sum = av2_highbd_sad128x128_avg_avx2(src, src_stride, ref, ref_stride,
                                        second_pred);
   src += src_stride << left_shift;
   ref += ref_stride << left_shift;
   second_pred += 128 << left_shift;
-  sum += avm_highbd_sad128x128_avg_avx2(src, src_stride, ref, ref_stride,
+  sum += av2_highbd_sad128x128_avg_avx2(src, src_stride, ref, ref_stride,
                                         second_pred);
   return sum;
 }
 
-unsigned int avm_highbd_sad256x128_avg_avx2(const uint16_t *src, int src_stride,
+unsigned int av2_highbd_sad256x128_avg_avx2(const uint16_t *src, int src_stride,
                                             const uint16_t *ref, int ref_stride,
                                             const uint16_t *second_pred) {
   __m256i sad = _mm256_setzero_si256();
@@ -1118,18 +1118,18 @@ unsigned int avm_highbd_sad256x128_avg_avx2(const uint16_t *src, int src_stride,
   return get_sad_from_mm256_epi32(&sad);
 }
 
-unsigned int avm_highbd_sad256x256_avg_avx2(const uint16_t *src, int src_stride,
+unsigned int av2_highbd_sad256x256_avg_avx2(const uint16_t *src, int src_stride,
                                             const uint16_t *ref, int ref_stride,
                                             const uint16_t *second_pred) {
   unsigned int sum;
   const int left_shift = 7;
 
-  sum = avm_highbd_sad256x128_avg_avx2(src, src_stride, ref, ref_stride,
+  sum = av2_highbd_sad256x128_avg_avx2(src, src_stride, ref, ref_stride,
                                        second_pred);
   src += src_stride << left_shift;
   ref += ref_stride << left_shift;
   second_pred += 256 << left_shift;
-  sum += avm_highbd_sad256x128_avg_avx2(src, src_stride, ref, ref_stride,
+  sum += av2_highbd_sad256x128_avg_avx2(src, src_stride, ref, ref_stride,
                                         second_pred);
   return sum;
 }
@@ -1182,7 +1182,7 @@ static AOM_FORCE_INLINE void init_sad(__m256i *s) {
   s[3] = _mm256_setzero_si256();
 }
 
-static AOM_FORCE_INLINE void avm_highbd_sad8xNx4d_avx2(
+static AOM_FORCE_INLINE void av2_highbd_sad8xNx4d_avx2(
     int N, const uint16_t *src, int src_stride,
     const uint16_t *const ref_array[], int ref_stride, uint32_t *sad_array) {
   __m256i sad_vec[4];
@@ -1211,7 +1211,7 @@ static AOM_FORCE_INLINE void avm_highbd_sad8xNx4d_avx2(
   get_4d_sad_from_mm256_epi32(sad_vec, sad_array);
 }
 
-static AOM_FORCE_INLINE void avm_highbd_sad16xNx4d_2rows_avx2(
+static AOM_FORCE_INLINE void av2_highbd_sad16xNx4d_2rows_avx2(
     int N, const uint16_t *src, int src_stride,
     const uint16_t *const ref_array[], int ref_stride, uint32_t *sad_array) {
   __m256i sad_vec[4];
@@ -1232,7 +1232,7 @@ static AOM_FORCE_INLINE void avm_highbd_sad16xNx4d_2rows_avx2(
   get_4d_sad_from_mm256_epi32(sad_vec, sad_array);
 }
 
-static AOM_FORCE_INLINE void avm_highbd_sad16xNx4d_avx2(
+static AOM_FORCE_INLINE void av2_highbd_sad16xNx4d_avx2(
     int N, const uint16_t *src, int src_stride,
     const uint16_t *const ref_array[], int ref_stride, uint32_t *sad_array) {
   __m256i sad_vec[4];
@@ -1255,7 +1255,7 @@ static AOM_FORCE_INLINE void avm_highbd_sad16xNx4d_avx2(
   get_4d_sad_from_mm256_epi32(sad_vec, sad_array);
 }
 
-static AOM_FORCE_INLINE void avm_highbd_sad32xNx4d_avx2(
+static AOM_FORCE_INLINE void av2_highbd_sad32xNx4d_avx2(
     int N, const uint16_t *src, int src_stride,
     const uint16_t *const ref_array[], int ref_stride, uint32_t *sad_array) {
   __m256i sad_vec[4];
@@ -1285,7 +1285,7 @@ static AOM_FORCE_INLINE void avm_highbd_sad32xNx4d_avx2(
   get_4d_sad_from_mm256_epi32(sad_vec, sad_array);
 }
 
-static AOM_FORCE_INLINE void avm_highbd_sad32xNx4d_2rows_avx2(
+static AOM_FORCE_INLINE void av2_highbd_sad32xNx4d_2rows_avx2(
     int N, const uint16_t *src, int src_stride,
     const uint16_t *const ref_array[], int ref_stride, uint32_t *sad_array) {
   __m256i sad_vec[4];
@@ -1306,7 +1306,7 @@ static AOM_FORCE_INLINE void avm_highbd_sad32xNx4d_2rows_avx2(
   get_4d_sad_from_mm256_epi32(sad_vec, sad_array);
 }
 
-static AOM_FORCE_INLINE void avm_highbd_sad64xNx4d_avx2(
+static AOM_FORCE_INLINE void av2_highbd_sad64xNx4d_avx2(
     int N, const uint16_t *src, int src_stride,
     const uint16_t *const ref_array[], int ref_stride, uint32_t *sad_array) {
   __m256i sad_vec[4];
@@ -1334,7 +1334,7 @@ static AOM_FORCE_INLINE void avm_highbd_sad64xNx4d_avx2(
   get_4d_sad_from_mm256_epi32(sad_vec, sad_array);
 }
 
-static AOM_FORCE_INLINE void avm_highbd_sad128xNx4d_avx2(
+static AOM_FORCE_INLINE void av2_highbd_sad128xNx4d_avx2(
     int N, const uint16_t *src, int src_stride,
     const uint16_t *const ref_array[], int ref_stride, uint32_t *sad_array) {
   __m256i sad_vec[4];
@@ -1361,7 +1361,7 @@ static AOM_FORCE_INLINE void avm_highbd_sad128xNx4d_avx2(
   get_4d_sad_from_mm256_epi32(sad_vec, sad_array);
 }
 
-static AOM_FORCE_INLINE void avm_highbd_sad256xNx4d_avx2(
+static AOM_FORCE_INLINE void av2_highbd_sad256xNx4d_avx2(
     int N, const uint16_t *src, int src_stride,
     const uint16_t *const ref_array[], int ref_stride, uint32_t *sad_array) {
   __m256i sad_vec[4];
@@ -1397,17 +1397,17 @@ static AOM_FORCE_INLINE void avm_highbd_sad256xNx4d_avx2(
 }
 
 #define highbd_sadMxNx4d_avx2(m, n)                                           \
-  void avm_highbd_sad##m##x##n##x4d_avx2(                                     \
+  void av2_highbd_sad##m##x##n##x4d_avx2(                                     \
       const uint16_t *src, int src_stride, const uint16_t *const ref_array[], \
       int ref_stride, uint32_t *sad_array) {                                  \
-    avm_highbd_sad##m##xNx4d_avx2(n, src, src_stride, ref_array, ref_stride,  \
+    av2_highbd_sad##m##xNx4d_avx2(n, src, src_stride, ref_array, ref_stride,  \
                                   sad_array);                                 \
   }
 #define highbd_sad_skip_MxNx4d_avx2(m, n)                                     \
-  void avm_highbd_sad_skip_##m##x##n##x4d_avx2(                               \
+  void av2_highbd_sad_skip_##m##x##n##x4d_avx2(                               \
       const uint16_t *src, int src_stride, const uint16_t *const ref_array[], \
       int ref_stride, uint32_t *sad_array) {                                  \
-    avm_highbd_sad##m##xNx4d_avx2((n / 2), src, 2 * src_stride, ref_array,    \
+    av2_highbd_sad##m##xNx4d_avx2((n / 2), src, 2 * src_stride, ref_array,    \
                                   2 * ref_stride, sad_array);                 \
     sad_array[0] <<= 1;                                                       \
     sad_array[1] <<= 1;                                                       \
@@ -1417,10 +1417,10 @@ static AOM_FORCE_INLINE void avm_highbd_sad256xNx4d_avx2(
 
 // Handle height 4 cases where only 2 rows are processed
 #define highbd_sad_skip_MxNx4d_2rows_avx2(m, n)                                \
-  void avm_highbd_sad_skip_##m##x##n##x4d_avx2(                                \
+  void av2_highbd_sad_skip_##m##x##n##x4d_avx2(                                \
       const uint16_t *src, int src_stride, const uint16_t *const ref_array[],  \
       int ref_stride, uint32_t *sad_array) {                                   \
-    avm_highbd_sad##m##xNx4d_2rows_avx2((n / 2), src, 2 * src_stride,          \
+    av2_highbd_sad##m##xNx4d_2rows_avx2((n / 2), src, 2 * src_stride,          \
                                         ref_array, 2 * ref_stride, sad_array); \
     sad_array[0] <<= 1;                                                        \
     sad_array[1] <<= 1;                                                        \

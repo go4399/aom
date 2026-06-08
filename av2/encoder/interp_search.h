@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_INTERP_FILTER_SEARCH_H_
-#define AVM_AV2_ENCODER_INTERP_FILTER_SEARCH_H_
+#ifndef AV2_AV2_ENCODER_INTERP_FILTER_SEARCH_H_
+#define AV2_AV2_ENCODER_INTERP_FILTER_SEARCH_H_
 
 #include "av2/encoder/block.h"
 #include "av2/encoder/encoder.h"
@@ -157,4 +157,4 @@ int64_t av2_interpolation_filter_search(
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_INTERP_FILTER_SEARCH_H_
+#endif  // AV2_AV2_ENCODER_INTERP_FILTER_SEARCH_H_

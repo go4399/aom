@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_ENCODEFRAME_UTILS_H_
-#define AVM_AV2_ENCODER_ENCODEFRAME_UTILS_H_
+#ifndef AV2_AV2_ENCODER_ENCODEFRAME_UTILS_H_
+#define AV2_AV2_ENCODER_ENCODEFRAME_UTILS_H_
 
 #include "aom_ports/system_state.h"
 
@@ -357,4 +357,4 @@ static INLINE int is_bsize_square(BLOCK_SIZE bsize) {
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_ENCODEFRAME_UTILS_H_
+#endif  // AV2_AV2_ENCODER_ENCODEFRAME_UTILS_H_

@@ -13,8 +13,8 @@
 /*!\file
  * \brief Declares functions used in palette search.
  */
-#ifndef AVM_AV2_ENCODER_PALETTE_H_
-#define AVM_AV2_ENCODER_PALETTE_H_
+#ifndef AV2_AV2_ENCODER_PALETTE_H_
+#define AV2_AV2_ENCODER_PALETTE_H_
 
 #include "av2/common/blockd.h"
 
@@ -171,4 +171,4 @@ void av2_rd_pick_palette_intra_sby(
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_PALETTE_H_
+#endif  // AV2_AV2_ENCODER_PALETTE_H_

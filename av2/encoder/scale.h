@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_SCALE_H_
-#define AVM_AV2_ENCODER_SCALE_H_
+#ifndef AV2_AV2_ENCODER_SCALE_H_
+#define AV2_AV2_ENCODER_SCALE_H_
 
 #include "av2/encoder/encoder.h"
 
@@ -34,4 +34,4 @@ static INLINE int av2_frame_scaled(const AV2_COMMON *cm) {
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_SCALE_H_
+#endif  // AV2_AV2_ENCODER_SCALE_H_

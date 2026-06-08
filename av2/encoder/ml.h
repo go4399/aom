@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_ML_H_
-#define AVM_AV2_ENCODER_ML_H_
+#ifndef AV2_AV2_ENCODER_ML_H_
+#define AV2_AV2_ENCODER_ML_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -80,4 +80,4 @@ void av2_nn_output_prec_reduce(float *const output, int num_output);
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_ML_H_
+#endif  // AV2_AV2_ENCODER_ML_H_

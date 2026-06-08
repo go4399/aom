@@ -33,7 +33,7 @@
 #include "aom_dsp/bitreader.h"
 #include "aom_dsp/bitreader_buffer.h"
 #include "aom_mem/aom_mem.h"
-#include "aom_ports/avm_timer.h"
+#include "aom_ports/av2_timer.h"
 #include "aom_ports/mem.h"
 #include "aom_ports/mem_ops.h"
 #include "aom_scale/aom_scale.h"
@@ -77,8 +77,8 @@
 #include "av2/decoder/detokenize.h"
 #include "av2/decoder/obu.h"
 
-#define AVM_MIN_THREADS_PER_TILE 1
-#define AVM_MAX_THREADS_PER_TILE 2
+#define AV2_MIN_THREADS_PER_TILE 1
+#define AV2_MAX_THREADS_PER_TILE 2
 
 #define MC_TEMP_BUF_PELS                           \
   (((MAX_SB_SIZE) * 2 + (AOM_INTERP_EXTEND) * 2) * \
@@ -694,7 +694,7 @@ static INLINE void decode_mbmi_block(AV2Decoder *const pbi,
   MACROBLOCKD *const xd = &dcb->xd;
 
 #if CONFIG_ACCOUNTING
-  avm_accounting_set_context(&pbi->accounting, mi_col, mi_row, xd->tree_type);
+  av2_accounting_set_context(&pbi->accounting, mi_col, mi_row, xd->tree_type);
 #endif
   set_offsets(cm, xd, bsize, mi_row, mi_col, bw, bh, x_mis, y_mis, parent,
               index);
@@ -2405,7 +2405,7 @@ static void read_seg_syntax_info_to_segmentation(
         const int ubits = get_unsigned_bits(data_max);
 
         if (av2_is_segfeature_signed(j)) {
-          data = avm_rb_read_inv_signed_literal(rb, ubits);
+          data = av2_rb_read_inv_signed_literal(rb, ubits);
         } else {
           data = aom_rb_read_literal(rb, ubits);
         }
@@ -2773,7 +2773,7 @@ static void read_match_indices_hdr(int plane, WienerNonsepInfo *wienerns_info,
     int decoded_match = base;
     if (n > 1) {
       decoded_match +=
-          (int)avm_rb_read_primitive_refsubexpfin(rb, n, 4, ref - base);
+          (int)av2_rb_read_primitive_refsubexpfin(rb, n, 4, ref - base);
     }
 
     wienerns_info->match_indices[c_id] = decoded_match;
@@ -2863,7 +2863,7 @@ static void read_wienerns_framefilters_hdr(AV2_COMMON *cm, int plane,
     for (int i = beg_feat; i < end_feat; ++i) {
       if (!nsfilter_params->subset_config[s][i]) continue;
       wienerns_info_nsfilter[i] =
-          avm_rb_read_primitive_refsubexpfin(
+          av2_rb_read_primitive_refsubexpfin(
               rb, 1 << wienerns_coeffs[i - beg_feat][WIENERNS_BIT_ID],
               wienerns_coeffs[i - beg_feat][WIENERNS_BIT_ID] - 3,
               ref_wienerns_info_nsfilter[i] -
@@ -2955,7 +2955,7 @@ static void read_wienerns_filter(MACROBLOCKD *xd, int is_uv,
     for (int i = beg_feat; i < end_feat; ++i) {
       if (!nsfilter_params->subset_config[s][i]) continue;
       wienerns_info_nsfilter[i] =
-          avm_read_4part_wref(
+          av2_read_4part_wref(
               rb,
               ref_wienerns_info_nsfilter[i] -
                   wienerns_coeffs[i - beg_feat][WIENERNS_MIN_ID],
@@ -3410,7 +3410,7 @@ static INLINE void setup_ccso(AV2_COMMON *cm, struct aom_read_bit_buffer *rb) {
 }
 
 static INLINE int read_delta_q(struct aom_read_bit_buffer *rb) {
-  return aom_rb_read_bit(rb) ? avm_rb_read_inv_signed_literal(rb, 6) : 0;
+  return aom_rb_read_bit(rb) ? av2_rb_read_inv_signed_literal(rb, 6) : 0;
 }
 
 static INLINE void setup_quantization(CommonQuantParams *quant_params,
@@ -3790,7 +3790,7 @@ static INLINE void setup_tip_frame_size(AV2_COMMON *cm) {
       &cm->ci_params_per_layer[cm->mlayer_id];
   const ColorInfo *const color_info = &ci_params->color_info;
   YV12_BUFFER_CONFIG *tip_frame_buf = &cm->tip_ref.tip_frame->buf;
-  if (avm_realloc_frame_buffer(
+  if (av2_realloc_frame_buffer(
           tip_frame_buf, cm->width, cm->height, seq_params->subsampling_x,
           seq_params->subsampling_y, AOM_DEC_BORDER_IN_PIXELS,
           cm->features.byte_alignment, NULL, NULL, NULL, false)) {
@@ -3816,7 +3816,7 @@ static INLINE void setup_tip_frame_size(AV2_COMMON *cm) {
   }
 
   tip_frame_buf = &cm->tip_ref.tmp_tip_frame->buf;
-  if (avm_realloc_frame_buffer(
+  if (av2_realloc_frame_buffer(
           tip_frame_buf, cm->width, cm->height, seq_params->subsampling_x,
           seq_params->subsampling_y, AOM_DEC_BORDER_IN_PIXELS,
           cm->features.byte_alignment, NULL, NULL, NULL, false)) {
@@ -3850,7 +3850,7 @@ static INLINE void setup_buffer_pool(AV2_COMMON *cm) {
   const ColorInfo *const color_info = &ci_params->color_info;
 
   lock_buffer_pool(pool);
-  if (avm_realloc_frame_buffer(
+  if (av2_realloc_frame_buffer(
           &cm->cur_frame->buf, cm->width, cm->height, seq_params->subsampling_x,
           seq_params->subsampling_y, AOM_DEC_BORDER_IN_PIXELS,
           cm->features.byte_alignment, &cm->cur_frame->raw_frame_buffer,
@@ -4666,7 +4666,7 @@ static INLINE void decode_tile(AV2Decoder *pbi, ThreadData *const td,
 }
 
 #if CONFIG_THROUGHPUT_ANALYSIS
-static void avm_accounting_cal_total(AV2Decoder *pbi) {
+static void av2_accounting_cal_total(AV2Decoder *pbi) {
   if (pbi->decoding_first_frame) {
     pbi->common.sym_stats.frame_dec_order = 0;
     pbi->common.sym_stats.tot_ctx_syms = 0;
@@ -4758,7 +4758,7 @@ static const uint8_t *decode_tiles(AV2Decoder *pbi, const uint8_t *data,
   get_tile_buffers(pbi, data, data_end, tile_buffers, start_tile, end_tile);
 #if CONFIG_ACCOUNTING
   if (pbi->acct_enabled) {
-    avm_accounting_reset(&pbi->accounting);
+    av2_accounting_reset(&pbi->accounting);
   }
 #endif
 
@@ -4799,7 +4799,7 @@ static const uint8_t *decode_tiles(AV2Decoder *pbi, const uint8_t *data,
       if (pbi->acct_enabled) {
         td->bit_reader->accounting = &pbi->accounting;
         td->bit_reader->accounting->last_tell_frac =
-            avm_reader_tell_frac(td->bit_reader);
+            av2_reader_tell_frac(td->bit_reader);
       } else {
         td->bit_reader->accounting = NULL;
       }
@@ -4829,7 +4829,7 @@ static const uint8_t *decode_tiles(AV2Decoder *pbi, const uint8_t *data,
   TileDataDec *const tile_data = pbi->tile_data + end_tile;
 #if CONFIG_THROUGHPUT_ANALYSIS
   if (pbi->acct_enabled) {
-    avm_accounting_cal_total(pbi);
+    av2_accounting_cal_total(pbi);
   }
 #endif  // CONFIG_THROUGHPUT_ANALYSIS
   return aom_reader_find_end(&tile_data->bit_reader);
@@ -4875,7 +4875,7 @@ static INLINE void tile_worker_hook_init(AV2Decoder *const pbi,
   if (pbi->acct_enabled) {
     td->bit_reader->accounting = &pbi->accounting;
     td->bit_reader->accounting->last_tell_frac =
-        avm_reader_tell_frac(td->bit_reader);
+        av2_reader_tell_frac(td->bit_reader);
   } else {
     td->bit_reader->accounting = NULL;
   }
@@ -4893,7 +4893,7 @@ static INLINE void tile_worker_hook_init(AV2Decoder *const pbi,
 #if CONFIG_ACCOUNTING
   if (pbi->acct_enabled) {
     tile_data->bit_reader.accounting->last_tell_frac =
-        avm_reader_tell_frac(&tile_data->bit_reader);
+        av2_reader_tell_frac(&tile_data->bit_reader);
   }
 #endif
 }
@@ -4950,7 +4950,7 @@ static INLINE int get_max_row_mt_workers_per_tile(AV2_COMMON *cm,
   // TODO(any): Modify this value if parsing is optimized in future.
   int sb_rows = av2_get_sb_rows_in_tile(cm, tile);
   int max_workers =
-      sb_rows == 1 ? AVM_MIN_THREADS_PER_TILE : AVM_MAX_THREADS_PER_TILE;
+      sb_rows == 1 ? AV2_MIN_THREADS_PER_TILE : AV2_MAX_THREADS_PER_TILE;
   return max_workers;
 }
 
@@ -5385,7 +5385,7 @@ static INLINE void allocate_mc_tmp_buf(AV2_COMMON *const cm,
 
 static INLINE void reset_dec_workers(AV2Decoder *pbi, AVxWorkerHook worker_hook,
                                      int num_workers) {
-  const AVxWorkerInterface *const winterface = avm_get_worker_interface();
+  const AVxWorkerInterface *const winterface = av2_get_worker_interface();
 
   // Reset tile decoding hook
   for (int worker_idx = 0; worker_idx < num_workers; ++worker_idx) {
@@ -5410,18 +5410,18 @@ static INLINE void reset_dec_workers(AV2Decoder *pbi, AVxWorkerHook worker_hook,
 #if CONFIG_ACCOUNTING
   if (pbi->acct_enabled) {
 #if CONFIG_THROUGHPUT_ANALYSIS
-    avm_accounting_cal_total(pbi);
+    av2_accounting_cal_total(pbi);
 #else
-    avm_accounting_dump(&pbi->accounting);
+    av2_accounting_dump(&pbi->accounting);
 #endif  // CONFIG_THROUGHPUT_ANALYSIS
-    avm_accounting_reset(&pbi->accounting);
+    av2_accounting_reset(&pbi->accounting);
   }
 #endif
 }
 
 static INLINE void launch_dec_workers(AV2Decoder *pbi, const uint8_t *data_end,
                                       int num_workers) {
-  const AVxWorkerInterface *const winterface = avm_get_worker_interface();
+  const AVxWorkerInterface *const winterface = av2_get_worker_interface();
 
   for (int worker_idx = 0; worker_idx < num_workers; ++worker_idx) {
     AVxWorker *const worker = &pbi->tile_workers[worker_idx];
@@ -5439,7 +5439,7 @@ static INLINE void launch_dec_workers(AV2Decoder *pbi, const uint8_t *data_end,
 }
 
 static INLINE void sync_dec_workers(AV2Decoder *pbi, int num_workers) {
-  const AVxWorkerInterface *const winterface = avm_get_worker_interface();
+  const AVxWorkerInterface *const winterface = av2_get_worker_interface();
   int corrupted = 0;
 
   for (int worker_idx = num_workers; worker_idx > 0; --worker_idx) {
@@ -5452,7 +5452,7 @@ static INLINE void sync_dec_workers(AV2Decoder *pbi, int num_workers) {
 
 static INLINE void decode_mt_init(AV2Decoder *pbi) {
   AV2_COMMON *const cm = &pbi->common;
-  const AVxWorkerInterface *const winterface = avm_get_worker_interface();
+  const AVxWorkerInterface *const winterface = av2_get_worker_interface();
   int worker_idx;
 
   // Create workers and thread_data
@@ -5879,7 +5879,7 @@ void av2_read_chroma_format_bitdepth(
   seq_params->monochrome = is_monochrome;
 }
 
-void av2_read_timing_info_header(avm_timing_info_t *timing_info,
+void av2_read_timing_info_header(av2_timing_info_t *timing_info,
                                  struct aom_internal_error_info *error,
                                  struct aom_read_bit_buffer *rb) {
   timing_info->num_units_in_display_tick =
@@ -6027,7 +6027,7 @@ static void read_seg_syntax_info(struct SegmentationInfoSyntax *seg_params,
         int data = 0;
 
         if (av2_is_segfeature_signed(j)) {
-          data = avm_rb_read_inv_signed_literal(rb, ubits);
+          data = av2_rb_read_inv_signed_literal(rb, ubits);
         } else {
           data = aom_rb_read_literal(rb, ubits);
         }
@@ -6133,13 +6133,13 @@ void read_sequence_inter_group_tool_flags(struct SequenceHeader *seq_params,
     seq_params->ref_frames_log2 = aom_ceil_log2(seq_params->ref_frames);
     seq_params->number_of_bits_for_lt_frame_id = aom_rb_read_literal(rb, 3);
     seq_params->def_max_drl_bits =
-        avm_rb_read_primitive_quniform(
+        av2_rb_read_primitive_quniform(
             rb, MAX_MAX_DRL_BITS - MIN_MAX_DRL_BITS + 1) +
         MIN_MAX_DRL_BITS;
     seq_params->allow_frame_max_drl_bits = aom_rb_read_bit(rb);
   }
   seq_params->def_max_bvp_drl_bits =
-      avm_rb_read_primitive_quniform(
+      av2_rb_read_primitive_quniform(
           rb, MAX_MAX_IBC_DRL_BITS - MIN_MAX_IBC_DRL_BITS + 1) +
       MIN_MAX_IBC_DRL_BITS;
   seq_params->allow_frame_max_bvp_drl_bits = aom_rb_read_bit(rb);
@@ -6541,7 +6541,7 @@ static INLINE void read_global_motion(AV2_COMMON *cm,
 
   int our_ref = num_total_refs;
   if (!frame_is_sframe(cm))
-    our_ref = avm_rb_read_primitive_quniform(rb, num_total_refs + 1);
+    our_ref = av2_rb_read_primitive_quniform(rb, num_total_refs + 1);
   if (our_ref == num_total_refs) {
     // Special case: Use IDENTITY model
     cm->base_global_motion_model = default_warp_params;
@@ -6560,7 +6560,7 @@ static INLINE void read_global_motion(AV2_COMMON *cm,
       cm->base_global_motion_model = default_warp_params;
       cm->base_global_motion_distance = 1;
     } else {
-      const int their_ref = avm_rb_read_primitive_quniform(rb, their_num_refs);
+      const int their_ref = av2_rb_read_primitive_quniform(rb, their_num_refs);
       if (buf->refs_restricted_status[their_ref]) {
         aom_internal_error(&cm->error, AOM_CODEC_ERROR,
                            "Invalid their_ref: restricted reference buffer");
@@ -6839,7 +6839,7 @@ static void read_frame_max_bvp_drl_bits(AV2_COMMON *const cm,
   features->max_bvp_drl_bits = seq_params->def_max_bvp_drl_bits;
   if (seq_params->allow_frame_max_bvp_drl_bits) {
     features->max_bvp_drl_bits =
-        avm_rb_read_primitive_ref_quniform(
+        av2_rb_read_primitive_ref_quniform(
             rb, MAX_MAX_IBC_DRL_BITS - MIN_MAX_IBC_DRL_BITS + 1,
             seq_params->def_max_bvp_drl_bits - MIN_MAX_IBC_DRL_BITS) +
         MIN_MAX_IBC_DRL_BITS;
@@ -6962,7 +6962,7 @@ static void read_frame_max_drl_bits(AV2_COMMON *const cm,
   features->max_drl_bits = seq_params->def_max_drl_bits;
   if (seq_params->allow_frame_max_drl_bits) {
     features->max_drl_bits =
-        avm_rb_read_primitive_ref_quniform(
+        av2_rb_read_primitive_ref_quniform(
             rb, MAX_MAX_DRL_BITS - MIN_MAX_DRL_BITS + 1,
             seq_params->def_max_drl_bits - MIN_MAX_DRL_BITS) +
         MIN_MAX_DRL_BITS;
@@ -9627,7 +9627,7 @@ int32_t av2_read_tilegroup_header(
 
   if (is_first_tile_group) {
 #if CONFIG_BITSTREAM_DEBUG
-    avm_bitstream_queue_set_frame_read(
+    av2_bitstream_queue_set_frame_read(
         (int)(derive_output_order_idx(cm, cm->cur_frame) * 2 +
               cm->immediate_output_picture));
 #endif
@@ -9842,12 +9842,12 @@ void av2_decode_tg_tiles_and_wrapup(AV2Decoder *pbi, const uint8_t *data,
   if (initialize_flag) setup_frame_info(pbi);
   const int num_planes = av2_num_planes(cm);
 #if CONFIG_INSPECTION
-  avm_realloc_frame_buffer(
+  av2_realloc_frame_buffer(
       &cm->predicted_pixels, cm->width, cm->height,
       cm->seq_params.subsampling_x, cm->seq_params.subsampling_y,
       AOM_DEC_BORDER_IN_PIXELS, cm->features.byte_alignment, NULL, NULL, NULL,
       false);
-  avm_realloc_frame_buffer(
+  av2_realloc_frame_buffer(
       &cm->prefiltered_pixels, cm->width, cm->height,
       cm->seq_params.subsampling_x, cm->seq_params.subsampling_y,
       AOM_DEC_BORDER_IN_PIXELS, cm->features.byte_alignment, NULL, NULL, NULL,

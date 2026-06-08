@@ -52,14 +52,14 @@ static INLINE unsigned int highbd_sad_ds(const uint16_t *a, int a_stride,
 }
 
 #define highbd_sadMxN(m, n)                                     \
-  unsigned int avm_highbd_sad##m##x##n##_c(                     \
+  unsigned int av2_highbd_sad##m##x##n##_c(                     \
       const uint16_t *src, int src_stride, const uint16_t *ref, \
       int ref_stride) {                                         \
     return highbd_sad(src, src_stride, ref, ref_stride, m, n);  \
   }
 
 #define highbd_sadMxN_ds(m, n)                                    \
-  unsigned int avm_highbd_sad##m##x##n##_ds_c(                    \
+  unsigned int av2_highbd_sad##m##x##n##_ds_c(                    \
       const uint16_t *src, int src_stride, const uint16_t *ref,   \
       int ref_stride) {                                           \
     return highbd_sad_ds(src, src_stride, ref, ref_stride, m, n); \

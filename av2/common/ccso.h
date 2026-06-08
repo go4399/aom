@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_CCSO_H_
-#define AVM_AV2_COMMON_CCSO_H_
+#ifndef AV2_AV2_COMMON_CCSO_H_
+#define AV2_AV2_COMMON_CCSO_H_
 
 #define CCSO_INPUT_INTERVAL 3
 #define CCSO_PROC_BLK_LOG2 5
@@ -72,4 +72,4 @@ void ccso_filter_block_hbd_wo_buf_4x4_c(
 #ifdef __cplusplus
 }  // extern "C"
 #endif
-#endif  // AVM_AV2_COMMON_CCSO_H_
+#endif  // AV2_AV2_COMMON_CCSO_H_

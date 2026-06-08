@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_PASS2_STRATEGY_H_
-#define AVM_AV2_ENCODER_PASS2_STRATEGY_H_
+#ifndef AV2_AV2_ENCODER_PASS2_STRATEGY_H_
+#define AV2_AV2_ENCODER_PASS2_STRATEGY_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -130,4 +130,4 @@ void av2_gop_bit_allocation(const AV2_COMP *cpi, RATE_CONTROL *const rc,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_PASS2_STRATEGY_H_
+#endif  // AV2_AV2_ENCODER_PASS2_STRATEGY_H_

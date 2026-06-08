@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_TXB_COMMON_H_
-#define AVM_AV2_COMMON_TXB_COMMON_H_
+#ifndef AV2_AV2_COMMON_TXB_COMMON_H_
+#define AV2_AV2_COMMON_TXB_COMMON_H_
 
 #include "av2/common/av2_common_int.h"
 
@@ -848,4 +848,4 @@ static INLINE void get_txb_ctx(const BLOCK_SIZE plane_bsize,
 #undef MAX_TX_SIZE_UNIT
 }
 
-#endif  // AVM_AV2_COMMON_TXB_COMMON_H_
+#endif  // AV2_AV2_COMMON_TXB_COMMON_H_

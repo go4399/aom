@@ -10,26 +10,26 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_TIMING_H_
-#define AVM_AV2_COMMON_TIMING_H_
+#ifndef AV2_AV2_COMMON_TIMING_H_
+#define AV2_AV2_COMMON_TIMING_H_
 
 #include "aom/aom_integer.h"
 #include "av2/common/enums.h"
 
-typedef struct avm_timing {
+typedef struct av2_timing {
   uint32_t num_units_in_display_tick;
   uint32_t time_scale;
   int equal_elemental_interval;
   uint32_t num_ticks_per_elemental_duration;
-} avm_timing_info_t;
+} av2_timing_info_t;
 
-typedef struct avm_dec_model_info {
+typedef struct av2_dec_model_info {
   uint32_t num_units_in_decoding_tick;
   int encoder_decoder_buffer_delay_length;
   int buffer_removal_time_length;
-} avm_dec_model_info_t;
+} av2_dec_model_info_t;
 
-typedef struct avm_dec_model_op_parameters {
+typedef struct av2_dec_model_op_parameters {
   int decoder_model_param_present_flag;
   int64_t bitrate;
   int64_t buffer_size;
@@ -38,18 +38,18 @@ typedef struct avm_dec_model_op_parameters {
   int low_delay_mode_flag;
   int display_model_param_present_flag;
   int initial_display_delay;
-} avm_dec_model_op_parameters_t;
+} av2_dec_model_op_parameters_t;
 
-void av2_set_avm_dec_model_info(avm_dec_model_info_t *decoder_model);
+void av2_set_avm_dec_model_info(av2_dec_model_info_t *decoder_model);
 
-void av2_set_dec_model_op_parameters(avm_dec_model_op_parameters_t *op_params);
+void av2_set_dec_model_op_parameters(av2_dec_model_op_parameters_t *op_params);
 
 void av2_set_resource_availability_parameters(
-    avm_dec_model_op_parameters_t *op_params);
+    av2_dec_model_op_parameters_t *op_params);
 
 int64_t av2_max_level_bitrate(BITSTREAM_PROFILE seq_profile_idc,
                               int seq_level_idx, int seq_tier,
                               int subsampling_x, int subsampling_y,
                               int monochrome);
 
-#endif  // AVM_AV2_COMMON_TIMING_H_
+#endif  // AV2_AV2_COMMON_TIMING_H_

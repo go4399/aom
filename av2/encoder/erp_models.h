@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_ERP_MODELS_H_
-#define AVM_AV2_ENCODER_ERP_MODELS_H_
+#ifndef AV2_AV2_ENCODER_ERP_MODELS_H_
+#define AV2_AV2_ENCODER_ERP_MODELS_H_
 
 #include "config/aom_config.h"
 #include "av2/encoder/ml.h"
@@ -6101,4 +6101,4 @@ static const float av2_erp_rect_hd_feature_std_BLOCK_128X128[19] = {
   2971539.750000f,  0.000001f,          0.000001f,
 };
 
-#endif  // AVM_AV2_ENCODER_ERP_MODELS_H_
+#endif  // AV2_AV2_ENCODER_ERP_MODELS_H_

@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_RECONINTER_H_
-#define AVM_AV2_COMMON_RECONINTER_H_
+#ifndef AV2_AV2_COMMON_RECONINTER_H_
+#define AV2_AV2_COMMON_RECONINTER_H_
 
 #include "av2/common/av2_common_int.h"
 #include "av2/common/convolve.h"
@@ -28,10 +28,10 @@
 //
 // We have to break this up into two macros to keep both clang-format and
 // tools/lint-hunks.py happy.
-#define AVM_LEFT_TOP_MARGIN_PX(subsampling) \
+#define AV2_LEFT_TOP_MARGIN_PX(subsampling) \
   ((AOM_BORDER_IN_PIXELS >> subsampling) - AOM_INTERP_EXTEND)
-#define AVM_LEFT_TOP_MARGIN_SCALED(subsampling) \
-  (AVM_LEFT_TOP_MARGIN_PX(subsampling) << SCALE_SUBPEL_BITS)
+#define AV2_LEFT_TOP_MARGIN_SCALED(subsampling) \
+  (AV2_LEFT_TOP_MARGIN_PX(subsampling) << SCALE_SUBPEL_BITS)
 
 #ifdef __cplusplus
 extern "C" {
@@ -154,15 +154,15 @@ typedef struct SubpelParams {
 #define EIGHT_TAPS_REF_RIGHT_BORDER (AOM_INTERP_EXTEND + REFINE_MV_MAX_OFFSET)
 #define EIGHT_TAPS_REF_BOTTOM_BORDER (AOM_INTERP_EXTEND + REFINE_MV_MAX_OFFSET)
 
-#define AVM_4TAPS_INTERP_EXTEND 2
+#define AV2_4TAPS_INTERP_EXTEND 2
 #define FOUR_TAPS_REF_TOP_BORDER \
-  (AVM_4TAPS_INTERP_EXTEND - 1 + REFINE_MV_MAX_OFFSET)
+  (AV2_4TAPS_INTERP_EXTEND - 1 + REFINE_MV_MAX_OFFSET)
 #define FOUR_TAPS_REF_LEFT_BORDER \
-  (AVM_4TAPS_INTERP_EXTEND - 1 + REFINE_MV_MAX_OFFSET)
+  (AV2_4TAPS_INTERP_EXTEND - 1 + REFINE_MV_MAX_OFFSET)
 #define FOUR_TAPS_REF_RIGHT_BORDER \
-  (AVM_4TAPS_INTERP_EXTEND + REFINE_MV_MAX_OFFSET)
+  (AV2_4TAPS_INTERP_EXTEND + REFINE_MV_MAX_OFFSET)
 #define FOUR_TAPS_REF_BOTTOM_BORDER \
-  (AVM_4TAPS_INTERP_EXTEND + REFINE_MV_MAX_OFFSET)
+  (AV2_4TAPS_INTERP_EXTEND + REFINE_MV_MAX_OFFSET)
 
 #define REF_TOP_BORDER_WARP (AOM_INTERP_EXTEND - 1)
 #define REF_LEFT_BORDER_WARP (AOM_INTERP_EXTEND - 1)
@@ -1345,4 +1345,4 @@ static INLINE bool is_subblock_outside(int x, int y, int mi_cols, int mi_rows,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_RECONINTER_H_
+#endif  // AV2_AV2_COMMON_RECONINTER_H_

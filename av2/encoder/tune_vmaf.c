@@ -265,7 +265,7 @@ static INLINE double cal_approx_vmaf(const AV2_COMP *const cpi,
       cpi->oxcf.tune_cfg.tuning == AOM_TUNE_VMAF_NEG_MAX_GAIN;
   double new_vmaf;
 
-  avm_calc_vmaf(cpi->vmaf_info.vmaf_model, source, sharpened, bit_depth,
+  av2_calc_vmaf(cpi->vmaf_info.vmaf_model, source, sharpened, bit_depth,
                 cal_vmaf_neg, &new_vmaf);
 
   const double sharpened_var = frame_average_variance(cpi, sharpened);
@@ -308,7 +308,7 @@ static double find_best_frame_unsharp_amount(const AV2_COMP *const cpi,
   const int height = source->y_height;
   YV12_BUFFER_CONFIG sharpened;
   memset(&sharpened, 0, sizeof(sharpened));
-  avm_alloc_frame_buffer(&sharpened, width, height, source->subsampling_x,
+  av2_alloc_frame_buffer(&sharpened, width, height, source->subsampling_x,
                          source->subsampling_y, cpi->oxcf.border_in_pixels,
                          cm->features.byte_alignment, false);
 
@@ -360,7 +360,7 @@ void av2_vmaf_neg_preprocessing(AV2_COMP *const cpi,
 
   YV12_BUFFER_CONFIG blurred;
   memset(&blurred, 0, sizeof(blurred));
-  avm_alloc_frame_buffer(&blurred, width, height, source->subsampling_x,
+  av2_alloc_frame_buffer(&blurred, width, height, source->subsampling_x,
                          source->subsampling_y, cpi->oxcf.border_in_pixels,
                          cm->features.byte_alignment, false);
 
@@ -381,10 +381,10 @@ void av2_vmaf_frame_preprocessing(AV2_COMP *const cpi,
   YV12_BUFFER_CONFIG source_extended, blurred;
   memset(&source_extended, 0, sizeof(source_extended));
   memset(&blurred, 0, sizeof(blurred));
-  avm_alloc_frame_buffer(&source_extended, width, height, source->subsampling_x,
+  av2_alloc_frame_buffer(&source_extended, width, height, source->subsampling_x,
                          source->subsampling_y, cpi->oxcf.border_in_pixels,
                          cm->features.byte_alignment, false);
-  avm_alloc_frame_buffer(&blurred, width, height, source->subsampling_x,
+  av2_alloc_frame_buffer(&blurred, width, height, source->subsampling_x,
                          source->subsampling_y, cpi->oxcf.border_in_pixels,
                          cm->features.byte_alignment, false);
 
@@ -420,10 +420,10 @@ void av2_vmaf_blk_preprocessing(AV2_COMP *const cpi,
   YV12_BUFFER_CONFIG source_extended, blurred;
   memset(&blurred, 0, sizeof(blurred));
   memset(&source_extended, 0, sizeof(source_extended));
-  avm_alloc_frame_buffer(&blurred, width, height, source->subsampling_x,
+  av2_alloc_frame_buffer(&blurred, width, height, source->subsampling_x,
                          source->subsampling_y, cpi->oxcf.border_in_pixels,
                          cm->features.byte_alignment, false);
-  avm_alloc_frame_buffer(&source_extended, width, height, source->subsampling_x,
+  av2_alloc_frame_buffer(&source_extended, width, height, source->subsampling_x,
                          source->subsampling_y, cpi->oxcf.border_in_pixels,
                          cm->features.byte_alignment, false);
 
@@ -456,10 +456,10 @@ void av2_vmaf_blk_preprocessing(AV2_COMP *const cpi,
   YV12_BUFFER_CONFIG source_block, blurred_block;
   memset(&source_block, 0, sizeof(source_block));
   memset(&blurred_block, 0, sizeof(blurred_block));
-  avm_alloc_frame_buffer(&source_block, block_w, block_h, source->subsampling_x,
+  av2_alloc_frame_buffer(&source_block, block_w, block_h, source->subsampling_x,
                          source->subsampling_y, cpi->oxcf.border_in_pixels,
                          cm->features.byte_alignment, false);
-  avm_alloc_frame_buffer(&blurred_block, block_w, block_h,
+  av2_alloc_frame_buffer(&blurred_block, block_w, block_h,
                          source->subsampling_x, source->subsampling_y,
                          cpi->oxcf.border_in_pixels,
                          cm->features.byte_alignment, false);
@@ -540,7 +540,7 @@ void av2_set_mb_vmaf_rdmult_scaling(AV2_COMP *cpi) {
   aom_clear_system_state();
   YV12_BUFFER_CONFIG resized_source;
   memset(&resized_source, 0, sizeof(resized_source));
-  avm_alloc_frame_buffer(&resized_source, y_width / resize_factor,
+  av2_alloc_frame_buffer(&resized_source, y_width / resize_factor,
                          y_height / resize_factor, cpi->source->subsampling_x,
                          cpi->source->subsampling_y, cpi->oxcf.border_in_pixels,
                          cm->features.byte_alignment, false);
@@ -558,7 +558,7 @@ void av2_set_mb_vmaf_rdmult_scaling(AV2_COMP *cpi) {
 
   YV12_BUFFER_CONFIG blurred;
   memset(&blurred, 0, sizeof(blurred));
-  avm_alloc_frame_buffer(&blurred, resized_y_width, resized_y_height,
+  av2_alloc_frame_buffer(&blurred, resized_y_width, resized_y_height,
                          cpi->source->subsampling_x, cpi->source->subsampling_y,
                          cpi->oxcf.border_in_pixels,
                          cm->features.byte_alignment, false);
@@ -566,7 +566,7 @@ void av2_set_mb_vmaf_rdmult_scaling(AV2_COMP *cpi) {
 
   YV12_BUFFER_CONFIG recon;
   memset(&recon, 0, sizeof(recon));
-  avm_alloc_frame_buffer(&recon, resized_y_width, resized_y_height,
+  av2_alloc_frame_buffer(&recon, resized_y_width, resized_y_height,
                          cpi->source->subsampling_x, cpi->source->subsampling_y,
                          cpi->oxcf.border_in_pixels,
                          cm->features.byte_alignment, false);
@@ -575,7 +575,7 @@ void av2_set_mb_vmaf_rdmult_scaling(AV2_COMP *cpi) {
   VmafContext *vmaf_context;
   const bool cal_vmaf_neg =
       cpi->oxcf.tune_cfg.tuning == AOM_TUNE_VMAF_NEG_MAX_GAIN;
-  avm_init_vmaf_context(&vmaf_context, cpi->vmaf_info.vmaf_model, cal_vmaf_neg);
+  av2_init_vmaf_context(&vmaf_context, cpi->vmaf_info.vmaf_model, cal_vmaf_neg);
   unsigned int *sses = aom_malloc(sizeof(*sses) * (num_rows * num_cols));
   memset(sses, 0, sizeof(*sses) * (num_rows * num_cols));
 
@@ -603,7 +603,7 @@ void av2_set_mb_vmaf_rdmult_scaling(AV2_COMP *cpi) {
                           blurred.y_stride, recon_buf, recon.y_stride,
                           resized_block_w, resized_block_h, 0.0, bit_depth);
 
-      avm_read_vmaf_image(vmaf_context, &resized_source, &recon, bit_depth,
+      av2_read_vmaf_image(vmaf_context, &resized_source, &recon, bit_depth,
                           index);
 
       // Restore recon buf
@@ -612,11 +612,11 @@ void av2_set_mb_vmaf_rdmult_scaling(AV2_COMP *cpi) {
                           resized_block_w, resized_block_h, 0.0, bit_depth);
     }
   }
-  avm_flush_vmaf_context(vmaf_context);
+  av2_flush_vmaf_context(vmaf_context);
   for (int row = 0; row < num_rows; ++row) {
     for (int col = 0; col < num_cols; ++col) {
       const int index = row * num_cols + col;
-      const double vmaf = avm_calc_vmaf_at_index(
+      const double vmaf = av2_calc_vmaf_at_index(
           vmaf_context, cpi->vmaf_info.vmaf_model, index);
       const double dvmaf = kBaselineVmaf - vmaf;
 
@@ -638,7 +638,7 @@ void av2_set_mb_vmaf_rdmult_scaling(AV2_COMP *cpi) {
 
   aom_free_frame_buffer(&resized_source);
   aom_free_frame_buffer(&blurred);
-  avm_close_vmaf_context(vmaf_context);
+  av2_close_vmaf_context(vmaf_context);
   aom_free(sses);
   aom_clear_system_state();
 }
@@ -710,13 +710,13 @@ static double calc_vmaf_motion_score(const AV2_COMP *const cpi,
   memset(&blurred_last, 0, sizeof(blurred_last));
   memset(&blurred_next, 0, sizeof(blurred_next));
 
-  avm_alloc_frame_buffer(&blurred_cur, y_width, y_height, cur->subsampling_x,
+  av2_alloc_frame_buffer(&blurred_cur, y_width, y_height, cur->subsampling_x,
                          cur->subsampling_y, cpi->oxcf.border_in_pixels,
                          cm->features.byte_alignment, false);
-  avm_alloc_frame_buffer(&blurred_last, y_width, y_height, cur->subsampling_x,
+  av2_alloc_frame_buffer(&blurred_last, y_width, y_height, cur->subsampling_x,
                          cur->subsampling_y, cpi->oxcf.border_in_pixels,
                          cm->features.byte_alignment, false);
-  avm_alloc_frame_buffer(&blurred_next, y_width, y_height, cur->subsampling_x,
+  av2_alloc_frame_buffer(&blurred_next, y_width, y_height, cur->subsampling_x,
                          cur->subsampling_y, cpi->oxcf.border_in_pixels,
                          cm->features.byte_alignment, false);
 
@@ -825,7 +825,7 @@ static INLINE double cal_approx_score(
   const uint32_t bit_depth = cpi->td.mb.e_mbd.bd;
   const bool cal_vmaf_neg =
       cpi->oxcf.tune_cfg.tuning == AOM_TUNE_VMAF_NEG_MAX_GAIN;
-  avm_calc_vmaf(cpi->vmaf_info.vmaf_model, src, recon_sharpened, bit_depth,
+  av2_calc_vmaf(cpi->vmaf_info.vmaf_model, src, recon_sharpened, bit_depth,
                 cal_vmaf_neg, &score);
   return src_variance / new_variance * (score - src_score);
 }
@@ -882,16 +882,16 @@ static double find_best_frame_unsharp_amount_neg(
   memset(&src_sharpened, 0, sizeof(src_sharpened));
   memset(&recon_blurred, 0, sizeof(recon_blurred));
   memset(&src_blurred, 0, sizeof(src_blurred));
-  avm_alloc_frame_buffer(&recon_sharpened, width, height, src->subsampling_x,
+  av2_alloc_frame_buffer(&recon_sharpened, width, height, src->subsampling_x,
                          src->subsampling_y, cpi->oxcf.border_in_pixels,
                          cm->features.byte_alignment, false);
-  avm_alloc_frame_buffer(&src_sharpened, width, height, src->subsampling_x,
+  av2_alloc_frame_buffer(&src_sharpened, width, height, src->subsampling_x,
                          src->subsampling_y, cpi->oxcf.border_in_pixels,
                          cm->features.byte_alignment, false);
-  avm_alloc_frame_buffer(&recon_blurred, width, height, src->subsampling_x,
+  av2_alloc_frame_buffer(&recon_blurred, width, height, src->subsampling_x,
                          src->subsampling_y, cpi->oxcf.border_in_pixels,
                          cm->features.byte_alignment, false);
-  avm_alloc_frame_buffer(&src_blurred, width, height, src->subsampling_x,
+  av2_alloc_frame_buffer(&src_blurred, width, height, src->subsampling_x,
                          src->subsampling_y, cpi->oxcf.border_in_pixels,
                          cm->features.byte_alignment, false);
 
@@ -944,7 +944,7 @@ void av2_update_vmaf_curve(AV2_COMP *cpi) {
   double base_score;
   const bool cal_vmaf_neg =
       cpi->oxcf.tune_cfg.tuning == AOM_TUNE_VMAF_NEG_MAX_GAIN;
-  avm_calc_vmaf(cpi->vmaf_info.vmaf_model, source, recon, bit_depth,
+  av2_calc_vmaf(cpi->vmaf_info.vmaf_model, source, recon, bit_depth,
                 cal_vmaf_neg, &base_score);
   cpi->vmaf_info.last_frame_vmaf[layer_depth] = base_score;
   cpi->vmaf_info.last_frame_ysse[layer_depth] =

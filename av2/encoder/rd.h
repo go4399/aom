@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_RD_H_
-#define AVM_AV2_ENCODER_RD_H_
+#ifndef AV2_AV2_ENCODER_RD_H_
+#define AV2_AV2_ENCODER_RD_H_
 
 #include <limits.h>
 
@@ -349,4 +349,4 @@ int av2_get_deltaq_offset(const struct AV2_COMP *cpi, int qindex, double beta);
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_RD_H_
+#endif  // AV2_AV2_ENCODER_RD_H_

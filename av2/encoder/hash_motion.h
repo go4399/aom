@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_HASH_MOTION_H_
-#define AVM_AV2_ENCODER_HASH_MOTION_H_
+#ifndef AV2_AV2_ENCODER_HASH_MOTION_H_
+#define AV2_AV2_ENCODER_HASH_MOTION_H_
 
 #include "config/aom_config.h"
 
@@ -96,4 +96,4 @@ void av2_get_block_hash_value(IntraBCHashInfo *intrabc_hash_info,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_HASH_MOTION_H_
+#endif  // AV2_AV2_ENCODER_HASH_MOTION_H_

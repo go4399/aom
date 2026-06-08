@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_AV2_LOOPFILTER_H_
-#define AVM_AV2_COMMON_AV2_LOOPFILTER_H_
+#ifndef AV2_AV2_COMMON_AV2_LOOPFILTER_H_
+#define AV2_AV2_COMMON_AV2_LOOPFILTER_H_
 
 #include "config/aom_config.h"
 
@@ -117,4 +117,4 @@ int df_side_from_qindex(int q_index, int bit_depth);
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_AV2_LOOPFILTER_H_
+#endif  // AV2_AV2_COMMON_AV2_LOOPFILTER_H_

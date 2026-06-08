@@ -139,17 +139,17 @@ static const struct arg_enum_list color_primaries_enum[] = {
 };
 
 typedef enum {
-  AVM_DFH_DISABLED = 0,
-  AVM_DFH_RAW = 1,
-  AVM_DFH_FG = 2,
-  AVM_DFH_BOTH = 3,
-} AVM_DFH_MODE;
+  AV2_DFH_DISABLED = 0,
+  AV2_DFH_RAW = 1,
+  AV2_DFH_FG = 2,
+  AV2_DFH_BOTH = 3,
+} AV2_DFH_MODE;
 
 static const struct arg_enum_list frame_hash_metadata_enum[] = {
-  { "off", AVM_DFH_DISABLED },
-  { "raw", AVM_DFH_RAW },
-  { "filmgrain", AVM_DFH_FG },
-  { "both", AVM_DFH_BOTH },
+  { "off", AV2_DFH_DISABLED },
+  { "raw", AV2_DFH_RAW },
+  { "filmgrain", AV2_DFH_FG },
+  { "both", AV2_DFH_BOTH },
   { NULL, 0 }
 };
 #endif  // CONFIG_AV2_ENCODER

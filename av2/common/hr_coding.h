@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_HR_CODING_H_
-#define AVM_AV2_COMMON_HR_CODING_H_
+#ifndef AV2_AV2_COMMON_HR_CODING_H_
+#define AV2_AV2_COMMON_HR_CODING_H_
 
 #include "config/aom_config.h"
 
@@ -150,4 +150,4 @@ int get_adaptive_hr_length(int level, int ctx);
  */
 int get_adaptive_hr_length_diff(int level, int ctx, int *diff);
 
-#endif  // AVM_AV2_COMMON_HR_CODING_H_
+#endif  // AV2_AV2_COMMON_HR_CODING_H_

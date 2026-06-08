@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_DECODER_OBU_H_
-#define AVM_AV2_DECODER_OBU_H_
+#ifndef AV2_AV2_DECODER_OBU_H_
+#define AV2_AV2_DECODER_OBU_H_
 
 #include "aom_dsp/bitreader_buffer.h"
 #include "av2/decoder/decoder.h"
@@ -27,7 +27,7 @@ aom_codec_err_t flush_all_xlayer_frames(struct AV2Decoder *pbi, AV2_COMMON *cm,
 //         0 if we didn't decode a frame but that's okay
 //           (eg, if there was a frame but we skipped it),
 //     or -1 on error
-int avm_decode_frame_from_obus(struct AV2Decoder *pbi, const uint8_t *data,
+int av2_decode_frame_from_obus(struct AV2Decoder *pbi, const uint8_t *data,
                                const uint8_t *data_end,
                                const uint8_t **p_data_end);
 
@@ -112,4 +112,4 @@ void av2_read_color_info(int *color_description_idc, int *color_primaries,
                          int *matrix_coefficients, int *full_range_flag,
                          struct aom_read_bit_buffer *rb);
 
-#endif  // AVM_AV2_DECODER_OBU_H_
+#endif  // AV2_AV2_DECODER_OBU_H_

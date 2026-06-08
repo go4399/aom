@@ -30,7 +30,7 @@ struct macroblockd;
 /* Encoder forward decls */
 struct macroblock;
 struct txfm_param;
-struct avm_variance_vtable;
+struct av2_variance_vtable;
 struct search_site_config;
 struct yv12_buffer_config;
 struct NN_CONFIG;
@@ -160,7 +160,7 @@ add_proto qw/void av2_highbd_iwht4x4_16_horz_add/, "const tran_low_t *input, uin
 add_proto qw/void av2_inv_idfm2d_add_4x4_vert/, "const int32_t *input, uint16_t *output, int stride, TX_TYPE tx_type, int bd";
 add_proto qw/void av2_inv_idfm2d_add_4x4_horz/, "const int32_t *input, uint16_t *output, int stride, TX_TYPE tx_type, int bd";
 
-if (avm_config("CONFIG_AV2_ENCODER") eq "yes") {
+if (av2_config("CONFIG_AV2_ENCODER") eq "yes") {
   add_proto qw/void av2_lossless_fwd_idtx/, "const int16_t *src_diff, tran_low_t *coeff, int diff_stride, TxfmParam *txfm_param";
   specialize qw/av2_lossless_fwd_idtx avx2/;
 }
@@ -220,7 +220,7 @@ add_proto qw/void av2_resize_and_extend_frame/, "const YV12_BUFFER_CONFIG *src, 
 #
 # Encoder functions below this point.
 #
-if (avm_config("CONFIG_AV2_ENCODER") eq "yes") {
+if (av2_config("CONFIG_AV2_ENCODER") eq "yes") {
   # trellis quant
   add_proto qw/void av2_decide_states/, "const struct tcq_node_t *prev, const struct tcq_rate_t *rd, const struct prequant_t *pq, int limits, int tru_eob, int64_t rdmult, struct tcq_node_t *decision";
   specialize qw/av2_decide_states avx2/;
@@ -307,7 +307,7 @@ if (avm_config("CONFIG_AV2_ENCODER") eq "yes") {
   specialize qw/av2_get_horver_correlation_full sse4_1 avx2 neon/;
 
   add_proto qw/void av2_nn_predict/, " const float *input_nodes, const NN_CONFIG *const nn_config, int reduce_prec, float *const output";
-  if (avm_config("CONFIG_EXCLUDE_SIMD_MISMATCH") ne "yes") {
+  if (av2_config("CONFIG_EXCLUDE_SIMD_MISMATCH") ne "yes") {
     specialize qw/av2_nn_predict sse3 neon/;
   }
 }
@@ -365,7 +365,7 @@ specialize qw/ccso_filter_block_hbd_wo_buf avx2/;
 add_proto qw/void ccso_filter_block_hbd_wo_buf_bo_only/, "const uint16_t *src_y, uint16_t *dts_yuv, const int x, const int y, const int pic_width, const int pic_height, const int8_t *offset_buf, const int src_y_stride, const int dst_stride, const int y_uv_hscale, const int y_uv_vscale, const int max_val, const int blk_size_x, const int blk_size_y, const bool isSingleBand, const uint8_t shift_bits";
 specialize qw/ccso_filter_block_hbd_wo_buf_bo_only avx2/;
 
-if (avm_config("CONFIG_AV2_ENCODER") eq "yes") {
+if (av2_config("CONFIG_AV2_ENCODER") eq "yes") {
   add_proto qw/void ccso_filter_block_hbd_with_buf/, "const uint16_t *src_y, uint16_t *dst_yuv, const uint8_t *src_cls0, const uint8_t *src_cls1,
                     const int src_y_stride, const int dst_stride,
                     const int ccso_stride,
@@ -442,7 +442,7 @@ add_proto qw/void mhccp_predict_hv_hbd/, "const uint16_t *input, uint16_t *dst, 
 specialize qw/mhccp_predict_hv_hbd avx2/;
 
 # Temporarily disable the sse4 function since it might overflow.
-if ((avm_config("MHCCP_CONVOLVE_SIMPLIFY") eq "yes") && 0) {
+if ((av2_config("MHCCP_CONVOLVE_SIMPLIFY") eq "yes") && 0) {
   specialize qw/mhccp_predict_hv_hbd sse4_1/;
 }
 add_proto qw/void av2_mhccp_derive_multi_param_hv/, "MACROBLOCKD *const xd, int plane,int above_lines, int left_lines, int ref_width,int ref_height, int dir, int is_top_sb_boundary";

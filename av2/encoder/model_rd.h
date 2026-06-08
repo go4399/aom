@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_MODEL_RD_H_
-#define AVM_AV2_ENCODER_MODEL_RD_H_
+#ifndef AV2_AV2_ENCODER_MODEL_RD_H_
+#define AV2_AV2_ENCODER_MODEL_RD_H_
 
 #include "aom/aom_integer.h"
 #include "av2/encoder/block.h"
@@ -51,7 +51,7 @@ static int64_t calculate_sse(MACROBLOCKD *const xd,
                              const int bh) {
   int64_t sse = 0;
   const int shift = xd->bd - 8;
-  sse = avm_highbd_sse(p->src.buf, p->src.stride, pd->dst.buf, pd->dst.stride,
+  sse = av2_highbd_sse(p->src.buf, p->src.stride, pd->dst.buf, pd->dst.stride,
                        bw, bh);
   sse = ROUND_POWER_OF_TWO(sse, shift * 2);
   return sse;
@@ -235,10 +235,10 @@ static INLINE void model_rd_for_sb_with_curvfit(
                                cm->width, cm->height, &bw, &bh);
     const int shift = xd->bd - 8;
     if (!is_border_block)
-      sse = avm_highbd_sse(p->src.buf, p->src.stride, pd->dst.buf,
+      sse = av2_highbd_sse(p->src.buf, p->src.stride, pd->dst.buf,
                            pd->dst.stride, bw, bh);
     else
-      sse = avm_highbd_sse_c(p->src.buf, p->src.stride, pd->dst.buf,
+      sse = av2_highbd_sse_c(p->src.buf, p->src.stride, pd->dst.buf,
                              pd->dst.stride, bw, bh);
 
     sse = ROUND_POWER_OF_TWO(sse, shift * 2);
@@ -275,4 +275,4 @@ static const model_rd_from_sse_type model_rd_sse_fn[MODELRD_TYPES] = {
 #ifdef __cplusplus
 }  // extern "C"
 #endif
-#endif  // AVM_AV2_ENCODER_MODEL_RD_H_
+#endif  // AV2_AV2_ENCODER_MODEL_RD_H_

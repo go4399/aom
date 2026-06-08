@@ -17,15 +17,15 @@
 #include "aom_dsp/bitreader_buffer.h"
 #include "aom/internal/aom_image_internal.h"
 
-#define avm_wb_write_bit aom_wb_write_bit
-#define avm_wb_write_literal aom_wb_write_literal
-#define avm_wb_bytes_written aom_wb_bytes_written
+#define av2_wb_write_bit aom_wb_write_bit
+#define av2_wb_write_literal aom_wb_write_literal
+#define av2_wb_bytes_written aom_wb_bytes_written
 #define aom_rb_read_bit aom_rb_read_bit
 #define aom_rb_read_literal aom_rb_read_literal
-#define avm_img_add_metadata aom_img_add_metadata
+#define av2_img_add_metadata aom_img_add_metadata
 
-int avm_encode_banding_hints_metadata(
-    const avm_banding_hints_metadata_t *metadata, uint8_t *payload,
+int av2_encode_banding_hints_metadata(
+    const av2_banding_hints_metadata_t *metadata, uint8_t *payload,
     size_t *payload_size) {
   if (!metadata || !payload || !payload_size) {
     return -1;
@@ -34,46 +34,46 @@ int avm_encode_banding_hints_metadata(
   struct aom_write_bit_buffer wb = { payload, 0 };
 
   // Write basic flags (3 bits)
-  avm_wb_write_bit(&wb, metadata->coding_banding_present_flag);
-  avm_wb_write_bit(&wb, metadata->source_banding_present_flag);
+  av2_wb_write_bit(&wb, metadata->coding_banding_present_flag);
+  av2_wb_write_bit(&wb, metadata->source_banding_present_flag);
 
   if (metadata->coding_banding_present_flag) {
-    avm_wb_write_bit(&wb, metadata->banding_hints_flag);
+    av2_wb_write_bit(&wb, metadata->banding_hints_flag);
 
     if (metadata->banding_hints_flag) {
-      avm_wb_write_bit(&wb, metadata->three_color_components);
+      av2_wb_write_bit(&wb, metadata->three_color_components);
 
       const int num_components = metadata->three_color_components ? 3 : 1;
 
       // Write per-component information
       for (int plane = 0; plane < num_components; plane++) {
-        avm_wb_write_bit(&wb,
+        av2_wb_write_bit(&wb,
                          metadata->banding_in_component_present_flag[plane]);
         if (metadata->banding_in_component_present_flag[plane]) {
-          avm_wb_write_literal(&wb, metadata->max_band_width_minus4[plane], 6);
-          avm_wb_write_literal(&wb, metadata->max_band_step_minus1[plane], 4);
+          av2_wb_write_literal(&wb, metadata->max_band_width_minus4[plane], 6);
+          av2_wb_write_literal(&wb, metadata->max_band_step_minus1[plane], 4);
         }
       }
 
       // Write band units information
-      avm_wb_write_bit(&wb, metadata->band_units_information_present_flag);
+      av2_wb_write_bit(&wb, metadata->band_units_information_present_flag);
       if (metadata->band_units_information_present_flag) {
-        avm_wb_write_literal(&wb, metadata->num_band_units_rows_minus_1, 5);
-        avm_wb_write_literal(&wb, metadata->num_band_units_cols_minus_1, 5);
-        avm_wb_write_bit(&wb, metadata->varying_size_band_units_flag);
+        av2_wb_write_literal(&wb, metadata->num_band_units_rows_minus_1, 5);
+        av2_wb_write_literal(&wb, metadata->num_band_units_cols_minus_1, 5);
+        av2_wb_write_bit(&wb, metadata->varying_size_band_units_flag);
 
         if (metadata->varying_size_band_units_flag) {
-          avm_wb_write_literal(&wb, metadata->band_block_in_luma_samples, 3);
+          av2_wb_write_literal(&wb, metadata->band_block_in_luma_samples, 3);
 
           // Write vertical sizes
           for (int r = 0; r <= metadata->num_band_units_rows_minus_1; r++) {
-            avm_wb_write_literal(
+            av2_wb_write_literal(
                 &wb, metadata->vert_size_in_band_blocks_minus1[r], 5);
           }
 
           // Write horizontal sizes
           for (int c = 0; c <= metadata->num_band_units_cols_minus_1; c++) {
-            avm_wb_write_literal(
+            av2_wb_write_literal(
                 &wb, metadata->horz_size_in_band_blocks_minus1[c], 5);
           }
         }
@@ -81,7 +81,7 @@ int avm_encode_banding_hints_metadata(
         // Write per-tile banding flags
         for (int r = 0; r <= metadata->num_band_units_rows_minus_1; r++) {
           for (int c = 0; c <= metadata->num_band_units_cols_minus_1; c++) {
-            avm_wb_write_bit(&wb,
+            av2_wb_write_bit(&wb,
                              metadata->banding_in_band_unit_present_flag[r][c]);
           }
         }
@@ -90,7 +90,7 @@ int avm_encode_banding_hints_metadata(
   }
 
   // Calculate actual payload size in bytes
-  *payload_size = avm_wb_bytes_written(&wb);
+  *payload_size = av2_wb_bytes_written(&wb);
 
   // Add byte alignment if needed
   if (wb.bit_offset != 0) {
@@ -100,9 +100,9 @@ int avm_encode_banding_hints_metadata(
   return 0;
 }
 
-int avm_decode_banding_hints_metadata(const uint8_t *payload,
+int av2_decode_banding_hints_metadata(const uint8_t *payload,
                                       size_t payload_size,
-                                      avm_banding_hints_metadata_t *metadata) {
+                                      av2_banding_hints_metadata_t *metadata) {
   if (!payload || !metadata || payload_size == 0) {
     return -1;
   }
@@ -172,8 +172,8 @@ int avm_decode_banding_hints_metadata(const uint8_t *payload,
   return 0;
 }
 
-int avm_img_add_banding_hints_metadata(
-    aom_image_t *img, const avm_banding_hints_metadata_t *banding_metadata,
+int av2_img_add_banding_hints_metadata(
+    aom_image_t *img, const av2_banding_hints_metadata_t *banding_metadata,
     aom_metadata_insert_flags_t insert_flag) {
   if (!img || !banding_metadata) {
     return -1;
@@ -183,12 +183,12 @@ int avm_img_add_banding_hints_metadata(
   uint8_t payload_buffer[256];  // Should be sufficient for banding metadata
   size_t payload_size = sizeof(payload_buffer);
 
-  if (avm_encode_banding_hints_metadata(banding_metadata, payload_buffer,
+  if (av2_encode_banding_hints_metadata(banding_metadata, payload_buffer,
                                         &payload_size) != 0) {
     return -1;
   }
 
   // Add the metadata to the image
-  return avm_img_add_metadata(img, OBU_METADATA_TYPE_BANDING_HINTS,
+  return av2_img_add_metadata(img, OBU_METADATA_TYPE_BANDING_HINTS,
                               payload_buffer, payload_size, insert_flag);
 }

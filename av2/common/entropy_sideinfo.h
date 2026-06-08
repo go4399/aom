@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_SIDEINFO_H_
-#define AVM_AV2_COMMON_SIDEINFO_H_
+#ifndef AV2_AV2_COMMON_SIDEINFO_H_
+#define AV2_AV2_COMMON_SIDEINFO_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -30,4 +30,4 @@ extern int beginningFrameFlag[MAX_NUMBER_CONTEXTS][MAX_DIMS_CONTEXT3]
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_SIDEINFO_H_
+#endif  // AV2_AV2_COMMON_SIDEINFO_H_

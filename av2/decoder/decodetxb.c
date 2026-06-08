@@ -49,7 +49,7 @@ static int get_q_ctx(int q) {
  *
  */
 static int read_exp_golomb(MACROBLOCKD *xd, aom_reader *r, int k) {
-  int length = avm_read_unary(r, 21, ACCT_INFO("hr"));
+  int length = av2_read_unary(r, 21, ACCT_INFO("hr"));
   if (length > 20) {
     aom_internal_error(xd->error_info, AOM_CODEC_CORRUPT_FRAME,
                        "Invalid length in read_exp_golomb");
@@ -84,7 +84,7 @@ static int read_exp_golomb(MACROBLOCKD *xd, aom_reader *r, int k) {
  */
 static int read_truncated_rice(MACROBLOCKD *xd, aom_reader *r, int m, int k,
                                int cmax) {
-  int q = avm_read_unary(r, cmax, ACCT_INFO("hr"));
+  int q = av2_read_unary(r, cmax, ACCT_INFO("hr"));
 
   int rem = (q == cmax) ? read_exp_golomb(xd, r, k)
                         : aom_read_literal(r, m, ACCT_INFO("hr"));
@@ -332,7 +332,7 @@ static INLINE void decode_eob(DecoderCodingBlock *dcb, aom_reader *const r,
 #if CONFIG_PARAKIT_COLLECT_DATA
     {
       eob_pt =
-          avm_read_symbol_probdata(r, ec_ctx->eob_flag_cdf16[pl_ctx], idxlist,
+          av2_read_symbol_probdata(r, ec_ctx->eob_flag_cdf16[pl_ctx], idxlist,
                                    cm->prob_models[EOB_FLAG_CDF16]) +
           1;
       break;
@@ -348,7 +348,7 @@ static INLINE void decode_eob(DecoderCodingBlock *dcb, aom_reader *const r,
 #if CONFIG_PARAKIT_COLLECT_DATA
     {
       eob_pt =
-          avm_read_symbol_probdata(r, ec_ctx->eob_flag_cdf32[pl_ctx], idxlist,
+          av2_read_symbol_probdata(r, ec_ctx->eob_flag_cdf32[pl_ctx], idxlist,
                                    cm->prob_models[EOB_FLAG_CDF32]) +
           1;
       break;

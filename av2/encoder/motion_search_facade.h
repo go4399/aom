@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_MOTION_SEARCH_H_
-#define AVM_AV2_ENCODER_MOTION_SEARCH_H_
+#ifndef AV2_AV2_ENCODER_MOTION_SEARCH_H_
+#define AV2_AV2_ENCODER_MOTION_SEARCH_H_
 
 #include "av2/encoder/encoder.h"
 
@@ -92,4 +92,4 @@ int_mv av2_simple_motion_search_ext(AV2_COMP *const cpi,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_MOTION_SEARCH_H_
+#endif  // AV2_AV2_ENCODER_MOTION_SEARCH_H_

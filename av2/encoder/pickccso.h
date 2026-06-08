@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_PICKCCSO_H_
-#define AVM_AV2_ENCODER_PICKCCSO_H_
+#ifndef AV2_AV2_ENCODER_PICKCCSO_H_
+#define AV2_AV2_ENCODER_PICKCCSO_H_
 
 #define CCSO_MAX_ITERATIONS 15
 
@@ -34,4 +34,4 @@ void ccso_search(AV2_COMMON *cm, MACROBLOCKD *xd, int rdmult,
 #ifdef __cplusplus
 }  // extern "C"
 #endif
-#endif  // AVM_AV2_ENCODER_PICKCCSO_H_
+#endif  // AV2_AV2_ENCODER_PICKCCSO_H_

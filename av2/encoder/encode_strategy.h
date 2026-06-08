@@ -13,8 +13,8 @@
 /*!\file
  * \brief Declares frame encoding functions.
  */
-#ifndef AVM_AV2_ENCODER_ENCODE_STRATEGY_H_
-#define AVM_AV2_ENCODER_ENCODE_STRATEGY_H_
+#ifndef AV2_AV2_ENCODER_ENCODE_STRATEGY_H_
+#define AV2_AV2_ENCODER_ENCODE_STRATEGY_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -55,7 +55,7 @@ extern "C" {
 int av2_encode_strategy(AV2_COMP *const cpi, size_t *const size,
                         uint8_t *const dest, unsigned int *frame_flags,
                         int64_t *const time_stamp, int64_t *const time_end,
-                        const avm_rational64_t *const timestamp_ratio,
+                        const av2_rational64_t *const timestamp_ratio,
                         int flush);
 
 /*!\cond */
@@ -91,4 +91,4 @@ int av2_check_keyframe_overlay(int gf_index, GF_GROUP *gf_group,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_ENCODE_STRATEGY_H_
+#endif  // AV2_AV2_ENCODER_ENCODE_STRATEGY_H_

@@ -19,7 +19,7 @@
 #include "aom_dsp/x86/synonyms.h"
 #include "av2/common/blockd.h"
 
-#define AVM_BLEND_A64_MAX_ALPHA AOM_BLEND_A64_MAX_ALPHA
+#define AV2_BLEND_A64_MAX_ALPHA AOM_BLEND_A64_MAX_ALPHA
 
 void av2_build_compound_diffwtd_mask_highbd_ssse3(
     uint8_t *mask, DIFFWTD_MASK_TYPE mask_type, const uint16_t *ssrc0,
@@ -34,7 +34,7 @@ void av2_build_compound_diffwtd_mask_highbd_ssse3(
     assert(mask_type == DIFFWTD_38 || mask_type == DIFFWTD_38_INV);
     const __m128i x0 = _mm_setzero_si128();
     const __m128i xAVM_BLEND_A64_MAX_ALPHA =
-        _mm_set1_epi16(AVM_BLEND_A64_MAX_ALPHA);
+        _mm_set1_epi16(AV2_BLEND_A64_MAX_ALPHA);
     const int mask_base = 38;
     const __m128i xmask_base = _mm_set1_epi16(mask_base);
     if (bd == 8) {

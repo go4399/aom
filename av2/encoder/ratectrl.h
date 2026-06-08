@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_RATECTRL_H_
-#define AVM_AV2_ENCODER_RATECTRL_H_
+#ifndef AV2_AV2_ENCODER_RATECTRL_H_
+#define AV2_AV2_ENCODER_RATECTRL_H_
 
 #include "aom/aom_codec.h"
 #include "aom/aom_integer.h"
@@ -502,4 +502,4 @@ int av2_calc_iframe_target_size_one_pass_cbr(const struct AV2_COMP *cpi);
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_RATECTRL_H_
+#endif  // AV2_AV2_ENCODER_RATECTRL_H_

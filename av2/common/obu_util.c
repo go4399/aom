@@ -75,7 +75,7 @@ static aom_codec_err_t read_obu_header(struct aom_read_bit_buffer *rb,
   return AOM_CODEC_OK;
 }
 
-aom_codec_err_t avm_read_obu_header_and_size(const uint8_t *data,
+aom_codec_err_t av2_read_obu_header_and_size(const uint8_t *data,
                                              size_t bytes_available,
                                              ObuHeader *obu_header,
                                              size_t *const payload_size,

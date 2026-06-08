@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_PRED_COMMON_H_
-#define AVM_AV2_COMMON_PRED_COMMON_H_
+#ifndef AV2_AV2_COMMON_PRED_COMMON_H_
+#define AV2_AV2_COMMON_PRED_COMMON_H_
 
 #include "av2/common/av2_common_int.h"
 #include "av2/common/blockd.h"
@@ -589,4 +589,4 @@ static INLINE aom_cdf_prob *av2_get_pred_cdf_compound_ref(
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_PRED_COMMON_H_
+#endif  // AV2_AV2_COMMON_PRED_COMMON_H_

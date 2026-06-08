@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_TEMPORAL_FILTER_H_
-#define AVM_AV2_ENCODER_TEMPORAL_FILTER_H_
+#ifndef AV2_AV2_ENCODER_TEMPORAL_FILTER_H_
+#define AV2_AV2_ENCODER_TEMPORAL_FILTER_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -112,4 +112,4 @@ int av2_temporal_filter(AV2_COMP *cpi, const int filter_frame_lookahead_idx,
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_TEMPORAL_FILTER_H_
+#endif  // AV2_AV2_ENCODER_TEMPORAL_FILTER_H_

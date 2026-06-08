@@ -508,7 +508,7 @@ static INLINE void unpack_and_store_16x1_pixels(const __m256i y0,
   _mm256_storeu_si256((__m256i *)dst, res);
 }
 
-static void avm_highbd_filter_block1d8_h6_avx2(
+static void av2_highbd_filter_block1d8_h6_avx2(
     const uint16_t *src_ptr, ptrdiff_t src_pitch, uint16_t *dst_ptr,
     ptrdiff_t dst_pitch, uint32_t height, const int16_t *filter, int bd) {
   __m256i signal[6], res0, res1;
@@ -538,13 +538,13 @@ static void avm_highbd_filter_block1d8_h6_avx2(
   }
 }
 
-static void avm_highbd_filter_block1d8_h8_avx2(
+static void av2_highbd_filter_block1d8_h8_avx2(
     const uint16_t *src_ptr, ptrdiff_t src_pitch, uint16_t *dst_ptr,
     ptrdiff_t dst_pitch, uint32_t height, const int16_t *filter, int bd) {
   // Invoke 6-tap specialized horizontal convolve function
   const bool is_filter_6tap = ((filter[0] | filter[7]) == 0);
   if (is_filter_6tap) {
-    avm_highbd_filter_block1d8_h6_avx2(src_ptr, src_pitch, dst_ptr, dst_pitch,
+    av2_highbd_filter_block1d8_h6_avx2(src_ptr, src_pitch, dst_ptr, dst_pitch,
                                        height, filter, bd);
     return;
   }
@@ -573,7 +573,7 @@ static void avm_highbd_filter_block1d8_h8_avx2(
   }
 }
 
-static void avm_highbd_filter_block1d16_h6_avx2(
+static void av2_highbd_filter_block1d16_h6_avx2(
     const uint16_t *src_ptr, ptrdiff_t src_pitch, uint16_t *dst_ptr,
     ptrdiff_t dst_pitch, uint32_t height, const int16_t *filter, int bd) {
   __m256i signal[6], res0, res1;
@@ -597,13 +597,13 @@ static void avm_highbd_filter_block1d16_h6_avx2(
   } while (height > 0);
 }
 
-static void avm_highbd_filter_block1d16_h8_avx2(
+static void av2_highbd_filter_block1d16_h8_avx2(
     const uint16_t *src_ptr, ptrdiff_t src_pitch, uint16_t *dst_ptr,
     ptrdiff_t dst_pitch, uint32_t height, const int16_t *filter, int bd) {
   // Invoke 6-tap specialized horizontal convolve function
   const bool is_filter_6tap = ((filter[0] | filter[7]) == 0);
   if (is_filter_6tap) {
-    avm_highbd_filter_block1d16_h6_avx2(src_ptr, src_pitch, dst_ptr, dst_pitch,
+    av2_highbd_filter_block1d16_h6_avx2(src_ptr, src_pitch, dst_ptr, dst_pitch,
                                         height, filter, bd);
     return;
   }
@@ -626,7 +626,7 @@ static void avm_highbd_filter_block1d16_h8_avx2(
   } while (height > 0);
 }
 
-static void avm_highbd_filter_block1d4_h4_avx2(
+static void av2_highbd_filter_block1d4_h4_avx2(
     const uint16_t *src_ptr, ptrdiff_t src_pitch, uint16_t *dst_ptr,
     ptrdiff_t dst_pitch, uint32_t height, const int16_t *filter, int bd) {
   const __m256i rounding = _mm256_set1_epi32(1 << (CONV8_ROUNDING_BITS - 1));
@@ -697,7 +697,7 @@ static void avm_highbd_filter_block1d4_h4_avx2(
   }
 }
 
-static void avm_highbd_filter_block1d8_h4_avx2(
+static void av2_highbd_filter_block1d8_h4_avx2(
     const uint16_t *src_ptr, ptrdiff_t src_pitch, uint16_t *dst_ptr,
     ptrdiff_t dst_pitch, uint32_t height, const int16_t *filter, int bd) {
   const __m256i rounding = _mm256_set1_epi32(1 << (CONV8_ROUNDING_BITS - 1));
@@ -787,12 +787,12 @@ static void avm_highbd_filter_block1d8_h4_avx2(
   }
 }
 
-static void avm_highbd_filter_block1d16_h4_avx2(
+static void av2_highbd_filter_block1d16_h4_avx2(
     const uint16_t *src_ptr, ptrdiff_t src_pitch, uint16_t *dst_ptr,
     ptrdiff_t dst_pitch, uint32_t height, const int16_t *filter, int bd) {
-  avm_highbd_filter_block1d8_h4_avx2(src_ptr, src_pitch, dst_ptr, dst_pitch,
+  av2_highbd_filter_block1d8_h4_avx2(src_ptr, src_pitch, dst_ptr, dst_pitch,
                                      height, filter, bd);
-  avm_highbd_filter_block1d8_h4_avx2(src_ptr + 8, src_pitch, dst_ptr + 8,
+  av2_highbd_filter_block1d8_h4_avx2(src_ptr + 8, src_pitch, dst_ptr + 8,
                                      dst_pitch, height, filter, bd);
 }
 
@@ -868,7 +868,7 @@ static INLINE void filter_8x1_2t_pixels(const __m256i *sig, const __m256i *f,
   *y0 = _mm256_srai_epi32(x0, CONV8_ROUNDING_BITS);
 }
 
-static void avm_highbd_filter_block1d8_h2_avx2(
+static void av2_highbd_filter_block1d8_h2_avx2(
     const uint16_t *src_ptr, ptrdiff_t src_pitch, uint16_t *dst_ptr,
     ptrdiff_t dst_pitch, uint32_t height, const int16_t *filter, int bd) {
   __m256i signal[2], res0, res1;
@@ -894,7 +894,7 @@ static void avm_highbd_filter_block1d8_h2_avx2(
   }
 }
 
-static void avm_highbd_filter_block1d16_h2_avx2(
+static void av2_highbd_filter_block1d16_h2_avx2(
     const uint16_t *src_ptr, ptrdiff_t src_pitch, uint16_t *dst_ptr,
     ptrdiff_t dst_pitch, uint32_t height, const int16_t *filter, int bd) {
   __m256i signal[2], res0, res1;
@@ -1031,7 +1031,7 @@ static INLINE void update_pixels_6t(__m256i *sig) {
   }
 }
 
-static void avm_highbd_filter_block1d8_v6_avx2(
+static void av2_highbd_filter_block1d8_v6_avx2(
     const uint16_t *src_ptr, ptrdiff_t src_pitch, uint16_t *dst_ptr,
     ptrdiff_t dst_pitch, uint32_t height, const int16_t *filter, int bd) {
   __m256i signal[9], res0, res1;
@@ -1056,13 +1056,13 @@ static void avm_highbd_filter_block1d8_v6_avx2(
   } while (height > 0);
 }
 
-static void avm_highbd_filter_block1d8_v8_avx2(
+static void av2_highbd_filter_block1d8_v8_avx2(
     const uint16_t *src_ptr, ptrdiff_t src_pitch, uint16_t *dst_ptr,
     ptrdiff_t dst_pitch, uint32_t height, const int16_t *filter, int bd) {
   // Invoke 6-tap specialized vertical convolve function
   const bool is_filter_6tap = ((filter[0] | filter[7]) == 0);
   if (is_filter_6tap) {
-    avm_highbd_filter_block1d8_v6_avx2(src_ptr, src_pitch, dst_ptr, dst_pitch,
+    av2_highbd_filter_block1d8_v6_avx2(src_ptr, src_pitch, dst_ptr, dst_pitch,
                                        height, filter, bd);
     return;
   }
@@ -1256,7 +1256,7 @@ static INLINE void update_16x7_pixels(__m256i *sig) {
   update_pixels_6t(&sig[6]);
 }
 
-static void avm_highbd_filter_block1d16_v6_avx2(
+static void av2_highbd_filter_block1d16_v6_avx2(
     const uint16_t *src_ptr, ptrdiff_t src_pitch, uint16_t *dst_ptr,
     ptrdiff_t dst_pitch, uint32_t height, const int16_t *filter, int bd) {
   __m256i signal[13], res0, res1;
@@ -1280,13 +1280,13 @@ static void avm_highbd_filter_block1d16_v6_avx2(
   } while (height > 0);
 }
 
-static void avm_highbd_filter_block1d16_v8_avx2(
+static void av2_highbd_filter_block1d16_v8_avx2(
     const uint16_t *src_ptr, ptrdiff_t src_pitch, uint16_t *dst_ptr,
     ptrdiff_t dst_pitch, uint32_t height, const int16_t *filter, int bd) {
   // Invoke 6-tap specialized vertical convolve function
   const bool is_filter_6tap = ((filter[0] | filter[7]) == 0);
   if (is_filter_6tap) {
-    avm_highbd_filter_block1d16_v6_avx2(src_ptr, src_pitch, dst_ptr, dst_pitch,
+    av2_highbd_filter_block1d16_v6_avx2(src_ptr, src_pitch, dst_ptr, dst_pitch,
                                         height, filter, bd);
     return;
   }
@@ -1311,7 +1311,7 @@ static void avm_highbd_filter_block1d16_v8_avx2(
   } while (height > 0);
 }
 
-static void avm_highbd_filter_block1d4_v4_avx2(
+static void av2_highbd_filter_block1d4_v4_avx2(
     const uint16_t *src_ptr, ptrdiff_t src_pitch, uint16_t *dst_ptr,
     ptrdiff_t dst_pitch, uint32_t height, const int16_t *filter, int bd) {
   const int bits = FILTER_BITS;
@@ -1371,7 +1371,7 @@ static void avm_highbd_filter_block1d4_v4_avx2(
   }
 }
 
-static void avm_highbd_filter_block1d8_v4_avx2(
+static void av2_highbd_filter_block1d8_v4_avx2(
     const uint16_t *src_ptr, ptrdiff_t src_pitch, uint16_t *dst_ptr,
     ptrdiff_t dst_pitch, uint32_t height, const int16_t *filter, int bd) {
   const int bits = FILTER_BITS;
@@ -1437,13 +1437,13 @@ static void avm_highbd_filter_block1d8_v4_avx2(
   }
 }
 
-static void avm_highbd_filter_block1d16_v4_avx2(
+static void av2_highbd_filter_block1d16_v4_avx2(
     const uint16_t *src_ptr, ptrdiff_t src_pitch, uint16_t *dst_ptr,
     ptrdiff_t dst_pitch, uint32_t height, const int16_t *filter, int bd) {
-  avm_highbd_filter_block1d8_v4_avx2(src_ptr, src_pitch, dst_ptr, dst_pitch,
+  av2_highbd_filter_block1d8_v4_avx2(src_ptr, src_pitch, dst_ptr, dst_pitch,
                                      height, filter, bd);
 
-  avm_highbd_filter_block1d8_v4_avx2(src_ptr + 8, src_pitch, dst_ptr + 8,
+  av2_highbd_filter_block1d8_v4_avx2(src_ptr + 8, src_pitch, dst_ptr + 8,
                                      dst_pitch, height, filter, bd);
 }
 
@@ -1468,7 +1468,7 @@ static INLINE void filter_16x2_2t_pixels(const __m256i *sig, const __m256i *f,
   filter_16_2t_pixels(sig, f, y0, y1);
 }
 
-static void avm_highbd_filter_block1d16_v2_avx2(
+static void av2_highbd_filter_block1d16_v2_avx2(
     const uint16_t *src_ptr, ptrdiff_t src_pitch, uint16_t *dst_ptr,
     ptrdiff_t dst_pitch, uint32_t height, const int16_t *filter, int bd) {
   __m256i signal[3], res0, res1;
@@ -1526,7 +1526,7 @@ static INLINE void store_8x1_2t_pixels_ver(const __m128i *y0, const __m128i *y1,
   _mm_storeu_si128((__m128i *)dst, res);
 }
 
-static void avm_highbd_filter_block1d8_v2_avx2(
+static void av2_highbd_filter_block1d8_v2_avx2(
     const uint16_t *src_ptr, ptrdiff_t src_pitch, uint16_t *dst_ptr,
     ptrdiff_t dst_pitch, uint32_t height, const int16_t *filter, int bd) {
   __m128i signal[3], res0, res1;
@@ -1549,7 +1549,7 @@ static void avm_highbd_filter_block1d8_v2_avx2(
 
 // The AVX2 1D filters only implement width 8/16; width 4 falls back to the SSE2
 // implementations. Those live in aom_high_subpixel_{8t,bilinear}_sse2.asm under
-// the libaom "aom_" prefix (libavm used an "avm_" prefix), so reference the
+// the libaom "aom_" prefix (libavm used an "av2_" prefix), so reference the
 // real "aom_"-prefixed symbols here.
 void aom_highbd_filter_block1d4_h8_sse2(const uint16_t *, ptrdiff_t, uint16_t *,
                                         ptrdiff_t, uint32_t, const int16_t *,
@@ -1563,19 +1563,19 @@ void aom_highbd_filter_block1d4_v8_sse2(const uint16_t *, ptrdiff_t, uint16_t *,
 void aom_highbd_filter_block1d4_v2_sse2(const uint16_t *, ptrdiff_t, uint16_t *,
                                         ptrdiff_t, uint32_t, const int16_t *,
                                         int);
-#define avm_highbd_filter_block1d4_h8_avx2 aom_highbd_filter_block1d4_h8_sse2
-#define avm_highbd_filter_block1d4_h2_avx2 aom_highbd_filter_block1d4_h2_sse2
-#define avm_highbd_filter_block1d4_v8_avx2 aom_highbd_filter_block1d4_v8_sse2
-#define avm_highbd_filter_block1d4_v2_avx2 aom_highbd_filter_block1d4_v2_sse2
+#define av2_highbd_filter_block1d4_h8_avx2 aom_highbd_filter_block1d4_h8_sse2
+#define av2_highbd_filter_block1d4_h2_avx2 aom_highbd_filter_block1d4_h2_sse2
+#define av2_highbd_filter_block1d4_v8_avx2 aom_highbd_filter_block1d4_v8_sse2
+#define av2_highbd_filter_block1d4_v2_avx2 aom_highbd_filter_block1d4_v2_sse2
 
 // HIGH_FUN_CONV_1D hard-codes the public name aom_highbd_convolve8_<dir>_avx2,
 // which is also emitted by the AV1 implementation in
 // aom_dsp/x86/highbd_convolve_avx2.c. To avoid a duplicate-symbol link error,
-// rename the AV2 (6-tap-capable) variant to a distinct avm_ symbol. The legacy
+// rename the AV2 (6-tap-capable) variant to a distinct av2_ symbol. The legacy
 // aom_highbd_convolve8 RTCD path continues to resolve to the AV1 version, so
 // AV1 behavior is unchanged.
-#define aom_highbd_convolve8_horiz_avx2 avm_highbd_convolve8_horiz_avx2
-#define aom_highbd_convolve8_vert_avx2 avm_highbd_convolve8_vert_avx2
+#define aom_highbd_convolve8_horiz_avx2 av2_highbd_convolve8_horiz_avx2
+#define aom_highbd_convolve8_vert_avx2 av2_highbd_convolve8_vert_avx2
 HIGH_FUN_CONV_1D(horiz, x_step_q4, filter_x, h, src, , avx2);
 HIGH_FUN_CONV_1D(vert, y_step_q4, filter_y, v, src - src_stride * 3, , avx2);
 #undef aom_highbd_convolve8_horiz_avx2

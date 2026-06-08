@@ -62,10 +62,10 @@ extern aom_codec_iface_t *aom_codec_av1_cx(void);
 #if CONFIG_AV2_ENCODER
 /*!\brief The interface to the AV2 encoder.
  */
-extern aom_codec_iface_t avm_codec_av2_cx_algo;
-extern aom_codec_iface_t *avm_codec_av2_cx(void);
-#define aom_codec_av2_cx_algo avm_codec_av2_cx_algo
-#define aom_codec_av2_cx avm_codec_av2_cx
+extern aom_codec_iface_t av2_codec_av2_cx_algo;
+extern aom_codec_iface_t *av2_codec_av2_cx(void);
+#define aom_codec_av2_cx_algo av2_codec_av2_cx_algo
+#define aom_codec_av2_cx av2_codec_av2_cx
 #endif
 /*!@} - end algorithm interface member group */
 

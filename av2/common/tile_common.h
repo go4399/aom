@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_COMMON_TILE_COMMON_H_
-#define AVM_AV2_COMMON_TILE_COMMON_H_
+#ifndef AV2_AV2_COMMON_TILE_COMMON_H_
+#define AV2_AV2_COMMON_TILE_COMMON_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -117,4 +117,4 @@ static INLINE int tile_log2(int blk_size, int target) {
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_COMMON_TILE_COMMON_H_
+#endif  // AV2_AV2_COMMON_TILE_COMMON_H_

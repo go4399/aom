@@ -10,8 +10,8 @@
  * aomedia.org/license/patent-license/.
  */
 
-#ifndef AVM_AV2_ENCODER_AQ_COMPLEXITY_H_
-#define AVM_AV2_ENCODER_AQ_COMPLEXITY_H_
+#ifndef AV2_AV2_ENCODER_AQ_COMPLEXITY_H_
+#define AV2_AV2_ENCODER_AQ_COMPLEXITY_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,4 +35,4 @@ void av2_setup_in_frame_q_adj(struct AV2_COMP *cpi);
 }  // extern "C"
 #endif
 
-#endif  // AVM_AV2_ENCODER_AQ_COMPLEXITY_H_
+#endif  // AV2_AV2_ENCODER_AQ_COMPLEXITY_H_
