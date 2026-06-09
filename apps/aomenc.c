@@ -1731,8 +1731,6 @@ static void encode_frame(struct stream_state *stream,
   }
 
   aom_usec_timer_start(&timer);
-  fprintf(stderr, "DEBUG: Calling aom_codec_encode with img=%p, pts=%ld, duration=%ld\n",
-          img, (long)frame_start, (long)(next_frame_start - frame_start));
   aom_codec_encode(&stream->encoder, img, frame_start,
                    (uint32_t)(next_frame_start - frame_start), 0);
   aom_usec_timer_mark(&timer);
@@ -1759,9 +1757,7 @@ static void get_cx_data(struct stream_state *stream,
   aom_codec_iter_t iter = NULL;
 
   *got_data = 0;
-  fprintf(stderr, "DEBUG: get_cx_data called\n");
   while ((pkt = aom_codec_get_cx_data(&stream->encoder, &iter))) {
-    fprintf(stderr, "DEBUG: get_cx_data got packet kind %d\n", pkt->kind);
     static size_t fsize = 0;
     static FileOffset ivf_header_pos = 0;
 
@@ -1770,7 +1766,6 @@ static void get_cx_data(struct stream_state *stream,
         *got_data = 1;
         break;
       case AOM_CODEC_CX_FRAME_PKT:
-        fprintf(stderr, "DEBUG: got CX_FRAME_PKT, size %zu\n", pkt->data.frame.sz);
         ++stream->frames_out;
         if (!global->quiet)
           fprintf(stderr, " %6luF", (unsigned long)pkt->data.frame.sz);

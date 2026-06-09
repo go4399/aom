@@ -1889,14 +1889,6 @@ static INLINE void decide_tip_setting_and_setup_tip_frame(AV2_COMP *cpi) {
         av2_setup_tip_frame(cm, &td->mb.e_mbd, NULL, td->mb.tmp_conv_dst,
                             av2_enc_calc_subpel_params, 0 /* copy_refined_mvs */
         );
-
-        fprintf(stderr, "DEBUG_TIP: cpi->source=%p, u_buffer=%p, short_u_buffer=%p\n",
-                cpi->source, cpi->source->u_buffer, CONVERT_TO_SHORTPTR(cpi->source->u_buffer));
-        fprintf(stderr, "DEBUG_TIP: tip_frame_buf=%p, u_buffer=%p, short_u_buffer=%p\n",
-                tip_frame_buf, tip_frame_buf->u_buffer, CONVERT_TO_SHORTPTR(tip_frame_buf->u_buffer));
-        fprintf(stderr, "DEBUG_TIP: uv_width=%d, uv_height=%d, uv_stride=%d\n",
-                cpi->source->uv_width, cpi->source->uv_height, cpi->source->uv_stride);
-        fflush(stderr);
         int64_t this_sse = aom_highbd_get_y_sse(cpi->source, tip_frame_buf);
         this_sse +=
             av2_highbd_sse(CONVERT_TO_SHORTPTR(cpi->source->u_buffer), cpi->source->uv_stride,

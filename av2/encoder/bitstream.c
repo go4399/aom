@@ -1190,10 +1190,6 @@ static void write_sec_tx_set(FRAME_CONTEXT *ec_ctx, aom_writer *w,
   } else {
     uint8_t stx_set_in_bitstream =
         most_probable_stx_mapping[intra_mode][stx_set_flag];
-    if (stx_set_flag >= IST_SET_SIZE) {
-      fprintf(stderr, "DEBUG_PRINT: tx_type=%d, primary=%d, sec_set=%d, stx_set_flag=%d\n",
-              tx_type, get_primary_tx_type(tx_type), get_secondary_tx_set(tx_type), stx_set_flag);
-    }
     assert(stx_set_flag < IST_SET_SIZE);
     av2_write_symbol(w, stx_set_in_bitstream, ec_ctx->most_probable_stx_set_cdf,
                      IST_SET_SIZE);

@@ -185,8 +185,7 @@ double av2_convert_qindex_to_q(int qindex, aom_bit_depth_t bit_depth) {
              (128.0 * (1 << QUANT_TABLE_BITS));
 
     default:
-      fprintf(stderr, "DEBUG: av2_convert_qindex_to_q called with bit_depth = %d\n", bit_depth);
-      abort();
+      assert(0 && "bit_depth should be AOM_BITS_8, AOM_BITS_10 or AOM_BITS_12");
       return -1.0;
   }
 }

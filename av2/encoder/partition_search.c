@@ -5947,15 +5947,7 @@ bool av2_rd_pick_partition(AV2_COMP *const cpi, ThreadData *td,
             part_search_state.ss_y, &td->shared_coeff_buf, xd->tree_type,
             num_planes);
         *rd_cost = pc_tree->rd_cost;
-        if (bsize == cm->sb_size) {
-          fprintf(stderr, "DEBUG_INFO: bsize=%d, sb_size=%d, pc_tree=%p, counterpart=%p\n",
-                  bsize, cm->sb_size, (void*)pc_tree, (void*)counterpart_block);
-          fprintf(stderr, "DEBUG_INFO: pc_tree parent=%p, index=%d, mi_row=%d, mi_col=%d\n",
-                  (void*)pc_tree->parent, pc_tree->index, pc_tree->mi_row, pc_tree->mi_col);
-          fprintf(stderr, "DEBUG_INFO: counterpart parent=%p, index=%d, mi_row=%d, mi_col=%d\n",
-                  (void*)counterpart_block->parent, counterpart_block->index, counterpart_block->mi_row, counterpart_block->mi_col);
-          exit(1);
-        }
+
 
         if (!pc_tree->is_last_subblock) {
           encode_sb(cpi, td, tile_data, tp, mi_row, mi_col, DRY_RUN_NORMAL,
