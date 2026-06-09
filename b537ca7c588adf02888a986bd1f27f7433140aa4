@@ -163,6 +163,30 @@
       },
       "revId": "b537ca7c588adf02888a986bd1f27f7433140aa4",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "993fab73_fb768246",
+        "filename": "av1/encoder/bitstream.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2050,
+      "author": {
+        "id": 6585
+      },
+      "writtenOn": "2026-06-09T18:29:49Z",
+      "side": 1,
+      "message": "I agree with Yunqing. The original CL seems flawed. It introduced writing a binary \"meaningful\" which breaks the decoder. I think we need to revert it.",
+      "parentUuid": "c1de62cd_ba7f6d76",
+      "range": {
+        "startLine": 2050,
+        "startChar": 0,
+        "endLine": 2050,
+        "endChar": 33
+      },
+      "revId": "b537ca7c588adf02888a986bd1f27f7433140aa4",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
