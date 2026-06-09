@@ -16,6 +16,24 @@
       "message": "You mentioned it uses \"previously evaluated 16x16 motion search\". But \"block_size\" here is 64x64, right? Could you explain?",
       "revId": "0d4bddb9831de540fbb6d66dab35594f77139ea5",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "324dd3e6_44cbd854",
+        "filename": "av1/encoder/temporal_filter.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1051,
+      "author": {
+        "id": 31012
+      },
+      "writtenOn": "2026-06-09T06:48:30Z",
+      "side": 0,
+      "message": "Yes, `block_size` is always `64x64`. However, `mb-\u003emv_limits` are set for each of the block sizes (before 32x32 and 16x16 motion searches).\n```\nParent code:\nav1_set_mv_limits(..., BLOCK_64X64);\nfor (frame \u003d 0; frame \u003c num_frames; frame++) {\n  motion_search(BLOCK_64X64);  // Correct limits for the first frame iteration\n  av1_set_mv_limits(..., BLOCK_32X32);\n  motion_search(BLOCK_32X32);\n  av1_set_mv_limits(..., BLOCK_16X16);\n  motion_search(BLOCK_16X16);\n}\n```\n\nAfter the first frame iteration (i.e., for `frame \u003d 1`), `mb-\u003emv_limits` contains the 16x16 limits. Therefore,the 64x64 motion search ends up using stale limits from the last 16x16 search.\n```\nFix code:\nfor (frame \u003d 0; frame \u003c num_frames; frame++) {\n  av1_set_mv_limits(..., BLOCK_64X64);\n  motion_search(BLOCK_64X64);\n  av1_set_mv_limits(..., BLOCK_32X32);\n  motion_search(BLOCK_32X32);\n  av1_set_mv_limits(..., BLOCK_16X16);\n  motion_search(BLOCK_16X16);\n}\n```\nThe fix recomputes the 64x64 MV limits at the start of each frame iteration, immediately before the 64x64 motion search, ensuring that the search always uses the correct 64x64 limits instead of stale 16x16 limits carried over from the last frame iteration.",
+      "parentUuid": "b67df70f_c317da69",
+      "revId": "0d4bddb9831de540fbb6d66dab35594f77139ea5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
