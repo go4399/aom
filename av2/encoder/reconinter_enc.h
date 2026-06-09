@@ -30,10 +30,10 @@ extern "C" {
 
 // Build single or compound reference inter predictors for all planes.
 // Can build inter-intra predictors, masked predictors etc as well.
-void av2_enc_build_inter_predictor(const AV2_COMMON *cm, MACROBLOCKD *xd,
-                                   int mi_row, int mi_col,
-                                   const BUFFER_SET *ctx, BLOCK_SIZE bsize,
-                                   int plane_from, int plane_to);
+int av2_enc_build_inter_predictor(const AV2_COMMON *cm, MACROBLOCKD *xd,
+                                  int mi_row, int mi_col,
+                                  const BUFFER_SET *ctx, BLOCK_SIZE bsize,
+                                  int plane_from, int plane_to);
 
 void enc_build_inter_predictors(const AV2_COMMON *cm, MACROBLOCKD *xd,
                                 int plane, MB_MODE_INFO *mi,

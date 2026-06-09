@@ -722,16 +722,19 @@ static int handle_wedge_inter_intra_mode(
       mbmi->motion_mode = SIMPLE_TRANSLATION;
       const int mi_row = xd->mi_row;
       const int mi_col = xd->mi_col;
-      av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, orig_dst, bsize,
-                                    AOM_PLANE_Y, AOM_PLANE_Y);
-      mbmi->motion_mode = INTERINTRA;
-      av2_combine_interintra(xd, bsize, 0, xd->plane[AOM_PLANE_Y].dst.buf,
-                             xd->plane[AOM_PLANE_Y].dst.stride, intrapred, bw);
-      model_rd_sb_fn[MODELRD_TYPE_MASKED_COMPOUND](
-          cpi, bsize, x, xd, 0, 0, &rate_sum, &dist_sum, &skip_txfm_sb,
-          &skip_sse_sb, NULL, NULL, NULL);
-      rd =
-          RDCOST(x->rdmult, *tmp_rate_mv + *rate_overhead + rate_sum, dist_sum);
+      if (!av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, orig_dst, bsize,
+                                         AOM_PLANE_Y, AOM_PLANE_Y)) {
+        rd = INT64_MAX;
+      } else {
+        mbmi->motion_mode = INTERINTRA;
+        av2_combine_interintra(xd, bsize, 0, xd->plane[AOM_PLANE_Y].dst.buf,
+                               xd->plane[AOM_PLANE_Y].dst.stride, intrapred, bw);
+        model_rd_sb_fn[MODELRD_TYPE_MASKED_COMPOUND](
+            cpi, bsize, x, xd, 0, 0, &rate_sum, &dist_sum, &skip_txfm_sb,
+            &skip_sse_sb, NULL, NULL, NULL);
+        rd =
+            RDCOST(x->rdmult, *tmp_rate_mv + *rate_overhead + rate_sum, dist_sum);
+      }
     }
   }
   if (rd >= *best_rd) {
@@ -785,8 +788,11 @@ int av2_handle_inter_intra_mode(const AV2_COMP *const cpi, MACROBLOCK *const x,
   mbmi->warp_inter_intra = 0;
   xd->plane[0].dst.buf = tmp_buf;
   xd->plane[0].dst.stride = bw;
-  av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, orig_dst, bsize,
-                                AOM_PLANE_Y, AOM_PLANE_Y);
+  if (!av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, orig_dst, bsize,
+                                     AOM_PLANE_Y, AOM_PLANE_Y)) {
+    restore_dst_buf(xd, *orig_dst, av2_num_planes(cm));
+    return -1;
+  }
   const int num_planes = av2_num_planes(cm);
 
   // Restore the buffers for intra prediction
@@ -858,15 +864,19 @@ int av2_handle_inter_intra_mode(const AV2_COMP *const cpi, MACROBLOCK *const x,
     mbmi->interintra_mode = best_interintra_mode;
     mbmi->mv[0].as_int = mv0.as_int;
     if (!mbmi->warp_inter_intra) {
-      av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, orig_dst, bsize,
-                                    AOM_PLANE_Y, AOM_PLANE_Y);
+      if (!av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, orig_dst, bsize,
+                                         AOM_PLANE_Y, AOM_PLANE_Y)) {
+        return -1;
+      }
     }
   }
   *tmp_rate2 += best_mode_rate;
 
   if (num_planes > 1 && !mbmi->warp_inter_intra) {
-    av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, orig_dst, bsize,
-                                  AOM_PLANE_U, num_planes - 1);
+    if (!av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, orig_dst, bsize,
+                                       AOM_PLANE_U, num_planes - 1)) {
+      return -1;
+    }
   }
   return 0;
 }
@@ -1174,8 +1184,10 @@ static int64_t masked_compound_type_rd(
                                                            bsize, this_mode);
       const int mi_row = xd->mi_row;
       const int mi_col = xd->mi_col;
-      av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, ctx, bsize,
-                                    AOM_PLANE_Y, AOM_PLANE_Y);
+      if (!av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, ctx, bsize,
+                                         AOM_PLANE_Y, AOM_PLANE_Y)) {
+        return INT64_MAX;
+      }
     } else if (diffwtd_newmv_search) {
       *out_rate_mv = av2_interinter_compound_motion_search(cpi, x, cur_mv,
                                                            bsize, this_mode);
@@ -1392,8 +1404,10 @@ int av2_compound_type_rd(const AV2_COMP *const cpi, MACROBLOCK *x,
       if (mode_rd < ref_best_rd) {
         // Reuse data if matching record is found
         if (comp_rate[cur_type] == INT_MAX) {
-          av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, orig_dst, bsize,
-                                        AOM_PLANE_Y, AOM_PLANE_Y);
+          if (!av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, orig_dst, bsize,
+                                             AOM_PLANE_Y, AOM_PLANE_Y)) {
+            continue;
+          }
           if (cur_type == COMPOUND_AVERAGE) *is_luma_interp_done = 1;
 
           // Compute RD cost for the current type

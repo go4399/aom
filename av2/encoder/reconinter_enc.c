@@ -152,7 +152,7 @@ void enc_build_inter_predictors(const AV2_COMMON *cm, MACROBLOCKD *xd,
                              NULL /* mc_buf */, av2_enc_calc_subpel_params);
 }
 
-void av2_enc_build_inter_predictor(const AV2_COMMON *cm, MACROBLOCKD *xd,
+int av2_enc_build_inter_predictor(const AV2_COMMON *cm, MACROBLOCKD *xd,
                                    int mi_row, int mi_col,
                                    const BUFFER_SET *ctx, BLOCK_SIZE bsize,
                                    int plane_from, int plane_to) {
@@ -187,7 +187,7 @@ void av2_enc_build_inter_predictor(const AV2_COMMON *cm, MACROBLOCKD *xd,
           (mi_y_p + y_off_p - BAWP_REF_LINES) < 0 || ref_w <= 0 || ref_h <= 0 ||
           (mi_x_p + ref_w + x_off_p) > width_p ||
           (mi_y_p + ref_h + y_off_p) > height_p) {
-        mbmi->bawp_flag[plane ? 1 : 0] = 0;
+        return 0;
       }
     }
 
@@ -276,6 +276,7 @@ void av2_enc_build_inter_predictor(const AV2_COMMON *cm, MACROBLOCKD *xd,
     assert(is_intrabc_block(mbmi, xd->tree_type));
     av2_build_morph_pred(cm, xd, bsize, mi_row, mi_col);
   }
+  return 1;
 }
 
 void av2_build_inter_predictor_single_buf_y(MACROBLOCKD *xd, BLOCK_SIZE bsize,

@@ -251,8 +251,10 @@ static void encode_superblock(const AV2_COMP *const cpi, TileDataEnc *tile_data,
       { p[0].dst.buf, p[1].dst.buf, p[2].dst.buf },
       { p[0].dst.stride, p[1].dst.stride, p[2].dst.stride },
     };
-    av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, &orig_dst, bsize,
-                                  start_plane, av2_num_planes(cm) - 1);
+    if (!av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, &orig_dst, bsize,
+                                       start_plane, av2_num_planes(cm) - 1)) {
+      return;
+    }
 
 #if CONFIG_MISMATCH_DEBUG
     if (dry_run == OUTPUT_ENABLED) {

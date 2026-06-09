@@ -1407,8 +1407,10 @@ int_mv av2_simple_motion_search(AV2_COMP *const cpi, MACROBLOCK *x, int mi_row,
   mbmi->mv[0] = best_mv;
 
   // Get a copy of the prediction output
-  av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, NULL, bsize,
-                                AOM_PLANE_Y, AOM_PLANE_Y);
+  if (!av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, NULL, bsize,
+                                     AOM_PLANE_Y, AOM_PLANE_Y)) {
+    best_mv.as_int = INVALID_MV;
+  }
 
   aom_clear_system_state();
 
@@ -1556,8 +1558,10 @@ int_mv av2_simple_motion_search_ext(AV2_COMP *const cpi,
   mbmi->mv[0] = best_mv;
 
   // Get a copy of the prediction output
-  av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, NULL, bsize,
-                                AOM_PLANE_Y, AOM_PLANE_Y);
+  if (!av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, NULL, bsize,
+                                     AOM_PLANE_Y, AOM_PLANE_Y)) {
+    best_mv.as_int = INVALID_MV;
+  }
 
   aom_clear_system_state();
 

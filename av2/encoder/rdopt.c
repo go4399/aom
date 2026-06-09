@@ -1751,8 +1751,12 @@ static void av2_get_model_rd(const AV2_COMP *const cpi, MACROBLOCKD *xd,
   int plane_to = AOM_PLANE_Y;
 
   // build the predictor
-  av2_enc_build_inter_predictor(cm, xd, xd->mi_row, xd->mi_col, orig_dst, bsize,
-                                plane_from, plane_to);
+  if (!av2_enc_build_inter_predictor(cm, xd, xd->mi_row, xd->mi_col, orig_dst, bsize,
+                                     plane_from, plane_to)) {
+    *dist_sum = INT64_MAX;
+    *rate_sum = 0;
+    return;
+  }
 
   // Compute the MVcosts for all signaled MVDs
   int this_mv_rate = av2_mv_bit_cost(
@@ -2433,9 +2437,11 @@ static int64_t motion_mode_rd(
                       &start_signaled_mvd_idx, &num_nonzero_mvd));
 
                   // Rebuild the predictor with updated MV
-                  av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col,
-                                                orig_dst, bsize, 0,
-                                                av2_num_planes(cm) - 1);
+                  if (!av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col,
+                                                     orig_dst, bsize, 0,
+                                                     av2_num_planes(cm) - 1)) {
+                    continue;
+                  }
 
                 } else if (num_nonzero_mvd >= th_for_num_nonzero) {
                   int last_sign_cost = get_last_sign_cost(
@@ -2831,8 +2837,10 @@ static int64_t motion_mode_rd(
                             mi_col, 0);
 
               // Build the warped predictor
-              av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, NULL, bsize,
-                                            0, av2_num_planes(cm) - 1);
+              if (!av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, NULL, bsize,
+                                                 0, av2_num_planes(cm) - 1)) {
+                continue;
+              }
             }
 
             // If we are searching newmv and the mv is the same as refmv, skip
@@ -3523,8 +3531,10 @@ static int64_t simple_translation_pred_rd(AV2_COMP *const cpi, MACROBLOCK *x,
   const int mi_row = xd->mi_row;
   const int mi_col = xd->mi_col;
 
-  av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, &orig_dst, bsize,
-                                AOM_PLANE_Y, AOM_PLANE_Y);
+  if (!av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, &orig_dst, bsize,
+                                     AOM_PLANE_Y, AOM_PLANE_Y)) {
+    return INT64_MAX;
+  }
   int est_rate;
   int64_t est_dist;
   model_rd_sb_fn[MODELRD_CURVFIT](cpi, bsize, x, xd, 0, 0, &est_rate, &est_dist,
@@ -4213,8 +4223,11 @@ static int process_compound_inter_mode(
   // rather than the tmp_buf.
   if (mbmi->interinter_comp.type == COMPOUND_AVERAGE && is_luma_interp_done) {
     if (num_planes > 1) {
-      av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, orig_dst, bsize,
-                                    AOM_PLANE_U, num_planes - 1);
+      if (!av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, orig_dst, bsize,
+                                         AOM_PLANE_U, num_planes - 1)) {
+        restore_dst_buf(xd, *orig_dst, num_planes);
+        return 1;
+      }
     }
     *skip_build_pred = 1;
   }
@@ -5116,9 +5129,12 @@ static int64_t handle_inter_mode(
                       is_comp_pred) {
                     // Build this inter predictor if it has not been previously
                     // built
-                    av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col,
-                                                  &orig_dst, bsize, 0,
-                                                  av2_num_planes(cm) - 1);
+                    if (!av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col,
+                                                       &orig_dst, bsize, 0,
+                                                       av2_num_planes(cm) - 1)) {
+                      restore_dst_buf(xd, orig_dst, num_planes);
+                      continue;
+                    }
                   }
 
                   // So far we did not make prediction for WARPMV mode
@@ -5257,7 +5273,6 @@ static int64_t handle_inter_mode(
 
   rd_stats->rdcost = RDCOST(x->rdmult, rd_stats->rate, rd_stats->dist);
   assert(av2_check_newmv_joint_nonzero(cm, x));
-
   return rd_stats->rdcost;
 }
 
@@ -5982,8 +5997,10 @@ static int64_t rd_pick_intrabc_mode_sb(const AV2_COMP *cpi, MACROBLOCK *x,
                   : x->mode_costs.morph_pred_cost[morph_pred_ctx][morph_idx];
           if (morph_idx == 0) {
             // Build intra bc predictor for yuv planes as baseline.
-            av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, NULL, bsize,
-                                          0, av2_num_planes(cm) - 1);
+            if (!av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, NULL, bsize,
+                                               0, av2_num_planes(cm) - 1)) {
+              continue;
+            }
           } else {
             // Build the y predictor using a linear model.
             const bool valid =
@@ -6323,8 +6340,10 @@ static INLINE void rd_pick_skip_mode(
       orig_dst.stride[i] = xd->plane[i].dst.stride;
     }
 
-    av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, &orig_dst, bsize, 0,
-                                  av2_num_planes(cm) - 1);
+    if (!av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, &orig_dst, bsize, 0,
+                                      av2_num_planes(cm) - 1)) {
+      continue;
+    }
 
     RD_STATS skip_mode_rd_stats, skip_mode_rd_stats_y, skip_mode_rd_stats_uv;
     av2_invalid_rd_stats(&skip_mode_rd_stats);
@@ -6524,8 +6543,10 @@ static INLINE void refine_winner_mode_tx(
       if (is_inter_mode(mbmi->mode)) {
         const int mi_row = xd->mi_row;
         const int mi_col = xd->mi_col;
-        av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, NULL, bsize, 0,
-                                      av2_num_planes(cm) - 1);
+        if (!av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, NULL, bsize, 0,
+                                           av2_num_planes(cm) - 1)) {
+          continue;
+        }
 
         av2_subtract_plane(x, bsize, 0, cm->width, cm->height);
         if (txfm_params->tx_mode_search_type == TX_MODE_SELECT &&
@@ -7996,8 +8017,10 @@ static void tx_search_best_inter_candidates(
       { p[0].dst.buf, p[1].dst.buf, p[2].dst.buf },
       { p[0].dst.stride, p[1].dst.stride, p[2].dst.stride },
     };
-    av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, &orig_dst, bsize, 0,
-                                  av2_num_planes(cm) - 1);
+    if (!av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, &orig_dst, bsize, 0,
+                                      av2_num_planes(cm) - 1)) {
+      continue;
+    }
 
     // Initialize RD stats
     RD_STATS rd_stats;

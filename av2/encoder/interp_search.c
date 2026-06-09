@@ -140,8 +140,11 @@ static INLINE void interp_model_rd_eval(
   if (!is_skip_build_pred) {
     const int mi_row = xd->mi_row;
     const int mi_col = xd->mi_col;
-    av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, orig_dst, bsize,
-                                  plane_from, plane_to);
+    if (!av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, orig_dst, bsize,
+                                       plane_from, plane_to)) {
+      av2_invalid_rd_stats(rd_stats);
+      return;
+    }
   }
 
   // The chroma can have different bsize than luma, so they need to taken care
@@ -442,6 +445,9 @@ int64_t av2_interpolation_filter_search(
     interp_model_rd_eval(x, cpi, bsize, orig_dst, AOM_PLANE_U, AOM_PLANE_V,
                          &rd_stats, *skip_build_pred);
   }
+  if (rd_stats_luma.rate == INT_MAX || (num_planes > 1 && rd_stats.rate == INT_MAX)) {
+    return INT64_MAX;
+  }
   *skip_build_pred = 1;
 
   av2_merge_rd_stats(&rd_stats, &rd_stats_luma);
@@ -506,8 +512,10 @@ int64_t av2_interpolation_filter_search(
     assert((skip_hor == 1) || (skip_ver == 1));
     const int mi_row = xd->mi_row;
     const int mi_col = xd->mi_col;
-    av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, orig_dst, bsize,
-                                  AOM_PLANE_Y, AOM_PLANE_Y);
+    if (!av2_enc_build_inter_predictor(cm, xd, mi_row, mi_col, orig_dst, bsize,
+                                       AOM_PLANE_Y, AOM_PLANE_Y)) {
+      return 1;
+    }
   }
   x->pred_sse[ref_frame] = (unsigned int)(rd_stats_luma.sse >> 4);
 

@@ -678,9 +678,12 @@ static int firstpass_inter_prediction(
     xd->mi[0]->ref_frame[0] = get_closest_pastcur_ref_or_ref0(cm);
     xd->mi[0]->ref_frame[1] = NONE_FRAME;
     xd->mi[0]->cwp_idx = CWP_EQUAL;
-    av2_enc_build_inter_predictor(cm, xd, mb_row * mb_scale, mb_col * mb_scale,
-                                  NULL, bsize, AOM_PLANE_Y, AOM_PLANE_Y);
-    av2_encode_sby_pass1(cpi, x, bsize);
+    if (!av2_enc_build_inter_predictor(cm, xd, mb_row * mb_scale, mb_col * mb_scale,
+                                       NULL, bsize, AOM_PLANE_Y, AOM_PLANE_Y)) {
+      this_inter_error = this_intra_error;
+    } else {
+      av2_encode_sby_pass1(cpi, x, bsize);
+    }
     stats->sum_mvr += best_mv.row;
     stats->sum_mvr_abs += abs(best_mv.row);
     stats->sum_mvc += best_mv.col;
