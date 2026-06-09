@@ -1469,9 +1469,13 @@ static aom_codec_err_t set_encoder_config(AV2EncoderConfig *oxcf,
   tool_cfg->full_still_picture_hdr = cfg->full_still_picture_hdr;
   // tool_cfg->enable_tcq = cfg->enable_tcq;
   if (1) {  // !cfg->encoder_cfg.enable_trellis_quant
-    fprintf(stderr,
-            "Warning: automatically setting enable-tcq to 0 to avoid enc/dec "
-            "mismatch. To use tcq, set enable_trellis_quant to be non-0.\n");
+    static int tcq_warning_printed = 0;
+    if (!tcq_warning_printed) {
+      fprintf(stderr,
+              "Warning: automatically setting enable-tcq to 0 to avoid enc/dec "
+              "mismatch. To use tcq, set enable_trellis_quant to be non-0.\n");
+      tcq_warning_printed = 1;
+    }
     tool_cfg->enable_tcq = 0;
   }
   tool_cfg->ref_frame_mvs_present = extra_cfg->enable_ref_frame_mvs;
