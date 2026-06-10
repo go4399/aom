@@ -16,6 +16,80 @@
       "message": "Hello - can I get a review of these perf changes?",
       "revId": "eb9516921c5b0007c4be9a646777ac548298a87c",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc80862c_60db1b37",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-06-10T19:10:00Z",
+      "side": 1,
+      "message": "Hi Chris, thanks for the patch. I can see the benefits of this change. With AV1 fixed, these tables shouldn\u0027t change.\nAdd James here, so he will review this.",
+      "revId": "eb9516921c5b0007c4be9a646777ac548298a87c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7e15be6_f86d8a94",
+        "filename": "av1/common/reconinter.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-06-10T19:10:00Z",
+      "side": 1,
+      "message": "Why change this from \"uint8_t\"?",
+      "range": {
+        "startLine": 66,
+        "startChar": 8,
+        "endLine": 66,
+        "endChar": 16
+      },
+      "revId": "eb9516921c5b0007c4be9a646777ac548298a87c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a3fac294_e28cae73",
+        "filename": "av1/common/wedge_masks_data.inc",
+        "patchSetId": 10
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-06-10T19:10:00Z",
+      "side": 1,
+      "message": "Please copy the exact license words from other libaom files, and only modify the year. This applies to all new files in this patch. Thanks.",
+      "revId": "eb9516921c5b0007c4be9a646777ac548298a87c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d7046bd4_c96f59a9",
+        "filename": "av1/common/wedge_masks_data.inc",
+        "patchSetId": 10
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-06-10T19:10:00Z",
+      "side": 1,
+      "message": "add \"static\"",
+      "revId": "eb9516921c5b0007c4be9a646777ac548298a87c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
