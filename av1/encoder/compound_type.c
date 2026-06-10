@@ -1231,6 +1231,175 @@ static int64_t masked_compound_type_rd(
 static const int comp_type_rd_threshold_mul[3] = { 1, 11, 12 };
 static const int comp_type_rd_threshold_div[3] = { 3, 16, 16 };
 
+// Perform exhaustive RD-based search for obtaining the best compound wedge
+// mask.
+static void wedge_compound_type_rd(
+    const AV1_COMP *const cpi, MACROBLOCK *x, const int_mv *const cur_mv,
+    const BUFFER_SET *orig_dst, HandleInterModeArgs *args, RD_STATS *rd_stats,
+    uint8_t **preds0, uint8_t **preds1, int *strides, const BLOCK_SIZE bsize,
+    int rate_mv, int64_t ref_best_rd, int64_t ref_skip_rd, int masked_type_cost,
+    int64_t *best_rd_cur, int *tmp_rate_mv, int *rs2) {
+  const AV1_COMMON *cm = &cpi->common;
+  MACROBLOCKD *xd = &x->e_mbd;
+  MB_MODE_INFO *mbmi = xd->mi[0];
+  const PREDICTION_MODE this_mode = mbmi->mode;
+  int best_mask_index = 0;
+  int best_wedge_sign = 0;
+  int_mv tmp_mv[2] = { mbmi->mv[0], mbmi->mv[1] };
+  int best_rs2 = 0;
+  int best_rate_mv = rate_mv;
+  int wedge_mask_size = get_wedge_types_lookup(bsize);
+  int need_mask_search = args->wedge_index == -1;
+  int wedge_newmv_search =
+      have_newmv_in_inter_mode(this_mode) &&
+      !cpi->sf.inter_sf.disable_interinter_wedge_newmv_search;
+
+  if ((need_mask_search && !wedge_newmv_search) ||
+      cpi->sf.inter_sf.skip_interinter_wedge_search_based_on_mse) {
+    // short cut repeated single reference block build
+    av1_build_inter_predictors_for_planes_single_buf(xd, bsize, 0, 0, 0, preds0,
+                                                     strides);
+    av1_build_inter_predictors_for_planes_single_buf(xd, bsize, 0, 0, 1, preds1,
+                                                     strides);
+
+    if (cpi->sf.inter_sf.skip_interinter_wedge_search_based_on_mse) {
+      unsigned int sse;
+      if (is_cur_buf_hbd(xd))
+        (void)cpi->ppi->fn_ptr[bsize].vf(CONVERT_TO_BYTEPTR(*preds0), *strides,
+                                         CONVERT_TO_BYTEPTR(*preds1), *strides,
+                                         &sse);
+      else
+        (void)cpi->ppi->fn_ptr[bsize].vf(*preds0, *strides, *preds1, *strides,
+                                         &sse);
+      const unsigned int mse =
+          ROUND_POWER_OF_TWO(sse, num_pels_log2_lookup[bsize]);
+      // If two predictors are very similar, skip wedge compound mode
+      // search.
+      if (mse < 512) {
+        *best_rd_cur = INT64_MAX;
+        return;
+      }
+    }
+  }
+
+  for (int wedge_mask = 0; wedge_mask < wedge_mask_size && need_mask_search;
+       ++wedge_mask) {
+    for (int wedge_sign = 0; wedge_sign < 2; ++wedge_sign) {
+      *tmp_rate_mv = rate_mv;
+      mbmi->interinter_comp.wedge_index = wedge_mask;
+      mbmi->interinter_comp.wedge_sign = wedge_sign;
+      *rs2 = masked_type_cost;
+      *rs2 += get_interinter_compound_mask_rate(&x->mode_costs, mbmi);
+
+      int64_t mode_rd = RDCOST(x->rdmult, *rs2 + rd_stats->rate, 0);
+      if (mode_rd >= ref_best_rd / 2) continue;
+
+      if (wedge_newmv_search) {
+        *tmp_rate_mv = av1_interinter_compound_motion_search(cpi, x, cur_mv,
+                                                             bsize, this_mode);
+        av1_enc_build_inter_predictor(cm, xd, xd->mi_row, xd->mi_col, orig_dst,
+                                      bsize, AOM_PLANE_Y, AOM_PLANE_Y);
+      } else {
+        av1_build_wedge_inter_predictor_from_buf(xd, bsize, 0, 0, preds0,
+                                                 strides, preds1, strides);
+      }
+
+      RD_STATS est_rd_stats;
+      int64_t this_rd_cur = INT64_MAX;
+      int eval_txfm =
+          prune_mode_by_skip_rd(cpi, x, xd, bsize, ref_skip_rd, *rs2 + rate_mv);
+      if (eval_txfm) {
+        this_rd_cur = estimate_yrd_for_sb(
+            cpi, bsize, x, AOMMIN(*best_rd_cur, ref_best_rd), &est_rd_stats);
+      }
+      if (this_rd_cur < INT64_MAX) {
+        this_rd_cur = RDCOST(x->rdmult, *rs2 + *tmp_rate_mv + est_rd_stats.rate,
+                             est_rd_stats.dist);
+      }
+      if (this_rd_cur < *best_rd_cur) {
+        best_mask_index = wedge_mask;
+        best_wedge_sign = wedge_sign;
+        *best_rd_cur = this_rd_cur;
+        tmp_mv[0] = mbmi->mv[0];
+        tmp_mv[1] = mbmi->mv[1];
+        best_rate_mv = *tmp_rate_mv;
+        best_rs2 = *rs2;
+      }
+    }
+    // Consider the asymmetric partitions for oblique angle only if the
+    // corresponding symmetric partition is the best so far.
+    // Note: For horizontal and vertical types, both symmetric and
+    // asymmetric partitions are always considered.
+    if (cpi->sf.inter_sf.enable_fast_wedge_mask_search) {
+      // The first 4 entries in wedge_codebook_16_heqw/hltw/hgtw[16]
+      // correspond to symmetric partitions of the 4 oblique angles, the
+      // next 4 entries correspond to the vertical/horizontal
+      // symmetric/asymmetric partitions and the last 8 entries correspond
+      // to the asymmetric partitions of oblique types.
+      const int idx_before_asym_oblique = 7;
+      const int last_oblique_sym_idx = 3;
+      if (wedge_mask == idx_before_asym_oblique) {
+        if (best_mask_index > last_oblique_sym_idx) {
+          break;
+        } else {
+          // Asymmetric (Index-1) map for the corresponding oblique masks.
+          // WEDGE_OBLIQUE27: sym - 0, asym - 8, 9
+          // WEDGE_OBLIQUE63: sym - 1, asym - 12, 13
+          // WEDGE_OBLIQUE117: sym - 2, asym - 14, 15
+          // WEDGE_OBLIQUE153: sym - 3, asym - 10, 11
+          const int asym_mask_idx[4] = { 7, 11, 13, 9 };
+          wedge_mask = asym_mask_idx[best_mask_index];
+          wedge_mask_size = wedge_mask + 3;
+        }
+      }
+    }
+  }
+
+  if (need_mask_search) {
+    if (save_mask_search_results(this_mode,
+                                 cpi->sf.inter_sf.reuse_mask_search_results)) {
+      args->wedge_index = best_mask_index;
+      args->wedge_sign = best_wedge_sign;
+    }
+  } else {
+    mbmi->interinter_comp.wedge_index = args->wedge_index;
+    mbmi->interinter_comp.wedge_sign = args->wedge_sign;
+
+    if (wedge_newmv_search) {
+      *tmp_rate_mv = av1_interinter_compound_motion_search(cpi, x, cur_mv,
+                                                           bsize, this_mode);
+    }
+
+    best_mask_index = args->wedge_index;
+    best_wedge_sign = args->wedge_sign;
+    tmp_mv[0] = mbmi->mv[0];
+    tmp_mv[1] = mbmi->mv[1];
+    best_rate_mv = *tmp_rate_mv;
+    best_rs2 = masked_type_cost;
+    best_rs2 += get_interinter_compound_mask_rate(&x->mode_costs, mbmi);
+    av1_enc_build_inter_predictor(cm, xd, xd->mi_row, xd->mi_col, orig_dst,
+                                  bsize, AOM_PLANE_Y, AOM_PLANE_Y);
+    int eval_txfm = prune_mode_by_skip_rd(cpi, x, xd, bsize, ref_skip_rd,
+                                          best_rs2 + rate_mv);
+    if (eval_txfm) {
+      RD_STATS est_rd_stats;
+      *best_rd_cur =
+          estimate_yrd_for_sb(cpi, bsize, x, INT64_MAX, &est_rd_stats);
+      if (*best_rd_cur != INT64_MAX)
+        *best_rd_cur =
+            RDCOST(x->rdmult, best_rs2 + *tmp_rate_mv + est_rd_stats.rate,
+                   est_rd_stats.dist);
+    }
+  }
+
+  mbmi->interinter_comp.wedge_index = best_mask_index;
+  mbmi->interinter_comp.wedge_sign = best_wedge_sign;
+  mbmi->mv[0] = tmp_mv[0];
+  mbmi->mv[1] = tmp_mv[1];
+  *tmp_rate_mv = best_rate_mv;
+  *rs2 = best_rs2;
+}
+
 int av1_compound_type_rd(const AV1_COMP *const cpi, MACROBLOCK *x,
                          HandleInterModeArgs *args, BLOCK_SIZE bsize,
                          int_mv *cur_mv, int mode_search_mask,
@@ -1433,159 +1602,10 @@ int av1_compound_type_rd(const AV1_COMP *const cpi, MACROBLOCK *x,
       // use spare buffer for following compound type try
       if (cur_type == COMPOUND_AVERAGE) restore_dst_buf(xd, *tmp_dst, 1);
     } else if (cur_type == COMPOUND_WEDGE) {
-      int best_mask_index = 0;
-      int best_wedge_sign = 0;
-      int_mv tmp_mv[2] = { mbmi->mv[0], mbmi->mv[1] };
-      int best_rs2 = 0;
-      int best_rate_mv = *rate_mv;
-      int wedge_mask_size = get_wedge_types_lookup(bsize);
-      int need_mask_search = args->wedge_index == -1;
-      int wedge_newmv_search =
-          have_newmv_in_inter_mode(this_mode) &&
-          !cpi->sf.inter_sf.disable_interinter_wedge_newmv_search;
-
-      if ((need_mask_search && !wedge_newmv_search) ||
-          cpi->sf.inter_sf.skip_interinter_wedge_search_based_on_mse) {
-        // short cut repeated single reference block build
-        av1_build_inter_predictors_for_planes_single_buf(xd, bsize, 0, 0, 0,
-                                                         preds0, strides);
-        av1_build_inter_predictors_for_planes_single_buf(xd, bsize, 0, 0, 1,
-                                                         preds1, strides);
-
-        if (cpi->sf.inter_sf.skip_interinter_wedge_search_based_on_mse) {
-          unsigned int sse;
-          if (is_cur_buf_hbd(xd))
-            (void)cpi->ppi->fn_ptr[bsize].vf(
-                CONVERT_TO_BYTEPTR(*preds0), *strides,
-                CONVERT_TO_BYTEPTR(*preds1), *strides, &sse);
-          else
-            (void)cpi->ppi->fn_ptr[bsize].vf(*preds0, *strides, *preds1,
-                                             *strides, &sse);
-          const unsigned int mse =
-              ROUND_POWER_OF_TWO(sse, num_pels_log2_lookup[bsize]);
-          // If two predictors are very similar, skip wedge compound mode
-          // search.
-          if (mse < 512) continue;
-        }
-      }
-
-      for (int wedge_mask = 0; wedge_mask < wedge_mask_size && need_mask_search;
-           ++wedge_mask) {
-        for (int wedge_sign = 0; wedge_sign < 2; ++wedge_sign) {
-          tmp_rate_mv = *rate_mv;
-          mbmi->interinter_comp.wedge_index = wedge_mask;
-          mbmi->interinter_comp.wedge_sign = wedge_sign;
-          rs2 = masked_type_cost[cur_type];
-          rs2 += get_interinter_compound_mask_rate(&x->mode_costs, mbmi);
-
-          mode_rd = RDCOST(x->rdmult, rs2 + rd_stats->rate, 0);
-          if (mode_rd >= ref_best_rd / 2) continue;
-
-          if (wedge_newmv_search) {
-            tmp_rate_mv = av1_interinter_compound_motion_search(
-                cpi, x, cur_mv, bsize, this_mode);
-            av1_enc_build_inter_predictor(cm, xd, mi_row, mi_col, orig_dst,
-                                          bsize, AOM_PLANE_Y, AOM_PLANE_Y);
-          } else {
-            av1_build_wedge_inter_predictor_from_buf(xd, bsize, 0, 0, preds0,
-                                                     strides, preds1, strides);
-          }
-
-          RD_STATS est_rd_stats;
-          int64_t this_rd_cur = INT64_MAX;
-          int eval_txfm = prune_mode_by_skip_rd(cpi, x, xd, bsize, ref_skip_rd,
-                                                rs2 + *rate_mv);
-          if (eval_txfm) {
-            this_rd_cur = estimate_yrd_for_sb(
-                cpi, bsize, x, AOMMIN(best_rd_cur, ref_best_rd), &est_rd_stats);
-          }
-          if (this_rd_cur < INT64_MAX) {
-            this_rd_cur =
-                RDCOST(x->rdmult, rs2 + tmp_rate_mv + est_rd_stats.rate,
-                       est_rd_stats.dist);
-          }
-          if (this_rd_cur < best_rd_cur) {
-            best_mask_index = wedge_mask;
-            best_wedge_sign = wedge_sign;
-            best_rd_cur = this_rd_cur;
-            tmp_mv[0] = mbmi->mv[0];
-            tmp_mv[1] = mbmi->mv[1];
-            best_rate_mv = tmp_rate_mv;
-            best_rs2 = rs2;
-          }
-        }
-        // Consider the asymmetric partitions for oblique angle only if the
-        // corresponding symmetric partition is the best so far.
-        // Note: For horizontal and vertical types, both symmetric and
-        // asymmetric partitions are always considered.
-        if (cpi->sf.inter_sf.enable_fast_wedge_mask_search) {
-          // The first 4 entries in wedge_codebook_16_heqw/hltw/hgtw[16]
-          // correspond to symmetric partitions of the 4 oblique angles, the
-          // next 4 entries correspond to the vertical/horizontal
-          // symmetric/asymmetric partitions and the last 8 entries correspond
-          // to the asymmetric partitions of oblique types.
-          const int idx_before_asym_oblique = 7;
-          const int last_oblique_sym_idx = 3;
-          if (wedge_mask == idx_before_asym_oblique) {
-            if (best_mask_index > last_oblique_sym_idx) {
-              break;
-            } else {
-              // Asymmetric (Index-1) map for the corresponding oblique masks.
-              // WEDGE_OBLIQUE27: sym - 0, asym - 8, 9
-              // WEDGE_OBLIQUE63: sym - 1, asym - 12, 13
-              // WEDGE_OBLIQUE117: sym - 2, asym - 14, 15
-              // WEDGE_OBLIQUE153: sym - 3, asym - 10, 11
-              const int asym_mask_idx[4] = { 7, 11, 13, 9 };
-              wedge_mask = asym_mask_idx[best_mask_index];
-              wedge_mask_size = wedge_mask + 3;
-            }
-          }
-        }
-      }
-
-      if (need_mask_search) {
-        if (save_mask_search_results(
-                this_mode, cpi->sf.inter_sf.reuse_mask_search_results)) {
-          args->wedge_index = best_mask_index;
-          args->wedge_sign = best_wedge_sign;
-        }
-      } else {
-        mbmi->interinter_comp.wedge_index = args->wedge_index;
-        mbmi->interinter_comp.wedge_sign = args->wedge_sign;
-        rs2 = masked_type_cost[cur_type];
-        rs2 += get_interinter_compound_mask_rate(&x->mode_costs, mbmi);
-
-        if (wedge_newmv_search) {
-          tmp_rate_mv = av1_interinter_compound_motion_search(cpi, x, cur_mv,
-                                                              bsize, this_mode);
-        }
-
-        best_mask_index = args->wedge_index;
-        best_wedge_sign = args->wedge_sign;
-        tmp_mv[0] = mbmi->mv[0];
-        tmp_mv[1] = mbmi->mv[1];
-        best_rate_mv = tmp_rate_mv;
-        best_rs2 = masked_type_cost[cur_type];
-        best_rs2 += get_interinter_compound_mask_rate(&x->mode_costs, mbmi);
-        av1_enc_build_inter_predictor(cm, xd, mi_row, mi_col, orig_dst, bsize,
-                                      AOM_PLANE_Y, AOM_PLANE_Y);
-        int eval_txfm = prune_mode_by_skip_rd(cpi, x, xd, bsize, ref_skip_rd,
-                                              best_rs2 + *rate_mv);
-        if (eval_txfm) {
-          RD_STATS est_rd_stats;
-          estimate_yrd_for_sb(cpi, bsize, x, INT64_MAX, &est_rd_stats);
-          best_rd_cur =
-              RDCOST(x->rdmult, best_rs2 + tmp_rate_mv + est_rd_stats.rate,
-                     est_rd_stats.dist);
-        }
-      }
-
-      mbmi->interinter_comp.wedge_index = best_mask_index;
-      mbmi->interinter_comp.wedge_sign = best_wedge_sign;
-      mbmi->mv[0] = tmp_mv[0];
-      mbmi->mv[1] = tmp_mv[1];
-      tmp_rate_mv = best_rate_mv;
-      rs2 = best_rs2;
+      wedge_compound_type_rd(cpi, x, cur_mv, orig_dst, args, rd_stats, preds0,
+                             preds1, strides, bsize, *rate_mv, ref_best_rd,
+                             ref_skip_rd, masked_type_cost[cur_type],
+                             &best_rd_cur, &tmp_rate_mv, &rs2);
     } else if (!enable_fast_compound_mode_search &&
                cur_type == COMPOUND_DIFFWTD) {
       int_mv tmp_mv[2];
