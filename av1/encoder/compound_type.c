@@ -1400,6 +1400,66 @@ static void wedge_compound_type_rd(
   *rs2 = best_rs2;
 }
 
+// Perform model RD based fast search for obtaining the best compound wedge
+// mask.
+static void fast_wedge_compound_type_rd(
+    const AV1_COMP *const cpi, MACROBLOCK *x, const int_mv *const cur_mv,
+    const BUFFER_SET *orig_dst, const CompoundTypeRdBuffers *buffers,
+    uint8_t **preds0, uint8_t **preds1, int *strides, const BLOCK_SIZE bsize,
+    int rate_mv, int64_t ref_skip_rd, int masked_type_cost,
+    int *calc_pred_masked_compound, int32_t *comp_rate, int64_t *comp_dist,
+    int *comp_rs2, int64_t *best_rd_cur, int *tmp_rate_mv, int *rs2) {
+  const AV1_COMMON *cm = &cpi->common;
+  MACROBLOCKD *xd = &x->e_mbd;
+  MB_MODE_INFO *mbmi = xd->mi[0];
+  const PREDICTION_MODE this_mode = mbmi->mode;
+
+  if (*calc_pred_masked_compound) {
+    get_inter_predictors_masked_compound(
+        x, bsize, preds0, preds1, buffers->residual1, buffers->diff10, strides);
+    *calc_pred_masked_compound = 0;
+  }
+
+  uint64_t cur_sse = UINT64_MAX;
+  int64_t rd =
+      pick_interinter_wedge(cpi, x, bsize, *preds0, *preds1, buffers->residual1,
+                            buffers->diff10, &cur_sse);
+  (void)cur_sse;
+  (void)rd;
+
+  const int wedge_newmv_search =
+      have_newmv_in_inter_mode(this_mode) &&
+      !cpi->sf.inter_sf.disable_interinter_wedge_newmv_search;
+
+  *rs2 = masked_type_cost;
+  *rs2 += get_interinter_compound_mask_rate(&x->mode_costs, mbmi);
+
+  if (wedge_newmv_search) {
+    *tmp_rate_mv =
+        av1_interinter_compound_motion_search(cpi, x, cur_mv, bsize, this_mode);
+    av1_enc_build_inter_predictor(cm, xd, xd->mi_row, xd->mi_col, orig_dst,
+                                  bsize, AOM_PLANE_Y, AOM_PLANE_Y);
+  } else {
+    av1_build_wedge_inter_predictor_from_buf(xd, bsize, 0, 0, preds0, strides,
+                                             preds1, strides);
+  }
+
+  int eval_txfm =
+      prune_mode_by_skip_rd(cpi, x, xd, bsize, ref_skip_rd, *rs2 + rate_mv);
+  if (eval_txfm) {
+    RD_STATS est_rd_stats;
+    *best_rd_cur = estimate_yrd_for_sb(cpi, bsize, x, INT64_MAX, &est_rd_stats);
+    if (*best_rd_cur != INT64_MAX) {
+      *best_rd_cur = RDCOST(x->rdmult, *rs2 + *tmp_rate_mv + est_rd_stats.rate,
+                            est_rd_stats.dist);
+      // Backup rate and distortion for future reuse.
+      comp_rate[COMPOUND_WEDGE] = est_rd_stats.rate;
+      comp_dist[COMPOUND_WEDGE] = est_rd_stats.dist;
+      comp_rs2[COMPOUND_WEDGE] = *rs2;
+    }
+  }
+}
+
 int av1_compound_type_rd(const AV1_COMP *const cpi, MACROBLOCK *x,
                          HandleInterModeArgs *args, BLOCK_SIZE bsize,
                          int_mv *cur_mv, int mode_search_mask,
@@ -1602,10 +1662,18 @@ int av1_compound_type_rd(const AV1_COMP *const cpi, MACROBLOCK *x,
       // use spare buffer for following compound type try
       if (cur_type == COMPOUND_AVERAGE) restore_dst_buf(xd, *tmp_dst, 1);
     } else if (cur_type == COMPOUND_WEDGE) {
-      wedge_compound_type_rd(cpi, x, cur_mv, orig_dst, args, rd_stats, preds0,
-                             preds1, strides, bsize, *rate_mv, ref_best_rd,
-                             ref_skip_rd, masked_type_cost[cur_type],
-                             &best_rd_cur, &tmp_rate_mv, &rs2);
+      if (cpi->sf.inter_sf.enable_comp_wedge_search_using_model_rd) {
+        fast_wedge_compound_type_rd(
+            cpi, x, cur_mv, orig_dst, buffers, preds0, preds1, strides, bsize,
+            *rate_mv, ref_skip_rd, masked_type_cost[cur_type],
+            &calc_pred_masked_compound, comp_rate, comp_dist, comp_rs2,
+            &best_rd_cur, &tmp_rate_mv, &rs2);
+      } else {
+        wedge_compound_type_rd(cpi, x, cur_mv, orig_dst, args, rd_stats, preds0,
+                               preds1, strides, bsize, *rate_mv, ref_best_rd,
+                               ref_skip_rd, masked_type_cost[cur_type],
+                               &best_rd_cur, &tmp_rate_mv, &rs2);
+      }
     } else if (!enable_fast_compound_mode_search &&
                cur_type == COMPOUND_DIFFWTD) {
       int_mv tmp_mv[2];
