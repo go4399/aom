@@ -54,6 +54,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a245cbcd_0d572eff",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 25857
+      },
+      "writtenOn": "2026-06-10T14:45:33Z",
+      "side": 1,
+      "message": "The default is set to 1 to preserve the existing behavior of the encoder. Prior to this CL, `lf-\u003emode_ref_delta_enabled` was hardcoded to 1 during frame initialization (inside `set_default_lf_deltas()`).\n \nIf we default this to 0, it would disable mode/ref loop filter deltas for all standard encodes. The purpose of adding this in `algo_cfg/av1_extracfg` is only to allow the unit test to override it to 0, so we can reproduce and validate the specific bitstream parsing bug that occurs when it is disabled. Therefore, we should keep the default at 1 so the standard encoder behavior remains unchanged.",
+      "parentUuid": "c2f6c309_53143e30",
+      "range": {
+        "startLine": 400,
+        "startChar": 0,
+        "endLine": 400,
+        "endChar": 44
+      },
+      "revId": "7ef76ded841ed699b11bdd5340abe02890011d36",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1815ad15_117f1588",
         "filename": "av1/av1_cx_iface.c",
         "patchSetId": 3
@@ -65,6 +89,30 @@
       "writtenOn": "2026-06-09T18:29:49Z",
       "side": 1,
       "message": "same here.",
+      "range": {
+        "startLine": 558,
+        "startChar": 0,
+        "endLine": 558,
+        "endChar": 44
+      },
+      "revId": "7ef76ded841ed699b11bdd5340abe02890011d36",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a79967b8_bba2170a",
+        "filename": "av1/av1_cx_iface.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 558,
+      "author": {
+        "id": 25857
+      },
+      "writtenOn": "2026-06-10T14:45:33Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "1815ad15_117f1588",
       "range": {
         "startLine": 558,
         "startChar": 0,
