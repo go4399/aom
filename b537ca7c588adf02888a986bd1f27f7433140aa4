@@ -259,6 +259,30 @@
       },
       "revId": "b537ca7c588adf02888a986bd1f27f7433140aa4",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96b8d554_bf8676fe",
+        "filename": "av1/encoder/bitstream.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 2050,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-06-10T18:06:04Z",
+      "side": 1,
+      "message": "Sounds good. Thank you both for looking into this.",
+      "parentUuid": "6c262d89_85b08bff",
+      "range": {
+        "startLine": 2050,
+        "startChar": 0,
+        "endLine": 2050,
+        "endChar": 33
+      },
+      "revId": "b537ca7c588adf02888a986bd1f27f7433140aa4",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
