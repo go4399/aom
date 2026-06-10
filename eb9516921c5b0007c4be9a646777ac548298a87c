@@ -147,6 +147,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1ecc9a1_c1e8718c",
+        "filename": "av1/common/reconinter.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 4896913
+      },
+      "writtenOn": "2026-06-10T22:45:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c0fa3824_1aa9f931",
+      "range": {
+        "startLine": 66,
+        "startChar": 8,
+        "endLine": 66,
+        "endChar": 16
+      },
+      "revId": "eb9516921c5b0007c4be9a646777ac548298a87c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "31e202eb_38bd9f5d",
@@ -164,6 +188,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8eb83c67_b23eafc8",
+        "filename": "av1/common/wedge_masks_data.inc",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4896913
+      },
+      "writtenOn": "2026-06-10T22:45:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31e202eb_38bd9f5d",
+      "revId": "eb9516921c5b0007c4be9a646777ac548298a87c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a3fac294_e28cae73",
@@ -177,6 +219,24 @@
       "writtenOn": "2026-06-10T19:10:00Z",
       "side": 1,
       "message": "Please copy the exact license words from other libaom files, and only modify the year. This applies to all new files in this patch. Thanks.",
+      "revId": "eb9516921c5b0007c4be9a646777ac548298a87c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "872f63f2_f4824d19",
+        "filename": "av1/common/wedge_masks_data.inc",
+        "patchSetId": 10
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4896913
+      },
+      "writtenOn": "2026-06-10T22:45:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3fac294_e28cae73",
       "revId": "eb9516921c5b0007c4be9a646777ac548298a87c",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
