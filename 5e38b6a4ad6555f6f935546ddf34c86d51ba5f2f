@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "191ea731_b6230195",
+        "filename": "av1/av1.cmake",
+        "patchSetId": 12
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-06-10T23:01:07Z",
+      "side": 1,
+      "message": "Move this to the last entry to keep some of the sort order. The first two entries are incorrect too, but we shouldn\u0027t make it worse.",
+      "revId": "5e38b6a4ad6555f6f935546ddf34c86d51ba5f2f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a0b28d0a_e1ce211b",
+        "filename": "av1/common/wedge_masks_data.inc",
+        "patchSetId": 12
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-06-10T23:01:07Z",
+      "side": 1,
+      "message": "The second table might be fine to format, but this is OK.",
+      "revId": "5e38b6a4ad6555f6f935546ddf34c86d51ba5f2f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a83c151_f1345dab",
+        "filename": "tools/gen_wedge_masks_data.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-06-10T23:01:07Z",
+      "side": 1,
+      "message": "The \u0027lines\u0027 references will fall out of sync. I think mentioning the source file should be enough given the constants can be searched for. That or include the commit hash could be used, assuming the lines aren\u0027t changed in this commit (it will probably be rebased before submitting).",
+      "range": {
+        "startLine": 187,
+        "startChar": 29,
+        "endLine": 187,
+        "endChar": 42
+      },
+      "revId": "5e38b6a4ad6555f6f935546ddf34c86d51ba5f2f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
