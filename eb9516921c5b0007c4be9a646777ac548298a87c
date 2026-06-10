@@ -125,6 +125,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c0fa3824_1aa9f931",
+        "filename": "av1/common/reconinter.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-06-10T20:05:45Z",
+      "side": 1,
+      "message": "\u003e Why change this from \"uint8_t\"?\n\nThis was given in the commit message:\n\n*3. **`wedge_masks` now stores `uint32_t` byte offsets** into `wedge_mask_buf` instead of raw `uint8_t *` pointers. This avoids loader base-relocations that would otherwise dirty the `.rdata` page on load and defeat the sharing goal.*",
+      "parentUuid": "e7e15be6_f86d8a94",
+      "range": {
+        "startLine": 66,
+        "startChar": 8,
+        "endLine": 66,
+        "endChar": 16
+      },
+      "revId": "eb9516921c5b0007c4be9a646777ac548298a87c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a3fac294_e28cae73",
         "filename": "av1/common/wedge_masks_data.inc",
         "patchSetId": 10
