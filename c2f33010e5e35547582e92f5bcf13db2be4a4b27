@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d723f633_6d0238ec",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 25857
+      },
+      "writtenOn": "2026-06-11T14:18:43Z",
+      "side": 1,
+      "message": "As suggested we renamed `meaningful` flag to `mode_ref_delta_update` to keep it consistent with decoder\u0027s naming convention. Please review patch-set 4.",
+      "revId": "c2f33010e5e35547582e92f5bcf13db2be4a4b27",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
