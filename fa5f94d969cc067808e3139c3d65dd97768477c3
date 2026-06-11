@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a54e56e9_5772cd5f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 33002
+      },
+      "writtenOn": "2026-06-11T09:53:17Z",
+      "side": 1,
+      "message": "Performance results of the encoder are provided below for all resolutions wrt commit [452bb4c0](https://aomedia.googlesource.com/aom/+/452bb4c07a4f98630396e74cd886ef8d381f9466):\n```\n \t           Instruction Count                 BD-Rate Loss(%)\ncpu   Resolution     Reduction(%)    avg.psnr  ovr.psnr   ssim     vmaf    vmaf_neg\n------------------------------------------------------------------------------------\n 0       LOWRES2       14.968         0.0986    0.1018   0.0633   0.0586   -0.0034\n 0       MIDRES2       16.203         0.0944    0.1081   0.0922  -0.0086   -0.0219\n 0    SHORTS608P       16.201         0.1331    0.1458   0.0995   0.0964    0.0964\n 0    SHORTS720P       16.974         0.0956    0.1039   0.0726   0.0002    0.0310\n 0   SHORTS1080P       14.774         0.1197    0.1180   0.0895   0.0904    0.1097\n 0        HDRES2       15.048         0.1017    0.0972   0.0331   0.0337    0.0389\n 0       Average       15.721         0.1080    0.1134   0.0761   0.0467    0.0452\n```\nThe instruction count reduction specified has been measured using command:\n$ perf stat -e instructions:u ./aomenc …\n\nPlease review.",
+      "revId": "fa5f94d969cc067808e3139c3d65dd97768477c3",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
