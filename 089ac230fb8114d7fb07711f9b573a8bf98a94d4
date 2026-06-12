@@ -16,6 +16,24 @@
       "message": "AVX512 version didn\u0027t bring much speedup compared to AVX2 version even for large block sizes, right? Do you know the reason? Does the same apply to other functions?",
       "revId": "089ac230fb8114d7fb07711f9b573a8bf98a94d4",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ee41093_48971271",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-06-12T14:59:45Z",
+      "side": 1,
+      "message": "The key difference here is that warping parameters are based on 8x8 blocks, so we can\u0027t load continous 512 bits (64 pixels) into a vector like SAD / CONVOLVE / VARIANCE for large blocks. Even on avx512, we need to load several times and then merge them into a block to take advantage of the wider vector.\n\nSo that\u0027s on the limitation of warping operations. It doesn\u0027t apply to other functions.\n\nI found the original CL to add avx512, and it basically has the similar speed up:\n\nhttps://aomedia-review.git.corp.google.com/c/aom/+/202342",
+      "parentUuid": "08f94f99_75683e6b",
+      "revId": "089ac230fb8114d7fb07711f9b573a8bf98a94d4",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
