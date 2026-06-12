@@ -2630,4 +2630,96 @@ TEST(EncodeAPI, Buganizer503810640V2) {
   ASSERT_EQ(aom_codec_destroy(&codec), AOM_CODEC_OK);
 }
 
+// This unit test monitors the potential double-free bug existed in MT worker
+// data allocation and deallocation.
+// It demonstrates a double-free in encoder_destroy() when a worker-thread
+// error during MT encoding longjmps past accumulate_counters_enc_workers(),
+// leaving cpi->td.mb populated; on the next encode call prepare_enc_workers()
+// shallow-copies those stale heap pointers into a worker's td->mb before
+// av1_alloc_mb_data() re-seats them; a second OOM inside av1_alloc_src_diff_
+// buf() longjmps with the worker's mb still aliasing cpi->td.mb; encoder_
+// destroy() then frees the same buffers twice via dealloc_compressor_data()
+// -> free_thread_data().
+//
+// The two allocation failures simulate renderer-heap exhaustion that a web
+// page could induce via large ArrayBuffer retention while running WebRTC AV1
+// encoding at >=720p (g_threads>1, ROW_MT=1).
+TEST(EncodeAPI, Buganizer513342555) {
+  constexpr int kWidth = 1280;
+  constexpr int kHeight = 720;
+
+  aom_codec_iface_t *iface = aom_codec_av1_cx();
+  aom_codec_enc_cfg_t cfg;
+  ASSERT_EQ(aom_codec_enc_config_default(iface, &cfg, AOM_USAGE_REALTIME),
+            AOM_CODEC_OK);
+  // Mirror Chrome WebRTC's LibaomAv1Encoder configuration.
+  cfg.g_w = kWidth;
+  cfg.g_h = kHeight;
+  cfg.g_threads = 4;
+  cfg.g_lag_in_frames = 0;
+  cfg.g_pass = AOM_RC_ONE_PASS;
+  cfg.rc_end_usage = AOM_CBR;
+  cfg.rc_target_bitrate = 1000;
+
+  aom_codec_ctx_t enc;
+  ASSERT_EQ(aom_codec_enc_init(&enc, iface, &cfg, 0), AOM_CODEC_OK);
+  ASSERT_EQ(aom_codec_control(&enc, AOME_SET_CPUUSED, 9), AOM_CODEC_OK);
+  ASSERT_EQ(aom_codec_control(&enc, AV1E_SET_ROW_MT, 1), AOM_CODEC_OK);
+  ASSERT_EQ(aom_codec_control(&enc, AV1E_SET_AUTO_TILES, 1), AOM_CODEC_OK);
+  ASSERT_EQ(aom_codec_control(&enc, AV1E_SET_MV_COST_UPD_FREQ, 3),
+            AOM_CODEC_OK);
+  ASSERT_EQ(aom_codec_control(&enc, AV1E_SET_MODE_COST_UPD_FREQ, 3),
+            AOM_CODEC_OK);
+  ASSERT_EQ(aom_codec_control(&enc, AV1E_SET_COEFF_COST_UPD_FREQ, 3),
+            AOM_CODEC_OK);
+  ASSERT_EQ(aom_codec_control(&enc, AV1E_SET_ENABLE_TPL_MODEL, 0),
+            AOM_CODEC_OK);
+
+  aom_image_t *img =
+      aom_img_alloc(nullptr, AOM_IMG_FMT_I420, kWidth, kHeight, 1);
+  ASSERT_NE(img, nullptr);
+  FillImage(img, 128);
+
+  // Ensure clean fault-injection state.
+  g_aom_poc_fail_worker_pc_tree = 0;
+  g_aom_poc_fail_src_diff_once = 0;
+
+  // ---- Frame N: simulate worker OOM in enc_row_mt_worker_hook() ----
+  // prepare_enc_workers() succeeds (allocates cpi->td.mb), then each worker's
+  // av1_alloc_pc_tree_node() "fails" -> worker setjmp returns 0 ->
+  // sync_enc_workers() longjmps to av1_get_compressed_data()'s setjmp,
+  // SKIPPING accumulate_counters_enc_workers() (the only place that would
+  // av1_dealloc_mb_data(&cpi->td.mb,...)).
+  g_aom_poc_fail_worker_pc_tree = 1;
+  aom_codec_err_t err = aom_codec_encode(&enc, img, /*pts=*/0, 1, 0);
+  g_aom_poc_fail_worker_pc_tree = 0;
+  fprintf(stderr, "[POC] frame N encode -> %d (%s)\n", err,
+          aom_codec_err_to_string(err));
+  EXPECT_EQ(err, AOM_CODEC_MEM_ERROR);
+
+  // ---- Frame N+1: simulate OOM in av1_alloc_src_diff_buf() plane[0] ----
+  // prepare_enc_workers() loop runs i = num_workers-1 first;
+  // shallow-copies cpi->td.mb (still holding frame-N heap pointers) into
+  // worker[num_workers-1]->td->mb; then av1_alloc_mb_data()'s first
+  // CHECK_MEM_ERROR (src_diff plane[0]) "fails" and longjmps. The worker's
+  // mb.{plane[1..2].src_diff, e_mbd.seg_mask, dqcoeff_buf} now alias
+  // cpi->td.mb's frame-N allocations.
+  g_aom_poc_fail_src_diff_once = 1;
+  err = aom_codec_encode(&enc, img, /*pts=*/1, 1, 0);
+  g_aom_poc_fail_src_diff_once = 0;
+  fprintf(stderr, "[POC] frame N+1 encode -> %d (%s)\n", err,
+          aom_codec_err_to_string(err));
+  EXPECT_EQ(err, AOM_CODEC_MEM_ERROR);
+
+  aom_img_free(img);
+
+  // ---- Destroy: double-free ----
+  // encoder_destroy() -> av1_remove_compressor() -> dealloc_compressor_data()
+  // frees cpi->td.mb's seg_mask/src_diff[]/dqcoeff_buf (free #1); then
+  // av1_remove_primary_compressor() -> free_thread_data() frees the SAME
+  // pointers via the aliased worker's td->mb (free #2). ASAN reports
+  // heap-use-after-free / double-free here.
+  fprintf(stderr, "[POC] calling aom_codec_destroy() (expect double-free)\n");
+  EXPECT_EQ(aom_codec_destroy(&enc), AOM_CODEC_OK);
+}
 }  // namespace

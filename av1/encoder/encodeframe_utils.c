@@ -1710,6 +1710,12 @@ void av1_alloc_src_diff_buf(const struct AV1Common *cm, struct macroblock *mb) {
         plane ? cm->seq_params->subsampling_x + cm->seq_params->subsampling_y
               : 0;
     const int sb_size = MAX_SB_SQUARE >> subsampling_xy;
+    // POC: one-shot simulated OOM on plane[0] inside prepare_enc_workers'
+    // first av1_alloc_mb_data() call, after the shallow copy.
+    if (plane == 0 && g_aom_poc_fail_src_diff_once) {
+      g_aom_poc_fail_src_diff_once = 0;
+      CHECK_MEM_ERROR(cm, mb->plane[plane].src_diff, (int16_t *)NULL);
+    }
     CHECK_MEM_ERROR(cm, mb->plane[plane].src_diff,
                     (int16_t *)aom_memalign(
                         32, sizeof(*mb->plane[plane].src_diff) * sb_size));
