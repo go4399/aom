@@ -34,6 +34,11 @@ extern "C" {
 #endif
 #endif
 
+// POC fault-injection hooks: when non-zero, force allocation failure at
+// specific call sites to simulate renderer OOM.
+extern volatile int g_aom_poc_fail_worker_pc_tree;
+extern volatile int g_aom_poc_fail_src_diff_once;
+
 void *aom_memalign(size_t align, size_t size);
 void *aom_malloc(size_t size);
 void *aom_calloc(size_t num, size_t size);

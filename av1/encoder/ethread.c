@@ -642,12 +642,21 @@ static int enc_row_mt_worker_hook(void *arg1, void *unused) {
   // Preallocate the pc_tree for realtime coding to reduce the cost of memory
   // allocation.
   if (cpi->sf.rt_sf.use_nonrd_pick_mode) {
-    thread_data->td->pc_root = av1_alloc_pc_tree_node(cm->seq_params->sb_size);
+    // POC: simulate per-worker OOM in av1_alloc_pc_tree_node().
+    thread_data->td->pc_root =
+        g_aom_poc_fail_worker_pc_tree
+            ? NULL
+            : av1_alloc_pc_tree_node(cm->seq_params->sb_size);
     if (!thread_data->td->pc_root)
       aom_internal_error(xd->error_info, AOM_CODEC_MEM_ERROR,
                          "Failed to allocate PC_TREE");
   } else {
     thread_data->td->pc_root = NULL;
+  }
+  // POC fallback: if nonrd pick mode is off, still simulate a worker error.
+  if (g_aom_poc_fail_worker_pc_tree) {
+    aom_internal_error(xd->error_info, AOM_CODEC_MEM_ERROR,
+                       "POC: simulated worker OOM");
   }
 
   assert(cur_tile_id != -1);
@@ -1569,6 +1578,19 @@ static inline void prepare_enc_workers(AV1_COMP *cpi, AVxWorkerHook hook,
                                        int num_workers) {
   MultiThreadInfo *const mt_info = &cpi->mt_info;
   AV1_COMMON *const cm = &cpi->common;
+
+  // If a previous frame's encode raised an error after this function ran,
+  // accumulate_counters_enc_workers() was skipped via longjmp and the mb
+  // buffers (including cpi->td.mb) were never freed. Free them here so the
+  // shallow copy of cpi->td.mb below cannot leave a worker's mb aliasing
+  // cpi->td.mb's heap allocations on a subsequent partial-allocation failure
+  // (which would double-free in encoder_destroy()).
+  for (int i = num_workers - 1; i >= 0; i--) {
+    EncWorkerData *const thread_data = &mt_info->tile_thr_data[i];
+    ThreadData *const td = (i == 0) ? &cpi->td : thread_data->original_td;
+    if (td) av1_dealloc_mb_data(&td->mb, av1_num_planes(cm));
+  }
+
   for (int i = num_workers - 1; i >= 0; i--) {
     AVxWorker *const worker = &mt_info->workers[i];
     EncWorkerData *const thread_data = &mt_info->tile_thr_data[i];
