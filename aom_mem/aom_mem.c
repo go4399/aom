@@ -16,6 +16,10 @@
 #include "include/aom_mem_intrnl.h"
 #include "aom/aom_integer.h"
 
+// POC fault-injection globals (simulate OOM at specific call sites).
+volatile int g_aom_poc_fail_worker_pc_tree = 0;
+volatile int g_aom_poc_fail_src_diff_once = 0;
+
 static size_t GetAllocationPaddingSize(size_t align) {
   assert(align > 0);
   assert(align < SIZE_MAX - ADDRESS_STORAGE_SIZE);
