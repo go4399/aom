@@ -70,6 +70,87 @@
       "parentUuid": "a26d6029_d34a02f6",
       "revId": "089ac230fb8114d7fb07711f9b573a8bf98a94d4",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d1240120_d94e3ffd",
+        "filename": "av1/common/warp_plane_hwy.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1516,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2026-06-15T15:06:26Z",
+      "side": 1,
+      "message": "nit: no C-style casts in C++; use static_cast instead.",
+      "range": {
+        "startLine": 1516,
+        "startChar": 0,
+        "endLine": 1516,
+        "endChar": 72
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "860e25c2_565dd236",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/common/warp_plane_hwy.h",
+              "range": {
+                "startLine": 1516,
+                "startChar": 0,
+                "endLine": 1520,
+                "endChar": 0
+              },
+              "replacement": "  const int64_t dst_x_stride_j \u003d\n      static_cast\u003cint64_t\u003e(mat[2]) * (8 \u003c\u003c subsampling_x);\n  const int64_t dst_y_stride_j \u003d\n      static_cast\u003cint64_t\u003e(mat[4]) * (8 \u003c\u003c subsampling_x);\n  const int64_t dst_x_stride_i \u003d\n      static_cast\u003cint64_t\u003e(mat[3]) * (8 \u003c\u003c subsampling_y);\n  const int64_t dst_y_stride_i \u003d\n      static_cast\u003cint64_t\u003e(mat[5]) * (8 \u003c\u003c subsampling_y);\n"
+            },
+            {
+              "path": "av1/common/warp_plane_hwy.h",
+              "range": {
+                "startLine": 1524,
+                "startChar": 0,
+                "endLine": 1525,
+                "endChar": 0
+              },
+              "replacement": "      static_cast\u003cint64_t\u003e(mat[2]) * src_x_0 +\n      static_cast\u003cint64_t\u003e(mat[3]) * src_y_0 + static_cast\u003cint64_t\u003e(mat[0]);\n"
+            },
+            {
+              "path": "av1/common/warp_plane_hwy.h",
+              "range": {
+                "startLine": 1526,
+                "startChar": 0,
+                "endLine": 1527,
+                "endChar": 0
+              },
+              "replacement": "      static_cast\u003cint64_t\u003e(mat[4]) * src_x_0 +\n      static_cast\u003cint64_t\u003e(mat[5]) * src_y_0 + static_cast\u003cint64_t\u003e(mat[1]);\n"
+            },
+            {
+              "path": "av1/common/warp_plane_hwy.h",
+              "range": {
+                "startLine": 1539,
+                "startChar": 0,
+                "endLine": 1540,
+                "endChar": 0
+              },
+              "replacement": "      int32_t ix4 \u003d static_cast\u003cint32_t\u003e(x4 \u003e\u003e WARPEDMODEL_PREC_BITS);\n"
+            },
+            {
+              "path": "av1/common/warp_plane_hwy.h",
+              "range": {
+                "startLine": 1541,
+                "startChar": 0,
+                "endLine": 1542,
+                "endChar": 0
+              },
+              "replacement": "      int32_t iy4 \u003d static_cast\u003cint32_t\u003e(y4 \u003e\u003e WARPEDMODEL_PREC_BITS);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "089ac230fb8114d7fb07711f9b573a8bf98a94d4",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
