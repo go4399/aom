@@ -54,7 +54,7 @@ static inline void update_coeff_general(
 
     int64_t dist_diff_0, dist_diff_low_0;
     if (qmatrix == NULL) {
-      const int64_t tqc2 = (int64_t)tqc << 1;
+      const int64_t tqc2 = (int64_t)tqc * 2;
       dist_diff_0 = ((int64_t)dqc * (dqc - tqc2)) * (1 << (2 * shift));
       dist_diff_low_0 =
           (abs_qc == 1)
@@ -221,7 +221,7 @@ static AOM_FORCE_INLINE void update_coeff_eob(
 
     int64_t dist, dist_low;
     if (qmatrix == NULL) {
-      const int64_t tqc2 = (int64_t)tqc << 1;
+      const int64_t tqc2 = (int64_t)tqc * 2;
       dist = ((int64_t)dqc * (dqc - tqc2)) * (1 << (2 * shift));
       dist_low =
           (abs_qc == 1)
