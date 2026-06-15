@@ -112,8 +112,14 @@ list(
   "${AOM_ROOT}/aom_dsp/av2_intrapred.c"
   "${AOM_ROOT}/av2/common/entropy_inits_coeffs.h"
   "${AOM_ROOT}/av2/common/entropy_inits_modes.h"
-  "${AOM_ROOT}/av2/common/entropy_inits_mv.h"
-  "${AOM_ROOT}/av2/common/entropy_sideinfo.h")
+  "${AOM_ROOT}/av2/common/entropy_sideinfo.h"
+  "${AOM_ROOT}/av2/common/entcode.c"
+  "${AOM_ROOT}/av2/common/entcode.h"
+  "${AOM_ROOT}/av2/common/entdec.c"
+  "${AOM_ROOT}/av2/common/entdec.h"
+  "${AOM_ROOT}/av2/common/entenc.c"
+  "${AOM_ROOT}/av2/common/entenc.h")
+
 
 list(APPEND AOM_AV2_COMMON_SOURCES "${AOM_ROOT}/av2/common/intra_matrix.c"
      "${AOM_ROOT}/av2/common/intra_matrix.h"

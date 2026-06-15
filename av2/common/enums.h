@@ -22,6 +22,9 @@
 #include "aom/aom_integer.h"
 #include "aom_dsp/txfm_common.h"
 #include "aom_ports/mem.h"
+#include "av2/common/entdec.h"
+#include "av2/common/entenc.h"
+
 
 // 4X4, 8X8, 16X16, 32X32, 64X64, 128X128
 #define SQR_BLOCK_SIZES 6

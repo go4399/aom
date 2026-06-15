@@ -181,10 +181,10 @@ static INLINE int av2_wb_count_primitive_refsubexpfin(uint16_t n, uint16_t k,
 }
 
 #define AVMSIGN AOMSIGN
-#define aom_write_literal aom_write_literal
-#define av2_write_symbol aom_write_symbol
-#define aom_write_bit aom_write_bit
-#define aom_writer aom_writer
+#include "av2/common/entenc.h"
+#define av2_write_symbol av2_write_symbol
+
+
 
 #ifndef av2_write_primitive_quniform_defined
 #define av2_write_primitive_quniform_defined
