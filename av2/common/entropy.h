@@ -21,6 +21,8 @@
 #include "av2/common/common.h"
 #include "av2/common/common_data.h"
 #include "av2/common/enums.h"
+#include "av2/common/entdec.h"
+#include "av2/common/entenc.h"
 
 #ifdef __cplusplus
 extern "C" {

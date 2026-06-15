@@ -327,6 +327,7 @@ if(NOT BUILD_SHARED_LIBS)
     set(AV2_UNIT_TEST_SOURCES
         "${AOM_ROOT}/test/av2_common_int_test.cc"
         "${AOM_ROOT}/test/av2_config_test.cc"
+        "${AOM_ROOT}/test/av2_ec_test.cc"
         "${AOM_ROOT}/test/av2_key_value_api_test.cc")
 
     if(CONFIG_AV2_ENCODER)
@@ -351,7 +352,9 @@ if(NOT BUILD_SHARED_LIBS)
     list(APPEND AOM_UNIT_TEST_COMMON_SOURCES
                 "${AOM_ROOT}/test/av2_common_int_test.cc"
                 "${AOM_ROOT}/test/av2_config_test.cc"
+                "${AOM_ROOT}/test/av2_ec_test.cc"
                 "${AOM_ROOT}/test/av2_key_value_api_test.cc")
+
 
     if(CONFIG_AV2_ENCODER)
       list(APPEND AOM_UNIT_TEST_ENCODER_SOURCES

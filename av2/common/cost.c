@@ -14,32 +14,8 @@
 #include "av2/common/cost.h"
 #include "av2/common/entropy.h"
 
-static const uint16_t av2_prob_inc_tbl[15][16] = {
-  { 8, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
-  { 10, 5, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
-  { 12, 8, 4, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
-  { 12, 9, 6, 3, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
-  { 13, 10, 8, 5, 2, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
-  { 13, 11, 9, 6, 4, 2, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
-  { 14, 12, 10, 8, 6, 4, 2, 0, -1, -1, -1, -1, -1, -1, -1, -1 },
-  { 14, 12, 10, 8, 7, 5, 3, 1, 0, -1, -1, -1, -1, -1, -1, -1 },
-  { 14, 12, 11, 9, 8, 6, 4, 3, 1, 0, -1, -1, -1, -1, -1, -1 },
-  { 14, 13, 11, 10, 8, 7, 5, 4, 2, 1, 0, -1, -1, -1, -1, -1 },
-  { 14, 13, 12, 10, 9, 8, 6, 5, 4, 2, 1, 0, -1, -1, -1, -1 },
-  { 14, 13, 12, 11, 9, 8, 7, 6, 4, 3, 2, 1, 0, -1, -1, -1 },
-  { 14, 13, 12, 11, 10, 9, 8, 6, 5, 4, 3, 2, 1, 0, -1, -1 },
-  { 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1 },
-  { 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 }
-};
+#include "av2/common/entcode.h"
 
-#define EC_PROB_SHIFT 6
-
-static INLINE unsigned get_adjusted_prob(uint16_t p, int n, int nsym) {
-  int adj_prob = (p >> EC_PROB_SHIFT) << EC_PROB_SHIFT;
-  int inc = av2_prob_inc_tbl[nsym - 2][n];
-  adj_prob += inc << (EC_PROB_SHIFT - 4);
-  return adj_prob;
-}
 
 // round(-log2(i/256.) * (1 << AV2_PROB_COST_SHIFT)); i = 128~255.
 const uint16_t av2_prob_cost[128] = {
@@ -58,7 +34,7 @@ void av2_cost_tokens_from_cdf(int *costs, const aom_cdf_prob *cdf,
                               const int nsym, const int *inv_map) {
   aom_cdf_prob p0 = CDF_PROB_TOP;
   for (int i = 0; i < nsym; i++) {
-    aom_cdf_prob p1 = get_adjusted_prob(cdf[i], i, nsym);
+    aom_cdf_prob p1 = av2_get_adjusted_prob(cdf[i], i, nsym);
     aom_cdf_prob p15 = p0 - p1;
     p0 = p1;
     if (inv_map)

@@ -22,6 +22,9 @@
 #include "aom/aom_integer.h"
 #include "aom_dsp/txfm_common.h"
 #include "aom_ports/mem.h"
+#include "av2/common/entdec.h"
+#include "av2/common/entenc.h"
+
 
 // 4X4, 8X8, 16X16, 32X32, 64X64, 128X128
 #define SQR_BLOCK_SIZES 6
@@ -73,7 +76,9 @@ typedef enum {
 #define WARPED_CAUSAL 2
 #endif
 
+#ifndef TXB_SKIP_CONTEXTS
 #define TXB_SKIP_CONTEXTS 3
+#endif
 #define TX_SIZE_CONTEXTS 3
 #define INTER_COMPOUND_MODES 8
 
@@ -93,7 +98,10 @@ typedef enum {
 #define UNIDIR_COMP_REFS 9
 #define TXFM_PARTITION_CONTEXTS ((TX_SIZES - TX_8X8) * 6 - 3)
 #define COMP_INDEX_CONTEXTS 6
+#ifndef PARTITION_CONTEXTS
 #define PARTITION_CONTEXTS (5 * 4)
+#endif
+
 #define TX_SIZE_CTX_MIN 1
 #define MAX_TX_CATS (TX_SIZES - TX_SIZE_CTX_MIN)
 #define MAX_TX_DEPTH 2
