@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "55545486_383f5b80",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 25857
+      },
+      "writtenOn": "2026-06-17T16:18:19Z",
+      "side": 1,
+      "message": "The CL overrides and disables the low-complexity decode mode when sharpness\u003d3 is set. As per your suggestion we planned to print the warning messages directly to stdout. However, after going through the code we noticed that av1_cx_iface.c does not print the warning messages directly to stdout. Hence, we did not prefer the approach as shown below.\n```\nif (extra_cfg-\u003eenable_low_complexity_decode \u0026\u0026 extra_cfg-\u003esharpness \u003d\u003d 3) {\n extra_cfg-\u003eenable_low_complexity_decode \u003d 0;\n fprintf(stderr,\n         \"Warning: Low complexity decode mode is disabled when --sharpness\u003d3.\\n\");\n}\n```\nHope the current approach is fine. Please let us know.",
+      "revId": "c73ca70a15f82f0af5821c87285f53140a66e78b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
