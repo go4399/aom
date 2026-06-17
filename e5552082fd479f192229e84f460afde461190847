@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "05e9b124_e04ab126",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-06-17T22:00:29Z",
+      "side": 1,
+      "message": "I don\u0027t really like this solution, but I\u0027m not sure if there\u0027s anything better that we can do without restructuring some of the flag testing. `CMAKE_C_FLAGS_*` are set to allow them to influence subsequent compiler flag checks.",
+      "revId": "e5552082fd479f192229e84f460afde461190847",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
