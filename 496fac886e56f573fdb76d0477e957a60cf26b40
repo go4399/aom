@@ -1,0 +1,39 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5e6a8ea_c747f36a",
+        "filename": "test/av1_c_vs_simd_encode.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-06-17T17:54:11Z",
+      "side": 1,
+      "message": "With \"-DCONFIG_HIGHWAY\u003d1\", the HIGHWAY version SIMD will replace previous written SIMD if both are available, right?",
+      "fixSuggestions": [
+        {
+          "fixId": "60fcfa69_705f6211",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/av1_c_vs_simd_encode.sh",
+              "range": {
+                "startLine": 307,
+                "startChar": 0,
+                "endLine": 308,
+                "endChar": 0
+              },
+              "replacement": "           -DCONFIG_HIGHWAY\u003d1 \\  $(# -DCONFIG_HIGHWAY\u003d1 enables SIMD implementations using the Highway library, potentially replacing other SIMD versions.)\n"
+            }
+          ]
+        }
+      ],
+      "revId": "496fac886e56f573fdb76d0477e957a60cf26b40",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
