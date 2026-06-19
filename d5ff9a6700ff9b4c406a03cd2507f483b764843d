@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f8a7957f_bcf32fa4",
+        "filename": "aom_dsp/grain_table.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-06-19T03:56:09Z",
+      "side": 1,
+      "message": "1. This is the remaining issue. This looks like `\\n` is optional.\n\n---\n\n4. Changing this to check for `EOF` and throwing with `AOM_CODEC_OK` will effectively break the loop. Another option is to rework this to return a value.",
+      "revId": "d5ff9a6700ff9b4c406a03cd2507f483b764843d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ff5ceeb7_e697a96d",
+        "filename": "aom_dsp/grain_table.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-06-19T03:56:09Z",
+      "side": 1,
+      "message": "3. This triggers a warning as it assumes `fscanf` potentially failed or returned an error. Adding `if (feof(file) || ferror(file))` before this does not clear the warning.",
+      "revId": "d5ff9a6700ff9b4c406a03cd2507f483b764843d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "55dbd63f_268e39bd",
+        "filename": "aom_dsp/grain_table.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-06-19T03:56:09Z",
+      "side": 1,
+      "message": "2. The function is called from here.",
+      "revId": "d5ff9a6700ff9b4c406a03cd2507f483b764843d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
