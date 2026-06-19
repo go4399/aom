@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bea64a85_d1ae9a81",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9616
+      },
+      "writtenOn": "2026-06-19T16:22:03Z",
+      "side": 1,
+      "message": "In this CL, a new speed feature `enable_comp_wedge_search_using_model_rd` is introduced to enable the model RD based wedge mask search performed by masked_compound_type_rd() for COMPOUND_WEDGE. The sf is enabled for speed \u003e\u003d 1. Compound wedge is currently disabled for speed \u003e\u003d4 as well as for resolutions less than 720p in speed 3.\n\nPlease find below the performance results of the encoder for speed 1, 2 and 3.\n```\n\n                    Instruction Count                 BD-Rate Loss(%)\ncpu   Resolution     Reduction(%)    avg.psnr  ovr.psnr   ssim     vmaf    vmaf_neg\n------------------------------------------------------------------------------------\n 1       LOWRES2       16.007        -0.0123    -0.0119  -0.0537  -0.0642   -0.0767\n 1       MIDRES2       11.972         0.0327     0.0279   0.0401   0.0250    0.0043\n 1    SHORTS608P       10.056         0.0029     0.0157   0.0241   0.0272    0.0036\n 1    SHORTS720P        8.751         0.0217     0.0271   0.0338   0.0083    0.0018\n 1   SHORTS1080P        6.095         0.0081     0.0079   0.0034   0.0138    0.0146\n 1        HDRES2        8.467         0.0885     0.0864   0.0686   0.0995    0.0836\n 1       Average       10.064         0.0218     0.0242   0.0190   0.0174    0.0046\n\n 2       LOWRES2        1.208        -0.1472    -0.1519  -0.1511  -0.0919   -0.2130\n 2       MIDRES2        0.745        -0.1736    -0.1868  -0.1629  -0.2198   -0.2194\n 2    SHORTS608P        0.446        -0.1071    -0.1038  -0.0868  -0.1854   -0.1516\n 2    SHORTS720P        1.501        -0.1341    -0.1290  -0.0751  -0.1402   -0.1289\n 2   SHORTS1080P        0.967        -0.0937    -0.0909  -0.0782  -0.1363   -0.1244\n 2        HDRES2        1.421        -0.1434    -0.1397  -0.0809  -0.1728   -0.1736\n 2       Average        1.037        -0.1309    -0.1310  -0.1036  -0.1570   -0.1652\n\n 3       LOWRES2       -0.005         0.0000     0.0000   0.0000   0.0000    0.0000\n 3       MIDRES2       -0.004         0.0000     0.0000   0.0000   0.0000    0.0000\n 3    SHORTS608P       -0.003         0.0000     0.0000   0.0000   0.0000    0.0000\n 3    SHORTS720P       -0.143        -0.1007    -0.1139  -0.0917  -0.1458   -0.1264\n 3   SHORTS1080P       -0.212        -0.0780    -0.0790  -0.0579  -0.1129   -0.0932\n 3        HDRES2       -0.281        -0.0564    -0.0590   0.0059  -0.0785   -0.1006\n 3       Average       -0.108        -0.0410    -0.0440  -0.0267  -0.0589   -0.0549\n```\nThe instruction count reduction specified has been measured using command:\n$ perf stat -e instructions:u ./aomenc …\n\nPlease note that for speed\u003d3, one content `factory_10180p.y4m` has a maximum quality drop of 2.4491% (avg.psnr BD-Rate). When investigated, it was observed that for this content, the changes in this CL causes a difference in sub-gop size (output of eval_gop_length() changes) w.r.t. the parent commit and hence causes this issue. Except for this one content, the maximum drop seen across all presets is less than 0.75%.\n\nPlease review.",
+      "revId": "138f3a3d74d454480671e67a7fbdf59e3ef9d329",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
