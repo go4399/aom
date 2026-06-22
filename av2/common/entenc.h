@@ -27,19 +27,28 @@ void av2_od_ec_encode_bool_q15(od_ec_enc *enc, int val, unsigned f_q15)
 void av2_od_ec_encode_cdf_q15(od_ec_enc *enc, int s, const uint16_t *cdf,
                               int nsyms) OD_ARG_NONNULL(1) OD_ARG_NONNULL(3);
 
+void av2_od_ec_encode_literal_bypass(od_ec_enc *enc, int val, int n_bits)
+    OD_ARG_NONNULL(1);
+
 static INLINE void av2_write(aom_writer *w, int bit, int probability) {
   int p = (0x7FFFFF - (probability << 15) + probability) >> 8;
   av2_od_ec_encode_bool_q15(&w->ec, bit, p);
 }
 
 static INLINE void av2_write_bit(aom_writer *w, int bit) {
-  av2_write(w, bit, 128);  // aom_prob_half
+  av2_od_ec_encode_literal_bypass(&w->ec, bit, 1);
 }
 
 static INLINE void av2_write_literal(aom_writer *w, int data, int bits) {
-  int bit;
-  for (bit = bits - 1; bit >= 0; bit--) av2_write_bit(w, 1 & (data >> bit));
+  int n_bits = bits;
+  int n;
+  while (n_bits > 0) {
+    n = n_bits >= 8 ? 8 : n_bits;
+    av2_od_ec_encode_literal_bypass(&w->ec, (data >> (bits - n)) & ((1 << n) - 1), n);
+    n_bits -= n;
+  }
 }
+
 
 static INLINE void av2_write_cdf(aom_writer *w, int symb,
                                  const aom_cdf_prob *cdf, int nsymbs) {

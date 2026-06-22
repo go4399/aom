@@ -29,6 +29,10 @@ OD_WARN_UNUSED_RESULT int av2_od_ec_decode_cdf_q15(od_ec_dec *dec,
                                                    int nsyms)
     OD_ARG_NONNULL(1) OD_ARG_NONNULL(2);
 
+OD_WARN_UNUSED_RESULT int av2_od_ec_decode_literal_bypass(od_ec_dec *dec,
+                                                          int n_bits)
+    OD_ARG_NONNULL(1);
+
 static INLINE int av2_read_(aom_reader *r, int prob ACCT_STR_PARAM) {
   int p = (0x7FFFFF - (prob << 15) + prob) >> 8;
   int bit = av2_od_ec_decode_bool_q15(&r->ec, p);
@@ -40,18 +44,29 @@ static INLINE int av2_read_(aom_reader *r, int prob ACCT_STR_PARAM) {
 }
 
 static INLINE int av2_read_bit_(aom_reader *r ACCT_STR_PARAM) {
-  return av2_read_(r, 128 ACCT_STR_ARG(ACCT_STR_NAME));  // aom_prob_half
+  int ret = av2_od_ec_decode_literal_bypass(&r->ec, 1);
+#if CONFIG_ACCOUNTING
+  if (ACCT_STR_NAME) aom_process_accounting(r, ACCT_STR_NAME);
+#endif
+  return ret;
 }
 
 static INLINE int av2_read_literal_(aom_reader *r, int bits ACCT_STR_PARAM) {
-  int literal = 0, bit;
-  for (bit = bits - 1; bit >= 0; bit--)
-    literal |= av2_read_bit_(r ACCT_STR_ARG(NULL)) << bit;
+  int literal = 0;
+  int n_bits = bits;
+  int n;
+  while (n_bits > 0) {
+    n = n_bits >= 8 ? 8 : n_bits;
+    literal <<= n;
+    literal += av2_od_ec_decode_literal_bypass(&r->ec, n);
+    n_bits -= n;
+  }
 #if CONFIG_ACCOUNTING
   if (ACCT_STR_NAME) aom_process_accounting(r, ACCT_STR_NAME);
 #endif
   return literal;
 }
+
 
 static INLINE int av2_read_cdf_(aom_reader *r, const aom_cdf_prob *cdf,
                                 int nsymbs ACCT_STR_PARAM) {

@@ -15,17 +15,22 @@
 #include <assert.h>
 
 static void av2_od_ec_enc_normalize(od_ec_enc *enc, od_ec_enc_window low,
-                                    unsigned rng) {
+                                    unsigned rng, int n_bypass) {
   int d;
   int c;
   int s;
   if (enc->error) return;
-  c = enc->cnt;
-  assert(rng <= 65535U);
-  d = 16 - OD_ILOG_NZ(rng);
+  if (n_bypass > 0) {
+    c = enc->cnt + n_bypass;
+    d = 0;
+  } else {
+    c = enc->cnt;
+    assert(rng <= 65535U);
+    d = 16 - OD_ILOG_NZ(rng);
+  }
   s = c + d;
 
-  if (s >= 40) {  // 56 - 16
+  if (s >= 0) {  // 56 - 16
     unsigned char *out = enc->buf;
     uint32_t storage = enc->storage;
     uint32_t offs = enc->offs;
@@ -60,6 +65,7 @@ static void av2_od_ec_enc_normalize(od_ec_enc *enc, od_ec_enc_window low,
   enc->cnt = s;
 }
 
+
 static void av2_od_ec_encode_q15(od_ec_enc *enc, unsigned fl, unsigned fh,
                                  int s, int nsyms) {
   od_ec_enc_window l;
@@ -81,7 +87,7 @@ static void av2_od_ec_encode_q15(od_ec_enc *enc, unsigned fl, unsigned fh,
     v = av2_od_ec_prob_scale(fh, r, s, nsyms);
     r -= v;
   }
-  av2_od_ec_enc_normalize(enc, l, r);
+  av2_od_ec_enc_normalize(enc, l, r, 0);
 }
 
 void av2_od_ec_encode_bool_q15(od_ec_enc *enc, int val, unsigned f) {
@@ -96,7 +102,7 @@ void av2_od_ec_encode_bool_q15(od_ec_enc *enc, int val, unsigned f) {
   v = av2_od_ec_prob_scale(f, r, 0, 2);
   if (val) l += r - v;
   r = val ? v : r - v;
-  av2_od_ec_enc_normalize(enc, l, r);
+  av2_od_ec_enc_normalize(enc, l, r, 0);
 }
 
 void av2_od_ec_encode_cdf_q15(od_ec_enc *enc, int s, const uint16_t *icdf,
@@ -107,3 +113,17 @@ void av2_od_ec_encode_cdf_q15(od_ec_enc *enc, int s, const uint16_t *icdf,
   av2_od_ec_encode_q15(enc, s > 0 ? icdf[s - 1] : AOM_ICDF(0), icdf[s], s,
                        nsyms);
 }
+
+void av2_od_ec_encode_literal_bypass(od_ec_enc *enc, int val, int n_bits) {
+  od_ec_enc_window l;
+  unsigned r;
+  l = enc->low;
+  r = enc->rng;
+  assert(32768U <= r);
+  assert((r & 1) == 0);
+  l <<= n_bits;
+  l += r * val;
+  av2_od_ec_enc_normalize(enc, l, r, n_bits);
+}
+
+

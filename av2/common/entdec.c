@@ -48,9 +48,10 @@ static int av2_od_ec_dec_normalize(od_ec_dec *dec, od_ec_window dif,
   dec->cnt -= d;
   dec->dif = ((dif + 1) << d) - 1;
   dec->rng = rng << d;
-  if (dec->cnt < 0) av2_od_ec_dec_refill(dec);
+  if (dec->cnt < 8) av2_od_ec_dec_refill(dec);
   return ret;
 }
+
 
 int av2_od_ec_decode_bool_q15(od_ec_dec *dec, unsigned f) {
   od_ec_window dif;
@@ -106,3 +107,39 @@ int av2_od_ec_decode_cdf_q15(od_ec_dec *dec, const uint16_t *icdf, int nsyms) {
   dif -= (od_ec_window)v << (OD_EC_WINDOW_SIZE - 16);
   return av2_od_ec_dec_normalize(dec, dif, r, ret);
 }
+
+static INLINE int av2_od_ec_dec_bypass_normalize(od_ec_dec *dec,
+                                                 od_ec_window dif, int n_bypass,
+                                                 int ret) {
+  dec->cnt -= n_bypass;
+  dec->dif = ((dif + 1) << n_bypass) - 1;
+  if (dec->cnt < 8) av2_od_ec_dec_refill(dec);
+  return ret;
+}
+
+
+int av2_od_ec_decode_literal_bypass(od_ec_dec *dec, int n_bits) {
+  od_ec_window dif;
+  od_ec_window vw;
+  unsigned r;
+  int ret;
+  dif = dec->dif;
+  r = dec->rng;
+  assert((r & 1) == 0);
+  assert(dif >> (OD_EC_WINDOW_SIZE - 16) < r);
+  assert(32768U <= r);
+  assert(0 < n_bits && n_bits <= 32);
+  vw = (od_ec_window)r << (OD_EC_WINDOW_SIZE - 16);
+  ret = 0;
+  for (int bit = 0; bit < n_bits; bit++) {
+    vw >>= 1;
+    ret <<= 1;
+    if (dif >= vw) {
+      dif -= vw;
+    } else {
+      ret |= 1;
+    }
+  }
+  return av2_od_ec_dec_bypass_normalize(dec, dif, n_bits, ret);
+}
+

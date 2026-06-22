@@ -69,3 +69,26 @@ TEST(AV2_EC_TEST, random_ec_test) {
   }
   od_ec_enc_clear(&enc);
 }
+
+TEST(AV2_EC_TEST, bypass_literal_test) {
+  od_ec_enc enc;
+  od_ec_dec dec;
+  unsigned char *ptr;
+  uint32_t ptr_sz;
+
+  od_ec_enc_init(&enc, 1);
+  for (int bits = 1; bits <= 8; bits++) {
+    int max_val = (1 << bits);
+    for (int v = 0; v < max_val; v++) {
+      od_ec_enc_reset(&enc);
+      av2_od_ec_encode_literal_bypass(&enc, v, bits);
+      ptr = od_ec_enc_done(&enc, &ptr_sz);
+      ASSERT_NE(ptr, nullptr);
+      od_ec_dec_init(&dec, ptr, ptr_sz);
+      int sym = av2_od_ec_decode_literal_bypass(&dec, bits);
+      EXPECT_EQ(sym, v) << "Failed for bits=" << bits << ", v=" << v;
+    }
+  }
+  od_ec_enc_clear(&enc);
+}
+
