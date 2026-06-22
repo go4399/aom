@@ -168,8 +168,14 @@ static const double q_pow_term[(QINDEX_RANGE >> 5) + 1] = { 0.65, 0.70, 0.75,
                                                             0.80, 0.85, 0.90,
                                                             0.95, 0.95, 0.95 };
 #define ERR_DIVISOR 96.0
-static double calc_correction_factor(double err_per_mb, int q) {
-  const double error_term = err_per_mb / ERR_DIVISOR;
+static double calc_correction_factor(double err_per_mb, int q,
+                                     double inactive_zone,
+                                     double cur_frame_coded_err) {
+  double error_term = err_per_mb / ERR_DIVISOR;
+  // Adjustment to the error_term based on the coded_error and inactive_zone.
+  if (cur_frame_coded_err < err_per_mb * 2) {
+    error_term = error_term * (1 - AOMMIN(0.6, inactive_zone));
+  }
   const int index = q >> 5;
   // Adjustment to power term based on qindex
   const double power_term =
@@ -319,15 +325,17 @@ static int qbpm_enumerator(int rate_err_tol, bool use_smaller_enumerator) {
 // calculation of a correction_factor.
 static int find_qindex_by_rate_with_correction(
     uint64_t desired_bits_per_mb, aom_bit_depth_t bit_depth,
-    double error_per_mb, double group_weight_factor, int rate_err_tol,
-    int best_qindex, int worst_qindex, bool use_smaller_enumerator) {
+    double error_per_mb, double cur_frame_coded_err, double group_weight_factor,
+    int rate_err_tol, int best_qindex, int worst_qindex,
+    bool use_smaller_enumerator, double inactive_zone) {
   assert(best_qindex <= worst_qindex);
   int low = best_qindex;
   int high = worst_qindex;
 
   while (low < high) {
     const int mid = (low + high) >> 1;
-    const double mid_factor = calc_correction_factor(error_per_mb, mid);
+    const double mid_factor = calc_correction_factor(
+        error_per_mb, mid, inactive_zone, cur_frame_coded_err);
     const double q = av1_convert_qindex_to_q(mid, bit_depth);
     const int enumerator =
         qbpm_enumerator(rate_err_tol, use_smaller_enumerator);
@@ -392,12 +400,19 @@ static int get_twopass_worst_quality(AV1_COMP *cpi, const double av_frame_err,
     // Update bpm correction factor based on previous GOP rate error.
     twopass_update_bpm_factor(cpi, rate_err_tol);
 
+    int baseline_gf_interval = cpi->ppi->p_rc.baseline_gf_interval - 1;
+    const FIRSTPASS_STATS *cur_stats = av1_firstpass_info_peek(
+        &cpi->ppi->twopass.firstpass_info, baseline_gf_interval);
+
+    assert(cur_stats != NULL);
+
     // Try and pick a max Q that will be high enough to encode the
     // content at the given rate.
     int q = find_qindex_by_rate_with_correction(
         target_norm_bits_per_mb, cpi->common.seq_params->bit_depth,
-        av_err_per_mb, cpi->ppi->twopass.bpm_factor, rate_err_tol,
-        rc->best_quality, rc->worst_quality, use_smaller_enumerator);
+        av_err_per_mb, cur_stats->coded_error, cpi->ppi->twopass.bpm_factor,
+        rate_err_tol, rc->best_quality, rc->worst_quality,
+        use_smaller_enumerator, inactive_zone);
 
     // Restriction on active max q for constrained quality mode.
     if (rc_cfg->mode == AOM_CQ) q = AOMMAX(q, rc_cfg->cq_level);
