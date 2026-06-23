@@ -40,14 +40,15 @@ static INLINE void av2_write_bit(aom_writer *w, int bit) {
 }
 
 static INLINE void av2_write_literal(aom_writer *w, int data, int bits) {
-  int n_bits = bits;
   int n;
-  while (n_bits > 0) {
-    n = n_bits >= 8 ? 8 : n_bits;
+  while (bits > 0) {
+    n = bits >= 8 ? 8 : bits;
     av2_od_ec_encode_literal_bypass(&w->ec, (data >> (bits - n)) & ((1 << n) - 1), n);
-    n_bits -= n;
+    bits -= n;
+    data &= ((1 << bits) - 1);
   }
 }
+
 
 
 static INLINE void av2_write_cdf(aom_writer *w, int symb,
