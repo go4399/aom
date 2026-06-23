@@ -397,7 +397,9 @@ struct av2_extracfg {
   unsigned int enable_lf_sub_pu;
   unsigned int force_video_mode;
   unsigned int enable_trellis_quant;
+  unsigned int enable_tcq;
   unsigned int enable_qm;
+
   unsigned int qm_y;
   unsigned int qm_u;
   unsigned int qm_v;
@@ -732,7 +734,9 @@ static struct av2_extracfg default_extra_cfg = {
   1,                            // enable_lf_sub_pu
   0,                            // force_video_mode
   3,                            // enable_trellis_quant
+  1,                            // enable_tcq
   0,                            // enable_qm
+
   DEFAULT_QM_Y,                 // qm_y
   DEFAULT_QM_U,                 // qm_u
   DEFAULT_QM_V,                 // qm_v
@@ -1467,8 +1471,8 @@ static aom_codec_err_t set_encoder_config(AV2EncoderConfig *oxcf,
   tool_cfg->superblock_size = extra_cfg->superblock_size;
   tool_cfg->enable_monochrome = cfg->monochrome;
   tool_cfg->full_still_picture_hdr = cfg->full_still_picture_hdr;
-  // tool_cfg->enable_tcq = cfg->enable_tcq;
-  if (1) {  // !cfg->encoder_cfg.enable_trellis_quant
+  tool_cfg->enable_tcq = extra_cfg->enable_tcq;
+  if (!extra_cfg->enable_trellis_quant) {
     static int tcq_warning_printed = 0;
     if (!tcq_warning_printed) {
       fprintf(stderr,
@@ -1478,6 +1482,8 @@ static aom_codec_err_t set_encoder_config(AV2EncoderConfig *oxcf,
     }
     tool_cfg->enable_tcq = 0;
   }
+
+
   tool_cfg->ref_frame_mvs_present = extra_cfg->enable_ref_frame_mvs;
   tool_cfg->enable_global_motion = extra_cfg->enable_global_motion;
   tool_cfg->enable_skip_mode = extra_cfg->enable_skip_mode;
@@ -4882,7 +4888,7 @@ static const aom_codec_enc_cfg_t encoder_usage_cfg[] = {
       { NULL, 0 },  // rc_firstpass_mb_stats_in
       256,          // rc_target_bitrate
       0,            // rc_min_quantizer
-      63,           // rc_max_quantizer
+      255,          // rc_max_quantizer
       25,           // rc_undershoot_pct
       25,           // rc_overshoot_pct
 
@@ -4953,7 +4959,7 @@ static const aom_codec_enc_cfg_t encoder_usage_cfg[] = {
       { NULL, 0 },  // rc_firstpass_mb_stats_in
       256,          // rc_target_bitrate
       0,            // rc_min_quantizer
-      63,           // rc_max_quantizer
+      255,          // rc_max_quantizer
       50,           // rc_undershoot_pct
       50,           // rc_overshoot_pct
 
@@ -5024,7 +5030,7 @@ static const aom_codec_enc_cfg_t encoder_usage_cfg[] = {
       { NULL, 0 },  // rc_firstpass_mb_stats_in
       256,          // rc_target_bitrate
       0,            // rc_min_quantizer
-      63,           // rc_max_quantizer
+      255,          // rc_max_quantizer
       25,           // rc_undershoot_pct
       25,           // rc_overshoot_pct
 

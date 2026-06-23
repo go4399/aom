@@ -1305,25 +1305,6 @@ extern void aom_highbd_quantize_b_c(
 }
 #endif
 
-static INLINE void av2_highbd_quantize_b(
-    const tran_low_t *coeff_ptr, intptr_t n_coeffs, const int32_t *zbin_ptr,
-    const int32_t *round_ptr, const int32_t *quant_ptr,
-    const int32_t *quant_shift_ptr, tran_low_t *qcoeff_ptr,
-    tran_low_t *dqcoeff_ptr, const int32_t *dequant_ptr, uint16_t *eob_ptr,
-    const int16_t *scan, const int16_t *iscan, const int log_scale) {
-  int16_t zbin[2] = { (int16_t)zbin_ptr[0], (int16_t)zbin_ptr[1] };
-  int16_t round[2] = { (int16_t)round_ptr[0], (int16_t)round_ptr[1] };
-  int16_t quant[2] = { (int16_t)quant_ptr[0], (int16_t)quant_ptr[1] };
-  int16_t quant_shift[2] = { (int16_t)quant_shift_ptr[0],
-                             (int16_t)quant_shift_ptr[1] };
-  int16_t dequant[2] = { (int16_t)dequant_ptr[0], (int16_t)dequant_ptr[1] };
-  (void)log_scale;
-
-  aom_highbd_quantize_b_c(coeff_ptr, n_coeffs, zbin, round, quant, quant_shift,
-                          qcoeff_ptr, dqcoeff_ptr, dequant, eob_ptr, scan,
-                          iscan);
-}
-
 void av2_highbd_quantize_b_c(const tran_low_t *coeff_ptr, intptr_t n_coeffs,
                              const int32_t *zbin_ptr, const int32_t *round_ptr,
                              const int32_t *quant_ptr,
@@ -1332,6 +1313,18 @@ void av2_highbd_quantize_b_c(const tran_low_t *coeff_ptr, intptr_t n_coeffs,
                              const int32_t *dequant_ptr, uint16_t *eob_ptr,
                              const int16_t *scan, const int16_t *iscan,
                              const int log_scale);
+
+static INLINE void av2_highbd_quantize_b(
+    const tran_low_t *coeff_ptr, intptr_t n_coeffs, const int32_t *zbin_ptr,
+    const int32_t *round_ptr, const int32_t *quant_ptr,
+    const int32_t *quant_shift_ptr, tran_low_t *qcoeff_ptr,
+    tran_low_t *dqcoeff_ptr, const int32_t *dequant_ptr, uint16_t *eob_ptr,
+    const int16_t *scan, const int16_t *iscan, const int log_scale) {
+  av2_highbd_quantize_b_c(coeff_ptr, n_coeffs, zbin_ptr, round_ptr, quant_ptr,
+                          quant_shift_ptr, qcoeff_ptr, dqcoeff_ptr, dequant_ptr,
+                          eob_ptr, scan, iscan, log_scale);
+}
+
 
 #ifdef __cplusplus
 extern "C" {
