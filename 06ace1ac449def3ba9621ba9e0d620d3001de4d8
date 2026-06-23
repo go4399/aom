@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04d9e226_269c380f",
+        "filename": "av1/encoder/speed_features.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 1766,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-06-23T14:51:12Z",
+      "side": 1,
+      "message": "You don\u0027t need this `if`",
+      "range": {
+        "startLine": 1766,
+        "startChar": 0,
+        "endLine": 1766,
+        "endChar": 35
+      },
+      "revId": "06ace1ac449def3ba9621ba9e0d620d3001de4d8",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
