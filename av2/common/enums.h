@@ -1468,11 +1468,12 @@ static INLINE int av2_read_unary(aom_reader *r, int max_nbits,
   int ret = 0;
   for (int bit = 0; bit < max_nbits; bit++) {
     if (aom_read_bit(r, NULL)) {
-      ret++;
-    } else {
       break;
+    } else {
+      ret++;
     }
   }
+
   return ret;
 }
 

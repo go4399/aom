@@ -139,14 +139,15 @@ static void write_truncated_rice(aom_writer *w, int level, int m, int k,
   int q = level >> m;
 
   if (q >= cmax) {
-    aom_write_literal(w, (1 << cmax) - 1, cmax);
+    aom_write_literal(w, 0, cmax);
     write_exp_golomb(w, level - (cmax << m), k);
   } else {
     const int mask = (1 << m) - 1;
-    aom_write_literal(w, (1 << q) - 1, q);
-    aom_write_literal(w, 0, 1);
+    aom_write_literal(w, 0, q);
+    aom_write_literal(w, 1, 1);
     aom_write_literal(w, level & mask, m);
   }
+
 }
 
 /*!\brief Encode and write to bitstream the input high range (HR) value of the
