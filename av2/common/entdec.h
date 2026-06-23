@@ -33,6 +33,11 @@ OD_WARN_UNUSED_RESULT int av2_od_ec_decode_literal_bypass(od_ec_dec *dec,
                                                           int n_bits)
     OD_ARG_NONNULL(1);
 
+OD_WARN_UNUSED_RESULT int av2_od_ec_decode_unary_bypass(od_ec_dec *dec,
+                                                         int max_bits)
+    OD_ARG_NONNULL(1);
+
+
 static INLINE int av2_read_(aom_reader *r, int prob ACCT_STR_PARAM) {
   int p = (0x7FFFFF - (prob << 15) + prob) >> 8;
   int bit = av2_od_ec_decode_bool_q15(&r->ec, p);
@@ -80,6 +85,7 @@ static INLINE int av2_read_cdf_(aom_reader *r, const aom_cdf_prob *cdf,
   return symb;
 }
 
+
 static INLINE int av2_read_symbol_(aom_reader *r, aom_cdf_prob *cdf,
                                    int nsymbs ACCT_STR_PARAM) {
   int ret;
@@ -87,6 +93,8 @@ static INLINE int av2_read_symbol_(aom_reader *r, aom_cdf_prob *cdf,
   if (r->allow_update_cdf) av2_update_cdf(cdf, ret, nsymbs);
   return ret;
 }
+
+
 
 #undef aom_read
 #undef aom_read_bit
@@ -104,6 +112,10 @@ static INLINE int av2_read_symbol_(aom_reader *r, aom_cdf_prob *cdf,
   av2_read_cdf_(r, cdf, nsymbs ACCT_STR_ARG(ACCT_STR_NAME))
 #define aom_read_symbol(r, cdf, nsymbs, ACCT_STR_NAME) \
   av2_read_symbol_(r, cdf, nsymbs ACCT_STR_ARG(ACCT_STR_NAME))
+
+
+
+
 
 #ifdef __cplusplus
 }  // extern "C"

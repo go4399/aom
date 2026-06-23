@@ -143,3 +143,32 @@ int av2_od_ec_decode_literal_bypass(od_ec_dec *dec, int n_bits) {
   return av2_od_ec_dec_bypass_normalize(dec, dif, n_bits, ret);
 }
 
+int av2_od_ec_decode_unary_bypass(od_ec_dec *dec, int max_bits) {
+  if (dec->cnt < max_bits - 1) av2_od_ec_dec_refill(dec);
+  od_ec_window dif;
+  od_ec_window vw;
+  unsigned r;
+  int ret;
+  dif = dec->dif;
+  r = dec->rng;
+  assert((r & 1) == 0);
+  assert(dif >> (OD_EC_WINDOW_SIZE - 16) < r);
+  assert(32768U <= r);
+  assert((0 < max_bits) && (max_bits <= 32));
+  vw = (od_ec_window)r << (OD_EC_WINDOW_SIZE - 16);
+  ret = 0;
+  int bit;
+  for (bit = 0; bit < max_bits; bit++) {
+    vw >>= 1;
+    if (dif >= vw) {
+      dif -= vw;
+      ret++;
+    } else {
+      bit++;
+      break;
+    }
+  }
+  return av2_od_ec_dec_bypass_normalize(dec, dif, bit, ret);
+}
+
+

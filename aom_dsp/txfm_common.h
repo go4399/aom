@@ -92,6 +92,13 @@ enum {
   EXT_TX_SET_DCTONLY,
   // DCT + Identity only
   EXT_TX_SET_DCT_IDTX,
+#if CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
+  // DCT_DCT + ADST_DCT/DCT_ADST + FLIPADST_DCT/DCT_FLIPADST + H_DCT/V_DCT
+  EXT_TX_SET_LONG_SIDE_64,
+  // DCT_DCT + Identity + ADST_DCT/DCT_ADST + FLIPADST_DCT/DCT_FLIPADST +
+  // H_DCT/V_DCT
+  EXT_TX_SET_LONG_SIDE_32,
+#endif
   // Discrete Trig transforms w/o flip (4) + Identity (1)
   EXT_TX_SET_DTT4_IDTX,
   // Discrete Trig transforms w/o flip (4) + Identity (1) + 1D Hor/vert DCT (2)
@@ -101,17 +108,13 @@ enum {
   // Discrete Trig transforms w/ flip (9) + Identity (1) + 1D Hor/Ver (6)
   EXT_TX_SET_ALL16,
 #if CONFIG_AV2_ENCODER || CONFIG_AV2_DECODER
-  // DCT_DCT + ADST_DCT/DCT_ADST + FLIPADST_DCT/DCT_FLIPADST + H_DCT/V_DCT
-  EXT_TX_SET_LONG_SIDE_64,
-  // DCT_DCT + Identity + ADST_DCT/DCT_ADST + FLIPADST_DCT/DCT_FLIPADST +
-  // H_DCT/V_DCT
-  EXT_TX_SET_LONG_SIDE_32,
   EXT_NEW_TX_SET,
   // DCT + Identity (1) + 1D Hor/vert DCT (2)
   EXT_TX_SET_DCT_IDTX_IDDCT,
 #endif
   EXT_TX_SET_TYPES
 } UENUM1BYTE(TxSetType);
+
 
 typedef struct txfm_param {
   // for both forward and inverse transforms

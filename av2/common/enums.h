@@ -1465,17 +1465,9 @@ static INLINE uint16_t av2_rb_read_primitive_refsubexpfin(
 static INLINE int av2_read_unary(aom_reader *r, int max_nbits,
                                  const char *acct) {
   (void)acct;
-  int ret = 0;
-  for (int bit = 0; bit < max_nbits; bit++) {
-    if (aom_read_bit(r, NULL)) {
-      break;
-    } else {
-      ret++;
-    }
-  }
-
-  return ret;
+  return av2_od_ec_decode_unary_bypass(&r->ec, max_nbits);
 }
+
 
 static INLINE uint16_t av2_read_primitive_quniform(aom_reader *r, uint16_t n,
                                                    const char *acct) {
