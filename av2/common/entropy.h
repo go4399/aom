@@ -24,9 +24,14 @@
 #include "av2/common/entdec.h"
 #include "av2/common/entenc.h"
 
+#include "av2/common/entcode.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#define update_cdf av2_update_cdf
+
 
 #define TOKEN_CDF_Q_CTXS 4
 
