@@ -762,8 +762,9 @@ void av2_quant(MACROBLOCK *x, int plane, int block, TxfmParam *txfm_param,
 }
 
 void av2_setup_xform(const AV2_COMMON *cm, MACROBLOCK *x, int plane,
-                     TX_SIZE tx_size, TX_TYPE tx_type, CctxType cctx_type,
+                     TX_SIZE tx_size, av2_tx_type tx_type, CctxType cctx_type,
                      TxfmParam *txfm_param) {
+
   MACROBLOCKD *const xd = &x->e_mbd;
   MB_MODE_INFO *const mbmi = xd->mi[0];
 

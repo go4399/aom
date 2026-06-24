@@ -75,8 +75,9 @@ void av2_encode_sby_pass1(struct AV2_COMP *cpi, MACROBLOCK *x,
                           BLOCK_SIZE bsize);
 
 void av2_setup_xform(const AV2_COMMON *cm, MACROBLOCK *x, int plane,
-                     TX_SIZE tx_size, TX_TYPE tx_type, CctxType cctx_Type,
+                     TX_SIZE tx_size, av2_tx_type tx_type, CctxType cctx_Type,
                      TxfmParam *txfm_param);
+
 void av2_setup_quant(TX_SIZE tx_size, int use_optimize_b, int xform_quant_idx,
                      int use_quant_b_adapt, QUANT_PARAM *qparam);
 
