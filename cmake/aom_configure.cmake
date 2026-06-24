@@ -480,8 +480,9 @@ configure_file("${aom_config_h_template}"
 
 if(CONFIG_AV2)
   file(WRITE "${AOM_CONFIG_DIR}/config/av2_dsp_rtcd.h"
-       "#ifndef AV2_DSP_RTCD_H_\n#define AV2_DSP_RTCD_H_\n#include <stdbool.h>\n#include \"av2/common/blockd.h\"\n#include \"av2/common/enums.h\"\n#include \"aom_dsp/aom_filter.h\"\n#include \"av2/common/filter.h\"\n#include \"av2/common/convolve.h\"\n#define AOM_AV1_COMMON_BLOCKD_H_\n#define AOM_AV1_COMMON_ENUMS_H_\n#define AOM_AV1_COMMON_MV_H_\n#define AOM_AV1_COMMON_SCALE_H_\n#define AOM_AV1_COMMON_TILE_COMMON_H_\n#define AOM_AV1_COMMON_ENTROPYMV_H_\n#define AOM_AV1_COMMON_ENTROPYMODE_H_\n#define AOM_AV1_COMMON_CONVOLVE_H_\n#define AOM_AV1_COMMON_FILTER_H_\n#include \"config/aom_dsp_rtcd.h\"\n#endif  // AV2_DSP_RTCD_H_\n")
+       "#ifndef AV2_DSP_RTCD_H_\n#define AV2_DSP_RTCD_H_\n#include <stdbool.h>\n#include \"av2/common/blockd.h\"\n#include \"av2/common/enums.h\"\n#include \"aom_dsp/aom_filter.h\"\n#include \"av2/common/filter.h\"\n#include \"av2/common/convolve.h\"\n#define AOM_AV1_COMMON_BLOCKD_H_\n#define AOM_AV1_COMMON_ENUMS_H_\n#define AOM_AV1_COMMON_MV_H_\n#define AOM_AV1_COMMON_SCALE_H_\n#define AOM_AV1_COMMON_TILE_COMMON_H_\n#define AOM_AV1_COMMON_ENTROPYMV_H_\n#define AOM_AV1_COMMON_ENTROPYMODE_H_\n#define AOM_AV1_COMMON_CONVOLVE_H_\n#define AOM_AV1_COMMON_FILTER_H_\n#include \"config/aom_dsp_rtcd.h\"\n#include \"av2/common/av2_rtcd_overrides.h\"\n#endif  // AV2_DSP_RTCD_H_\n")
 endif()
+
 
 # Read the current git hash.
 find_package(Git)
