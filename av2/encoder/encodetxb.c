@@ -102,12 +102,10 @@ static void write_exp_golomb(aom_writer *w, int level, int k) {
   length = get_msb(x) + 1;
   assert(length > k);
 
-  const int L = length - 1 - k;
-  aom_write_literal(w, (1 << L) - 1, L);
-  aom_write_literal(w, 0, 1);
-  const int mask = (1 << (length - 1)) - 1;
-  aom_write_literal(w, x & mask, length - 1);
+  aom_write_literal(w, 0, length - 1 - k);
+  aom_write_literal(w, x, length);
 }
+
 
 /*!\brief Encode an input integer value using Truncated-Rice coding and write
  * to bitstream
