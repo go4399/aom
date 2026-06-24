@@ -18,6 +18,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbb79f75_0f89f816",
+        "filename": "av1/encoder/x86/pickrst_avx2.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2120,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-06-24T19:35:25Z",
+      "side": 1,
+      "message": "I am answering my own question. At this point, `width \u003c 16`, so `j` in the original code is equal to 0. Therefore the new code is equivalent to the original code.",
+      "parentUuid": "228e820b_81461337",
+      "revId": "dd6848dd70cd1f7562e277e1099cf84d691b786d",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8fa23c01_376358b9",
