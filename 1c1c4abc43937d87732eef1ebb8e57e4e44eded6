@@ -16,6 +16,91 @@
       "message": "This causes crashes on x86 and Arm:\n\n* https://aomedia.issues.chromium.org/527078408\n* https://aomedia.issues.chromium.org/527242002\n\nIt will be disabled temporarily in https://aomedia-review.googlesource.com/c/aom/+/214381.",
       "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7afb560e_1728c3b9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-06-25T01:56:43Z",
+      "side": 1,
+      "message": "Apurve: I looked at some code in this CL. I have some suggestions.",
+      "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd00390b_25559ffb",
+        "filename": "av1/encoder/block.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 1442,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-06-25T01:56:43Z",
+      "side": 1,
+      "message": "This comment is not clear enough. A distance is between two points. The comment only mentions one point (bottom edge of the frame). What is the other point?\n\nAlso, this comment should point out this distance may be negative and explain why.",
+      "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f6441576_a02bb5e3",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 4296,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-06-25T01:56:43Z",
+      "side": 1,
+      "message": "Nit: replace `* 4` with `\u003c\u003c MI_SIZE_LOG2` for consistency?",
+      "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3061d56d_28dc89d3",
+        "filename": "av1/encoder/rdopt_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-06-25T01:56:43Z",
+      "side": 1,
+      "message": "This function is very complicated. Please document this function (at least the output parameters and the return value).\n\nOptional: I also suggest adding some tests for this complicated function, at least to clarify its behavior.",
+      "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "65bfaf0b_f8926889",
+        "filename": "av1/encoder/rdopt_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-06-25T01:56:43Z",
+      "side": 1,
+      "message": "If `x-\u003epix_to_bottom_edge` is an odd number and `pd-\u003esubsampling_y` is equal to 1, is `x-\u003epix_to_bottom_edge \u003e\u003e pd-\u003esubsampling_y` still correct?",
+      "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
