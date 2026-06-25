@@ -36,7 +36,7 @@ void av2_fwht4x4_msa(const int16_t *input, int16_t *output,
   in0 -= in3;
   in1 += in2;
 
-  SLLI_4V(in0, in1, in2, in3, 2);
+  SLLI_4V(in0, in1, in2, in3, 3);
 
   TRANSPOSE4x4_SH_SH(in0, in3, in1, in2, in0, in3, in1, in2);
 

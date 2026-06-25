@@ -21,6 +21,9 @@
 #define UNIT_QUANT_SHIFT 2
 #define UNIT_QUANT_FACTOR (1 << UNIT_QUANT_SHIFT)
 
+#define AV2_UNIT_QUANT_SHIFT 3
+#define AV2_UNIT_QUANT_FACTOR (1 << AV2_UNIT_QUANT_SHIFT)
+
 // block transform size
 enum {
   TX_4X4,    // 4x4 transform

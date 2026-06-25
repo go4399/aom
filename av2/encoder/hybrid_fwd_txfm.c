@@ -834,10 +834,10 @@ void av2_fwht4x4_c(const int16_t *input, tran_low_t *output, int stride) {
     c1 = e1 - c1;
     a1 -= c1;
     d1 += b1;
-    op[0] = (tran_low_t)(a1 * UNIT_QUANT_FACTOR);
-    op[1] = (tran_low_t)(c1 * UNIT_QUANT_FACTOR);
-    op[2] = (tran_low_t)(d1 * UNIT_QUANT_FACTOR);
-    op[3] = (tran_low_t)(b1 * UNIT_QUANT_FACTOR);
+    op[0] = (tran_low_t)(a1 * AV2_UNIT_QUANT_FACTOR);
+    op[1] = (tran_low_t)(c1 * AV2_UNIT_QUANT_FACTOR);
+    op[2] = (tran_low_t)(d1 * AV2_UNIT_QUANT_FACTOR);
+    op[3] = (tran_low_t)(b1 * AV2_UNIT_QUANT_FACTOR);
 
     ip += 4;
     op += 4;

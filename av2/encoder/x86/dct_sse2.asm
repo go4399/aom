@@ -60,8 +60,8 @@ cglobal fwht4x4, 3, 4, 8, input, output, stride
   TRANSFORM_COLS
   TRANSPOSE_4X4
 
-  psllw           m0,        2
-  psllw           m1,        2
+  psllw           m0,        3
+  psllw           m1,        3
 
   ; sign extension
   mova            m2,             m0

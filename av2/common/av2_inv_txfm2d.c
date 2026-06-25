@@ -27,10 +27,10 @@ void av2_highbd_iwht4x4_16_add_c(const tran_low_t *input, uint16_t *dest,
   tran_low_t *op = output;
 
   for (i = 0; i < 4; i++) {
-    a1 = ip[0] >> UNIT_QUANT_SHIFT;
-    c1 = ip[1] >> UNIT_QUANT_SHIFT;
-    d1 = ip[2] >> UNIT_QUANT_SHIFT;
-    b1 = ip[3] >> UNIT_QUANT_SHIFT;
+    a1 = ip[0] >> AV2_UNIT_QUANT_SHIFT;
+    c1 = ip[1] >> AV2_UNIT_QUANT_SHIFT;
+    d1 = ip[2] >> AV2_UNIT_QUANT_SHIFT;
+    b1 = ip[3] >> AV2_UNIT_QUANT_SHIFT;
     a1 += c1;
     d1 -= b1;
     e1 = (a1 - d1) >> 1;
@@ -88,10 +88,10 @@ void av2_highbd_iwht4x4_16_vert_add_c(const tran_low_t *input, uint16_t *dest,
   tran_low_t *op = output;
 
   for (i = 0; i < 4; i++) {
-    a1 = ip[0] >> UNIT_QUANT_SHIFT;
-    c1 = ip[1] >> UNIT_QUANT_SHIFT;
-    d1 = ip[2] >> UNIT_QUANT_SHIFT;
-    b1 = ip[3] >> UNIT_QUANT_SHIFT;
+    a1 = ip[0] >> AV2_UNIT_QUANT_SHIFT;
+    c1 = ip[1] >> AV2_UNIT_QUANT_SHIFT;
+    d1 = ip[2] >> AV2_UNIT_QUANT_SHIFT;
+    b1 = ip[3] >> AV2_UNIT_QUANT_SHIFT;
     a1 += c1;
     d1 -= b1;
     e1 = (a1 - d1) >> 1;
@@ -156,10 +156,10 @@ void av2_highbd_iwht4x4_16_horz_add_c(const tran_low_t *input, uint16_t *dest,
   tran_low_t d1_delay = 0;
 
   for (i = 0; i < 4; i++) {
-    a1 = ip[0] >> UNIT_QUANT_SHIFT;
-    c1 = ip[1] >> UNIT_QUANT_SHIFT;
-    d1 = ip[2] >> UNIT_QUANT_SHIFT;
-    b1 = ip[3] >> UNIT_QUANT_SHIFT;
+    a1 = ip[0] >> AV2_UNIT_QUANT_SHIFT;
+    c1 = ip[1] >> AV2_UNIT_QUANT_SHIFT;
+    d1 = ip[2] >> AV2_UNIT_QUANT_SHIFT;
+    b1 = ip[3] >> AV2_UNIT_QUANT_SHIFT;
     a1 += c1;
     d1 -= b1;
     e1 = (a1 - d1) >> 1;
@@ -236,7 +236,7 @@ void av2_highbd_iwht4x4_1_add_c(const tran_low_t *in, uint16_t *dest,
   tran_low_t *op = tmp;
   (void)bd;
 
-  a1 = ip[0] >> UNIT_QUANT_SHIFT;
+  a1 = ip[0] >> AV2_UNIT_QUANT_SHIFT;
   e1 = a1 >> 1;
   a1 -= e1;
   op[0] = a1;
@@ -269,7 +269,7 @@ void av2_highbd_iwht4x4_1_vert_add_c(const tran_low_t *in, uint16_t *dest,
   tran_low_t *op = tmp;
   (void)bd;
 
-  a1 = ip[0] >> UNIT_QUANT_SHIFT;
+  a1 = ip[0] >> AV2_UNIT_QUANT_SHIFT;
   e1 = a1 >> 1;
   a1 -= e1;
   op[0] = a1;
@@ -307,7 +307,7 @@ void av2_highbd_iwht4x4_1_horz_add_c(const tran_low_t *in, uint16_t *dest,
 
   (void)bd;
 
-  a1 = ip[0] >> UNIT_QUANT_SHIFT;
+  a1 = ip[0] >> AV2_UNIT_QUANT_SHIFT;
   e1 = a1 >> 1;
   a1 -= e1;
   op[0] = a1;
