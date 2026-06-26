@@ -36,7 +36,7 @@ int aom_free_frame_buffer(YV12_BUFFER_CONFIG *ybf) {
     if (ybf->buffer_alloc_sz > 0) {
       aom_free(ybf->buffer_alloc);
     }
-#if CONFIG_AV1_ENCODER && !CONFIG_REALTIME_ONLY
+#if (CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER) && !CONFIG_REALTIME_ONLY
     if (ybf->y_pyramid) {
       aom_free_pyramid(ybf->y_pyramid);
     }
@@ -71,7 +71,7 @@ static int realloc_frame_buffer_aligned(
 
     uint8_t *buf = NULL;
 
-#if CONFIG_REALTIME_ONLY || !CONFIG_AV1_ENCODER
+#if CONFIG_REALTIME_ONLY || !(CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER)
     // We should only need an 8-bit version of the source frame if we are
     // encoding in non-realtime mode
     (void)alloc_pyramid;
@@ -81,7 +81,7 @@ static int realloc_frame_buffer_aligned(
 #if defined AOM_MAX_ALLOCABLE_MEMORY
     // The size of ybf->buffer_alloc.
     uint64_t alloc_size = frame_size;
-#if CONFIG_AV1_ENCODER && !CONFIG_REALTIME_ONLY
+#if (CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER) && !CONFIG_REALTIME_ONLY
     // The size of ybf->y_pyramid
     if (alloc_pyramid) {
       alloc_size += aom_get_pyramid_alloc_size(width, height, use_highbitdepth);
@@ -183,7 +183,7 @@ static int realloc_frame_buffer_aligned(
 
     ybf->use_external_reference_buffers = 0;
 
-#if CONFIG_AV1_ENCODER && !CONFIG_REALTIME_ONLY
+#if (CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER) && !CONFIG_REALTIME_ONLY
     if (ybf->y_pyramid) {
       aom_free_pyramid(ybf->y_pyramid);
       ybf->y_pyramid = NULL;

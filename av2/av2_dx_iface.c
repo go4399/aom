@@ -66,7 +66,7 @@
 
 #define av2_s_frame_info aom_s_frame_info
 #define ACCT_INFO(x) x
-int av2_get_bitdepth_from_index(uint32_t bitdepth_lut_idx);
+
 
 #define AV2_COPY_NEW_FRAME_IMAGE AV1_COPY_NEW_FRAME_IMAGE
 #define AV2_COPY_REFERENCE AV1_COPY_REFERENCE

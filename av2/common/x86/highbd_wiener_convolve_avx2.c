@@ -3691,7 +3691,7 @@ static INLINE void apply_asym_12tap_filtering(
 //                   = ((a2-c2)*fc4+(e2-c2)*fc4) (a3-c3)*fc4+(e3-c3)*fc4) .. |
 //                   (b2-d2)*fc4 +(f2-d2)*fc4) . .
 // Here, out_f4_01 contains partial output of rows 0 and 1 corresponding to fc4.
-void av2_convolve_symmetric_subtract_center_highbd_6tap_avx2(
+static void av2_convolve_symmetric_subtract_center_highbd_6tap_avx2(
     const uint16_t *dgd, int stride, const NonsepFilterConfig *filter_config,
     const int16_t *filter, uint16_t *dst, int dst_stride, int bit_depth,
     int block_row_begin, int block_col_begin) {
@@ -3772,7 +3772,7 @@ void av2_convolve_symmetric_subtract_center_highbd_6tap_avx2(
 //                   (b3-e3)*f10+(h3-e3)*f10) . .
 // Here, out_f10_01 contains partial output of rows 0 and 1 corresponding to
 // fc10.
-void av2_convolve_symmetric_subtract_center_highbd_12tap_avx2(
+static void av2_convolve_symmetric_subtract_center_highbd_12tap_avx2(
     const uint16_t *dgd, int stride, const NonsepFilterConfig *filter_config,
     const int16_t *filter, uint16_t *dst, int dst_stride, int bit_depth,
     int block_row_begin, int block_col_begin) {
@@ -4286,7 +4286,7 @@ const int config_13tap_uv_from_y_avx2[][3] = {
 };
 */
 
-void av2_convolve_symmetric_dual_highbd_7plus13tap_avx2(
+static void av2_convolve_symmetric_dual_highbd_7plus13tap_avx2(
     const uint16_t *dgd, int dgd_stride, const uint16_t *dgd_dual,
     int dgd_dual_stride, const NonsepFilterConfig *filter_config,
     const int16_t *filter, uint16_t *dst, int dst_stride, int bit_depth,
@@ -4435,7 +4435,7 @@ void av2_convolve_symmetric_dual_highbd_avx2(
 //                   (b2-d2)*fc4 +(f2-d2)*fc4) . .
 // Here, out_f4_01 contains partial output of rows 0 and 1 corresponding to fc4.
 
-void av2_convolve_symmetric_dual_subtract_center_highbd_6plus12tap_avx2(
+static void av2_convolve_symmetric_dual_subtract_center_highbd_6plus12tap_avx2(
     const uint16_t *dgd, int dgd_stride, const uint16_t *dgd_dual,
     int dgd_dual_stride, const NonsepFilterConfig *filter_config,
     const int16_t *filter, uint16_t *dst, int dst_stride, int bit_depth,
@@ -4543,7 +4543,7 @@ void av2_convolve_symmetric_dual_subtract_center_highbd_avx2(
  * Feature lines buffers are updated here by taking the absolute of these
  * gradient information.
  */
-void calc_gradient_in_various_directions_avx2(
+static void calc_gradient_in_various_directions_avx2(
     int16_t *feature_line_buffers[], int row, int buffer_row,
     const uint16_t *dgd, int dgd_stride, int width, int col_begin, int col_end,
     int feature_length, int buffer_col) {
@@ -4692,7 +4692,7 @@ static void update_feature_sum_bufs_4_avx2(int *feature_sum_buffers[],
   _mm_storeu_si128((__m128i *)(sum_buf3), sub3);
 }
 
-void prepare_feature_sum_bufs_avx2(int *feature_sum_buffers[],
+static void prepare_feature_sum_bufs_avx2(int *feature_sum_buffers[],
                                    int16_t *feature_line_buffers[],
                                    int feature_length, int buffer_row,
                                    int col_begin, int col_end, int buffer_col) {

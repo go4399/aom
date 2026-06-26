@@ -21,7 +21,16 @@
 #include "aom_dsp/flow_estimation/corner_detect.h"
 #include "aom_mem/aom_mem.h"
 #include "aom_util/aom_pthread.h"
+#if CONFIG_AV1
 #include "av1/common/common.h"
+#elif CONFIG_AV2
+#include "av2/common/common.h"
+#endif
+
+#if CONFIG_AV2 && !CONFIG_AV1
+#define av1_zero av2_zero
+#define av1_zero_array av2_zero_array
+#endif
 
 #define FAST_BARRIER 18
 

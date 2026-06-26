@@ -19,7 +19,9 @@
 #include "av2/common/convolve.h"
 #include "av2/common/filter.h"
 #include "config/av2_dsp_rtcd.h"
+#if CONFIG_AV1
 #include "config/av1_rtcd.h"
+#endif
 #include "av2/common/reconinter.h"
 #include "av2/common/warped_motion.h"
 #include "av2/common/scale.h"
@@ -56,28 +58,7 @@ void av2_build_wedge_inter_predictor_from_buf_y(
     MACROBLOCKD *xd, BLOCK_SIZE bsize, uint16_t *ext_dst0, int ext_dst_stride0,
     uint16_t *ext_dst1, int ext_dst_stride1);
 
-// Forward declarations for standard AV1 upsampled and mask prediction routines
-struct AV1Common;
-void aom_highbd_upsampled_pred(MACROBLOCKD *xd,
-                               const struct AV1Common *const cm, int mi_row,
-                               int mi_col, const MV *const mv,
-                               uint8_t *comp_pred8, int width, int height,
-                               int subpel_x_q3, int subpel_y_q3,
-                               const uint8_t *ref8, int ref_stride, int bd,
-                               int subpel_search);
 
-void aom_highbd_comp_avg_upsampled_pred(
-    MACROBLOCKD *xd, const struct AV1Common *const cm, int mi_row, int mi_col,
-    const MV *const mv, uint8_t *comp_pred8, const uint8_t *pred8, int width,
-    int height, int subpel_x_q3, int subpel_y_q3, const uint8_t *ref8,
-    int ref_stride, int bd, int subpel_search);
-
-void aom_highbd_comp_mask_upsampled_pred(
-    MACROBLOCKD *xd, const struct AV1Common *const cm, int mi_row, int mi_col,
-    const MV *const mv, uint8_t *comp_pred8, const uint8_t *pred8, int width,
-    int height, int subpel_x_q3, int subpel_y_q3, const uint8_t *ref8,
-    int ref_stride, const uint8_t *mask, int mask_stride, int invert_mask,
-    int bd, int subpel_search);
 
 static inline void av2_highbd_comp_mask_pred(uint16_t *dst,
                                              const uint16_t *pred, int width,
@@ -100,47 +81,24 @@ static inline void av2_highbd_comp_avg_pred(uint16_t *dst, const uint16_t *pred,
 
 #include "aom_ports/mem.h"
 
-// Inline wrappers for AV2 HBD compatibility
-static inline void av2_highbd_upsampled_pred(
+void av2_highbd_upsampled_pred(
     MACROBLOCKD *xd, const AV2_COMMON *const cm, int mi_row, int mi_col,
     const MV *const mv, uint16_t *comp_pred, int width, int height,
     int subpel_x_q3, int subpel_y_q3, const uint16_t *ref, int ref_stride,
-    int bd, int subpel_search, int is_scaled) {
-  (void)xd;
-  (void)is_scaled;
-  aom_highbd_upsampled_pred(NULL, (const struct AV1Common *)cm, mi_row, mi_col,
-                            mv, CONVERT_TO_BYTEPTR(comp_pred), width, height,
-                            subpel_x_q3, subpel_y_q3, CONVERT_TO_BYTEPTR(ref),
-                            ref_stride, bd, subpel_search);
-}
+    int bd, int subpel_search, int is_scaled);
 
-static inline void av2_highbd_comp_avg_upsampled_pred(
+void av2_highbd_comp_avg_upsampled_pred(
     MACROBLOCKD *xd, const AV2_COMMON *const cm, int mi_row, int mi_col,
     const MV *const mv, uint16_t *comp_pred, const uint16_t *pred, int width,
     int height, int subpel_x_q3, int subpel_y_q3, const uint16_t *ref,
-    int ref_stride, int bd, int subpel_search, int is_scaled) {
-  (void)xd;
-  (void)is_scaled;
-  aom_highbd_comp_avg_upsampled_pred(
-      NULL, (const struct AV1Common *)cm, mi_row, mi_col, mv,
-      CONVERT_TO_BYTEPTR(comp_pred), CONVERT_TO_BYTEPTR(pred), width, height, subpel_x_q3,
-      subpel_y_q3, CONVERT_TO_BYTEPTR(ref), ref_stride, bd, subpel_search);
-}
+    int ref_stride, int bd, int subpel_search, int is_scaled);
 
-static inline void av2_highbd_comp_mask_upsampled_pred(
+void av2_highbd_comp_mask_upsampled_pred(
     MACROBLOCKD *xd, const AV2_COMMON *const cm, int mi_row, int mi_col,
     const MV *const mv, uint16_t *comp_pred, const uint16_t *pred, int width,
     int height, int subpel_x_q3, int subpel_y_q3, const uint16_t *ref,
     int ref_stride, const uint8_t *mask, int mask_stride, int invert_mask,
-    int bd, int subpel_search, int is_scaled) {
-  (void)xd;
-  (void)is_scaled;
-  aom_highbd_comp_mask_upsampled_pred(
-      NULL, (const struct AV1Common *)cm, mi_row, mi_col, mv,
-      CONVERT_TO_BYTEPTR(comp_pred), CONVERT_TO_BYTEPTR(pred), width, height, subpel_x_q3,
-      subpel_y_q3, CONVERT_TO_BYTEPTR(ref), ref_stride, mask, mask_stride,
-      invert_mask, bd, subpel_search);
-}
+    int bd, int subpel_search, int is_scaled);
 
 static inline void av2_highbd_dist_wtd_comp_avg_upsampled_pred(
     MACROBLOCKD *xd, const AV2_COMMON *const cm, int mi_row, int mi_col,
@@ -148,12 +106,9 @@ static inline void av2_highbd_dist_wtd_comp_avg_upsampled_pred(
     int height, int subpel_x_q3, int subpel_y_q3, const uint16_t *ref,
     int ref_stride, int bd, const DIST_WTD_COMP_PARAMS *jcp_param,
     int subpel_search, int is_scaled) {
-  (void)xd;
-  (void)is_scaled;
-  aom_highbd_upsampled_pred(NULL, (const struct AV1Common *)cm, mi_row, mi_col,
-                            mv, CONVERT_TO_BYTEPTR(comp_pred), width, height,
-                            subpel_x_q3, subpel_y_q3, CONVERT_TO_BYTEPTR(ref),
-                            ref_stride, bd, subpel_search);
+  av2_highbd_upsampled_pred(xd, cm, mi_row, mi_col, mv, comp_pred, width, height,
+                            subpel_x_q3, subpel_y_q3, ref, ref_stride,
+                            bd, subpel_search, is_scaled);
   const int w0 = jcp_param->fwd_offset;
   const int w1 = jcp_param->bck_offset;
   for (int i = 0; i < height; ++i) {

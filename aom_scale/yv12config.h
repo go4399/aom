@@ -34,10 +34,10 @@ extern "C" {
 #define AOM_ENC_ALLINTRA_BORDER 64
 #define AOM_DEC_BORDER_IN_PIXELS 64
 
-#if CONFIG_AV1_ENCODER && !CONFIG_REALTIME_ONLY
+#if (CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER) && !CONFIG_REALTIME_ONLY
 struct image_pyramid;
 struct corner_list;
-#endif  // CONFIG_AV1_ENCODER && !CONFIG_REALTIME_ONLY
+#endif  // (CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER) && !CONFIG_REALTIME_ONLY
 
 /*!\endcond */
 /*!
@@ -113,11 +113,11 @@ typedef struct yv12_buffer_config {
   };
 
   // Global motion search data
-#if CONFIG_AV1_ENCODER && !CONFIG_REALTIME_ONLY
+#if (CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER) && !CONFIG_REALTIME_ONLY
   // 8-bit downsampling pyramid for the Y plane
   struct image_pyramid *y_pyramid;
   struct corner_list *corners;
-#endif  // CONFIG_AV1_ENCODER && !CONFIG_REALTIME_ONLY
+#endif  // (CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER) && !CONFIG_REALTIME_ONLY
 
   uint8_t *buffer_alloc;
   size_t buffer_alloc_sz;

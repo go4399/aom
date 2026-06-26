@@ -14,8 +14,24 @@
 #include "aom_ports/bitops.h"
 #include "aom_util/aom_pthread.h"
 
-// TODO(rachelbarker): Move needed code from av1/ to aom_dsp/
+#if CONFIG_AV1
 #include "av1/common/resize.h"
+#elif CONFIG_AV2
+#include "av2/common/resize.h"
+#endif
+
+#if CONFIG_AV2 && !CONFIG_AV1
+#define av1_resize_plane av2_resize_plane
+#define av1_resize_plane_to_half(input, height, width, in_stride, dst, \
+                                 dst_height, dst_width, dst_stride)    \
+  av2_resize_plane(input, height, width, in_stride, dst, dst_height,   \
+                   dst_width, dst_stride)
+static inline bool should_resize_by_half(int height, int width, int height2, int width2) {
+  const bool is_width_by_2 = ((width + 1) >> 1) == width2;
+  const bool is_height_by_2 = ((height + 1) >> 1) == height2;
+  return (is_width_by_2 && is_height_by_2);
+}
+#endif
 
 #include <assert.h>
 #include <string.h>

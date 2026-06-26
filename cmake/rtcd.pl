@@ -184,6 +184,7 @@ sub declare_function_pointers {
       print "$rtyp ${ofn}($args);\n";
     }
     if (eval "\$${fn}_indirect" eq "false") {
+      print "#undef ${fn}\n";
       print "#define ${fn} ${dfn}\n";
     } else {
       print "RTCD_EXTERN $rtyp (*${fn})($args);\n";

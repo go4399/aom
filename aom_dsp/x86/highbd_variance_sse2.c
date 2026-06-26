@@ -18,8 +18,13 @@
 #include "aom_dsp/x86/synonyms.h"
 #include "aom_ports/mem.h"
 
+#if CONFIG_AV1
 #include "av1/common/filter.h"
 #include "av1/common/reconinter.h"
+#elif CONFIG_AV2
+#include "av2/common/filter.h"
+#include "av2/common/reconinter.h"
+#endif
 
 typedef uint32_t (*high_variance_fn_t)(const uint16_t *src, int src_stride,
                                        const uint16_t *ref, int ref_stride,

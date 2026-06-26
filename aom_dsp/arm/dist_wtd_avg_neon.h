@@ -15,7 +15,11 @@
 #include <arm_neon.h>
 
 #include "aom_dsp/aom_dsp_common.h"
+#if CONFIG_AV1
 #include "av1/common/enums.h"
+#elif CONFIG_AV2
+#include "av2/common/enums.h"
+#endif
 
 static inline uint8x8_t dist_wtd_avg_u8x8(uint8x8_t a, uint8x8_t b,
                                           uint8x8_t wta, uint8x8_t wtb) {

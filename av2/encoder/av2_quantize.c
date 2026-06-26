@@ -575,10 +575,10 @@ void av2_frame_init_quantizer(AV2_COMP *cpi) {
   av2_init_plane_quantizers(cpi, x, xd->mi[0]->segment_id);
 }
 
-void set_frame_dc_delta_q(const AV2_COMMON *const cm, int *y_dc_delta_q,
-                          int enable_chroma_deltaq, int *u_dc_delta_q,
-                          int *v_dc_delta_q, int *u_ac_delta_q,
-                          int *v_ac_delta_q) {
+static void set_frame_dc_delta_q(const AV2_COMMON *const cm, int *y_dc_delta_q,
+                                 int enable_chroma_deltaq, int *u_dc_delta_q,
+                                 int *v_dc_delta_q, int *u_ac_delta_q,
+                                 int *v_ac_delta_q) {
   (void)cm;
   (void)enable_chroma_deltaq;
   *y_dc_delta_q = 0;

@@ -12,7 +12,12 @@
 #include <tmmintrin.h>
 #include <assert.h>
 
+#include "config/aom_config.h"
+#if CONFIG_AV1
 #include "config/av1_rtcd.h"
+#elif CONFIG_AV2
+#include "config/av2_dsp_rtcd.h"
+#endif
 
 #include "aom_dsp/x86/convolve_sse2.h"
 #include "aom_dsp/x86/convolve_common_intrin.h"

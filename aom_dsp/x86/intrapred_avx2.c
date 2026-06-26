@@ -11,7 +11,12 @@
 
 #include <immintrin.h>
 
+#include "config/aom_config.h"
+#if CONFIG_AV1
 #include "config/av1_rtcd.h"
+#elif CONFIG_AV2
+#include "config/av2_dsp_rtcd.h"
+#endif
 #include "aom_dsp/x86/intrapred_x86.h"
 #include "aom_dsp/x86/intrapred_utils.h"
 #include "aom_dsp/x86/lpf_common_sse2.h"

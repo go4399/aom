@@ -29,6 +29,18 @@
 #define CONFIG_AV2_DECODER 0
 #endif
 
+#ifndef CONFIG_PARAKIT_COLLECT_DATA
+#define CONFIG_PARAKIT_COLLECT_DATA 0
+#endif
+
+#ifndef CONFIG_THROUGHPUT_ANALYSIS
+#define CONFIG_THROUGHPUT_ANALYSIS 0
+#endif
+
+#ifndef CONFIG_QM_DEBUG
+#define CONFIG_QM_DEBUG 0
+#endif
+
 #ifndef INLINE
 #define INLINE inline
 #endif

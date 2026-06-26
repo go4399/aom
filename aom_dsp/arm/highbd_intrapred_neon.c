@@ -13,7 +13,11 @@
 
 #include "config/aom_config.h"
 #include "config/aom_dsp_rtcd.h"
+#if CONFIG_AV1
 #include "config/av1_rtcd.h"
+#elif CONFIG_AV2
+#include "config/av2_dsp_rtcd.h"
+#endif
 
 #include "aom/aom_integer.h"
 #include "aom_dsp/arm/mem_neon.h"

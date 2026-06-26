@@ -170,7 +170,7 @@ if(CONFIG_AV2)
 
 endif()
 
-if(CONFIG_AV1_DECODER)
+if(CONFIG_AV1_DECODER OR CONFIG_AV2_DECODER)
   list(APPEND AOM_DSP_DECODER_SOURCES
               "${AOM_ROOT}/aom_dsp/binary_codes_reader.c"
               "${AOM_ROOT}/aom_dsp/binary_codes_reader.h"
@@ -179,7 +179,7 @@ if(CONFIG_AV1_DECODER)
               "${AOM_ROOT}/aom_dsp/entdec.h")
 endif()
 
-if(CONFIG_AV1_ENCODER)
+if(CONFIG_AV1_ENCODER OR CONFIG_AV2_ENCODER)
   list(APPEND AOM_DSP_ENCODER_SOURCES
               "${AOM_ROOT}/aom_dsp/avg.c"
               "${AOM_ROOT}/aom_dsp/bitwriter.c"
@@ -442,7 +442,7 @@ function(setup_aom_dsp_targets)
   # source file to the aom_dsp target.
   add_no_op_source_file_to_target("aom_dsp" "c")
 
-  if(CONFIG_AV1_DECODER)
+  if(CONFIG_AV1_DECODER OR CONFIG_AV2_DECODER)
     add_library(aom_dsp_decoder OBJECT ${AOM_DSP_DECODER_SOURCES})
     list(APPEND AOM_LIB_TARGETS aom_dsp_decoder)
     target_sources(aom PRIVATE $<TARGET_OBJECTS:aom_dsp_decoder>)
@@ -451,7 +451,7 @@ function(setup_aom_dsp_targets)
     endif()
   endif()
 
-  if(CONFIG_AV1_ENCODER)
+  if(CONFIG_AV1_ENCODER OR CONFIG_AV2_ENCODER)
     add_library(aom_dsp_encoder OBJECT ${AOM_DSP_ENCODER_SOURCES})
     list(APPEND AOM_LIB_TARGETS aom_dsp_encoder)
     target_sources(aom PRIVATE $<TARGET_OBJECTS:aom_dsp_encoder>)
@@ -468,7 +468,7 @@ function(setup_aom_dsp_targets)
     add_intrinsics_object_library("-msse2" "sse2" "aom_dsp_common"
                                   "AOM_DSP_COMMON_INTRIN_SSE2")
 
-    if(CONFIG_AV1_ENCODER)
+    if(CONFIG_AV1_ENCODER OR CONFIG_AV2_ENCODER)
       if("${AOM_TARGET_CPU}" STREQUAL "x86_64")
         list(APPEND AOM_DSP_ENCODER_ASM_SSE2 ${AOM_DSP_ENCODER_ASM_SSE2_X86_64})
       endif()
@@ -483,7 +483,7 @@ function(setup_aom_dsp_targets)
     add_intrinsics_object_library("-mssse3" "ssse3" "aom_dsp_common"
                                   "AOM_DSP_COMMON_INTRIN_SSSE3")
 
-    if(CONFIG_AV1_ENCODER)
+    if(CONFIG_AV1_ENCODER OR CONFIG_AV2_ENCODER)
       if("${AOM_TARGET_CPU}" STREQUAL "x86_64")
         list(APPEND AOM_DSP_ENCODER_ASM_SSSE3
                     ${AOM_DSP_ENCODER_ASM_SSSE3_X86_64})
@@ -497,14 +497,14 @@ function(setup_aom_dsp_targets)
   if(HAVE_SSE4_1)
     add_intrinsics_object_library("-msse4.1" "sse4_1" "aom_dsp_common"
                                   "AOM_DSP_COMMON_INTRIN_SSE4_1")
-    if(CONFIG_AV1_ENCODER)
+    if(CONFIG_AV1_ENCODER OR CONFIG_AV2_ENCODER)
       add_intrinsics_object_library("-msse4.1" "sse4_1" "aom_dsp_encoder"
                                     "AOM_DSP_ENCODER_INTRIN_SSE4_1")
     endif()
   endif()
 
   if(HAVE_AVX)
-    if(CONFIG_AV1_ENCODER)
+    if(CONFIG_AV1_ENCODER OR CONFIG_AV2_ENCODER)
       add_intrinsics_object_library("-mavx" "avx" "aom_dsp_encoder"
                                     "AOM_DSP_ENCODER_INTRIN_AVX")
     endif()
@@ -513,13 +513,13 @@ function(setup_aom_dsp_targets)
   if(HAVE_AVX2)
     add_intrinsics_object_library("-mavx2" "avx2" "aom_dsp_common"
                                   "AOM_DSP_COMMON_INTRIN_AVX2")
-    if(CONFIG_AV1_ENCODER)
+    if(CONFIG_AV1_ENCODER OR CONFIG_AV2_ENCODER)
       add_intrinsics_object_library("-mavx2" "avx2" "aom_dsp_encoder"
                                     "AOM_DSP_ENCODER_INTRIN_AVX2")
     endif()
   endif()
 
-  if(HAVE_AVX512 AND CONFIG_AV1_ENCODER AND CONFIG_HIGHWAY)
+  if(HAVE_AVX512 AND (CONFIG_AV1_ENCODER OR CONFIG_AV2_ENCODER) AND CONFIG_HIGHWAY)
     add_intrinsics_object_library("-march=skylake-avx512" "avx512"
                                   "aom_dsp_encoder"
                                   "AOM_DSP_ENCODER_INTRIN_AVX512")
@@ -534,7 +534,7 @@ function(setup_aom_dsp_targets)
   if(HAVE_NEON)
     add_intrinsics_object_library("${AOM_NEON_INTRIN_FLAG}" "neon"
                                   "aom_dsp_common" "AOM_DSP_COMMON_INTRIN_NEON")
-    if(CONFIG_AV1_ENCODER)
+    if(CONFIG_AV1_ENCODER OR CONFIG_AV2_ENCODER)
       add_intrinsics_object_library("${AOM_NEON_INTRIN_FLAG}" "neon"
                                     "aom_dsp_encoder"
                                     "AOM_DSP_ENCODER_INTRIN_NEON")
@@ -545,7 +545,7 @@ function(setup_aom_dsp_targets)
     add_intrinsics_object_library("${AOM_NEON_DOTPROD_FLAG}" "neon_dotprod"
                                   "aom_dsp_common"
                                   "AOM_DSP_COMMON_INTRIN_NEON_DOTPROD")
-    if(CONFIG_AV1_ENCODER)
+    if(CONFIG_AV1_ENCODER OR CONFIG_AV2_ENCODER)
       add_intrinsics_object_library("${AOM_NEON_DOTPROD_FLAG}" "neon_dotprod"
                                     "aom_dsp_encoder"
                                     "AOM_DSP_ENCODER_INTRIN_NEON_DOTPROD")
@@ -561,7 +561,7 @@ function(setup_aom_dsp_targets)
   if(HAVE_SVE)
     add_intrinsics_object_library("${AOM_SVE_FLAG}" "sve" "aom_dsp_common"
                                   "AOM_DSP_COMMON_INTRIN_SVE")
-    if(CONFIG_AV1_ENCODER)
+    if(CONFIG_AV1_ENCODER OR CONFIG_AV2_ENCODER)
       add_intrinsics_object_library("${AOM_SVE_FLAG}" "sve" "aom_dsp_encoder"
                                     "AOM_DSP_ENCODER_INTRIN_SVE")
     endif()

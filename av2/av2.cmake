@@ -473,6 +473,12 @@ if(CONFIG_INTERNAL_STATS)
   list(APPEND AOM_AV2_ENCODER_SOURCES "${AOM_ROOT}/av2/encoder/blockiness.c")
 endif()
 
+if(NOT CONFIG_AV1_DECODER)
+  list(APPEND AOM_AV2_COMMON_SOURCES
+              "${AOM_ROOT}/av1/decoder/grain_synthesis.c"
+              "${AOM_ROOT}/av1/decoder/grain_synthesis.h")
+endif()
+
 # Setup AV2 common/decoder/encoder targets. The libaom target must exist before
 # this function is called.
 function(setup_av2_targets)

@@ -87,7 +87,9 @@ int main(int argc, char **argv) {
 
   // Shared library builds don't support whitebox tests that exercise internal
   // symbols.
+#if CONFIG_AV1
   av1_rtcd();
+#endif
 #if CONFIG_AV2
   av2_rtcd();
 #endif

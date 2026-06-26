@@ -74,6 +74,7 @@ set_aom_detect_var(HAVE_WXWIDGETS 0 "WxWidgets present.")
 # Build configuration flags.
 set_aom_config_var(AOM_RTCD_FLAGS ""
                    "Arguments to pass to rtcd.pl. Separate with ';'")
+set_aom_config_var(CONFIG_AV1 1 "Enable AV1 support.")
 set_aom_config_var(CONFIG_AV1_DECODER 1 "Enable AV1 decoder.")
 set_aom_config_var(CONFIG_AV1_ENCODER 1 "Enable AV1 encoder.")
 set_aom_config_var(CONFIG_AV2 0 "Enable AV2 experimental support.")

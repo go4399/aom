@@ -21,8 +21,11 @@
 #include "aom_dsp/mathutils.h"
 #include "aom_mem/aom_mem.h"
 
-// TODO(rachelbarker): Remove dependence on code in av1/encoder/
+#if CONFIG_AV1
 #include "av1/encoder/random.h"
+#elif CONFIG_AV2
+#include "av2/encoder/random.h"
+#endif
 
 #define MAX_MINPTS 4
 #define MINPTS_MULTIPLIER 5

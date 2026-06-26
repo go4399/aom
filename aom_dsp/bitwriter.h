@@ -20,8 +20,13 @@
 #include "aom_dsp/prob.h"
 
 #if CONFIG_RD_DEBUG
+#if CONFIG_AV1
 #include "av1/common/blockd.h"
 #include "av1/encoder/cost.h"
+#elif CONFIG_AV2
+#include "av2/common/blockd.h"
+#include "av2/common/cost.h"
+#endif
 #endif
 
 #if CONFIG_BITSTREAM_DEBUG

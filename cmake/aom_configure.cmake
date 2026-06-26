@@ -293,6 +293,17 @@ if(ENABLE_GOMA)
   set_compiler_launcher(ENABLE_GOMA gomacc)
 endif()
 
+if(NOT CONFIG_AV1)
+  change_config_and_warn(CONFIG_AV1_ENCODER 0 "CONFIG_AV1=0")
+  change_config_and_warn(CONFIG_AV1_DECODER 0 "CONFIG_AV1=0")
+endif()
+
+if(CONFIG_AV1_ENCODER OR CONFIG_AV1_DECODER)
+  set(CONFIG_AV1 1)
+else()
+  set(CONFIG_AV1 0)
+endif()
+
 if(CONFIG_AV2_ENCODER OR CONFIG_AV2_DECODER)
   set(CONFIG_AV2 1)
 else()
@@ -503,15 +514,26 @@ if(NOT PERL_FOUND)
 endif()
 
 set(AOM_RTCD_CONFIG_FILE_LIST "${AOM_ROOT}/aom_dsp/aom_dsp_rtcd_defs.pl"
-                              "${AOM_ROOT}/aom_scale/aom_scale_rtcd.pl"
-                              "${AOM_ROOT}/av1/common/av1_rtcd_defs.pl")
+                              "${AOM_ROOT}/aom_scale/aom_scale_rtcd.pl")
 set(AOM_RTCD_HEADER_FILE_LIST "${AOM_CONFIG_DIR}/config/aom_dsp_rtcd.h"
-                              "${AOM_CONFIG_DIR}/config/aom_scale_rtcd.h"
-                              "${AOM_CONFIG_DIR}/config/av1_rtcd.h")
+                              "${AOM_CONFIG_DIR}/config/aom_scale_rtcd.h")
 set(AOM_RTCD_SOURCE_FILE_LIST "${AOM_ROOT}/aom_dsp/aom_dsp_rtcd.c"
-                              "${AOM_ROOT}/aom_scale/aom_scale_rtcd.c"
-                              "${AOM_ROOT}/av1/common/av1_rtcd.c")
-set(AOM_RTCD_SYMBOL_LIST aom_dsp_rtcd aom_scale_rtcd av1_rtcd)
+                              "${AOM_ROOT}/aom_scale/aom_scale_rtcd.c")
+set(AOM_RTCD_SYMBOL_LIST aom_dsp_rtcd aom_scale_rtcd)
+
+if(CONFIG_AV1)
+  list(APPEND AOM_RTCD_CONFIG_FILE_LIST "${AOM_ROOT}/av1/common/av1_rtcd_defs.pl")
+  list(APPEND AOM_RTCD_HEADER_FILE_LIST "${AOM_CONFIG_DIR}/config/av1_rtcd.h")
+  list(APPEND AOM_RTCD_SOURCE_FILE_LIST "${AOM_ROOT}/av1/common/av1_rtcd.c")
+  list(APPEND AOM_RTCD_SYMBOL_LIST av1_rtcd)
+endif()
+
+if(CONFIG_AV2)
+  list(APPEND AOM_RTCD_CONFIG_FILE_LIST "${AOM_ROOT}/av2/common/av2_rtcd_defs.pl")
+  list(APPEND AOM_RTCD_HEADER_FILE_LIST "${AOM_CONFIG_DIR}/config/av2_rtcd.h")
+  list(APPEND AOM_RTCD_SOURCE_FILE_LIST "${AOM_ROOT}/av2/common/av2_rtcd.c")
+  list(APPEND AOM_RTCD_SYMBOL_LIST av2_rtcd)
+endif()
 list(LENGTH AOM_RTCD_SYMBOL_LIST AOM_RTCD_CUSTOM_COMMAND_COUNT)
 math(EXPR AOM_RTCD_CUSTOM_COMMAND_COUNT "${AOM_RTCD_CUSTOM_COMMAND_COUNT} - 1")
 

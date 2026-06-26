@@ -79,7 +79,9 @@ include("${AOM_ROOT}/aom_mem/aom_mem.cmake")
 include("${AOM_ROOT}/aom_ports/aom_ports.cmake")
 include("${AOM_ROOT}/aom_scale/aom_scale.cmake")
 include("${AOM_ROOT}/aom_util/aom_util.cmake")
-include("${AOM_ROOT}/av1/av1.cmake")
+if(CONFIG_AV1)
+  include("${AOM_ROOT}/av1/av1.cmake")
+endif()
 if(CONFIG_AV2)
   include("${AOM_ROOT}/av2/av2.cmake")
 endif()
@@ -91,14 +93,18 @@ include("${AOM_ROOT}/test/test.cmake")
 list(APPEND AOM_RTCD_SOURCES
             "${AOM_CONFIG_DIR}/config/aom_dsp_rtcd.h"
             "${AOM_CONFIG_DIR}/config/aom_scale_rtcd.h"
-            "${AOM_CONFIG_DIR}/config/av1_rtcd.h"
             "${AOM_ROOT}/aom_dsp/aom_dsp_rtcd_defs.pl"
             "${AOM_ROOT}/aom_dsp/aom_dsp_rtcd.c"
             "${AOM_ROOT}/aom_scale/aom_scale_rtcd.pl"
             "${AOM_ROOT}/aom_scale/aom_scale_rtcd.c"
-            "${AOM_ROOT}/av1/common/av1_rtcd_defs.pl"
-            "${AOM_ROOT}/av1/common/av1_rtcd.c"
             "${AOM_ROOT}/cmake/rtcd.pl")
+
+if(CONFIG_AV1)
+  list(APPEND AOM_RTCD_SOURCES
+              "${AOM_CONFIG_DIR}/config/av1_rtcd.h"
+              "${AOM_ROOT}/av1/common/av1_rtcd_defs.pl"
+              "${AOM_ROOT}/av1/common/av1_rtcd.c")
+endif()
 
 if(CONFIG_AV2)
   list(APPEND AOM_RTCD_SOURCES
@@ -178,14 +184,10 @@ list(APPEND AOM_SOURCES
             "${AOM_ROOT}/aom/src/aom_integer.c")
 
 list(APPEND AOM_COMMON_APP_UTIL_SOURCES
-            "${AOM_ROOT}/av1/arg_defs.c"
-            "${AOM_ROOT}/av1/arg_defs.h"
             "${AOM_ROOT}/common/args_helper.c"
             "${AOM_ROOT}/common/args_helper.h"
             "${AOM_ROOT}/common/args.c"
             "${AOM_ROOT}/common/args.h"
-            "${AOM_ROOT}/common/av1_config.c"
-            "${AOM_ROOT}/common/av1_config.h"
             "${AOM_ROOT}/common/md5_utils.c"
             "${AOM_ROOT}/common/md5_utils.h"
             "${AOM_ROOT}/common/tools_common.c"
@@ -197,6 +199,14 @@ list(APPEND AOM_COMMON_APP_UTIL_SOURCES
             "${AOM_ROOT}/common/y4menc.h"
             "${AOM_ROOT}/common/ivfdec.c"
             "${AOM_ROOT}/common/ivfdec.h")
+
+if(CONFIG_AV1)
+  list(APPEND AOM_COMMON_APP_UTIL_SOURCES
+              "${AOM_ROOT}/av1/arg_defs.c"
+              "${AOM_ROOT}/av1/arg_defs.h"
+              "${AOM_ROOT}/common/av1_config.c"
+              "${AOM_ROOT}/common/av1_config.h")
+endif()
 
 list(APPEND AOM_DECODER_APP_UTIL_SOURCES "${AOM_ROOT}/common/obudec.c"
             "${AOM_ROOT}/common/obudec.h" "${AOM_ROOT}/common/video_reader.c"
@@ -273,9 +283,11 @@ add_rtcd_build_step("${AOM_ROOT}/aom_dsp/aom_dsp_rtcd_defs.pl"
 add_rtcd_build_step("${AOM_ROOT}/aom_scale/aom_scale_rtcd.pl"
                     "${AOM_CONFIG_DIR}/config/aom_scale_rtcd.h"
                     "${AOM_ROOT}/aom_scale/aom_scale_rtcd.c" "aom_scale_rtcd")
-add_rtcd_build_step("${AOM_ROOT}/av1/common/av1_rtcd_defs.pl"
-                    "${AOM_CONFIG_DIR}/config/av1_rtcd.h"
-                    "${AOM_ROOT}/av1/common/av1_rtcd.c" "av1_rtcd")
+if(CONFIG_AV1)
+  add_rtcd_build_step("${AOM_ROOT}/av1/common/av1_rtcd_defs.pl"
+                      "${AOM_CONFIG_DIR}/config/av1_rtcd.h"
+                      "${AOM_ROOT}/av1/common/av1_rtcd.c" "av1_rtcd")
+endif()
 if(CONFIG_AV2)
   add_rtcd_build_step("${AOM_ROOT}/av2/common/av2_rtcd_defs.pl"
                       "${AOM_CONFIG_DIR}/config/av2_rtcd.h"
@@ -432,7 +444,9 @@ setup_aom_mem_targets()
 setup_aom_ports_targets()
 setup_aom_util_targets()
 setup_aom_scale_targets()
-setup_av1_targets()
+if(CONFIG_AV1)
+  setup_av1_targets()
+endif()
 if(CONFIG_AV2)
   setup_av2_targets()
 endif()
@@ -459,13 +473,13 @@ if(ENABLE_EXAMPLES OR ENABLE_TESTS OR ENABLE_TOOLS)
   add_library(aom_common_app_util OBJECT ${AOM_COMMON_APP_UTIL_SOURCES})
   add_library(aom_usage_exit OBJECT "${AOM_GEN_SRC_DIR}/usage_exit.c")
   set_property(TARGET ${example} PROPERTY FOLDER examples)
-  if(CONFIG_AV1_DECODER)
+  if(CONFIG_AV1_DECODER OR CONFIG_AV2_DECODER)
     add_library(aom_decoder_app_util OBJECT ${AOM_DECODER_APP_UTIL_SOURCES})
     set_property(TARGET ${example} PROPERTY FOLDER examples)
     # obudec depends on internal headers that require *rtcd.h
     add_dependencies(aom_decoder_app_util aom_rtcd)
   endif()
-  if(CONFIG_AV1_ENCODER)
+  if(CONFIG_AV1_ENCODER OR CONFIG_AV2_ENCODER)
     add_library(aom_encoder_app_util OBJECT ${AOM_ENCODER_APP_UTIL_SOURCES})
     set_property(TARGET ${example} PROPERTY FOLDER examples)
   endif()

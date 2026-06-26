@@ -5767,7 +5767,7 @@ static const uint8_t *decode_tiles_row_mt(AV2Decoder *pbi, const uint8_t *data,
 static INLINE void error_handler(void *data, aom_codec_err_t error,
                                  const char *detail) {
   AV2_COMMON *const cm = (AV2_COMMON *)data;
-  aom_internal_error(&cm->error, error, detail);
+  aom_internal_error(&cm->error, error, "%s", detail);
 }
 
 // Gets the bitdepth_lut_idx field in color_config() and returns bit_depth from
@@ -5925,8 +5925,8 @@ void av2_read_conformance_window(struct aom_read_bit_buffer *rb,
   }
 }
 
-void read_tile_syntax_info(TileInfoSyntax *tile_params,
-                           struct aom_read_bit_buffer *rb) {
+static void read_tile_syntax_info(TileInfoSyntax *tile_params,
+                                  struct aom_read_bit_buffer *rb) {
   tile_params->allow_tile_info_change = aom_rb_read_bit(rb);
   CommonTileParams *tile_info = &tile_params->tile_info;
   tile_info->uniform_spacing = aom_rb_read_bit(rb);
@@ -6040,8 +6040,8 @@ static void read_seg_syntax_info(struct SegmentationInfoSyntax *seg_params,
   av2_calculate_segdata_from_syntax(seg_params);
 }
 
-void read_sequence_partition_group_tool_flags(struct SequenceHeader *seq_params,
-                                              struct aom_read_bit_buffer *rb) {
+static void read_sequence_partition_group_tool_flags(struct SequenceHeader *seq_params,
+                                                     struct aom_read_bit_buffer *rb) {
   setup_seq_sb_size(seq_params, rb);
   seq_params->enable_sdp = seq_params->monochrome ? 0 : aom_rb_read_bit(rb);
   seq_params->enable_extended_sdp =
@@ -6059,8 +6059,8 @@ void read_sequence_partition_group_tool_flags(struct SequenceHeader *seq_params,
   }
 }
 
-void read_sequence_intra_group_tool_flags(struct SequenceHeader *seq_params,
-                                          struct aom_read_bit_buffer *rb) {
+static void read_sequence_intra_group_tool_flags(struct SequenceHeader *seq_params,
+                                                 struct aom_read_bit_buffer *rb) {
   seq_params->enable_intra_dip = aom_rb_read_bit(rb);
   seq_params->enable_intra_edge_filter = aom_rb_read_bit(rb);
   seq_params->enable_mrls = aom_rb_read_bit(rb);
@@ -6070,8 +6070,8 @@ void read_sequence_intra_group_tool_flags(struct SequenceHeader *seq_params,
   seq_params->enable_mhccp = aom_rb_read_bit(rb);
   seq_params->enable_ibp = aom_rb_read_bit(rb);
 }
-void read_sequence_inter_group_tool_flags(struct SequenceHeader *seq_params,
-                                          struct aom_read_bit_buffer *rb) {
+static void read_sequence_inter_group_tool_flags(struct SequenceHeader *seq_params,
+                                                 struct aom_read_bit_buffer *rb) {
   if (seq_params->single_picture_header_flag) {
     seq_params->seq_frame_motion_modes_present_flag = 0;
     seq_params->enable_six_param_warp_delta = 0;
@@ -6211,8 +6211,8 @@ void read_sequence_inter_group_tool_flags(struct SequenceHeader *seq_params,
   }
 }
 
-void read_sequence_scc_group_tool_flags(struct SequenceHeader *seq_params,
-                                        struct aom_read_bit_buffer *rb) {
+static void read_sequence_scc_group_tool_flags(struct SequenceHeader *seq_params,
+                                               struct aom_read_bit_buffer *rb) {
   if (seq_params->single_picture_header_flag) {
     seq_params->force_screen_content_tools = 2;  // SELECT_SCREEN_CONTENT_TOOLS
     seq_params->force_integer_mv = 2;            // SELECT_INTEGER_MV
@@ -6236,8 +6236,8 @@ void read_sequence_scc_group_tool_flags(struct SequenceHeader *seq_params,
   }
 }
 
-void read_sequence_filter_group_tool_flags(struct SequenceHeader *seq_params,
-                                           struct aom_read_bit_buffer *rb) {
+static void read_sequence_filter_group_tool_flags(struct SequenceHeader *seq_params,
+                                                  struct aom_read_bit_buffer *rb) {
   seq_params->disable_loopfilters_across_tiles = aom_rb_read_bit(rb);
   seq_params->enable_cdef = aom_rb_read_bit(rb);
   seq_params->enable_gdf = aom_rb_read_bit(rb);
@@ -6285,7 +6285,7 @@ void read_sequence_filter_group_tool_flags(struct SequenceHeader *seq_params,
   seq_params->df_par_bits_minus2 = aom_rb_read_literal(rb, 2);
 }
 
-void read_sequence_transform_quant_entropy_group_tool_flags(
+static void read_sequence_transform_quant_entropy_group_tool_flags(
     struct SequenceHeader *seq_params, struct aom_read_bit_buffer *rb) {
   seq_params->enable_fsc = aom_rb_read_bit(rb);
   if (!seq_params->enable_fsc) {
@@ -6365,8 +6365,8 @@ void read_sequence_transform_quant_entropy_group_tool_flags(
   }
 }
 
-void read_sequence_segment_tool_flags(struct SequenceHeader *seq_params,
-                                      struct aom_read_bit_buffer *rb) {
+static void read_sequence_segment_tool_flags(struct SequenceHeader *seq_params,
+                                             struct aom_read_bit_buffer *rb) {
   seq_params->enable_ext_seg = aom_rb_read_bit(rb);
   seq_params->seq_seg_info_present_flag = aom_rb_read_bit(rb);
   if (seq_params->seq_seg_info_present_flag) {
@@ -7299,7 +7299,7 @@ static void read_frame_opfl_refine_type(AV2_COMMON *const cm,
   }
 }
 
-int ras_frame_refresh_frame_flags_derivation(AV2Decoder *pbi) {
+static int ras_frame_refresh_frame_flags_derivation(AV2Decoder *pbi) {
   AV2_COMMON *const cm = &pbi->common;
   int refresh_frame_flags = (1 << cm->seq_params.ref_frames) - 1;
   for (int i = 0; i < cm->seq_params.ref_frames; i++) {
@@ -7319,7 +7319,7 @@ int ras_frame_refresh_frame_flags_derivation(AV2Decoder *pbi) {
 // different embedded layers) in a temporal unit, by clearing the
 // valid_for_referencing flags and current and dependent mlayer reference frames
 // only.
-void mark_reference_frames_with_long_term_ids(AV2Decoder *pbi) {
+static void mark_reference_frames_with_long_term_ids(AV2Decoder *pbi) {
   AV2_COMMON *const cm = &pbi->common;
   for (int i = 0; i < cm->seq_params.ref_frames; i++) {
     if (cm->ref_frame_map[i] != NULL &&
@@ -7336,7 +7336,7 @@ void mark_reference_frames_with_long_term_ids(AV2Decoder *pbi) {
   }
 }
 
-void check_long_term_ids_exist(AV2Decoder *pbi) {
+static void check_long_term_ids_exist(AV2Decoder *pbi) {
   AV2_COMMON *const cm = &pbi->common;
   for (int j = 0; j < cm->num_ref_key_frames; j++) {
     int found = 0;
@@ -7837,7 +7837,7 @@ static int is_reference_mapping_consistent(
   return 1;
 }
 
-void update_num_restricted_ref(AV2_COMMON *const cm) {
+static void update_num_restricted_ref(AV2_COMMON *const cm) {
   int num_total_refs = cm->ref_frames_info.num_total_refs;
   int num_restricted_ref = 0;
   for (int i = 0; i < num_total_refs; i++) {
@@ -9801,7 +9801,7 @@ static INLINE void setup_frame_info(AV2Decoder *pbi) {
 // 1) For multiple tiles-based coding, calculate the average CDFs from the
 // allowed tiles, and use the average CDFs of the tiles as the frame's CDFs
 // 2) For one tile coding, directly use that tile's CDFs as the frame's CDFs
-void decoder_avg_tiles_cdfs(AV2Decoder *const pbi) {
+static void decoder_avg_tiles_cdfs(AV2Decoder *const pbi) {
   AV2_COMMON *const cm = &pbi->common;
   const CommonTileParams *const tiles = &cm->tiles;
   const int total_tiles = tiles->rows * tiles->cols;
@@ -9819,7 +9819,7 @@ void decoder_avg_tiles_cdfs(AV2Decoder *const pbi) {
   }
 }
 
-void av2_gdf_frame_dec(AV2_COMMON *cm) { gdf_filter_frame(cm); }
+static void av2_gdf_frame_dec(AV2_COMMON *cm) { gdf_filter_frame(cm); }
 
 void av2_decode_tg_tiles_and_wrapup(AV2Decoder *pbi, const uint8_t *data,
                                     const uint8_t *data_end,

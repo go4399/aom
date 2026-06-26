@@ -17,10 +17,10 @@
 
 #include "aom/aom_decoder.h"
 #include "aom/aom_encoder.h"
-#if CONFIG_AV1_ENCODER
+#if CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER
 #include "aom/aomcx.h"
 #endif
-#if CONFIG_AV1_DECODER
+#if CONFIG_AV1_DECODER || CONFIG_AV2_DECODER
 #include "aom/aomdx.h"
 #endif
 

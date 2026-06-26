@@ -16,7 +16,9 @@
 #include <assert.h>
 
 #include "config/aom_config.h"
+#if CONFIG_AV1
 #include "config/av1_rtcd.h"
+#endif
 
 #include "aom/aom_integer.h"
 #include "aom_dsp/aom_dsp_common.h"

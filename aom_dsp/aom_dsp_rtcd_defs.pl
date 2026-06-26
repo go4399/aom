@@ -16,9 +16,13 @@ print <<EOF
 
 #include "aom/aom_integer.h"
 #include "aom_dsp/aom_dsp_common.h"
+#if CONFIG_AV1
 #include "av1/common/blockd.h"
 #include "av1/common/enums.h"
-
+#elif CONFIG_AV2
+#include "av2/common/blockd.h"
+#include "av2/common/enums.h"
+#endif
 EOF
 }
 forward_decls qw/aom_dsp_forward_decls/;
@@ -681,7 +685,7 @@ if (aom_config("CONFIG_AV1_HIGHBITDEPTH") eq "yes") {
 #
 # Forward transform
 #
-if (aom_config("CONFIG_AV1_ENCODER") eq "yes"){
+if (aom_config("CONFIG_AV1_ENCODER") eq "yes" || aom_config("CONFIG_AV2_ENCODER") eq "yes"){
     add_proto qw/void aom_fdct4x4/, "const int16_t *input, tran_low_t *output, int stride";
     specialize qw/aom_fdct4x4 neon sse2/;
 
@@ -732,7 +736,7 @@ if (aom_config("CONFIG_AV1_ENCODER") eq "yes"){
 #
 # Quantization
 #
-if (aom_config("CONFIG_AV1_ENCODER") eq "yes") {
+if (aom_config("CONFIG_AV1_ENCODER") eq "yes" || aom_config("CONFIG_AV2_ENCODER") eq "yes") {
   add_proto qw/void aom_quantize_b/, "const tran_low_t *coeff_ptr, intptr_t n_coeffs, const int16_t *zbin_ptr, const int16_t *round_ptr, const int16_t *quant_ptr, const int16_t *quant_shift_ptr, tran_low_t *qcoeff_ptr, tran_low_t *dqcoeff_ptr, const int16_t *dequant_ptr, uint16_t *eob_ptr, const int16_t *scan, const int16_t *iscan";
   specialize qw/aom_quantize_b sse2 neon avx avx2/, "$ssse3_x86_64";
 
@@ -754,7 +758,7 @@ if (aom_config("CONFIG_AV1_ENCODER") eq "yes") {
   }
 }  # CONFIG_AV1_ENCODER
 
-if (aom_config("CONFIG_AV1_ENCODER") eq "yes" && aom_config("CONFIG_AV1_HIGHBITDEPTH") eq "yes") {
+if ((aom_config("CONFIG_AV1_ENCODER") eq "yes" || aom_config("CONFIG_AV2_ENCODER") eq "yes") && aom_config("CONFIG_AV1_HIGHBITDEPTH") eq "yes") {
   add_proto qw/void aom_highbd_quantize_b/, "const tran_low_t *coeff_ptr, intptr_t n_coeffs, const int16_t *zbin_ptr, const int16_t *round_ptr, const int16_t *quant_ptr, const int16_t *quant_shift_ptr, tran_low_t *qcoeff_ptr, tran_low_t *dqcoeff_ptr, const int16_t *dequant_ptr, uint16_t *eob_ptr, const int16_t *scan, const int16_t *iscan";
   specialize qw/aom_highbd_quantize_b sse2 avx2 neon/;
 
@@ -799,7 +803,7 @@ if (aom_config("CONFIG_AV1_HIGHBITDEPTH") eq "yes") {
   specialize "aom_highbd_blend_a64_d16_mask", qw/sse4_1 neon avx2/;
 }
 
-if (aom_config("CONFIG_AV1_ENCODER") eq "yes") {
+if (aom_config("CONFIG_AV1_ENCODER") eq "yes" || aom_config("CONFIG_AV2_ENCODER") eq "yes") {
   #
   # Block subtraction
   #
@@ -1326,7 +1330,7 @@ if (aom_config("CONFIG_AV1_ENCODER") eq "yes") {
   }
 }  # CONFIG_AV1_ENCODER
 
-if (aom_config("CONFIG_AV1_ENCODER") eq "yes") {
+if (aom_config("CONFIG_AV1_ENCODER") eq "yes" || aom_config("CONFIG_AV2_ENCODER") eq "yes") {
 
   #
   # Specialty Variance

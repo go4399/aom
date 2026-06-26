@@ -1737,6 +1737,7 @@ static INLINE int32_t clamp64_to_32(int64_t value) {
 #define aom_reset_mmx_state aom_reset_mmx_state_dummy
 static INLINE void aom_reset_mmx_state_dummy(void) {}
 
+#ifndef AOM_DSP_IMPL
 #define aom_highbd_ibp_dc_top_predictor_4x4_c \
   av2_highbd_ibp_dc_top_predictor_4x4_c
 #define aom_highbd_ibp_dc_top_predictor_8x8_c \
@@ -2489,6 +2490,7 @@ static INLINE void aom_reset_mmx_state_dummy(void) {}
 #define aom_highbd_dc_128_predictor_4x64 av2_highbd_dc_128_predictor_4x64_c
 #undef aom_highbd_dc_128_predictor_64x4
 #define aom_highbd_dc_128_predictor_64x4 av2_highbd_dc_128_predictor_64x4_c
+#endif // AOM_DSP_IMPL
 
 #define av2_add_film_grain av1_add_film_grain
 

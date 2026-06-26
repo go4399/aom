@@ -21,8 +21,13 @@
 #include "aom_dsp/blend.h"
 #include "aom_dsp/variance.h"
 
+#if CONFIG_AV1
 #include "av1/common/filter.h"
 #include "av1/common/reconinter.h"
+#elif CONFIG_AV2
+#include "av2/common/filter.h"
+#include "av2/common/reconinter.h"
+#endif
 
 #if !CONFIG_REALTIME_ONLY
 uint32_t aom_get_mb_ss_c(const int16_t *a) {

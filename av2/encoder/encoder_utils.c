@@ -903,7 +903,7 @@ static void fix_interp_filter(InterpFilter *const interp_filter,
     }
   }
 }
-void direct_existing_frames_to_current(AV2_COMP *const cpi) {
+static void direct_existing_frames_to_current(AV2_COMP *const cpi) {
   AV2_COMMON *const cm = &cpi->common;
   cm->immediate_output_picture = 1;
   cm->cur_frame->implicit_output_picture = 1;

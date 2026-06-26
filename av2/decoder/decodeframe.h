@@ -129,6 +129,8 @@ void av2_validate_frame_level_conformance(
     const struct SequenceHeader *seq_params, int frame_width, int frame_height,
     struct aom_internal_error_info *error_info);
 
+int av2_get_bitdepth_from_index(uint32_t bitdepth_lut_idx);
+
 // This function is used to dervie DOH to check the first keyobu of the temporal
 // unit. This function must be updated with the get_disp_order_hint()
 int get_disp_order_hint_keyobu(SequenceHeader *seq_params, OBU_TYPE obu_type,

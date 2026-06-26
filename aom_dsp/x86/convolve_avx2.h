@@ -19,8 +19,13 @@
 #include "aom_dsp/x86/mem_sse2.h"
 #include "aom_dsp/x86/synonyms.h"
 
+#if CONFIG_AV1
 #include "av1/common/convolve.h"
 #include "av1/common/filter.h"
+#elif CONFIG_AV2
+#include "av2/common/convolve.h"
+#include "av2/common/filter.h"
+#endif
 
 #define SECOND_32_BLK (32)
 #define THIRD_32_BLK (32 << 1)

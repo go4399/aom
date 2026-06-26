@@ -45,12 +45,12 @@ uint32_t aom_rb_read_uvlc(struct aom_read_bit_buffer *rb);
 
 uint32_t aom_rb_read_unsigned_literal(struct aom_read_bit_buffer *rb, int bits);
 
-#if CONFIG_AV1_DECODER
+#if CONFIG_AV1_DECODER || CONFIG_AV2_DECODER
 int aom_rb_read_inv_signed_literal(struct aom_read_bit_buffer *rb, int bits);
 
 int16_t aom_rb_read_signed_primitive_refsubexpfin(
     struct aom_read_bit_buffer *rb, uint16_t n, uint16_t k, int16_t ref);
-#endif  // CONFIG_AV1_DECODER
+#endif  // CONFIG_AV1_DECODER || CONFIG_AV2_DECODER
 
 #ifdef __cplusplus
 }  // extern "C"

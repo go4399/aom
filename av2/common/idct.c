@@ -444,9 +444,9 @@ void inv_txfm_ddtx_size8_c(const int *src, int *dst, int shift, int line,
   }
 }
 
-void inv_txfm_ddtx_size16_c(const int *src, int *dst, int shift, int line,
-                            int skip_line, int zero_line, const int coef_min,
-                            const int coef_max) {
+static void inv_txfm_ddtx_size16_c(const int *src, int *dst, int shift, int line,
+                                   int skip_line, int zero_line, const int coef_min,
+                                   const int coef_max) {
   (void)zero_line;
   const int offset = 1 << (shift - 1);
   const int nz_line = line - skip_line;
@@ -465,9 +465,9 @@ void inv_txfm_ddtx_size16_c(const int *src, int *dst, int shift, int line,
   }
 }
 
-void inv_txfm_fddt_size4_c(const int *src, int *dst, int shift, int line,
-                           int skip_line, int zero_line, const int coef_min,
-                           const int coef_max) {
+static void inv_txfm_fddt_size4_c(const int *src, int *dst, int shift, int line,
+                                  int skip_line, int zero_line, const int coef_min,
+                                  const int coef_max) {
   (void)zero_line;
   const int offset = 1 << (shift - 1);
   const int nz_line = line - skip_line;
@@ -487,9 +487,9 @@ void inv_txfm_fddt_size4_c(const int *src, int *dst, int shift, int line,
   }
 }
 
-void inv_txfm_fddt_size8_c(const int *src, int *dst, int shift, int line,
-                           int skip_line, int zero_line, const int coef_min,
-                           const int coef_max) {
+static void inv_txfm_fddt_size8_c(const int *src, int *dst, int shift, int line,
+                                  int skip_line, int zero_line, const int coef_min,
+                                  const int coef_max) {
   (void)zero_line;
   const int offset = 1 << (shift - 1);
   const int nz_line = line - skip_line;
@@ -509,9 +509,9 @@ void inv_txfm_fddt_size8_c(const int *src, int *dst, int shift, int line,
   }
 }
 
-void inv_txfm_fddt_size16_c(const int *src, int *dst, int shift, int line,
-                            int skip_line, int zero_line, const int coef_min,
-                            const int coef_max) {
+static void inv_txfm_fddt_size16_c(const int *src, int *dst, int shift, int line,
+                                   int skip_line, int zero_line, const int coef_min,
+                                   const int coef_max) {
   (void)zero_line;
   const int offset = 1 << (shift - 1);
   const int nz_line = line - skip_line;
@@ -531,10 +531,10 @@ void inv_txfm_fddt_size16_c(const int *src, int *dst, int shift, int line,
   }
 }
 
-void inv_transform_1d_c(const int *src, int *dst, int shift, int line,
-                        int skip_line, int zero_line, const int coef_min,
-                        const int coef_max, const int tx_type_index,
-                        const int size_index) {
+static void inv_transform_1d_c(const int *src, int *dst, int shift, int line,
+                               int skip_line, int zero_line, const int coef_min,
+                               const int coef_max, const int tx_type_index,
+                               const int size_index) {
   switch (size_index) {
     case 0:
       switch (tx_type_index) {
@@ -841,9 +841,9 @@ void av2_highbd_iwht4x4_horz_add(const tran_low_t *input, uint16_t *dest,
 }
 
 // inverse transform for 4x4 dpcm lossless vertical mode
-void av2_highbd_inv_txfm_add_4x4_vert_c(const tran_low_t *input, uint16_t *dest,
-                                        int stride,
-                                        const TxfmParam *txfm_param) {
+static void av2_highbd_inv_txfm_add_4x4_vert_c(const tran_low_t *input, uint16_t *dest,
+                                               int stride,
+                                               const TxfmParam *txfm_param) {
   assert(av2_ext_tx_used[txfm_param->tx_set_type][txfm_param->tx_type]);
   int eob = txfm_param->eob;
   int bd = txfm_param->bd;
@@ -858,9 +858,9 @@ void av2_highbd_inv_txfm_add_4x4_vert_c(const tran_low_t *input, uint16_t *dest,
 }
 
 // inverse transform for 4x4 dpcm lossless horizontal mode
-void av2_highbd_inv_txfm_add_4x4_horz_c(const tran_low_t *input, uint16_t *dest,
-                                        int stride,
-                                        const TxfmParam *txfm_param) {
+static void av2_highbd_inv_txfm_add_4x4_horz_c(const tran_low_t *input, uint16_t *dest,
+                                               int stride,
+                                               const TxfmParam *txfm_param) {
   assert(av2_ext_tx_used[txfm_param->tx_set_type][txfm_param->tx_type]);
   int eob = txfm_param->eob;
   int bd = txfm_param->bd;

@@ -28,7 +28,11 @@
 #endif  // CONFIG_BITSTREAM_DEBUG
 
 #if CONFIG_ACCOUNTING
+#if CONFIG_AV1
 #include "av1/decoder/accounting.h"
+#elif CONFIG_AV2
+#include "av2/decoder/accounting.h"
+#endif
 #define ACCT_STR_NAME acct_str
 #define ACCT_STR_PARAM , const char *ACCT_STR_NAME
 #define ACCT_STR_ARG(s) , s
@@ -84,6 +88,7 @@ uint32_t aom_reader_tell_frac(const aom_reader *r);
 
 #if CONFIG_ACCOUNTING
 static inline void aom_process_accounting(const aom_reader *r ACCT_STR_PARAM) {
+#if CONFIG_AV1
   if (r->accounting != NULL) {
     uint32_t tell_frac;
     tell_frac = aom_reader_tell_frac(r);
@@ -91,13 +96,21 @@ static inline void aom_process_accounting(const aom_reader *r ACCT_STR_PARAM) {
                           tell_frac - r->accounting->last_tell_frac);
     r->accounting->last_tell_frac = tell_frac;
   }
+#elif CONFIG_AV2
+  (void)r;
+#endif
 }
 
 static inline void aom_update_symb_counts(const aom_reader *r, int is_binary) {
+#if CONFIG_AV1
   if (r->accounting != NULL) {
     r->accounting->syms.num_multi_syms += !is_binary;
     r->accounting->syms.num_binary_syms += !!is_binary;
   }
+#elif CONFIG_AV2
+  (void)r;
+  (void)is_binary;
+#endif
 }
 #endif
 

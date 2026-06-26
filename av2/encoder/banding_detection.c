@@ -253,7 +253,7 @@ static inline uint16_t mode3(uint16_t a, uint16_t b, uint16_t c) {
   return min3(a, b, c);
 }
 
-void cambi_filter_mode(Av2BandDetectInfo *dbi, int width, int height) {
+static void cambi_filter_mode(Av2BandDetectInfo *dbi, int width, int height) {
   uint16_t *data = dbi->frame;
   const ptrdiff_t stride = dbi->stride;
   uint16_t *buffer = dbi->buffers.filter_mode_buffer;
@@ -558,7 +558,7 @@ static inline double weight_scores_per_scale(const int *scale_weights,
   return score / normalization;
 }
 
-double cambi_score(Av2BandDetectInfo *dbi, int frame_width, int frame_height) {
+static double cambi_score(Av2BandDetectInfo *dbi, int frame_width, int frame_height) {
   double scores_per_scale[CAMBI_NUM_SCALES];
   int scaled_width = frame_width;
   int scaled_height = frame_height;
@@ -582,8 +582,8 @@ double cambi_score(Av2BandDetectInfo *dbi, int frame_width, int frame_height) {
                                  dbi->pixels_in_window);
 }
 
-double av2_compute_cambi(const YV12_BUFFER_CONFIG *frame,
-                         Av2BandDetectInfo *dbi, MACROBLOCKD *xd) {
+static double av2_compute_cambi(const YV12_BUFFER_CONFIG *frame,
+                                Av2BandDetectInfo *dbi, MACROBLOCKD *xd) {
   av2_setup_dst_planes(xd->plane, frame, 0, 0, 0, 1, NULL);
   struct buf_2d pre_buf = xd->plane[0].dst;
   const int src_stride = xd->plane[0].dst.stride;
@@ -602,7 +602,7 @@ double av2_compute_cambi(const YV12_BUFFER_CONFIG *frame,
 static const int cambi_scale_weights[CAMBI_NUM_SCALES] = { 16, 8, 4, 2, 1 };
 static const int cambi_contrast_weights[8] = { 1, 2, 3, 4, 4, 5, 5, 6 };
 
-void set_contrast_arrays_cambi(Av2BandDetectInfo *const dbi) {
+static void set_contrast_arrays_cambi(Av2BandDetectInfo *const dbi) {
   const int num_diffs = dbi->num_diffs;
 
   dbi->diffs_weights = aom_malloc(sizeof(dbi->diffs_weights) * num_diffs);
@@ -615,7 +615,7 @@ void set_contrast_arrays_cambi(Av2BandDetectInfo *const dbi) {
   }
 }
 
-void set_tvi_per_contrast(Av2BandDetectInfo *const dbi, int bitdepth) {
+static void set_tvi_per_contrast(Av2BandDetectInfo *const dbi, int bitdepth) {
   (void)bitdepth;
   const int num_diffs = dbi->num_diffs;
   dbi->tvi_for_diff = aom_malloc(sizeof(dbi->tvi_for_diff) * num_diffs);
