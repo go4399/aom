@@ -339,13 +339,31 @@ static inline void get_txb_dimensions(const MACROBLOCKD *xd, int plane,
   if (width) *width = txb_width;
 }
 
+/*!
+ * \brief Computes the effective dimensions of a block.
+ *
+ * \param[in]    x             Pointer to structure holding the data for the
+                               current encoding macroblock
+ * \param[in]    plane         The index of the current plane
+ * \param[in]    plane_bsize   Block size for the current plane
+ * \param[in]    blk_col       Column offset of the transform block, in MI units
+ * \param[in]    blk_row       Row offset of the transform block, in MI units
+ * \param[in]    cols          Transform block width, in pixels
+ * \param[in]    rows          Transform block height, in pixels
+ * \param[in]    clip_dims     If false, returns the original block dimensions
+ *                             If true, clips the block dimensions so they lie
+ *                             within the valid frame extent
+ * \param[out]   visible_cols  Pointer to the effective block width, in pixels
+ * \param[out]   visible_rows  Pointer to the effective block height, in pixels
+ *
+ * \return 1 if the block dimensions were clipped; otherwise 0.
+ */
 static inline int get_visible_dimensions(const MACROBLOCK *x, int plane,
                                          BLOCK_SIZE plane_bsize, int blk_col,
                                          int blk_row, int cols, int rows,
-                                         int *visible_cols, int *visible_rows,
-                                         bool use_crop_dim) {
-  if ((x->pix_to_bottom_edge >= 0 && x->pix_to_right_edge >= 0) ||
-      !use_crop_dim) {
+                                         bool clip_dims, int *visible_cols,
+                                         int *visible_rows) {
+  if ((x->pix_to_bottom_edge >= 0 && x->pix_to_right_edge >= 0) || !clip_dims) {
     if (visible_cols != NULL && visible_rows != NULL) {
       *visible_rows = rows;
       *visible_cols = cols;
