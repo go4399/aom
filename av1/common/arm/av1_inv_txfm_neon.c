@@ -9,6 +9,8 @@
  * PATENTS file, you can obtain it at www.aomedia.org/license/patent.
  */
 
+#include "av1/common/arm/av1_inv_txfm_neon.h"
+
 #include <arm_neon.h>
 
 #include "config/aom_config.h"
@@ -21,7 +23,6 @@
 #include "av1/common/av1_txfm.h"
 #include "av1/common/enums.h"
 #include "av1/common/idct.h"
-#include "av1/common/arm/av1_inv_txfm_neon.h"
 
 // 1D itx types
 typedef enum ATTRIBUTE_PACKED {
@@ -4176,11 +4177,6 @@ static inline void lowbd_inv_txfm2d_add_universe_neon(
       break;
   }
 }
-
-// This function is used by av1_inv_txfm2d_test.cc.
-void av1_lowbd_inv_txfm2d_add_neon(const int32_t *input, uint8_t *output,
-                                   int stride, TX_TYPE tx_type, TX_SIZE tx_size,
-                                   int eob);
 
 void av1_lowbd_inv_txfm2d_add_neon(const int32_t *input, uint8_t *output,
                                    int stride, TX_TYPE tx_type, TX_SIZE tx_size,

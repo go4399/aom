@@ -11,6 +11,8 @@
 #ifndef AOM_AV1_COMMON_ARM_AV1_INV_TXFM_NEON_H_
 #define AOM_AV1_COMMON_ARM_AV1_INV_TXFM_NEON_H_
 
+#include <arm_neon.h>
+
 #include "config/aom_config.h"
 #include "config/av1_rtcd.h"
 
@@ -19,6 +21,10 @@
 #include "av1/common/av1_inv_txfm1d.h"
 #include "av1/common/av1_inv_txfm1d_cfg.h"
 #include "av1/common/av1_txfm.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef void (*transform_1d_neon)(const int32_t *input, int32_t *output,
                                   const int8_t cos_bit,
@@ -150,5 +156,14 @@ static inline void get_eobx_eoby_scan_h_identity(int *eobx, int *eoby,
   assert(temp_eoby < 32);
   *eoby = eob_fill[temp_eoby];
 }
+
+// This function is used by av1_inv_txfm2d_test.cc.
+void av1_lowbd_inv_txfm2d_add_neon(const int32_t *input, uint8_t *output,
+                                   int stride, TX_TYPE tx_type, TX_SIZE tx_size,
+                                   int eob);
+
+#ifdef __cplusplus
+}  // extern "C"
+#endif
 
 #endif  // AOM_AV1_COMMON_ARM_AV1_INV_TXFM_NEON_H_
