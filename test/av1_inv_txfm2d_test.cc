@@ -24,6 +24,16 @@
 #include "test/av1_txfm_test.h"
 #include "test/util.h"
 
+#if HAVE_SSSE3
+#include "av1/common/x86/av1_inv_txfm_ssse3.h"
+#endif
+#if HAVE_AVX2
+#include "av1/common/x86/av1_inv_txfm_avx2.h"
+#endif
+#if HAVE_NEON
+#include "av1/common/arm/av1_inv_txfm_neon.h"
+#endif
+
 using libaom_test::ACMRandom;
 using libaom_test::bd;
 using libaom_test::compute_avg_abs_error;
@@ -374,30 +384,16 @@ TEST_P(AV1LbdInvTxfm2d, DISABLED_Speed) {
 }
 
 #if HAVE_SSSE3
-extern "C" void av1_lowbd_inv_txfm2d_add_ssse3(const int32_t *input,
-                                               uint8_t *output, int stride,
-                                               TX_TYPE tx_type, TX_SIZE tx_size,
-                                               int eob);
 INSTANTIATE_TEST_SUITE_P(SSSE3, AV1LbdInvTxfm2d,
                          ::testing::Values(av1_lowbd_inv_txfm2d_add_ssse3));
 #endif  // HAVE_SSSE3
 
 #if HAVE_AVX2
-extern "C" void av1_lowbd_inv_txfm2d_add_avx2(const int32_t *input,
-                                              uint8_t *output, int stride,
-                                              TX_TYPE tx_type, TX_SIZE tx_size,
-                                              int eob);
-
 INSTANTIATE_TEST_SUITE_P(AVX2, AV1LbdInvTxfm2d,
                          ::testing::Values(av1_lowbd_inv_txfm2d_add_avx2));
 #endif  // HAVE_AVX2
 
 #if HAVE_NEON
-extern "C" void av1_lowbd_inv_txfm2d_add_neon(const int32_t *input,
-                                              uint8_t *output, int stride,
-                                              TX_TYPE tx_type, TX_SIZE tx_size,
-                                              int eob);
-
 INSTANTIATE_TEST_SUITE_P(NEON, AV1LbdInvTxfm2d,
                          ::testing::Values(av1_lowbd_inv_txfm2d_add_neon));
 #endif  // HAVE_NEON
