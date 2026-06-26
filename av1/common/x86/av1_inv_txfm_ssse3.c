@@ -13,6 +13,7 @@
 #include "config/av1_rtcd.h"
 
 #include "av1/common/av1_inv_txfm1d_cfg.h"
+#include "av1/common/av1_inv_txfm2d.h"
 #include "av1/common/x86/av1_inv_txfm_ssse3.h"
 #include "av1/common/x86/av1_txfm_sse2.h"
 
