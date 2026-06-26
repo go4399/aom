@@ -4287,16 +4287,28 @@ static inline int get_mi_ext_idx(const int mi_row, const int mi_col,
   return mi_ext_row * mbmi_ext_stride + mi_ext_col;
 }
 
+// Computes the signed distances from the bottom and right edges of the current
+// prediction block to the corresponding edges of the frame.
 static inline void set_pixels_to_frame_edge(MACROBLOCK *x, int bw, int bh,
                                             int mi_col, int mi_row, int mi_cols,
                                             int mi_rows, int frame_width,
-                                            int frame_height,
-                                            bool do_border_pad) {
-  int total_frame_width = do_border_pad ? frame_width : (mi_cols * 4);
-  int total_frame_height = do_border_pad ? frame_height : (mi_rows * 4);
+                                            int frame_height, int ss_x,
+                                            int ss_y, bool do_border_pad) {
+  // For do_border_pad = 1, align the frame dimensions to match the
+  // rounded-up dimensions of subsampled chroma planes (uv_crop_width and
+  // uv_crop_height). For do_border_pad = 0, align the frame dimensions to a
+  // multiple of 8 to match the dimensions represented by mi_cols and mi_rows,
+  // which are rounded up to a multiples of 8 pixels.
+  int aligned_frame_width = do_border_pad
+                                ? (((frame_width + ss_x) >> ss_x) << ss_x)
+                                : (mi_cols << MI_SIZE_LOG2);
+  int aligned_frame_height = do_border_pad
+                                 ? (((frame_height + ss_y) >> ss_y) << ss_y)
+                                 : (mi_rows << MI_SIZE_LOG2);
 
-  x->pix_to_bottom_edge = total_frame_height - ((mi_row + bh) << MI_SIZE_LOG2);
-  x->pix_to_right_edge = total_frame_width - ((mi_col + bw) << MI_SIZE_LOG2);
+  x->pix_to_bottom_edge =
+      aligned_frame_height - ((mi_row + bh) << MI_SIZE_LOG2);
+  x->pix_to_right_edge = aligned_frame_width - ((mi_col + bw) << MI_SIZE_LOG2);
 }
 
 // Lighter version of set_offsets that only sets the mode info

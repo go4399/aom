@@ -694,7 +694,8 @@ void av1_set_offsets_without_segment_id(const AV1_COMP *const cpi,
 
   set_pixels_to_frame_edge(x, mi_width, mi_height, mi_col, mi_row,
                            cm->mi_params.mi_cols, cm->mi_params.mi_rows,
-                           cm->width, cm->height, cpi->do_border_pad);
+                           cm->width, cm->height, cm->seq_params->subsampling_x,
+                           cm->seq_params->subsampling_y, cpi->do_border_pad);
 
   // Set up source buffers.
   av1_setup_src_planes(x, cpi->source, mi_row, mi_col, num_planes, bsize);

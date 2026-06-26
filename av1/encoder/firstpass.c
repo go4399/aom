@@ -525,7 +525,8 @@ static int firstpass_intra_prediction(
   set_pixels_to_frame_edge(x, mi_size_wide[bsize], mi_size_high[bsize],
                            unit_col * unit_scale, unit_row * unit_scale,
                            mi_params->mi_cols, mi_params->mi_rows, cm->width,
-                           cm->height, cpi->do_border_pad);
+                           cm->height, seq_params->subsampling_x,
+                           seq_params->subsampling_y, cpi->do_border_pad);
 
   set_plane_n4(xd, mi_size_wide[bsize], mi_size_high[bsize], num_planes);
   xd->mi[0]->segment_id = 0;
