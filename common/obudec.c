@@ -71,6 +71,7 @@ static int obudec_read_leb128(struct AvxInputContext *input_ctx,
 // success, and non-zero on failure. When end of file is reached, the return
 // value is 0 and the 'bytes_read' value is set to 0. If 'buffered' is true, it
 // is buffered in the detect buffer first.
+#if CONFIG_AV1_DECODER
 static int obudec_read_obu_header(struct AvxInputContext *input_ctx,
                                   size_t buffer_capacity, int is_annexb,
                                   uint8_t *obu_data, ObuHeader *obu_header,
@@ -107,6 +108,7 @@ static int obudec_read_obu_header(struct AvxInputContext *input_ctx,
 
   return 0;
 }
+#endif
 
 // Reads OBU payload from 'input_ctx' and returns 0 for success when all payload
 // bytes are read from the file. Payload data is written to 'obu_data', and
@@ -127,6 +129,7 @@ static int obudec_read_obu_payload(struct AvxInputContext *input_ctx,
   return 0;
 }
 
+#if CONFIG_AV1_DECODER
 static int obudec_read_obu_header_and_size(
     struct AvxInputContext *input_ctx, size_t buffer_capacity, int is_annexb,
     uint8_t *buffer, size_t *bytes_read, size_t *payload_length,
@@ -280,7 +283,9 @@ static int obudec_read_one_obu(struct AvxInputContext *input_ctx,
   *obu_length = bytes_read;
   return 0;
 }
+#endif
 
+#if CONFIG_AV1_DECODER
 int file_is_obu(struct ObuDecInputContext *obu_ctx) {
   if (!obu_ctx || !obu_ctx->avx_ctx) return 0;
 
@@ -503,6 +508,22 @@ int obudec_read_temporal_unit(struct ObuDecInputContext *obu_ctx,
   }
   return 0;
 }
+#else
+int file_is_obu(struct ObuDecInputContext *obu_ctx) {
+  (void)obu_ctx;
+  return 0;
+}
+
+int obudec_read_temporal_unit(struct ObuDecInputContext *obu_ctx,
+                              uint8_t **buffer, size_t *bytes_read,
+                              size_t *buffer_size) {
+  (void)obu_ctx;
+  (void)buffer;
+  (void)bytes_read;
+  (void)buffer_size;
+  return -1;
+}
+#endif
 
 void obudec_free(struct ObuDecInputContext *obu_ctx) {
   free(obu_ctx->buffer);

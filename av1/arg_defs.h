@@ -119,7 +119,7 @@ typedef struct av1_codec_arg_definitions {
   arg_def_t dist_metric;
   arg_def_t cq_level;
   arg_def_t max_intra_rate_pct;
-#if CONFIG_AV1_ENCODER
+#if CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER
   arg_def_t cpu_used_av1;
   arg_def_t rowmtarg;
   arg_def_t fpmtarg;
@@ -240,7 +240,7 @@ typedef struct av1_codec_arg_definitions {
   arg_def_t enable_low_complexity_decode;
   arg_def_t screen_detection_mode;
   arg_def_t validate_hbd_input;
-#endif  // CONFIG_AV1_ENCODER
+#endif  // CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER
 } av1_codec_arg_definitions_t;
 
 extern const av1_codec_arg_definitions_t g_av1_codec_arg_defs;

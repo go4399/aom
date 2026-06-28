@@ -521,7 +521,7 @@ void usage_exit(void) {
   exit(EXIT_FAILURE);
 }
 
-#if CONFIG_AV1_ENCODER
+#if CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER
 #define ARG_CTRL_CNT_MAX NELEMENTS(av1_arg_ctrl_map)
 #define ARG_KEY_VAL_CNT_MAX NELEMENTS(av1_key_val_args)
 #endif

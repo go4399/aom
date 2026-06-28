@@ -200,7 +200,7 @@ list(APPEND AOM_COMMON_APP_UTIL_SOURCES
             "${AOM_ROOT}/common/ivfdec.c"
             "${AOM_ROOT}/common/ivfdec.h")
 
-if(CONFIG_AV1)
+if(CONFIG_AV1 OR CONFIG_AV2)
   list(APPEND AOM_COMMON_APP_UTIL_SOURCES
               "${AOM_ROOT}/av1/arg_defs.c"
               "${AOM_ROOT}/av1/arg_defs.h"
@@ -485,10 +485,14 @@ if(ENABLE_EXAMPLES OR ENABLE_TESTS OR ENABLE_TOOLS)
   endif()
 endif()
 
-if(CONFIG_AV1_DECODER AND ENABLE_EXAMPLES)
+if((CONFIG_AV1_DECODER OR CONFIG_AV2_DECODER) AND ENABLE_EXAMPLES)
   add_executable(aomdec "${AOM_ROOT}/apps/aomdec.c"
                         $<TARGET_OBJECTS:aom_common_app_util>
                         $<TARGET_OBJECTS:aom_decoder_app_util>)
+  list(APPEND AOM_APP_TARGETS aomdec)
+endif()
+
+if(CONFIG_AV1_DECODER AND ENABLE_EXAMPLES)
   add_executable(decode_to_md5 "${AOM_ROOT}/examples/decode_to_md5.c"
                                $<TARGET_OBJECTS:aom_common_app_util>
                                $<TARGET_OBJECTS:aom_decoder_app_util>)
@@ -541,7 +545,7 @@ if(CONFIG_AV1_DECODER AND ENABLE_EXAMPLES)
   endif()
 
   # Maintain a list of decoder example targets.
-  list(APPEND AOM_DECODER_EXAMPLE_TARGETS aomdec decode_to_md5 decode_with_drops
+  list(APPEND AOM_DECODER_EXAMPLE_TARGETS decode_to_md5 decode_with_drops
               scalable_decoder simple_decoder)
 
   # Add decoder examples to the app targets list.
@@ -567,12 +571,16 @@ if(CONFIG_LIBYUV OR CONFIG_TUNE_BUTTERAUGLI)
   include_directories("${AOM_ROOT}/third_party/libyuv/include")
 endif()
 
+if((CONFIG_AV1_ENCODER OR CONFIG_AV2_ENCODER) AND ENABLE_EXAMPLES)
+  add_executable(aomenc "${AOM_ROOT}/apps/aomenc.c"
+                        $<TARGET_OBJECTS:aom_common_app_util>
+                        $<TARGET_OBJECTS:aom_encoder_app_util>
+                        $<TARGET_OBJECTS:aom_encoder_stats>)
+  list(APPEND AOM_APP_TARGETS aomenc)
+endif()
+
 if(CONFIG_AV1_ENCODER)
   if(ENABLE_EXAMPLES)
-    add_executable(aomenc "${AOM_ROOT}/apps/aomenc.c"
-                          $<TARGET_OBJECTS:aom_common_app_util>
-                          $<TARGET_OBJECTS:aom_encoder_app_util>
-                          $<TARGET_OBJECTS:aom_encoder_stats>)
     add_executable(lossless_encoder "${AOM_ROOT}/examples/lossless_encoder.c"
                                     $<TARGET_OBJECTS:aom_common_app_util>
                                     $<TARGET_OBJECTS:aom_encoder_app_util>)
@@ -864,11 +872,11 @@ if(ENABLE_EXAMPLES OR ENABLE_TESTS OR ENABLE_TOOLS)
     endif()
 
     # Add to existing targets.
-    if(CONFIG_AV1_DECODER)
+    if(CONFIG_AV1_DECODER OR CONFIG_AV2_DECODER)
       target_sources(aom_decoder_app_util PRIVATE ${AOM_WEBM_DECODER_SOURCES})
     endif()
 
-    if(CONFIG_AV1_ENCODER)
+    if(CONFIG_AV1_ENCODER OR CONFIG_AV2_ENCODER)
       target_sources(aom_encoder_app_util PRIVATE ${AOM_WEBM_ENCODER_SOURCES})
     endif()
 
@@ -1009,10 +1017,10 @@ if(ENABLE_DOCS)
 endif()
 
 # Aomedia dist rule.
-if(CONFIG_AV1_DECODER AND ENABLE_EXAMPLES)
+if((CONFIG_AV1_DECODER OR CONFIG_AV2_DECODER) AND ENABLE_EXAMPLES)
   list(APPEND AOM_DIST_APPS $<TARGET_FILE:aomdec>)
 endif()
-if(CONFIG_AV1_ENCODER AND ENABLE_EXAMPLES)
+if((CONFIG_AV1_ENCODER OR CONFIG_AV2_ENCODER) AND ENABLE_EXAMPLES)
   list(APPEND AOM_DIST_APPS $<TARGET_FILE:aomenc>)
 endif()
 

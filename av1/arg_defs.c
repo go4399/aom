@@ -59,7 +59,7 @@ static const struct arg_enum_list dist_metric_enum[] = {
   { NULL, 0 }
 };
 
-#if CONFIG_AV1_ENCODER
+#if CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER
 static const struct arg_enum_list timing_info_enum[] = {
   { "unspecified", AOM_TIMING_UNSPECIFIED },
   { "constant", AOM_TIMING_EQUAL },
@@ -145,7 +145,7 @@ static const struct arg_enum_list color_primaries_enum[] = {
   { "ebu3213", AOM_CICP_CP_EBU_3213 },
   { NULL, 0 }
 };
-#endif  // CONFIG_AV1_ENCODER
+#endif  // CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER
 
 const av1_codec_arg_definitions_t g_av1_codec_arg_defs = {
   .help = ARG_DEF(NULL, "help", 0, "Show usage options and exit"),
@@ -727,5 +727,5 @@ const av1_codec_arg_definitions_t g_av1_codec_arg_defs = {
               "Check that input samples are within the valid range "
               "for the chosen bit depth with high bit depth encoding (0: "
               "disabled, 1: enabled (default))"),
-#endif  // CONFIG_AV1_ENCODER
+#endif  // CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER
 };

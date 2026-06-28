@@ -403,6 +403,7 @@ static int parse_sequence_header(const uint8_t *const buffer, size_t length,
 
 int get_av1config_from_obu(const uint8_t *buffer, size_t length, int is_annexb,
                            Av1Config *config) {
+#if CONFIG_AV1_DECODER
   if (!buffer || length == 0 || !config) {
     return -1;
   }
@@ -425,6 +426,13 @@ int get_av1config_from_obu(const uint8_t *buffer, size_t length, int is_annexb,
   config->version = 1;
   return parse_sequence_header(buffer + obu_header_length,
                                sequence_header_length, config);
+#else
+  (void)buffer;
+  (void)length;
+  (void)is_annexb;
+  (void)config;
+  return -1;
+#endif
 }
 
 int read_av1config(const uint8_t *buffer, size_t buffer_length,

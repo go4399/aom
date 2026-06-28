@@ -18,11 +18,11 @@
 
 #include "common/tools_common.h"
 
-#if CONFIG_AV1_ENCODER
+#if CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER
 #include "aom/aomcx.h"
 #endif
 
-#if CONFIG_AV1_DECODER
+#if CONFIG_AV1_DECODER || CONFIG_AV2_DECODER
 #include "aom/aomdx.h"
 #endif
 
@@ -147,9 +147,11 @@ struct CodecInfo {
   uint32_t fourcc;
 };
 
-#if CONFIG_AV1_ENCODER
+#if CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER
 static const struct CodecInfo aom_encoders[] = {
+#if CONFIG_AV1_ENCODER
   { &aom_codec_av1_cx, "av1", AV1_FOURCC },
+#endif
 #if CONFIG_AV2_ENCODER
   { &av2_codec_av2_cx, "av2", AV2_FOURCC },
 #endif
@@ -192,11 +194,13 @@ const char *get_short_name_by_aom_encoder(aom_codec_iface_t *iface) {
   return NULL;
 }
 
-#endif  // CONFIG_AV1_ENCODER
+#endif  // CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER
 
-#if CONFIG_AV1_DECODER
+#if CONFIG_AV1_DECODER || CONFIG_AV2_DECODER
 static const struct CodecInfo aom_decoders[] = {
+#if CONFIG_AV1_DECODER
   { &aom_codec_av1_dx, "av1", AV1_FOURCC },
+#endif
 #if CONFIG_AV2_DECODER
   { &av2_codec_av2_dx, "av2", AV2_FOURCC },
 #endif
@@ -247,7 +251,7 @@ uint32_t get_fourcc_by_aom_decoder(aom_codec_iface_t *iface) {
   return 0;
 }
 
-#endif  // CONFIG_AV1_DECODER
+#endif  // CONFIG_AV1_DECODER || CONFIG_AV2_DECODER
 
 void aom_img_write(const aom_image_t *img, FILE *file) {
   int plane;

@@ -21,7 +21,7 @@
 #include "aom/aom_integer.h"
 #include "aom_ports/mem.h"
 
-#if CONFIG_AV1_ENCODER
+#if CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER
 #include "common/y4minput.h"
 #endif
 
@@ -115,7 +115,7 @@ struct AvxInputContext {
   int only_i420;
   uint32_t fourcc;
   struct AvxRational framerate;
-#if CONFIG_AV1_ENCODER
+#if CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER
   y4m_input y4m;
 #endif
   aom_color_range_t color_range;
