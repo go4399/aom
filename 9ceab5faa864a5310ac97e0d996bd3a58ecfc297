@@ -37,6 +37,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "de309e6a_25f13640",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 4297,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-06-29T17:58:45Z",
+      "side": 1,
+      "message": "Deepa: Please make sure Yunqing or someone else checks this change.\n\nCould you please add a comment to explain why this function needs to align frame dimensions to a multiple of 2? I believe the reason is to ensure that `pix_to_bottom_edge` and `pix_to_right_edge` are even numbers. If that\u0027s the reason, then that should not be necessary when we are not subsampling in the corresponding direction, such as 4:4:4. So I think this change requires more thought.\n\nAnother question I have is that when we do want `pix_to_bottom_edge` and `pix_to_right_edge` to be even numbers, it\u0027s not clear whether we should round up or round down. Please also explain this in the comment. Thanks!",
+      "revId": "9ceab5faa864a5310ac97e0d996bd3a58ecfc297",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f84f254c_888b3a29",
         "filename": "av1/encoder/model_rd.h",
         "patchSetId": 2
