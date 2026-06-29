@@ -311,7 +311,7 @@ const av1_codec_arg_definitions_t g_av1_codec_arg_defs = {
       ARG_DEF(NULL, "cq-level", 1, "Constant/Constrained Quality level"),
   .max_intra_rate_pct =
       ARG_DEF(NULL, "max-intra-rate", 1, "Max I-frame bitrate (pct)"),
-#if CONFIG_AV1_ENCODER
+#if CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER
   .cpu_used_av1 = ARG_DEF(NULL, "cpu-used", 1,
                           "Speed setting (0..6 in good mode, 5..12 in realtime "
                           "mode, 0..9 in all intra mode)"),

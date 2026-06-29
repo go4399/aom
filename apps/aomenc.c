@@ -494,8 +494,8 @@ static void show_help(FILE *fout, int shorthelp) {
   arg_show_usage(fout, rc_args);
   fprintf(fout, "\nKeyframe Placement Options:\n");
   arg_show_usage(fout, kf_args);
-#if CONFIG_AV1_ENCODER
-  fprintf(fout, "\nAV1 Specific Options:\n");
+#if CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER
+  fprintf(fout, "\nAV1/AV2 Specific Options:\n");
   arg_show_usage(fout, av1_ctrl_args);
   arg_show_usage(fout, av1_key_val_args);
 #endif
@@ -963,7 +963,7 @@ static int parse_stream_params(struct AvxEncoderConfig *global,
 
   // Handle codec specific options
   if (0) {
-#if CONFIG_AV1_ENCODER
+#if CONFIG_AV1_ENCODER || CONFIG_AV2_ENCODER
   } else if (strcmp(get_short_name_by_aom_encoder(global->codec), "av1") == 0 ||
              strcmp(get_short_name_by_aom_encoder(global->codec), "av2") == 0) {
     // TODO(jingning): Reuse AV1 specific encoder configuration parameters.
