@@ -53,6 +53,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "40819c93_c96afd62",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 8893
+      },
+      "writtenOn": "2026-06-29T05:57:25Z",
+      "side": 1,
+      "message": "Please review https://aomedia-review.googlesource.com/c/aom/+/214541",
+      "parentUuid": "02aee91b_37d08522",
+      "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e2c66c50_1e62dd70",
@@ -66,6 +84,24 @@
       "writtenOn": "2026-06-25T02:12:18Z",
       "side": 1,
       "message": "Please add a comment. This macro should require `d \u003e 0` and only allow `n` to be negative.\n\nNote: I am not sure if the current definition of this macro works for all combinations of `n` and `d`, so it is best to simplifiy it and require `d` to be positive.",
+      "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2f8ee1c_9f605284",
+        "filename": "aom_ports/mem.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 8893
+      },
+      "writtenOn": "2026-06-29T05:57:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e2c66c50_1e62dd70",
       "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -87,6 +123,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "67c20386_f2c661d4",
+        "filename": "aom_ports/mem.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 8893
+      },
+      "writtenOn": "2026-06-29T05:57:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9ee6ab0a_8841f071",
+      "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bd00390b_25559ffb",
@@ -104,6 +158,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "395be501_5d278cb8",
+        "filename": "av1/encoder/block.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 1442,
+      "author": {
+        "id": 8893
+      },
+      "writtenOn": "2026-06-29T05:57:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bd00390b_25559ffb",
+      "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8b644af6_1ee8ef85",
@@ -117,6 +189,24 @@
       "writtenOn": "2026-06-25T02:12:18Z",
       "side": 1,
       "message": "Nit: I suggest using the array element notation:\n\n```\n      sum +\u003d diff[row * diff_stride + col];\n```\n\nMake the same change to the next two functions.",
+      "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "342739fc_b8f15a78",
+        "filename": "av1/encoder/encodemb.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 8893
+      },
+      "writtenOn": "2026-06-29T05:57:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8b644af6_1ee8ef85",
       "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -140,6 +230,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e27f985c_111911dc",
+        "filename": "av1/encoder/encodemb.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 8893
+      },
+      "writtenOn": "2026-06-29T05:57:25Z",
+      "side": 1,
+      "message": "Yes, that is correct. We have added these conditions to silence static analyser warning ‘Division by zero’  as here https://build.aomedia.org/jenkins/job/libaom__static_analysis/49763/mode\u003dshallow/console",
+      "parentUuid": "5bb4966f_9cdaa766",
+      "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f53d5da6_38464d96",
         "filename": "av1/encoder/encodemb.c",
         "patchSetId": 6
@@ -151,6 +259,24 @@
       "writtenOn": "2026-06-25T02:12:18Z",
       "side": 1,
       "message": "Delete this function. Use the `aom_memset16()` function in aom_mem/aom_mem.h.",
+      "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac88faa4_c84db0af",
+        "filename": "av1/encoder/encodemb.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 8893
+      },
+      "writtenOn": "2026-06-29T05:57:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f53d5da6_38464d96",
       "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -172,6 +298,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "31edc8cb_7dc99015",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 4296,
+      "author": {
+        "id": 8893
+      },
+      "writtenOn": "2026-06-29T05:57:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6441576_a02bb5e3",
+      "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3061d56d_28dc89d3",
@@ -185,6 +329,24 @@
       "writtenOn": "2026-06-25T01:56:43Z",
       "side": 1,
       "message": "This function is very complicated. Please document this function (at least the output parameters and the return value).\n\nOptional: I also suggest adding some tests for this complicated function, at least to clarify its behavior.",
+      "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0dee58e4_ee2c712e",
+        "filename": "av1/encoder/rdopt_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 8893
+      },
+      "writtenOn": "2026-06-29T05:57:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3061d56d_28dc89d3",
       "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -208,6 +370,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "724cf3b7_8486ad56",
+        "filename": "av1/encoder/rdopt_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 8893
+      },
+      "writtenOn": "2026-06-29T05:57:25Z",
+      "side": 1,
+      "message": "We have renamed this parameter as `clip_dims` in https://aomedia-review.googlesource.com/c/aom/+/214541 to better reflect its purpose.  If this parameter is false, the block dimensions remain unchanged. If true, the function clips the block dimensions so they lie within the valid frame extent. Here, the frame extent depends on `do_border_pad`: when `do_border_pad` is 0, the frame dimensions are aligned to a multiple of 8; when `do_border_pad` is 1, they are aligned to a multiple of 2.",
+      "parentUuid": "a7f6c0f4_cc79b988",
+      "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "65bfaf0b_f8926889",
         "filename": "av1/encoder/rdopt_utils.h",
         "patchSetId": 6
@@ -219,6 +399,24 @@
       "writtenOn": "2026-06-25T01:56:43Z",
       "side": 1,
       "message": "If `x-\u003epix_to_bottom_edge` is an odd number and `pd-\u003esubsampling_y` is equal to 1, is `x-\u003epix_to_bottom_edge \u003e\u003e pd-\u003esubsampling_y` still correct?",
+      "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8d496a4_abb364f1",
+        "filename": "av1/encoder/rdopt_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 8893
+      },
+      "writtenOn": "2026-06-29T05:57:25Z",
+      "side": 1,
+      "message": "Yes, it is not correct. Thanks for pointing this out. This case arises when frame dimensions are odd. We have corrected the same in \u003chttps://aomedia-review.googlesource.com/c/aom/+/214541\u003e by aligning the frame dimensions to a multiple of 2.",
+      "parentUuid": "65bfaf0b_f8926889",
       "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
