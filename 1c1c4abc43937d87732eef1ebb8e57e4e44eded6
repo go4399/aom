@@ -248,6 +248,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a5087591_e89c49db",
+        "filename": "av1/encoder/encodemb.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-06-29T17:58:26Z",
+      "side": 1,
+      "message": "The static analyzer also considers assertions. Please try adding the following assertion to these three functions:\n\n```\n  assert(w \u003e 0 \u0026\u0026 h \u003e 0);\n```",
+      "parentUuid": "e27f985c_111911dc",
+      "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f53d5da6_38464d96",
         "filename": "av1/encoder/encodemb.c",
         "patchSetId": 6
@@ -386,6 +404,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2cdeac09_b96d8fa3",
+        "filename": "av1/encoder/rdopt_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-06-29T17:58:26Z",
+      "side": 1,
+      "message": "Thanks for the explanation.",
+      "parentUuid": "724cf3b7_8486ad56",
+      "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "65bfaf0b_f8926889",
@@ -417,6 +453,24 @@
       "side": 1,
       "message": "Yes, it is not correct. Thanks for pointing this out. This case arises when frame dimensions are odd. We have corrected the same in \u003chttps://aomedia-review.googlesource.com/c/aom/+/214541\u003e by aligning the frame dimensions to a multiple of 2.",
       "parentUuid": "65bfaf0b_f8926889",
+      "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ded31b2_d9ebf2cf",
+        "filename": "av1/encoder/rdopt_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-06-29T17:58:26Z",
+      "side": 1,
+      "message": "Let\u0027s continue the discussion in https://aomedia-review.googlesource.com/c/aom/+/214541,",
+      "parentUuid": "f8d496a4_abb364f1",
       "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
