@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b34b724_393fe0ab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-06-29T17:46:31Z",
+      "side": 1,
+      "message": "LGTM. Just some parameter name comment nits.",
+      "revId": "9ceab5faa864a5310ac97e0d996bd3a58ecfc297",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "85ae2c27_d73231bd",
+        "filename": "av1/encoder/encodemb.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-06-29T17:46:31Z",
+      "side": 1,
+      "message": "Nit: Change `true /* clip_dims */` to `/*clip_dims\u003d*/true`",
+      "revId": "9ceab5faa864a5310ac97e0d996bd3a58ecfc297",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f84f254c_888b3a29",
+        "filename": "av1/encoder/model_rd.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-06-29T17:46:31Z",
+      "side": 1,
+      "message": "Nit: Change `true /* clip_dims */` to `/*clip_dims\u003d*/true`\n\nAlso at line 283.",
+      "revId": "9ceab5faa864a5310ac97e0d996bd3a58ecfc297",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6bb5618_4b3e15ce",
+        "filename": "av1/encoder/tx_search.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-06-29T17:46:31Z",
+      "side": 1,
+      "message": "Nit: Change `true /* clip_dims */` to `/*clip_dims\u003d*/true`\n\nMake the same change to the other occurrences in the file.",
+      "revId": "9ceab5faa864a5310ac97e0d996bd3a58ecfc297",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
