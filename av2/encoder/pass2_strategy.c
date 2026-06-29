@@ -1332,9 +1332,9 @@ static void calculate_gf_length(AV2_COMP *cpi, int max_gop_length,
         double ratio;
 
         // load neighboring coded errs
-        int is_high[MAX_GF_INTERVAL + 1 + MAX_PAD_GF_CHECK * 2] = { 0 };
-        double errs[MAX_GF_INTERVAL + 1 + MAX_PAD_GF_CHECK * 2] = { 0 };
-        double si[MAX_GF_INTERVAL + 1 + MAX_PAD_GF_CHECK * 2] = { 0 };
+        int is_high[MAX_GF_INTERVAL_AV2 + 1 + MAX_PAD_GF_CHECK * 2] = { 0 };
+        double errs[MAX_GF_INTERVAL_AV2 + 1 + MAX_PAD_GF_CHECK * 2] = { 0 };
+        double si[MAX_GF_INTERVAL_AV2 + 1 + MAX_PAD_GF_CHECK * 2] = { 0 };
         int before_pad =
             AOMMIN(MAX_PAD_GF_CHECK, rc->frames_since_key - 1 + cur_start);
         int after_pad =
@@ -2997,7 +2997,7 @@ void av2_get_second_pass_params(AV2_COMP *cpi,
 
     if (cpi->lap_enabled && cpi->rc.enable_scenecut_detection) {
       int num_frames_to_detect_scenecut, frames_to_key;
-      num_frames_to_detect_scenecut = MAX_GF_LENGTH_LAP + 1;
+      num_frames_to_detect_scenecut = MAX_GF_LENGTH_LAP_AV2 + 1;
       frames_to_key = define_kf_interval(cpi, &this_frame, NULL,
                                          num_frames_to_detect_scenecut);
       if (frames_to_key != -1)
@@ -3008,7 +3008,7 @@ void av2_get_second_pass_params(AV2_COMP *cpi,
 
     const KeyFrameCfg *const kf_cfg = &cpi->oxcf.kf_cfg;
     int max_gop_length = (kf_cfg->key_freq_max > 1)
-                             ? AOMMIN(MAX_GF_LENGTH_LAP, cpi->rc.frames_to_key)
+                             ? AOMMIN(MAX_GF_LENGTH_LAP_AV2, cpi->rc.frames_to_key)
                              : 1;
     if (rc->intervals_till_gf_calculate_due == 0 || 1) {
       calculate_gf_length(cpi, max_gop_length, MAX_NUM_GF_INTERVALS,

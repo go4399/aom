@@ -1287,7 +1287,7 @@ void av2_change_config(struct AV2_COMP *cpi, const AV2EncoderConfig *oxcf) {
   // Need to call av2_rc_init() whenever any QP, lossless or related config
   // is changed after compressor creation.
   av2_rc_init(&cpi->oxcf, 0, rc);
-  rc->baseline_gf_interval = (MIN_GF_INTERVAL + MAX_GF_INTERVAL) / 2;
+  rc->baseline_gf_interval = (MIN_GF_INTERVAL + MAX_GF_INTERVAL_AV2) / 2;
 
   cm->features.cross_frame_context =
       (oxcf->tool_cfg.frame_parallel_decoding_mode)
@@ -1595,14 +1595,14 @@ AV2_COMP *av2_create_compressor(AV2EncoderConfig *oxcf, BufferPool *const pool,
   cpi->rc.enable_scenecut_detection = ENABLE_SCENECUT_MODE_2;
   if (cpi->lap_enabled) {
     if ((num_lap_buffers <
-         (MAX_GF_LENGTH_LAP + SCENE_CUT_KEY_TEST_INTERVAL + 1)) &&
-        num_lap_buffers >= (MAX_GF_LENGTH_LAP + 3)) {
+         (MAX_GF_LENGTH_LAP_AV2 + SCENE_CUT_KEY_TEST_INTERVAL + 1)) &&
+        num_lap_buffers >= (MAX_GF_LENGTH_LAP_AV2 + 3)) {
       /*
        * For lag in frames >= 19 and <33, enable scenecut
        * with limited future frame prediction.
        */
       cpi->rc.enable_scenecut_detection = ENABLE_SCENECUT_MODE_1;
-    } else if (num_lap_buffers < (MAX_GF_LENGTH_LAP + 3)) {
+    } else if (num_lap_buffers < (MAX_GF_LENGTH_LAP_AV2 + 3)) {
       // Disable scenecut when lag_in_frames < 19.
       cpi->rc.enable_scenecut_detection = DISABLE_SCENECUT;
     }

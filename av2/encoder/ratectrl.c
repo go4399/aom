@@ -279,7 +279,7 @@ int av2_rc_get_default_min_gf_interval(int width, int height,
   static const double factor_safe = 3840 * 2160 * 20.0;
   const double factor = width * height * framerate;
   const int default_interval =
-      clamp((int)(framerate * 0.125), MIN_GF_INTERVAL, MAX_GF_INTERVAL);
+      clamp((int)(framerate * 0.125), MIN_GF_INTERVAL, MAX_GF_INTERVAL_AV2);
 
   if (factor <= factor_safe)
     return default_interval;
@@ -293,9 +293,9 @@ int av2_rc_get_default_min_gf_interval(int width, int height,
 }
 
 int av2_rc_get_default_max_gf_interval(double framerate, int min_gf_interval) {
-  int interval = AOMMIN(MAX_GF_INTERVAL, (int)(framerate * 0.75));
+  int interval = AOMMIN(MAX_GF_INTERVAL_AV2, (int)(framerate * 0.75));
   interval += (interval & 0x01);  // Round to even value
-  interval = AOMMAX(MAX_GF_INTERVAL, interval);
+  interval = AOMMAX(MAX_GF_INTERVAL_AV2, interval);
   return AOMMAX(interval, min_gf_interval);
 }
 

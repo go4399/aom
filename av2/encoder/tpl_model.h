@@ -80,7 +80,7 @@ typedef struct AV2TplRowMultiThreadInfo {
 // The first REF_FRAMES + 1 buffers are reserved.
 // tpl_data->tpl_frame starts after REF_FRAMES + 1
 #define MAX_LENGTH_TPL_FRAME_STATS (MAX_TPL_FRAME_IDX + REF_FRAMES + 1)
-#define MAX_TPL_EXTEND (MAX_LAG_BUFFERS - MAX_GF_INTERVAL)
+#define MAX_TPL_EXTEND (MAX_LAG_BUFFERS - MAX_GF_INTERVAL_AV2)
 #define TPL_DEP_COST_SCALE_LOG2 4
 
 typedef struct TplDepStats {
