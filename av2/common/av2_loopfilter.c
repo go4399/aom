@@ -1247,7 +1247,7 @@ INLINE void setup_tip_dst_planes(AV2_COMMON *const cm, MACROBLOCKD *xd,
     subsampling_x = cm->seq_params.subsampling_x;
     subsampling_y = cm->seq_params.subsampling_y;
   }
-  setup_tip_dst_plane(&pd->dst, (uint16_t *)src->buffers[plane],
+  setup_tip_dst_plane(&pd->dst, CONVERT_TO_SHORTPTR(src->buffers[plane]),
                       src->widths[is_uv], src->heights[is_uv],
                       src->strides[is_uv], tpl_row, tpl_col, NULL,
                       subsampling_x, subsampling_y);

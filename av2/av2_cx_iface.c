@@ -2123,6 +2123,15 @@ static aom_codec_err_t ctrl_set_qp(aom_codec_alg_priv_t *ctx, va_list args) {
   return update_extra_cfg(ctx, &extra_cfg);
 }
 
+static aom_codec_err_t ctrl_set_cq_level(aom_codec_alg_priv_t *ctx,
+                                         va_list args) {
+  struct av2_extracfg extra_cfg = ctx->extra_cfg;
+  const int cq_level = CAST(AOME_SET_CQ_LEVEL, args);
+  // Scale 6-bit CQ level (0-63) to 8-bit QP (0-255)
+  extra_cfg.qp = cq_level * 4;
+  return update_extra_cfg(ctx, &extra_cfg);
+}
+
 static aom_codec_err_t ctrl_set_rc_max_intra_bitrate_pct(
     aom_codec_alg_priv_t *ctx, va_list args) {
   struct av2_extracfg extra_cfg = ctx->extra_cfg;
@@ -4721,7 +4730,7 @@ static aom_codec_ctrl_fn_map_t encoder_ctrl_maps[] = {
   { AVME_SET_ARNR_STRENGTH, ctrl_set_arnr_strength },
   { AVME_SET_TUNING, ctrl_set_tuning },
   { AVME_SET_QP, ctrl_set_qp },
-  { AOME_SET_CQ_LEVEL, ctrl_set_qp },
+  { AOME_SET_CQ_LEVEL, ctrl_set_cq_level },
   { AVME_SET_MAX_INTRA_BITRATE_PCT, ctrl_set_rc_max_intra_bitrate_pct },
   { AVME_SET_NUMBER_MLAYERS, ctrl_set_number_mlayers },
   { AVME_SET_NUMBER_TLAYERS, ctrl_set_number_tlayers },
