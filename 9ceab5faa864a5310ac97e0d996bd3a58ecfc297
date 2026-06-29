@@ -71,6 +71,47 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1c6c394c_e7f2db69",
+        "filename": "av1/encoder/rdopt_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-06-29T18:25:55Z",
+      "side": 1,
+      "message": "Why not use (x-\u003epix_to_bottom_edge \u003e 0 \u0026\u0026 x-\u003epix_to_right_edge \u003e 0)?",
+      "range": {
+        "startLine": 366,
+        "startChar": 6,
+        "endLine": 366,
+        "endChar": 63
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "a531761e_77d79151",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/encoder/rdopt_utils.h",
+              "range": {
+                "startLine": 366,
+                "startChar": 0,
+                "endLine": 367,
+                "endChar": 0
+              },
+              "replacement": "  if ((x-\u003epix_to_bottom_edge \u003e 0 \u0026\u0026 x-\u003epix_to_right_edge \u003e 0) || !clip_dims) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9ceab5faa864a5310ac97e0d996bd3a58ecfc297",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d6bb5618_4b3e15ce",
         "filename": "av1/encoder/tx_search.c",
         "patchSetId": 2
