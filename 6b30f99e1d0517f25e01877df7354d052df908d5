@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ef1b74a_3e61f7dc",
+        "filename": "av1/encoder/rdopt_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-06-30T17:53:22Z",
+      "side": 1,
+      "message": "Instead of rounding `pix_to_bottom_edge` up to a multiple of 2 in `set_pixels_to_frame_edge()`, I think it is clearer and more correct to handle an odd `pix_to_bottom_edge` here.\n\nFor example, I think we can change this statement to:\n\n```\n    const int block_rows \u003d\n        ((x-\u003epix_to_bottom_edge + pd-\u003esubsampling_y) \u003e\u003e pd-\u003esubsampling_y) + block_height;\n```\n\nPlease double check and make sure that this expression is correct when `pix_to_bottom_edge` is negative. Another possible expression would be:\n\n```\n    const int block_rows \u003d\n        (x-\u003epix_to_bottom_edge - pd-\u003esubsampling_y) / (1 \u003c\u003c pd-\u003esubsampling_y) + block_height;\n```\n\nwhich is equivalent to\n\n```\n    const int block_rows \u003d\n        ROUND_POWER_OF_TWO_SIGNED(x-\u003epix_to_bottom_edge, pd-\u003esubsampling_y) + block_height;\n```",
+      "revId": "6b30f99e1d0517f25e01877df7354d052df908d5",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
