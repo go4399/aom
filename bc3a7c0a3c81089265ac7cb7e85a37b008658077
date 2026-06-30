@@ -101,6 +101,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "49047111_ea5e7b36",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2026-06-30T20:45:39Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "4f9061f6_c39e17b9",
+      "range": {
+        "startLine": 177,
+        "startChar": 47,
+        "endLine": 177,
+        "endChar": 60
+      },
+      "revId": "bc3a7c0a3c81089265ac7cb7e85a37b008658077",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "54bf928e_8fa927dd",
