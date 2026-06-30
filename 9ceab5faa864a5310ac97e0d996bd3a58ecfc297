@@ -35,6 +35,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e885d04_cdf7d98f",
+        "filename": "av1/encoder/encodemb.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 8893
+      },
+      "writtenOn": "2026-06-30T15:04:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85ae2c27_d73231bd",
+      "revId": "9ceab5faa864a5310ac97e0d996bd3a58ecfc297",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "de309e6a_25f13640",
@@ -54,6 +72,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "229f76df_dfb9000b",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 4297,
+      "author": {
+        "id": 8893
+      },
+      "writtenOn": "2026-06-30T15:04:17Z",
+      "side": 1,
+      "message": "Thank you for the correction. Frame alignment is not necessary when chroma planes are not subsampled. We have corrected it in the new patchset. \n\nThe intent of aligning the frame dimensions is to ensure that the edge distances used for chroma planes remain consistent with the rounded-up chroma plane dimensions for odd frame sizes (e.g., `uv_crop_width \u003d (width + ss_x) \u003e\u003e ss_x`).",
+      "parentUuid": "de309e6a_25f13640",
+      "revId": "9ceab5faa864a5310ac97e0d996bd3a58ecfc297",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f84f254c_888b3a29",
         "filename": "av1/encoder/model_rd.h",
         "patchSetId": 2
@@ -65,6 +101,24 @@
       "writtenOn": "2026-06-29T17:46:31Z",
       "side": 1,
       "message": "Nit: Change `true /* clip_dims */` to `/*clip_dims\u003d*/true`\n\nAlso at line 283.",
+      "revId": "9ceab5faa864a5310ac97e0d996bd3a58ecfc297",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a43ae93d_be45fd7e",
+        "filename": "av1/encoder/model_rd.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 8893
+      },
+      "writtenOn": "2026-06-30T15:04:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f84f254c_888b3a29",
       "revId": "9ceab5faa864a5310ac97e0d996bd3a58ecfc297",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
@@ -112,6 +166,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9274bf8d_aaa6cd42",
+        "filename": "av1/encoder/rdopt_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 8893
+      },
+      "writtenOn": "2026-06-30T15:04:17Z",
+      "side": 1,
+      "message": "When `x-\u003epix_to_bottom_edge \u003d\u003d 0 \u0026\u0026 x-\u003epix_to_right_edge \u003d\u003d 0` the block does not extend beyond frame boundaries and the actual block dimensions are returned. Thus this case can be included here.",
+      "parentUuid": "1c6c394c_e7f2db69",
+      "range": {
+        "startLine": 366,
+        "startChar": 6,
+        "endLine": 366,
+        "endChar": 63
+      },
+      "revId": "9ceab5faa864a5310ac97e0d996bd3a58ecfc297",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d6bb5618_4b3e15ce",
         "filename": "av1/encoder/tx_search.c",
         "patchSetId": 2
@@ -123,6 +201,24 @@
       "writtenOn": "2026-06-29T17:46:31Z",
       "side": 1,
       "message": "Nit: Change `true /* clip_dims */` to `/*clip_dims\u003d*/true`\n\nMake the same change to the other occurrences in the file.",
+      "revId": "9ceab5faa864a5310ac97e0d996bd3a58ecfc297",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d61923fa_45e58971",
+        "filename": "av1/encoder/tx_search.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 8893
+      },
+      "writtenOn": "2026-06-30T15:04:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d6bb5618_4b3e15ce",
       "revId": "9ceab5faa864a5310ac97e0d996bd3a58ecfc297",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
