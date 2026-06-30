@@ -129,6 +129,30 @@
       },
       "revId": "bc3a7c0a3c81089265ac7cb7e85a37b008658077",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "24c55e14_5c9674a8",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 7525
+      },
+      "writtenOn": "2026-06-30T17:49:22Z",
+      "side": 1,
+      "message": "That kinda makes sense. But what if a frame in the middle of the group has a larger coded_error? Was this introduced to tackle a specific sequence?",
+      "parentUuid": "2e44b2e8_89a143d6",
+      "range": {
+        "startLine": 411,
+        "startChar": 11,
+        "endLine": 411,
+        "endChar": 53
+      },
+      "revId": "bc3a7c0a3c81089265ac7cb7e85a37b008658077",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
