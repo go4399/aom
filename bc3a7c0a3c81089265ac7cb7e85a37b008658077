@@ -79,6 +79,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4f9061f6_c39e17b9",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 31132
+      },
+      "writtenOn": "2026-06-30T19:17:51Z",
+      "side": 1,
+      "message": "Acknowledged. We can experiment with the stats mentioned above later. This will likely impact a broader set of clips, so the coding performance impact has to be carefully evaluated. Thank you for the heads-up.",
+      "parentUuid": "b5ebf8d0_0ae19199",
+      "range": {
+        "startLine": 177,
+        "startChar": 47,
+        "endLine": 177,
+        "endChar": 60
+      },
+      "revId": "bc3a7c0a3c81089265ac7cb7e85a37b008658077",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "54bf928e_8fa927dd",
         "filename": "av1/encoder/pass2_strategy.c",
         "patchSetId": 3
