@@ -290,6 +290,30 @@
       },
       "revId": "bc3a7c0a3c81089265ac7cb7e85a37b008658077",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a7f03e2_4e752023",
+        "filename": "av1/encoder/pass2_strategy.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 31132
+      },
+      "writtenOn": "2026-06-30T18:28:35Z",
+      "side": 1,
+      "message": "@bohanli@google.com Will do.\n@yunqingwang@google.com yes, the coded_error is from 1st pass. This change is on the second pass, that we utilize the first pass stats to determine the rc qp.",
+      "parentUuid": "f018c71c_12d90c44",
+      "range": {
+        "startLine": 411,
+        "startChar": 11,
+        "endLine": 411,
+        "endChar": 53
+      },
+      "revId": "bc3a7c0a3c81089265ac7cb7e85a37b008658077",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
