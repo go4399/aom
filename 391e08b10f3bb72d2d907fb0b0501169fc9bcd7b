@@ -1,0 +1,222 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc283216_7f327a5e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2026-07-01T21:05:51Z",
+      "side": 1,
+      "message": "A few comments, but I\u0027m not going to review all of it at 5PM ahead of a long weekend.",
+      "revId": "391e08b10f3bb72d2d907fb0b0501169fc9bcd7b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce17d5bf_abb18c54",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2026-07-01T21:05:51Z",
+      "side": 1,
+      "message": "Generally we don\u0027t put underscores in C++ function names, ditto throughout.",
+      "range": {
+        "startLine": 61,
+        "startChar": 36,
+        "endLine": 61,
+        "endChar": 62
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "45d5da61_6bc3225e",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/common/convolve_2d_sr_hwy.h",
+              "range": {
+                "startLine": 61,
+                "startChar": 0,
+                "endLine": 63,
+                "endChar": 0
+              },
+              "replacement": "HWY_ATTR HWY_INLINE hn::VFromD\u003cD16\u003e ConvolveLowbdXShuffleFree(D16 d16, V8 data,\n                                                             const VI8 *coeffs) {\n"
+            },
+            {
+              "path": "av1/common/convolve_2d_sr_hwy.h",
+              "range": {
+                "startLine": 222,
+                "startChar": 0,
+                "endLine": 223,
+                "endChar": 0
+              },
+              "replacement": "HWY_ATTR HWY_INLINE hn::VFromD\u003cD16\u003e ConvolveLowbdX12TapShuffleFree(\n"
+            },
+            {
+              "path": "av1/common/convolve_2d_sr_hwy.h",
+              "range": {
+                "startLine": 467,
+                "startChar": 0,
+                "endLine": 468,
+                "endChar": 0
+              },
+              "replacement": "      res \u003d ConvolveLowbdXShuffleFree\u003ctaps_x_const\u003e(d16_h, data_vec, coeffs_h);\n"
+            },
+            {
+              "path": "av1/common/convolve_2d_sr_hwy.h",
+              "range": {
+                "startLine": 500,
+                "startChar": 0,
+                "endLine": 501,
+                "endChar": 0
+              },
+              "replacement": "            res \u003d ConvolveLowbdX12TapShuffleFree(\n"
+            }
+          ]
+        }
+      ],
+      "revId": "391e08b10f3bb72d2d907fb0b0501169fc9bcd7b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f2c3d81_ecb81d41",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2026-07-01T21:05:51Z",
+      "side": 1,
+      "message": "Do we have `if constexpr` now in libaom?",
+      "range": {
+        "startLine": 76,
+        "startChar": 7,
+        "endLine": 76,
+        "endChar": 16
+      },
+      "revId": "391e08b10f3bb72d2d907fb0b0501169fc9bcd7b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be32ccce_b27b7349",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2026-07-01T21:05:51Z",
+      "side": 1,
+      "message": "nit: no need for else after return. Ditto throughout.",
+      "range": {
+        "startLine": 234,
+        "startChar": 0,
+        "endLine": 234,
+        "endChar": 10
+      },
+      "revId": "391e08b10f3bb72d2d907fb0b0501169fc9bcd7b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "35c01965_95581f32",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2026-07-01T21:05:51Z",
+      "side": 1,
+      "message": "nit: C-style casts are discouraged in C++. Additionally you already spell the type on the right, so these could reasonably be auto.",
+      "range": {
+        "startLine": 347,
+        "startChar": 17,
+        "endLine": 347,
+        "endChar": 23
+      },
+      "revId": "391e08b10f3bb72d2d907fb0b0501169fc9bcd7b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14f3e23a_12c7d0b9",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 8084
+      },
+      "writtenOn": "2026-07-01T21:05:51Z",
+      "side": 1,
+      "message": "Maybe HWY_ALIGN or HWY_ALIGN_MAX? Ditto throughout.",
+      "range": {
+        "startLine": 349,
+        "startChar": 4,
+        "endLine": 349,
+        "endChar": 16
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "e94618bb_d1c2eec1",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/common/convolve_2d_sr_hwy.h",
+              "range": {
+                "startLine": 349,
+                "startChar": 0,
+                "endLine": 351,
+                "endChar": 0
+              },
+              "replacement": "    int8_t coeff_arr[16] \u003d { c0, c1, c0, c1, c0, c1, c0, c1,\n                             c0, c1, c0, c1, c0, c1, c0, c1 };\n"
+            },
+            {
+              "path": "av1/common/convolve_2d_sr_hwy.h",
+              "range": {
+                "startLine": 363,
+                "startChar": 0,
+                "endLine": 364,
+                "endChar": 0
+              },
+              "replacement": "    int16_t coeff_arr[8] \u003d { c0, c1, c0, c1, c0, c1, c0, c1 };\n"
+            },
+            {
+              "path": "av1/common/convolve_2d_sr_hwy.h",
+              "range": {
+                "startLine": 374,
+                "startChar": 0,
+                "endLine": 375,
+                "endChar": 0
+              },
+              "replacement": "    int16_t coeff_arr[8] \u003d { c0, c1, c0, c1, c0, c1, c0, c1 };\n"
+            }
+          ]
+        }
+      ],
+      "revId": "391e08b10f3bb72d2d907fb0b0501169fc9bcd7b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
