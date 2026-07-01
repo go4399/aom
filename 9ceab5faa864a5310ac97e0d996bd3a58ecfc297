@@ -106,6 +106,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "81572459_f109d604",
+        "filename": "av1/encoder/encoder.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 4297,
+      "author": {
+        "id": 8893
+      },
+      "writtenOn": "2026-07-01T14:38:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "225b4d5b_9a9603f3",
+      "revId": "9ceab5faa864a5310ac97e0d996bd3a58ecfc297",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f84f254c_888b3a29",
