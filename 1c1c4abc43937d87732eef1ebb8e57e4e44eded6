@@ -299,6 +299,24 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4665a52a_ae8e53a5",
+        "filename": "av1/encoder/encodemb.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 31322
+      },
+      "writtenOn": "2026-07-03T14:54:13Z",
+      "side": 1,
+      "message": "Using aom_memset16() results in integer sanitizer runtime error as reported in the sanitizer build \u003chttps://build.aomedia.org/jenkins/job/libaom__per_commit-unit_test-sanitizers/31675/GTEST_SHARD_INDEX\u003d0,sanitizer\u003dinteger/consoleFull\u003e. This is because the buffer being initialized is of type int16_t and using aom_memset16() causes an implicit signed-to-unsigned conversion when a negative value is passed. Thus we have reverted to using aom_memset_int16() to avoid the sanitizer failure. The fix is available in https://aomedia-review.googlesource.com/c/aom/+/214741. Please review. \n\nAs the function aom_memset16() stores the value through a uint16_t * we see that the function prototype should be more accurately expressed as follows:\n\nvoid *aom_memset16(void *dest, uint16_t val, size_t length)",
+      "parentUuid": "ac88faa4_c84db0af",
+      "revId": "1c1c4abc43937d87732eef1ebb8e57e4e44eded6",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f6441576_a02bb5e3",
