@@ -74,6 +74,13 @@ static inline void avg_wxh_block_vert_c(int16_t *diff, ptrdiff_t diff_stride,
   }
 }
 
+static inline void *aom_memset_int16(void *dest, int16_t val, size_t length) {
+  size_t i;
+  int16_t *dest16 = (int16_t *)dest;
+  for (i = 0; i < length; i++) *dest16++ = val;
+  return dest;
+}
+
 // Fill the outside-frame part's residues with values derived from the in-frame
 // part's residues.
 static inline void fill_residue_outside_frame(
@@ -91,11 +98,12 @@ static inline void fill_residue_outside_frame(
     // Fill the remaining parts of the block with the average value
     const int right_pixels = tx_cols - visible_tx_cols;
     for (int i = 0; i < tx_rows; ++i) {
-      aom_memset16(diff + i * diff_stride + visible_tx_cols, avg, right_pixels);
+      aom_memset_int16(diff + i * diff_stride + visible_tx_cols, avg,
+                       right_pixels);
     }
 
     for (int i = visible_tx_rows; i < tx_rows; ++i) {
-      aom_memset16(diff + i * diff_stride, avg, visible_tx_cols);
+      aom_memset_int16(diff + i * diff_stride, avg, visible_tx_cols);
     }
   } else if (htx_tab[tx_type] == IDTX_1D) {
     if (visible_tx_rows < tx_rows) {
@@ -129,8 +137,8 @@ static inline void fill_residue_outside_frame(
                               visible_tx_rows, out);
 
       for (int i = 0; i < visible_tx_rows; ++i) {
-        aom_memset16(diff + i * diff_stride + visible_tx_cols, out[i],
-                     right_pixels);
+        aom_memset_int16(diff + i * diff_stride + visible_tx_cols, out[i],
+                         right_pixels);
       }
     }
 
