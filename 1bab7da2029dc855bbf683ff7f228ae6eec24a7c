@@ -55,6 +55,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "29f61e7b_fdb35696",
+        "filename": "av1/encoder/block.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 1447,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-07-03T01:36:17Z",
+      "side": 1,
+      "message": "Deepa: Thank you for your reply. It\u0027s fine to keep the current sign. Your suggested change sounds good because it takes advantage of the knowledge that `x-\u003epix_to_bottom_edge` is negative.",
+      "parentUuid": "83305658_e0dd63f7",
+      "revId": "1bab7da2029dc855bbf683ff7f228ae6eec24a7c",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "61c836d6_283bcd98",
         "filename": "av1/encoder/encoder.h",
         "patchSetId": 4
