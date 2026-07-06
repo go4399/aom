@@ -497,7 +497,7 @@ static int main_loop(int argc, const char **argv_) {
   memset(&webm_ctx, 0, sizeof(webm_ctx));
   input.webm_ctx = &webm_ctx;
 #endif
-  struct ObuDecInputContext obu_ctx = { NULL, NULL, 0, 0, 0 };
+  struct ObuDecInputContext obu_ctx = { 0 };
   int is_ivf = 0;
 
   obu_ctx.avx_ctx = &aom_input_ctx;
@@ -707,7 +707,16 @@ static int main_loop(int argc, const char **argv_) {
   else
     interface = fourcc_interface;
 
-  if (!interface) interface = get_aom_decoder_by_index(0);
+  if (!interface) {
+#if CONFIG_AV2_DECODER
+    if (input.aom_input_ctx->file_type == FILE_TYPE_OBU && obu_ctx.is_av2) {
+      interface = aom_codec_av2_dx();
+    } else
+#endif
+    {
+      interface = get_aom_decoder_by_index(0);
+    }
+  }
 
   dec_flags = 0;
   if (aom_codec_dec_init(&decoder, interface, &cfg, dec_flags)) {

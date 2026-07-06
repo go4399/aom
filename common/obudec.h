@@ -23,6 +23,7 @@ struct ObuDecInputContext {
   size_t buffer_capacity;
   size_t bytes_buffered;
   int is_annexb;
+  int is_av2;
 };
 
 // Returns 1 when file data starts (if Annex B stream, after reading the
