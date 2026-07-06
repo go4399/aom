@@ -89,6 +89,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d248e12_a423237e",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-07-06T16:30:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ce17d5bf_abb18c54",
+      "range": {
+        "startLine": 61,
+        "startChar": 36,
+        "endLine": 61,
+        "endChar": 62
+      },
+      "revId": "391e08b10f3bb72d2d907fb0b0501169fc9bcd7b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7f2c3d81_ecb81d41",
@@ -102,6 +126,30 @@
       "writtenOn": "2026-07-01T21:05:51Z",
       "side": 1,
       "message": "Do we have `if constexpr` now in libaom?",
+      "range": {
+        "startLine": 76,
+        "startChar": 7,
+        "endLine": 76,
+        "endChar": 16
+      },
+      "revId": "391e08b10f3bb72d2d907fb0b0501169fc9bcd7b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e6c45c3_e55280bd",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-07-06T16:30:18Z",
+      "side": 1,
+      "message": "technically c++17 is not enforced in libaom so I replaced it with highway version",
+      "parentUuid": "7f2c3d81_ecb81d41",
       "range": {
         "startLine": 76,
         "startChar": 7,
@@ -135,6 +183,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "161b879a_8b426714",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-07-06T16:30:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be32ccce_b27b7349",
+      "range": {
+        "startLine": 234,
+        "startChar": 0,
+        "endLine": 234,
+        "endChar": 10
+      },
+      "revId": "391e08b10f3bb72d2d907fb0b0501169fc9bcd7b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "35c01965_95581f32",
@@ -148,6 +220,30 @@
       "writtenOn": "2026-07-01T21:05:51Z",
       "side": 1,
       "message": "nit: C-style casts are discouraged in C++. Additionally you already spell the type on the right, so these could reasonably be auto.",
+      "range": {
+        "startLine": 347,
+        "startChar": 17,
+        "endLine": 347,
+        "endChar": 23
+      },
+      "revId": "391e08b10f3bb72d2d907fb0b0501169fc9bcd7b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb19d11c_cf6d14ae",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-07-06T16:30:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "35c01965_95581f32",
       "range": {
         "startLine": 347,
         "startChar": 17,
@@ -215,6 +311,30 @@
           ]
         }
       ],
+      "revId": "391e08b10f3bb72d2d907fb0b0501169fc9bcd7b",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d359270_bdfc1b4d",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-07-06T16:30:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14f3e23a_12c7d0b9",
+      "range": {
+        "startLine": 349,
+        "startChar": 4,
+        "endLine": 349,
+        "endChar": 16
+      },
       "revId": "391e08b10f3bb72d2d907fb0b0501169fc9bcd7b",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
