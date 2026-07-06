@@ -33,6 +33,24 @@
       "message": "The `aom_memset16()` function prototype is modeled after that of [`memset()`](https://en.cppreference.com/c/string/byte/memset), which declares its second parameter as `int`:\n\n```\nvoid* memset( void* dest, int ch, size_t count );\n```\n\nI am sure it is possible to handle this properly inside `aom_memset16()`. Could you please try adding a `uint16_t` cast to `aom_memset16()` as follows?\n\n```\nstatic inline void *aom_memset16(void *dest, int val, size_t length) {\n  size_t i;\n  uint16_t *dest16 \u003d (uint16_t *)dest;\n  for (i \u003d 0; i \u003c length; i++) *dest16++ \u003d (uint16_t)val;    \u003c\u003d NOTE THE CAST\n  return dest;\n}\n```",
       "revId": "978d995b5e705a9393044f18cf7aa61521606f3f",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fdb90c19_90177a5f",
+        "filename": "av1/encoder/encodemb.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 31322
+      },
+      "writtenOn": "2026-07-06T15:39:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4457b9b_1344b01f",
+      "revId": "978d995b5e705a9393044f18cf7aa61521606f3f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
