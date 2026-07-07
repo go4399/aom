@@ -1,0 +1,39 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d3dd946_4fdb8648",
+        "filename": "av1/common/av1_rtcd_defs.pl",
+        "patchSetId": 8
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 5185
+      },
+      "writtenOn": "2026-07-07T20:28:21Z",
+      "side": 1,
+      "message": "Looks like all-level SIMD code are replaced by HIGHWAY versions. Do you know the performance changes? Is AV2 getting faster?",
+      "fixSuggestions": [
+        {
+          "fixId": "8d67e7a3_a978badf",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "av1/common/av1_rtcd_defs.pl",
+              "range": {
+                "startLine": 608,
+                "startChar": 0,
+                "endLine": 610,
+                "endChar": 0
+              },
+              "replacement": "    specialize qw/av1_convolve_2d_sr avx512/;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "e1e3bdadc55eade5fded91f3ee0acf26f3c237b9",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
