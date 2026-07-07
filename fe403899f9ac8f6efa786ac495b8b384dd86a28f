@@ -24,6 +24,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1bc0ce3f_0c681a5b",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-07-07T18:10:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0da20be_9a164641",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 11
+      },
+      "revId": "fe403899f9ac8f6efa786ac495b8b384dd86a28f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d791d445_dd56fb01",
@@ -37,6 +61,30 @@
       "writtenOn": "2026-07-06T15:35:29Z",
       "side": 1,
       "message": "What convention does libaom use for tags? I thought it was something like uint16_tag.",
+      "range": {
+        "startLine": 39,
+        "startChar": 55,
+        "endLine": 39,
+        "endChar": 58
+      },
+      "revId": "fe403899f9ac8f6efa786ac495b8b384dd86a28f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "34bd0d99_b7992038",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-07-07T18:10:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d791d445_dd56fb01",
       "range": {
         "startLine": 39,
         "startChar": 55,
@@ -70,6 +118,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "61768868_7309f9d5",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-07-07T18:10:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a68c53a_1e252e98",
+      "range": {
+        "startLine": 51,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 8
+      },
+      "revId": "fe403899f9ac8f6efa786ac495b8b384dd86a28f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "88d6f9af_525a5add",
@@ -83,6 +155,30 @@
       "writtenOn": "2026-07-06T15:35:29Z",
       "side": 1,
       "message": "nit/personal preference: brackets, even if not strictly needed.",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 92,
+        "endChar": 51
+      },
+      "revId": "fe403899f9ac8f6efa786ac495b8b384dd86a28f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c1d0c680_d85d9312",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-07-07T18:10:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "88d6f9af_525a5add",
       "range": {
         "startLine": 92,
         "startChar": 0,
@@ -116,6 +212,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3afba30f_6c262629",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-07-07T18:10:34Z",
+      "side": 1,
+      "message": "Done\n\nSince avx512 and avx2 would guarantee D16 has more than 8 lanes, I removed the else branch.",
+      "parentUuid": "7842013a_903bb1b4",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 99,
+        "endChar": 10
+      },
+      "revId": "fe403899f9ac8f6efa786ac495b8b384dd86a28f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0951993a_b87fcb6a",
@@ -129,6 +249,30 @@
       "writtenOn": "2026-07-06T15:35:29Z",
       "side": 1,
       "message": "nit: PromoteLowerTo/PromoteUpperTo.",
+      "range": {
+        "startLine": 148,
+        "startChar": 0,
+        "endLine": 172,
+        "endChar": 48
+      },
+      "revId": "fe403899f9ac8f6efa786ac495b8b384dd86a28f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0fbd68c_081ed7f6",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-07-07T18:10:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0951993a_b87fcb6a",
       "range": {
         "startLine": 148,
         "startChar": 0,
@@ -162,6 +306,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "33fd5ea6_1dd29492",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-07-07T18:10:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "012f16b2_9dbd225d",
+      "range": {
+        "startLine": 174,
+        "startChar": 0,
+        "endLine": 184,
+        "endChar": 64
+      },
+      "revId": "fe403899f9ac8f6efa786ac495b8b384dd86a28f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8c030606_e91e2b37",
@@ -175,6 +343,30 @@
       "writtenOn": "2026-07-06T15:35:29Z",
       "side": 1,
       "message": "ShiftRight\u003c1\u003e.",
+      "range": {
+        "startLine": 198,
+        "startChar": 0,
+        "endLine": 199,
+        "endChar": 54
+      },
+      "revId": "fe403899f9ac8f6efa786ac495b8b384dd86a28f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "34547ce7_fbbe269f",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-07-07T18:10:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8c030606_e91e2b37",
       "range": {
         "startLine": 198,
         "startChar": 0,
@@ -208,6 +400,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e82ea25b_58f99536",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-07-07T18:10:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0c588e4d_d3911464",
+      "range": {
+        "startLine": 294,
+        "startChar": 4,
+        "endLine": 294,
+        "endChar": 15
+      },
+      "revId": "fe403899f9ac8f6efa786ac495b8b384dd86a28f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b1201bd4_2e8562c5",
@@ -221,6 +437,30 @@
       "writtenOn": "2026-07-06T15:35:29Z",
       "side": 1,
       "message": "I don\u0027t understand these names.",
+      "range": {
+        "startLine": 320,
+        "startChar": 0,
+        "endLine": 322,
+        "endChar": 36
+      },
+      "revId": "fe403899f9ac8f6efa786ac495b8b384dd86a28f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ff1d9c88_51f45ca2",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-07-07T18:10:34Z",
+      "side": 1,
+      "message": "They were half or quarter of `D`",
+      "parentUuid": "b1201bd4_2e8562c5",
       "range": {
         "startLine": 320,
         "startChar": 0,
@@ -272,6 +512,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c005a378_c140d3a2",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-07-07T18:10:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3487c7ae_c257f21f",
+      "range": {
+        "startLine": 381,
+        "startChar": 2,
+        "endLine": 381,
+        "endChar": 42
+      },
+      "revId": "fe403899f9ac8f6efa786ac495b8b384dd86a28f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0543fe43_a3ba5d3d",
@@ -285,6 +549,30 @@
       "writtenOn": "2026-07-06T15:35:29Z",
       "side": 1,
       "message": "Why does this need to capture everything?",
+      "range": {
+        "startLine": 468,
+        "startChar": 32,
+        "endLine": 468,
+        "endChar": 33
+      },
+      "revId": "fe403899f9ac8f6efa786ac495b8b384dd86a28f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4db45f1_cfe6cdb6",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-07-07T18:10:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0543fe43_a3ba5d3d",
       "range": {
         "startLine": 468,
         "startChar": 32,
@@ -318,6 +606,30 @@
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "83adf7a7_3a5617b6",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 856,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-07-07T18:10:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7623f4a5_ae62f034",
+      "range": {
+        "startLine": 856,
+        "startChar": 0,
+        "endLine": 856,
+        "endChar": 12
+      },
+      "revId": "fe403899f9ac8f6efa786ac495b8b384dd86a28f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3a3c4cc3_cee6e073",
@@ -331,6 +643,30 @@
       "writtenOn": "2026-07-06T15:35:29Z",
       "side": 1,
       "message": "How much more code/.text does this add? I see a lot of per-function specialization, which might be desirable, but there is eventually a point where code size starts to degrade performance. How does this behave E2E?",
+      "range": {
+        "startLine": 1376,
+        "startChar": 21,
+        "endLine": 1376,
+        "endChar": 33
+      },
+      "revId": "fe403899f9ac8f6efa786ac495b8b384dd86a28f",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d40f15f9_abae7a6b",
+        "filename": "av1/common/convolve_2d_sr_hwy.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 1376,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-07-07T18:10:34Z",
+      "side": 1,
+      "message": "This whole highway / avx512 implementation adds about 133k to .text\n\nAs for end to end encoding, there\u0027s no perf impact.",
+      "parentUuid": "3a3c4cc3_cee6e073",
       "range": {
         "startLine": 1376,
         "startChar": 21,
