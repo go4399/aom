@@ -51,6 +51,24 @@
       "parentUuid": "92589e64_34afe2d1",
       "revId": "7915d069a50549c2cb94f272c0cfbd697b139110",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81069d4f_533095c2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5960
+      },
+      "writtenOn": "2026-07-08T19:48:39Z",
+      "side": 1,
+      "message": "I can\u0027t find a bug related to this but there\u0027re similar ones that claim to be fixed in gcc 16 (https://gcc.gnu.org/bugzilla/show_bug.cgi?id\u003d118838) but actually not this particular bug.\n\nI\u0027ve tried on godbolt.org (With -E option so it expands the macros) with gcc16 and it still complains.\n\nWith gcc 16.1:\n\nhttps://godbolt.org/z/6eshM7Gz9\n\nWith clang:\n\nhttps://godbolt.org/z/nW8n3Kxdc\n\nYou can see with gcc16.1, the static_assert() is completely dropped (line 12 in the right panel), leaving only the `;`. But clang has no issue.",
+      "parentUuid": "21ac6344_277d25f2",
+      "revId": "7915d069a50549c2cb94f272c0cfbd697b139110",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
