@@ -16,6 +16,23 @@
       "message": "What a strange bug. Can we put this mitigation in Highway instead?",
       "revId": "7915d069a50549c2cb94f272c0cfbd697b139110",
       "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fbb938ff_2a1d2192",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5020
+      },
+      "writtenOn": "2026-07-08T18:55:15Z",
+      "side": 1,
+      "message": "\u003e GCC has a bug where it drops tokens after escaped quotes inside macros.\n\u003e That caused the static assert statment in HWY_BEFORE_NAMESPACE() and\n\u003e HWY_AFTER_NAMESPACE() to be dropped. Thus the extra semi warnings.\n\nIt would be good to add a reference to the bug. Was it fixed in GCC 16+?",
+      "revId": "7915d069a50549c2cb94f272c0cfbd697b139110",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
     }
   ]
 }
