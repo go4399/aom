@@ -12,6 +12,10 @@
 #ifndef AOM_AV1_COMMON_CONVOLVE_2D_SR_HWY_H_
 #define AOM_AV1_COMMON_CONVOLVE_2D_SR_HWY_H_
 
+#include "aom_ports/aom_hwy_common.h"
+
+AOM_SUPPRESS_HWY_WARNINGS_PUSH
+
 #include "av1/common/convolve.h"
 #include "av1/common/filter.h"
 #include "config/aom_config.h"
@@ -842,5 +846,7 @@ HWY_AFTER_NAMESPACE();
                                 filter_params_x, filter_params_y, subpel_x_qn, \
                                 subpel_y_qn, conv_params);                     \
   }
+
+AOM_SUPPRESS_HWY_WARNINGS_POP
 
 #endif  // AOM_AV1_COMMON_CONVOLVE_2D_SR_HWY_H_

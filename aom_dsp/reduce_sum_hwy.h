@@ -11,6 +11,10 @@
 #ifndef AOM_AOM_DSP_REDUCE_SUM_HWY_H_
 #define AOM_AOM_DSP_REDUCE_SUM_HWY_H_
 
+#include "aom_ports/aom_hwy_common.h"
+
+AOM_SUPPRESS_HWY_WARNINGS_PUSH
+
 #include <type_traits>
 #include "third_party/highway/hwy/highway.h"
 
@@ -65,5 +69,7 @@ HWY_ATTR HWY_INLINE hn::Vec<hn::BlockDFromD<D>> BlockReduceSum(
 }  // namespace
 
 HWY_AFTER_NAMESPACE();
+
+AOM_SUPPRESS_HWY_WARNINGS_POP
 
 #endif  // AOM_AOM_DSP_REDUCE_SUM_HWY_H_

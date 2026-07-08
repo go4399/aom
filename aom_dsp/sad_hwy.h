@@ -11,6 +11,10 @@
 #ifndef AOM_AOM_DSP_SAD_HWY_H_
 #define AOM_AOM_DSP_SAD_HWY_H_
 
+#include "aom_ports/aom_hwy_common.h"
+
+AOM_SUPPRESS_HWY_WARNINGS_PUSH
+
 #include "aom_dsp/reduce_sum_hwy.h"
 #include "third_party/highway/hwy/highway.h"
 
@@ -192,5 +196,7 @@ HWY_MAYBE_UNUSED void SumOfAbsoluteDiffND(const uint8_t *src_ptr,
   X(64, 32, suffix)
 
 HWY_AFTER_NAMESPACE();
+
+AOM_SUPPRESS_HWY_WARNINGS_POP
 
 #endif  // AOM_AOM_DSP_SAD_HWY_H_

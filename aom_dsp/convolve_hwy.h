@@ -12,6 +12,10 @@
 #ifndef AOM_AOM_DSP_CONVOLVE_HWY_H_
 #define AOM_AOM_DSP_CONVOLVE_HWY_H_
 
+#include "aom_ports/aom_hwy_common.h"
+
+AOM_SUPPRESS_HWY_WARNINGS_PUSH
+
 #include "config/aom_config.h"
 
 #include <cassert>
@@ -1481,5 +1485,7 @@ HWY_MAYBE_UNUSED void Convolve8Horiz(const uint8_t *src, ptrdiff_t src_stride,
   }
 
 HWY_AFTER_NAMESPACE();
+
+AOM_SUPPRESS_HWY_WARNINGS_POP
 
 #endif  // AOM_AOM_DSP_CONVOLVE_HWY_H_

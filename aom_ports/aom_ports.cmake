@@ -20,6 +20,10 @@ list(APPEND AOM_PORTS_INCLUDES "${AOM_ROOT}/aom_ports/aom_once.h"
             "${AOM_ROOT}/aom_ports/mem_ops_aligned.h"
             "${AOM_ROOT}/aom_ports/sanitizer.h")
 
+if(CONFIG_HIGHWAY)
+  list(APPEND AOM_PORTS_INCLUDES "${AOM_ROOT}/aom_ports/aom_hwy_common.h")
+endif()
+
 list(APPEND AOM_PORTS_ASM_X86 "${AOM_ROOT}/aom_ports/float.asm")
 
 list(APPEND AOM_PORTS_INCLUDES_X86 "${AOM_ROOT}/aom_ports/x86_abi_support.asm")

@@ -12,6 +12,10 @@
 #ifndef AOM_AV1_COMMON_WARP_PLANE_HWY_H_
 #define AOM_AV1_COMMON_WARP_PLANE_HWY_H_
 
+#include "aom_ports/aom_hwy_common.h"
+
+AOM_SUPPRESS_HWY_WARNINGS_PUSH
+
 #include "av1/common/warped_motion.h"
 #include "config/av1_rtcd.h"
 #include "third_party/highway/hwy/highway.h"
@@ -1712,5 +1716,7 @@ HWY_ATTR void WarpAffine(const int32_t *HWY_RESTRICT mat,
   }
 
 HWY_AFTER_NAMESPACE();
+
+AOM_SUPPRESS_HWY_WARNINGS_POP
 
 #endif  // AOM_AV1_COMMON_WARP_PLANE_HWY_H_

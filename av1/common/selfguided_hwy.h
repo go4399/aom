@@ -12,6 +12,10 @@
 #ifndef AV1_COMMON_SELFGUIDED_HWY_H_
 #define AV1_COMMON_SELFGUIDED_HWY_H_
 
+#include "aom_ports/aom_hwy_common.h"
+
+AOM_SUPPRESS_HWY_WARNINGS_PUSH
+
 #include "av1/common/restoration.h"
 #include "config/aom_config.h"
 #include "config/av1_rtcd.h"
@@ -739,5 +743,7 @@ HWY_AFTER_NAMESPACE();
         dat8, width, height, stride, eps, xqd, dst8, dst_stride, tmpbuf, \
         bit_depth, highbd);                                              \
   }
+
+AOM_SUPPRESS_HWY_WARNINGS_POP
 
 #endif  // AV1_COMMON_SELFGUIDED_HWY_H_

@@ -12,6 +12,10 @@
 #ifndef AOM_AV1_ENCODER_AV1_FWD_TXFM2D_HWY_H_
 #define AOM_AV1_ENCODER_AV1_FWD_TXFM2D_HWY_H_
 
+#include "aom_ports/aom_hwy_common.h"
+
+AOM_SUPPRESS_HWY_WARNINGS_PUSH
+
 #include <stdint.h>
 
 #include "config/aom_config.h"
@@ -2553,5 +2557,7 @@ HWY_AFTER_NAMESPACE();
     HWY_NAMESPACE::LowBitdepthForwardTransform2D(src_diff, coeff, diff_stride, \
                                                  txfm_param);                  \
   }
+
+AOM_SUPPRESS_HWY_WARNINGS_POP
 
 #endif  // AOM_AV1_ENCODER_AV1_FWD_TXFM2D_HWY_H_
