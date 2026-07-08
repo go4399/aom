@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb4c1b7a_2b341821",
+        "filename": "aom_dsp/arm/sum_squares_sve.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-07-08T20:06:35Z",
+      "side": 1,
+      "message": "This is an example of a function that requires `height` to be an even number.",
+      "revId": "cadfdf0eaf8c0dc194c62da07a8dc0db75c2c72a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "77eeeb5b_441e722e",
+        "filename": "aom_dsp/arm/sum_squares_sve.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-07-08T20:06:35Z",
+      "side": 1,
+      "message": "This function requires `width` be equal to 4. So I removed the `width` parameter.",
+      "revId": "cadfdf0eaf8c0dc194c62da07a8dc0db75c2c72a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc2fc13d_232ff7f3",
+        "filename": "aom_dsp/arm/sum_squares_sve.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-07-08T20:06:35Z",
+      "side": 1,
+      "message": "Salome: I believe this function works for not only `width \u003d\u003d 8` but also `width % 8 \u003d\u003d 0`. Please double check.",
+      "revId": "cadfdf0eaf8c0dc194c62da07a8dc0db75c2c72a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ff5c849_45ca9e59",
+        "filename": "aom_dsp/arm/sum_squares_sve.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 9545
+      },
+      "writtenOn": "2026-07-08T20:06:35Z",
+      "side": 1,
+      "message": "Salome: I believe this function works for not only `width \u003d\u003d 8` but also `width % 8 \u003d\u003d 0`. Please double check.",
+      "revId": "cadfdf0eaf8c0dc194c62da07a8dc0db75c2c72a",
+      "serverId": "e5514cf8-2d6e-3e29-adb4-24cd6dde4bf0"
+    }
+  ]
+}
