@@ -1762,6 +1762,7 @@ void av1_nonrd_pick_intra_mode(AV1_COMP *cpi, MACROBLOCK *x, RD_STATS *rd_cost,
   mi->mv[0].as_int = mi->mv[1].as_int = INVALID_MV;
 
   bool allow_skip_nondc = true;
+  bool palette_selected = false;
   // Change the limit of this loop to add other intra prediction
   // mode tests.
   for (int mode_index = 0; mode_index < RTC_INTRA_MODES; ++mode_index) {
@@ -1844,6 +1845,7 @@ void av1_nonrd_pick_intra_mode(AV1_COMP *cpi, MACROBLOCK *x, RD_STATS *rd_cost,
         bsize <= BLOCK_16X16 && x->source_variance > 200;
     try_palette &= prune;
   }
+
   if (try_palette) {
     const unsigned int intra_ref_frame_cost = 0;
     x->color_palette_thresh = (best_sad_norm < 500) ? 32 : 64;
@@ -1853,6 +1855,7 @@ void av1_nonrd_pick_intra_mode(AV1_COMP *cpi, MACROBLOCK *x, RD_STATS *rd_cost,
                                  &this_rdc, best_rdc.rdcost);
     // Update best mode data.
     if (this_rdc.rdcost < best_rdc.rdcost) {
+      palette_selected = true;
       best_mode = DC_PRED;
       mi->mv[0].as_int = INVALID_MV;
       mi->mv[1].as_int = INVALID_MV;
@@ -1867,7 +1870,7 @@ void av1_nonrd_pick_intra_mode(AV1_COMP *cpi, MACROBLOCK *x, RD_STATS *rd_cost,
   }
 
   bool try_intrabc = cpi->sf.rt_sf.rt_use_intrabc && av1_allow_intrabc(cm) &&
-                     bsize <= BLOCK_16X16;
+                     bsize <= BLOCK_16X16 && try_palette && palette_selected;
 
   if (try_intrabc) {
     int_mv best_dv;
